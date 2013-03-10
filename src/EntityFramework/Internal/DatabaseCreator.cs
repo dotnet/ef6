@@ -8,6 +8,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -49,23 +50,14 @@ namespace System.Data.Entity.Internal
             if (internalContext.CodeFirstModel != null
                 && _resolver.GetService<MigrationSqlGenerator>(internalContext.ProviderName) != null)
             {
-                var contextType = internalContext.Owner.GetType();
+                if (!IsMigrationsConfigured(internalContext.Owner.GetType()))
+                {
+                    var migrator = createMigrator(
+                        GetMigrationsConfiguration(internalContext),
+                        internalContext.Owner);
 
-                var migrator = createMigrator(
-                    new DbMigrationsConfiguration
-                        {
-                            ContextType = contextType,
-                            AutomaticMigrationsEnabled = true,
-                            MigrationsAssembly = contextType.Assembly,
-                            MigrationsNamespace = contextType.Namespace,
-                            ContextKey = internalContext.ContextKey,
-                            TargetDatabase =
-                                new DbConnectionInfo(
-                                internalContext.OriginalConnectionString, internalContext.ProviderName)
-                        },
-                    internalContext.Owner);
-
-                migrator.Update();
+                    migrator.Update();
+                }
             }
             else
             {
@@ -76,6 +68,31 @@ namespace System.Data.Entity.Internal
             // If the database is created explicitly, then this is treated as overriding the
             // database initialization strategy, so make it as already run.
             internalContext.MarkDatabaseInitialized();
+        }
+
+        public static bool IsMigrationsConfigured(Type contextType)
+        {
+            DebugCheck.NotNull(contextType);
+
+            return new MigrationsConfigurationFinder(new TypeFinder(contextType.Assembly))
+                       .FindMigrationsConfiguration(contextType, null) != null;
+        }
+
+        public static DbMigrationsConfiguration GetMigrationsConfiguration(InternalContext internalContext)
+        {
+            DebugCheck.NotNull(internalContext);
+
+            var contextType = internalContext.Owner.GetType();
+
+            return new DbMigrationsConfiguration
+                {
+                    ContextType = contextType,
+                    AutomaticMigrationsEnabled = true,
+                    MigrationsAssembly = contextType.Assembly,
+                    MigrationsNamespace = contextType.Namespace,
+                    ContextKey = internalContext.ContextKey,
+                    TargetDatabase = new DbConnectionInfo(internalContext.OriginalConnectionString, internalContext.ProviderName)
+                };
         }
     }
 }

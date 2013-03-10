@@ -393,6 +393,7 @@
     <Compile Include="Migrations\History\DefaultHistoryContextFactory.cs" />
     <Compile Include="Migrations\History\IHistoryContextFactory.cs" />
     <Compile Include="Migrations\Infrastructure\MigrationsPendingException.cs" />
+    <Compile Include="Migrations\Utilities\MigrationsConfigurationFinder.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeActivator.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeFilter.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypesFinder.cs" />
@@ -1353,6 +1354,7 @@
     <Compile Include="Utilities\ProviderRowFinder.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
     <Compile Include="Utilities\TaskHelper.cs" />
+    <Compile Include="Utilities\TypeFinder.cs" />
     <Compile Include="Utilities\XContainerExtensions.cs" />
     <Compile Include="Utilities\XDocumentExtensions.cs" />
     <Compile Include="Migrations\History\HistoryContext.cs" />

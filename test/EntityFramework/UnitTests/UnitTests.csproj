@@ -295,6 +295,7 @@
     <Compile Include="Internal\ThrowingMonitorTests.cs" />
     <Compile Include="Migrations\AddMigrationCommandTests.cs" />
     <Compile Include="Migrations\History\DefaultHistoryContextFactoryTests.cs" />
+    <Compile Include="Migrations\Utilities\MigrationsConfigurationFinderTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeActivatorTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeFilterTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypesFinderTests.cs" />
@@ -423,6 +424,7 @@
     <Compile Include="Utilities\ProviderRowFinderTests.cs" />
     <Compile Include="Utilities\StringExtensionsTests.cs" />
     <Compile Include="Utilities\TaskHelperTests.cs" />
+    <Compile Include="Utilities\TypeFinderTests.cs" />
     <Compile Include="Utilities\XContainerExtensionsTests.cs" />
     <Compile Include="Utilities\XDocumentExtensionsTests.cs" />
     <Compile Include="Migrations\History\HistoryRepositoryTests.cs" />

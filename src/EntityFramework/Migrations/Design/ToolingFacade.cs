@@ -9,7 +9,6 @@ namespace System.Data.Entity.Migrations.Design
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
@@ -75,9 +74,9 @@ namespace System.Data.Entity.Migrations.Design
             _connectionStringInfo = connectionStringInfo;
 
             var info = new AppDomainSetup
-                           {
-                               ShadowCopyFiles = "true"
-                           };
+                {
+                    ShadowCopyFiles = "true"
+                };
 
             if (!string.IsNullOrWhiteSpace(workingDirectory))
             {
@@ -133,9 +132,9 @@ namespace System.Data.Entity.Migrations.Design
         public string GetContextType(string contextTypeName)
         {
             var runner = new GetContextTypeRunner
-                             {
-                                 ContextTypeName = contextTypeName
-                             };
+                {
+                    ContextTypeName = contextTypeName
+                };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -181,10 +180,10 @@ namespace System.Data.Entity.Migrations.Design
         public void Update(string targetMigration, bool force)
         {
             var runner = new UpdateRunner
-                             {
-                                 TargetMigration = targetMigration,
-                                 Force = force
-                             };
+                {
+                    TargetMigration = targetMigration,
+                    Force = force
+                };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -201,11 +200,11 @@ namespace System.Data.Entity.Migrations.Design
         {
             var runner
                 = new ScriptUpdateRunner
-                      {
-                          SourceMigration = sourceMigration,
-                          TargetMigration = targetMigration,
-                          Force = force
-                      };
+                    {
+                        SourceMigration = sourceMigration,
+                        TargetMigration = targetMigration,
+                        Force = force
+                    };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -226,12 +225,12 @@ namespace System.Data.Entity.Migrations.Design
         {
             var runner
                 = new ScaffoldRunner
-                      {
-                          MigrationName = migrationName,
-                          Language = language,
-                          RootNamespace = rootNamespace,
-                          IgnoreChanges = ignoreChanges
-                      };
+                    {
+                        MigrationName = migrationName,
+                        Language = language,
+                        RootNamespace = rootNamespace,
+                        IgnoreChanges = ignoreChanges
+                    };
             ConfigureRunner(runner);
 
             Run(runner);
@@ -249,10 +248,10 @@ namespace System.Data.Entity.Migrations.Design
         {
             var runner
                 = new InitialCreateScaffoldRunner
-                      {
-                          Language = language,
-                          RootNamespace = rootNamespace
-                      };
+                    {
+                        Language = language,
+                        RootNamespace = rootNamespace
+                    };
 
             ConfigureRunner(runner);
 
@@ -405,97 +404,13 @@ namespace System.Data.Entity.Migrations.Design
 
             private DbMigrationsConfiguration FindConfiguration()
             {
-                var configurationType = FindType<DbMigrationsConfiguration>(
+                return new MigrationsConfigurationFinder(new TypeFinder(LoadAssembly())).FindMigrationsConfiguration(
+                    null,
                     ConfigurationTypeName,
-                    types => types
-                                 .Where(
-                                     t => t.GetConstructor(Type.EmptyTypes) != null
-                                          && !t.IsAbstract
-                                          && !t.IsGenericType)
-                                 .ToList(),
                     Error.AssemblyMigrator_NoConfiguration,
                     (assembly, types) => Error.AssemblyMigrator_MultipleConfigurations(assembly),
                     Error.AssemblyMigrator_NoConfigurationWithName,
                     Error.AssemblyMigrator_MultipleConfigurationsWithName);
-
-                return configurationType.CreateInstance<DbMigrationsConfiguration>(
-                    Strings.CreateInstance_BadMigrationsConfigurationType,
-                    s => new MigrationsException(s));
-            }
-
-            protected Type FindType<TBase>(
-                string typeName,
-                Func<IEnumerable<Type>, IEnumerable<Type>> filter,
-                Func<string, Exception> noType,
-                Func<string, IEnumerable<Type>, Exception> multipleTypes,
-                Func<string, string, Exception> noTypeWithName,
-                Func<string, string, Exception> multipleTypesWithName)
-            {
-                var typeNameSpecified = !string.IsNullOrWhiteSpace(typeName);
-                var assembly = LoadAssembly();
-
-                Type type = null;
-
-                // Try for a fully-qualified match
-                if (typeNameSpecified)
-                {
-                    type = assembly.GetType(typeName);
-                }
-
-                // Otherwise, search for it
-                if (type == null)
-                {
-                    var assemblyName = assembly.GetName().Name;
-                    var types = assembly.GetAccessibleTypes()
-                                        .Where(t => typeof(TBase).IsAssignableFrom(t));
-
-                    if (typeNameSpecified)
-                    {
-                        types = types
-                            .Where(t => string.Equals(t.Name, typeName, StringComparison.OrdinalIgnoreCase))
-                            .ToList();
-
-                        // Disambiguate using case
-                        if (types.Count() > 1)
-                        {
-                            types = types
-                                .Where(t => string.Equals(t.Name, typeName, StringComparison.Ordinal))
-                                .ToList();
-                        }
-
-                        if (!types.Any())
-                        {
-                            throw noTypeWithName(typeName, assemblyName);
-                        }
-
-                        if (types.Count() > 1)
-                        {
-                            throw multipleTypesWithName(typeName, assemblyName);
-                        }
-                    }
-                    else
-                    {
-                        // Filter out unusable types
-                        types = filter(types);
-
-                        if (!types.Any())
-                        {
-                            throw noType(assemblyName);
-                        }
-
-                        if (types.Count() > 1)
-                        {
-                            throw multipleTypes(assemblyName, types);
-                        }
-                    }
-
-                    Debug.Assert(types.Count() == 1);
-                    type = types.Single();
-                }
-
-                Debug.Assert(type != null);
-
-                return type;
             }
 
             protected Assembly LoadAssembly()
@@ -684,7 +599,8 @@ namespace System.Data.Entity.Migrations.Design
             [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
             protected override void RunCore()
             {
-                var contextType = FindType<DbContext>(
+                var contextType = new TypeFinder(LoadAssembly()).FindType(
+                    typeof(DbContext),
                     ContextTypeName,
                     types => types.Where(t => !typeof(HistoryContext).IsAssignableFrom(t)),
                     Error.EnableMigrations_NoContext,
