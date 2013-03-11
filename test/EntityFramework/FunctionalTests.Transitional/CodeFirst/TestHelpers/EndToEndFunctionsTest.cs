@@ -43,6 +43,9 @@ namespace FunctionalTests
             var model = modelBuilder.Build(_connection);
             var compiledModel = model.Compile();
 
+            // TODO: Remove when Work Item 947 is fixed
+            Database.SetInitializer<DbContext>(null);
+
             return new DbContext(_connection, compiledModel, false);
         }
 
