@@ -3,6 +3,9 @@
 namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Common;
+    using System.Data.Entity.Config;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Edm;
@@ -11,6 +14,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Migrations.UserRoles_v2;
     using System.Data.Entity.Utilities;
     using System.Linq;
+    using System.Xml.Linq;
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
@@ -141,10 +145,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             modelBuilder.Entity<OrderLine>().HasKey(
                 ol => new
-                          {
-                              ol.Id,
-                              ol.OrderId
-                          });
+                    {
+                        ol.Id,
+                        ol.OrderId
+                    });
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -200,10 +204,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             modelBuilder.Entity<OrderLine>().HasKey(
                 ol => new
-                          {
-                              ol.Id,
-                              ol.OrderId
-                          });
+                    {
+                        ol.Id,
+                        ol.OrderId
+                    });
             modelBuilder.Entity<OrderLine>().Property(ol => ol.Id).HasColumnName("pk_ID");
 
             var model2 = modelBuilder.Build(ProviderInfo);
@@ -237,13 +241,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<OrderLine>()
-                .HasKey(
-                    ol => new
-                              {
-                                  ol.Id,
-                                  ol.OrderId
-                              })
-                .ToTable("tbl_OrderLines");
+                        .HasKey(
+                            ol => new
+                                {
+                                    ol.Id,
+                                    ol.OrderId
+                                })
+                        .ToTable("tbl_OrderLines");
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -416,6 +420,68 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Null(inverse.Column.IsUnicode);
         }
 
+        [MigrationsTheory] // CodePlex 726
+        public void Can_handle_max_length_set_to_MAX_in_SSDL()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<MigrationsCustomer>().Property(c => c.Photo).HasMaxLength(100);
+            modelBuilder.Entity<MigrationsCustomer>().Property(c => c.FullName).HasMaxLength(100);
+            var sourceModel = modelBuilder.Build(ProviderInfo).GetModel();
+
+            modelBuilder.Entity<MigrationsCustomer>().Property(c => c.Photo).IsMaxLength();
+            modelBuilder.Entity<MigrationsCustomer>().Property(c => c.FullName).IsMaxLength();
+            var targetModel = modelBuilder.Build(ProviderInfo).GetModel();
+
+            // Artificially add MaxLength=MAX to a couple of properties
+            var customerEntity = targetModel
+                .Elements().First()
+                .Elements().First()
+                .Elements().Single(e => e.Name.LocalName == "StorageModels")
+                .Elements().Single(e => e.Name.LocalName == "Schema")
+                .Elements().Single(e => e.Name.LocalName == "EntityType" && e.Attributes("Name").Any(a => a.Value == "MigrationsCustomer"));
+
+            customerEntity.Elements().Single(e => e.Name.LocalName == "Property" && e.Attributes("Name").Any(a => a.Value == "FullName"))
+                          .Add(new XAttribute("MaxLength", "Max"));
+            customerEntity.Elements().Single(e => e.Name.LocalName == "Property" && e.Attributes("Name").Any(a => a.Value == "Photo"))
+                          .Add(new XAttribute("MaxLength", "MAX"));
+
+            DbProviderInfo providerInfo;
+            var sourceMetadata = new EdmModelDiffer.ModelMetadata
+                {
+                    Model = sourceModel,
+                    StoreItemCollection = sourceModel.GetStoreItemCollection(out providerInfo),
+                    ProviderManifest = GetProviderManifest(providerInfo),
+                    ProviderInfo = providerInfo
+                };
+
+            var targetMetadata = new EdmModelDiffer.ModelMetadata
+                {
+                    Model = targetModel,
+                    // Use the source model here since it doesn't effect the test and the SQL Server provider
+                    // won't load the target model
+                    StoreItemCollection = sourceModel.GetStoreItemCollection(out providerInfo),
+                    ProviderManifest = GetProviderManifest(providerInfo),
+                    ProviderInfo = providerInfo
+                };
+
+            var operations = new EdmModelDiffer().Diff(sourceMetadata, targetMetadata, includeSystemOperations: false);
+
+            Assert.Equal(2, operations.Count());
+            operations.OfType<AlterColumnOperation>().Each(
+                o =>
+                    {
+                        Assert.Null(o.Column.MaxLength);
+                        Assert.Equal(100, ((AlterColumnOperation)o.Inverse).Column.MaxLength);
+                    });
+        }
+
+        private static DbProviderManifest GetProviderManifest(DbProviderInfo providerInfo)
+        {
+            return DbConfiguration.GetService<DbProviderFactory>(providerInfo.ProviderInvariantName)
+                                  .GetProviderServices()
+                                  .GetProviderManifest(providerInfo.ProviderManifestToken);
+        }
+
         [MigrationsTheory]
         public void Can_populate_table_model_for_added_tables()
         {
@@ -535,16 +601,16 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.True(
                 operations.Select(
                     (o, i) => new
-                                  {
-                                      o,
-                                      i
-                                  }).Single(a => a.o is CreateIndexOperation).i <
+                        {
+                            o,
+                            i
+                        }).Single(a => a.o is CreateIndexOperation).i <
                 operations.Select(
                     (o, i) => new
-                                  {
-                                      o,
-                                      i
-                                  }).Single(a => a.o is AddForeignKeyOperation).i);
+                        {
+                            o,
+                            i
+                        }).Single(a => a.o is AddForeignKeyOperation).i);
 
             var addForeignKeyOperation = operations.OfType<AddForeignKeyOperation>().Single();
 
@@ -625,16 +691,16 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.True(
                 operations.Select(
                     (o, i) => new
-                                  {
-                                      o,
-                                      i
-                                  }).Single(a => a.o is DropForeignKeyOperation).i <
+                        {
+                            o,
+                            i
+                        }).Single(a => a.o is DropForeignKeyOperation).i <
                 operations.Select(
                     (o, i) => new
-                                  {
-                                      o,
-                                      i
-                                  }).Single(a => a.o is DropIndexOperation).i);
+                        {
+                            o,
+                            i
+                        }).Single(a => a.o is DropIndexOperation).i);
 
             var dropForeignKeyOperation = operations.OfType<DropForeignKeyOperation>().Single();
 
@@ -776,29 +842,29 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<MigrationsCustomer>()
-                .Map(
-                    mc =>
-                        {
-                            mc.Properties(
-                                c => new
-                                         {
-                                             c.Id,
-                                             c.FullName,
-                                             c.HomeAddress,
-                                             c.WorkAddress
-                                         });
-                            mc.ToTable("MigrationsCustomers");
-                        })
-                .Map(
-                    mc =>
-                        {
-                            mc.Properties(
-                                c => new
-                                         {
-                                             c.Name
-                                         });
-                            mc.ToTable("Customers_Split");
-                        });
+                        .Map(
+                            mc =>
+                                {
+                                    mc.Properties(
+                                        c => new
+                                            {
+                                                c.Id,
+                                                c.FullName,
+                                                c.HomeAddress,
+                                                c.WorkAddress
+                                            });
+                                    mc.ToTable("MigrationsCustomers");
+                                })
+                        .Map(
+                            mc =>
+                                {
+                                    mc.Properties(
+                                        c => new
+                                            {
+                                                c.Name
+                                            });
+                                    mc.ToTable("Customers_Split");
+                                });
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -858,17 +924,17 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder.Entity<MigrationsCustomer>();
             modelBuilder.Entity<MigrationsCustomer>().HasKey(
                 p => new
-                         {
-                             p.Id,
-                             p.Name
-                         });
+                    {
+                        p.Id,
+                        p.Name
+                    });
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder.Entity<MigrationsCustomer>()
-                .HasMany(p => p.Orders)
-                .WithOptional()
-                .Map(c => c.MapKey("CustomerId", "CustomerName"));
+                        .HasMany(p => p.Orders)
+                        .WithOptional()
+                        .Map(c => c.MapKey("CustomerId", "CustomerName"));
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
