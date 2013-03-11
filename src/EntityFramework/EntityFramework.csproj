@@ -1070,7 +1070,6 @@
     <Compile Include="Core\Objects\SqlClient\SqlFunctions.cs" />
     <Compile Include="Core\Objects\SqlClient\SqlSpatialFunctions.cs" />
     <Compile Include="Core\Objects\StateManagerMemberMetadata.cs" />
-    <Compile Include="Core\Objects\StateManagerValue.cs" />
     <Compile Include="Core\OptimisticConcurrencyException.cs" />
     <Compile Include="Core\PropertyConstraintException.cs" />
     <Compile Include="Core\ProviderIncompatibleException.cs" />
