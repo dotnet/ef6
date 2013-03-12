@@ -78,6 +78,9 @@
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
@@ -150,7 +153,8 @@
     <Compile Include="Config\RootDependencyResolverTests.cs" />
     <Compile Include="Config\SingletonDependencyResolverTests.cs" />
     <Compile Include="Config\WrappingDependencyResolverTests.cs" />
-    <Compile Include="ConnectionFactoryConfigTests.cs" />
+    <Compile Include="ConnectionFactoryConfig\ConnectionFactoryConfigTests.cs" />
+    <Compile Include="ConnectionFactoryConfig\ReferenceRemoverTests.cs" />
     <Compile Include="Core\Common\CommandTrees\DbCommandTreeTests.cs" />
     <Compile Include="Core\Common\CommandTrees\DbExpressionBuilderTests.cs" />
     <Compile Include="Core\Common\Internal\Materialization\CodeGenEmitterTests.cs" />

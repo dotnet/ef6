@@ -45,11 +45,13 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                     project.ProjectItems,
                     i => processor.ProcessConfigFile(
                         i, new Func<XDocument, bool>[]
-                               {
-                                   c => manipulator.AddOrUpdateConfigSection(c, GetType().Assembly.GetName().Version),
-                                   c => manipulator.AddConnectionFactoryToConfig(c, factorySpecification)
-                               }));
+                            {
+                                c => manipulator.AddOrUpdateConfigSection(c, GetType().Assembly.GetName().Version),
+                                c => manipulator.AddConnectionFactoryToConfig(c, factorySpecification)
+                            }));
             }
+
+            new ReferenceRemover(project).TryRemoveSystemDataEntity();
         }
     }
 }

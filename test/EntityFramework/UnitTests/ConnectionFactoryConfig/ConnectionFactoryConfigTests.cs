@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity
+namespace System.Data.Entity.ConnectionFactoryConfig
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.ConnectionFactoryConfig;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Resources;
@@ -27,7 +26,6 @@ namespace System.Data.Entity
         // Hard-coding this rather than getting it dynamically because the product code gets it dynamically
         // and the tests need to make sure it gets the correct thing. This will need to be updated when the
         // assembly version number is incremented.
-        private static readonly Version _builtEntityFrameworkVersion = new Version("6.0.0.0");
         private static readonly Version _net45EntityFrameworkVersion = new Version("6.0.0.0");
         private static readonly Version _net40EntityFrameworkVersion = new Version("6.0.0.0");
 
@@ -74,14 +72,14 @@ namespace System.Data.Entity
                         new ConfigFileProcessor()
                             .ProcessConfigFile(
                                 mockedItem.Object, new Func<XDocument, bool>[]
-                                                       {
-                                                           c =>
-                                                           mockManipulator.Object.AddOrUpdateConfigSection(c, _net45EntityFrameworkVersion),
-                                                           c =>
-                                                           mockManipulator.Object.AddConnectionFactoryToConfig(
-                                                               c,
-                                                               new ConnectionFactorySpecification("F"))
-                                                       });
+                                    {
+                                        c =>
+                                        mockManipulator.Object.AddOrUpdateConfigSection(c, _net45EntityFrameworkVersion),
+                                        c =>
+                                        mockManipulator.Object.AddConnectionFactoryToConfig(
+                                            c,
+                                            new ConnectionFactorySpecification("F"))
+                                    });
 
                         mockManipulator.Verify(
                             m =>
@@ -1034,6 +1032,19 @@ namespace System.Data.Entity
         #region Tests using real Visual Studio objects
 
         [Fact]
+        public void Assembly_reference_can_be_found_for_real_assembly()
+        {
+            Run_Project_test_if_Visual_Studio_is_running(
+                p =>
+                    {
+                        var dataRef = new ReferenceRemover(p).TryFindReference("System.Data", "b77a5c561934e089");
+                        Assert.Equal("System.Data", dataRef.Identity);
+                        Assert.Equal("b77a5c561934e089", dataRef.PublicKeyToken.ToLowerInvariant());
+                        Assert.True(dataRef.StrongName);
+                    });
+        }
+
+        [Fact]
         public void Default_connection_factory_is_added_to_real_Visual_Studio_project_and_config_file()
         {
             var configFilesFound = new List<string>();
@@ -1043,24 +1054,24 @@ namespace System.Data.Entity
                     {
                         new ConfigFileFinder().FindConfigFiles(
                             p.ProjectItems, i =>
-                                                {
-                                                    configFilesFound.Add(i.Name);
+                                {
+                                    configFilesFound.Add(i.Name);
 
-                                                    var config = XDocument.Load(i.FileNames[0]);
+                                    var config = XDocument.Load(i.FileNames[0]);
 
-                                                    // Checked in app.config for unit tests has no connection factory, so one should be added
-                                                    var modified = new ConfigFileManipulator().AddConnectionFactoryToConfig(
-                                                        config,
-                                                        new ConnectionFactorySpecification(
-                                                            ConnectionFactorySpecification.SqlConnectionFactoryName,
-                                                            "SomeConnectionString"));
+                                    // Checked in app.config for unit tests has no connection factory, so one should be added
+                                    var modified = new ConfigFileManipulator().AddConnectionFactoryToConfig(
+                                        config,
+                                        new ConnectionFactorySpecification(
+                                            ConnectionFactorySpecification.SqlConnectionFactoryName,
+                                            "SomeConnectionString"));
 
-                                                    Assert.True(modified);
+                                    Assert.True(modified);
 
-                                                    Assert.Equal(
-                                                        ConnectionFactorySpecification.SqlConnectionFactoryName, GetFactoryName(config));
-                                                    Assert.Equal("SomeConnectionString", GetArgument(config));
-                                                });
+                                    Assert.Equal(
+                                        ConnectionFactorySpecification.SqlConnectionFactoryName, GetFactoryName(config));
+                                    Assert.Equal("SomeConnectionString", GetArgument(config));
+                                });
 
                         Assert.Equal(1, configFilesFound.Count);
                         Assert.Equal("App.config", configFilesFound.Single());
@@ -1073,7 +1084,7 @@ namespace System.Data.Entity
             Run_Project_test_if_Visual_Studio_is_running(
                 p =>
                     {
-                        var types = ProjectExtensions.GetProjectTypes(p);
+                        var types = p.GetProjectTypes();
                         Assert.Equal(new[] { "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" }, types);
                     });
         }
@@ -1151,19 +1162,19 @@ namespace System.Data.Entity
             string arg10)
         {
             Args = new List<string>
-                       {
-                           arg0,
-                           arg1,
-                           arg2,
-                           arg3,
-                           arg4,
-                           arg5,
-                           arg6,
-                           arg7,
-                           arg8,
-                           arg9,
-                           arg10
-                       };
+                {
+                    arg0,
+                    arg1,
+                    arg2,
+                    arg3,
+                    arg4,
+                    arg5,
+                    arg6,
+                    arg7,
+                    arg8,
+                    arg9,
+                    arg10
+                };
         }
     }
 
