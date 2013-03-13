@@ -11,6 +11,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.IO;
     using System.Reflection;
 
     /// <summary>
@@ -135,10 +136,12 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         ///     Gets or sets the namespace used for code-based migrations.
         /// </summary>
-        public string MigrationsNamespace { get; set; }
+        public string MigrationsNamespace { get; set; } // Allowed to be null
 
         /// <summary>
         ///     Gets or sets the sub-directory that code-based migrations are stored in.
+        ///     Note that this property must be set to a relative path for a sub-directory under the
+        ///     Visual Studio project root; it cannot be set to an absoluete path.
         /// </summary>
         public string MigrationsDirectory
         {
@@ -146,6 +149,11 @@ namespace System.Data.Entity.Migrations
             set
             {
                 Check.NotEmpty(value, "value");
+
+                if (Path.IsPathRooted(value))
+                {
+                    throw new MigrationsException(Strings.DbMigrationsConfiguration_RootedPath(value));
+                }
 
                 _migrationsDirectory = value;
             }
@@ -173,7 +181,7 @@ namespace System.Data.Entity.Migrations
                        ?? _resolver.Value.GetService<IHistoryContextFactory>(GetType())
                        ?? _resolver.Value.GetService<IHistoryContextFactory>();
             }
-            set { _historyContextFactory = value; }
+            set { _historyContextFactory = value; } // Allowed to be null
         }
 
         /// <summary>

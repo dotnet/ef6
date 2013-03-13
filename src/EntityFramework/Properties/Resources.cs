@@ -13182,6 +13182,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        ///     A string like "The 'MigrationsDirectory' property of 'DbMigrationsConfiguration' was set to the absolute path '{0}'. The migrations directory must be set to a relative path for a sub-directory under the Visual Studio project root."
+        /// </summary>
+        internal static string DbMigrationsConfiguration_RootedPath(object p0)
+        {
+            return EntityRes.GetString(EntityRes.DbMigrationsConfiguration_RootedPath, p0);
+        }
+
+        /// <summary>
         ///     A string like "The type '{0}' cannot be used to filter properties. Only scalar types, string, and byte[] are supported."
         /// </summary>
         internal static string ModelBuilder_PropertyFilterTypeMustBePrimitive(object p0)
@@ -16771,6 +16779,7 @@ namespace System.Data.Entity.Resources
         internal const string CreateConfigurationType_NoParameterlessConstructor = "CreateConfigurationType_NoParameterlessConstructor";
         internal const string CollectionEmpty = "CollectionEmpty";
         internal const string DbMigrationsConfiguration_ContextType = "DbMigrationsConfiguration_ContextType";
+        internal const string DbMigrationsConfiguration_RootedPath = "DbMigrationsConfiguration_RootedPath";
         internal const string ModelBuilder_PropertyFilterTypeMustBePrimitive = "ModelBuilder_PropertyFilterTypeMustBePrimitive";
         internal const string LightweightEntityConfiguration_TypeMismatch = "LightweightEntityConfiguration_TypeMismatch";
         internal const string LightweightEntityConfiguration_NonScalarProperty = "LightweightEntityConfiguration_NonScalarProperty";

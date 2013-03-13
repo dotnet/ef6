@@ -6,6 +6,7 @@ namespace System.Data.Entity.Migrations.Utilities
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
@@ -42,11 +43,33 @@ namespace System.Data.Entity.Migrations.Utilities
                 noTypeWithName,
                 multipleTypesWithName);
 
-            return configurationType == null
-                       ? null
-                       : configurationType.CreateInstance<DbMigrationsConfiguration>(
-                           Strings.CreateInstance_BadMigrationsConfigurationType,
-                           s => new MigrationsException(s));
+            try
+            {
+                return configurationType == null
+                           ? null
+                           : configurationType.CreateInstance<DbMigrationsConfiguration>(
+                               Strings.CreateInstance_BadMigrationsConfigurationType,
+                               s => new MigrationsException(s));
+            }
+            catch (TargetInvocationException ex)
+            {
+                Debug.Assert(ex.InnerException != null);
+
+                try
+                {
+                    var stackField = typeof(Exception).GetField("_remoteStackTraceString", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (stackField != null)
+                    {
+                        stackField.SetValue(ex.InnerException, ex.InnerException.StackTrace);
+                    }
+                }
+                catch (FieldAccessException)
+                {
+                    // Accessing _remoteStackTraceString can fail in partial trust, so abort attempt.
+                }
+
+                throw ex.InnerException;
+            }
         }
     }
 }

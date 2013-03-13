@@ -89,6 +89,10 @@ function Enable-Migrations
             {
                 Write-Host $error.StackTrace
             }
+			else
+			{
+			    Write-Verbose $error.StackTrace
+			}
 
             throw $error.Message
         }
@@ -181,6 +185,10 @@ function Add-Migration
             {
                 Write-Host $error.StackTrace
             }
+			else
+			{
+			    Write-Verbose $error.StackTrace
+			}
 
             throw $error.Message
         }		
@@ -273,6 +281,10 @@ function Update-Database
             {
                 Write-Host $error.StackTrace
             }
+			else
+			{
+			    Write-Verbose $error.StackTrace
+			}
 
             throw $error.Message
         }		
@@ -345,6 +357,10 @@ function Get-Migrations
             {
                 Write-Host $error.StackTrace
             }
+			else
+			{
+			    Write-Verbose $error.StackTrace
+			}
 
             throw $error.Message
         }

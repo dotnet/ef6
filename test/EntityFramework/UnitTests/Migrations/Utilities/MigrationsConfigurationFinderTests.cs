@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Migrations.Utilities
 {
+    using System.Data.Entity.Migrations.Infrastructure;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
@@ -201,6 +203,31 @@ namespace System.Data.Entity.Migrations.Utilities
                     .FindMigrationsConfiguration(
                         typeof(ContextWithMultipleConfigs),
                         null));
+        }
+
+        [Fact]
+        public void FindMigrationsConfiguration_unwraps_and_preserves_stack_for_invocation_exceptions_thrown_when_constructing_object()
+        {
+            var exception =
+                Assert.Throws<MigrationsException>(
+                    () => new MigrationsConfigurationFinder(
+                              new TypeFinder(typeof(ContextWithBadConfig).Assembly))
+                              .FindMigrationsConfiguration(typeof(ContextWithBadConfig), null));
+
+            Assert.Equal(Strings.DbMigrationsConfiguration_RootedPath(@"\Test"), exception.Message);
+            Assert.Contains("set_MigrationsDirectory", exception.StackTrace);
+        }
+
+        public class ContextWithBadConfig : DbContext
+        {
+        }
+
+        public class BadConfig : DbMigrationsConfiguration<ContextWithBadConfig>
+        {
+            public BadConfig()
+            {
+                MigrationsDirectory = @"\Test";
+            }
         }
     }
 }

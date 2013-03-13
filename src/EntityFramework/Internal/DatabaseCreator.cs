@@ -10,6 +10,8 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Handles creating databases either using the core provider or the Migrations pipeline.
@@ -70,12 +72,21 @@ namespace System.Data.Entity.Internal
             internalContext.MarkDatabaseInitialized();
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public static bool IsMigrationsConfigured(Type contextType)
         {
             DebugCheck.NotNull(contextType);
 
-            return new MigrationsConfigurationFinder(new TypeFinder(contextType.Assembly))
-                       .FindMigrationsConfiguration(contextType, null) != null;
+            try
+            {
+                return new MigrationsConfigurationFinder(new TypeFinder(contextType.Assembly))
+                           .FindMigrationsConfiguration(contextType, null) != null;
+            }
+            catch (Exception ex)
+            {
+                Debug.Fail("Exception ignored while attempting to create migration configuration: " + ex);
+                return false;
+            }
         }
 
         public static DbMigrationsConfiguration GetMigrationsConfiguration(InternalContext internalContext)
