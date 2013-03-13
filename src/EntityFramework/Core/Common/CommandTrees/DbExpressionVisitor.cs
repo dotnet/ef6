@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Core.Common.CommandTrees
 {
+    using System.Data.Entity.Resources;
+
     /// <summary>
     ///     The expression visitor pattern abstract base class that should be implemented by visitors that do not return a result value.
     /// </summary>
@@ -272,6 +274,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     Visitor pattern method for DbInExpression.
         /// </summary>
         /// <param name="expression"> The DbInExpression that is being visited. </param>
-        public abstract void Visit(DbInExpression expression);
+        public virtual void Visit(DbInExpression expression)
+        {
+            throw new NotImplementedException(Strings.VisitDbInExpressionNotImplemented);
+        }
     }
 }

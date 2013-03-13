@@ -11030,7 +11030,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The EntitySets parameter must not be null for functions returning multiple resultsets."
+        ///     A string like "The EntitySets parameter must not be null for functions that return multiple result sets."
         /// </summary>
         internal static string NullEntitySetsForFunctionReturningMultipleResultSets
         {
@@ -13371,6 +13371,14 @@ namespace System.Data.Entity.Resources
         internal static string AssociationSet_EndEntityTypeMismatch
         {
             get { return EntityRes.GetString(EntityRes.AssociationSet_EndEntityTypeMismatch); }
+        }
+
+        /// <summary>
+        ///     A string like "DbInExpression handling is not implemented. The functionality involving DbInExpression, new in Entity Framework 6, is turned off by default for compatibility with existing provider implementations. It can be enabled by overriding DbProviderManifest.SupportsInExpression and returning true, in which case any command tree expression visitor implemented by the provider must handle the new expression type."
+        /// </summary>
+        internal static string VisitDbInExpressionNotImplemented
+        {
+            get { return EntityRes.GetString(EntityRes.VisitDbInExpressionNotImplemented); }
         }
     }
 
@@ -16739,6 +16747,7 @@ namespace System.Data.Entity.Resources
         internal const string EdmProperty_InvalidPropertyType = "EdmProperty_InvalidPropertyType";
         internal const string ConcurrentMethodInvocation = "ConcurrentMethodInvocation";
         internal const string AssociationSet_EndEntityTypeMismatch = "AssociationSet_EndEntityTypeMismatch";
+        internal const string VisitDbInExpressionNotImplemented = "VisitDbInExpressionNotImplemented";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;
