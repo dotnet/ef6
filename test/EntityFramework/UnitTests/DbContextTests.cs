@@ -736,5 +736,35 @@ END";
         }
 
         #endregion
+
+        #region Other tests
+        public class UseCSharpNullComparisonBehaviorDbContext : DbContext
+        {
+        }
+
+        [Fact]
+        public static void UseCSharpNullComparisonBehavior_is_retrieved_and_set_correctly()
+        {
+            Database.SetInitializer<UseCSharpNullComparisonBehaviorDbContext>(null);
+
+            using (var dbContext = new UseCSharpNullComparisonBehaviorDbContext())
+            {
+                var objectContext = ((IObjectContextAdapter)dbContext).ObjectContext;
+
+                Assert.False(dbContext.Configuration.UseCSharpNullComparisonBehavior);
+                Assert.False(objectContext.ContextOptions.UseCSharpNullComparisonBehavior);
+
+                dbContext.Configuration.UseCSharpNullComparisonBehavior = true;
+
+                Assert.True(dbContext.Configuration.UseCSharpNullComparisonBehavior);
+                Assert.True(objectContext.ContextOptions.UseCSharpNullComparisonBehavior);
+
+                dbContext.Configuration.UseCSharpNullComparisonBehavior = false;
+
+                Assert.False(dbContext.Configuration.UseCSharpNullComparisonBehavior);
+                Assert.False(objectContext.ContextOptions.UseCSharpNullComparisonBehavior);
+            }
+        }
+        #endregion
     }
 }

@@ -68,6 +68,9 @@ namespace System.Data.Entity.Internal
         // This flag is used to keep the users selected proxy creation option before the object context is initialized.  
         private bool _initialProxyCreationFlag = true;
 
+        // This flag is used to keep the users C# null comparison behavior option before the object context is initialized.  
+        private bool _useCSharpNullComparisonBehaviorFlag;
+
         // Set when database initialization is in-progress to prevent attempts to recursively initialize from
         // the initalizer.
         private bool _inDatabaseInitialization;
@@ -416,6 +419,7 @@ namespace System.Data.Entity.Internal
 
                     _objectContext.ContextOptions.LazyLoadingEnabled = _initialLazyLoadingFlag;
                     _objectContext.ContextOptions.ProxyCreationEnabled = _initialProxyCreationFlag;
+                    _objectContext.ContextOptions.UseCSharpNullComparisonBehavior = _useCSharpNullComparisonBehaviorFlag;
 
                     _objectContext.ContextOptions.UseConsistentNullReferenceBehavior = true;
 
@@ -674,6 +678,36 @@ namespace System.Data.Entity.Internal
                 else
                 {
                     _initialProxyCreationFlag = value;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether C# null comparison behavior is enabled.
+        ///     If the underlying ObjectContext exists, then this property acts as a wrapper over the flag stored there.
+        ///     If the underlying ObjectContext has not been created yet, then we store the value given so we can later
+        ///     use it when we create the ObjectContext.  This allows the flag to be changed, for example in
+        ///     a DbContext constructor, without it causing the ObjectContext to be created.
+        /// </summary>
+        public override bool UseCSharpNullComparisonBehavior
+        {
+            get
+            {
+                var objectContext = ObjectContextInUse;
+                return objectContext != null
+                           ? objectContext.ContextOptions.UseCSharpNullComparisonBehavior
+                           : _useCSharpNullComparisonBehaviorFlag;
+            }
+            set
+            {
+                var objectContext = ObjectContextInUse;
+                if (objectContext != null)
+                {
+                    objectContext.ContextOptions.UseCSharpNullComparisonBehavior = value;
+                }
+                else
+                {
+                    _useCSharpNullComparisonBehaviorFlag = value;
                 }
             }
         }

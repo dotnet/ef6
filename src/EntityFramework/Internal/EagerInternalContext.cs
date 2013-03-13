@@ -220,6 +220,16 @@ namespace System.Data.Entity.Internal
             set { ObjectContextInUse.ContextOptions.ProxyCreationEnabled = value; }
         }
 
+        /// <summary>
+        ///     Gets or sets a value indicating whether C# null comparison behavior is enabled.  This is just a wrapper
+        ///     over the same flag in the underlying ObjectContext.
+        /// </summary>
+        public override bool UseCSharpNullComparisonBehavior
+        {
+            get { return ObjectContextInUse.ContextOptions.UseCSharpNullComparisonBehavior; }
+            set { ObjectContextInUse.ContextOptions.UseCSharpNullComparisonBehavior = value; }
+        }
+
         #endregion
     }
 }

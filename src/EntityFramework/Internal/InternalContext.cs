@@ -568,6 +568,11 @@ namespace System.Data.Entity.Internal
         public abstract bool ProxyCreationEnabled { get; set; }
 
         /// <summary>
+        ///     Gets or sets a value indicating whether C# null comparison behavior is enabled.
+        /// </summary>
+        public abstract bool UseCSharpNullComparisonBehavior { get; set; }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether DetectChanges is called automatically in the API.
         /// </summary>
         public bool AutoDetectChangesEnabled { get; set; }

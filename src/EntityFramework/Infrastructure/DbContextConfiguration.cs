@@ -91,6 +91,23 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
+        ///     Gets or sets a value indicating whether C# behavior should be exhibited when comparing null values.
+        ///     If this flag is set, then any equality comparison between two operands, both of which are potentially
+        ///     nullable, will be rewritten to show C# null comparison semantics. The default value is true.
+        ///     Example:
+        ///     (operand1 = operand2) will be rewritten as
+        ///     (((operand1 = operand2) AND NOT (operand1 IS NULL OR operand2 IS NULL)) || (operand1 IS NULL && operand2 IS NULL))
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if C# null comparison behavior is enabled; otherwise, <c>false</c> .
+        /// </value>
+        public bool UseCSharpNullComparisonBehavior
+        {
+            get { return _internalContext.UseCSharpNullComparisonBehavior; }
+            set { _internalContext.UseCSharpNullComparisonBehavior = value; }
+        }
+
+        /// <summary>
         ///     Gets or sets a value indicating whether the <see cref="DbContext.ChangeTracker.DetectChanges()" />
         ///     method is called automatically by methods of <see cref="DbContext" /> and related classes.
         ///     The default value is true.
