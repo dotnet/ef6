@@ -178,6 +178,7 @@
     <Compile Include="Core\Mapping\StorageMappingFragmentTests.cs" />
     <Compile Include="Core\Mapping\StorageScalarPropertyMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageSetMappingTests.cs" />
+    <Compile Include="Core\Mapping\Update\Internal\PropagatorTests.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\Utils\ExternalCallsTests.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyCacheTests.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyCheckerTests.cs" />

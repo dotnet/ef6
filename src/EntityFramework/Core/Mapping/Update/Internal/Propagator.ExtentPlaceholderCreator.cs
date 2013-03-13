@@ -17,16 +17,18 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         ///     Class generating default records for extents. Has a single external entry point, the
         ///     <see cref="CreatePlaceholder" /> static method.
         /// </summary>
-        private class ExtentPlaceholderCreator
+        internal class ExtentPlaceholderCreator
         {
             /// <summary>
             ///     Constructs a new placeholder creator.
             /// </summary>
-            private ExtentPlaceholderCreator()
+            internal ExtentPlaceholderCreator()
             {
             }
 
             private static readonly Dictionary<PrimitiveTypeKind, object> _typeDefaultMap = InitializeTypeDefaultMap();
+            private static readonly Lazy<Dictionary<PrimitiveTypeKind, object>> _spatialTypeDefaultMap =
+                new Lazy<Dictionary<PrimitiveTypeKind, object>>(InitializeSpatialTypeDefaultMap);
 
             /// <summary>
             ///     Initializes a map from primitive scalar types in the C-Space to default values
@@ -55,6 +57,25 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 typeDefaultMap[PrimitiveTypeKind.SByte] = default(SByte);
                 typeDefaultMap[PrimitiveTypeKind.String] = String.Empty;
 
+#if DEBUG
+                foreach (var o in typeDefaultMap.Values)
+                {
+                    Debug.Assert(null != o, "DbConstantExpression instances do not support null values");
+                }
+#endif
+
+                return typeDefaultMap;
+            }
+
+            /// <summary>
+            ///     Initializes a map from primitive spatial types in the C-Space to default values
+            ///     used within the placeholder.
+            /// </summary>
+            private static Dictionary<PrimitiveTypeKind, object> InitializeSpatialTypeDefaultMap()
+            {
+                var typeDefaultMap = new Dictionary<PrimitiveTypeKind, object>(
+                    EqualityComparer<PrimitiveTypeKind>.Default);
+
                 typeDefaultMap[PrimitiveTypeKind.Geometry] = DbGeometry.FromText("POINT EMPTY");
                 typeDefaultMap[PrimitiveTypeKind.GeometryPoint] = DbGeometry.FromText("POINT EMPTY");
                 typeDefaultMap[PrimitiveTypeKind.GeometryLineString] = DbGeometry.FromText("LINESTRING EMPTY");
@@ -81,6 +102,21 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 #endif
 
                 return typeDefaultMap;
+            }
+
+            /// <summary>
+            /// Attempts to retrieve the the default value for the specified primitive type.
+            /// </summary>
+            /// <param name="primitiveType">A primitive type.</param>
+            /// <param name="defaultValue">The default value for the primitive type.</param>
+            /// <returns>true if a default value was found, false otherwise.</returns>
+            private static bool TryGetDefaultValue(PrimitiveType primitiveType, out object defaultValue)
+            {
+                var primitiveTypeKind = primitiveType.PrimitiveTypeKind;
+
+                return Helper.IsSpatialType(primitiveType)
+                    ? _spatialTypeDefaultMap.Value.TryGetValue(primitiveTypeKind, out defaultValue)
+                    : _typeDefaultMap.TryGetValue(primitiveTypeKind, out defaultValue);
             }
 
             /// <summary>
@@ -222,11 +258,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             // Find "sanctioned" default value
-            private static void GetPropagatorResultForPrimitiveType(PrimitiveType primitiveType, out PropagatorResult result)
+            internal static void GetPropagatorResultForPrimitiveType(PrimitiveType primitiveType, out PropagatorResult result)
             {
                 object value;
-                var primitiveTypeKind = primitiveType.PrimitiveTypeKind;
-                if (!_typeDefaultMap.TryGetValue(primitiveTypeKind, out value))
+                if (!TryGetDefaultValue(primitiveType, out value))
                 {
                     // If none exists, default to lowest common denominator for constants
                     value = default(byte);
