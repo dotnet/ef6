@@ -21,6 +21,22 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         [Fact]
+        public void Cannot_initialize_column_mapping_builder_to_null_values()
+        {
+            var property = new EdmProperty("X");
+
+            Assert.Equal(
+                "columnProperty",
+                Assert.Throws<ArgumentNullException>(
+                    () => new ColumnMappingBuilder(null, new[] { property })).ParamName);
+
+            Assert.Equal(
+                "propertyPath",
+                Assert.Throws<ArgumentNullException>(
+                    () => new ColumnMappingBuilder(property, null)).ParamName);
+        }
+
+        [Fact]
         public void Setting_column_should_update_property_mapping()
         {
             var columnProperty1 = new EdmProperty("C1");

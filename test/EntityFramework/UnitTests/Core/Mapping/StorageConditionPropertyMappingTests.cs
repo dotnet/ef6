@@ -22,5 +22,23 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Same(columnMember2, conditionPropertyMapping.ColumnProperty);
         }
+
+        public void Can_get_and_set_Value()
+        {
+            var conditionPropertyMapping
+                = new StorageConditionPropertyMapping(null, new EdmProperty("C"), 42, null);
+            
+            Assert.Equal(42, conditionPropertyMapping.Value);
+            Assert.Null(conditionPropertyMapping.IsNull);
+        }
+
+        public void Can_get_and_set_IsNull()
+        {
+            var conditionPropertyMapping
+                = new StorageConditionPropertyMapping(null, new EdmProperty("C"), null, false);
+
+            Assert.Null(conditionPropertyMapping.Value);
+            Assert.False((bool)conditionPropertyMapping.IsNull);
+        }
     }
 }

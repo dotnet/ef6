@@ -5335,6 +5335,9 @@
     <value>The entity type of one of the ends of the specified association type does not match the entity type of the corresponding entity set end.</value>  
   </data>
   <data name="VisitDbInExpressionNotImplemented" xml:space="preserve">
-    <value>DbInExpression handling is not implemented. The functionality involving DbInExpression, new in Entity Framework 6, is turned off by default for compatibility with existing provider implementations. It can be enabled by overriding DbProviderManifest.SupportsInExpression and returning true, in which case any command tree expression visitor implemented by the provider must handle the new expression type.</value>  
+    <value>DbInExpression handling is not implemented. The functionality involving DbInExpression, new in Entity Framework 6, is turned off by default for compatibility with existing provider implementations. It can be enabled by overriding DbProviderManifest.SupportsInExpression and returning true, in which case any command tree expression visitor implemented by the provider must handle the new expression type.</value>
+  </data>
+  <data name="InvalidColumnBuilderArgument" xml:space="preserve">
+    <value>Argument '{0}' is not valid. The specified mapping already exists or property paths are empty.</value>
   </data>
 </root>

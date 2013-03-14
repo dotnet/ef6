@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         [Fact]
-        public void Can_get_and_set_source__and_target_end_mappings()
+        public void Can_get_and_set_source_and_target_end_mappings()
         {
             var entitySet1 = new EntitySet();
             var associationSet = new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace));

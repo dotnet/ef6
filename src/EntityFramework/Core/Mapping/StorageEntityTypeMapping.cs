@@ -45,20 +45,20 @@ namespace System.Data.Entity.Core.Mapping
     ///     above example. Users can access the table mapping fragments under the
     ///     entity type mapping through this class.
     /// </example>
-    internal class StorageEntityTypeMapping : StorageTypeMapping
+    public class StorageEntityTypeMapping : StorageTypeMapping
     {
         /// <summary>
         ///     Construct the new EntityTypeMapping object.
         /// </summary>
         /// <param name="setMapping"> Set Mapping that contains this Type mapping </param>
-        internal StorageEntityTypeMapping(StorageSetMapping setMapping)
+        public StorageEntityTypeMapping(StorageSetMapping setMapping)
             : base(setMapping)
         {
         }
 
         private readonly List<DataModelAnnotation> _annotationsList = new List<DataModelAnnotation>();
 
-        public IList<DataModelAnnotation> Annotations
+        internal IList<DataModelAnnotation> Annotations
         {
             get { return _annotationsList; }
         }
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     a list of TypeMetadata that this mapping holds true for.
         /// </summary>
-        internal override ReadOnlyCollection<EdmType> Types
+        public override ReadOnlyCollection<EdmType> Types
         {
             get { return new List<EdmType>(m_entityTypes.Values).AsReadOnly(); }
         }
@@ -99,7 +99,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     a list of TypeMetadatas for which the mapping holds true for
         ///     not only the type specified but the sub-types of that type as well.
         /// </summary>
-        internal override ReadOnlyCollection<EdmType> IsOfTypes
+        public override ReadOnlyCollection<EdmType> IsOfTypes
         {
             get { return new List<EdmType>(m_isOfEntityTypes.Values).AsReadOnly(); }
         }
@@ -107,9 +107,9 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Add a Type to the list of types that this mapping is valid for
         /// </summary>
-        internal void AddType(EdmType type)
+        public void AddType(EdmType type)
         {
-            DebugCheck.NotNull(type);
+            Check.NotNull(type, "type");
 
             m_entityTypes.Add(type.FullName, type);
         }

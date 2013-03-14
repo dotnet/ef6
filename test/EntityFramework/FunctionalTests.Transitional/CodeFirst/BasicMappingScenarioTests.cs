@@ -4170,7 +4170,7 @@ namespace FunctionalTests
             Assert.Equal(2, databaseMapping.Database.EntityTypes.Count());
             Assert.Equal(
                 2,
-                databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.ElementAt(0).
+                databaseMapping.EntityContainerMappings.Single().EntitySetMappings.ElementAt(0).EntityTypeMappings.ElementAt(0).
                     MappingFragments.Count);
             databaseMapping.Assert<AssocBase>("NameTbl").HasColumns("Id", "Name");
             databaseMapping.Assert<AssocBase>("DataTbl").HasColumns("Id", "BaseData");
@@ -4224,7 +4224,7 @@ namespace FunctionalTests
             Assert.Equal(3, databaseMapping.Database.EntityTypes.Count());
             Assert.Equal(
                 3,
-                databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.ElementAt(0).
+                databaseMapping.EntityContainerMappings.Single().EntitySetMappings.ElementAt(0).EntityTypeMappings.ElementAt(0).
                     MappingFragments.Count);
             databaseMapping.Assert<AssocBase>("NameTbl").HasColumns("Id", "Name");
             databaseMapping.Assert<AssocBase>("DataTbl").HasColumns("Id", "BaseData");
@@ -4458,7 +4458,7 @@ namespace FunctionalTests
             Assert.Equal(3, databaseMapping.Database.EntityTypes.Count());
             Assert.Equal(
                 3,
-                databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.ElementAt(0).
+                databaseMapping.EntityContainerMappings.Single().EntitySetMappings.ElementAt(0).EntityTypeMappings.ElementAt(0).
                     MappingFragments.Count);
             databaseMapping.Assert<AssocBase>("NameTbl").HasColumns("Id", "Name");
             databaseMapping.Assert<AssocBase>("DataTbl").HasColumns("Id", "BaseData");

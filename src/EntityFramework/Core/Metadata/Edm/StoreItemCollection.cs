@@ -20,7 +20,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     ///     Class for representing a collection of items in Store space.
     /// </summary>
-    [CLSCompliant(false)]
     public partial class StoreItemCollection : ItemCollection
     {
         private double _schemaVersion = XmlConstants.UndefinedVersion;

@@ -13380,6 +13380,12 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.VisitDbInExpressionNotImplemented); }
         }
+        ///     A string like "Argument '{0}' is not valid. The specified mapping already exists or property paths are empty."
+        /// </summary>
+        internal static string InvalidColumnBuilderArgument(object p0)
+        {
+            return EntityRes.GetString(EntityRes.InvalidColumnBuilderArgument, p0);
+        }
     }
 
     /// <summary>
@@ -16748,6 +16754,7 @@ namespace System.Data.Entity.Resources
         internal const string ConcurrentMethodInvocation = "ConcurrentMethodInvocation";
         internal const string AssociationSet_EndEntityTypeMismatch = "AssociationSet_EndEntityTypeMismatch";
         internal const string VisitDbInExpressionNotImplemented = "VisitDbInExpressionNotImplemented";
+        internal const string InvalidColumnBuilderArgument = "InvalidColumnBuilderArgument";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

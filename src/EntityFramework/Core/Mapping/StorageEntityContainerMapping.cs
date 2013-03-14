@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Mapping
     ///         is mapped to a single Entity Container in the S - space.
     ///     </remarks>
     /// </summary>
-    internal class StorageEntityContainerMapping : Map
+    public class StorageEntityContainerMapping : Map
     {
         /// <summary>
         ///     Construct a new EntityContainer mapping object
@@ -41,10 +41,12 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         /// <param name="entityContainer"> Entity Continer type that is being mapped on the C-side </param>
         /// <param name="storageEntityContainer"> Entity Continer type that is being mapped on the S-side </param>
-        internal StorageEntityContainerMapping(
+        public StorageEntityContainerMapping(
             EntityContainer entityContainer, EntityContainer storageEntityContainer,
             StorageMappingItemCollection storageMappingItemCollection, bool validate, bool generateUpdateViews)
         {
+            Check.NotNull(entityContainer, "entityContainer");
+
             m_entityContainer = entityContainer;
             m_storageEntityContainer = storageEntityContainer;
             m_storageMappingItemCollection = storageMappingItemCollection;
@@ -141,7 +143,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     The Entity Container Metadata object on the C-side
         ///     for which the mapping is being represented.
         /// </summary>
-        internal EntityContainer EdmEntityContainer
+        public EntityContainer EdmEntityContainer
         {
             get { return m_entityContainer; }
         }
@@ -150,7 +152,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     The Entity Container Metadata object on the C-side
         ///     for which the mapping is being represented.
         /// </summary>
-        internal EntityContainer StorageEntityContainer
+        public EntityContainer StorageEntityContainer
         {
             get { return m_storageEntityContainer; }
         }
@@ -160,7 +162,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     container. In CS mapping, the mapping is done
         ///     at the extent level as opposed to the type level.
         /// </summary>
-        internal ReadOnlyCollection<StorageSetMapping> EntitySetMaps
+        public ReadOnlyCollection<StorageSetMapping> EntitySetMaps
         {
             get { return new List<StorageSetMapping>(m_entitySetMappings.Values).AsReadOnly(); }
         }
@@ -186,7 +188,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     The reason we have RelationshipSetMaps is to be consistent with CDM metadata
         ///     which treats both associations and compositions as Relationships.
         /// </remarks>
-        internal ReadOnlyCollection<StorageSetMapping> RelationshipSetMaps
+        public ReadOnlyCollection<StorageSetMapping> RelationshipSetMaps
         {
             get { return new List<StorageSetMapping>(m_associationSetMappings.Values).AsReadOnly(); }
         }
@@ -195,7 +197,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     a list of all the  set maps under this
         ///     container.
         /// </summary>
-        internal IEnumerable<StorageSetMapping> AllSetMaps
+        public IEnumerable<StorageSetMapping> AllSetMaps
         {
             get { return m_entitySetMappings.Values.Concat(m_associationSetMappings.Values); }
         }
@@ -293,7 +295,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     under this entity container mapping. The method will be called
         ///     by the Mapping loader.
         /// </summary>
-        internal void AddEntitySetMapping(StorageSetMapping setMapping)
+        public void AddEntitySetMapping(StorageSetMapping setMapping)
         {
             if (!m_entitySetMappings.ContainsKey(setMapping.Set.Name))
             {
@@ -306,7 +308,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     under this entity container mapping. The method will be called
         ///     by the Mapping loader.
         /// </summary>
-        internal void AddAssociationSetMapping(StorageSetMapping setMapping)
+        public void AddAssociationSetMapping(StorageSetMapping setMapping)
         {
             m_associationSetMappings.Add(setMapping.Set.Name, setMapping);
         }

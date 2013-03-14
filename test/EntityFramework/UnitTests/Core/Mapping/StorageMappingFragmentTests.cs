@@ -2,12 +2,38 @@
 
 namespace System.Data.Entity.Core.Mapping
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
 
     public class StorageMappingFragmentTests
     {
+        [Fact]
+        public void Can_not_create_mapping_fragment_with_null_entity_set()
+        {
+            var entityTypeMapping = 
+                new StorageEntityTypeMapping(
+                new StorageEntitySetMapping(
+                    new EntitySet(),
+                    new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace))));
+
+            Assert.Equal(
+                "tableExtent",
+                Assert.Throws<ArgumentNullException>(
+                    () => new StorageMappingFragment(null, entityTypeMapping, false)).ParamName);
+        }
+
+        [Fact]
+        public void Can_not_create_mapping_fragment_with_null_type_mapping()
+        {
+            Assert.Equal(
+                "typeMapping",
+                Assert.Throws<ArgumentNullException>(
+                    () => new StorageMappingFragment(new EntitySet(), null, false)).ParamName);
+        }
+
         [Fact]
         public void Can_add_and_remove_properties()
         {
@@ -58,6 +84,53 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Same(columnProperty, scalarPropertyMapping.ColumnProperty);
             Assert.Same(property, scalarPropertyMapping.EdmProperty);
+        }
+
+        [Fact]
+        public void Cannot_add_invalid_column_mapping_builder()
+        {
+            var mappingFragment
+                = new StorageMappingFragment(
+                    new EntitySet(),
+                    new StorageEntityTypeMapping(
+                        new StorageEntitySetMapping(
+                            new EntitySet(),
+                            new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
+
+            Assert.Equal(
+                "columnMappingBuilder",
+                Assert.Throws<ArgumentNullException>(
+                    () => mappingFragment.AddColumnMapping(null)).ParamName);
+
+            Assert.Equal(
+                Strings.InvalidColumnBuilderArgument("columnBuilderMapping"),
+                Assert.Throws<ArgumentException>(
+                () => mappingFragment.AddColumnMapping(
+                    new ColumnMappingBuilder(new EdmProperty("S"), new List<EdmProperty>()))).Message);
+
+
+        }
+
+        [Fact]
+        public void Cannot_add_duplicate_column_mapping_builder()
+        {
+            var mappingFragment
+                = new StorageMappingFragment(
+                    new EntitySet(),
+                    new StorageEntityTypeMapping(
+                        new StorageEntitySetMapping(
+                            new EntitySet(),
+                            new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
+
+            var columnMappingBuilder =
+                new ColumnMappingBuilder(new EdmProperty("S"), new[] { new EdmProperty("S") });
+
+            mappingFragment.AddColumnMapping(columnMappingBuilder);
+
+            Assert.Equal(
+                Strings.InvalidColumnBuilderArgument("columnBuilderMapping"),
+                Assert.Throws<ArgumentException>(
+                () => mappingFragment.AddColumnMapping(columnMappingBuilder)).Message);            
         }
 
         [Fact]

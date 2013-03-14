@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     This class represents the metadata for all the scalar property map elements in the
     ///     above example.
     /// </example>
-    internal class StorageScalarPropertyMapping : StoragePropertyMapping
+    public class StorageScalarPropertyMapping : StoragePropertyMapping
     {
         /// <summary>
         ///     Construct a new Scalar EdmProperty mapping object
@@ -67,10 +67,10 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     column name from which the sclar property is being mapped
         /// </summary>
-        internal EdmProperty ColumnProperty
+        public EdmProperty ColumnProperty
         {
             get { return m_columnMember; }
-            set
+            internal set
             {
                 DebugCheck.NotNull(value);
 

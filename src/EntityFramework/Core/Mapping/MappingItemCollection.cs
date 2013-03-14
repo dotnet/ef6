@@ -9,7 +9,6 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     ///     Class for representing a collection of mapping items in Edm space.
     /// </summary>
-    [CLSCompliant(false)]
     public abstract class MappingItemCollection : ItemCollection
     {
         /// <summary>

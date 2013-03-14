@@ -2654,7 +2654,7 @@ namespace FunctionalTests
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.TargetEnd.RelationshipMultiplicity);
             databaseMapping.Assert<SomeItemDetail>().HasForeignKeyColumn("Item_SomeItemId"); // IA FK
-            Assert.Equal(1, databaseMapping.EntityContainerMappings[0].AssociationSetMappings.Count());
+            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.Count());
         }
 
         [Fact]
@@ -2689,7 +2689,7 @@ namespace FunctionalTests
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.TargetEnd.RelationshipMultiplicity);
             databaseMapping.Assert<SomeItemDetail>().HasForeignKeyColumn("Item_SomeItemId"); // IA FK
-            Assert.Equal(1, databaseMapping.EntityContainerMappings[0].AssociationSetMappings.Count());
+            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.Count());
         }
 
         [Fact]
@@ -2708,7 +2708,7 @@ namespace FunctionalTests
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.TargetEnd.RelationshipMultiplicity);
             databaseMapping.Assert<SomeItemDetail>().HasForeignKeyColumn("Id"); // FK
-            Assert.Equal(0, databaseMapping.EntityContainerMappings[0].AssociationSetMappings.Count());
+            Assert.Equal(0, databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.Count());
         }
 
         [Fact]
@@ -2726,7 +2726,7 @@ namespace FunctionalTests
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.TargetEnd.RelationshipMultiplicity);
             databaseMapping.Assert<SomeItemDetail>().HasForeignKeyColumn("Id"); // FK
-            Assert.Equal(0, databaseMapping.EntityContainerMappings[0].AssociationSetMappings.Count());
+            Assert.Equal(0, databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.Count());
         }
 
         [Fact]
@@ -2744,7 +2744,7 @@ namespace FunctionalTests
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.TargetEnd.RelationshipMultiplicity);
             databaseMapping.Assert<SomeItemDetail>().HasForeignKeyColumn("Id"); // FK
-            Assert.Equal(0, databaseMapping.EntityContainerMappings[0].AssociationSetMappings.Count());
+            Assert.Equal(0, databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.Count());
         }
 
         [Fact]
@@ -2762,7 +2762,7 @@ namespace FunctionalTests
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.TargetEnd.RelationshipMultiplicity);
             databaseMapping.Assert<SomeItemDetail>().HasForeignKeyColumn("Id"); // FK
-            Assert.Equal(0, databaseMapping.EntityContainerMappings[0].AssociationSetMappings.Count());
+            Assert.Equal(0, databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.Count());
         }
 
         [Fact]
@@ -2781,7 +2781,7 @@ namespace FunctionalTests
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.Many, aset.ElementType.TargetEnd.RelationshipMultiplicity);
             databaseMapping.Assert<CDDep>().HasForeignKeyColumn("CDPrin_CDPrinId"); // AI FK
-            Assert.Equal(1, databaseMapping.EntityContainerMappings[0].AssociationSetMappings.Count());
+            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.Count());
         }
 
         public class CDPrin
@@ -3117,7 +3117,7 @@ namespace FunctionalTests
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, aset.ElementType.TargetEnd.RelationshipMultiplicity);
             databaseMapping.Assert<SomeItemDetail>().HasForeignKeyColumn("Item_SomeItemId"); // IA FK
-            Assert.Equal(1, databaseMapping.EntityContainerMappings[0].AssociationSetMappings.Count());
+            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.Count());
         }
 
         [Fact]
@@ -3136,7 +3136,7 @@ namespace FunctionalTests
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.SourceEnd.RelationshipMultiplicity);
             Assert.Equal(RelationshipMultiplicity.One, aset.ElementType.TargetEnd.RelationshipMultiplicity);
             databaseMapping.Assert<SomeItem>().HasForeignKeyColumn("SomeItemId"); // FK
-            Assert.Equal(0, databaseMapping.EntityContainerMappings[0].AssociationSetMappings.Count());
+            Assert.Equal(0, databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.Count());
         }
 
         [Fact]
@@ -3325,7 +3325,7 @@ namespace FunctionalTests
                            .HasColumn("IndependentColumn1");
             Assert.Equal(
                 "IndependentColumn1",
-                databaseMapping.EntityContainerMappings[0].AssociationSetMappings.ElementAt(0).ColumnConditions.ElementAt(0).ColumnProperty
+                databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.ElementAt(0).ColumnConditions.ElementAt(0).ColumnProperty
                                                           .Name);
         }
 

@@ -26,16 +26,18 @@ namespace System.Data.Entity.Core.Mapping
     ///     This class represents the metadata for the EntitySetMapping elements in the
     ///     above example. And it is possible to access the EntityTypeMaps underneath it.
     /// </example>
-    internal class StorageEntitySetMapping : StorageSetMapping
+    public class StorageEntitySetMapping : StorageSetMapping
     {
         /// <summary>
         ///     Construct a EntitySet mapping object
         /// </summary>
         /// <param name="extent"> EntitySet metadata object </param>
         /// <param name="entityContainerMapping"> The entity Container Mapping that contains this Set mapping </param>
-        internal StorageEntitySetMapping(EntitySet extent, StorageEntityContainerMapping entityContainerMapping)
+        public StorageEntitySetMapping(EntitySet extent, StorageEntityContainerMapping entityContainerMapping)
             : base(extent, entityContainerMapping)
         {
+            Check.NotNull(extent, "extent");
+
             m_modificationFunctionMappings = new List<StorageEntityTypeModificationFunctionMapping>();
             m_implicitlyMappedAssociationSetEnds = new List<AssociationSetEnd>();
         }
@@ -46,7 +48,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Gets all function mappings for this entity set.
         /// </summary>
-        internal IList<StorageEntityTypeModificationFunctionMapping> ModificationFunctionMappings
+        public IList<StorageEntityTypeModificationFunctionMapping> ModificationFunctionMappings
         {
             get { return m_modificationFunctionMappings.AsReadOnly(); }
         }
@@ -54,7 +56,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Gets all association sets that are implicitly "covered" through function mappings.
         /// </summary>
-        internal IList<AssociationSetEnd> ImplicitlyMappedAssociationSetEnds
+        public IList<AssociationSetEnd> ImplicitlyMappedAssociationSetEnds
         {
             get { return m_implicitlyMappedAssociationSetEnds.AsReadOnly(); }
         }

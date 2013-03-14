@@ -24,7 +24,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     ///     Class for representing a collection of items in Edm space.
     /// </summary>
-    [CLSCompliant(false)]
     public sealed class EdmItemCollection : ItemCollection
     {
         /// <summary>

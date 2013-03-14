@@ -31,5 +31,33 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Empty(storageTypeMapping.MappingFragments);
         }
+
+        [Fact]
+        public void Can_get_set_mapping()
+        {
+            var storageSetMapping
+                = new StorageEntitySetMapping(
+                    new EntitySet(),
+                    new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)));
+
+            var storageTypeMapping
+                = new StorageEntityTypeMapping(storageSetMapping);
+
+            Assert.Same(storageSetMapping, storageTypeMapping.SetMapping);
+        }
+
+        [Fact]
+        public void Can_not_add_null_fragment()
+        {
+            var storageSetMapping
+                = new StorageEntitySetMapping(
+                    new EntitySet(),
+                    new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)));
+
+            Assert.Equal(
+                "fragment",
+                Assert.Throws<ArgumentNullException>(
+                    () => new StorageEntityTypeMapping(storageSetMapping).AddFragment(null)).ParamName);
+        }
     }
 }

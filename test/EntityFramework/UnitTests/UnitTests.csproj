@@ -165,6 +165,7 @@
     <Compile Include="Core\EntityClient\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\EntitySqlExceptionTests.cs" />
     <Compile Include="Core\Mapping\ColumnMappingBuilderTests.cs" />
+    <Compile Include="Core\Mapping\StorageAssociationTypeMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageEntityTypeModificationFunctionMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageMappingItemCollectionTests.cs" />
     <Compile Include="Core\Mapping\StorageTypeMappingTests.cs" />
@@ -190,6 +191,7 @@
     <Compile Include="Core\Metadata\Edm\CodeFirstOSpaceLoaderTests.cs" />
     <Compile Include="Core\Metadata\Edm\CodeFirstOSpaceTypeFactoryTests.cs" />
     <Compile Include="Core\Metadata\Edm\ComplexTypeTests.cs" />
+    <Compile Include="Core\Metadata\Edm\DbDatabaseMappingTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmFunctionTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmItemCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmMemberTests.cs" />

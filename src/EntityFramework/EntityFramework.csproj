@@ -213,7 +213,7 @@
     <Compile Include="Core\Common\internal\materialization\CodeGenEmitter.cs" />
     <Compile Include="Core\Common\internal\materialization\CoordinatorFactory`.cs" />
     <Compile Include="Core\Common\internal\materialization\Coordinator`.cs" />
-    <Compile Include="Core\Mapping\IStructuralTypeMapping.cs" />
+    <Compile Include="Core\Mapping\StructuralTypeMapping.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\IViewAssemblyCache.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\QueryRewriting\FragmentQueryKBChaseSupport.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyCache.cs" />

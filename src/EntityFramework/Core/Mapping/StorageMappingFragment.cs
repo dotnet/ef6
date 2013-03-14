@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
@@ -51,7 +52,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     MappingFragment element like EntityKey map, Property Maps, Discriminator
     ///     property through this mapping fragment class.
     /// </example>
-    internal class StorageMappingFragment : IStructuralTypeMapping
+    public class StorageMappingFragment : StructuralTypeMapping
     {
         private readonly List<ColumnMappingBuilder> _columnMappings = new List<ColumnMappingBuilder>();
         private readonly List<DataModelAnnotation> _annotationsList = new List<DataModelAnnotation>();
@@ -61,14 +62,14 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         /// <param name="tableExtent"> </param>
         /// <param name="typeMapping"> </param>
-        internal StorageMappingFragment(EntitySet tableExtent, StorageTypeMapping typeMapping, bool distinctFlag)
+        public StorageMappingFragment(EntitySet tableExtent, StorageTypeMapping typeMapping, bool isSQueryDistinct)
         {
-            DebugCheck.NotNull(tableExtent);
-            DebugCheck.NotNull(typeMapping);
+            Check.NotNull(tableExtent, "tableExtent");
+            Check.NotNull(typeMapping, "typeMapping");
 
             m_tableExtent = tableExtent;
             m_typeMapping = typeMapping;
-            m_isSQueryDistinct = distinctFlag;
+            m_isSQueryDistinct = isSQueryDistinct;
         }
 
         public IEnumerable<ColumnMappingBuilder> ColumnMappings
@@ -78,14 +79,18 @@ namespace System.Data.Entity.Core.Mapping
 
         public void AddColumnMapping(ColumnMappingBuilder columnMappingBuilder)
         {
-            DebugCheck.NotNull(columnMappingBuilder);
+            Check.NotNull(columnMappingBuilder, "columnMappingBuilder");
+            if (!columnMappingBuilder.PropertyPath.Any()
+                || _columnMappings.Contains(columnMappingBuilder))
+            {
+                throw new ArgumentException(Strings.InvalidColumnBuilderArgument("columnBuilderMapping"));
+            }
+
             DebugCheck.NotNull(columnMappingBuilder.ColumnProperty);
-            Debug.Assert(columnMappingBuilder.PropertyPath.Any());
-            Debug.Assert(!_columnMappings.Contains(columnMappingBuilder));
 
             _columnMappings.Add(columnMappingBuilder);
 
-            IStructuralTypeMapping structuralTypeMapping = this;
+            StructuralTypeMapping structuralTypeMapping = this;
             EdmProperty property;
 
             // Turn the property path into a mapping fragment nested tree structure.
@@ -149,7 +154,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        public void RemoveColumnMapping(ColumnMappingBuilder columnMappingBuilder)
+        internal void RemoveColumnMapping(ColumnMappingBuilder columnMappingBuilder)
         {
             DebugCheck.NotNull(columnMappingBuilder);
             DebugCheck.NotNull(columnMappingBuilder.ColumnProperty);
@@ -161,7 +166,7 @@ namespace System.Data.Entity.Core.Mapping
             RemoveColumnMapping(this, columnMappingBuilder.PropertyPath);
         }
 
-        private void RemoveColumnMapping(IStructuralTypeMapping structuralTypeMapping, IEnumerable<EdmProperty> propertyPath)
+        private void RemoveColumnMapping(StructuralTypeMapping structuralTypeMapping, IEnumerable<EdmProperty> propertyPath)
         {
             DebugCheck.NotNull(structuralTypeMapping);
             DebugCheck.NotNull(propertyPath);
@@ -193,7 +198,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        public IList<DataModelAnnotation> Annotations
+        internal IList<DataModelAnnotation> Annotations
         {
             get { return _annotationsList; }
         }
@@ -224,10 +229,10 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     The table from which the properties are mapped in this fragment
         /// </summary>
-        internal EntitySet TableSet
+        public EntitySet TableSet
         {
             get { return m_tableExtent; }
-            set
+            internal set
             {
                 DebugCheck.NotNull(value);
 
@@ -235,7 +240,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        internal EntityType Table
+        public EntityType Table
         {
             get { return m_tableExtent.ElementType; }
         }
@@ -249,7 +254,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     Returns all the property mappings defined in the complex type mapping
         ///     including Properties and Condition Properties
         /// </summary>
-        internal ReadOnlyCollection<StoragePropertyMapping> AllProperties
+        public ReadOnlyCollection<StoragePropertyMapping> AllProperties
         {
             get
             {
@@ -264,7 +269,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     Returns all the property mappings defined in the complex type mapping
         ///     including Properties and Condition Properties
         /// </summary>
-        public ReadOnlyCollection<StoragePropertyMapping> Properties
+        public override ReadOnlyCollection<StoragePropertyMapping> Properties
         {
             get { return m_properties.AsReadOnly(); }
         }
@@ -298,22 +303,22 @@ namespace System.Data.Entity.Core.Mapping
         ///     Add a property mapping as a child of this mapping fragment
         /// </summary>
         /// <param name="prop"> child property mapping to be added </param>
-        public void AddProperty(StoragePropertyMapping prop)
+        internal override void AddProperty(StoragePropertyMapping prop)
         {
             m_properties.Add(prop);
         }
 
-        public void RemoveProperty(StoragePropertyMapping prop)
+        internal override void RemoveProperty(StoragePropertyMapping prop)
         {
             m_properties.Remove(prop);
         }
 
-        public void ClearConditions()
+        internal void ClearConditions()
         {
             m_conditionProperties.Clear();
         }
 
-        public void RemoveConditionProperty(StorageConditionPropertyMapping condition)
+        internal void RemoveConditionProperty(StorageConditionPropertyMapping condition)
         {
             DebugCheck.NotNull(condition);
 

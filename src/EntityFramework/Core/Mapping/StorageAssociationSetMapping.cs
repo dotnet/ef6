@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     above example. And it is possible to access the AssociationTypeMap underneath it.
     ///     There will be only one TypeMap under AssociationSetMap.
     /// </example>
-    internal class StorageAssociationSetMapping : StorageSetMapping
+    public class StorageAssociationSetMapping : StorageSetMapping
     {
         private readonly List<DataModelAnnotation> _annotationsList = new List<DataModelAnnotation>();
 
@@ -67,10 +67,10 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal StorageAssociationSetModificationFunctionMapping ModificationFunctionMapping { get; set; }
 
-        internal EntitySet StoreEntitySet
+        public EntitySet StoreEntitySet
         {
             get { return (SingleFragment != null) ? SingleFragment.TableSet : null; }
-            set
+            internal set
             {
                 DebugCheck.NotNull(value);
                 Debug.Assert(SingleFragment != null);
@@ -92,10 +92,10 @@ namespace System.Data.Entity.Core.Mapping
                            ? SingleFragment.Properties.OfType<StorageEndPropertyMapping>().FirstOrDefault()
                            : null;
             }
-            set
+            internal set
             {
                 DebugCheck.NotNull(value);
-                Debug.Assert(SingleFragment != null);
+                DebugCheck.NotNull(SingleFragment);
                 Debug.Assert(SingleFragment.Properties.Count == 0);
 
                 SingleFragment.AddProperty(value);
@@ -110,17 +110,17 @@ namespace System.Data.Entity.Core.Mapping
                            ? SingleFragment.Properties.OfType<StorageEndPropertyMapping>().ElementAtOrDefault(1)
                            : null;
             }
-            set
+            internal set
             {
                 DebugCheck.NotNull(value);
-                Debug.Assert(SingleFragment != null);
+                DebugCheck.NotNull(SingleFragment);
                 Debug.Assert(SingleFragment.Properties.Count == 1);
 
                 SingleFragment.AddProperty(value);
             }
         }
 
-        public virtual IList<DataModelAnnotation> Annotations
+        internal virtual IList<DataModelAnnotation> Annotations
         {
             get { return _annotationsList; }
         }
@@ -135,7 +135,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        public void AddColumnCondition(StorageConditionPropertyMapping storageConditionPropertyMapping)
+        internal void AddColumnCondition(StorageConditionPropertyMapping storageConditionPropertyMapping)
         {
             if (SingleFragment != null)
             {

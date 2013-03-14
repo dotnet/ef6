@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     ///     Describes modification function mappings for an entity type within an entity set.
     /// </summary>
-    internal sealed class StorageEntityTypeModificationFunctionMapping
+    public sealed class StorageEntityTypeModificationFunctionMapping
     {
         internal StorageEntityTypeModificationFunctionMapping(
             EntityType entityType,

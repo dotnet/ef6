@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     above example. This includes the scalar property maps, complex property maps
     ///     and end property maps.
     /// </example>
-    internal abstract class StoragePropertyMapping
+    public abstract class StoragePropertyMapping
     {
         /// <summary>
         ///     Construct a new EdmProperty mapping object
@@ -56,18 +56,9 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     The PropertyMetadata object that represents the member for which mapping is being specified
         /// </summary>
-        internal virtual EdmProperty EdmProperty
+        public virtual EdmProperty EdmProperty
         {
             get { return m_cdmMember; }
-        }
-
-        /// <summary>
-        ///     This method is primarily for debugging purposes.
-        ///     Will be removed shortly.
-        /// </summary>
-        /// <param name="index"> </param>
-        internal virtual void Print(int index)
-        {
         }
     }
 }

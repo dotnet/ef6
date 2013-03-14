@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     This class represents the metadata for all the end property map elements in the
     ///     above example. EndPropertyMaps provide mapping for each end of the association.
     /// </example>
-    internal class StorageEndPropertyMapping : StoragePropertyMapping
+    public class StorageEndPropertyMapping : StoragePropertyMapping
     {
         /// <summary>
         ///     Construct a new End Property mapping object
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     return ReadOnlyCollection of property mappings that are children of this End mapping
         /// </summary>
-        internal ReadOnlyCollection<StoragePropertyMapping> Properties
+        public ReadOnlyCollection<StoragePropertyMapping> Properties
         {
             get { return m_properties.AsReadOnly(); }
         }
@@ -77,14 +77,14 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     The relation end property Metadata object for which the mapping is represented.
         /// </summary>
-        internal RelationshipEndMember EndMember { get; set; }
+        public RelationshipEndMember EndMember { get; internal set; }
 
         /// <summary>
         ///     Returns all store properties that are mapped under this mapping fragment
         /// </summary>
         internal IEnumerable<EdmMember> StoreProperties
         {
-            get { return PropertyMappings.Select((propertyMap => propertyMap.ColumnProperty)); }
+            get { return PropertyMappings.Select(propertyMap => propertyMap.ColumnProperty); }
         }
 
         /// <summary>

@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             databaseMapping.Model = model;
             databaseMapping.Database = database;
 
-            databaseMapping.EntityContainerMappings.Add(new StorageEntityContainerMapping(model.Containers.Single()));
+            databaseMapping.AddEntityContainerMapping(new StorageEntityContainerMapping(model.Containers.Single()));
 
             return databaseMapping;
         }

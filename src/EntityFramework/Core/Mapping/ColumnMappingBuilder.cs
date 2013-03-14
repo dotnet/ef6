@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
 
-    internal class ColumnMappingBuilder
+    public class ColumnMappingBuilder
     {
         private EdmProperty _columnProperty;
         private readonly IList<EdmProperty> _propertyPath;
@@ -14,8 +14,8 @@ namespace System.Data.Entity.Core.Mapping
 
         public ColumnMappingBuilder(EdmProperty columnProperty, IList<EdmProperty> propertyPath)
         {
-            DebugCheck.NotNull(columnProperty);
-            DebugCheck.NotNull(propertyPath);
+            Check.NotNull(columnProperty, "columnProperty");
+            Check.NotNull(propertyPath, "propertyPath");
 
             _columnProperty = columnProperty;
             _propertyPath = propertyPath;
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Mapping
         public EdmProperty ColumnProperty
         {
             get { return _columnProperty; }
-            set
+            internal set
             {
                 DebugCheck.NotNull(value);
 
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        public void SetTarget(StorageScalarPropertyMapping scalarPropertyMapping)
+        internal void SetTarget(StorageScalarPropertyMapping scalarPropertyMapping)
         {
             _scalarPropertyMapping = scalarPropertyMapping;
         }

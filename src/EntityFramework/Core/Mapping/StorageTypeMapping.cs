@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     above example namely EntityTypeMapping, AssociationTypeMapping and CompositionTypeMapping.
     ///     The TypeMapping elements contain TableMappingFragments which in turn contain the property maps.
     /// </example>
-    internal abstract class StorageTypeMapping
+    public abstract class StorageTypeMapping
     {
         /// <summary>
         ///     Construct the new StorageTypeMapping object.
@@ -65,12 +65,12 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Mapping fragments that make up this set type
         /// </summary>
-        internal ReadOnlyCollection<StorageMappingFragment> MappingFragments
+        public ReadOnlyCollection<StorageMappingFragment> MappingFragments
         {
             get { return m_fragments.AsReadOnly(); }
         }
 
-        internal StorageSetMapping SetMapping
+        public StorageSetMapping SetMapping
         {
             get { return m_setMapping; }
         }
@@ -78,21 +78,21 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     a list of TypeMetadata that this mapping holds true for.
         /// </summary>
-        internal abstract ReadOnlyCollection<EdmType> Types { get; }
+        public abstract ReadOnlyCollection<EdmType> Types { get; }
 
         /// <summary>
         ///     a list of TypeMetadatas for which the mapping holds true for
         ///     not only the type specified but the sub-types of that type as well.
         /// </summary>
-        internal abstract ReadOnlyCollection<EdmType> IsOfTypes { get; }
+        public abstract ReadOnlyCollection<EdmType> IsOfTypes { get; }
 
         /// <summary>
         ///     Add a fragment mapping as child of this type mapping
         /// </summary>
         /// <param name="fragment"> </param>
-        internal void AddFragment(StorageMappingFragment fragment)
+        public void AddFragment(StorageMappingFragment fragment)
         {
-            DebugCheck.NotNull(fragment);
+            Check.NotNull(fragment, "fragment");
 
             m_fragments.Add(fragment);
         }

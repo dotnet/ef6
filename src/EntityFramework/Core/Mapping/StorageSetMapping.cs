@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     The SetMapping elements that are children of the EntityContainerMapping element
     ///     can be accessed through the properties on this type.
     /// </example>
-    internal abstract class StorageSetMapping
+    public abstract class StorageSetMapping
     {
         /// <summary>
         ///     Construct the new StorageSetMapping object.
@@ -70,7 +70,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     The set for which this mapping is for
         /// </summary>
-        internal EntitySetBase Set
+        public EntitySetBase Set
         {
             get { return m_extent; }
         }
@@ -80,12 +80,12 @@ namespace System.Data.Entity.Core.Mapping
         ///// For AssociationSet and CompositionSet there will be one type (at least that's what
         ///// we expect as of now). EntitySet could have mappings for multiple Entity types.
         ///// </summary>
-        internal ReadOnlyCollection<StorageTypeMapping> TypeMappings
+        public ReadOnlyCollection<StorageTypeMapping> TypeMappings
         {
             get { return m_typeMappings.AsReadOnly(); }
         }
 
-        internal StorageEntityContainerMapping EntityContainerMapping
+        public StorageEntityContainerMapping EntityContainerMapping
         {
             get { return m_entityContainerMapping; }
         }
@@ -134,9 +134,9 @@ namespace System.Data.Entity.Core.Mapping
         ///     Add type mapping as a child under this SetMapping
         /// </summary>
         /// <param name="typeMapping"> </param>
-        internal void AddTypeMapping(StorageTypeMapping typeMapping)
+        public void AddTypeMapping(StorageTypeMapping typeMapping)
         {
-            DebugCheck.NotNull(typeMapping);
+            Check.NotNull(typeMapping, "typeMapping");
 
             m_typeMappings.Add(typeMapping);
         }

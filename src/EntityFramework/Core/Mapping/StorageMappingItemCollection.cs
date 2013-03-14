@@ -27,7 +27,6 @@ namespace System.Data.Entity.Core.Mapping
         System.Data.Entity.Core.Common.Utils.Pair<Metadata.Edm.EntitySetBase, Common.Utils.Pair<Metadata.Edm.EntityTypeBase, bool>>;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    [CLSCompliant(false)]
     public class StorageMappingItemCollection : MappingItemCollection
     {
         internal delegate bool TryGetUserDefinedQueryView(EntitySetBase extent, out GeneratedView generatedView);

@@ -18,7 +18,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     ///     Most of the implementation for actual maintenance of the collection is
     ///     done by MetadataCollection
     /// </summary>
-    [CLSCompliant(false)]
     public abstract class ItemCollection : ReadOnlyMetadataCollection<GlobalItem>
     {
         internal ItemCollection()

@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     The AssociationTypeType Metadata object for which the mapping is represented.
         /// </summary>
-        internal AssociationType AssociationType
+        public AssociationType AssociationType
         {
             get { return m_relation; }
         }
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     Since Association types dont participate in Inheritance, This can only
         ///     be one type.
         /// </summary>
-        internal override ReadOnlyCollection<EdmType> Types
+        public override ReadOnlyCollection<EdmType> Types
         {
             get { return new ReadOnlyCollection<EdmType>(new[] { m_relation }); }
         }
@@ -82,7 +82,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     Since Association types dont participate in Inheritance, an Empty list
         ///     is returned here.
         /// </summary>
-        internal override ReadOnlyCollection<EdmType> IsOfTypes
+        public override ReadOnlyCollection<EdmType> IsOfTypes
         {
             get { return new List<EdmType>().AsReadOnly(); }
         }

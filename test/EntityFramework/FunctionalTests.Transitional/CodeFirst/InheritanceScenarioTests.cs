@@ -511,19 +511,19 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal(1, databaseMapping.EntityContainerMappings[0].EntitySetMappings.Count());
-            Assert.Equal(4, databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.Count());
+            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
+            Assert.Equal(4, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.ElementAt(0).EntityTypeMappings.Count());
             Assert.True(
-                databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
+                databaseMapping.EntityContainerMappings.Single().EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
                     x => x.EntityType.Name == "A1").IsHierarchyMapping);
             Assert.False(
-                databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
+                databaseMapping.EntityContainerMappings.Single().EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
                     x => x.EntityType.Name == "A2").IsHierarchyMapping);
             Assert.False(
-                databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
+                databaseMapping.EntityContainerMappings.Single().EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
                     x => x.EntityType.Name == "A3").IsHierarchyMapping);
             Assert.False(
-                databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
+                databaseMapping.EntityContainerMappings.Single().EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
                     x => x.EntityType.Name == "A4").IsHierarchyMapping);
         }
 
@@ -571,16 +571,16 @@ namespace FunctionalTests
 
             databaseMapping.AssertValid();
 
-            Assert.Equal(1, databaseMapping.EntityContainerMappings[0].EntitySetMappings.Count());
-            Assert.Equal(3, databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.Count());
+            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
+            Assert.Equal(3, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.ElementAt(0).EntityTypeMappings.Count());
             Assert.False(
-                databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
+                databaseMapping.EntityContainerMappings.Single().EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
                     x => x.EntityType.Name == "B1").IsHierarchyMapping);
             Assert.True(
-                databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
+                databaseMapping.EntityContainerMappings.Single().EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
                     x => x.EntityType.Name == "B2").IsHierarchyMapping);
             Assert.False(
-                databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
+                databaseMapping.EntityContainerMappings.Single().EntitySetMappings.ElementAt(0).EntityTypeMappings.Single(
                     x => x.EntityType.Name == "B3").IsHierarchyMapping);
         }
 
@@ -634,11 +634,11 @@ namespace FunctionalTests
             Assert.Equal(
                 "OnSiteEmployees",
                 databaseMapping.Database.GetEntitySet(
-                    databaseMapping.EntityContainerMappings[0].AssociationSetMappings.ElementAt(0).Table).Table);
+                    databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.ElementAt(0).Table).Table);
 
             Assert.Equal(
                 "ITOffice_ITOfficeId",
-                databaseMapping.EntityContainerMappings[0].AssociationSetMappings.ElementAt(0).SourceEndMapping
+                databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.ElementAt(0).SourceEndMapping
                 .PropertyMappings.ElementAt(0).ColumnProperty.Name);
         }
 
@@ -665,7 +665,7 @@ namespace FunctionalTests
 
             databaseMapping.Assert<IT_Employee>().HasNoForeignKeyColumn("IT_OfficeId");
             databaseMapping.Assert<IT_OnSiteEmployee>().HasForeignKeyColumn("IT_OfficeId");
-            Assert.Equal(0, databaseMapping.EntityContainerMappings[0].AssociationSetMappings.Count());
+            Assert.Equal(0, databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.Count());
         }
 
         public class ITOffice
@@ -1089,7 +1089,7 @@ namespace FunctionalTests
                 databaseMapping.AssertValid();
 
                 var derivedTypeMappings =
-                    databaseMapping.EntityContainerMappings[0].EntitySetMappings
+                    databaseMapping.EntityContainerMappings.Single().EntitySetMappings
                                                               .First(es => es.EntitySet.Name.Contains("Dependent")).EntityTypeMappings;
 
                 Assert.Equal(
@@ -1168,7 +1168,7 @@ namespace FunctionalTests
 
                 databaseMapping.AssertValid();
 
-                var typeMappings = databaseMapping.EntityContainerMappings[0].EntitySetMappings.ElementAt(0).EntityTypeMappings;
+                var typeMappings = databaseMapping.EntityContainerMappings.Single().EntitySetMappings.ElementAt(0).EntityTypeMappings;
 
                 Assert.Equal(1, typeMappings.Count());
                 Assert.Equal("C", typeMappings.ElementAt(0).EntityType.Name);
