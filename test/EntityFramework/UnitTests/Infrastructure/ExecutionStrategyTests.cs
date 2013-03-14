@@ -18,7 +18,8 @@ namespace System.Data.Entity.Infrastructure
         {
             Assert.Equal(
                 "retryDelayStrategy",
-                Assert.Throws<ArgumentNullException>(() => new ExecutionStrategy(null, new Mock<IRetriableExceptionDetector>().Object)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => new ExecutionStrategy(null, new Mock<IRetriableExceptionDetector>().Object))
+                      .ParamName);
             Assert.Equal(
                 "retriableExceptionDetector",
                 Assert.Throws<ArgumentNullException>(() => new ExecutionStrategy(new Mock<IRetryDelayStrategy>().Object, null)).ParamName);
@@ -187,17 +188,17 @@ namespace System.Data.Entity.Infrastructure
                 var mockRetryDelayStrategy = new Mock<IRetryDelayStrategy>();
                 mockRetryDelayStrategy.Setup(m => m.GetNextDelay(It.IsAny<Exception>())).Returns<Exception>(
                     e =>
-                    {
-                        Assert.True(false);
-                        return null;
-                    });
+                        {
+                            Assert.True(false);
+                            return null;
+                        });
                 var mockRetriableExceptionDetector = new Mock<IRetriableExceptionDetector>();
                 mockRetriableExceptionDetector.Setup(m => m.ShouldRetryOn(It.IsAny<Exception>())).Returns<Exception>(
                     e =>
-                    {
-                        Assert.True(false);
-                        return false;
-                    });
+                        {
+                            Assert.True(false);
+                            return false;
+                        });
 
                 var mockExecutionStrategy =
                     new Mock<ExecutionStrategy>(mockRetryDelayStrategy.Object, mockRetriableExceptionDetector.Object)
@@ -424,8 +425,9 @@ namespace System.Data.Entity.Infrastructure
                         }.Object;
 
                 Assert.Equal(
-                    "taskFunc",
-                    Assert.Throws<ArgumentNullException>(() => mockExecutionStrategy.ExecuteAsync(null, CancellationToken.None).Wait()).ParamName);
+                    "func",
+                    Assert.Throws<ArgumentNullException>(() => mockExecutionStrategy.ExecuteAsync(null, CancellationToken.None).Wait())
+                          .ParamName);
             }
 
             [Fact]
@@ -438,8 +440,9 @@ namespace System.Data.Entity.Infrastructure
                         }.Object;
 
                 Assert.Equal(
-                    "taskFunc",
-                    Assert.Throws<ArgumentNullException>(() => mockExecutionStrategy.ExecuteAsync((Func<Task<int>>)null, CancellationToken.None).Wait()).ParamName);
+                    "func",
+                    Assert.Throws<ArgumentNullException>(
+                        () => mockExecutionStrategy.ExecuteAsync((Func<Task<int>>)null, CancellationToken.None).Wait()).ParamName);
             }
 
             [Fact]
@@ -580,7 +583,8 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void ExecuteAsync_Action_retries_until_not_retrieable_exception_is_thrown()
             {
-                ExecuteAsync_retries_until_not_retrieable_exception_is_thrown((e, f) => e.ExecuteAsync(() => (Task)f(), CancellationToken.None));
+                ExecuteAsync_retries_until_not_retrieable_exception_is_thrown(
+                    (e, f) => e.ExecuteAsync(() => (Task)f(), CancellationToken.None));
             }
 
             [Fact]
@@ -679,6 +683,5 @@ namespace System.Data.Entity.Infrastructure
         }
 
 #endif
-
     }
 }

@@ -1351,8 +1351,8 @@ namespace System.Data.Entity
             SourceNonAsyncEnumerableTest(() => ((IQueryable)Source()).ForEachAsync(e => e.GetType()));
             SourceNonAsyncEnumerableTest(() => ((IQueryable)Source()).ForEachAsync(e => e.GetType(), new CancellationToken()));
 
-            SourceNonAsyncEnumerableTest(() => (Source()).ToListAsync<double>());
-            SourceNonAsyncEnumerableTest(() => (Source()).ToListAsync<double>(new CancellationToken()));
+            SourceNonAsyncEnumerableTest(() => ((IQueryable)Source()).ToListAsync());
+            SourceNonAsyncEnumerableTest(() => ((IQueryable)Source()).ToListAsync(new CancellationToken()));
         }
 
         [Fact]

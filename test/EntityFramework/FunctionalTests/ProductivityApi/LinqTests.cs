@@ -12659,7 +12659,7 @@ namespace ProductivityApiTests
 #if NET40
             return query.ToList<object>();
 #else
-            return query.ToListAsync<object>().Result;
+            return query.ToListAsync().Result;
 #endif
         }
 

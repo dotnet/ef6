@@ -484,7 +484,7 @@ namespace System.Data.Entity.Core.EntityClient
         ///     be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
         /// </summary>
         /// <param name="behavior"> The behavior to use when executing the command </param>
-        /// <returns> A Task containing sn EntityDataReader object. </returns>
+        /// <returns> A task containing an EntityDataReader object. </returns>
         /// <exception cref="InvalidOperationException">
         ///     For stored procedure commands, if called
         ///     for anything but an entity collection result
@@ -500,7 +500,7 @@ namespace System.Data.Entity.Core.EntityClient
         ///     be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
         /// </summary>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
-        /// <returns> A Task containing sn EntityDataReader object. </returns>
+        /// <returns> A task containing an EntityDataReader object. </returns>
         /// <exception cref="InvalidOperationException">
         ///     For stored procedure commands, if called
         ///     for anything but an entity collection result
@@ -516,7 +516,7 @@ namespace System.Data.Entity.Core.EntityClient
         ///     be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
         /// </summary>
         /// <param name="behavior"> The behavior to use when executing the command </param>
-        /// <returns> A Task containing sn EntityDataReader object. </returns>
+        /// <returns> A task containing an EntityDataReader object. </returns>
         /// <exception cref="InvalidOperationException">
         ///     For stored procedure commands, if called
         ///     for anything but an entity collection result
@@ -533,7 +533,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="behavior"> The behavior to use when executing the command </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
-        /// <returns> A Task containing sn EntityDataReader object. </returns>
+        /// <returns> A task containing an EntityDataReader object. </returns>
         /// <exception cref="InvalidOperationException">
         ///     For stored procedure commands, if called
         ///     for anything but an entity collection result

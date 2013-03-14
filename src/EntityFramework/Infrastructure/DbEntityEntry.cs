@@ -104,7 +104,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Note that changing the values in the returned dictionary will not update the values in the database.
         ///     If the entity is not found in the database then null is returned.
         /// </summary>
-        /// <returns> A Task that contains the store values. </returns>
+        /// <returns> A task that contains the store values. </returns>
         public Task<DbPropertyValues> GetDatabaseValuesAsync()
         {
             return GetDatabaseValuesAsync(CancellationToken.None);
@@ -117,7 +117,7 @@ namespace System.Data.Entity.Infrastructure
         ///     If the entity is not found in the database then null is returned.
         /// </summary>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task that contains the store values. </returns>
+        /// <returns> A task that contains the store values. </returns>
         public async Task<DbPropertyValues> GetDatabaseValuesAsync(CancellationToken cancellationToken)
         {
             var storeValues =
@@ -135,6 +135,33 @@ namespace System.Data.Entity.Infrastructure
         {
             _internalEntityEntry.Reload();
         }
+
+#if !NET40
+
+        /// <summary>
+        ///     An asynchronous version of Reload, which
+        ///     reloads the entity from the database overwriting any property values with values from the database.
+        ///     The entity will be in the Unchanged state after calling this method.
+        /// </summary>
+        /// <returns> A task representing the asynchronous operation. </returns>
+        public Task ReloadAsync()
+        {
+            return _internalEntityEntry.ReloadAsync(CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of Reload, which
+        ///     reloads the entity from the database overwriting any property values with values from the database.
+        ///     The entity will be in the Unchanged state after calling this method.
+        /// </summary>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A task representing the asynchronous operation. </returns>
+        public Task ReloadAsync(CancellationToken cancellationToken)
+        {
+            return _internalEntityEntry.ReloadAsync(cancellationToken);
+        }
+
+#endif
 
         #endregion
 

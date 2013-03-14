@@ -31,6 +31,8 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
             v.VerifyMethod(e => e.GetDatabaseValuesAsync(), m => m.GetDatabaseValuesAsync(CancellationToken.None));
             v.VerifyMethod(e => e.GetDatabaseValuesAsync(CancellationToken.None), m => m.GetDatabaseValuesAsync(CancellationToken.None));
+            v.VerifyMethod(e => e.ReloadAsync(), m => m.ReloadAsync(CancellationToken.None));
+            v.VerifyMethod(e => e.ReloadAsync(CancellationToken.None), m => m.ReloadAsync(CancellationToken.None));
 #endif
         }
 
@@ -58,6 +60,8 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
             v.VerifyMethod(e => e.GetDatabaseValuesAsync(), m => m.GetDatabaseValuesAsync(CancellationToken.None));
             v.VerifyMethod(e => e.GetDatabaseValuesAsync(CancellationToken.None), m => m.GetDatabaseValuesAsync(CancellationToken.None));
+            v.VerifyMethod(e => e.ReloadAsync(), m => m.ReloadAsync(CancellationToken.None));
+            v.VerifyMethod(e => e.ReloadAsync(CancellationToken.None), m => m.ReloadAsync(CancellationToken.None));
 #endif
         }
 

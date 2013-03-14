@@ -160,7 +160,6 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Asynchronously creates a T[] from an <see cref="IDbAsyncEnumerable{T}" /> by enumerating it asynchronously.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <typeparam name="T">
         ///     The type of the elements of <paramref name="source" /> .
@@ -178,7 +177,6 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Asynchronously creates a T[] from an <see cref="IDbAsyncEnumerable{T}" /> by enumerating it asynchronously.
-        ///     If the underlying type doesn't support asynchronous enumeration it will be enumerated synchronously.
         /// </summary>
         /// <typeparam name="T">
         ///     The type of the elements of <paramref name="source" /> .

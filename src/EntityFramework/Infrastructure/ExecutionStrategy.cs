@@ -128,15 +128,15 @@ namespace System.Data.Entity.Infrastructure
         /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the action shouldn't be retried anymore</exception>
         /// <exception cref="InvalidOperationException">if an existing transaction is detected and the execution strategy doesn't support it</exception>
         /// <exception cref="InvalidOperationException">if this instance was already used to execute an action</exception>
-        public Task ExecuteAsync(Func<Task> taskFunc, CancellationToken cancellationToken)
+        public Task ExecuteAsync(Func<Task> func, CancellationToken cancellationToken)
         {
-            Check.NotNull(taskFunc, "taskFunc");
+            Check.NotNull(func, "func");
             EnsurePreexecutionState();
 
             return ProtectedExecuteAsync(
                 async () =>
                           {
-                              await taskFunc().ConfigureAwait(continueOnCapturedContext: false);
+                              await func().ConfigureAwait(continueOnCapturedContext: false);
                               return true;
                           }, cancellationToken);
         }
@@ -145,9 +145,9 @@ namespace System.Data.Entity.Infrastructure
         ///     Repeatedly executes the specified asynchronous task while it satisfies the current retry policy.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The type parameter of the <see cref="Task{T}"/> returned by <paramref name="taskFunc"/>.
+        ///     The type parameter of the <see cref="Task{T}"/> returned by <paramref name="func"/>.
         /// </typeparam>
-        /// <param name="taskFunc">A function that returns a started task of type <typeparamref name="TResult"/>.</param>
+        /// <param name="func">A function that returns a started task of type <typeparamref name="TResult"/>.</param>
         /// <param name="cancellationToken">
         ///     A cancellation token used to cancel the retry operation, but not operations that are already in flight
         ///     or that already completed successfully.
@@ -161,17 +161,17 @@ namespace System.Data.Entity.Infrastructure
         /// <exception cref="InvalidOperationException">if an existing transaction is detected and the execution strategy doesn't support it</exception>
         /// <exception cref="InvalidOperationException">if this instance was already used to execute an action</exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> taskFunc, CancellationToken cancellationToken)
+        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> func, CancellationToken cancellationToken)
         {
-            Check.NotNull(taskFunc, "taskFunc");
+            Check.NotNull(func, "func");
             EnsurePreexecutionState();
 
-            return ProtectedExecuteAsync(taskFunc, cancellationToken);
+            return ProtectedExecuteAsync(func, cancellationToken);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected virtual async Task<TResult> ProtectedExecuteAsync<TResult>(
-            Func<Task<TResult>> taskFunc, CancellationToken cancellationToken)
+            Func<Task<TResult>> func, CancellationToken cancellationToken)
         {
             while (true)
             {
@@ -179,7 +179,7 @@ namespace System.Data.Entity.Infrastructure
 
                 try
                 {
-                    return await taskFunc().ConfigureAwait(continueOnCapturedContext: false);
+                    return await func().ConfigureAwait(continueOnCapturedContext: false);
                 }
                 catch (Exception ex)
                 {

@@ -9,7 +9,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Threading;
     using System.Threading.Tasks;
 
-    public static class IDbAsyncEnumeratorExtensions
+    internal static class IDbAsyncEnumeratorExtensions
     {
         /// <summary>
         ///     Advances the enumerator to the next element in the sequence, returning the result asynchronously.

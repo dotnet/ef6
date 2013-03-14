@@ -59,36 +59,36 @@ namespace System.Data.Entity.SqlServer
 
 #if !NET40
 
-        public Task ExecuteAsync(Func<Task> taskFunc, CancellationToken cancellationToken)
+        public Task ExecuteAsync(Func<Task> func, CancellationToken cancellationToken)
         {
-            if (taskFunc == null)
+            if (func == null)
             {
-                throw new ArgumentNullException("taskFunc");
+                throw new ArgumentNullException("func");
             }
 
             return ExecuteAsyncImplementation(
                 async () =>
                           {
-                              await taskFunc().ConfigureAwait(continueOnCapturedContext: false);
+                              await func().ConfigureAwait(continueOnCapturedContext: false);
                               return true;
                           });
         }
 
-        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> taskFunc, CancellationToken cancellationToken)
+        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> func, CancellationToken cancellationToken)
         {
-            if (taskFunc == null)
+            if (func == null)
             {
-                throw new ArgumentNullException("taskFunc");
+                throw new ArgumentNullException("func");
             }
 
-            return ExecuteAsyncImplementation(taskFunc);
+            return ExecuteAsyncImplementation(func);
         }
 
-        private async Task<TResult> ExecuteAsyncImplementation<TResult>(Func<Task<TResult>> taskFunc)
+        private async Task<TResult> ExecuteAsyncImplementation<TResult>(Func<Task<TResult>> func)
         {
             try
             {
-                return await taskFunc().ConfigureAwait(continueOnCapturedContext: false);
+                return await func().ConfigureAwait(continueOnCapturedContext: false);
             }
             catch (Exception ex)
             {

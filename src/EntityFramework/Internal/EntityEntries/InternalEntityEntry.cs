@@ -192,7 +192,7 @@ namespace System.Data.Entity.Internal
         ///     An asynchronous version of GetDatabaseValues, which
         ///     queries the database for copies of the values of the tracked entity as they currently exist in the database.
         /// </summary>
-        /// <returns> A Task containing the store values. </returns>
+        /// <returns> A task containing the store values. </returns>
         public virtual async Task<InternalPropertyValues> GetDatabaseValuesAsync(CancellationToken cancellationToken)
         {
             ValidateStateToGetValues("GetDatabaseValuesAsync", EntityState.Added);
@@ -332,6 +332,21 @@ namespace System.Data.Entity.Internal
 
             _internalContext.ObjectContext.Refresh(RefreshMode.StoreWins, Entity);
         }
+        
+#if !NET40
+
+        /// <summary>
+        ///     An asynchronous version of Reload, which
+        ///     calls Refresh with StoreWins on the underlying state entry.
+        /// </summary>
+        public virtual Task ReloadAsync(CancellationToken cancellationToken)
+        {
+            ValidateStateToGetValues("ReloadAsync", EntityState.Added);
+
+            return _internalContext.ObjectContext.RefreshAsync(RefreshMode.StoreWins, Entity, cancellationToken);
+        }
+
+#endif
 
         #endregion
 

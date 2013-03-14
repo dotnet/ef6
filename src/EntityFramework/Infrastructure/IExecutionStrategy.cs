@@ -42,15 +42,15 @@ namespace System.Data.Entity.Infrastructure
         ///     first time or after retrying transient failures). If the task fails with a non-transient error or
         ///     the retry limit is reached, the returned task will become faulted and the exception must be observed.
         /// </returns>
-        Task ExecuteAsync(Func<Task> taskFunc, CancellationToken cancellationToken);
+        Task ExecuteAsync(Func<Task> func, CancellationToken cancellationToken);
 
         /// <summary>
         ///     Executes the specified asynchronous function and returns the result.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The type parameter of the <see cref="Task{T}"/> returned by <paramref name="taskFunc"/>.
+        ///     The type parameter of the <see cref="Task{T}"/> returned by <paramref name="func"/>.
         /// </typeparam>
-        /// <param name="taskFunc">A function that returns a started task of type <typeparamref name="TResult"/>.</param>
+        /// <param name="func">A function that returns a started task of type <typeparamref name="TResult"/>.</param>
         /// <param name="cancellationToken">
         ///     A cancellation token used to cancel the retry operation, but not operations that are already in flight
         ///     or that already completed successfully.
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Infrastructure
         ///     the retry limit is reached, the returned task will become faulted and the exception must be observed.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> taskFunc, CancellationToken cancellationToken);
+        Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> func, CancellationToken cancellationToken);
 
 #endif
     }

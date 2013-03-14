@@ -2050,11 +2050,11 @@ namespace System.Data.Entity.Core.Objects
         #region Refresh
 
         /// <summary>
-        ///     Refreshing cache data with store data for specific entities.
+        ///     Refreshes cache data with store data for specific entities.
         ///     The order in which entites are refreshed is non-deterministic.
         /// </summary>
         /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
-        /// <param name="collection"> must not be null and all entities must be attached to this context. May be empty. </param>
+        /// <param name="collection"> The entities to refresh. Must not be null and all entities must be attached to this context. May be empty. </param>
         /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
         /// <exception cref="ArgumentNullException">collection is null</exception>
         /// <exception cref="ArgumentException">collection contains null or non entities or entities not attached to this context</exception>
@@ -2063,20 +2063,14 @@ namespace System.Data.Entity.Core.Objects
             Check.NotNull(collection, "collection");
 
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
-            try
-            {
-                EntityUtil.CheckArgumentRefreshMode(refreshMode);
-                // collection may not contain any entities -- this is valid for this overload
-                RefreshEntities(refreshMode, collection);
-            }
-            finally
-            {
-                ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
-            }
+            EntityUtil.CheckArgumentRefreshMode(refreshMode);
+
+            // collection may not contain any entities -- this is valid for this overload
+            RefreshEntities(refreshMode, collection);
         }
 
         /// <summary>
-        ///     Refreshing cache data with store data for a specific entity.
+        ///     Refreshes cache data with store data for a specific entity.
         /// </summary>
         /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
         /// <param name="entity"> The entity to refresh. This must be a non-null entity that is attached to this context </param>
@@ -2089,16 +2083,93 @@ namespace System.Data.Entity.Core.Objects
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
 
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
-            try
-            {
-                EntityUtil.CheckArgumentRefreshMode(refreshMode);
-                RefreshEntities(refreshMode, new[] { entity });
-            }
-            finally
-            {
-                ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
-            }
+            EntityUtil.CheckArgumentRefreshMode(refreshMode);
+
+            RefreshEntities(refreshMode, new[] { entity });
         }
+
+#if !NET40
+
+        /// <summary>
+        ///     An asynchronous version of Refresh, which
+        ///     refreshes cache data with store data for specific entities.
+        ///     The order in which entites are refreshed is non-deterministic.
+        /// </summary>
+        /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
+        /// <param name="collection"> The entities to refresh. Must not be null and all entities must be attached to this context. May be empty. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A task representing the asynchronous operation. </returns>
+        /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
+        /// <exception cref="ArgumentNullException">collection is null</exception>
+        /// <exception cref="ArgumentException">collection contains null or non entities or entities not attached to this context</exception>
+        public Task RefreshAsync(RefreshMode refreshMode, IEnumerable collection)
+        {
+            return RefreshAsync(refreshMode, collection, CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of Refresh, which
+        ///     refreshes cache data with store data for specific entities.
+        ///     The order in which entites are refreshed is non-deterministic.
+        /// </summary>
+        /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
+        /// <param name="collection"> The entities to refresh. Must not be null and all entities must be attached to this context. May be empty. </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A task representing the asynchronous operation. </returns>
+        /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
+        /// <exception cref="ArgumentNullException">collection is null</exception>
+        /// <exception cref="ArgumentException">collection contains null or non entities or entities not attached to this context</exception>
+        public virtual Task RefreshAsync(RefreshMode refreshMode, IEnumerable collection, CancellationToken cancellationToken)
+        {
+            Check.NotNull(collection, "collection");
+
+            AsyncMonitor.EnsureNotEntered();
+            ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
+            EntityUtil.CheckArgumentRefreshMode(refreshMode);
+
+            return RefreshEntitiesAsync(refreshMode, collection, cancellationToken);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of Refresh, which
+        ///     refreshes cache data with store data for a specific entity.
+        /// </summary>
+        /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
+        /// <param name="entity"> The entity to refresh. This must be a non-null entity that is attached to this context </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A task representing the asynchronous operation. </returns>
+        /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
+        /// <exception cref="ArgumentNullException">entity is null</exception>
+        /// <exception cref="ArgumentException">entity is not attached to this context</exception>
+        public Task RefreshAsync(RefreshMode refreshMode, object entity)
+        {
+            return RefreshAsync(refreshMode, entity, CancellationToken.None);
+        }
+
+        /// <summary>
+        ///     An asynchronous version of Refresh, which
+        ///     refreshes cache data with store data for a specific entity.
+        /// </summary>
+        /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
+        /// <param name="entity"> The entity to refresh. This must be a non-null entity that is attached to this context </param>
+        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <returns> A task representing the asynchronous operation. </returns>
+        /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
+        /// <exception cref="ArgumentNullException">entity is null</exception>
+        /// <exception cref="ArgumentException">entity is not attached to this context</exception>
+        public virtual Task RefreshAsync(RefreshMode refreshMode, object entity, CancellationToken cancellationToken)
+        {
+            Check.NotNull(entity, "entity");
+            Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
+
+            AsyncMonitor.EnsureNotEntered();
+            ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
+            EntityUtil.CheckArgumentRefreshMode(refreshMode);
+
+            return RefreshEntitiesAsync(refreshMode, new[] { entity }, cancellationToken);
+        }
+
+#endif
 
         /// <summary>
         ///     Validates that the given entity/key pair has an ObjectStateEntry
@@ -2160,9 +2231,6 @@ namespace System.Data.Entity.Core.Objects
                     AddRefreshKey(entity, entities, refreshKeys);
                 }
 
-                // The collection is no longer required at this point.
-                collection = null;
-
                 #endregion
 
                 #region 2) build and execute the query for each set of entities
@@ -2185,9 +2253,6 @@ namespace System.Data.Entity.Core.Objects
                         }
                     }
                 }
-
-                // The refreshKeys list is no longer required at this point.
-                refreshKeys = null;
 
                 #endregion
 
@@ -2261,6 +2326,8 @@ namespace System.Data.Entity.Core.Objects
                 {
                     ReleaseConnection();
                 }
+
+                ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
             }
         }
 
@@ -2268,56 +2335,177 @@ namespace System.Data.Entity.Core.Objects
             RefreshMode refreshMode, Dictionary<EntityKey, EntityEntry> trackedEntities,
             EntitySet targetSet, List<EntityKey> targetKeys, int startFrom)
         {
-            var queryTreeAndNextPosition = PrepareRefreshQuery(targetSet, targetKeys, startFrom);
-
-            // Evaluate the refresh query using ObjectQuery<T> and process the results to update the ObjectStateManager.
-            var mergeOption = (RefreshMode.StoreWins == refreshMode
-                                   ? MergeOption.OverwriteChanges
-                                   : MergeOption.PreserveChanges);
-            var objectQueryExecutionPlan = _objectQueryExecutionPlanFactory.Prepare(
-                this, queryTreeAndNextPosition.Item1, typeof(object), mergeOption,
-                /*streaming:*/ false, null, null, DbExpressionBuilder.AliasGenerator);
+            var queryPlanAndNextPosition = PrepareRefreshQuery(refreshMode, targetSet, targetKeys, startFrom);
 
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
             var results = executionStrategy.Execute(
                 () => ExecuteInTransaction(
-                    () => objectQueryExecutionPlan.Execute<object>(this, null),
+                    () => queryPlanAndNextPosition.Item1.Execute<object>(this, null),
                     throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: false,
                     releaseConnectionOnSuccess: true));
 
-            foreach (var entity in results)
-            {
-                // There is a risk that, during an event, the Entity removed itself from the cache.
-                var entry = ObjectStateManager.FindEntityEntry(entity);
-                if (null != entry
-                    && EntityState.Modified == entry.State)
-                {
-                    // this is 'ForceChanges' - which is the same as PreserveChanges, except all properties are marked modified.
-                    Debug.Assert(RefreshMode.ClientWins == refreshMode, "StoreWins always becomes unchanged");
-                    entry.SetModifiedAll();
-                }
-
-                var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, this);
-                var key = wrappedEntity.EntityKey;
-                if ((object)key == null)
-                {
-                    throw Error.EntityKey_UnexpectedNull();
-                }
-
-                // An incorrectly returned entity should result in an exception to avoid further corruption to the ObjectStateManager.
-                if (!trackedEntities.Remove(key))
-                {
-                    throw new InvalidOperationException(Strings.ObjectContext_StoreEntityNotPresentInClient);
-                }
-            }
+            ProcessRefreshedEntities(trackedEntities, results);
 
             // Return the position in the list from which the next refresh operation should start.
             // This will be equal to the list count if all remaining entities in the list were
             // refreshed during this call.
-            return queryTreeAndNextPosition.Item2;
+            return queryPlanAndNextPosition.Item2;
         }
 
-        internal virtual Tuple<DbQueryCommandTree, int> PrepareRefreshQuery(EntitySet targetSet, List<EntityKey> targetKeys, int startFrom)
+#if !NET40
+
+        private async Task RefreshEntitiesAsync(RefreshMode refreshMode, IEnumerable collection, CancellationToken cancellationToken)
+        {
+            // refreshMode and collection should already be validated prior to this call -- collection can be empty in one Refresh overload
+            // but not in the other, so we need to do that check before we get to this common method
+            DebugCheck.NotNull(collection);
+
+            AsyncMonitor.Enter();
+
+            var openedConnection = false;
+
+            try
+            {
+                var entities = new Dictionary<EntityKey, EntityEntry>(RefreshEntitiesSize(collection));
+
+                #region 1) Validate and bucket the entities by entity set
+
+                var refreshKeys = new Dictionary<EntitySet, List<EntityKey>>();
+                foreach (var entity in collection) // anything other than object risks InvalidCastException
+                {
+                    AddRefreshKey(entity, entities, refreshKeys);
+                }
+
+                #endregion
+
+                #region 2) build and execute the query for each set of entities
+
+                if (refreshKeys.Count > 0)
+                {
+                    await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    openedConnection = true;
+
+                    // All entities from a single set can potentially be refreshed in the same query.
+                    // However, the refresh operations are batched in an attempt to avoid the generation
+                    // of query trees or provider SQL that exhaust available client or server resources.
+                    foreach (var targetSet in refreshKeys.Keys)
+                    {
+                        var setKeys = refreshKeys[targetSet];
+                        var refreshedCount = 0;
+                        while (refreshedCount < setKeys.Count)
+                        {
+                            refreshedCount =
+                                await
+                                BatchRefreshEntitiesByKeyAsync(refreshMode, entities, targetSet, setKeys, refreshedCount, cancellationToken)
+                                    .ConfigureAwait(continueOnCapturedContext: false);
+                        }
+                    }
+                }
+
+                #endregion
+
+                #region 3) process the unrefreshed entities
+
+                if (RefreshMode.StoreWins == refreshMode)
+                {
+                    // remove all entites that have been removed from the store, not added by client
+                    foreach (var item in entities)
+                    {
+                        Debug.Assert(EntityState.Added != item.Value.State, "should not be possible");
+                        if (EntityState.Detached
+                            != item.Value.State)
+                        {
+                            // We set the detaching flag here even though we are deleting because we are doing a
+                            // Delete/AcceptChanges cycle to simulate a Detach, but we can't use Detach directly
+                            // because legacy behavior around cascade deletes should be preserved.  However, we
+                            // do want to prevent FK values in dependents from being nulled, which is why we
+                            // need to set the detaching flag.
+                            ObjectStateManager.TransactionManager.BeginDetaching();
+                            try
+                            {
+                                item.Value.Delete();
+                            }
+                            finally
+                            {
+                                ObjectStateManager.TransactionManager.EndDetaching();
+                            }
+                            Debug.Assert(EntityState.Detached != item.Value.State, "not expecting detached");
+
+                            item.Value.AcceptChanges();
+                        }
+                    }
+                }
+                else if (RefreshMode.ClientWins == refreshMode
+                         && 0 < entities.Count)
+                {
+                    // throw an exception with all appropriate entity keys in text
+                    var prefix = String.Empty;
+                    var builder = new StringBuilder();
+                    foreach (var item in entities)
+                    {
+                        Debug.Assert(EntityState.Added != item.Value.State, "should not be possible");
+                        if (item.Value.State
+                            == EntityState.Deleted)
+                        {
+                            // Detach the deleted items because this is the client changes and the server
+                            // does not have these items any more
+                            item.Value.AcceptChanges();
+                        }
+                        else
+                        {
+                            builder.Append(prefix).Append(Environment.NewLine);
+                            builder.Append('\'').Append(item.Key.ConcatKeyValue()).Append('\'');
+                            prefix = ",";
+                        }
+                    }
+
+                    // If there were items that could not be found, throw an exception
+                    if (builder.Length > 0)
+                    {
+                        throw new InvalidOperationException(Strings.ObjectContext_ClientEntityRemovedFromStore(builder.ToString()));
+                    }
+                }
+
+                #endregion
+            }
+            finally
+            {
+                if (openedConnection)
+                {
+                    ReleaseConnection();
+                }
+
+                AsyncMonitor.Exit();
+                ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
+            }
+        }
+
+        private async Task<int> BatchRefreshEntitiesByKeyAsync(
+            RefreshMode refreshMode, Dictionary<EntityKey, EntityEntry> trackedEntities,
+            EntitySet targetSet, List<EntityKey> targetKeys, int startFrom, CancellationToken cancellationToken)
+        {
+            var queryPlanAndNextPosition = PrepareRefreshQuery(refreshMode, targetSet, targetKeys, startFrom);
+
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var results = await executionStrategy.ExecuteAsync(
+                () => ExecuteInTransactionAsync(
+                    () => queryPlanAndNextPosition.Item1.ExecuteAsync<object>(this, null, cancellationToken),
+                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: false,
+                    releaseConnectionOnSuccess: true, cancellationToken: cancellationToken), cancellationToken)
+                                                 .ConfigureAwait(continueOnCapturedContext: false);
+
+            ProcessRefreshedEntities(trackedEntities, results);
+
+            // Return the position in the list from which the next refresh operation should start.
+            // This will be equal to the list count if all remaining entities in the list were
+            // refreshed during this call.
+            return queryPlanAndNextPosition.Item2;
+        }
+
+#endif
+
+        internal virtual Tuple<ObjectQueryExecutionPlan, int> PrepareRefreshQuery(
+            RefreshMode refreshMode, EntitySet targetSet, List<EntityKey> targetKeys, int startFrom)
         {
             // A single refresh query can be built for all entities from the same set.
             // For each entity set, a DbFilterExpression is constructed that
@@ -2383,9 +2571,45 @@ namespace System.Data.Entity.Core.Objects
             DbExpression refreshQuery = entitySetBinding.Filter(entitySetFilter);
 
             // Initialize the command tree used to issue the refresh query.
-            return new Tuple<DbQueryCommandTree, int>(
-                DbQueryCommandTree.FromValidExpression(MetadataWorkspace, DataSpace.CSpace, refreshQuery),
-                startFrom);
+            var tree = DbQueryCommandTree.FromValidExpression(MetadataWorkspace, DataSpace.CSpace, refreshQuery);
+
+            // Evaluate the refresh query using ObjectQuery<T> and process the results to update the ObjectStateManager.
+            var mergeOption = (RefreshMode.StoreWins == refreshMode
+                                   ? MergeOption.OverwriteChanges
+                                   : MergeOption.PreserveChanges);
+            var objectQueryExecutionPlan = _objectQueryExecutionPlanFactory.Prepare(
+                this, tree, typeof(object), mergeOption,
+                /*streaming:*/ false, null, null, DbExpressionBuilder.AliasGenerator);
+
+            return new Tuple<ObjectQueryExecutionPlan, int>(objectQueryExecutionPlan, startFrom);
+        }
+
+        private void ProcessRefreshedEntities(Dictionary<EntityKey, EntityEntry> trackedEntities, ObjectResult<object> results)
+        {
+            foreach (var entity in results)
+            {
+                // There is a risk that, during an event, the Entity removed itself from the cache.
+                var entry = ObjectStateManager.FindEntityEntry(entity);
+                if (entry != null
+                    && entry.State == EntityState.Modified)
+                {
+                    // this is 'ForceChanges' - which is the same as PreserveChanges, except all properties are marked modified.
+                    entry.SetModifiedAll();
+                }
+
+                var wrappedEntity = EntityWrapperFactory.WrapEntityUsingContext(entity, this);
+                var key = wrappedEntity.EntityKey;
+                if ((object)key == null)
+                {
+                    throw Error.EntityKey_UnexpectedNull();
+                }
+
+                // An incorrectly returned entity should result in an exception to avoid further corruption to the ObjectStateManager.
+                if (!trackedEntities.Remove(key))
+                {
+                    throw new InvalidOperationException(Strings.ObjectContext_StoreEntityNotPresentInClient);
+                }
+            }
         }
 
         private static int RefreshEntitiesSize(IEnumerable collection)
@@ -3272,10 +3496,12 @@ namespace System.Data.Entity.Core.Objects
                         // If the types were not loaded into the workspace we try loading types from the assembly the type lives in and re-try
                         // loading the type. We don't care if the type still cannot be loaded - in this case the result TypeUsage will be null
                         // which we handle later.
-                        if (!Perspective.TryGetTypeByName(objectParameter.MappableType.FullNameWithNesting(), /*ignoreCase */ false, out typeUsage))
+                        if (!Perspective.TryGetTypeByName(
+                                objectParameter.MappableType.FullNameWithNesting(), /*ignoreCase */ false, out typeUsage))
                         {
                             MetadataWorkspace.ImplicitLoadAssemblyForType(objectParameter.MappableType, null);
-                            Perspective.TryGetTypeByName(objectParameter.MappableType.FullNameWithNesting(), /*ignoreCase */ false, out typeUsage);
+                            Perspective.TryGetTypeByName(
+                                objectParameter.MappableType.FullNameWithNesting(), /*ignoreCase */ false, out typeUsage);
                         }
                     }
                     else
@@ -3355,7 +3581,7 @@ namespace System.Data.Entity.Core.Objects
                             ospaceItems.TryGetItem(type.FullNameWithNesting(), out entityType);
                             return entityType;
                         }).Where(entityType => entityType != null),
-                        MetadataWorkspace
+                MetadataWorkspace
                 );
         }
 
@@ -3479,7 +3705,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="commandText"> The command specified in the server's native query language. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
-        /// <returns> A Task containing a single integer return value. </returns>
+        /// <returns> A task containing a single integer return value. </returns>
         public Task<int> ExecuteStoreCommandAsync(string commandText, params object[] parameters)
         {
             return ExecuteStoreCommandAsync(commandText, CancellationToken.None, parameters);
@@ -3493,7 +3719,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="commandText"> The command specified in the server's native query language. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing a single integer return value. </returns>
+        /// <returns> A task containing a single integer return value. </returns>
         public virtual Task<int> ExecuteStoreCommandAsync(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
@@ -3502,7 +3728,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         private async Task<int> ExecuteStoreCommandInternalAsync(
-           string commandText, CancellationToken cancellationToken, params object[] parameters)
+            string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
             AsyncMonitor.Enter();
@@ -3512,8 +3738,8 @@ namespace System.Data.Entity.Core.Objects
                 return await executionStrategy.ExecuteAsync(
                     () => ExecuteInTransactionAsync(
                         () => CreateStoreCommand(commandText, parameters).ExecuteNonQueryAsync(cancellationToken),
-                        /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
-                        /*startLocalTransaction:*/ true, /*releaseConnectionOnSuccess:*/ true, cancellationToken),
+                              /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
+                              /*startLocalTransaction:*/ true, /*releaseConnectionOnSuccess:*/ true, cancellationToken),
                     cancellationToken);
             }
             finally
@@ -3694,7 +3920,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A Task containing an enumeration of objects of type <typeparamref name="TElement" /> .
+        ///     A task containing an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(string commandText, params object[] parameters)
@@ -3712,7 +3938,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A Task containing an enumeration of objects of type <typeparamref name="TElement" /> .
+        ///     A task containing an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
@@ -3740,7 +3966,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="executionOptions"> The options for executing this query. </param> 
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A Task containing an enumeration of objects of type <typeparamref name="TElement" /> .
+        ///     A task containing an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
@@ -3770,7 +3996,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A Task containing an enumeration of objects of type <typeparamref name="TElement" /> .
+        ///     A task containing an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
@@ -3800,7 +4026,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="executionOptions"> The options for executing this query. </param> 
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A Task containing an enumeration of objects of type <typeparamref name="TElement" /> .
+        ///     A task containing an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
@@ -3821,7 +4047,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A Task containing an enumeration of objects of type <typeparamref name="TElement" /> .
+        ///     A task containing an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
@@ -3862,7 +4088,7 @@ namespace System.Data.Entity.Core.Objects
                 // user must manually call LoadFromAssembly. *GetCallingAssembly returns
                 // the assembly of the method that invoked the currently executing method.
                 MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
-                
+
                 return await executionStrategy.ExecuteAsync(
                     () => ExecuteInTransactionAsync(
                         () => ExecuteStoreQueryInternalAsync<TElement>(
@@ -3871,7 +4097,6 @@ namespace System.Data.Entity.Core.Objects
                               /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !executionOptions.Streaming,
                         cancellationToken),
                     cancellationToken);
-
             }
             finally
             {

@@ -10,6 +10,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
     using AdvancedPatternsModel;
     using ConcurrencyModel;
     using SimpleModel;
@@ -3021,7 +3022,7 @@ namespace ProductivityApiTests
 #if !NET40
                 var asyncEnumerator = ((IDbAsyncEnumerable)nonGenericQuery).GetAsyncEnumerator();
 
-                Assert.True(asyncEnumerator.MoveNextAsync().Result);
+                Assert.True(asyncEnumerator.MoveNextAsync(CancellationToken.None).Result);
 
                 Assert.Same(query.First(), asyncEnumerator.Current);
 #endif

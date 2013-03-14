@@ -100,11 +100,11 @@ namespace System.Data.Entity.SqlServer
             var executionStrategy = new DefaultSqlExecutionStrategy();
 
             Assert.Equal(
-                "taskFunc",
+                "func",
                 Assert.Throws<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null, CancellationToken.None)).ParamName);
 
             Assert.Equal(
-                "taskFunc",
+                "func",
                 Assert.Throws<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null, CancellationToken.None)).ParamName);
         }
         [Fact]

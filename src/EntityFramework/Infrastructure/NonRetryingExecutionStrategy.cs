@@ -29,14 +29,14 @@ namespace System.Data.Entity.Infrastructure
 
 #if !NET40
 
-        public Task ExecuteAsync(Func<Task> taskFunc, CancellationToken cancellationToken)
+        public Task ExecuteAsync(Func<Task> func, CancellationToken cancellationToken)
         {
-            return taskFunc();
+            return func();
         }
 
-        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> taskFunc, CancellationToken cancellationToken)
+        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> func, CancellationToken cancellationToken)
         {
-            return taskFunc();
+            return func();
         }
 
 #endif

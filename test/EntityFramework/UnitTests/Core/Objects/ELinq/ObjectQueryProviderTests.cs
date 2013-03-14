@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
     using Moq;
     using Xunit;
 
@@ -46,7 +47,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             var expectedResult = new object();
 
             createObjectQueryProviderMock.Setup(m => m.CreateQuery(It.IsAny<Expression>(), It.IsAny<Type>()))
-                .Returns(MockHelper.CreateMockObjectQuery(expectedResult).Object);
+                                         .Returns(MockHelper.CreateMockObjectQuery(expectedResult).Object);
 
             var result = ((IQueryProvider)createObjectQueryProviderMock.Object).Execute(new Mock<Expression>().Object);
 
@@ -61,7 +62,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             var expectedResult = new object();
 
             createObjectQueryProviderMock.Setup(m => m.CreateQuery<object>(It.IsAny<Expression>()))
-                .Returns(MockHelper.CreateMockObjectQuery(expectedResult).Object);
+                                         .Returns(MockHelper.CreateMockObjectQuery(expectedResult).Object);
 
             var result = ((IQueryProvider)createObjectQueryProviderMock.Object).Execute<object>(new Mock<Expression>().Object);
 
@@ -74,14 +75,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
         public void ExecuteAsync_nongeneric_throws_for_null_argument()
         {
             Assert.Throws<ArgumentNullException>(
-                () => (CreateObjectQueryProviderMock().Object).ExecuteAsync(null));
+                () => ((IDbAsyncQueryProvider)CreateObjectQueryProviderMock().Object).ExecuteAsync(null, CancellationToken.None));
         }
 
         [Fact]
         public void ExecuteAsync_generic_throws_for_null_argument()
         {
             Assert.Throws<ArgumentNullException>(
-                () => (CreateObjectQueryProviderMock().Object).ExecuteAsync<object>(null));
+                () => ((IDbAsyncQueryProvider)CreateObjectQueryProviderMock().Object).ExecuteAsync<object>(null, CancellationToken.None));
         }
 
         [Fact]
@@ -92,9 +93,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
             var expectedResult = new object();
 
             createObjectQueryProviderMock.Setup(m => m.CreateQuery(It.IsAny<Expression>(), It.IsAny<Type>()))
-                .Returns(MockHelper.CreateMockObjectQuery(expectedResult).Object);
+                                         .Returns(MockHelper.CreateMockObjectQuery(expectedResult).Object);
 
-            var result = createObjectQueryProviderMock.Object.ExecuteAsync(new Mock<Expression>().Object).Result;
+            var result = ((IDbAsyncQueryProvider)createObjectQueryProviderMock.Object)
+                .ExecuteAsync(new Mock<Expression>().Object, CancellationToken.None).Result;
 
             Assert.Same(expectedResult, result);
         }
@@ -107,9 +109,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
             var expectedResult = new object();
 
             createObjectQueryProviderMock.Setup(m => m.CreateQuery<object>(It.IsAny<Expression>()))
-                .Returns(MockHelper.CreateMockObjectQuery(expectedResult).Object);
+                                         .Returns(MockHelper.CreateMockObjectQuery(expectedResult).Object);
 
-            var result = createObjectQueryProviderMock.Object.ExecuteAsync<object>(new Mock<Expression>().Object).Result;
+            var result = ((IDbAsyncQueryProvider)createObjectQueryProviderMock.Object)
+                .ExecuteAsync<object>(new Mock<Expression>().Object, CancellationToken.None).Result;
 
             Assert.Same(expectedResult, result);
         }
