@@ -20,7 +20,11 @@ namespace System.Data.Entity.Internal
                 customKey = modelCacheKeyProvider.CacheKey;
             }
 
-            return new DefaultModelCacheKey(context.GetType(), context.InternalContext.ProviderName, customKey);
+            return new DefaultModelCacheKey(
+                context.GetType(),
+                context.InternalContext.ProviderName,
+                context.InternalContext.ProviderFactory.GetType(),
+                customKey);
         }
     }
 }

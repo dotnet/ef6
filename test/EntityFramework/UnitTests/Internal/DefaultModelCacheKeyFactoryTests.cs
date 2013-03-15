@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Infrastructure;
+    using System.Data.SqlClient;
     using Moq;
     using Xunit;
 
@@ -28,6 +29,7 @@ namespace System.Data.Entity.Internal
 
             var mockInternalContext = new Mock<InternalContext>();
             mockInternalContext.SetupGet(ic => ic.ProviderName).Returns("foo");
+            mockInternalContext.Setup(m => m.Connection).Returns(new SqlConnection());
 
             mockContext.SetupGet(c => c.InternalContext).Returns(mockInternalContext.Object);
 

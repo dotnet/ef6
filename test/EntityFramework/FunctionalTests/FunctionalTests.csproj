@@ -155,6 +155,20 @@
     <Compile Include="ViewGeneration\PregenContextEdmxViews.cs" />
     <Compile Include="ViewGeneration\PregenContextViews.cs" />
     <Compile Include="ViewGeneration\PregeneratedViewsTests.cs" />
+    <Compile Include="WrappingProvider\LogItem.cs" />
+    <Compile Include="WrappingProvider\WrappingAdoNetProvider.cs" />
+    <Compile Include="WrappingProvider\WrappingCommand.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WrappingProvider\WrappingCommandDefinition.cs" />
+    <Compile Include="WrappingProvider\WrappingConnection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WrappingProvider\WrappingEfProvider.cs" />
+    <Compile Include="WrappingProvider\WrappingProviderFactoryService.cs" />
+    <Compile Include="WrappingProvider\WrappingProviderInvariantName.cs" />
+    <Compile Include="WrappingProvider\WrappingProviderTests.cs" />
+    <Compile Include="WrappingProvider\WrappingTransaction.cs" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
     <Compile Include="EntityClient\AsyncScenarios.cs" />
     <Compile Include="EntityClient\DependencyResolverTests.cs" />

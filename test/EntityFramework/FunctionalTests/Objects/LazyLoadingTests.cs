@@ -72,7 +72,7 @@ namespace System.Data.Entity.Objects
                 var engineId = context.Teams.Where(t => t.Id == teamId).Select(t => t.Engine).AsNoTracking().FirstOrDefault().Id;
 
                 var team = context.Teams.Where(t => t.Id == teamId).AsNoTracking().Single();
-                team.Constructor = "Foobarius Foobar";
+                team.Constructor = "Fooblearius Fooblebar";
 
                 Assert.NotNull(team.Engine);
             }
@@ -84,7 +84,7 @@ namespace System.Data.Entity.Objects
             using (var context = new F1Context())
             {
                 var team = context.Teams.FirstOrDefault();
-                team.Constructor = "Foobarius Foobar";
+                team.Constructor = "Fooblearius Fooblebar";
 
                 Assert.True(team.Drivers.Count > 0);
             }

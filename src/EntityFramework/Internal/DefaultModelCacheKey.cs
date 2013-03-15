@@ -10,16 +10,19 @@ namespace System.Data.Entity.Internal
     {
         private readonly Type _contextType;
         private readonly string _providerName;
+        private readonly Type _providerType;
         private readonly string _customKey;
 
-        public DefaultModelCacheKey(Type contextType, string providerName, string customKey)
+        public DefaultModelCacheKey(Type contextType, string providerName, Type providerType, string customKey)
         {
             DebugCheck.NotNull(contextType);
             Debug.Assert(typeof(DbContext).IsAssignableFrom(contextType));
             DebugCheck.NotEmpty(providerName);
+            DebugCheck.NotNull(providerType);
 
             _contextType = contextType;
             _providerName = providerName;
+            _providerType = providerType;
             _customKey = customKey;
         }
 
@@ -46,6 +49,7 @@ namespace System.Data.Entity.Internal
             {
                 return (_contextType.GetHashCode() * 397)
                        ^ _providerName.GetHashCode()
+                       ^ _providerType.GetHashCode()
                        ^ (!string.IsNullOrWhiteSpace(_customKey) ? _customKey.GetHashCode() : 0);
             }
         }
@@ -56,6 +60,7 @@ namespace System.Data.Entity.Internal
 
             return _contextType == other._contextType
                    && string.Equals(_providerName, other._providerName)
+                   && string.Equals(_providerType, other._providerType)
                    && string.Equals(_customKey, other._customKey);
         }
     }

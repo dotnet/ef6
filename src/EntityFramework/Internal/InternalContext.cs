@@ -114,6 +114,8 @@ namespace System.Data.Entity.Internal
 
         private bool _oSpaceLoadingForced;
 
+        private DbProviderFactory _providerFactory;
+
         public event EventHandler<EventArgs> OnDisposing;
 
         /// <summary>
@@ -278,8 +280,7 @@ namespace System.Data.Entity.Internal
         /// <returns> The model hash, or null if not found. </returns>
         public virtual string QueryForModelHash()
         {
-            return new EdmMetadataRepository(
-                OriginalConnectionString, DbProviderServices.GetProviderFactory(Connection))
+            return new EdmMetadataRepository(OriginalConnectionString, ProviderFactory)
                 .QueryForModelHash(c => new EdmMetadataContext(c));
         }
 
@@ -313,7 +314,7 @@ namespace System.Data.Entity.Internal
         {
             return new HistoryRepository(
                 OriginalConnectionString,
-                DbProviderServices.GetProviderFactory(Connection),
+                ProviderFactory,
                 ContextKey,
                 new[] { DefaultSchema });
         }
@@ -1192,6 +1193,11 @@ namespace System.Data.Entity.Internal
         public virtual string ProviderName
         {
             get { return Connection.GetProviderInvariantName(); }
+        }
+
+        public DbProviderFactory ProviderFactory
+        {
+            get { return _providerFactory ?? (_providerFactory = DbProviderServices.GetProviderFactory(Connection)); }
         }
 
         /// <summary>
