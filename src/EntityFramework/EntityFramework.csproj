@@ -347,6 +347,7 @@
     <Compile Include="DbContextTransaction.cs" />
     <Compile Include="Edm\Serialization\MslXmlSchemaWriter.cs" />
     <Compile Include="Infrastructure\DbProviderNameAttribute.cs" />
+    <Compile Include="Infrastructure\Net40DefaultDbProviderFactoryService.cs" />
     <Compile Include="Migrations\Infrastructure\IDbMigration.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryService.cs" />
     <Compile Include="Infrastructure\DbConcurrencyException.cs" />

@@ -5,19 +5,14 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
-    using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
-    using System.Linq;
     using System.Reflection;
     using Xunit;
 
-#if NET40
-    using System.Data.Entity.Resources;
-    using Moq;
-#endif
-
     public class DefaultDbProviderFactoryServiceTests : TestBase
     {
+#if !NET40
+
         [Fact]
         public void GetProviderFactory_throws_for_null_connection()
         {
@@ -44,137 +39,68 @@ namespace System.Data.Entity.Infrastructure
             Assert.NotNull(GenericProviderFactory<DbProviderFactory>.Instance);
             Assert.Equal(
                 GenericProviderFactory<DbProviderFactory>.Instance,
-                new DefaultDbProviderFactoryService(
-                    new ProviderRowFinder(DbProviderFactories.GetFactoryClasses().Rows.OfType<DataRow>()))
+                new DefaultDbProviderFactoryService()
                     .GetProviderFactory(new GenericConnection<DbProviderFactory>()));
         }
-
-#if NET40
-        [Fact]
-        public void GetProviderFactory_throws_for_unknown_provider_on_net40()
-        {
-            var mockConnection = new Mock<DbConnection>();
-            mockConnection.Setup(m => m.ToString()).Returns("Disco 2000");
-
-            Assert.Equal(
-                Strings.ProviderNotFound("Disco 2000"),
-                Assert.Throws<NotSupportedException>(
-                    () => new DefaultDbProviderFactoryService().GetProviderFactory(mockConnection.Object)).Message);
-        }
-
-        [Fact]
-        public void GetProviderFactory_caches_factory_instances_on_net40()
-        {
-            var mockFinder = new Mock<ProviderRowFinder>(null)
-                                 {
-                                     CallBase = true
-                                 };
-
-            var service = new DefaultDbProviderFactoryService(mockFinder.Object);
-
-            Assert.Equal(SqlClientFactory.Instance, service.GetProviderFactory(new SqlConnection()));
-            mockFinder.Verify(m => m.FindRow(It.IsAny<Type>(), It.IsAny<Func<DataRow, bool>>()), Times.Once());
-
-            Assert.Equal(SqlClientFactory.Instance, service.GetProviderFactory(new SqlConnection()));
-            mockFinder.Verify(m => m.FindRow(It.IsAny<Type>(), It.IsAny<Func<DataRow, bool>>()), Times.Once()); // Finder not called again
-        }
-#endif
 
         [Fact]
         public void GetProviderFactory_returns_exact_connection_type_match_in_same_assembly()
         {
-            var rows = new[]
-                           {
-                               CreateProviderRow("Row1", "Row.1", _weakProviderType2.AssemblyQualifiedName),
-                               CreateProviderRow("Row2", "Row.2", typeof(FakeProviderFactory2).AssemblyQualifiedName),
-                               CreateProviderRow("Row3", "Row.3", _weakProviderType1.AssemblyQualifiedName),
-                               CreateProviderRow("Row4", "Row.4", typeof(FakeSqlProviderFactory).AssemblyQualifiedName),
-                           };
-
             Assert.Same(
                 FakeSqlProviderFactory.Instance,
-                new DefaultDbProviderFactoryService(new ProviderRowFinder(rows)).GetProviderFactory(new FakeSqlConnection()));
+                new DefaultDbProviderFactoryService().GetProviderFactory(new FakeSqlConnection()));
         }
 
         [Fact]
         public void GetProviderFactory_returns_exact_connection_type_match_in_different_assembly()
         {
-            var rows = new[]
-                           {
-                               CreateProviderRow("Row1", "Row.1", _weakProviderType2.AssemblyQualifiedName),
-                               CreateProviderRow("Row2", "Row.2", typeof(FakeProviderFactory2).AssemblyQualifiedName),
-                               CreateProviderRow("Row3", "Row.3", _weakProviderType1.AssemblyQualifiedName),
-                           };
-
             Assert.Same(
-                GetFactoryInstance(_weakProviderType1),
-                new DefaultDbProviderFactoryService(new ProviderRowFinder(rows))
-                    .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(_weakProviderType1))));
+                GetFactoryInstance(WeakProviderType1),
+                new DefaultDbProviderFactoryService()
+                    .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType1))));
         }
 
         [Fact]
         public void GetProviderFactory_returns_derived_connection_type_match_in_same_assembly()
         {
-            var rows = new[]
-                           {
-                               CreateProviderRow("Row1", "Row.1", _weakProviderType2.AssemblyQualifiedName),
-                               CreateProviderRow("Row2", "Row.2", typeof(FakeProviderFactory2).AssemblyQualifiedName),
-                           };
-
             Assert.Same(
                 FakeProviderFactory2.Instance,
-                new DefaultDbProviderFactoryService(new ProviderRowFinder(rows))
+                new DefaultDbProviderFactoryService()
                     .GetProviderFactory(new FakeSqlConnection("2008", FakeProviderFactory2.Instance)));
         }
 
         [Fact]
         public void GetProviderFactory_returns_derived_connection_type_match_in_different_assembly()
         {
-            var rows = new[]
-                           {
-                               CreateProviderRow("Row1", "Row.1", _weakProviderType2.AssemblyQualifiedName),
-                           };
-
             Assert.Same(
-                GetFactoryInstance(_weakProviderType2),
-                new DefaultDbProviderFactoryService(new ProviderRowFinder(rows))
-                    .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(_weakProviderType2))));
+                GetFactoryInstance(WeakProviderType2),
+                new DefaultDbProviderFactoryService()
+                    .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType2))));
         }
 
         [Fact]
         public void GetProviderFactory_returns_provider_in_weakly_named_assembly_without_version_or_key_in_name()
         {
-            var rows = new[]
-                           {
-                               CreateProviderRow("ProviderFactory", "Provider.Factory", "WeakProviderFactory, ProviderAssembly1"),
-                           };
-
             Assert.Same(
-                GetFactoryInstance(_weakProviderType1),
-                new DefaultDbProviderFactoryService(new ProviderRowFinder(rows))
-                    .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(_weakProviderType1))));
+                GetFactoryInstance(WeakProviderType1),
+                new DefaultDbProviderFactoryService()
+                    .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType1))));
         }
 
         [Fact]
         public void GetProviderFactory_returns_provider_in_weakly_named_assembly_with_non_standard_spacing_in_name()
         {
-            var rows = new[]
-                           {
-                               CreateProviderRow(
-                                   "ProviderFactory", "Provider.Factory",
-                                   "WeakProviderFactory,ProviderAssembly1,   Version=0.0.0.0,    Culture=neutral,PublicKeyToken=null"),
-                           };
-
             Assert.Same(
-                GetFactoryInstance(_weakProviderType1),
-                new DefaultDbProviderFactoryService(new ProviderRowFinder(rows))
-                    .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(_weakProviderType1))));
+                GetFactoryInstance(WeakProviderType1),
+                new DefaultDbProviderFactoryService()
+                    .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType1))));
         }
+#endif
 
-        private static readonly Type _weakProviderType1 = CreateWeakProviderType(typeof(FakeProviderBase1), "ProviderAssembly1");
-        private static readonly Type _weakProviderType2 = CreateWeakProviderType(typeof(FakeProviderBase2), "ProviderAssembly2");
+        protected static readonly Type WeakProviderType1 = CreateWeakProviderType(typeof(FakeProviderBase1), "ProviderAssembly1");
+        protected static readonly Type WeakProviderType2 = CreateWeakProviderType(typeof(FakeProviderBase2), "ProviderAssembly2");
 
-        private static Type CreateWeakProviderType(Type baseProviderType, string assemblyName)
+        protected static Type CreateWeakProviderType(Type baseProviderType, string assemblyName)
         {
             var assembly = new DynamicAssembly();
             var dynamicType =
@@ -191,7 +117,7 @@ namespace System.Data.Entity.Infrastructure
             return assembly.GetType("WeakProviderFactory");
         }
 
-        private static DbProviderFactory GetFactoryInstance(Type factoryType)
+        protected static DbProviderFactory GetFactoryInstance(Type factoryType)
         {
             return (DbProviderFactory)factoryType.GetField("Instance").GetValue(null);
         }

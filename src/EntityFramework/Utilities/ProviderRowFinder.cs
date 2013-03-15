@@ -3,31 +3,23 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
-    using System.Data.Common;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using System.Reflection;
 
     internal class ProviderRowFinder
     {
-        private readonly IEnumerable<DataRow> _dataRows;
-
-        public ProviderRowFinder(IEnumerable<DataRow> dataRows = null)
-        {
-            _dataRows = dataRows ?? DbProviderFactories.GetFactoryClasses().Rows.OfType<DataRow>();
-        }
-
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public virtual DataRow FindRow(Type hintType, Func<DataRow, bool> selector)
+        public virtual DataRow FindRow(Type hintType, Func<DataRow, bool> selector, IEnumerable<DataRow> dataRows)
         {
             DebugCheck.NotNull(selector);
+            DebugCheck.NotNull(dataRows);
 
             const int assemblyQualifiedNameIndex = 3;
 
             var assemblyHint = hintType == null ? null : new AssemblyName(hintType.Assembly.FullName);
 
-            foreach (var row in _dataRows)
+            foreach (var row in dataRows)
             {
                 var assemblyQualifiedTypeName = (string)row[assemblyQualifiedNameIndex];
 

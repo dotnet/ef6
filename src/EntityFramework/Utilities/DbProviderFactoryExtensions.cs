@@ -10,7 +10,7 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     internal static class DbProviderFactoryExtensions
     {
@@ -20,9 +20,12 @@ namespace System.Data.Entity.Utilities
 
             const int invariantNameIndex = 2;
 
+            var dataRows = DbProviderFactories.GetFactoryClasses().Rows.OfType<DataRow>();
+
             var row = new ProviderRowFinder().FindRow(
                 factory.GetType(),
-                r => DbProviderFactories.GetFactory(r).GetType() == factory.GetType());
+                r => DbProviderFactories.GetFactory(r).GetType() == factory.GetType(),
+                dataRows);
 
             if (row == null)
             {

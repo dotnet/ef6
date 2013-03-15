@@ -57,10 +57,15 @@ namespace System.Data.Entity.Config
             _resolvers.Add(new SingletonDependencyResolver<IManifestTokenService>(new DefaultManifestTokenService()));
             _resolvers.Add(new SingletonDependencyResolver<IHistoryContextFactory>(new DefaultHistoryContextFactory()));
             _resolvers.Add(new ThreadLocalDependencyResolver<IDbCommandInterceptor>(() => new DefaultCommandInterceptor()));
-            _resolvers.Add(new SingletonDependencyResolver<IDbProviderFactoryService>(new DefaultDbProviderFactoryService()));
             _resolvers.Add(new SingletonDependencyResolver<IPluralizationService>(new EnglishPluralizationService()));
             _resolvers.Add(new SingletonDependencyResolver<IViewAssemblyCache>(new ViewAssemblyCache()));
             _resolvers.Add(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
+
+#if NET40
+            _resolvers.Add(new SingletonDependencyResolver<IDbProviderFactoryService>(new Net40DefaultDbProviderFactoryService()));
+#else
+            _resolvers.Add(new SingletonDependencyResolver<IDbProviderFactoryService>(new DefaultDbProviderFactoryService()));
+#endif
         }
 
         public DatabaseInitializerResolver DatabaseInitializerResolver

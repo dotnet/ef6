@@ -25,14 +25,15 @@ namespace System.Data.Entity.Utilities
         {
             var foundRows = new List<DataRow>();
 
-            new ProviderRowFinder(CreateTestRows())
+            new ProviderRowFinder()
                 .FindRow(
                     hintType,
                     r =>
                         {
                             foundRows.Add(r);
                             return false;
-                        });
+                        },
+                    CreateTestRows());
 
             Assert.Equal(hintType == null ? 3 : 1, foundRows.Count);
             Assert.Equal(1, foundRows.Count(r => (string)r["AssemblyQualifiedName"] == typeof(DbContext).AssemblyQualifiedName));
@@ -41,17 +42,17 @@ namespace System.Data.Entity.Utilities
         [Fact]
         public void FindRow_returns_null_when_no_row_matches()
         {
-            Assert.Null(new ProviderRowFinder(CreateTestRows()).FindRow(null, r => false));
+            Assert.Null(new ProviderRowFinder().FindRow(null, r => false, CreateTestRows()));
         }
 
         private static IEnumerable<DataRow> CreateTestRows()
         {
             return new[]
-                       {
-                           CreateProviderRow("Row1", "Row.1", typeof(DbConnection).AssemblyQualifiedName),
-                           CreateProviderRow("Row2", "Row.2", typeof(DbContext).AssemblyQualifiedName),
-                           CreateProviderRow("Row3", "Row.3", typeof(TestBase).AssemblyQualifiedName),
-                       };
+                {
+                    CreateProviderRow("Row1", "Row.1", typeof(DbConnection).AssemblyQualifiedName),
+                    CreateProviderRow("Row2", "Row.2", typeof(DbContext).AssemblyQualifiedName),
+                    CreateProviderRow("Row3", "Row.3", typeof(TestBase).AssemblyQualifiedName),
+                };
         }
     }
 }

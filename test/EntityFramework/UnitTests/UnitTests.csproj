@@ -276,6 +276,7 @@
     <Compile Include="Infrastructure\DefaultManifestTokenServiceTests.cs" />
     <Compile Include="Infrastructure\ExecutionStrategyTests.cs" />
     <Compile Include="Infrastructure\ExponentialRetryDelayStrategyTests.cs" />
+    <Compile Include="Infrastructure\Net40DefaultDbProviderFactoryServiceTests.cs" />
     <Compile Include="Infrastructure\NonRetryingExecutionStrategyTests.cs" />
     <Compile Include="Infrastructure\ModelNamespaceConventionTests.cs" />
     <Compile Include="Infrastructure\DbProviderNameAttributeTests.cs" />

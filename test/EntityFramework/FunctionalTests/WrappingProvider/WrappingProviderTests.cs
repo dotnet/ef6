@@ -33,6 +33,27 @@ namespace System.Data.Entity.WrappingProvider
         }
 
         [Fact]
+        public void Wrapping_provider_can_be_found_using_net40_style_table_lookup_even_after_first_asking_for_non_wrapped_provider()
+        {
+            MutableResolver.AddResolver<IDbProviderFactoryService>(
+                new SingletonDependencyResolver<IDbProviderFactoryService>(
+                    (IDbProviderFactoryService)Activator.CreateInstance(
+                        typeof(DbContext).Assembly.GetTypes().Single(t => t.Name == "Net40DefaultDbProviderFactoryService"), nonPublic: true)));
+
+            Assert.Same(
+                SqlClientFactory.Instance,
+                DbConfiguration.GetService<IDbProviderFactoryService>()
+                               .GetProviderFactory(new SqlConnection()));
+
+            RegisterAdoNetProvider(typeof(WrappingAdoNetProvider<SqlClientFactory>));
+
+            Assert.Same(
+                WrappingAdoNetProvider<SqlClientFactory>.Instance,
+                DbConfiguration.GetService<IDbProviderFactoryService>()
+                               .GetProviderFactory(new WrappingConnection<SqlClientFactory>(new SqlConnection())));
+        }
+
+        [Fact]
         public void Correct_services_are_returned_when_setup_by_replacing_ADO_NET_provider()
         {
             RegisterAdoNetProvider(typeof(WrappingAdoNetProvider<SqlClientFactory>));
