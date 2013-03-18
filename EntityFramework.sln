@@ -27,7 +27,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{004FD563-72FA-456F-B4F8-011C307C4FDE}"
 	ProjectSection(SolutionItems) = preProject
 		src\NuGet\EntityFramework\tools\about_EntityFramework.help.txt = src\NuGet\EntityFramework\tools\about_EntityFramework.help.txt
-		src\NuGet\EntityFramework\tools\EntityFramework.PS3.psd1 = src\NuGet\EntityFramework\tools\EntityFramework.PS3.psd1
 		src\NuGet\EntityFramework\tools\EntityFramework.psd1 = src\NuGet\EntityFramework\tools\EntityFramework.psd1
 		src\NuGet\EntityFramework\tools\EntityFramework.psm1 = src\NuGet\EntityFramework\tools\EntityFramework.psm1
 		src\NuGet\EntityFramework\tools\init.ps1 = src\NuGet\EntityFramework\tools\init.ps1
