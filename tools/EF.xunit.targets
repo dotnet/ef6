@@ -5,7 +5,8 @@
          and also still work with NuGet Package Restore. -->
          
     <ItemGroup>
-        <XunitMsBuildRunner Include="..\packages\**\xunit.runner.msbuild.dll"/>
+        <XunitMsBuildRunner Include="..\packages\**\xunit.runner.msbuild.dll"
+                            Exclude="..\packages\xunit.runners.*\**\xunit.runner.msbuild.dll" />
     </ItemGroup>
     
     <UsingTask TaskName="Xunit.Runner.MSBuild.xunit" AssemblyFile="@(XunitMsBuildRunner)"/>
