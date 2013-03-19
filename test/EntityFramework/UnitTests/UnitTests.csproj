@@ -404,7 +404,6 @@
     <Compile Include="Migrations\DbMigratorTests.cs" />
     <Compile Include="Migrations\Design\CSharpMigrationCodeGeneratorTests.cs" />
     <Compile Include="Migrations\Design\MigrationCodeGeneratorTests.cs" />
-    <Compile Include="Migrations\Design\ToolingExceptionTests.cs" />
     <Compile Include="Migrations\Design\VisualBasicMigrationCodeGeneratorTests.cs" />
     <Compile Include="Migrations\Edm\ModelCompressorTests.cs" />
     <Compile Include="Internal\ConfigFile\ParameterCollectionTests.cs" />

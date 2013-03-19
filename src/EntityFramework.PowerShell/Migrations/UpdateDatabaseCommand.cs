@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Migrations
 {
-    using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Extensions;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Resources;
@@ -19,44 +18,36 @@ namespace System.Data.Entity.Migrations
 
             Execute(
                 () =>
+                {
+                    var project = Project;
+
+                    using (var facade = GetFacade())
                     {
-                        var project = Project;
-
-                        using (var facade = GetFacade())
+                        if (script)
                         {
-                            if (script)
-                            {
-                                var sql = facade.ScriptUpdate(sourceMigration, targetMigration, force);
+                            var sql = facade.ScriptUpdate(sourceMigration, targetMigration, force);
 
-                                project.NewSqlFile(sql);
+                            project.NewSqlFile(sql);
+                        }
+                        else
+                        {
+                            if (!verbose)
+                            {
+                                WriteLine(Strings.UpdateDatabaseCommand_VerboseInstructions);
                             }
-                            else
-                            {
-                                if (!verbose)
-                                {
-                                    WriteLine(Strings.UpdateDatabaseCommand_VerboseInstructions);
-                                }
 
-                                try
-                                {
-                                    facade.Update(targetMigration, force);
-                                }
-                                catch (ToolingException ex)
-                                {
-                                    if (ex.InnerType
-                                        == typeof(AutomaticMigrationsDisabledException).FullName)
-                                    {
-                                        facade.LogWarningDelegate(ex.Message);
-                                        facade.LogWarningDelegate(Strings.AutomaticMigrationDisabledInfo);
-                                    }
-                                    else
-                                    {
-                                        throw;
-                                    }
-                                }
+                            try
+                            {
+                                facade.Update(targetMigration, force);
+                            }
+                            catch (AutomaticMigrationsDisabledException ex)
+                            {
+                                facade.LogWarningDelegate(ex.Message);
+                                facade.LogWarningDelegate(Strings.AutomaticMigrationDisabledInfo);
                             }
                         }
-                    });
+                    }
+                });
         }
     }
 }

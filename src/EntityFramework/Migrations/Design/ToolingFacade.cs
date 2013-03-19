@@ -295,24 +295,9 @@ namespace System.Data.Entity.Migrations.Design
             runner.Log = new ToolLogger(this);
         }
 
-        [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
         private void Run(BaseRunner runner)
         {
-            _appDomain.SetData("error", null);
-            _appDomain.SetData("typeName", null);
-            _appDomain.SetData("stackTrace", null);
-
             _appDomain.DoCallBack(runner.Run);
-
-            var error = (string)_appDomain.GetData("error");
-
-            if (error != null)
-            {
-                var typeName = (string)_appDomain.GetData("typeName");
-                var stackTrace = (string)_appDomain.GetData("stackTrace");
-
-                throw new ToolingException(error, typeName, stackTrace);
-            }
         }
 
         private class ToolLogger : MigrationsLogger
@@ -357,24 +342,7 @@ namespace System.Data.Entity.Migrations.Design
             public DbConnectionInfo ConnectionStringInfo { get; set; }
             public ToolLogger Log { get; set; }
 
-            [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
-            [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-            public void Run()
-            {
-                try
-                {
-                    RunCore();
-                }
-                catch (Exception ex)
-                {
-                    // Not ideal; not sure why exceptions won't just serialize straight across
-                    AppDomain.CurrentDomain.SetData("error", ex.Message);
-                    AppDomain.CurrentDomain.SetData("typeName", ex.GetType().FullName);
-                    AppDomain.CurrentDomain.SetData("stackTrace", ex.ToString());
-                }
-            }
-
-            protected abstract void RunCore();
+            public abstract void Run();
 
             protected MigratorBase GetMigrator()
             {
@@ -432,7 +400,7 @@ namespace System.Data.Entity.Migrations.Design
         private class GetDatabaseMigrationsRunner : BaseRunner
         {
             [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
-            protected override void RunCore()
+            public override void Run()
             {
                 var databaseMigrations = GetMigrator().GetDatabaseMigrations();
 
@@ -444,7 +412,7 @@ namespace System.Data.Entity.Migrations.Design
         private class GetPendingMigrationsRunner : BaseRunner
         {
             [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
-            protected override void RunCore()
+            public override void Run()
             {
                 var pendingMigrations = GetMigrator().GetPendingMigrations();
 
@@ -458,7 +426,7 @@ namespace System.Data.Entity.Migrations.Design
             public string TargetMigration { get; set; }
             public bool Force { get; set; }
 
-            protected override void RunCore()
+            public override void Run()
             {
                 GetMigrator().Update(TargetMigration);
             }
@@ -482,7 +450,7 @@ namespace System.Data.Entity.Migrations.Design
             public bool Force { get; set; }
 
             [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
-            protected override void RunCore()
+            public override void Run()
             {
                 var migrator = GetMigrator();
 
@@ -513,7 +481,7 @@ namespace System.Data.Entity.Migrations.Design
             public bool IgnoreChanges { get; set; }
 
             [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
-            protected override void RunCore()
+            public override void Run()
             {
                 var configuration = GetConfiguration();
 
@@ -579,7 +547,7 @@ namespace System.Data.Entity.Migrations.Design
         private class GetContextTypesRunner : BaseRunner
         {
             [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
-            protected override void RunCore()
+            public override void Run()
             {
                 var assembly = LoadAssembly();
 
@@ -597,7 +565,7 @@ namespace System.Data.Entity.Migrations.Design
             public string ContextTypeName { get; set; }
 
             [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
-            protected override void RunCore()
+            public override void Run()
             {
                 var contextType = new TypeFinder(LoadAssembly()).FindType(
                     typeof(DbContext),
@@ -605,18 +573,18 @@ namespace System.Data.Entity.Migrations.Design
                     types => types.Where(t => !typeof(HistoryContext).IsAssignableFrom(t)),
                     Error.EnableMigrations_NoContext,
                     (assembly, types) =>
+                    {
+                        var message = new StringBuilder();
+                        message.Append(Strings.EnableMigrations_MultipleContexts(assembly));
+
+                        foreach (var type in types)
                         {
-                            var message = new StringBuilder();
-                            message.Append(Strings.EnableMigrations_MultipleContexts(assembly));
+                            message.AppendLine();
+                            message.Append(Strings.EnableMigrationsForContext(type.FullName));
+                        }
 
-                            foreach (var type in types)
-                            {
-                                message.AppendLine();
-                                message.Append(Strings.EnableMigrationsForContext(type.FullName));
-                            }
-
-                            return new MigrationsException(message.ToString());
-                        },
+                        return new MigrationsException(message.ToString());
+                    },
                     Error.EnableMigrations_NoContextWithName,
                     Error.EnableMigrations_MultipleContextsWithName);
 

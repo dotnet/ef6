@@ -145,21 +145,9 @@ namespace System.Data.Entity.Migrations
             DebugCheck.NotNull(ex);
 
             _domain.SetData("wasError", true);
-
-            var toolEx = ex as ToolingException;
-
-            if (toolEx == null)
-            {
-                _domain.SetData("error.Message", ex.Message);
-                _domain.SetData("error.TypeName", ex.GetType().FullName);
-                _domain.SetData("error.StackTrace", ex.ToString());
-            }
-            else
-            {
-                _domain.SetData("error.Message", toolEx.Message);
-                _domain.SetData("error.TypeName", toolEx.InnerType);
-                _domain.SetData("error.StackTrace", toolEx.InnerStackTrace);
-            }
+            _domain.SetData("error.Message", ex.Message);
+            _domain.SetData("error.TypeName", ex.GetType().FullName);
+            _domain.SetData("error.StackTrace", ex.ToString());
         }
     }
 }

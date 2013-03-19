@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations
 {
     using System.CodeDom.Compiler;
     using System.Data.Entity.Migrations.Design;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.SqlServer;
     using System.IO;
     using System.Linq;
@@ -162,7 +163,7 @@ namespace System.Data.Entity.Migrations
                 dataDirectory: null,
                 connectionStringInfo: null))
             {
-                Assert.Throws<ToolingException>(() => facade.GetContextType("MissingContext"));
+                Assert.Throws<MigrationsException>(() => facade.GetContextType("MissingContext"));
             }
         }
 
@@ -273,7 +274,7 @@ namespace System.Data.Entity.Migrations
                 null,
                 null))
             {
-                Assert.Throws<ToolingException>(() => facade.GetDatabaseMigrations())
+                Assert.Throws<MigrationsException>(() => facade.GetDatabaseMigrations())
                     .ValidateMessage("ToolingFacade_AssemblyNotFound", unknownAssemblyName);
             }
         }
