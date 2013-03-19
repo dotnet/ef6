@@ -5,7 +5,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    /// Event arguments passed to <see cref="DbConfiguration.OnLockingConfiguration"/> event handlers.
+    ///     Event arguments passed to <see cref="DbConfiguration.OnLockingConfiguration" /> event handlers.
     /// </summary>
     public class DbConfigurationEventArgs : EventArgs
     {
@@ -55,14 +55,14 @@ namespace System.Data.Entity.Config
         ///     resolver is a resolver that incepts a service would have been returned by the resolver
         ///     chain and wraps or replaces it with another service of the same type.
         /// </summary>
-        /// <typeparam name="TService">The type of service to wrap.</typeparam>
-        /// <param name="wrapService">A delegate that takes the unwrapped service and key and returns the wrapped service.</param>
-        public void WrapService<TService>(Func<TService, object, TService> serviceWrapper)
+        /// <typeparam name="TService">The type of service to wrap or replace.</typeparam>
+        /// <param name="serviceInterceptor">A delegate that takes the unwrapped service and key and returns the wrapped or replaced service.</param>
+        public void ReplaceService<TService>(Func<TService, object, TService> serviceInterceptor)
         {
-            Check.NotNull(serviceWrapper, "serviceWrapper");
+            Check.NotNull(serviceInterceptor, "serviceInterceptor");
 
             AddDependencyResolver(
-                new WrappingDependencyResolver<TService>(ResolverSnapshot, serviceWrapper),
+                new WrappingDependencyResolver<TService>(ResolverSnapshot, serviceInterceptor),
                 overrideConfigFile: true);
         }
     }

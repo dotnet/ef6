@@ -59,24 +59,24 @@ namespace System.Data.Entity.Config
             }
         }
 
-        public class WrapService
+        public class ReplaceService
         {
             public interface IPilkington
             {
             }
 
             [Fact]
-            public void WrapService_throws_if_given_a_null_delegate()
+            public void ReplaceService_throws_if_given_a_null_delegate()
             {
                 Assert.Equal(
-                    "serviceWrapper",
+                    "serviceInterceptor",
                     Assert.Throws<ArgumentNullException>(
                         () => (new DbConfigurationEventArgs(new Mock<InternalConfiguration>().Object))
-                                  .WrapService<IPilkington>(null)).ParamName);
+                                  .ReplaceService<IPilkington>(null)).ParamName);
             }
 
             [Fact]
-            public void WrapService_wraps_service_and_returns_wrapped_service()
+            public void ReplaceService_wraps_service_and_returns_wrapped_service()
             {
                 var originalService = new Mock<IPilkington>().Object;
                 var wrappedService = new Mock<IPilkington>().Object;
@@ -88,7 +88,7 @@ namespace System.Data.Entity.Config
                 internalConfiguration.AddDependencyResolver(resolver.Object);
 
                 new DbConfigurationEventArgs(internalConfiguration)
-                    .WrapService<IPilkington>(
+                    .ReplaceService<IPilkington>(
                     (s, k) =>
                     {
                         Assert.Same(originalService, s);
