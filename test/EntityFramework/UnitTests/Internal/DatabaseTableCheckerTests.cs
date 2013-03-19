@@ -91,7 +91,7 @@ namespace System.Data.Entity.Internal
             internalContextMock.Setup(m => m.ObjectContext).Returns(mockObjectContext);
             internalContextMock.Setup(m => m.CreateObjectContextForDdlOps()).Returns(clonedObjectContextMock.Object);
 
-            MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+            MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
             try
             {
                 new DatabaseTableChecker().AnyModelTableExists(new FakeContext(connectionMock.Object, internalContextMock.Object));

@@ -31,12 +31,12 @@ namespace System.Data.Entity.Config
 
         public object GetService(Type type, object key)
         {
-            if (type == typeof(IExecutionStrategy))
+            if (type == typeof(Func<IExecutionStrategy>))
             {
                 var executionStrategyKey = key as ExecutionStrategyKey;
                 if (executionStrategyKey == null)
                 {
-                    throw new ArgumentException(Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, typeof(IExecutionStrategy)));
+                    throw new ArgumentException(Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, "Func<IExecutionStrategy>"));
                 }
 
                 if (!executionStrategyKey.ProviderInvariantName.Equals(_providerInvariantName, StringComparison.Ordinal))
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Config
                     return null;
                 }
 
-                return _getExecutionStrategy();
+                return _getExecutionStrategy;
             }
 
             return null;

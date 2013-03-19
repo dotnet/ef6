@@ -35,16 +35,16 @@ namespace System.Data.Entity.Config
         public void GetService_throws_for_null_or_incorrect_key_type()
         {
             Assert.Equal(
-                Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, typeof(IExecutionStrategy)),
+                Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, "Func<IExecutionStrategy>"),
                 Assert.Throws<ArgumentException>(
                     () => new ExecutionStrategyResolver<IExecutionStrategy>("Foo", null, () => new Mock<IExecutionStrategy>().Object)
-                              .GetService<IExecutionStrategy>(null)).Message);
+                              .GetService<Func<IExecutionStrategy>>(null)).Message);
 
             Assert.Equal(
-                Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, typeof(IExecutionStrategy)),
+                Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, "Func<IExecutionStrategy>"),
                 Assert.Throws<ArgumentException>(
                     () => new ExecutionStrategyResolver<IExecutionStrategy>("Foo", null, () => new Mock<IExecutionStrategy>().Object)
-                              .GetService<IExecutionStrategy>("a")).Message);
+                              .GetService<Func<IExecutionStrategy>>("a")).Message);
         }
         
         [Fact]
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Config
         {
             Assert.Null(
                 new ExecutionStrategyResolver<IExecutionStrategy>("Foo", null, () => new Mock<IExecutionStrategy>().Object)
-                    .GetService<IExecutionStrategy>(
+                    .GetService<Func<IExecutionStrategy>>(
                         new ExecutionStrategyKey("FooClient", "a")));
         }
 
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Config
         {
             Assert.Null(
                 new ExecutionStrategyResolver<IExecutionStrategy>("Foo", "b", () => new Mock<IExecutionStrategy>().Object)
-                    .GetService<IExecutionStrategy>(
+                    .GetService<Func<IExecutionStrategy>>(
                         new ExecutionStrategyKey("Foo", "a")));
         }
 
@@ -71,8 +71,8 @@ namespace System.Data.Entity.Config
             var mockExecutionStrategy = new Mock<IExecutionStrategy>().Object;
             var resolver = new ExecutionStrategyResolver<IExecutionStrategy>("Foo", null, () => mockExecutionStrategy);
 
-            var resolvedExecutionStrategy = resolver.GetService<IExecutionStrategy>(
-                new ExecutionStrategyKey("Foo", "bar"));
+            var resolvedExecutionStrategy = resolver.GetService<Func<IExecutionStrategy>>(
+                new ExecutionStrategyKey("Foo", "bar"))();
 
             Assert.Same(mockExecutionStrategy, resolvedExecutionStrategy);
         }
@@ -83,8 +83,8 @@ namespace System.Data.Entity.Config
             var mockExecutionStrategy = new Mock<IExecutionStrategy>().Object;
             var resolver = new ExecutionStrategyResolver<IExecutionStrategy>("Foo", "bar", () => mockExecutionStrategy);
 
-            var resolvedExecutionStrategy = resolver.GetService<IExecutionStrategy>(
-                new ExecutionStrategyKey("Foo", "bar"));
+            var resolvedExecutionStrategy = resolver.GetService<Func<IExecutionStrategy>>(
+                new ExecutionStrategyKey("Foo", "bar"))();
 
             Assert.Same(mockExecutionStrategy, resolvedExecutionStrategy);
         }

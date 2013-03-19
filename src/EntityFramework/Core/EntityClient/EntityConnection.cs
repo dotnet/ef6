@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Core.EntityClient
 {
-    using System.Collections.Concurrent;
     using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity.Config;
@@ -112,9 +111,9 @@ namespace System.Data.Entity.Core.EntityClient
         ///     This constructor allows to skip the initialization code for testing purposes.
         /// </summary>
         internal EntityConnection(
-            MetadataWorkspace workspace, 
-            DbConnection connection, 
-            bool skipInitialization, 
+            MetadataWorkspace workspace,
+            DbConnection connection,
+            bool skipInitialization,
             bool entityConnectionOwnsStoreConnection)
         {
             if (!skipInitialization)
@@ -134,7 +133,8 @@ namespace System.Data.Entity.Core.EntityClient
                 }
 
                 // Verify that a factory can be retrieved
-                if (connection.GetProviderFactory() == null)
+                var providerFactory = connection.GetProviderFactory();
+                if (providerFactory == null)
                 {
                     throw new ProviderIncompatibleException(Strings.EntityClient_DbConnectionHasNoProvider(connection));
                 }
@@ -142,6 +142,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var collection = (StoreItemCollection)workspace.GetItemCollection(DataSpace.SSpace);
 
                 _providerFactory = collection.StoreProviderFactory;
+                Debug.Assert(_providerFactory == providerFactory);
                 _initialized = true;
             }
 
@@ -486,28 +487,26 @@ namespace System.Data.Entity.Core.EntityClient
                 throw Error.EntityClient_CannotReopenConnection();
             }
 
-            var closeStoreConnectionOnFailure = false;
-            try
+            if (_storeConnection.State != ConnectionState.Open)
             {
-                if (_storeConnection.State != ConnectionState.Open)
+                var metadataWorkspace = GetMetadataWorkspace();
+                try
                 {
-                    DbProviderServices.GetExecutionStrategy(_storeConnection).Execute(_storeConnection.Open);
+                    DbProviderServices.GetExecutionStrategy(_storeConnection, metadataWorkspace).Execute(_storeConnection.Open);
+                }
+                catch (Exception e)
+                {
+                    if (e.IsCatchableExceptionType())
+                    {
+                        var exceptionMessage = Strings.EntityClient_ProviderSpecificError("Open");
+                        throw new EntityException(exceptionMessage, e);
+                    }
 
-                    closeStoreConnectionOnFailure = true;
+                    throw;
                 }
 
                 // With every successful open of the store connection, always null out the current db transaction and enlistedTransaction
                 ClearTransactions();
-            }
-            catch (Exception e)
-            {
-                if (e.IsCatchableExceptionType())
-                {
-                    var exceptionMessage = Strings.EntityClient_ProviderSpecificError("Open");
-                    throw new EntityException(exceptionMessage, e);
-                }
-
-                throw;
             }
 
             // the following guards against the case when the user closes the underlying store connection
@@ -517,8 +516,6 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 throw Error.EntityClient_ConnectionNotOpen();
             }
-
-            InitializeMetadata(_storeConnection, _storeConnection, closeStoreConnectionOnFailure);
         }
 
 #if !NET40
@@ -546,29 +543,28 @@ namespace System.Data.Entity.Core.EntityClient
                 throw Error.EntityClient_CannotReopenConnection();
             }
 
-            var closeStoreConnectionOnFailure = false;
-            try
+            if (_storeConnection.State != ConnectionState.Open)
             {
-                if (_storeConnection.State != ConnectionState.Open)
+                var metadataWorkspace = GetMetadataWorkspace();
+                try
                 {
-                    var executionStrategy = DbProviderServices.GetExecutionStrategy(_storeConnection);
+                    var executionStrategy = DbProviderServices.GetExecutionStrategy(_storeConnection, metadataWorkspace);
                     await executionStrategy.ExecuteAsync(() => _storeConnection.OpenAsync(cancellationToken), cancellationToken)
                                            .ConfigureAwait(continueOnCapturedContext: false);
-                    closeStoreConnectionOnFailure = true;
+                }
+                catch (Exception e)
+                {
+                    if (e.IsCatchableExceptionType())
+                    {
+                        var exceptionMessage = Strings.EntityClient_ProviderSpecificError("Open");
+                        throw new EntityException(exceptionMessage, e);
+                    }
+
+                    throw;
                 }
 
                 // With every successful open of the store connection, always null out the current db transaction and enlistedTransaction
                 ClearTransactions();
-            }
-            catch (Exception e)
-            {
-                if (e.IsCatchableExceptionType())
-                {
-                    var exceptionMessage = Strings.EntityClient_ProviderSpecificError("Open");
-                    throw new EntityException(exceptionMessage, e);
-                }
-
-                throw;
             }
 
             // the following guards against the case when the user closes the underlying store connection
@@ -578,8 +574,6 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 throw Error.EntityClient_ConnectionNotOpen();
             }
-
-            InitializeMetadata(_storeConnection, _storeConnection, closeStoreConnectionOnFailure);
         }
 
 #endif
@@ -598,50 +592,6 @@ namespace System.Data.Entity.Core.EntityClient
         protected override DbCommand CreateDbCommand()
         {
             return CreateCommand();
-        }
-
-        /// <summary>
-        ///     Helper method to initialize the metadata workspace and reset the store connection
-        ///     associated with the entity client
-        /// </summary>
-        /// <param name="newConnection"> The new connection to associate with the entity client </param>
-        /// <param name="originalConnection"> The original connection associated with the entity client </param>
-        /// <param name="closeOriginalConnectionOnFailure"> A flag to indicate whether the original store connection needs to be closed on failure </param>
-        private void InitializeMetadata(
-            DbConnection newConnection,
-            DbConnection originalConnection,
-            bool closeOriginalConnectionOnFailure)
-        {
-            try
-            {
-                // Ensure metadata is loaded and the workspace is appropriately initialized.
-                GetMetadataWorkspace();
-            }
-            catch (Exception e)
-            {
-                // Undo the open if something failed
-                if (e.IsCatchableExceptionType())
-                {
-                    if (newConnection != originalConnection)
-                    {
-                        UnsubscribeFromStoreConnectionStateChangeEvents();
-                    }
-
-                    _storeConnection = newConnection;
-
-                    if (newConnection != originalConnection)
-                    {
-                        SubscribeToStoreConnectionStateChangeEvents();
-                    }
-
-                    if (closeOriginalConnectionOnFailure && originalConnection != null)
-                    {
-                        originalConnection.Close();
-                    }
-                }
-
-                throw;
-            }
         }
 
         /// <summary>
@@ -711,7 +661,7 @@ namespace System.Data.Entity.Core.EntityClient
             DbTransaction storeTransaction = null;
             try
             {
-                var executionStrategy = DbProviderServices.GetExecutionStrategy(_storeConnection);
+                var executionStrategy = DbProviderServices.GetExecutionStrategy(_storeConnection, GetMetadataWorkspace());
                 storeTransaction = executionStrategy.Execute(
                     () =>
                         {
@@ -1003,6 +953,7 @@ namespace System.Data.Entity.Core.EntityClient
                 _metadataWorkspace = null;
 
                 ClearTransactions();
+                UnsubscribeFromStoreConnectionStateChangeEvents();
                 _storeConnection = storeConnection;
                 SubscribeToStoreConnectionStateChangeEvents();
 

@@ -88,7 +88,7 @@ namespace System.Data.Entity.Core.Objects
             var executionStrategyMock = new Mock<IExecutionStrategy>();
             executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
-            MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+            MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
             try
             {
                 Assert.Equal(
@@ -112,7 +112,7 @@ namespace System.Data.Entity.Core.Objects
             var executionStrategyMock = new Mock<IExecutionStrategy>();
             executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
-            MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+            MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
             try
             {
                 Assert.Equal(
@@ -243,7 +243,7 @@ namespace System.Data.Entity.Core.Objects
                                              });
             }
 
-            MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+            MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
             try
             {
                 execute(objectQuery);

@@ -1162,7 +1162,7 @@ namespace ProductivityApiTests
         private void VerifyConcurrency(Action<SimpleModelContext, List<Task>> execute, bool shouldThrow)
         {
             var taskCompletionSource = new TaskCompletionSource<object>();
-            MutableResolver.AddResolver<IExecutionStrategy>(k => new BlockingStrategy(taskCompletionSource.Task));
+            MutableResolver.AddResolver<Func<IExecutionStrategy>>(k => (Func<IExecutionStrategy>)(() => new BlockingStrategy(taskCompletionSource.Task)));
 
             // The returned tasks need to be awaited on before the test ends in case they are faulted
             var tasks = new List<Task>();

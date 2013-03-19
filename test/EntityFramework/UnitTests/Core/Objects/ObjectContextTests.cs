@@ -18,6 +18,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.SqlServer;
     using System.Linq;
 #if !NET40
     using System.Threading;
@@ -94,6 +95,12 @@ namespace System.Data.Entity.Core.Objects
                 var storeConnectionMock = new Mock<DbConnection>();
                 storeConnectionMock.Setup(m => m.DataSource).Returns("foo");
                 mockObjectContext.Setup(oc => oc.Connection).Returns(storeConnectionMock.Object);
+
+                var storeItemCollection = new StoreItemCollection(
+                    GenericProviderFactory<DbProviderFactory>.Instance, new SqlProviderManifest("2008"), "System.Data.FakeSqlClient", "2008");
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>();
+                metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(storeItemCollection);
+                mockObjectContext.Setup(oc => oc.MetadataWorkspace).Returns(metadataWorkspaceMock.Object);
 
                 mockObjectContext.Object.SaveChanges(SaveOptions.None);
 
@@ -275,7 +282,7 @@ namespace System.Data.Entity.Core.Objects
                 var executionStrategyMock = new Mock<IExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<int>>())).Returns<Func<int>>(f => 2);
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     Assert.Equal(2, objectContext.SaveChanges());
@@ -333,6 +340,9 @@ namespace System.Data.Entity.Core.Objects
                                      .Returns(entityContainer);
                 metadataWorkspaceMock.Setup(m => m.TryGetEntityContainer(It.IsAny<string>(), It.IsAny<DataSpace>(), out entityContainer))
                                      .Returns(true);
+                var storeItemCollection = new StoreItemCollection(
+                    GenericProviderFactory<DbProviderFactory>.Instance, new SqlProviderManifest("2008"), "System.Data.FakeSqlClient", "2008");
+                metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(storeItemCollection);
 #pragma warning disable 618
                 metadataWorkspaceMock.Object.RegisterItemCollection(omicMock.Object);
 #pragma warning restore 618
@@ -406,7 +416,7 @@ namespace System.Data.Entity.Core.Objects
                                                  return result;
                                              });
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() =>executionStrategyMock.Object));
                 try
                 {
                     objectContextMock.Object.Refresh(RefreshMode.StoreWins, new object());
@@ -705,7 +715,7 @@ namespace System.Data.Entity.Core.Objects
                                                  return result;
                                              });
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     objectContextMock.Object.ExecuteStoreCommand("foo");
@@ -819,7 +829,7 @@ namespace System.Data.Entity.Core.Objects
                 var executionStrategyMock = new Mock<IExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     Assert.Equal(
@@ -928,7 +938,7 @@ namespace System.Data.Entity.Core.Objects
                                                  return result;
                                              });
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     objectContextMock.Object.ExecuteStoreQuery<object>("Foo");
@@ -1270,7 +1280,7 @@ namespace System.Data.Entity.Core.Objects
                 var executionStrategyMock = new Mock<IExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     Assert.Equal(
@@ -1344,7 +1354,7 @@ namespace System.Data.Entity.Core.Objects
                                              });
 
                 FakeSqlProviderServices.Instance.EntityCommandDefinition = entityCommandDefinition;
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     objectContextMock.Object.ExecuteFunction<object>("Foo");
@@ -1403,7 +1413,7 @@ namespace System.Data.Entity.Core.Objects
                                              });
 
                 FakeSqlProviderServices.Instance.EntityCommandDefinition = entityCommandDefinition;
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     objectContextMock.Object.ExecuteFunction("Foo");
@@ -1657,12 +1667,15 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.SetupGet(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
                 entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(storeConnectionMock.Object);
 
-                var metadataWorkspace = new Mock<MetadataWorkspace>();
-                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
-                metadataWorkspace.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
-                metadataWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>();
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
+                metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
+                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+                var storeItemCollection = new StoreItemCollection(
+                    GenericProviderFactory<DbProviderFactory>.Instance, new SqlProviderManifest("2008"), "System.Data.FakeSqlClient", "2008");
+                metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(storeItemCollection);
 
-                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock, metadataWorkspace);
+                var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock, metadataWorkspaceMock);
                 objectContext.SaveChangesAsync(SaveOptions.AcceptAllChangesAfterSave).Wait();
 
                 objectStateManagerMock.Verify(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()), Times.AtLeastOnce());
@@ -1761,7 +1774,7 @@ namespace System.Data.Entity.Core.Objects
                 executionStrategyMock.Setup(m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>())).Returns<Func<Task<int>>, CancellationToken>(
                     (f, c) => Task.FromResult(2));
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     Assert.Equal(2, objectContext.SaveChangesAsync(SaveOptions.AcceptAllChangesAfterSave).Result);
@@ -1819,6 +1832,9 @@ namespace System.Data.Entity.Core.Objects
                                      .Returns(entityContainer);
                 metadataWorkspaceMock.Setup(m => m.TryGetEntityContainer(It.IsAny<string>(), It.IsAny<DataSpace>(), out entityContainer))
                                      .Returns(true);
+                var storeItemCollection = new StoreItemCollection(
+                    GenericProviderFactory<DbProviderFactory>.Instance, new SqlProviderManifest("2008"), "System.Data.FakeSqlClient", "2008");
+                metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(storeItemCollection);
 #pragma warning disable 618
                 metadataWorkspaceMock.Object.RegisterItemCollection(omicMock.Object);
 #pragma warning restore 618
@@ -1902,7 +1918,7 @@ namespace System.Data.Entity.Core.Objects
                                                  return Task.FromResult(result);
                                              });
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     objectContextMock.Object.RefreshAsync(RefreshMode.StoreWins, new object()).Wait();
@@ -2220,10 +2236,10 @@ namespace System.Data.Entity.Core.Objects
                                                  return Task.FromResult(result);
                                              });
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
-                    var result = objectContextMock.Object.ExecuteStoreCommandAsync("foo").Result;
+                    Assert.NotNull(objectContextMock.Object.ExecuteStoreCommandAsync("foo").Result);
                 }
                 finally
                 {
@@ -2346,7 +2362,7 @@ namespace System.Data.Entity.Core.Objects
                 var executionStrategyMock = new Mock<IExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     Assert.Equal(
@@ -2468,10 +2484,10 @@ namespace System.Data.Entity.Core.Objects
                                                  return Task.FromResult(result);
                                              });
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
-                    var result = objectContextMock.Object.ExecuteStoreQueryAsync<object>("Foo").Result;
+                    Assert.NotNull(objectContextMock.Object.ExecuteStoreQueryAsync<object>("Foo").Result);
                 }
                 finally
                 {
@@ -2854,6 +2870,10 @@ namespace System.Data.Entity.Core.Objects
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.OSpace)).Returns(true);
                 metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.OCSpace)).Returns(default(ItemCollection));
                 metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+
+                var storeItemCollection = new StoreItemCollection(
+                    GenericProviderFactory<DbProviderFactory>.Instance, new SqlProviderManifest("2008"), "System.Data.FakeSqlClient", "2008");
+                metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(storeItemCollection);
             }
 
             if (entityConnectionMock == null)

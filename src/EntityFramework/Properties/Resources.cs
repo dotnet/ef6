@@ -12902,7 +12902,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "No {0} instance was passed to the IDbDependencyResolver.GetService method. A {0} instance must be supplied when attempting to resolve an {1} dependency."
+        ///     A string like "No '{0}' instance was passed to the IDbDependencyResolver.GetService method. A '{0}' instance must be supplied when attempting to resolve an {1} dependency."
         /// </summary>
         internal static string DbDependencyResolver_InvalidKey(object p0, object p1)
         {

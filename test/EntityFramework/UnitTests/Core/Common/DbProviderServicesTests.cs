@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
@@ -15,7 +16,7 @@ namespace System.Data.Entity.Core.Common
     using Moq.Protected;
     using Xunit;
 
-    public class DbProviderServicesTests 
+    public class DbProviderServicesTests
     {
         public class ExpandDataDirectory
         {
@@ -123,7 +124,7 @@ namespace System.Data.Entity.Core.Common
                 }
             }
         }
-        
+
         public class GetProviderServices : TestBase
         {
             [Fact]
@@ -149,11 +150,11 @@ namespace System.Data.Entity.Core.Common
             public void Instance_method_returns_SimpleExecutionStrategy()
             {
                 var mockProviderServices = new Mock<DbProviderServices>
-                                              {
-                                                  CallBase = true
-                                              }.Object;
+                                               {
+                                                   CallBase = true
+                                               }.Object;
 
-                Assert.IsType<NonRetryingExecutionStrategy>(mockProviderServices.GetExecutionStrategy());
+                Assert.IsType<NonRetryingExecutionStrategy>(mockProviderServices.GetExecutionStrategyFactory()());
             }
 
             [Fact]
@@ -162,17 +163,25 @@ namespace System.Data.Entity.Core.Common
                 var connectionMock = new Mock<DbConnection>();
                 connectionMock.Setup(m => m.DataSource).Returns("FooSource");
 
+                var model = new EdmModel(DataSpace.SSpace);
+                model.ProviderInfo = new DbProviderInfo("System.Data.FakeSqlClient", "2008");
+                model.ProviderManifest = new SqlProviderManifest("2008");
+                var storeItemCollectionMock = new Mock<StoreItemCollection>(model);
+
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>();
+                metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(storeItemCollectionMock.Object);
+
                 var entityConnection = new EntityConnection(
                     workspace: null, connection: connectionMock.Object, skipInitialization: true, entityConnectionOwnsStoreConnection: false);
 
                 var mockExecutionStrategy = new Mock<IExecutionStrategy>().Object;
-                MutableResolver.AddResolver<IExecutionStrategy>(
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(
                     k =>
                         {
                             var key = k as ExecutionStrategyKey;
                             Assert.Equal("System.Data.FakeSqlClient", key.ProviderInvariantName);
                             Assert.Equal("FooSource", key.ServerName);
-                            return mockExecutionStrategy;
+                            return (Func<IExecutionStrategy>)(() => mockExecutionStrategy);
                         });
 
                 var providerFactoryServiceMock = new Mock<IDbProviderFactoryService>();
@@ -183,7 +192,8 @@ namespace System.Data.Entity.Core.Common
                 try
                 {
                     Assert.Same(mockExecutionStrategy, DbProviderServices.GetExecutionStrategy(connectionMock.Object));
-                    Assert.Same(mockExecutionStrategy, DbProviderServices.GetExecutionStrategy(entityConnection));
+                    Assert.Same(
+                        mockExecutionStrategy, DbProviderServices.GetExecutionStrategy(entityConnection, metadataWorkspaceMock.Object));
                 }
                 finally
                 {
@@ -191,7 +201,7 @@ namespace System.Data.Entity.Core.Common
                 }
             }
         }
- 
+
         public class GetSpatialServices
         {
             [Fact]
@@ -216,8 +226,8 @@ namespace System.Data.Entity.Core.Common
 
                 var testProvider = new Mock<DbProviderServices>(mockResolver.Object);
                 testProvider.Protected()
-                    .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
-                    .Returns(mockSpatialServices.Object);
+                            .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
+                            .Returns(mockSpatialServices.Object);
 
                 Assert.Same(
                     mockSpatialServices.Object,
@@ -231,8 +241,8 @@ namespace System.Data.Entity.Core.Common
 
                 var testProvider = new Mock<DbProviderServices>(mockResolver.Object);
                 testProvider.Protected()
-                    .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
-                    .Throws(new Exception("Fail"));
+                            .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
+                            .Throws(new Exception("Fail"));
 
                 Assert.Equal(
                     Strings.ProviderDidNotReturnSpatialServices,
@@ -246,8 +256,8 @@ namespace System.Data.Entity.Core.Common
 
                 var testProvider = new Mock<DbProviderServices>(mockResolver.Object);
                 testProvider.Protected()
-                    .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
-                    .Throws(new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices));
+                            .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
+                            .Throws(new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices));
 
                 Assert.Equal(
                     Strings.ProviderDidNotReturnSpatialServices,
@@ -261,8 +271,8 @@ namespace System.Data.Entity.Core.Common
 
                 var testProvider = new Mock<DbProviderServices>(mockResolver.Object);
                 testProvider.Protected()
-                    .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
-                    .Returns((DbSpatialServices)null);
+                            .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
+                            .Returns((DbSpatialServices)null);
 
                 Assert.Equal(
                     Strings.ProviderDidNotReturnSpatialServices,

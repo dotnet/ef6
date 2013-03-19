@@ -5,19 +5,19 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
-    using System.Linq;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#endif
     using System.Transactions;
     using Moq;
     using Moq.Protected;
     using Xunit;
     using IsolationLevel = System.Data.IsolationLevel;
-#if !NET40
-
-#endif
 
     public class EntityConnectionTests
     {
@@ -47,13 +47,15 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void GetMetadataWorkspace_returns_the_workspace_passed_to_constructor()
             {
-                var mockWorkspace = new Mock<MetadataWorkspace>();
-                mockWorkspace.Setup(m => m.IsItemCollectionAlreadyRegistered(It.IsAny<DataSpace>())).Returns(true);
-                mockWorkspace.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(new Mock<StoreItemCollection>().Object);
+                var mockWorkspace = CreateMetadataWorkspaceMock();
 
-                Assert.Same(mockWorkspace.Object, new EntityConnection(mockWorkspace.Object, new SqlConnection()).GetMetadataWorkspace());
+                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
+
+                Assert.Same(mockWorkspace.Object, new EntityConnection(mockWorkspace.Object, dbConnectionMock.Object).GetMetadataWorkspace());
                 Assert.Same(
-                    mockWorkspace.Object, new EntityConnection(mockWorkspace.Object, new SqlConnection(), true).GetMetadataWorkspace());
+                    mockWorkspace.Object, new EntityConnection(mockWorkspace.Object, dbConnectionMock.Object, true).GetMetadataWorkspace());
             }
         }
 
@@ -80,8 +82,8 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+                var metadataWorkspaceMock = CreateMetadataWorkspaceMock();
+
                 var metadataWorkspace = metadataWorkspaceMock.Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
@@ -101,9 +103,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var metadataWorkspace = metadataWorkspaceMock.Object;
+                var metadataWorkspace = CreateMetadataWorkspaceMock().Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
                 entityConnection.Open();
@@ -120,9 +120,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var metadataWorkspace = metadataWorkspaceMock.Object;
+                var metadataWorkspace = CreateMetadataWorkspaceMock().Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
                 Assert.Equal(
@@ -137,9 +135,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Broken);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var metadataWorkspace = metadataWorkspaceMock.Object;
+                var metadataWorkspace = CreateMetadataWorkspaceMock().Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
                 Assert.Equal(
@@ -156,9 +152,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
 
                 Assert.Equal(
                     Strings.EntityClient_ConnectionNotOpen,
@@ -196,7 +190,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
 
                 var entityConnection = new EntityConnection(
-                    new Mock<MetadataWorkspace>(MockBehavior.Strict).Object, dbConnectionMock.Object, true, true);
+                    CreateMetadataWorkspaceMock().Object, dbConnectionMock.Object, true, true);
 
                 Assert.Equal(
                     Strings.EntityClient_ConnectionNotOpen,
@@ -214,10 +208,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
 
                 var executionStrategyMock = new Mock<IExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.Execute(It.IsAny<Action>())).Callback<Action>(
@@ -228,7 +219,7 @@ namespace System.Data.Entity.Core.EntityClient
                             storeConnectionMock.Verify(m => m.Open(), Times.Once());
                         });
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     entityConnection.Open();
@@ -252,11 +243,8 @@ namespace System.Data.Entity.Core.EntityClient
                     storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                     storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
                     storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
-
-                    var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                    metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
-                    var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+                    
+                    var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
                     Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
 
@@ -288,10 +276,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
 
@@ -391,12 +376,9 @@ namespace System.Data.Entity.Core.EntityClient
                     storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                     storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
                     storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
-
-                    var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                    metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
+                    
                     // open entityConnection - both entityConnection and store connection should now be open
-                    var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+                    var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
                     entityConnection.Open();
                     storeConnectionMock.Raise(
                         conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
@@ -431,11 +413,8 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
                 // open entityConnection - both entityConnection and store connection should now be open
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
                 entityConnection.Open();
                 storeConnectionMock.Raise(
                     conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
@@ -461,7 +440,7 @@ namespace System.Data.Entity.Core.EntityClient
 
 #if !NET40
         // These tests rely on being able to mock DbConnection, which is very complicated on .NET 4, so disabling these tests on that platform
-        public class Dispose
+        public class Dispose : TestBase
         {
             [Fact]
             public void EntityConnection_disposes_underlying_StoreConnection_if_entityConnectionShouldDisposeStoreConnection_flag_is_set()
@@ -469,16 +448,9 @@ namespace System.Data.Entity.Core.EntityClient
                 var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 storeConnectionMock.Protected().Setup("Dispose", true).Verifiable();
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Closed);
-                storeConnectionMock.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(new Mock<DbProviderFactory>().Object);
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.CSpace)).Returns(true);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace)).Returns(true);
-                metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(new Mock<StoreItemCollection>().Object);
-
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true);
                 entityConnection.Dispose();
 
                 storeConnectionMock.Protected().Verify("Dispose", Times.Once(), true);
@@ -486,22 +458,15 @@ namespace System.Data.Entity.Core.EntityClient
 
             [Fact]
             public void
-                EntityConnection_does_not_dispose_underlying_StoreConnection_if_entityConnectionShouldDisposeStoreConnection_flag_is_not_set
+                EntityConnection_does_not_dispose_underlying_StoreConnection_if_entityConnectionOwnsStoreConnection_flag_is_not_set
                 ()
             {
                 var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 storeConnectionMock.Protected().Setup("Dispose", true).Verifiable();
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Closed);
-                storeConnectionMock.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(new Mock<DbProviderFactory>().Object);
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.CSpace)).Returns(true);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace)).Returns(true);
-                metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(new Mock<StoreItemCollection>().Object);
-
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, false);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, false);
                 entityConnection.Dispose();
 
                 storeConnectionMock.Protected().Verify("Dispose", Times.Never(), true);
@@ -509,22 +474,15 @@ namespace System.Data.Entity.Core.EntityClient
 
             [Fact]
             public void
-                EntityConnection_does_not_dispose_underlying_StoreConnection_if_the_entityConnectionShouldDisposeStoreConnection_flag_is_not_specified
+                EntityConnection_does_not_dispose_underlying_StoreConnection_if_the_entityConnectionOwnsStoreConnection_flag_is_not_specified
                 ()
             {
                 var storeConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 storeConnectionMock.Protected().Setup("Dispose", true).Verifiable();
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Closed);
-                storeConnectionMock.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(new Mock<DbProviderFactory>().Object);
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.CSpace)).Returns(true);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace)).Returns(true);
-                metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(new Mock<StoreItemCollection>().Object);
-
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object);
                 entityConnection.Dispose();
 
                 storeConnectionMock.Protected().Verify("Dispose", Times.Never(), true);
@@ -556,9 +514,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, dbConnectionMock.Object, true, true);
 
                 entityConnection.OpenAsync().Wait();
                 dbConnectionMock.Raise(
@@ -577,9 +533,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, dbConnectionMock.Object, true, true);
 
                 entityConnection.OpenAsync().Wait();
                 dbConnectionMock.Raise(
@@ -595,9 +549,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var metadataWorkspace = metadataWorkspaceMock.Object;
+                var metadataWorkspace = CreateMetadataWorkspaceMock().Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
                 Assert.Equal(
@@ -615,9 +567,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Broken);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var metadataWorkspace = metadataWorkspaceMock.Object;
+                var metadataWorkspace = CreateMetadataWorkspaceMock().Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
                 Assert.Equal(
@@ -637,9 +587,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
 
                 Assert.Equal(
                     Strings.EntityClient_ConnectionNotOpen,
@@ -686,8 +634,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Closed);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
-                var entityConnection = new EntityConnection(
-                    new Mock<MetadataWorkspace>(MockBehavior.Strict).Object, dbConnectionMock.Object, true, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, dbConnectionMock.Object, true, true);
 
                 Assert.Equal(
                     Strings.EntityClient_ConnectionNotOpen,
@@ -708,9 +655,7 @@ namespace System.Data.Entity.Core.EntityClient
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, dbConnectionMock.Object, true, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, dbConnectionMock.Object, true, true);
 
                 Assert.Equal(
                     Strings.EntityClient_ProviderSpecificError("Open"),
@@ -737,10 +682,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
 
                 var executionStrategyMock = new Mock<IExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.ExecuteAsync(It.IsAny<Func<Task>>(), It.IsAny<CancellationToken>()))
@@ -753,7 +695,7 @@ namespace System.Data.Entity.Core.EntityClient
                                                  return Task.FromResult(true);
                                              });
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     entityConnection.OpenAsync().Wait();
@@ -778,11 +720,8 @@ namespace System.Data.Entity.Core.EntityClient
                     storeConnectionMock.Setup(m => m.Close()).Callback(() => storeConnectionState = ConnectionState.Closed);
                     storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
                     storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
-
-                    var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                    metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
-                    var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+                    
+                    var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
                     Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                     Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
 
@@ -815,10 +754,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
 
@@ -921,11 +857,8 @@ namespace System.Data.Entity.Core.EntityClient
                     storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
                     storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
-                    var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                    metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
                     // open entityConnection - both entityConnection and store connection should now be open
-                    var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+                    var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
                     entityConnection.OpenAsync().Wait();
                     storeConnectionMock.Raise(
                         conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
@@ -960,11 +893,8 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => storeConnectionState);
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
                 // open entityConnection - both entityConnection and store connection should now be open
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
                 entityConnection.OpenAsync().Wait();
                 storeConnectionMock.Raise(
                     conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
@@ -990,7 +920,7 @@ namespace System.Data.Entity.Core.EntityClient
 
 #endif
 
-        public class Begin : TestBase
+        public class BeginTransaction : TestBase
         {
             [Fact]
             public void ExecutionStrategy_is_used_to_recover_from_a_transient_error()
@@ -1015,10 +945,7 @@ namespace System.Data.Entity.Core.EntityClient
                                                return new Mock<DbTransaction>().Object;
                                            });
 
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
-                metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
-
-                var entityConnection = new EntityConnection(metadataWorkspaceMock.Object, storeConnectionMock.Object, true, true);
+                var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
 
                 var executionStrategyMock = new Mock<IExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<DbTransaction>>())).Returns<Func<DbTransaction>>(
@@ -1043,7 +970,7 @@ namespace System.Data.Entity.Core.EntityClient
                             return result;
                         });
 
-                MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     entityConnection.BeginTransaction();
@@ -1193,6 +1120,20 @@ namespace System.Data.Entity.Core.EntityClient
 
                 Assert.Equal(dbTransactionMock.Object, entityConnection.CurrentTransaction.StoreTransaction);
             }
+        }
+
+        private static Mock<MetadataWorkspace> CreateMetadataWorkspaceMock()
+        {
+            var storeItemCollection = new StoreItemCollection(
+                GenericProviderFactory<DbProviderFactory>.Instance, new SqlProviderManifest("2008"), "System.Data.FakeSqlClient", "2008");
+
+            var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+            metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(storeItemCollection);
+            metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.SSpace)).Returns(true);
+            metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.CSpace)).Returns(true);
+            metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace)).Returns(true);
+
+            return metadataWorkspaceMock;
         }
     }
 }

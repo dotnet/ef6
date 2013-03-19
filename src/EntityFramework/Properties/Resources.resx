@@ -1930,7 +1930,7 @@
   <data name="InvalidEntitySetName" xml:space="preserve">
     <value>The EntitySet with the specified name '{0}' does not exist in the EntityContainer.</value>
   </data>
-  <data name="OnlyFunctionImportsCanBeAddedToEntityContainer">
+  <data name="OnlyFunctionImportsCanBeAddedToEntityContainer" xml:space="preserve">
     <value>The function '{0}' is not marked as FunctionImport and cannot be added to the EntityContainer</value>
   </data>
   <data name="ItemInvalidIdentity" xml:space="preserve">
@@ -4426,10 +4426,10 @@
   <data name="ReturnParameterInInputParameterCollection" xml:space="preserve">
     <value>Parameters in the Parameters collection must not have mode set to ParameterMode.ReturnValue.</value>
   </data>
-  <data name="NullEntitySetsForFunctionReturningMultipleResultSets">
+  <data name="NullEntitySetsForFunctionReturningMultipleResultSets" xml:space="preserve">
     <value>The EntitySets parameter must not be null for functions that return multiple result sets.</value>
   </data>
-  <data name="NumberOfEntitySetsDoesNotMatchNumberOfReturnParameters">
+  <data name="NumberOfEntitySetsDoesNotMatchNumberOfReturnParameters" xml:space="preserve">
     <value>The number of entity sets should match the number of return parameters.</value>
   </data>
   <data name="EntityParameterCollectionInvalidParameterName" xml:space="preserve">
@@ -4882,18 +4882,18 @@
   <data name="ComposableFunctionOrFunctionImportMustDeclareReturnType" xml:space="preserve">
     <value>Functions and function imports that can be composed must declare a return type.</value>
   </data>
-  <data name="NonComposableFunctionCannotBeMappedAsComposable">
+  <data name="NonComposableFunctionCannotBeMappedAsComposable" xml:space="preserve">
     <value>Argument '{0}' is invalid. The specified function is not marked as composable.</value>
   </data>
-  <data name="ComposableFunctionImportsReturningEntitiesNotSupported">
+  <data name="ComposableFunctionImportsReturningEntitiesNotSupported" xml:space="preserve">
     <value>Mapping function imports returning entities is not supported.</value>
-  </data>  
-  <data name="StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues">
+  </data>
+  <data name="StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues" xml:space="preserve">
     <value>Structural type mappings must not be null or empty for function imports returning non-scalar values.</value>
   </data>
-  <data name="InvalidReturnTypeForComposableFunction">
+  <data name="InvalidReturnTypeForComposableFunction" xml:space="preserve">
     <value>Invalid return type for composable function.</value>
-  </data>  
+  </data>
   <data name="NonComposableFunctionMustNotDeclareReturnType" xml:space="preserve">
     <value>Functions that cannot be composed must not declare a return type.</value>
   </data>
@@ -5130,7 +5130,7 @@
     <value>No name was passed to the IDbDependencyResolver.GetService method. The provider invariant name must be supplied when attempting to resolve a {0} dependency.</value>
   </data>
   <data name="DbDependencyResolver_InvalidKey" xml:space="preserve">
-    <value>No {0} instance was passed to the IDbDependencyResolver.GetService method. A {0} instance must be supplied when attempting to resolve an {1} dependency.</value>
+    <value>No '{0}' instance was passed to the IDbDependencyResolver.GetService method. A '{0}' instance must be supplied when attempting to resolve an {1} dependency.</value>
   </data>
   <data name="DefaultConfigurationUsedBeforeSet" xml:space="preserve">
     <value>The default DbConfiguration instance was used by the Entity Framework before an attempt was made to set an instance of '{0}'. The '{0}' instance must be set at application start before using any Entity Framework features or must be registered in the application's config file. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
@@ -5350,7 +5350,7 @@
     <value>A concurrent method invocation has been detected. Ensure that any asynchronous methods invoked on this context have finished executing before calling any other method on the context. Also don't use the same context instance across different threads.</value>
   </data>
   <data name="AssociationSet_EndEntityTypeMismatch" xml:space="preserve">
-    <value>The entity type of one of the ends of the specified association type does not match the entity type of the corresponding entity set end.</value>  
+    <value>The entity type of one of the ends of the specified association type does not match the entity type of the corresponding entity set end.</value>
   </data>
   <data name="VisitDbInExpressionNotImplemented" xml:space="preserve">
     <value>DbInExpression handling is not implemented. The functionality involving DbInExpression, new in Entity Framework 6, is turned off by default for compatibility with existing provider implementations. It can be enabled by overriding DbProviderManifest.SupportsInExpression and returning true, in which case any command tree expression visitor implemented by the provider must handle the new expression type.</value>

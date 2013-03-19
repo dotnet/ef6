@@ -35,8 +35,8 @@ namespace System.Data.Entity.Infrastructure
                 return false;
             }
 
-            return ProviderInvariantName == otherKey.ProviderInvariantName
-                   && ServerName == otherKey.ServerName;
+            return ProviderInvariantName.Equals(otherKey.ProviderInvariantName, StringComparison.Ordinal)
+                   && ServerName.Equals(otherKey.ServerName, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()

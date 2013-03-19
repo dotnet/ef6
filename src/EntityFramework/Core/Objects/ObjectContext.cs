@@ -2337,7 +2337,7 @@ namespace System.Data.Entity.Core.Objects
         {
             var queryPlanAndNextPosition = PrepareRefreshQuery(refreshMode, targetSet, targetKeys, startFrom);
 
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             var results = executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => queryPlanAndNextPosition.Item1.Execute<object>(this, null),
@@ -2486,7 +2486,7 @@ namespace System.Data.Entity.Core.Objects
         {
             var queryPlanAndNextPosition = PrepareRefreshQuery(refreshMode, targetSet, targetKeys, startFrom);
 
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             var results = await executionStrategy.ExecuteAsync(
                 () => ExecuteInTransactionAsync(
                     () => queryPlanAndNextPosition.Item1.ExecuteAsync<object>(this, null, cancellationToken),
@@ -2694,7 +2694,7 @@ namespace System.Data.Entity.Core.Objects
             // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
             if (0 < entriesAffected)
             {
-                var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+                var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
                 entriesAffected = executionStrategy.Execute(
                     () => SaveChangesToStore(
                         options, throwOnExistingTransaction: executionStrategy.RetriesOnFailure));
@@ -2743,7 +2743,7 @@ namespace System.Data.Entity.Core.Objects
                 // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
                 if (0 < entriesAffected)
                 {
-                    var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+                    var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
                     entriesAffected = await executionStrategy.ExecuteAsync(
                         () => SaveChangesToStoreAsync(
                             options,
@@ -3205,7 +3205,7 @@ namespace System.Data.Entity.Core.Objects
                 }
             }
 
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
 
             if (executionStrategy.RetriesOnFailure
                 && executionOptions.Streaming)
@@ -3243,7 +3243,7 @@ namespace System.Data.Entity.Core.Objects
             EdmFunction functionImport;
             var entityCommand = CreateEntityCommandForFunctionImport(functionName, out functionImport, parameters);
 
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => ExecuteFunctionCommand(entityCommand), throwOnExistingTransaction: executionStrategy.RetriesOnFailure,
@@ -3686,7 +3686,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> A single integer return value </returns>
         public virtual int ExecuteStoreCommand(string commandText, params object[] parameters)
         {
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             AsyncMonitor.EnsureNotEntered();
 
             return executionStrategy.Execute(
@@ -3730,7 +3730,7 @@ namespace System.Data.Entity.Core.Objects
         private async Task<int> ExecuteStoreCommandInternalAsync(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             AsyncMonitor.Enter();
 
             try
@@ -3840,7 +3840,7 @@ namespace System.Data.Entity.Core.Objects
             // the assembly of the method that invoked the currently executing method.
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
 
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
 
             if (executionStrategy.RetriesOnFailure
                 && executionOptions.Streaming)
@@ -3946,7 +3946,7 @@ namespace System.Data.Entity.Core.Objects
         {
             AsyncMonitor.EnsureNotEntered();
 
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             if (executionStrategy.RetriesOnFailure)
             {
                 throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
@@ -3974,7 +3974,7 @@ namespace System.Data.Entity.Core.Objects
         {
             AsyncMonitor.EnsureNotEntered();
 
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             if (executionStrategy.RetriesOnFailure
                 && executionOptions.Streaming)
             {
@@ -4004,7 +4004,7 @@ namespace System.Data.Entity.Core.Objects
         {
             AsyncMonitor.EnsureNotEntered();
 
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             if (executionStrategy.RetriesOnFailure
                 && executionOptions.Streaming)
             {
@@ -4057,7 +4057,7 @@ namespace System.Data.Entity.Core.Objects
             Check.NotEmpty(entitySetName, "entitySetName");
             AsyncMonitor.EnsureNotEntered();
 
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             if (executionStrategy.RetriesOnFailure
                 && executionOptions.Streaming)
             {

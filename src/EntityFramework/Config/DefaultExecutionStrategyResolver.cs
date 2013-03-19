@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Config
 {
-    using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
@@ -13,7 +12,7 @@ namespace System.Data.Entity.Config
     {
         public object GetService(Type type, object key)
         {
-            if (type == typeof(IExecutionStrategy))
+            if (type == typeof(Func<IExecutionStrategy>))
             {
                 Check.NotNull(key, "key");
 
@@ -28,7 +27,7 @@ namespace System.Data.Entity.Config
 
                 Debug.Assert(providerServices != null);
 
-                return providerServices.GetExecutionStrategy();
+                return providerServices.GetExecutionStrategyFactory();
             }
 
             return null;

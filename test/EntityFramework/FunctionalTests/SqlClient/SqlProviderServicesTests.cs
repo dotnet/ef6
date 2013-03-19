@@ -19,7 +19,7 @@ namespace System.Data.Entity.SqlServer
             var executionStrategyMock = new Mock<IExecutionStrategy>();
             executionStrategyMock.Setup(m => m.Execute(It.IsAny<Action>())).Callback<Action>(a => a());
 
-            MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+            MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
             try
             {
                 var connection = new SqlConnection(SimpleConnectionString(("master")));

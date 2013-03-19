@@ -19,9 +19,9 @@ namespace System.Data.Entity.Config
         [Fact]
         public void GetService_returns_execution_strategy_from_provider()
         {
-            var mockExecutionStrategy = new Mock<NonRetryingExecutionStrategy>().Object;
+            var mockExecutionStrategy = new Mock<IExecutionStrategy>().Object;
             var providerServicesMock = new Mock<DbProviderServices>();
-            providerServicesMock.Setup(m => m.GetExecutionStrategy()).Returns(mockExecutionStrategy);
+            providerServicesMock.Setup(m => m.GetExecutionStrategyFactory()).Returns(() => mockExecutionStrategy);
             var mockProviderServices = providerServicesMock.Object;
             var resolver = new DefaultExecutionStrategyResolver();
 
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Config
             IExecutionStrategy resolvedExecutionStrategy;
             try
             {
-                resolvedExecutionStrategy = resolver.GetService<IExecutionStrategy>(new ExecutionStrategyKey("FooClient", "foo"));
+                resolvedExecutionStrategy = resolver.GetService<Func<IExecutionStrategy>>(new ExecutionStrategyKey("FooClient", "foo"))();
             }
             finally
             {
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Config
         [Fact]
         public void GetService_throws_for_null_key()
         {
-            Assert.Throws<ArgumentNullException>(() => new DefaultExecutionStrategyResolver().GetService<IExecutionStrategy>(null));
+            Assert.Throws<ArgumentNullException>(() => new DefaultExecutionStrategyResolver().GetService<Func<IExecutionStrategy>>(null));
         }
     }
 }

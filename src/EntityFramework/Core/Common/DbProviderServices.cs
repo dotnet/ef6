@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Common
 {
+    using System.Collections.Concurrent;
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -26,6 +27,13 @@ namespace System.Data.Entity.Core.Common
     public abstract class DbProviderServices
     {
         private readonly Lazy<IDbDependencyResolver> _resolver;
+
+        private readonly ConcurrentDictionary<string, DbSpatialServices> _spatialServices =
+            new ConcurrentDictionary<string, DbSpatialServices>();
+
+        private static readonly ConcurrentDictionary<ExecutionStrategyKey, Func<IExecutionStrategy>>
+            _executionStrategyFactories =
+                new ConcurrentDictionary<ExecutionStrategyKey, Func<IExecutionStrategy>>();
 
         /// <summary>
         ///     Constructs an EF provider that will use the <see cref="IDbDependencyResolver" /> obtained from
@@ -62,7 +70,9 @@ namespace System.Data.Entity.Core.Common
             Check.NotNull(commandTree, "commandTree");
             ValidateDataSpace(commandTree);
             var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-            Debug.Assert(storeMetadata.StoreProviderManifest != null, "StoreItemCollection has null StoreProviderManifest?");
+            Debug.Assert(
+                storeMetadata.StoreProviderManifest != null,
+                "StoreItemCollection has null StoreProviderManifest?");
 
             return CreateDbCommandDefinition(storeMetadata.StoreProviderManifest, commandTree);
         }
@@ -75,7 +85,9 @@ namespace System.Data.Entity.Core.Common
         /// <remarks>
         ///     This method simply delegates to the provider's implementation of CreateDbCommandDefinition.
         /// </remarks>
-        public DbCommandDefinition CreateCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
+        public DbCommandDefinition CreateCommandDefinition(
+            DbProviderManifest providerManifest,
+            DbCommandTree commandTree)
         {
             Check.NotNull(providerManifest, "providerManifest");
             Check.NotNull(commandTree, "commandTree");
@@ -104,7 +116,9 @@ namespace System.Data.Entity.Core.Common
         /// <param name="connection"> provider manifest previously retrieved from the store provider </param>
         /// <param name="commandTree"> command tree for the statement </param>
         /// <returns> an executable command definition object </returns>
-        protected abstract DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree);
+        protected abstract DbCommandDefinition CreateDbCommandDefinition(
+            DbProviderManifest providerManifest,
+            DbCommandTree commandTree);
 
         /// <summary>
         ///     Ensures that the data space of the specified command tree is the target (S-) space
@@ -218,9 +232,10 @@ namespace System.Data.Entity.Core.Common
         ///     <see cref="IDbDependencyResolver"/> registered for <see cref="ExecutionStrategy"/> that handles this provider.
         /// </summary>
         /// <returns>A new instance of <see cref="ExecutionStrategy"/></returns>
-        public virtual IExecutionStrategy GetExecutionStrategy()
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        public virtual Func<IExecutionStrategy> GetExecutionStrategyFactory()
         {
-            return new NonRetryingExecutionStrategy();
+            return () => new NonRetryingExecutionStrategy();
         }
 
         /// <summary>
@@ -230,16 +245,45 @@ namespace System.Data.Entity.Core.Common
         /// <returns>A new instance of <see cref="ExecutionStrategy"/></returns>
         public static IExecutionStrategy GetExecutionStrategy(DbConnection connection)
         {
+            return GetExecutionStrategy(connection, GetProviderFactory(connection));
+        }
+
+        /// <summary>
+        ///     Gets the <see cref="IExecutionStrategy"/> that will be used to execute methods that use the specified connection.
+        ///     Uses MetadataWorkspace for faster lookup.
+        /// </summary>
+        /// <param name="connection">The database connection</param>
+        /// <returns>A new instance of <see cref="ExecutionStrategy"/></returns>
+        internal static IExecutionStrategy GetExecutionStrategy(
+            DbConnection connection,
+            MetadataWorkspace metadataWorkspace)
+        {
+            var storeMetadata = (StoreItemCollection)metadataWorkspace.GetItemCollection(DataSpace.SSpace);
+
+            return GetExecutionStrategy(connection, storeMetadata.StoreProviderFactory);
+        }
+
+        private static IExecutionStrategy GetExecutionStrategy(
+            DbConnection connection,
+            DbProviderFactory providerFactory)
+        {
             var entityConnection = connection as EntityConnection;
             if (entityConnection != null)
             {
                 connection = entityConnection.StoreConnection;
             }
-            
-            var providerInvariantName = connection.GetProviderInvariantName();
 
-            return DbConfiguration.GetService<IExecutionStrategy>(
-                new ExecutionStrategyKey(providerInvariantName, connection.DataSource));
+            // Using the type name of DbProviderFactory implementation instead of the provider invariant name for performance
+            var cacheKey = new ExecutionStrategyKey(providerFactory.GetType().FullName, connection.DataSource);
+
+            var factory = _executionStrategyFactories.GetOrAdd(
+                cacheKey,
+                k =>
+                DbConfiguration.GetService<Func<IExecutionStrategy>>(
+                    new ExecutionStrategyKey(
+                    DbConfiguration.GetService<IProviderInvariantName>(providerFactory).Name,
+                    connection.DataSource)));
+            return factory();
         }
 
         public DbSpatialDataReader GetSpatialDataReader(DbDataReader fromReader, string manifestToken)
@@ -270,7 +314,7 @@ namespace System.Data.Entity.Core.Common
 
         public DbSpatialServices GetSpatialServices(string manifestToken)
         {
-            return GetSpatialServicesInternal(_resolver, manifestToken);
+            return _spatialServices.GetOrAdd(manifestToken, mt => GetSpatialServicesInternal(_resolver, mt));
         }
 
         internal DbSpatialServices GetSpatialServicesInternal(Lazy<IDbDependencyResolver> resolver, string manifestToken)
@@ -409,7 +453,9 @@ namespace System.Data.Entity.Core.Common
             return DbCreateDatabaseScript(providerManifestToken, storeItemCollection);
         }
 
-        protected virtual string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
+        protected virtual string DbCreateDatabaseScript(
+            string providerManifestToken,
+            StoreItemCollection storeItemCollection)
         {
             Check.NotNull(providerManifestToken, "providerManifestToken");
             Check.NotNull(storeItemCollection, "storeItemCollection");
@@ -424,7 +470,7 @@ namespace System.Data.Entity.Core.Common
         /// <param name="connection"> Connection to a non-existent database that needs to be created and be populated with the store objects indicated by the storeItemCollection </param>
         /// <param name="commandTimeout"> Execution timeout for any commands needed to create the database. </param>
         /// <param name="storeItemCollection">
-        ///     The collection of all store items based on which the script should be created < </param>
+        ///     The collection of all store items based on which the script should be created </param>
         public void CreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
             Check.NotNull(connection, "connection");
@@ -433,7 +479,9 @@ namespace System.Data.Entity.Core.Common
             DbCreateDatabase(connection, commandTimeout, storeItemCollection);
         }
 
-        protected virtual void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
+        protected virtual void DbCreateDatabase(
+            DbConnection connection, int? commandTimeout,
+            StoreItemCollection storeItemCollection)
         {
             Check.NotNull(connection, "connection");
             Check.NotNull(storeItemCollection, "storeItemCollection");
@@ -460,7 +508,9 @@ namespace System.Data.Entity.Core.Common
             return DbDatabaseExists(connection, commandTimeout, storeItemCollection);
         }
 
-        protected virtual bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
+        protected virtual bool DbDatabaseExists(
+            DbConnection connection, int? commandTimeout,
+            StoreItemCollection storeItemCollection)
         {
             Check.NotNull(connection, "connection");
             Check.NotNull(storeItemCollection, "storeItemCollection");
@@ -483,7 +533,9 @@ namespace System.Data.Entity.Core.Common
             DbDeleteDatabase(connection, commandTimeout, storeItemCollection);
         }
 
-        protected virtual void DbDeleteDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
+        protected virtual void DbDeleteDatabase(
+            DbConnection connection, int? commandTimeout,
+            StoreItemCollection storeItemCollection)
         {
             Check.NotNull(connection, "connection");
             Check.NotNull(storeItemCollection, "storeItemCollection");

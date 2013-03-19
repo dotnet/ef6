@@ -687,7 +687,7 @@ namespace System.Data.Entity.Core.Objects
         private ObjectResult<T> GetResults(MergeOption? forMergeOption)
         {
             QueryState.ObjectContext.AsyncMonitor.EnsureNotEntered();
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(QueryState.ObjectContext.Connection);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(QueryState.ObjectContext.Connection, QueryState.ObjectContext.MetadataWorkspace);
 
             if (executionStrategy.RetriesOnFailure
                 && QueryState.EffectiveStreamingBehaviour)
@@ -709,7 +709,7 @@ namespace System.Data.Entity.Core.Objects
         {
             QueryState.ObjectContext.AsyncMonitor.EnsureNotEntered();
 
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(QueryState.ObjectContext.Connection);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(QueryState.ObjectContext.Connection, QueryState.ObjectContext.MetadataWorkspace);
             if (executionStrategy.RetriesOnFailure
                 && QueryState.EffectiveStreamingBehaviour)
             {

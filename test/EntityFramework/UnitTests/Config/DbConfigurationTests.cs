@@ -340,8 +340,6 @@ namespace System.Data.Entity.Config
             [Fact]
             public void Setting_PluralizationService_throws_if_given_a_null_service()
             {
-                var configuration = CreatedLockedConfiguration();
-
                 Assert.Equal(
                     "pluralizationService",
                     Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetPluralizationService(null)).ParamName);

@@ -9,9 +9,9 @@ namespace System.Data.Entity.SqlServer
     public class SqlProviderServicesTests
     {
         [Fact]
-        public void GetExecutionStrategy_returns_DefaultSqlExecutionStrategy()
+        public void GetExecutionStrategyFactory_returns_DefaultSqlExecutionStrategy()
         {
-            Assert.IsType<DefaultSqlExecutionStrategy>(SqlProviderServices.Instance.GetExecutionStrategy());
+            Assert.IsType<DefaultSqlExecutionStrategy>(SqlProviderServices.Instance.GetExecutionStrategyFactory()());
         }
 
         [Fact]

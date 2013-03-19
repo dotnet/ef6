@@ -458,7 +458,7 @@ namespace System.Data.Entity.Migrations
 
             var executionStrategyMock = new Mock<IExecutionStrategy>();
 
-            MutableResolver.AddResolver<IExecutionStrategy>(key => executionStrategyMock.Object);
+            MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
             try
             {
                 migrator.ExecuteStatements(Enumerable.Empty<MigrationStatement>());

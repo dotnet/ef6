@@ -735,9 +735,9 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <inheritdoc/>
-        public override IExecutionStrategy GetExecutionStrategy()
+        public override Func<IExecutionStrategy> GetExecutionStrategyFactory()
         {
-            return new DefaultSqlExecutionStrategy();
+            return () => new DefaultSqlExecutionStrategy();
         }
 
         protected override string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
@@ -1142,7 +1142,8 @@ namespace System.Data.Entity.SqlServer
             var openingConnection = sqlConnection.State == ConnectionState.Closed;
             if (openingConnection)
             {
-                DbConfiguration.GetService<IExecutionStrategy>(new ExecutionStrategyKey("System.Data.SqlClient", sqlConnection.DataSource))
+                DbConfiguration.GetService<Func<IExecutionStrategy>>(
+                    new ExecutionStrategyKey("System.Data.SqlClient", sqlConnection.DataSource))()
                                .Execute(
                                    () =>
                                        {
