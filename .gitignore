@@ -22,3 +22,5 @@ EntityFramework.SqlServerCompact.xml
 *.LOCAL.*
 StyleCop.Cache
 *.csproj.DotSettings
+/coverage
+/OpenCoverResults.xml

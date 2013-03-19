@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="OpenCover" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <OpenCoverMsBuild Include="..\packages\**\OpenCover.MSBuild.dll" />
+    <OpenCoverConsole Include="..\packages\**\OpenCover.Console.exe" />
+    <ReportGeneratorMsBuild Include="..\packages\**\ReportGenerator.exe" />
+    <XunitConsoleRunner Include="..\packages\**\xunit.console.clr4.x86.exe"/>
+  </ItemGroup>
+  <UsingTask TaskName="OpenCover.MSBuild.OpenCover" AssemblyFile="@(OpenCoverMsBuild)" />
+  <UsingTask TaskName="ReportGenerator" AssemblyFile="@(ReportGeneratorMsBuild)" />  
+  <Target Name="OpenCover">
+    <Message Text="Running tests with code coverage..." Importance="High" />
+    <OpenCover ToolPath="@(OpenCoverConsole->'%(RelativeDir)')"
+               ToolExe="@(OpenCoverConsole->'%(Filename)%(Extension)')"
+               Target="@(XunitConsoleRunner)"
+               TargetArgs="EF.opencover.xunit /silent"
+               MergeByHash="True"
+               Filter="+[EntityFramework]*"
+               Output="..\OpenCoverResults.xml" />
+    <Message Text="Generating code coverage report..." Importance="High" />
+    <ReportGenerator ReportFiles="..\OpenCoverResults.xml"
+                     TargetDirectory="..\coverage"
+                     ReportTypes="Html;XmlSummary" />
+  </Target>
+</Project>
