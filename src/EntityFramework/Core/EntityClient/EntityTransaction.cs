@@ -40,11 +40,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public new virtual EntityConnection Connection
         {
-            get
-            {
-                // follow the store transaction behavior
-                return ((null != _storeTransaction.Connection) ? _connection : null);
-            }
+            get { return (EntityConnection)DbConnection; }
         }
 
         /// <summary>
@@ -52,11 +48,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         protected override DbConnection DbConnection
         {
-            get
-            {
-                // follow the store transaction behavior
-                return ((null != _storeTransaction.Connection) ? _connection : null);
-            }
+            // follow the store transaction behavior
+            get { return (((_storeTransaction != null ? _storeTransaction.Connection : null) != null) ? _connection : null); }
         }
 
         /// <summary>
@@ -64,7 +57,12 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override IsolationLevel IsolationLevel
         {
-            get { return _storeTransaction.IsolationLevel; }
+            get
+            {
+                return _storeTransaction != null
+                           ? _storeTransaction.IsolationLevel
+                           : default(IsolationLevel);
+            }
         }
 
         /// <summary>
@@ -82,7 +80,10 @@ namespace System.Data.Entity.Core.EntityClient
         {
             try
             {
-                _storeTransaction.Commit();
+                if (_storeTransaction != null)
+                {
+                    _storeTransaction.Commit();
+                }
             }
             catch (Exception e)
             {
@@ -104,7 +105,10 @@ namespace System.Data.Entity.Core.EntityClient
         {
             try
             {
-                _storeTransaction.Rollback();
+                if (_storeTransaction != null)
+                {
+                    _storeTransaction.Rollback();
+                }
             }
             catch (Exception e)
             {
@@ -128,7 +132,11 @@ namespace System.Data.Entity.Core.EntityClient
             if (disposing)
             {
                 ClearCurrentTransaction();
-                _storeTransaction.Dispose();
+
+                if (_storeTransaction != null)
+                {
+                    _storeTransaction.Dispose();
+                }
             }
             base.Dispose(disposing);
         }
@@ -138,8 +146,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         private void ClearCurrentTransaction()
         {
-            if (_connection.CurrentTransaction
-                == this)
+            if ((_connection != null)
+                && (_connection.CurrentTransaction == this))
             {
                 _connection.ClearCurrentTransaction();
             }

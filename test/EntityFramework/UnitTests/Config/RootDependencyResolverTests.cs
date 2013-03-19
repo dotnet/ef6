@@ -101,12 +101,6 @@ namespace System.Data.Entity.Config
         }
 
         [Fact]
-        public void The_root_resolver_returns_the_default_command_interceptor_service()
-        {
-            Assert.IsType<DefaultCommandInterceptor>(new RootDependencyResolver().GetService<IDbCommandInterceptor>());
-        }
-
-        [Fact]
         public void The_root_resolver_returns_the_default_sql_generators()
         {
             Assert.IsType<SqlServerMigrationSqlGenerator>(

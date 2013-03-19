@@ -183,8 +183,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <returns> Number of rows affected by the command. </returns>
         internal abstract long Execute(
             Dictionary<int, object> identifierValues,
-            List<KeyValuePair<PropagatorResult, object>> generatedValues,
-            IDbCommandInterceptor commandInterceptor);
+            List<KeyValuePair<PropagatorResult, object>> generatedValues);
 
 #if !NET40
 

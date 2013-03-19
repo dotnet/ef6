@@ -4,9 +4,10 @@ namespace System.Data.Entity.Core.Common
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-
+    
     /// <summary>
     ///     A prepared command definition, can be cached and reused to avoid
     ///     repreparing a command.
@@ -61,7 +62,7 @@ namespace System.Data.Entity.Core.Common
         /// <returns> </returns>
         public virtual DbCommand CreateCommand()
         {
-            return (DbCommand)(_prototype.Clone());
+            return (DbCommand)_prototype.Clone();
         }
 
         internal static void PopulateParameterFromTypeUsage(DbParameter parameter, TypeUsage type, bool isOutParam)

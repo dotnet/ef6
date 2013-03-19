@@ -15,6 +15,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Data.Entity.Core.Query.ResultAssembly;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -585,6 +586,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 
 #endif
 
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private DbCommand PrepareEntityCommandBeforeExecution(EntityCommand entityCommand)
         {
             if (1 != _mappedCommandDefinitions.Count)
@@ -594,7 +596,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 
             var entityTransaction = entityCommand.ValidateAndGetEntityTransaction();
             var definition = _mappedCommandDefinitions[0];
-            var storeProviderCommand = definition.CreateCommand();
+
+            var storeProviderCommand = new InterceptableDbCommand(definition.CreateCommand());
 
             CommandHelper.SetStoreProviderCommandState(entityCommand, entityTransaction, storeProviderCommand);
 

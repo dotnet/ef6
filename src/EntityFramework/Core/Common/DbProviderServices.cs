@@ -28,6 +28,7 @@ namespace System.Data.Entity.Core.Common
     public abstract class DbProviderServices
     {
         private readonly Lazy<IDbDependencyResolver> _resolver;
+        private readonly Interception _interception;
 
         private readonly ConcurrentDictionary<string, DbSpatialServices> _spatialServices =
             new ConcurrentDictionary<string, DbSpatialServices>();
@@ -42,8 +43,8 @@ namespace System.Data.Entity.Core.Common
         ///     as the <see cref="DbSpatialServices" /> instance to use.
         /// </summary>
         protected DbProviderServices()
+            : this(DbConfiguration.DependencyResolver)
         {
-            _resolver = new Lazy<IDbDependencyResolver>(() => DbConfiguration.DependencyResolver);
         }
 
         /// <summary>
@@ -52,10 +53,17 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <param name="resolver"> The resolver to use. </param>
         protected DbProviderServices(IDbDependencyResolver resolver)
+            : this(resolver, Interception.Instance)
+        {
+        }
+
+        internal DbProviderServices(IDbDependencyResolver resolver, Interception interception)
         {
             Check.NotNull(resolver, "resolver");
+            DebugCheck.NotNull(interception);
 
             _resolver = new Lazy<IDbDependencyResolver>(() => resolver);
+            _interception = interception;
         }
 
         /// <summary>
@@ -70,10 +78,14 @@ namespace System.Data.Entity.Core.Common
         {
             Check.NotNull(commandTree, "commandTree");
             ValidateDataSpace(commandTree);
+            
             var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+
             Debug.Assert(
                 storeMetadata.StoreProviderManifest != null,
                 "StoreItemCollection has null StoreProviderManifest?");
+
+            commandTree = _interception.Dispatch(commandTree);
 
             return CreateDbCommandDefinition(storeMetadata.StoreProviderManifest, commandTree);
         }

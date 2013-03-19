@@ -15,7 +15,6 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
@@ -72,40 +71,6 @@ namespace System.Data.Entity.Core.Objects
                 objectContext.SaveChanges(SaveOptions.DetectChangesBeforeSave);
 
                 objectStateManagerMock.Verify(m => m.DetectChanges(), Times.Once());
-            }
-
-            [Fact]
-            public void Does_not_ensure_connection_when_intercepting()
-            {
-                var mockObjectStateManager = new Mock<ObjectStateManager>();
-                mockObjectStateManager.Setup(osm => osm.GetObjectStateEntriesCount(It.IsAny<EntityState>())).Returns(1);
-
-                var mockCommandInterceptor = new Mock<IDbCommandInterceptor>();
-                mockCommandInterceptor.SetupGet(ci => ci.IsEnabled).Returns(true);
-
-                var mockEntityAdapter = new Mock<IEntityAdapter>();
-
-                var mockObjectContext
-                    = new Mock<ObjectContext>(null, null, null, mockCommandInterceptor.Object, mockEntityAdapter.Object)
-                          {
-                              CallBase = true
-                          };
-                mockObjectContext.Setup(oc => oc.ObjectStateManager).Returns(mockObjectStateManager.Object);
-
-                var storeConnectionMock = new Mock<DbConnection>();
-                storeConnectionMock.Setup(m => m.DataSource).Returns("foo");
-                mockObjectContext.Setup(oc => oc.Connection).Returns(storeConnectionMock.Object);
-
-                var storeItemCollection = new StoreItemCollection(
-                    GenericProviderFactory<DbProviderFactory>.Instance, new SqlProviderManifest("2008"), "System.Data.FakeSqlClient", "2008");
-                var metadataWorkspaceMock = new Mock<MetadataWorkspace>();
-                metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(storeItemCollection);
-                mockObjectContext.Setup(oc => oc.MetadataWorkspace).Returns(metadataWorkspaceMock.Object);
-
-                mockObjectContext.Object.SaveChanges(SaveOptions.None);
-
-                mockObjectContext.Verify(oc => oc.EnsureConnection(), Times.Never());
-                mockEntityAdapter.Verify(ea => ea.Update(mockObjectStateManager.Object, false));
             }
 
             [Fact]
@@ -1492,12 +1457,13 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void ObjectContext_disposes_underlying_EntityConnection_if_contextOwnConnection_flag_is_set()
             {
-                var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true);
+                var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true, null);
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(new Mock<MetadataWorkspace>().Object);
                 entityConnectionMock.Protected().Setup("Dispose", true).Verifiable();
 
                 var objectContext = new ObjectContext(entityConnectionMock.Object, true);
+
                 objectContext.Dispose();
 
                 entityConnectionMock.Protected().Verify("Dispose", Times.Once(), true);
@@ -1506,7 +1472,7 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void ObjectContext_does_not_dispose_underlying_EntityConnection_if_contextOwnConnection_flag_is_not_set()
             {
-                var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true);
+                var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true, null);
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(new Mock<MetadataWorkspace>().Object);
                 entityConnectionMock.Protected().Setup("Dispose", false).Verifiable();
@@ -1520,7 +1486,7 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void ObjectContext_does_not_dispose_underlying_EntityConnection_if_contextOwnConnection_flag_is_not_specified()
             {
-                var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true);
+                var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true, null);
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(new Mock<MetadataWorkspace>().Object);
                 entityConnectionMock.Protected().Setup("Dispose", true).Verifiable();
@@ -2892,7 +2858,7 @@ namespace System.Data.Entity.Core.Objects
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(metadataWorkspaceMock.Object);
             }
 
-            var objectContextMock = new Mock<ObjectContext>(objectQueryExecutionPlanFactory, translator, columnMapFactory, null, null)
+            var objectContextMock = new Mock<ObjectContext>(objectQueryExecutionPlanFactory, translator, columnMapFactory, null)
                                         {
                                             CallBase = true
                                         };

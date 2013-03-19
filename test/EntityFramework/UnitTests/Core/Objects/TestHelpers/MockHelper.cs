@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.SqlServer;
+    using System.Data.SqlClient;
     using System.Linq;
     using System.Linq.Expressions;
 #if !NET40
@@ -126,8 +127,9 @@ namespace System.Data.Entity.Core.Objects
             var model = new EdmModel(DataSpace.SSpace);
             model.ProviderInfo = new DbProviderInfo(GenericProviderFactory<DbProviderFactory>.Instance.InvariantProviderName, "2008");
             model.ProviderManifest = new SqlProviderManifest("2008");
-            var storeItemCollectionMock = new Mock<StoreItemCollection>(model);
-
+            
+            var storeItemCollectionMock = new Mock<StoreItemCollection>(model) { CallBase = true };
+            
             var metadataWorkspaceMock = new Mock<MetadataWorkspace>();
             metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(storeItemCollectionMock.Object);
             objectContextMock.Setup(m => m.MetadataWorkspace).Returns(metadataWorkspaceMock.Object);

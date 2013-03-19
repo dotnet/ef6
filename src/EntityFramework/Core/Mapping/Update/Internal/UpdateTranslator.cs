@@ -4,7 +4,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.Utils;
@@ -36,8 +35,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class UpdateTranslator
     {
-        private readonly IDbCommandInterceptor _commandInterceptor;
-
         #region Constructors
 
         /// <summary>
@@ -45,7 +42,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         /// <param name="stateManager"> Entity state manager containing changes to be processed. </param>
         /// <param name="adapter"> Map adapter requesting the changes. </param>
-        public UpdateTranslator(IEntityStateManager stateManager, EntityAdapter adapter, IDbCommandInterceptor commandInterceptor = null)
+        public UpdateTranslator(IEntityStateManager stateManager, EntityAdapter adapter)
             : this()
         {
             DebugCheck.NotNull(stateManager);
@@ -53,10 +50,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             _stateManager = stateManager;
             _adapter = adapter;
-
-            _commandInterceptor
-                = commandInterceptor
-                  ?? DbConfiguration.GetService<IDbCommandInterceptor>();
 
             // connection state
             _providerServices = adapter.Connection.StoreProviderFactory.GetProviderServices();
@@ -421,7 +414,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 {
                     // Remember the data sources so that we can throw meaningful exception
                     source = command;
-                    var rowsAffected = command.Execute(identifierValues, generatedValues, _commandInterceptor);
+                    var rowsAffected = command.Execute(identifierValues, generatedValues);
                     ValidateRowsAffected(rowsAffected, source);
                 }
             }
@@ -788,7 +781,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             Debug.Assert(null != Connection.StoreConnection, "EntityAdapter.Update ensures the store connection is set");
             try
             {
-                command = _providerServices.CreateCommand(commandTree);
+                command = new InterceptableDbCommand(_providerServices.CreateCommand(commandTree));
             }
             catch (Exception e)
             {
@@ -905,8 +898,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     if (_stateManager.TryGetEntityStateEntry(key, out valueEntry))
                     {
                         // Convert state entry so that its values are known to the update pipeline.
-                        var result = _recordConverter.ConvertCurrentValuesToPropagatorResult(
-                            valueEntry, ModifiedPropertiesBehavior.NoneModified);
+                        _recordConverter.ConvertCurrentValuesToPropagatorResult(valueEntry, ModifiedPropertiesBehavior.NoneModified);
                     }
                 }
             }

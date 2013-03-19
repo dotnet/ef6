@@ -48,12 +48,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 updateCommandMock.Setup(
                     m => m.Execute(
                         It.IsAny<Dictionary<int, object>>(),
-                        It.IsAny<List<KeyValuePair<PropagatorResult, object>>>(),
-                        It.IsAny<IDbCommandInterceptor>()))
+                        It.IsAny<List<KeyValuePair<PropagatorResult, object>>>()))
                     .Returns(
                         (Dictionary<int, object> identifierValues,
-                            List<KeyValuePair<PropagatorResult, object>> generatedValues,
-                            IDbCommandInterceptor interceptor) =>
+                            List<KeyValuePair<PropagatorResult, object>> generatedValues) =>
                             {
                                 generatedValues.Add(
                                     new KeyValuePair<PropagatorResult, object>(mockPropagatorResult.Object, generatedValue));
@@ -87,8 +85,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 updateCommandMock.Setup(
                     m => m.Execute(
                         It.IsAny<Dictionary<int, object>>(),
-                        It.IsAny<List<KeyValuePair<PropagatorResult, object>>>(),
-                        It.IsAny<IDbCommandInterceptor>()))
+                        It.IsAny<List<KeyValuePair<PropagatorResult, object>>>()))
                     .Returns(() => { throw dbException; });
 
                 var objectStateManager = new Mock<ObjectStateManager>

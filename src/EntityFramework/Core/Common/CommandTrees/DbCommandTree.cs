@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         ///     Gets the metadata workspace used by this command tree.
         /// </summary>
-        public MetadataWorkspace MetadataWorkspace
+        public virtual MetadataWorkspace MetadataWorkspace
         {
             get { return _metadata; }
         }
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         ///     Gets the data space in which metadata used by this command tree must reside.
         /// </summary>
-        public DataSpace DataSpace
+        public virtual DataSpace DataSpace
         {
             get { return _dataSpace; }
         }

@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -52,6 +53,9 @@ namespace System.Data.Entity.Core.EntityClient
         private Transaction _enlistedTransaction;
         private bool _initialized;
 
+        private readonly Interception _interception;
+        private ConnectionState? _fakeConnectionState;
+
         /// <summary>
         ///     Constructs the EntityConnection object with a connection not yet associated to a particular store
         /// </summary>
@@ -79,6 +83,8 @@ namespace System.Data.Entity.Core.EntityClient
         public EntityConnection(string connectionString)
         {
             ChangeConnectionString(connectionString);
+
+            _interception = Interception.Instance;
         }
 
         /// <summary>
@@ -114,7 +120,8 @@ namespace System.Data.Entity.Core.EntityClient
             MetadataWorkspace workspace,
             DbConnection connection,
             bool skipInitialization,
-            bool entityConnectionOwnsStoreConnection)
+            bool entityConnectionOwnsStoreConnection, 
+            Interception interception = null)
         {
             if (!skipInitialization)
             {
@@ -149,6 +156,7 @@ namespace System.Data.Entity.Core.EntityClient
             _metadataWorkspace = workspace;
             _storeConnection = connection;
             _entityConnectionShouldDisposeStoreConnection = entityConnectionOwnsStoreConnection;
+            _interception = interception ?? Interception.Instance;
 
             if (_storeConnection != null)
             {
@@ -323,7 +331,7 @@ namespace System.Data.Entity.Core.EntityClient
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public override ConnectionState State
         {
-            get { return _entityClientConnectionState; }
+            get { return _fakeConnectionState ?? _entityClientConnectionState; }
         }
 
         /// <summary>
@@ -472,6 +480,15 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override void Open()
         {
+            _fakeConnectionState = null;
+
+            if (!_interception.Dispatch(this))
+            {
+                _fakeConnectionState = ConnectionState.Open;
+
+                return;
+            }
+
             if (_storeConnection == null)
             {
                 throw Error.EntityClient_ConnectionStringNeededBeforeOperation();
@@ -598,6 +615,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         public override void Close()
         {
+            _fakeConnectionState = null;
+
             // It's a no-op if there isn't an underlying connection
             if (_storeConnection == null)
             {
@@ -642,11 +661,16 @@ namespace System.Data.Entity.Core.EntityClient
         /// <returns> An object representing the new transaction </returns>
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
+            if (_fakeConnectionState != null)
+            {
+                return new EntityTransaction();
+            } 
+            
             if (CurrentTransaction != null)
             {
                 throw new InvalidOperationException(Strings.EntityClient_TransactionAlreadyStarted);
             }
-
+            
             if (_storeConnection == null)
             {
                 throw Error.EntityClient_ConnectionStringNeededBeforeOperation();
@@ -716,7 +740,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </exception>
         /// <exception cref="InvalidOperationException">Thrown if the connection associated with the transaction does not match the Entity Framework's connection</exception>
         /// <summary>
-        internal EntityTransaction UseStoreTransaction(DbTransaction storeTransaction)
+        internal virtual EntityTransaction UseStoreTransaction(DbTransaction storeTransaction)
         {
             if (storeTransaction == null)
             {

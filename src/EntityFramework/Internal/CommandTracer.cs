@@ -3,42 +3,67 @@
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Config;
-    using System.Linq;
+    using System.Data.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Utilities;
 
-    internal class CommandTracer : IDisposable
+    internal sealed class CommandTracer : IDisposable, IDbInterceptor
     {
-        private IDbCommandInterceptor _commandInterceptor;
+        private readonly List<DbCommand> _commands = new List<DbCommand>();
+        private readonly List<DbCommandTree> _commandTrees = new List<DbCommandTree>();
 
-        public CommandTracer(IDbCommandInterceptor commandInterceptor = null)
+        private readonly DbContext _context;
+        private readonly Interception _interception;
+
+        public CommandTracer(DbContext context)
+            : this(context, Interception.Instance)
         {
-            _commandInterceptor
-                = commandInterceptor
-                  ?? DbConfiguration.GetService<IDbCommandInterceptor>();
-
-            if (_commandInterceptor != null)
-            {
-                _commandInterceptor.IsEnabled = true;
-            }
         }
 
-        public IEnumerable<InterceptedCommand> Commands
+        internal CommandTracer(DbContext context, Interception interception)
         {
-            get
-            {
-                return (_commandInterceptor != null)
-                           ? _commandInterceptor.Commands
-                           : Enumerable.Empty<InterceptedCommand>();
-            }
+            Check.NotNull(context, "context");
+            DebugCheck.NotNull(interception);
+
+            _context = context;
+            _interception = interception;
+
+            _interception.Add(_context, this);
         }
 
-        public void Dispose()
+        public IEnumerable<DbCommand> DbCommands
         {
-            if (_commandInterceptor != null)
-            {
-                _commandInterceptor.IsEnabled = false;
-                _commandInterceptor = null;
-            }
+            get { return _commands; }
+        }
+
+        public IEnumerable<DbCommandTree> CommandTrees
+        {
+            get { return _commandTrees; }
+        }
+
+        bool IDbInterceptor.CommandExecuting(DbCommand command)
+        {
+            _commands.Add(command);
+
+            return false; // cancel execution
+        }
+
+        DbCommandTree IDbInterceptor.CommandTreeCreated(DbCommandTree commandTree)
+        {
+            _commandTrees.Add(commandTree);
+
+            return commandTree;
+        }
+
+        bool IDbInterceptor.ConnectionOpening(DbConnection connection)
+        {
+            return false; // don't open
+        }
+
+        void IDisposable.Dispose()
+        {
+            _interception.Remove(_context, this);
         }
     }
 }

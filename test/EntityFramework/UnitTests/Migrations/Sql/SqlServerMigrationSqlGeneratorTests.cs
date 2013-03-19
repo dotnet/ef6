@@ -495,7 +495,7 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
                 = new HistoryOperation(
                     new[]
                         {
-                            new InterceptedCommand(sqlCommand)
+                            sqlCommand
                         });
 
             var sql =
@@ -518,7 +518,7 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
                 = new HistoryOperation(
                     new[]
                         {
-                            new InterceptedCommand(sqlCommand)
+                            sqlCommand
                         });
 
             var sql =

@@ -2,8 +2,6 @@
 
 namespace System.Data.Entity.Migrations.Model
 {
-    using System.Data.Entity.Internal;
-    using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using Xunit;
 
@@ -12,7 +10,7 @@ namespace System.Data.Entity.Migrations.Model
         [Fact]
         public void Can_get_and_set_properties()
         {
-            var historyOperation = new HistoryOperation(new[] { new InterceptedCommand(new SqlCommand()) });
+            var historyOperation = new HistoryOperation(new[] { new SqlCommand() });
 
             Assert.NotEmpty(historyOperation.Commands);
         }

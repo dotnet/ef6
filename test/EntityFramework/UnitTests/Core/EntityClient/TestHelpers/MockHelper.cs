@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.EntityClient
             dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
             var dbConnection = dbConnectionMock.Object;
 
-            var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Loose, metadataWorkspace, dbConnection, true, true)
+            var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Loose, metadataWorkspace, dbConnection, true, true, null)
                                            {
                                                CallBase = true
                                            };

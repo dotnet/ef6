@@ -104,8 +104,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         internal override long Execute(
             Dictionary<int, object> identifierValues,
-            List<KeyValuePair<PropagatorResult, object>> generatedValues,
-            IDbCommandInterceptor commandInterceptor)
+            List<KeyValuePair<PropagatorResult, object>> generatedValues)
         {
             // Compile command
             using (var command = CreateCommand(identifierValues))
@@ -174,16 +173,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
                 else
                 {
-                    // We currently only intercept commands on this code path.
-
-                    var executeCommand = true;
-
-                    if (commandInterceptor != null)
-                    {
-                        executeCommand = commandInterceptor.Intercept(command);
-                    }
-
-                    rowsAffected = executeCommand ? command.ExecuteNonQuery() : 1;
+                    rowsAffected = command.ExecuteNonQuery();
                 }
 
                 return rowsAffected;

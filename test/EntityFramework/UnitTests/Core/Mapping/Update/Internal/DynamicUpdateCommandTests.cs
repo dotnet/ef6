@@ -56,48 +56,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 var generatedValues = new List<KeyValuePair<PropagatorResult, object>>();
 
-                var rowsAffectedResult = mockDynamicUpdateCommand.Object.Execute(identifierValues, generatedValues, null);
+                var rowsAffectedResult = mockDynamicUpdateCommand.Object.Execute(identifierValues, generatedValues);
 
                 Assert.Equal(rowsAffected, rowsAffectedResult);
                 Assert.Equal(1, timesCommandTimeoutCalled);
                 Assert.Equal(0, generatedValues.Count);
-            }
-
-            [Fact]
-            public void Execute_calls_interceptor_when_there_is_no_reader_and_cancels_execution()
-            {
-                var mockUpdateTranslator = new Mock<UpdateTranslator>(MockBehavior.Strict);
-                mockUpdateTranslator.Setup(m => m.CommandTimeout).Returns(43);
-                var entityConnection = new Mock<EntityConnection>().Object;
-                mockUpdateTranslator.Setup(m => m.Connection).Returns(entityConnection);
-
-                var mockDbModificationCommandTree = new Mock<DbModificationCommandTree>();
-                var mockDynamicUpdateCommand = new Mock<DynamicUpdateCommand>(
-                    new Mock<TableChangeProcessor>().Object, mockUpdateTranslator.Object,
-                    ModificationOperator.Delete, PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
-                    PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0), mockDbModificationCommandTree.Object,
-                    /*outputIdentifiers*/ null)
-                                                   {
-                                                       CallBase = true
-                                                   };
-
-                var mockDbCommand = new Mock<DbCommand>();
-
-                var identifierValues = new Dictionary<int, object>();
-
-                mockDynamicUpdateCommand.Protected().Setup<DbCommand>("CreateCommand", identifierValues).Returns(mockDbCommand.Object);
-
-                var generatedValues = new List<KeyValuePair<PropagatorResult, object>>();
-
-                var mockCommandInterceptor = new Mock<IDbCommandInterceptor>();
-
-                var rowsAffectedResult = mockDynamicUpdateCommand.Object.Execute(
-                    identifierValues, generatedValues, mockCommandInterceptor.Object);
-
-                Assert.Equal(1, rowsAffectedResult);
-
-                mockCommandInterceptor.Verify(i => i.Intercept(mockDbCommand.Object));
-                mockDbCommand.Verify(m => m.ExecuteNonQuery(), Times.Never());
             }
 
             [Fact]
@@ -156,7 +119,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 var generatedValues = new List<KeyValuePair<PropagatorResult, object>>();
 
-                var rowsAffectedResult = mockDynamicUpdateCommand.Object.Execute(identifierValues, generatedValues, null);
+                var rowsAffectedResult = mockDynamicUpdateCommand.Object.Execute(identifierValues, generatedValues);
 
                 Assert.Equal(1, rowsAffectedResult);
                 Assert.Equal(1, generatedValues.Count);

@@ -30,7 +30,7 @@ namespace System.Data.Entity.Internal
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public EagerInternalContext(DbContext owner)
-            : base(owner)
+            : base(owner, null)
         {
         }
 
@@ -43,8 +43,12 @@ namespace System.Data.Entity.Internal
         /// <param name="objectContext">
         ///     The existing <see cref="ObjectContext" /> .
         /// </param>
-        public EagerInternalContext(DbContext owner, ObjectContext objectContext, bool objectContextOwned)
-            : base(owner)
+        public EagerInternalContext(
+            DbContext owner, 
+            ObjectContext objectContext, 
+            bool objectContextOwned, 
+            Interception interception = null)
+            : base(owner, interception)
         {
             DebugCheck.NotNull(objectContext);
 

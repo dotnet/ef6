@@ -12,7 +12,7 @@ namespace System.Data.Entity.Internal
         public void CommandTimeout_is_obtained_from_and_set_in_ObjectContext_if_ObjectContext_exists()
         {
             var mockContext = new Mock<LazyInternalContext>(
-                new Mock<DbContext>().Object, new Mock<IInternalConnection>().Object, null, null, null)
+                new Mock<DbContext>().Object, new Mock<IInternalConnection>().Object, null, null, null, null)
                 {
                     CallBase = true
                 };
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Internal
         public void CommandTimeout_is_obtained_from_and_set_in_field_if_ObjectContext_does_not_exist()
         {
             var mockContext = new Mock<LazyInternalContext>(
-                new Mock<DbContext>().Object, new Mock<IInternalConnection>().Object, null, null, null)
+                new Mock<DbContext>().Object, new Mock<IInternalConnection>().Object, null, null, null, null)
                 {
                     CallBase = true
                 };

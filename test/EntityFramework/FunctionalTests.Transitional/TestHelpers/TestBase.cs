@@ -7,6 +7,7 @@ namespace System.Data.Entity
     using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity.Config;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
@@ -26,6 +27,30 @@ namespace System.Data.Entity
         static TestBase()
         {
             DbConfiguration.SetConfiguration(new FunctionalTestsConfiguration());
+
+            // Uncomment below to log all test generated SQL to the console.
+            // Interception.Register(new LoggingCommandInterceptor());
+        }
+
+        public class LoggingInterceptor : IDbInterceptor
+        {
+            public bool CommandExecuting(DbCommand command)
+            {
+                Console.WriteLine(command.CommandText);
+                Console.WriteLine();
+
+                return true;
+            }
+
+            public DbCommandTree CommandTreeCreated(DbCommandTree commandTree)
+            {
+                return commandTree;
+            }
+
+            public bool ConnectionOpening(DbConnection connection)
+            {
+                return true;
+            }
         }
 
         internal DbDatabaseMapping BuildMapping(DbModelBuilder modelBuilder)
@@ -65,7 +90,7 @@ namespace System.Data.Entity
                         new DataColumn("Name", typeof(string)),
                         new DataColumn("Description", typeof(string)),
                         new DataColumn("InvariantName", typeof(string)),
-                        new DataColumn("AssemblyQualifiedName", typeof(string)),
+                        new DataColumn("AssemblyQualifiedName", typeof(string))
                     });
 
             var row = table.NewRow();
@@ -79,17 +104,17 @@ namespace System.Data.Entity
         protected static void RunTestWithTempMetadata(string csdl, string ssdl, string msl, Action<IEnumerable<string>> test)
         {
             var paths = new[]
-                {
-                    Path.GetTempFileName() + ".ssdl",
-                    Path.GetTempFileName() + ".csdl",
-                    Path.GetTempFileName() + ".msl"
-                };
+                            {
+                                Path.GetTempFileName() + ".ssdl",
+                                Path.GetTempFileName() + ".csdl",
+                                Path.GetTempFileName() + ".msl"
+                            };
             var metadata = new[]
-                {
-                    ssdl,
-                    csdl,
-                    msl
-                };
+                               {
+                                   ssdl,
+                                   csdl,
+                                   msl
+                               };
             try
             {
                 for (var i = 0; i < metadata.Length; i++)
@@ -273,7 +298,7 @@ namespace System.Data.Entity
         /// <param name="userId"> User ID to be use when connecting to SQL Server. </param>
         /// <param name="password"> Password for the SQL Server account. </param>
         /// <param name="persistSecurityInfo">
-        ///     Indicates if security-sensitive information is not returned as part of the 
+        ///     Indicates if security-sensitive information is not returned as part of the
         ///     connection if the connection has ever been opened.
         /// </param>
         /// <returns> The connection string. </returns>

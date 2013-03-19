@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Common
 {
     using System.Data.Common;
     using System.Data.Entity.Config;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
@@ -18,6 +19,45 @@ namespace System.Data.Entity.Core.Common
 
     public class DbProviderServicesTests
     {
+        public class CreateCommandDefinition
+        {
+            [Fact]
+            public void Dispatches_to_interception()
+            {
+                var mockInterception = new Mock<Interception>();
+
+                var providerServices
+                    = new Mock<DbProviderServices>(
+                        new Mock<IDbDependencyResolver>().Object,
+                        mockInterception.Object)
+                          {
+                              CallBase = true
+                          }.Object;
+
+                var mockCommandTree
+                    = new Mock<DbCommandTree>
+                          {
+                              DefaultValue = DefaultValue.Mock
+                          };
+
+                mockCommandTree.SetupGet(m => m.DataSpace).Returns(DataSpace.SSpace);
+
+                var mockStoreItemCollection
+                    = new Mock<StoreItemCollection>
+                          {
+                              DefaultValue = DefaultValue.Mock
+                          };
+
+                mockCommandTree
+                    .Setup(m => m.MetadataWorkspace.GetItemCollection(DataSpace.SSpace))
+                    .Returns(mockStoreItemCollection.Object);
+
+                providerServices.CreateCommandDefinition(mockCommandTree.Object);
+
+                mockInterception.Verify(m => m.Dispatch(mockCommandTree.Object), Times.Once());
+            }
+        }
+
         public class ExpandDataDirectory
         {
             [Fact]
@@ -166,8 +206,9 @@ namespace System.Data.Entity.Core.Common
                 var model = new EdmModel(DataSpace.SSpace);
                 model.ProviderInfo = new DbProviderInfo("System.Data.FakeSqlClient", "2008");
                 model.ProviderManifest = new SqlProviderManifest("2008");
-                var storeItemCollectionMock = new Mock<StoreItemCollection>(model);
 
+                var storeItemCollectionMock = new Mock<StoreItemCollection>(model) { CallBase = true };
+                
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>();
                 metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(storeItemCollectionMock.Object);
 

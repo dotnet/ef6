@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Migrations.Model
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Internal;
+    using System.Data.Common;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Migrations.Model
     /// </summary>
     public class HistoryOperation : MigrationOperation
     {
-        private readonly IEnumerable<InterceptedCommand> _commands;
+        private readonly IEnumerable<DbCommand> _commands;
 
         /// <summary>
         ///     Initializes a new instance of the HistoryOperation class.
@@ -23,10 +23,11 @@ namespace System.Data.Entity.Migrations.Model
         /// <param name="commands"> A sequence of commands representing the operations being applied to the history table. </param>
         /// <param name="anonymousArguments"> Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public HistoryOperation(IEnumerable<InterceptedCommand> commands, object anonymousArguments = null)
+        public HistoryOperation(IEnumerable<DbCommand> commands, object anonymousArguments = null)
             : base(anonymousArguments)
         {
             Check.NotNull(commands, "commands");
+
             if (!commands.Any())
             {
                 throw new ArgumentException(Strings.CollectionEmpty("commands", "HistoryOperation"));
@@ -38,7 +39,7 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     A sequence of commands representing the operations being applied to the history table.
         /// </summary>
-        public IEnumerable<InterceptedCommand> Commands
+        public IEnumerable<DbCommand> Commands
         {
             get { return _commands; }
         }

@@ -14,6 +14,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Threading;
@@ -23,6 +24,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     /// <summary>
     ///     Aggregates information about a modification command delegated to a store function.
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     internal class FunctionUpdateCommand : UpdateCommand
     {
         #region Constructors
@@ -35,8 +37,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="stateEntries"> State entries handled by this operation. </param>
         /// <param name="stateEntry"> 'Root' state entry being handled by this function. </param>
         internal FunctionUpdateCommand(
-            StorageModificationFunctionMapping functionMapping, UpdateTranslator translator,
-            ReadOnlyCollection<IEntityStateEntry> stateEntries, ExtractedStateEntry stateEntry)
+            StorageModificationFunctionMapping functionMapping,
+            UpdateTranslator translator,
+            ReadOnlyCollection<IEntityStateEntry> stateEntries,
+            ExtractedStateEntry stateEntry)
             : this(translator, stateEntries, stateEntry,
                 translator.GenerateCommandDefinition(functionMapping).CreateCommand())
         {
@@ -46,14 +50,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         protected FunctionUpdateCommand(
-            UpdateTranslator translator, ReadOnlyCollection<IEntityStateEntry> stateEntries, ExtractedStateEntry stateEntry,
+            UpdateTranslator translator,
+            ReadOnlyCollection<IEntityStateEntry> stateEntries,
+            ExtractedStateEntry stateEntry,
             DbCommand dbCommand)
             : base(translator, stateEntry.Original, stateEntry.Current)
         {
             // populate the main state entry for error reporting
             _stateEntries = stateEntries;
 
-            _dbCommand = dbCommand;
+            _dbCommand = new InterceptableDbCommand(dbCommand);
         }
 
         #endregion
@@ -245,8 +251,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         internal override long Execute(
             Dictionary<int, object> identifierValues,
-            List<KeyValuePair<PropagatorResult, object>> generatedValues,
-            IDbCommandInterceptor commandInterceptor)
+            List<KeyValuePair<PropagatorResult, object>> generatedValues)
         {
             var connection = Translator.Connection;
             // configure command to use the connection and transaction for this session
@@ -280,6 +285,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                             .OrderBy(r => r.Key)) // order by column ordinal to avoid breaking SequentialAccess readers
                         {
                             var columnOrdinal = resultColumn.Key;
+
+                            if (columnOrdinal == -1)
+                            {
+                                break; // nullable reader; short-circuit
+                            }
+
                             var columnType = members[resultColumn.Value.RecordOrdinal].TypeUsage;
                             object value;
 

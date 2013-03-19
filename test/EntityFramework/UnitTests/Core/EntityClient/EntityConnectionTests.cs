@@ -3,10 +3,12 @@
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
+    using System.Data.SqlClient;
 #if !NET40
     using System.Threading;
     using System.Threading.Tasks;
@@ -19,6 +21,64 @@ namespace System.Data.Entity.Core.EntityClient
 
     public class EntityConnectionTests
     {
+        public class InterceptingOpen
+        {
+            [Fact]
+            public void Open_should_dispatch_and_optionally_open_underlying_connection()
+            {
+                var mockConnection = new Mock<DbConnection>();
+
+                mockConnection.SetupGet(m => m.DataSource).Returns("Foo");
+
+                var mockInterception = new Mock<Interception>();
+
+                var mockStoreItemCollection = new Mock<StoreItemCollection>();
+
+                mockStoreItemCollection
+                    .SetupGet(m => m.StoreProviderFactory)
+                    .Returns(DbProviderServices.GetProviderFactory(new SqlConnection()));
+
+                var mockMetadataWorkspace = new Mock<MetadataWorkspace>();
+
+                mockMetadataWorkspace
+                    .Setup(m => m.GetItemCollection(DataSpace.SSpace))
+                    .Returns(mockStoreItemCollection.Object);
+
+                var connection
+                    = new EntityConnection(
+                        mockMetadataWorkspace.Object,
+                        mockConnection.Object,
+                        true,
+                        true,
+                        mockInterception.Object);
+
+                mockInterception.Setup(m => m.Dispatch(connection)).Returns(false);
+
+                connection.Open();
+
+                mockConnection.Verify(m => m.Open(), Times.Never());
+
+                Assert.Equal(ConnectionState.Open, connection.State);
+
+                mockInterception.Setup(m => m.Dispatch(connection)).Returns(true);
+
+                mockConnection
+                    .Setup(m => m.Open())
+                    .Callback(
+                        () => mockConnection
+                                  .SetupGet(m => m.State).Returns(ConnectionState.Open)
+                                  .Raises(
+                                      m => m.StateChange += null,
+                                      new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open)));
+
+                connection.Open();
+
+                mockConnection.Verify(m => m.Open(), Times.Once());
+
+                Assert.Equal(ConnectionState.Open, connection.State);
+            }
+        }
+
         public class Constructors : TestBase
         {
             [Fact]

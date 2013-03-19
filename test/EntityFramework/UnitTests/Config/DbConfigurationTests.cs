@@ -368,15 +368,6 @@ namespace System.Data.Entity.Config
             }
         }
 
-        public class GetService
-        {
-            [Fact]
-            public void Delegates_to_internal_configuration()
-            {
-                Assert.NotNull(DbConfiguration.GetService<IDbCommandInterceptor>(null));
-            }
-        }
-
         public class DependencyResolver
         {
             [Fact]

@@ -472,11 +472,11 @@ namespace System.Data.Entity.Migrations.History
                             ProductVersion = _productVersion
                         });
 
-                using (var commandTracer = new CommandTracer())
+                using (var commandTracer = new CommandTracer(context))
                 {
                     context.SaveChanges();
 
-                    return new HistoryOperation(commandTracer.Commands);
+                    return new HistoryOperation(commandTracer.DbCommands);
                 }
             }
         }
@@ -497,11 +497,11 @@ namespace System.Data.Entity.Migrations.History
                 context.History.Attach(historyRow);
                 context.History.Remove(historyRow);
 
-                using (var commandTracer = new CommandTracer())
+                using (var commandTracer = new CommandTracer(context))
                 {
                     context.SaveChanges();
 
-                    return new HistoryOperation(commandTracer.Commands);
+                    return new HistoryOperation(commandTracer.DbCommands);
                 }
             }
         }

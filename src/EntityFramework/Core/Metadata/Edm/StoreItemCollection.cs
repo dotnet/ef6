@@ -260,7 +260,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _queryCacheManager; }
         }
 
-        public DbProviderFactory StoreProviderFactory
+        public virtual DbProviderFactory StoreProviderFactory
         {
             get { return _providerFactory; }
         }

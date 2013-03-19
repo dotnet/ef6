@@ -711,7 +711,7 @@ namespace System.Data.Entity.Migrations.History
                 = (HistoryOperation)historyRepository.CreateInsertOperation("Migration1", modelDocument);
 
             Assert.NotEmpty(historyOperation.Commands);
-            Assert.Equal(4, historyOperation.Commands.Single().Parameters.Count());
+            Assert.Equal(4, historyOperation.Commands.Single().Parameters.Count);
         }
 
         [MigrationsTheory]
@@ -736,7 +736,7 @@ namespace System.Data.Entity.Migrations.History
                 = (HistoryOperation)historyRepository.CreateDeleteOperation("Migration1");
 
             Assert.NotEmpty(historyOperation.Commands);
-            Assert.Equal(2, historyOperation.Commands.Single().Parameters.Count());
+            Assert.Equal(2, historyOperation.Commands.Single().Parameters.Count);
         }
 
         [MigrationsTheory]

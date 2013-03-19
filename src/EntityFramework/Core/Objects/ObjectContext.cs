@@ -85,9 +85,7 @@ namespace System.Data.Entity.Core.Objects
         private readonly ColumnMapFactory _columnMapFactory;
 
         private readonly ObjectContextOptions _options = new ObjectContextOptions();
-
-        private readonly IDbCommandInterceptor _commandInterceptor;
-
+        
         private const string UseLegacyPreserveChangesBehavior = "EntityFramework_UseLegacyPreserveChangesBehavior";
 
         private readonly ThrowingMonitor _asyncMonitor = new ThrowingMonitor();
@@ -187,8 +185,7 @@ namespace System.Data.Entity.Core.Objects
             bool isConnectionConstructor,
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory,
             Translator translator = null,
-            ColumnMapFactory columnMapFactory = null,
-            IDbCommandInterceptor commandInterceptor = null)
+            ColumnMapFactory columnMapFactory = null)
         {
             Check.NotNull(connection, "connection");
 
@@ -197,6 +194,7 @@ namespace System.Data.Entity.Core.Objects
             _columnMapFactory = columnMapFactory ?? new ColumnMapFactory();
 
             _connection = connection;
+
             _connection.StateChange += ConnectionStateChange;
             _entityWrapperFactory = new EntityWrapperFactory();
             // Ensure a valid connection
@@ -231,10 +229,6 @@ namespace System.Data.Entity.Core.Objects
             {
                 ContextOptions.UseLegacyPreserveChangesBehavior = useV35Behavior;
             }
-
-            _commandInterceptor
-                = commandInterceptor
-                  ?? DbConfiguration.GetService<IDbCommandInterceptor>();
         }
 
         /// <summary>
@@ -244,13 +238,11 @@ namespace System.Data.Entity.Core.Objects
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null,
             Translator translator = null,
             ColumnMapFactory columnMapFactory = null,
-            IDbCommandInterceptor commandInterceptor = null,
             IEntityAdapter adapter = null)
         {
             _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
             _translator = translator ?? new Translator();
             _columnMapFactory = columnMapFactory ?? new ColumnMapFactory();
-            _commandInterceptor = commandInterceptor;
             _adapter = adapter;
         }
 
@@ -2845,18 +2837,12 @@ namespace System.Data.Entity.Core.Objects
             _adapter.Connection = Connection;
             _adapter.CommandTimeout = CommandTimeout;
 
-            int entriesAffected;
-            if (_commandInterceptor == null
-                || !_commandInterceptor.IsEnabled)
-            {
-                entriesAffected = ExecuteInTransaction(
-                    () => _adapter.Update(ObjectStateManager, throwOnClosedConnection: true), throwOnExistingTransaction,
-                    startLocalTransaction: true, releaseConnectionOnSuccess: true);
-            }
-            else
-            {
-                entriesAffected = _adapter.Update(ObjectStateManager, false);
-            }
+            var entriesAffected
+                = ExecuteInTransaction(
+                    () => _adapter.Update(ObjectStateManager),
+                    throwOnExistingTransaction,
+                    startLocalTransaction: true,
+                    releaseConnectionOnSuccess: true);
 
             if ((SaveOptions.AcceptAllChangesAfterSave & options) != 0)
             {
