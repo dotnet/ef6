@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
@@ -11,6 +12,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Core.Query.PlanCompiler;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -19,8 +21,46 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     ///     Represents a mapping from a model function import to a store composable function.
     /// </summary>
-    internal class FunctionImportMappingComposable : FunctionImportMapping
+    public class FunctionImportMappingComposable : FunctionImportMapping
     {
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public FunctionImportMappingComposable(
+            EdmFunction functionImport,
+            EdmFunction targetFunction,
+            List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>> structuralTypeMappings)
+            : base(functionImport, targetFunction)
+        {
+            if (!functionImport.IsComposableAttribute)
+            {
+                throw new ArgumentException(Strings.NonComposableFunctionCannotBeMappedAsComposable("functionImport"));
+            }
+
+            if (!targetFunction.IsComposableAttribute)
+            {
+                throw new ArgumentException(Strings.NonComposableFunctionCannotBeMappedAsComposable("targetFunction"));
+            }
+
+            if (functionImport.EntitySet != null)
+            {
+                throw new NotSupportedException(Strings.ComposableFunctionImportsReturningEntitiesNotSupported);
+            }
+
+            EdmType resultType;
+            if (!MetadataHelper.TryGetFunctionImportReturnType(functionImport, 0, out resultType))
+            {
+                throw new ArgumentException(Strings.InvalidReturnTypeForComposableFunction);
+            }
+
+            if (!TypeSemantics.IsScalarType(resultType)
+                && (structuralTypeMappings == null || structuralTypeMappings.Count == 0))
+            {
+                throw new ArgumentException(Strings.StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues);
+            }
+
+            m_structuralTypeMappings = structuralTypeMappings;
+        }
+
         internal FunctionImportMappingComposable(
             EdmFunction functionImport,
             EdmFunction targetFunction,
@@ -80,11 +120,18 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         private Node m_internalTreeNode;
 
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public ReadOnlyCollection<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>> StructuralTypeMappings
+        {
+            get { return m_structuralTypeMappings == null ? null : m_structuralTypeMappings.AsReadOnly(); }
+        }
+
         internal EdmProperty[] TvfKeys
         {
             get { return m_targetFunctionKeys; }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "projectOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -210,6 +257,8 @@ namespace System.Data.Entity.Core.Mapping
 
         internal DbQueryCommandTree GenerateFunctionView(out DiscriminatorMap discriminatorMap)
         {
+            DebugCheck.NotNull(m_mappingItemCollection);
+
             discriminatorMap = null;
 
             // Prepare the direct call of the store function as StoreFunction(@EdmFunc_p1, ..., @EdmFunc_pN).

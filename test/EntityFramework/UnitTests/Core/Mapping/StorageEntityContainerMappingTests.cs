@@ -73,5 +73,62 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Same(associationSetMapping, entityContainerMapping.AssociationSetMappings.Single());
             Assert.Same(associationSetMapping, entityContainerMapping.RelationshipSetMaps.Single());
         }
+
+        [Fact]
+        public void Can_add_and_get_function_import_mapping()
+        {
+            var typeUsage = 
+                TypeUsage.CreateDefaultTypeUsage(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32).GetCollectionType());
+
+            var entityContainerMapping = new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace));
+
+            var composableFuntionMapping =
+                new FunctionImportMappingComposable(
+                    new EdmFunction(
+                        "f", "model", DataSpace.CSpace,
+                        new EdmFunctionPayload()
+                            {
+                                IsComposable = true,
+                                ReturnParameters =
+                                    new[]
+                                        {
+                                            new FunctionParameter(
+                                                "ReturnType",
+                                                typeUsage,
+                                                ParameterMode.ReturnValue),
+                                        }
+
+                            }),
+                    new EdmFunction(
+                        "f", "store", DataSpace.SSpace,
+                        new EdmFunctionPayload()
+                            {
+                                IsComposable = true,
+                                ReturnParameters =
+                                    new[]
+                                        {
+                                            new FunctionParameter(
+                                                "ReturnType",
+                                                typeUsage,
+                                                ParameterMode.ReturnValue),
+                                        }
+                            }),
+                    null);
+
+            Assert.Empty(entityContainerMapping.FunctionImportMappings);
+            entityContainerMapping.AddFunctionImportMapping(composableFuntionMapping);
+            Assert.Same(composableFuntionMapping, entityContainerMapping.FunctionImportMappings.Single());
+        }
+
+        [Fact]
+        public void Cannot_add_null_function_import_mapping()
+        {
+            Assert.Equal(
+                "mapping",
+                Assert.Throws<ArgumentNullException>(
+                    () => new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)).AddFunctionImportMapping(null))
+                      .ParamName);
+        }
     }
 }

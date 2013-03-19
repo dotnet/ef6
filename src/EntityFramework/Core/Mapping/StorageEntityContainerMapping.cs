@@ -177,6 +177,11 @@ namespace System.Data.Entity.Core.Mapping
             get { return RelationshipSetMaps.OfType<StorageAssociationSetMapping>(); }
         }
 
+        public ReadOnlyCollection<FunctionImportMapping> FunctionImportMappings
+        {
+            get { return m_functionImportMappings.Values.ToList().AsReadOnly();  }
+        }
+
         /// <summary>
         ///     a list of all the  entity set maps under this
         ///     container. In CS mapping, the mapping is done
@@ -356,9 +361,11 @@ namespace System.Data.Entity.Core.Mapping
 
         // Methods to modify and access function imports, which association a "functionImport" declared
         // in the model entity container with a targetFunction declared in the target
-        internal void AddFunctionImportMapping(EdmFunction functionImport, FunctionImportMapping mapping)
+        public void AddFunctionImportMapping(FunctionImportMapping mapping)
         {
-            m_functionImportMappings.Add(functionImport, mapping);
+            Check.NotNull(mapping, "mapping");
+
+            m_functionImportMappings.Add(mapping.FunctionImport, mapping);
         }
 
         internal virtual bool TryGetFunctionImportMapping(EdmFunction functionImport, out FunctionImportMapping mapping)

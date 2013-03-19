@@ -165,9 +165,12 @@
     <Compile Include="Core\EntityClient\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\EntitySqlExceptionTests.cs" />
     <Compile Include="Core\Mapping\ColumnMappingBuilderTests.cs" />
+    <Compile Include="Core\Mapping\FunctionImportMappingComposableTests.cs" />
+    <Compile Include="Core\Mapping\FunctionImportMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageAssociationTypeMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageEntityTypeModificationFunctionMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageMappingItemCollectionTests.cs" />
+    <Compile Include="Core\Mapping\StoragePropertyMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageTypeMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageAssociationSetMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageComplexTypeMappingTests.cs" />

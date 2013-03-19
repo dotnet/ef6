@@ -4882,6 +4882,18 @@
   <data name="ComposableFunctionOrFunctionImportMustDeclareReturnType" xml:space="preserve">
     <value>Functions and function imports that can be composed must declare a return type.</value>
   </data>
+  <data name="NonComposableFunctionCannotBeMappedAsComposable">
+    <value>Argument '{0}' is invalid. The specified function is not marked as composable.</value>
+  </data>
+  <data name="ComposableFunctionImportsReturningEntitiesNotSupported">
+    <value>Mapping function imports returning entities is not supported.</value>
+  </data>  
+  <data name="StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues">
+    <value>Structural type mappings must not be null or empty for function imports returning non-scalar values.</value>
+  </data>
+  <data name="InvalidReturnTypeForComposableFunction">
+    <value>Invalid return type for composable function.</value>
+  </data>  
   <data name="NonComposableFunctionMustNotDeclareReturnType" xml:space="preserve">
     <value>Functions that cannot be composed must not declare a return type.</value>
   </data>
@@ -5325,7 +5337,7 @@
   <data name="DbProviderNameAttributeNotFound" xml:space="preserve">
     <value>The type '{0}' doesn't have DbProviderNameAttribute, please use an overload that has a provider invariant name string parameter.</value>
   </data>
-  <data name="EdmProperty_InvalidPropertyType">
+  <data name="EdmProperty_InvalidPropertyType" xml:space="preserve">
     <value>A property cannot be of type '{0}'. The property type must be a ComplexType, a PrimitiveType or an EnumType.</value>
   </data>
   <data name="ConcurrentMethodInvocation" xml:space="preserve">
@@ -5339,5 +5351,8 @@
   </data>
   <data name="InvalidColumnBuilderArgument" xml:space="preserve">
     <value>Argument '{0}' is not valid. The specified mapping already exists or property paths are empty.</value>
+  </data>
+  <data name="StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed" xml:space="preserve">
+    <value>Invalid scalar property mapping. Both entity model property and store column must be scalar properties.</value>
   </data>
 </root>

@@ -12246,6 +12246,38 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        ///     A string like "Argument '{0}' is invalid. The specified function is not marked as composable."
+        /// </summary>
+        internal static string NonComposableFunctionCannotBeMappedAsComposable(object p0)
+        {
+            return EntityRes.GetString(EntityRes.NonComposableFunctionCannotBeMappedAsComposable, p0);
+        }
+
+        /// <summary>
+        ///     A string like "Mapping function imports returning entities is not supported."
+        /// </summary>
+        internal static string ComposableFunctionImportsReturningEntitiesNotSupported
+        {
+            get { return EntityRes.GetString(EntityRes.ComposableFunctionImportsReturningEntitiesNotSupported); }
+        }
+
+        /// <summary>
+        ///     A string like "Structural type mappings must not be null or empty for function imports returning non-scalar values."
+        /// </summary>
+        internal static string StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues
+        {
+            get { return EntityRes.GetString(EntityRes.StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues); }
+        }
+
+        /// <summary>
+        ///     A string like "Invalid return type for composable function."
+        /// </summary>
+        internal static string InvalidReturnTypeForComposableFunction
+        {
+            get { return EntityRes.GetString(EntityRes.InvalidReturnTypeForComposableFunction); }
+        }
+
+        /// <summary>
         ///     A string like "Functions that cannot be composed must not declare a return type."
         /// </summary>
         internal static string NonComposableFunctionMustNotDeclareReturnType
@@ -13380,11 +13412,21 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.VisitDbInExpressionNotImplemented); }
         }
+
+        /// <summary>
         ///     A string like "Argument '{0}' is not valid. The specified mapping already exists or property paths are empty."
         /// </summary>
         internal static string InvalidColumnBuilderArgument(object p0)
         {
             return EntityRes.GetString(EntityRes.InvalidColumnBuilderArgument, p0);
+        }
+
+        /// <summary>
+        ///     A string like "Invalid scalar property mapping. Both entity model property and store column must be scalar properties."
+        /// </summary>
+        internal static string StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed
+        {
+            get { return EntityRes.GetString(EntityRes.StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed); }
         }
     }
 
@@ -16612,6 +16654,10 @@ namespace System.Data.Entity.Resources
         internal const string EndWithoutMultiplicity = "EndWithoutMultiplicity";
         internal const string EntityContainerCannotExtendItself = "EntityContainerCannotExtendItself";
         internal const string ComposableFunctionOrFunctionImportMustDeclareReturnType = "ComposableFunctionOrFunctionImportMustDeclareReturnType";
+        internal const string NonComposableFunctionCannotBeMappedAsComposable = "NonComposableFunctionCannotBeMappedAsComposable";
+        internal const string ComposableFunctionImportsReturningEntitiesNotSupported = "ComposableFunctionImportsReturningEntitiesNotSupported";
+        internal const string StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues = "StructuralTypeMappingsMustNotBeNullForFunctionImportsReturingNonScalarValues";
+        internal const string InvalidReturnTypeForComposableFunction = "InvalidReturnTypeForComposableFunction";
         internal const string NonComposableFunctionMustNotDeclareReturnType = "NonComposableFunctionMustNotDeclareReturnType";
         internal const string CommandTextFunctionsNotComposable = "CommandTextFunctionsNotComposable";
         internal const string CommandTextFunctionsCannotDeclareStoreFunctionName = "CommandTextFunctionsCannotDeclareStoreFunctionName";
@@ -16755,6 +16801,7 @@ namespace System.Data.Entity.Resources
         internal const string AssociationSet_EndEntityTypeMismatch = "AssociationSet_EndEntityTypeMismatch";
         internal const string VisitDbInExpressionNotImplemented = "VisitDbInExpressionNotImplemented";
         internal const string InvalidColumnBuilderArgument = "InvalidColumnBuilderArgument";
+        internal const string StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed = "StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

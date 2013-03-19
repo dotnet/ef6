@@ -1758,7 +1758,7 @@ namespace System.Data.Entity.Core.Mapping
                 }
                 Debug.Assert(mapping != null, "mapping != null");
 
-                entityContainerMapping.AddFunctionImportMapping(functionImport, mapping);
+                entityContainerMapping.AddFunctionImportMapping(mapping);
             }
             else
             {
@@ -1791,7 +1791,7 @@ namespace System.Data.Entity.Core.Mapping
                     }
                 }
 
-                entityContainerMapping.AddFunctionImportMapping(functionImport, mapping);
+                entityContainerMapping.AddFunctionImportMapping(mapping);
             }
         }
 

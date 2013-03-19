@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
@@ -45,15 +46,17 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         /// <param name="member"> </param>
         /// <param name="columnMember"> </param>
-        internal StorageScalarPropertyMapping(EdmProperty member, EdmProperty columnMember)
+        public StorageScalarPropertyMapping(EdmProperty member, EdmProperty columnMember)
             : base(member)
         {
-            DebugCheck.NotNull(columnMember);
-            Debug.Assert(
-                Helper.IsScalarType(member.TypeUsage.EdmType),
-                "StorageScalarPropertyMapping must only map primitive or enum types");
-            Debug.Assert(
-                Helper.IsPrimitiveType(columnMember.TypeUsage.EdmType), "StorageScalarPropertyMapping must only map primitive types");
+            Check.NotNull(member, "member");
+            Check.NotNull(columnMember, "columnMember");
+            
+            if (!Helper.IsScalarType(member.TypeUsage.EdmType)
+                || !Helper.IsPrimitiveType(columnMember.TypeUsage.EdmType))
+            {
+                throw new ArgumentException(Strings.StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed);
+            }
 
             m_columnMember = columnMember;
         }
