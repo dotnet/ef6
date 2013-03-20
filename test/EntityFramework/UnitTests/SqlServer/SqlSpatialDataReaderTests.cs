@@ -35,7 +35,7 @@ namespace System.Data.Entity.SqlServer
             var mockSqlDataReader = CreateSqlDataReaderWrapper(dbGeography.ProviderValue, "sys.geography");
             var sqlSpatialDataReader = new SqlSpatialDataReader(SqlSpatialServices.Instance, mockSqlDataReader);
 
-            var convertedDbGeography = sqlSpatialDataReader.GetGeographyAsync(0).Result;
+            var convertedDbGeography = sqlSpatialDataReader.GetGeographyAsync(0, CancellationToken.None).Result;
 
             Assert.Equal(dbGeography.WellKnownValue.WellKnownText, convertedDbGeography.WellKnownValue.WellKnownText);
         }
@@ -63,7 +63,7 @@ namespace System.Data.Entity.SqlServer
             var sqlDataReaderWrapper = CreateSqlDataReaderWrapper(dbGeometry.ProviderValue, "sys.geometry");
             var sqlSpatialDataReader = new SqlSpatialDataReader(SqlSpatialServices.Instance, sqlDataReaderWrapper);
 
-            var convertedDbGeometry = sqlSpatialDataReader.GetGeometryAsync(0).Result;
+            var convertedDbGeometry = sqlSpatialDataReader.GetGeometryAsync(0, CancellationToken.None).Result;
 
             Assert.Equal(dbGeometry.WellKnownValue.WellKnownText, convertedDbGeometry.WellKnownValue.WellKnownText);
         }

@@ -25,18 +25,6 @@ namespace System.Data.Entity.Spatial
         ///     An asynchronous version of <see cref="GetGeography"/>, which
         ///     reads an instance of <see cref="DbGeography" /> from the column at the specified column ordinal.
         /// </summary>
-        /// <param name="ordinal"> The ordinal of the column that contains the geography value. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task"/> containing the instance of <see cref="DbGeography" /> at the specified column value. </returns>
-        public Task<DbGeography> GetGeographyAsync(int ordinal)
-        {
-            return GetGeographyAsync(ordinal, CancellationToken.None);
-        }
-
-        /// <summary>
-        ///     An asynchronous version of <see cref="GetGeography"/>, which
-        ///     reads an instance of <see cref="DbGeography" /> from the column at the specified column ordinal.
-        /// </summary>
         /// <remarks>
         ///     Providers should override with an appropriate implementation.
         ///     The default implementation invokes the synchronous <see cref="GetGeography"/> method and returns
@@ -74,18 +62,6 @@ namespace System.Data.Entity.Spatial
         public abstract DbGeometry GetGeometry(int ordinal);
 
 #if !NET40
-
-        /// <summary>
-        ///     An asynchronous version of <see cref="GetGeometry"/>, which
-        ///     reads an instance of <see cref="DbGeometry" /> from the column at the specified column ordinal.
-        /// </summary>
-        /// <param name="ordinal"> The ordinal of the data record column that contains the provider-specific geometry data. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A <see cref="Task"/> containing the instance of <see cref="DbGeometry" /> at the specified column value. </returns>
-        public Task<DbGeometry> GetGeometryAsync(int ordinal)
-        {
-            return GetGeometryAsync(ordinal, CancellationToken.None);
-        }
 
         /// <summary>
         ///     An asynchronous version of <see cref="GetGeometry"/>, which

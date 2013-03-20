@@ -71,7 +71,7 @@ namespace System.Data.Entity.Spatial
                 .Returns(Task.FromResult(dbGeography))
                 .Verifiable();
 
-            var task = mockDbSpatialDataReader.Object.GetGeographyAsync(0);
+            var task = mockDbSpatialDataReader.Object.GetGeographyAsync(0, CancellationToken.None);
 
             mockDbSpatialDataReader.Verify(m => m.GetGeographyAsync(0, CancellationToken.None), Times.Once());
             Assert.Same(dbGeography, task.Result);
@@ -135,7 +135,7 @@ namespace System.Data.Entity.Spatial
                 .Returns(Task.FromResult(dbGeometry))
                 .Verifiable();
 
-            var task = mockDbSpatialDataReader.Object.GetGeometryAsync(0);
+            var task = mockDbSpatialDataReader.Object.GetGeometryAsync(0, CancellationToken.None);
 
             mockDbSpatialDataReader.Verify(m => m.GetGeometryAsync(0, CancellationToken.None), Times.Once());
             Assert.Same(dbGeometry, task.Result);

@@ -13086,7 +13086,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The source IQueryable doesn't implement IDbAsyncEnumerable{0}."
+        ///     A string like "The source IQueryable doesn't implement IDbAsyncEnumerable{0}. Only sources that implement IDbAsyncEnumerable can be used for Entity Framework asynchronous operations. For more details see http://go.microsoft.com/fwlink/?LinkId=287068."
         /// </summary>
         internal static string IQueryable_Not_Async(object p0)
         {
@@ -13094,7 +13094,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The provider for the source IQueryable doesn't implement IDbAsyncQueryProvider."
+        ///     A string like "The provider for the source IQueryable doesn't implement IDbAsyncQueryProvider. Only providers that implement IDbAsyncQueryProvider can be used for Entity Framework asynchronous operations. For more details see http://go.microsoft.com/fwlink/?LinkId=287068."
         /// </summary>
         internal static string IQueryable_Provider_Not_Async
         {
@@ -13406,7 +13406,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "A concurrent method invocation has been detected. Ensure that any asynchronous methods invoked on this context have finished executing before calling any other method on the context. Also don't use the same context instance across different threads."
+        ///     A string like "A second operation started on this context before a previous asynchronous operation completed. Use 'await' to ensure that any asynchronous operations have completed before calling another method on this context. Any instance members are not guaranteed to be thread safe."
         /// </summary>
         internal static string ConcurrentMethodInvocation
         {
@@ -14917,7 +14917,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     InvalidOperationException with message like "The source IQueryable doesn't implement IDbAsyncEnumerable{0}."
+        ///     InvalidOperationException with message like "The source IQueryable doesn't implement IDbAsyncEnumerable{0}. Only sources that implement IDbAsyncEnumerable can be used for Entity Framework asynchronous operations. For more details see http://go.microsoft.com/fwlink/?LinkId=287068."
         /// </summary>
         internal static Exception IQueryable_Not_Async(object p0)
         {
@@ -14925,7 +14925,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     InvalidOperationException with message like "The provider for the source IQueryable doesn't implement IDbAsyncQueryProvider."
+        ///     InvalidOperationException with message like "The provider for the source IQueryable doesn't implement IDbAsyncQueryProvider. Only providers that implement IDbAsyncQueryProvider can be used for Entity Framework asynchronous operations. For more details see http://go.microsoft.com/fwlink/?LinkId=287068."
         /// </summary>
         internal static Exception IQueryable_Provider_Not_Async()
         {

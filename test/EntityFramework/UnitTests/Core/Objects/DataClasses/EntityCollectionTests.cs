@@ -165,7 +165,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 entityCollectionMock.Setup(m => m.CheckOwnerNull())
                     .Callback(() => { timesCheckOwnerNullCalled++; });
 
-                entityCollectionMock.Object.LoadAsync(mergeOption).Wait();
+                entityCollectionMock.Object.LoadAsync(mergeOption, CancellationToken.None).Wait();
 
                 entityCollectionMock.Verify(
                     m => m.LoadAsync(It.IsAny<List<IEntityWrapper>>(), It.IsAny<MergeOption>(), It.IsAny<CancellationToken>()));

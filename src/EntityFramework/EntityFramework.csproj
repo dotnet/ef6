@@ -961,7 +961,6 @@
     <Compile Include="Core\Objects\DataClasses\IEntityWithKey.cs" />
     <Compile Include="Core\Objects\DataClasses\IEntityWithRelationships.cs" />
     <Compile Include="Core\Objects\DataClasses\IRelatedEnd.cs" />
-    <Compile Include="Core\Objects\DataClasses\IRelatedEndExtensions.cs" />
     <Compile Include="Core\Objects\DataClasses\IRelationshipFixer.cs" />
     <Compile Include="Core\Objects\DataClasses\RelatedEnd.cs" />
     <Compile Include="Core\Objects\DataClasses\RelationshipFixer.cs" />

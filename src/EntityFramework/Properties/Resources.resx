@@ -5203,11 +5203,11 @@
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="IQueryable_Not_Async" xml:space="preserve">
-    <value>The source IQueryable doesn't implement IDbAsyncEnumerable{0}.</value>
+    <value>The source IQueryable doesn't implement IDbAsyncEnumerable{0}. Only sources that implement IDbAsyncEnumerable can be used for Entity Framework asynchronous operations. For more details see http://go.microsoft.com/fwlink/?LinkId=287068.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="IQueryable_Provider_Not_Async" xml:space="preserve">
-    <value>The provider for the source IQueryable doesn't implement IDbAsyncQueryProvider.</value>
+    <value>The provider for the source IQueryable doesn't implement IDbAsyncQueryProvider. Only providers that implement IDbAsyncQueryProvider can be used for Entity Framework asynchronous operations. For more details see http://go.microsoft.com/fwlink/?LinkId=287068.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="EmptySequence" xml:space="preserve">
@@ -5347,7 +5347,7 @@
     <value>A property cannot be of type '{0}'. The property type must be a ComplexType, a PrimitiveType or an EnumType.</value>
   </data>
   <data name="ConcurrentMethodInvocation" xml:space="preserve">
-    <value>A concurrent method invocation has been detected. Ensure that any asynchronous methods invoked on this context have finished executing before calling any other method on the context. Also don't use the same context instance across different threads.</value>
+    <value>A second operation started on this context before a previous asynchronous operation completed. Use 'await' to ensure that any asynchronous operations have completed before calling another method on this context. Any instance members are not guaranteed to be thread safe.</value>
   </data>
   <data name="AssociationSet_EndEntityTypeMismatch" xml:space="preserve">
     <value>The entity type of one of the ends of the specified association type does not match the entity type of the corresponding entity set end.</value>

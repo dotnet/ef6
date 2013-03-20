@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Threading;
     using Moq;
     using Xunit;
 
@@ -187,7 +188,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         () =>
                         ExceptionHelpers.UnwrapAggregateExceptions(
                             () =>
-                            entityReference.LoadAsync().Wait())).Message);
+                            entityReference.LoadAsync(CancellationToken.None).Wait())).Message);
             }
 
             [Fact]
@@ -196,7 +197,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var entityReference = MockHelper.CreateMockEntityReference<object>(refreshedValue: null).Object;
 
                 Assert.False(entityReference.IsLoaded);
-                entityReference.LoadAsync(MergeOption.AppendOnly).Wait();
+                entityReference.LoadAsync(MergeOption.AppendOnly, CancellationToken.None).Wait();
                 Assert.True(entityReference.IsLoaded);
             }
 
@@ -206,7 +207,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var entityReference = MockHelper.CreateMockEntityReference<object>(refreshedValue: null).Object;
 
                 Assert.False(entityReference.IsLoaded);
-                entityReference.LoadAsync(MergeOption.NoTracking).Wait();
+                entityReference.LoadAsync(MergeOption.NoTracking, CancellationToken.None).Wait();
                 Assert.True(entityReference.IsLoaded);
             }
 
@@ -216,7 +217,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var entityReference = MockHelper.CreateMockEntityReference<object>(refreshedValue: null).Object;
 
                 Assert.False(entityReference.IsLoaded);
-                entityReference.LoadAsync(MergeOption.OverwriteChanges).Wait();
+                entityReference.LoadAsync(MergeOption.OverwriteChanges, CancellationToken.None).Wait();
                 Assert.True(entityReference.IsLoaded);
 
                 var objectContext = entityReference.ObjectContext;
@@ -237,7 +238,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var entityReference = MockHelper.CreateMockEntityReference<object>(refreshedValue: null).Object;
 
                 Assert.False(entityReference.IsLoaded);
-                entityReference.LoadAsync(MergeOption.PreserveChanges).Wait();
+                entityReference.LoadAsync(MergeOption.PreserveChanges, CancellationToken.None).Wait();
                 Assert.True(entityReference.IsLoaded);
 
                 var objectContext = entityReference.ObjectContext;
@@ -274,7 +275,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                             });
 
                 var entityReference = entityReferenceMock.Object;
-                entityReference.LoadAsync(mergeOption).Wait();
+                entityReference.LoadAsync(mergeOption, CancellationToken.None).Wait();
                 Assert.True(1 == timesMergeCalled, "Expected Merge to be called once for MergeOption." + mergeOption);
             }
 
@@ -305,7 +306,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         () =>
                         ExceptionHelpers.UnwrapAggregateExceptions(
                             () =>
-                            entityReferenceMock.Object.LoadAsync(MergeOption.NoTracking).Wait())).Message);
+                            entityReferenceMock.Object.LoadAsync(MergeOption.NoTracking, CancellationToken.None).Wait())).Message);
             }
 
             [Fact]
@@ -325,7 +326,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         () =>
                         ExceptionHelpers.UnwrapAggregateExceptions(
                             () =>
-                            entityReferenceMock.Object.LoadAsync(MergeOption.NoTracking).Wait())).Message);
+                            entityReferenceMock.Object.LoadAsync(MergeOption.NoTracking, CancellationToken.None).Wait())).Message);
             }
         }
 
