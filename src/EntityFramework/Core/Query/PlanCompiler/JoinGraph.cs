@@ -813,7 +813,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns> </returns>
         private bool CanJoinEdgeBeTurnedIntoInnerJoin(AugmentedNode rightNode, JoinEdge joinEdge)
         {
-            return AreAllTableRowsPreserved(rightNode, joinEdge.Right) && IsConstraintPresentForTurningIntoInnerJoin(joinEdge);
+            return !joinEdge.RestrictedElimination 
+                && AreAllTableRowsPreserved(rightNode, joinEdge.Right) 
+                && IsConstraintPresentForTurningIntoInnerJoin(joinEdge);
         }
 
         /// <summary>
