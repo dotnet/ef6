@@ -229,9 +229,9 @@ namespace System.Data.Entity.Core.Common
 
         /// <summary>
         ///     Returns the provider-specific execution strategy. This method will only be invoked if there's no 
-        ///     <see cref="IDbDependencyResolver"/> registered for <see cref="ExecutionStrategy"/> that handles this provider.
+        ///     <see cref="IDbDependencyResolver"/> registered for <see cref="Func{IExecutionStrategy}"/> that handles this provider.
         /// </summary>
-        /// <returns>A new instance of <see cref="ExecutionStrategy"/></returns>
+        /// <returns> The execution strategy factory for this provider. </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public virtual Func<IExecutionStrategy> GetExecutionStrategyFactory()
         {
@@ -242,7 +242,7 @@ namespace System.Data.Entity.Core.Common
         ///     Gets the <see cref="IExecutionStrategy"/> that will be used to execute methods that use the specified connection.
         /// </summary>
         /// <param name="connection">The database connection</param>
-        /// <returns>A new instance of <see cref="ExecutionStrategy"/></returns>
+        /// <returns>A new instance of <see cref="ExecutionStrategyBase"/></returns>
         public static IExecutionStrategy GetExecutionStrategy(DbConnection connection)
         {
             return GetExecutionStrategy(connection, GetProviderFactory(connection));
@@ -253,7 +253,7 @@ namespace System.Data.Entity.Core.Common
         ///     Uses MetadataWorkspace for faster lookup.
         /// </summary>
         /// <param name="connection">The database connection</param>
-        /// <returns>A new instance of <see cref="ExecutionStrategy"/></returns>
+        /// <returns>A new instance of <see cref="ExecutionStrategyBase"/></returns>
         internal static IExecutionStrategy GetExecutionStrategy(
             DbConnection connection,
             MetadataWorkspace metadataWorkspace)

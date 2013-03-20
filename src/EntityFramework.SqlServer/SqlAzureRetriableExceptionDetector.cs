@@ -2,23 +2,15 @@
 
 namespace System.Data.Entity.SqlServer
 {
-    using System.Data.Entity.Core;
-    using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
 
     /// <summary>
-    ///     A <see cref="IRetriableExceptionDetector"/> that detects the exceptions caused by SQL Azure transient failures.
+    ///     Detects the exceptions caused by SQL Azure transient failures.
     /// </summary>
-    public class SqlAzureRetriableExceptionDetector : IRetriableExceptionDetector
+    internal static class SqlAzureRetriableExceptionDetector
     {
-        /// <inheritdoc/>
-        public bool ShouldRetryOn(Exception ex)
+        public static bool ShouldRetryOn(Exception ex)
         {
-            if (ex == null)
-            {
-                return false;
-            }
-
             var sqlException = ex as SqlException;
             if (sqlException != null)
             {
@@ -85,24 +77,6 @@ namespace System.Data.Entity.SqlServer
             if (ex is TimeoutException)
             {
                 return true;
-            }
-
-            var entityException = ex as EntityException;
-            if (entityException != null)
-            {
-                return ShouldRetryOn(entityException.InnerException);
-            }
-
-            var dbUpdateException = ex as DbUpdateException;
-            if (dbUpdateException != null)
-            {
-                return ShouldRetryOn(dbUpdateException.InnerException);
-            }
-
-            var updateException = ex as UpdateException;
-            if (updateException != null)
-            {
-                return ShouldRetryOn(updateException.InnerException);
             }
 
             return false;

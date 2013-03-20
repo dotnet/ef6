@@ -353,15 +353,12 @@
     <Compile Include="Infrastructure\DbConcurrencyException.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenService.cs" />
     <Compile Include="Infrastructure\IExecutionStrategy.cs" />
-    <Compile Include="Infrastructure\ExecutionStrategy.cs" />
+    <Compile Include="Infrastructure\ExecutionStrategyBase.cs" />
     <Compile Include="Infrastructure\ExecutionStrategyKey.cs" />
-    <Compile Include="Infrastructure\ExponentialRetryDelayStrategy.cs" />
     <Compile Include="Infrastructure\IDbModelCacheKeyProvider.cs" />
     <Compile Include="Infrastructure\IDbProviderFactoryService.cs" />
     <Compile Include="Infrastructure\IManifestTokenService.cs" />
     <Compile Include="Infrastructure\IProviderInvariantName.cs" />
-    <Compile Include="Infrastructure\IRetriableExceptionDetector.cs" />
-    <Compile Include="Infrastructure\IRetryDelayStrategy.cs" />
     <Compile Include="Infrastructure\Pluralization\CustomPluralizationEntry.cs" />
     <Compile Include="Infrastructure\Pluralization\EnglishPluralizationService.cs" />
     <Compile Include="Infrastructure\Pluralization\IPluralizationService.cs" />

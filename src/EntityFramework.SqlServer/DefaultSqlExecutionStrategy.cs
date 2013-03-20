@@ -9,12 +9,10 @@ namespace System.Data.Entity.SqlServer
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     An execution strategy that doesn't affect the execution but will throw a more helpful exception if a transient failure is detected.
+    ///     An <see cref="IExecutionStrategy"/> that doesn't affect the execution but will throw a more helpful exception if a transient failure is detected.
     /// </summary>
     internal sealed class DefaultSqlExecutionStrategy : IExecutionStrategy
     {
-        private readonly IRetriableExceptionDetector _retriableExceptionDetector = new SqlAzureRetriableExceptionDetector();
-
         public bool RetriesOnFailure
         {
             get { return false; }
@@ -48,7 +46,7 @@ namespace System.Data.Entity.SqlServer
             }
             catch (Exception ex)
             {
-                if (_retriableExceptionDetector.ShouldRetryOn(ex))
+                if (ExecutionStrategyBase.UnwrapAndHandleException(ex, SqlAzureRetriableExceptionDetector.ShouldRetryOn))
                 {
                     throw new EntityException(Strings.TransientExceptionDetected, ex);
                 }
@@ -92,7 +90,7 @@ namespace System.Data.Entity.SqlServer
             }
             catch (Exception ex)
             {
-                if (_retriableExceptionDetector.ShouldRetryOn(ex))
+                if (ExecutionStrategyBase.UnwrapAndHandleException(ex, SqlAzureRetriableExceptionDetector.ShouldRetryOn))
                 {
                     throw new EntityException(Strings.TransientExceptionDetected, ex);
                 }

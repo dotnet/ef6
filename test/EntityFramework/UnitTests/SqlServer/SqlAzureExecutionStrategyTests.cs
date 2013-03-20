@@ -4,27 +4,12 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Infrastructure;
     using System.Linq;
-    using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class SqlAzureExecutionStrategyTests
     {
-        [Fact]
-        public void Default_constructor_uses_ExponentialRetryDelayStrategy_and_SqlAzureRetriableExceptionDetector()
-        {
-            var executionStrategy = new SqlAzureExecutionStrategy();
-
-            var retryDelayStrategyProperty = executionStrategy.GetType().GetProperty(
-                "RetryDelayStrategy",
-                BindingFlags.Instance | BindingFlags.NonPublic);
-            Assert.IsType<ExponentialRetryDelayStrategy>(retryDelayStrategyProperty.GetValue(executionStrategy, null));
-
-            var retriableExceptionDetectorProperty = executionStrategy.GetType().GetProperty(
-                "RetriableExceptionDetector",
-                BindingFlags.Instance | BindingFlags.NonPublic);
-            Assert.IsType<SqlAzureRetriableExceptionDetector>(retriableExceptionDetectorProperty.GetValue(executionStrategy, null));
-        }
-
         [Fact]
         public void Has_ProviderInvariantNameAttribute()
         {
@@ -32,5 +17,72 @@ namespace System.Data.Entity.SqlServer
                 "System.Data.SqlClient",
                 DbProviderNameAttribute.GetFromType(typeof(SqlAzureExecutionStrategy)).Single().Name);
         }
+
+        [Fact]
+        public void Execute_Action_retries_until_succesful()
+        {
+            Execute_retries_until_succesful((e, f) => e.Execute(() => { f(); }));
+        }
+
+        [Fact]
+        public void Execute_Func_retries_until_succesful()
+        {
+            Execute_retries_until_succesful((e, f) => e.Execute(f));
+        }
+
+        private void Execute_retries_until_succesful(Action<ExecutionStrategyBase, Func<int>> execute)
+        {
+            var executionStrategy = new SqlAzureExecutionStrategy();
+            var executionCount = 0;
+
+            execute(
+                executionStrategy, () =>
+                                       {
+                                           if (executionCount++ < 3)
+                                           {
+                                               throw new TimeoutException();
+                                           }
+
+                                           return executionCount;
+                                       });
+
+            Assert.Equal(4, executionCount);
+        }
+
+#if !NET40
+
+        [Fact]
+        public void ExecuteAsync_Action_retries_until_succesful()
+        {
+            ExecuteAsync_retries_until_succesful((e, f) => e.ExecuteAsync(() => (Task)f(), CancellationToken.None));
+        }
+
+        [Fact]
+        public void ExecuteAsync_Func_retries_until_succesful()
+        {
+            ExecuteAsync_retries_until_succesful((e, f) => e.ExecuteAsync(f, CancellationToken.None));
+        }
+
+        private void ExecuteAsync_retries_until_succesful(Func<ExecutionStrategyBase, Func<Task<int>>, Task> executeAsync)
+        {
+            var executionStrategy = new SqlAzureExecutionStrategy();
+
+            var executionCount = 0;
+
+            executeAsync(
+                executionStrategy, () =>
+                                       {
+                                           if (executionCount++ < 3)
+                                           {
+                                               throw new TimeoutException();
+                                           }
+
+                                           return Task.FromResult(executionCount);
+                                       }).Wait();
+
+            Assert.Equal(4, executionCount);
+        }
+
+#endif
     }
 }

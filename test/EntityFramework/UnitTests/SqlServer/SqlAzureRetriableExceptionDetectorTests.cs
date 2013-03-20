@@ -11,37 +11,37 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void ShouldRetryOn_returns_false_for_null()
         {
-            Assert.False(new SqlAzureRetriableExceptionDetector().ShouldRetryOn(null));
+            Assert.False(SqlAzureRetriableExceptionDetector.ShouldRetryOn(null));
         }
 
         [Fact]
         public void ShouldRetryOn_returns_false_for_non_transient_exception()
         {
-            Assert.False(new SqlAzureRetriableExceptionDetector().ShouldRetryOn(new EntityException()));
+            Assert.False(SqlAzureRetriableExceptionDetector.ShouldRetryOn(new EntityException()));
         }
 
         [Fact]
         public void ShouldRetryOn_returns_true_for_TimeoutException()
         {
-            Assert.True(new SqlAzureRetriableExceptionDetector().ShouldRetryOn(new TimeoutException()));
+            Assert.True(SqlAzureRetriableExceptionDetector.ShouldRetryOn(new TimeoutException()));
         }
 
         [Fact]
-        public void ShouldRetryOn_returns_true_for_exception_nested_in_EntityException()
+        public void ShouldRetryOn_returns_false_for_exception_nested_in_EntityException()
         {
-            Assert.True(new SqlAzureRetriableExceptionDetector().ShouldRetryOn(new EntityException("", new TimeoutException())));
+            Assert.False(SqlAzureRetriableExceptionDetector.ShouldRetryOn(new EntityException("", new TimeoutException())));
         }
 
         [Fact]
-        public void ShouldRetryOn_returns_true_for_exception_nested_in_DbUpdateException()
+        public void ShouldRetryOn_returns_false_for_exception_nested_in_DbUpdateException()
         {
-            Assert.True(new SqlAzureRetriableExceptionDetector().ShouldRetryOn(new DbUpdateException("", new TimeoutException())));
+            Assert.False(SqlAzureRetriableExceptionDetector.ShouldRetryOn(new DbUpdateException("", new TimeoutException())));
         }
 
         [Fact]
-        public void ShouldRetryOn_returns_true_for_exception_nested_in_UpdateException()
+        public void ShouldRetryOn_returns_false_for_exception_nested_in_UpdateException()
         {
-            Assert.True(new SqlAzureRetriableExceptionDetector().ShouldRetryOn(new UpdateException("", new TimeoutException())));
+            Assert.False(SqlAzureRetriableExceptionDetector.ShouldRetryOn(new UpdateException("", new TimeoutException())));
         }
     }
 }

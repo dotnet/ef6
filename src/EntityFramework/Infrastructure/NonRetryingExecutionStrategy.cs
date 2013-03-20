@@ -8,7 +8,7 @@ namespace System.Data.Entity.Infrastructure
 #endif
 
     /// <summary>
-    ///     An <see cref="ExecutionStrategy"/> that doesn't retry operations if they fail and supports existing transactions.
+    ///     An <see cref="IExecutionStrategy"/> that doesn't retry operations if they fail.
     /// </summary>
     public class NonRetryingExecutionStrategy : IExecutionStrategy
     {

@@ -5,15 +5,15 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Infrastructure;
 
     /// <summary>
-    ///     An <see cref="ExecutionStrategy"/> that uses the <see cref="ExponentialRetryDelayStrategy"/> and
-    ///     <see cref="SqlAzureRetriableExceptionDetector"/>.
+    ///     An <see cref="IExecutionStrategy"/> that retries actions that throw exceptions caused by SQL Azure transient failures.
     /// </summary>
     [DbProviderName("System.Data.SqlClient")]
-    public class SqlAzureExecutionStrategy : ExecutionStrategy
+    public class SqlAzureExecutionStrategy : ExecutionStrategyBase
     {
-        public SqlAzureExecutionStrategy()
-            : base(new ExponentialRetryDelayStrategy(), new SqlAzureRetriableExceptionDetector())
+        /// <inheritdoc/>
+        protected override bool ShouldRetryOn(Exception exception)
         {
+            return SqlAzureRetriableExceptionDetector.ShouldRetryOn(exception);
         }
     }
 }

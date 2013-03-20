@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Infrastructure
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -10,30 +12,81 @@ namespace System.Data.Entity.Infrastructure
     using System.Transactions;
 
     /// <summary>
-    ///     Provides the base implementation of the retry mechanism for unreliable actions and transient conditions.
-    ///     A new instance will be created each time an action is executed.
+    ///     Provides the base implementation of the retry mechanism for unreliable actions and transient conditions that uses
+    ///     exponentially increasing delays between retries.
     /// </summary>
-    public class ExecutionStrategy : IExecutionStrategy
+    /// <remarks>
+    ///     A new instance will be created each time an action is executed.
+    /// 
+    ///     The following formula is used to calculate the delay after <c>retryCount</c> number of attempts:
+    ///     <code>min(random(1, 1.1) * (2 ^ retryCount - 1), maxDelay)</code>
+    ///     The <c>retryCount</c> starts at 0.
+    ///     The random factor distributes uniformly the retry attempts from multiple parallel actions failing simultaneously.
+    /// </remarks>
+    public abstract class ExecutionStrategyBase : IExecutionStrategy
     {
         private bool _hasExecuted;
+        private readonly List<Exception> _exceptionsEncountered = new List<Exception>();
+        private readonly Random _random = new Random();
+
+        private readonly int _maxRetryCount;
+        private readonly TimeSpan _maxDelay;
 
         /// <summary>
-        ///     Creates a new instance of <see cref="ExecutionStrategy"/> that use the supplied retry delay strategy and
-        ///     retriable exception detector to handle transient failures during action execution.
+        ///     The default number of retry attempts, must be nonnegative.
         /// </summary>
-        /// <param name="retryDelayStrategy">The strategy used to determine the delay between execution attempts.</param>
-        /// <param name="retriableExceptionDetector">The detector used to detect retriable exceptions.</param>
-        public ExecutionStrategy(IRetryDelayStrategy retryDelayStrategy, IRetriableExceptionDetector retriableExceptionDetector)
-        {
-            Check.NotNull(retryDelayStrategy, "retryDelayStrategy");
-            Check.NotNull(retriableExceptionDetector, "retriableExceptionDetector");
+        private const int DefaultMaxRetryCount = 5;
 
-            RetryDelayStrategy = retryDelayStrategy;
-            RetriableExceptionDetector = retriableExceptionDetector;
+        /// <summary>
+        ///     The default maximum random factor, must not be lesser than 1.
+        /// </summary>
+        private const double DefaultRandomFactor = 1.1;
+
+        /// <summary>
+        ///     The default base for the exponential function used to compute the delay between retries, must be positive.
+        /// </summary>
+        private const double DefaultExponentialBase = 2;
+
+        /// <summary>
+        ///     The default coefficient for the exponential function used to compute the delay between retries, must be nonnegative.
+        /// </summary>
+        private static readonly TimeSpan DefaultCoefficient = TimeSpan.FromSeconds(1);
+
+        /// <summary>
+        ///     The default maximum time delay between retries, must be nonnegative.
+        /// </summary>
+        private static readonly TimeSpan DefaultMaxDelay = TimeSpan.FromSeconds(30);
+
+        /// <summary>
+        ///     Creates a new instance of <see cref="ExecutionStrategyBase"/>.
+        /// </summary>
+        /// <remarks>
+        ///     The default retry limit is 5, which means that the total amout of time spent between retries is 26 seconds plus the random factor.
+        /// </remarks>
+        protected ExecutionStrategyBase()
+            : this(DefaultMaxRetryCount, DefaultMaxDelay)
+        {
         }
 
-        protected IRetryDelayStrategy RetryDelayStrategy { get; private set; }
-        protected IRetriableExceptionDetector RetriableExceptionDetector { get; private set; }
+        /// <summary>
+        ///     Creates a new instance of <see cref="ExecutionStrategyBase"/> with the specified limits for number of retries and the delay between retries.
+        /// </summary>
+        /// <param name="maxRetryCount"> The maximum number of retry attempts. </param>
+        /// <param name="maxDelay"> The maximum delay in milliseconds between retries. </param>
+        protected ExecutionStrategyBase(int maxRetryCount, TimeSpan maxDelay)
+        {
+            if (maxRetryCount < 0)
+            {
+                throw new ArgumentOutOfRangeException("maxRetryCount");
+            }
+            if (maxDelay.TotalMilliseconds < 0.0)
+            {
+                throw new ArgumentOutOfRangeException("maxDelay");
+            }
+
+            _maxRetryCount = maxRetryCount;
+            _maxDelay = maxDelay;
+        }
 
         /// <inheritdoc/>
         public bool RetriesOnFailure
@@ -89,12 +142,12 @@ namespace System.Data.Entity.Infrastructure
                 }
                 catch (Exception ex)
                 {
-                    if (!RetriableExceptionDetector.ShouldRetryOn(ex))
+                    if (!UnwrapAndHandleException(ex, ShouldRetryOn))
                     {
                         throw;
                     }
 
-                    delay = RetryDelayStrategy.GetNextDelay(ex);
+                    delay = GetNextDelay(ex);
                     if (delay == null)
                     {
                         throw new RetryLimitExceededException(ex);
@@ -183,12 +236,12 @@ namespace System.Data.Entity.Infrastructure
                 }
                 catch (Exception ex)
                 {
-                    if (!RetriableExceptionDetector.ShouldRetryOn(ex))
+                    if (!ShouldRetryOn(ex))
                     {
                         throw;
                     }
 
-                    delay = RetryDelayStrategy.GetNextDelay(ex);
+                    delay = GetNextDelay(ex);
                     if (delay == null)
                     {
                         throw new RetryLimitExceededException(ex);
@@ -220,5 +273,73 @@ namespace System.Data.Entity.Infrastructure
 
             _hasExecuted = true;
         }
+
+        /// <summary>
+        ///     Determines whether the action should be retried and the delay before the next attempt.
+        /// </summary>
+        /// <param name="lastException">The exception thrown during the last execution attempt.</param>
+        /// <returns>
+        ///     Returns the delay indicating how long to wait for before the next execution attempt if the action should be retried;
+        ///     <c>null</c> otherwise
+        /// </returns>
+        protected internal virtual TimeSpan? GetNextDelay(Exception lastException)
+        {
+            _exceptionsEncountered.Add(lastException);
+
+            var currentRetryCount = _exceptionsEncountered.Count - 1;
+            if (currentRetryCount < _maxRetryCount)
+            {
+                var delta = (Math.Pow(DefaultExponentialBase, currentRetryCount) - 1.0)
+                            * (1.0 + _random.NextDouble() * (DefaultRandomFactor - 1.0));
+
+                var delay = Math.Min(
+                    DefaultCoefficient.TotalMilliseconds * delta,
+                    _maxDelay.TotalMilliseconds);
+
+                return TimeSpan.FromMilliseconds(delay);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        ///     Recursively gets InnerException from <paramref name="exception"/> as long as it's an 
+        ///     <see cref="EntityException"/>, <see cref="DbUpdateException"/> or <see cref="UpdateException"/>
+        ///     and passes it to <paramref name="exceptionHandler"/>
+        /// </summary>
+        /// <param name="exception"> The exception to be unwrapped. </param>
+        /// <param name="exceptionHandler"> A delegate that will be called with the unwrapped exception. </param>
+        /// <returns> The result from <paramref name="exceptionHandler"/>. </returns>
+        public static T UnwrapAndHandleException<T>(Exception exception, Func<Exception, T> exceptionHandler)
+        {
+            DebugCheck.NotNull(exception);
+
+            var entityException = exception as EntityException;
+            if (entityException != null)
+            {
+                return UnwrapAndHandleException(entityException.InnerException, exceptionHandler);
+            }
+
+            var dbUpdateException = exception as DbUpdateException;
+            if (dbUpdateException != null)
+            {
+                return UnwrapAndHandleException(dbUpdateException.InnerException, exceptionHandler);
+            }
+
+            var updateException = exception as UpdateException;
+            if (updateException != null)
+            {
+                return UnwrapAndHandleException(updateException.InnerException, exceptionHandler);
+            }
+
+            return exceptionHandler(exception);
+        }
+
+        /// <summary>
+        ///     Determines whether the specified exception represents a transient failure that can be compensated by a retry.
+        /// </summary>
+        /// <param name="ex">The exception object to be verified.</param>
+        /// <returns><c>true</c> if the specified exception is considered as transient, otherwise <c>false</c>.</returns>
+        protected abstract bool ShouldRetryOn(Exception exception);
     }
 }

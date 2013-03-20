@@ -5,7 +5,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     A key used for resolving <see cref="ExecutionStrategy"/>. It consists of the ADO.NET provider invariant name
+    ///     A key used for resolving <see cref="Func{IExecutionStrategy}"/>. It consists of the ADO.NET provider invariant name
     ///     and the database server name as specified in the connection string.
     /// </summary>
     public class ExecutionStrategyKey
