@@ -12622,11 +12622,19 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The provider did not return a DbSpatialServices instance."
+        ///     A string like "The provider did not return a 'DbSpatialServices' instance. In order to use the 'DbGeography' or 'DbGeometry' spatial types the EF provider being used must support spatial types and all prerequisites for the provider must be installed. See http://go.microsoft.com/fwlink/?LinkId=287183 for details."
         /// </summary>
         internal static string ProviderDidNotReturnSpatialServices
         {
             get { return EntityRes.GetString(EntityRes.ProviderDidNotReturnSpatialServices); }
+        }
+
+        /// <summary>
+        ///     A string like "No usable spatial provider could be found. In order to use the 'DbGeography' or 'DbGeometry' spatial types the EF provider being used must support spatial types and all prerequisites for the provider must be installed. See http://go.microsoft.com/fwlink/?LinkId=287183 for details."
+        /// </summary>
+        internal static string SpatialProviderNotUsable
+        {
+            get { return EntityRes.GetString(EntityRes.SpatialProviderNotUsable); }
         }
 
         /// <summary>
@@ -16710,6 +16718,7 @@ namespace System.Data.Entity.Resources
         internal const string ProviderDidNotReturnAProviderManifest = "ProviderDidNotReturnAProviderManifest";
         internal const string ProviderDidNotReturnAProviderManifestToken = "ProviderDidNotReturnAProviderManifestToken";
         internal const string ProviderDidNotReturnSpatialServices = "ProviderDidNotReturnSpatialServices";
+        internal const string SpatialProviderNotUsable = "SpatialProviderNotUsable";
         internal const string ProviderRequiresStoreCommandTree = "ProviderRequiresStoreCommandTree";
         internal const string ProviderShouldOverrideEscapeLikeArgument = "ProviderShouldOverrideEscapeLikeArgument";
         internal const string ProviderEscapeLikeArgumentReturnedNull = "ProviderEscapeLikeArgumentReturnedNull";

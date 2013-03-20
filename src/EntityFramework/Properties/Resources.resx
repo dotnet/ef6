@@ -5024,7 +5024,10 @@
     <value>The provider did not return a ProviderManifestToken string.</value>
   </data>
   <data name="ProviderDidNotReturnSpatialServices" xml:space="preserve">
-    <value>The provider did not return a DbSpatialServices instance.</value>
+    <value>The provider did not return a 'DbSpatialServices' instance. In order to use the 'DbGeography' or 'DbGeometry' spatial types the EF provider being used must support spatial types and all prerequisites for the provider must be installed. See http://go.microsoft.com/fwlink/?LinkId=287183 for details.</value>
+  </data>
+  <data name="SpatialProviderNotUsable" xml:space="preserve">
+    <value>No usable spatial provider could be found. In order to use the 'DbGeography' or 'DbGeometry' spatial types the EF provider being used must support spatial types and all prerequisites for the provider must be installed. See http://go.microsoft.com/fwlink/?LinkId=287183 for details.</value>
   </data>
   <data name="ProviderRequiresStoreCommandTree" xml:space="preserve">
     <value>This provider does not support the specified command tree. EntityClient should be used to create a command definition from this command tree.</value>

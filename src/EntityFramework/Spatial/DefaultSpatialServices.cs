@@ -58,7 +58,7 @@ namespace System.Data.Entity.Spatial
 
         private static Exception SpatialServicesUnavailable()
         {
-            return new NotImplementedException();
+            return new NotImplementedException(Strings.SpatialProviderNotUsable);
         }
 
         private static ReadOnlySpatialValues CheckProviderValue(object providerValue)

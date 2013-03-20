@@ -349,6 +349,7 @@
     <Compile Include="ModelConfiguration\Edm\Services\FunctionParameterMappingGeneratorTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\ModificationFunctionMappingGeneratorTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\StructuralTypeMappingGeneratorTests.cs" />
+    <Compile Include="Spatial\DefaultServicesTests.cs" />
     <Compile Include="SqlServerCompact\SqlCeProviderServicesTests.cs" />
     <Compile Include="SqlServerCompact\SqlGen\DmlSqlGeneratorTests.cs" />
     <Compile Include="SqlServerCompact\SqlGen\SqlGeneratorTests.cs" />
