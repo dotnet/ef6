@@ -117,5 +117,29 @@ namespace System.Data.Entity.Edm.Serialization
             schemaWriterMock.Verify(sw => sw.WriteFunctionParameterHeader(functionParameter), Times.Once());
             schemaWriterMock.Verify(sw => sw.WriteEndElement(), Times.Once());
         }
+
+        [Fact]
+        public void VisitFunctionImport_writes_start_and_end_elements()
+        {
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
+            var functionImport = new EdmFunction("foo", "bar", DataSpace.CSpace);
+
+            new EdmSerializationVisitor(schemaWriterMock.Object).VisitFunctionImport(functionImport);
+
+            schemaWriterMock.Verify(sw => sw.WriteFunctionImportElementHeader(functionImport), Times.Once());
+            schemaWriterMock.Verify(sw => sw.WriteEndElement(), Times.Once());
+        }
+
+        [Fact]
+        public void VisitFunctionImportParameter_writes_function_parameter()
+        {
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
+            var functionImport = new FunctionParameter();
+
+            new EdmSerializationVisitor(schemaWriterMock.Object).VisitFunctionImportParameter(functionImport);
+
+            schemaWriterMock.Verify(sw => sw.WriteFunctionImportParameterElementHeader(functionImport), Times.Once());
+            schemaWriterMock.Verify(sw => sw.WriteEndElement(), Times.Once());
+        }
     }
 }

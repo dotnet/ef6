@@ -725,6 +725,31 @@ namespace System.Data.Entity.Edm.Serialization
             WriteExtendedProperties(entitySet);
         }
 
+        internal virtual void WriteFunctionImportElementHeader(EdmFunction functionImport)
+        {
+            DebugCheck.NotNull(functionImport);
+
+            _xmlWriter.WriteStartElement(XmlConstants.FunctionImport);
+            _xmlWriter.WriteAttributeString(XmlConstants.Name, functionImport.Name);
+            _xmlWriter.WriteAttributeString(
+                XmlConstants.ReturnType, GetTypeName(functionImport.ReturnParameter.TypeUsage.EdmType));
+            
+            if (functionImport.IsComposableAttribute)
+            {
+                _xmlWriter.WriteAttributeString(XmlConstants.IsComposable, XmlConstants.True);
+            }
+        }
+
+        internal virtual void WriteFunctionImportParameterElementHeader(FunctionParameter parameter)
+        {
+            DebugCheck.NotNull(parameter);
+
+            _xmlWriter.WriteStartElement(XmlConstants.Parameter);
+            _xmlWriter.WriteAttributeString(XmlConstants.Name, parameter.Name);
+            _xmlWriter.WriteAttributeString(XmlConstants.Mode, parameter.Mode.ToString());
+            _xmlWriter.WriteAttributeString(XmlConstants.TypeAttribute, GetTypeName(parameter.TypeUsage.EdmType));
+        }
+
         internal void WriteDefiningQuery(EntitySet entitySet)
         {
             DebugCheck.NotNull(entitySet);
@@ -765,6 +790,20 @@ namespace System.Data.Entity.Edm.Serialization
             xmlNamespaceUri = name.Substring(0, pos);
             attributeName = name.Substring(pos + 1, (name.Length - 1) - pos);
             return true;
+        }
+
+        private static string GetTypeName(EdmType type)
+        {
+            if (type.BuiltInTypeKind == BuiltInTypeKind.CollectionType)
+            {
+                return 
+                    string.Format(
+                        CultureInfo.InvariantCulture, 
+                        "Collection({0})", 
+                        GetTypeName(((CollectionType)type).TypeUsage.EdmType));
+            }
+
+            return type.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType ? type.Name : type.FullName;
         }
     }
 }

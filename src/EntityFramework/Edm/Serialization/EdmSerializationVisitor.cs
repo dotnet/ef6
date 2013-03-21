@@ -108,6 +108,26 @@ namespace System.Data.Entity.Edm.Serialization
             _schemaWriter.WriteEndElement();
         }
 
+        protected internal override void VisitFunctionImport(EdmFunction functionImport)
+        {
+            _schemaWriter.WriteFunctionImportElementHeader(functionImport);
+            base.VisitFunctionImport(functionImport);
+            _schemaWriter.WriteEndElement();
+        }
+
+        protected internal override void VisitFunctionImportParameter(FunctionParameter parameter)
+        {
+            _schemaWriter.WriteFunctionImportParameterElementHeader(parameter);
+            base.VisitFunctionImportParameter(parameter);
+            _schemaWriter.WriteEndElement();
+        }
+
+        protected internal override void VisitFunctionImportReturnParameter(FunctionParameter parameter)
+        {
+            // function imports with multiple return types are currently not supported
+            // for function with single return value the return type is being written inline
+        }
+
         protected override void VisitEdmEntityType(EntityType item)
         {
             _schemaWriter.WriteEntityTypeElementHeader(item);

@@ -94,6 +94,7 @@ namespace System.Data.Entity.Edm.Validation
                 AddRule(EdmModelSemanticValidationRules.EdmComplexType_PropertyNameAlreadyDefinedDuplicate);
                 AddRule(EdmModelSemanticValidationRules.EdmComplexType_InvalidIsAbstract);
                 AddRule(EdmModelSemanticValidationRules.EdmComplexType_InvalidIsPolymorphic);
+                AddRule(EdmModelSemanticValidationRules.EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2);
             }
         }
 
@@ -134,6 +135,7 @@ namespace System.Data.Entity.Edm.Validation
             {
                 RemoveRule(EdmModelSemanticValidationRules.EdmProperty_InvalidPropertyType);
                 AddRule(EdmModelSemanticValidationRules.EdmProperty_InvalidPropertyType_V3);
+                RemoveRule(EdmModelSemanticValidationRules.EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2);
             }
         }
     }

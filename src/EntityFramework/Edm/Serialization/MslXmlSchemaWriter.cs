@@ -6,6 +6,7 @@ namespace System.Data.Entity.Edm.Serialization
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
     using System.Xml;
 
@@ -178,6 +179,39 @@ namespace System.Data.Entity.Edm.Serialization
                 WriteConditionElement(conditionColumn);
             }
 
+            _xmlWriter.WriteEndElement();
+        }
+
+        public void WriteFunctionImportMappingElement(FunctionImportMappingComposable functionImportMapping)
+        {
+            DebugCheck.NotNull(functionImportMapping);
+
+            _xmlWriter.WriteStartElement(StorageMslConstructs.FunctionImportMappingElement);
+            _xmlWriter.WriteAttributeString(
+                StorageMslConstructs.FunctionImportMappingFunctionNameAttribute, 
+                functionImportMapping.TargetFunction.FullName);
+            _xmlWriter.WriteAttributeString(
+                StorageMslConstructs.FunctionImportMappingFunctionImportNameAttribute, 
+                functionImportMapping.FunctionImport.Name);
+            _xmlWriter.WriteStartElement(StorageMslConstructs.FunctionImportMappingResultMapping);
+
+            Debug.Assert(
+                functionImportMapping.StructuralTypeMappings.Count == 1,
+                "multiple result sets not supported.");
+            Debug.Assert(
+                functionImportMapping.StructuralTypeMappings.First().Item1.BuiltInTypeKind == BuiltInTypeKind.ComplexType,
+                "mapping to entity sets not supported.");
+
+            var structuralMapping = functionImportMapping.StructuralTypeMappings.Single();
+            _xmlWriter.WriteStartElement(StorageMslConstructs.ComplexTypeMappingElement);
+            _xmlWriter.WriteAttributeString(StorageMslConstructs.ComplexTypeMappingTypeNameAttribute, structuralMapping.Item1.FullName);
+            foreach (StorageScalarPropertyMapping propertyMapping in structuralMapping.Item3)
+            {
+                WritePropertyMapping(propertyMapping);
+            }
+
+            _xmlWriter.WriteEndElement();
+            _xmlWriter.WriteEndElement();
             _xmlWriter.WriteEndElement();
         }
 

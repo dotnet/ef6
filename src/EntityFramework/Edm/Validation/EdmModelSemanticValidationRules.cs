@@ -15,6 +15,21 @@ namespace System.Data.Entity.Edm.Validation
     [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
     internal static class EdmModelSemanticValidationRules
     {
+        internal static readonly EdmModelValidationRule<EdmFunction> EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2 =
+            new EdmModelValidationRule<EdmFunction>(
+                (context, function) =>
+                {
+                    Debug.Assert(context.Model.SchemaVersion < 3, "This rule should not be invoked for v3 schema.");
+
+                    if (function.IsFunctionImport && function.IsComposableAttribute)
+                    {
+                        context.AddError(
+                            function,
+                            null,
+                            Strings.EdmModel_Validator_Semantic_ComposableFunctionImportsNotSupportedForSchemaVersion);
+                    }
+                });
+
         internal static readonly EdmModelValidationRule<EdmFunction> EdmFunction_DuplicateParameterName
             = new EdmModelValidationRule<EdmFunction>(
                 (context, function) =>

@@ -131,5 +131,58 @@ namespace System.Data.Entity.Edm.Validation
                     duplicateEntitySet.Table),
                 errorEventArgs.ErrorMessage);
         }
+
+        [Fact]
+        public void EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2()
+        {
+            var errorEventArgs = EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2_runner(1.0);
+            Assert.NotNull(errorEventArgs);
+            Assert.IsType<EdmFunction>(errorEventArgs.Item);
+            Assert.Equal(
+                errorEventArgs.ErrorMessage,
+                Strings.EdmModel_Validator_Semantic_ComposableFunctionImportsNotSupportedForSchemaVersion);
+
+            errorEventArgs = EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2_runner(2.0);
+            Assert.NotNull(errorEventArgs);
+            Assert.IsType<EdmFunction>(errorEventArgs.Item);
+            Assert.Equal(
+                errorEventArgs.ErrorMessage,
+                Strings.EdmModel_Validator_Semantic_ComposableFunctionImportsNotSupportedForSchemaVersion);
+        }
+
+        [Fact]
+        public void EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2_not_thrown_for_non_composable_function_imports()
+        {
+            Assert.Null(
+                EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2_runner(
+                    1.0, 
+                    isFunctionImport: true, 
+                    isComposable: false));
+        }
+
+        private static DataModelErrorEventArgs EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2_runner(double schemaVersion, bool isFunctionImport = true, bool isComposable = true)
+        {
+            var functionImport = new EdmFunction(
+                "f", "Ns", DataSpace.CSpace,
+                new EdmFunctionPayload
+                {
+                    IsComposable = isComposable,
+                    IsFunctionImport = isFunctionImport
+                });
+
+            var model = new EdmModel(DataSpace.CSpace, schemaVersion);
+
+            var validationContext
+                = new EdmModelValidationContext(model, true);
+
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            EdmModelSemanticValidationRules
+                .EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2
+                .Evaluate(validationContext, functionImport);
+
+            return errorEventArgs;
+        }
     }
 }

@@ -901,6 +901,9 @@
   <data name="EdmModel_Validator_Semantic_InvalidPropertyType_V3" xml:space="preserve">
     <value>A property cannot be of type {0}. The property type must be a ComplexType, a PrimitiveType or an EnumType.</value>
   </data>
+  <data name="EdmModel_Validator_Semantic_ComposableFunctionImportsNotSupportedForSchemaVersion" xml:space="preserve">
+    <value>Composable function imports are not supported for version 1.0 or 2.0 EDM Models.</value>
+  </data>
   <data name="EdmModel_Validator_Syntactic_MissingName" xml:space="preserve">
     <value>The name is missing or not valid.</value>
   </data>

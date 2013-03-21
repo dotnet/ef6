@@ -1742,6 +1742,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        ///     A string like "Composable function imports are not supported for version 1.0 or 2.0 EDM Models."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_ComposableFunctionImportsNotSupportedForSchemaVersion
+        {
+            get { return EntityRes.GetString(EntityRes.EdmModel_Validator_Semantic_ComposableFunctionImportsNotSupportedForSchemaVersion); }
+        }
+
+        /// <summary>
         ///     A string like "The name is missing or not valid."
         /// </summary>
         internal static string EdmModel_Validator_Syntactic_MissingName
@@ -15357,6 +15365,7 @@ namespace System.Data.Entity.Resources
         internal const string EdmModel_Validator_Semantic_CycleInTypeHierarchy = "EdmModel_Validator_Semantic_CycleInTypeHierarchy";
         internal const string EdmModel_Validator_Semantic_InvalidPropertyType_V1_1 = "EdmModel_Validator_Semantic_InvalidPropertyType_V1_1";
         internal const string EdmModel_Validator_Semantic_InvalidPropertyType_V3 = "EdmModel_Validator_Semantic_InvalidPropertyType_V3";
+        internal const string EdmModel_Validator_Semantic_ComposableFunctionImportsNotSupportedForSchemaVersion = "EdmModel_Validator_Semantic_ComposableFunctionImportsNotSupportedForSchemaVersion";
         internal const string EdmModel_Validator_Syntactic_MissingName = "EdmModel_Validator_Syntactic_MissingName";
         internal const string EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong = "EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong";
         internal const string EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed = "EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed";

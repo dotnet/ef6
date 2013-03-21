@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Edm.Serialization
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
@@ -311,6 +313,96 @@ namespace System.Data.Entity.Edm.Serialization
     </DeleteFunction>
   </ModificationFunctionMapping>
 </AssociationSetMapping>",
+                fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteEntityContainerMappingElement_should_write_function_import_elements()
+        {
+            var typeUsage =
+                TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+
+            var complexTypeProperty1 = new EdmProperty("CTProperty1", typeUsage);
+            var complexTypeProperty2 = new EdmProperty("CTProperty2", typeUsage);
+
+            var complexType = new ComplexType("CT", "Ns", DataSpace.CSpace);
+            complexType.AddMember(complexTypeProperty1);
+            complexType.AddMember(complexTypeProperty2);
+
+            var functionImport =
+                new EdmFunction(
+                    "f_c", "Ns", DataSpace.CSpace,
+                    new EdmFunctionPayload
+                        {
+                            IsComposable = true,
+                            IsFunctionImport = true,
+                            ReturnParameters =
+                                new[]
+                                    {
+                                        new FunctionParameter(
+                                            "ReturnValue",
+                                            TypeUsage.CreateDefaultTypeUsage(complexType.GetCollectionType()),
+                                            ParameterMode.ReturnValue)
+                                    },
+                            Parameters =
+                                new[]
+                                    {
+                                        new FunctionParameter("param", typeUsage, ParameterMode.Out)
+                                    }
+                        });
+
+
+            var rowTypeProperty1 = new EdmProperty("RTProperty1", typeUsage);
+            var rowTypeProperty2 = new EdmProperty("RTProperty2", typeUsage);
+            var rowType = new RowType(new[] { rowTypeProperty1, rowTypeProperty2 });
+
+            var storeFunction =
+                new EdmFunction(
+                    "f_s", "Ns.Store", DataSpace.SSpace,
+                    new EdmFunctionPayload
+                        {
+                            ReturnParameters =
+                                new[]
+                                    {
+                                        new FunctionParameter(
+                                            "Return",
+                                            TypeUsage.CreateDefaultTypeUsage(rowType),
+                                            ParameterMode.ReturnValue),
+                                    },
+                            Parameters =
+                                new[]
+                                    {
+                                        new FunctionParameter("param", typeUsage, ParameterMode.Out)
+                                    }
+                        });
+
+            var structuralTypeMapping =
+                new Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>(
+                    complexType, new List<StorageConditionPropertyMapping>(), new List<StoragePropertyMapping>());
+
+            structuralTypeMapping.Item3.Add(new StorageScalarPropertyMapping(complexTypeProperty1, rowTypeProperty1));
+            structuralTypeMapping.Item3.Add(new StorageScalarPropertyMapping(complexTypeProperty2, rowTypeProperty2));
+
+            var functionImportMapping = new FunctionImportMappingComposable(
+                functionImport,
+                storeFunction,
+                new List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>>
+                    {
+                        structuralTypeMapping
+                    });
+
+            var fixture = new Fixture();
+            fixture.Writer.WriteFunctionImportMappingElement(functionImportMapping);
+
+            Assert.Equal(
+                @"<FunctionImportMapping FunctionName=""Ns.Store.f_s"" FunctionImportName=""f_c"">
+  <ResultMapping>
+    <ComplexTypeMapping TypeName=""Ns.CT"">
+      <ScalarProperty Name=""CTProperty1"" ColumnName=""RTProperty1"" />
+      <ScalarProperty Name=""CTProperty2"" ColumnName=""RTProperty2"" />
+    </ComplexTypeMapping>
+  </ResultMapping>
+</FunctionImportMapping>",
                 fixture.ToString());
         }
 

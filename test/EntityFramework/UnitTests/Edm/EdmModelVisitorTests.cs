@@ -57,5 +57,63 @@ namespace System.Data.Entity.Edm
             visitorMock.Verify(v => v.VisitMetadataItem(functionParameter), Times.Once());
             visitorMock.Verify(v => v.VisitFunctionParameter(functionParameter), Times.Once());
         }
+
+        [Fact]
+        public void VisitEdmEntityContainer_visits_function_imports()
+        {
+            var functionPayload =
+                new EdmFunctionPayload
+                    {
+                        IsFunctionImport = true
+                    };
+
+            var functionImport =
+                new EdmFunction("f", "N", DataSpace.CSpace, functionPayload);
+
+            var container = new EntityContainer("C", DataSpace.CSpace);
+            container.AddFunctionImport(functionImport);
+
+            var visitorMock =
+                new Mock<EdmModelVisitor>
+                    {
+                        CallBase = true
+                    };
+
+            visitorMock.Object.VisitEdmModel(new EdmModel(container));
+
+            visitorMock.Verify(v => v.VisitFunctionImports(container, It.IsAny<IEnumerable<EdmFunction>>()), Times.Once());
+            visitorMock.Verify(v => v.VisitFunctionImport(functionImport), Times.Once());
+        }
+
+        [Fact]
+        public void VisitFunctionImport_visits_function_import_input_and_returnparameters()
+        {
+            var typeUsage = 
+                TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+
+            var inputParam = new FunctionParameter("p1", typeUsage, ParameterMode.In);
+            var returnParam = new FunctionParameter("r", typeUsage, ParameterMode.ReturnValue);
+
+            var functionPayload =
+                new EdmFunctionPayload
+                {
+                    IsFunctionImport = true,
+                    Parameters = new [] { inputParam },
+                    ReturnParameters = new[] {returnParam}
+                };
+
+            var functionImport = new EdmFunction("f", "N", DataSpace.CSpace, functionPayload);
+
+            var visitorMock =
+                new Mock<EdmModelVisitor>
+                    {
+                        CallBase = true
+                    };
+
+            visitorMock.Object.VisitFunctionImport(functionImport);
+
+            visitorMock.Verify(v => v.VisitFunctionImportParameter(inputParam), Times.Once());
+            visitorMock.Verify(v => v.VisitFunctionImportReturnParameter(returnParam), Times.Once());
+        }
     }
 }

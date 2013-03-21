@@ -71,6 +71,11 @@ namespace System.Data.Entity.Edm
                 {
                     VisitAssociationSets(item, item.AssociationSets);
                 }
+
+                if (item.FunctionImports.Any())
+                {
+                    VisitFunctionImports(item, item.FunctionImports);
+                }
             }
         }
 
@@ -117,6 +122,46 @@ namespace System.Data.Entity.Edm
         protected virtual void VisitEdmAssociationSetEnd(EntitySet item)
         {
             VisitMetadataItem(item);
+        }
+
+        protected internal virtual void VisitFunctionImports(EntityContainer container, IEnumerable<EdmFunction> functionImports)
+        {
+            VisitCollection(functionImports, VisitFunctionImport);
+        }
+
+        protected internal virtual void VisitFunctionImport(EdmFunction functionImport)
+        {
+            VisitMetadataItem(functionImport);
+
+            if (functionImport.Parameters != null)
+            {
+                VisitFunctionImportParameters(functionImport.Parameters);
+            }
+
+            if (functionImport.ReturnParameters != null)
+            {
+                VisitFunctionImportReturnParameters(functionImport.ReturnParameters);
+            }
+        }
+
+        protected internal virtual void VisitFunctionImportParameters(IEnumerable<FunctionParameter> parameters)
+        {
+            VisitCollection(parameters, VisitFunctionImportParameter);
+        }
+
+        protected internal virtual void VisitFunctionImportParameter(FunctionParameter parameter)
+        {
+            VisitMetadataItem(parameter);
+        }
+
+        protected internal virtual void VisitFunctionImportReturnParameters(IEnumerable<FunctionParameter> parameters)
+        {
+            VisitCollection(parameters, VisitFunctionImportReturnParameter);
+        }
+
+        protected internal virtual void VisitFunctionImportReturnParameter(FunctionParameter parameter)
+        {
+            VisitMetadataItem(parameter);
         }
 
         protected virtual void VisitComplexTypes(IEnumerable<ComplexType> complexTypes)
