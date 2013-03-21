@@ -16,6 +16,7 @@ namespace System.Data.Entity.Core.Common
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
+    using System.Transactions;
     using System.Xml;
 
     /// <summary>
@@ -174,11 +175,17 @@ namespace System.Data.Entity.Core.Common
 
             try
             {
-                var providerManifestToken = GetDbProviderManifestToken(connection);
+                string providerManifestToken;
+                using (new TransactionScope(TransactionScopeOption.Suppress))
+                {
+                    providerManifestToken = GetDbProviderManifestToken(connection);
+                }
+
                 if (providerManifestToken == null)
                 {
                     throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnAProviderManifestToken);
                 }
+
                 return providerManifestToken;
             }
             catch (ProviderIncompatibleException)
@@ -505,7 +512,10 @@ namespace System.Data.Entity.Core.Common
             Check.NotNull(connection, "connection");
             Check.NotNull(storeItemCollection, "storeItemCollection");
 
-            return DbDatabaseExists(connection, commandTimeout, storeItemCollection);
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                return DbDatabaseExists(connection, commandTimeout, storeItemCollection);
+            }
         }
 
         protected virtual bool DbDatabaseExists(

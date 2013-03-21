@@ -32,13 +32,7 @@ namespace System.Data.Entity
         {
             Check.NotNull(context, "context");
 
-            bool databaseExists;
-            using (new TransactionScope(TransactionScopeOption.Suppress))
-            {
-                databaseExists = context.Database.Exists();
-            }
-
-            if (databaseExists && new DatabaseTableChecker().AnyModelTableExists(context))
+            if (context.Database.Exists() && new DatabaseTableChecker().AnyModelTableExists(context))
             {
                 // If there is no metadata either in the model or in the database, then
                 // we assume that the database matches the model because the common cases for

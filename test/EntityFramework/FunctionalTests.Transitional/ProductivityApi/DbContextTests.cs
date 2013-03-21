@@ -15,6 +15,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Validation;
+    using System.Data.SqlClient;
     using System.Globalization;
     using System.Linq;
     using System.Transactions;
@@ -3539,5 +3540,76 @@ namespace ProductivityApiTests
             }
         }
         #endregion
+
+        [Fact]
+        public void DbContext_can_be_initialized_without_promotion_to_distributed_transaction_inside_transaction_scope_if_the_context_type_has_been_previously_initialized_outside()
+        {
+            var connectionString = default(string);
+            using (var context = new TransactionTestsContext())
+            {
+                // force context initialization
+                context.Entities.Count();
+                connectionString = context.Database.Connection.ConnectionString;
+            }
+
+            using (new TransactionScope())
+            {
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    connection.EnlistTransaction(Transaction.Current);
+                    using (var context = new TransactionTestsContext(connection, false))
+                    {
+                        context.Entities.Count();
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void DbContext_can_be_initialized_without_promotion_to_distributed_transaction_inside_user_transaction_if_the_context_type_has_been_previously_initalized_outside()
+        {
+            var connectionString = default(string);
+            using (var context = new TransactionTestsContext())
+            {
+                // force context initialization
+                context.Entities.Count();
+                connectionString = context.Database.Connection.ConnectionString;
+            }
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    using (var context = new TransactionTestsContext(connection, false))
+                    {
+                        context.Database.UseTransaction(transaction);
+                        context.Entities.Count();
+                    }
+                }
+            }
+        }
     }
+
+    public class TransactionTestsContext : DbContext
+    {
+        public TransactionTestsContext()
+        {
+        }
+
+        public TransactionTestsContext(DbConnection existingConnection, bool contextOwnsConnection)
+            : base(existingConnection, contextOwnsConnection)
+        {
+        }
+
+        public DbSet<TransactionTestEntity> Entities { get; set; }
+    }
+
+    public class TransactionTestEntity
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
 }

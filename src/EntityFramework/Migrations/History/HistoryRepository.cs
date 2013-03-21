@@ -84,25 +84,28 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext())
             {
-                var lastModel
-                    = CreateHistoryQuery(context, contextKey)
-                        .OrderByDescending(h => h.MigrationId)
-                        .Select(
-                            s => new
-                                     {
-                                         s.MigrationId,
-                                         s.Model
-                                     })
-                        .FirstOrDefault();
-
-                if (lastModel == null)
+                using (new TransactionScope(TransactionScopeOption.Suppress))
                 {
-                    return null;
+                    var lastModel
+                        = CreateHistoryQuery(context, contextKey)
+                            .OrderByDescending(h => h.MigrationId)
+                            .Select(
+                                s => new
+                                    {
+                                        s.MigrationId,
+                                        s.Model
+                                    })
+                            .FirstOrDefault();
+
+                    if (lastModel == null)
+                    {
+                        return null;
+                    }
+
+                    migrationId = lastModel.MigrationId;
+
+                    return new ModelCompressor().Decompress(lastModel.Model);
                 }
-
-                migrationId = lastModel.MigrationId;
-
-                return new ModelCompressor().Decompress(lastModel.Model);
             }
         }
 
@@ -117,15 +120,12 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext())
             {
-                var model
-                    = CreateHistoryQuery(context)
-                        .Where(h => h.MigrationId == migrationId)
-                        .Select(h => h.Model)
-                        .Single();
+                var model = CreateHistoryQuery(context)
+                    .Where(h => h.MigrationId == migrationId)
+                    .Select(h => h.Model)
+                    .Single();
 
-                return (model == null)
-                           ? null
-                           : new ModelCompressor().Decompress(model);
+                return (model == null) ? null : new ModelCompressor().Decompress(model);
             }
         }
 
@@ -140,10 +140,13 @@ namespace System.Data.Entity.Migrations.History
 
             using (var context = CreateContext())
             {
-                var databaseMigrations
-                    = CreateHistoryQuery(context)
+                List<string> databaseMigrations;
+                using (new TransactionScope(TransactionScopeOption.Suppress))
+                {
+                    databaseMigrations = CreateHistoryQuery(context)
                         .Select(h => h.MigrationId)
                         .ToList();
+                }
 
                 var pendingMigrations = localMigrations.Except(databaseMigrations);
                 var firstDatabaseMigration = databaseMigrations.FirstOrDefault();
@@ -292,12 +295,9 @@ namespace System.Data.Entity.Migrations.History
             {
                 using (var context = CreateContext(connection))
                 {
-                    using (new TransactionScope(TransactionScopeOption.Suppress))
+                    if (!context.Database.Exists())
                     {
-                        if (!context.Database.Exists())
-                        {
-                            return false;
-                        }
+                        return false;
                     }
                 }
 
@@ -307,16 +307,22 @@ namespace System.Data.Entity.Migrations.History
                     {
                         try
                         {
-                            context.History.Count();
+                            using (new TransactionScope(TransactionScopeOption.Suppress))
+                            {
+                                context.History.Count();
+                            }
 
                             _currentSchema = schema;
                             _contextKeyColumnExists = true;
 
                             try
                             {
-                                if (context.History.Any(hr => hr.ContextKey == contextKey))
+                                using (new TransactionScope(TransactionScopeOption.Suppress))
                                 {
-                                    return true;
+                                    if (context.History.Any(hr => hr.ContextKey == contextKey))
+                                    {
+                                        return true;
+                                    }
                                 }
                             }
                             catch (EntityException)
@@ -357,9 +363,12 @@ namespace System.Data.Entity.Migrations.History
 
                     try
                     {
-                        context.History
-                               .Select(h => h.ProductVersion)
-                               .FirstOrDefault();
+                        using (new TransactionScope(TransactionScopeOption.Suppress))
+                        {
+                            context.History
+                                   .Select(h => h.ProductVersion)
+                                   .FirstOrDefault();
+                        }
 
                         productVersionExists = true;
                     }
@@ -423,9 +432,12 @@ namespace System.Data.Entity.Migrations.History
 
                     try
                     {
-                        context.History
-                               .Select(h => h.CreatedOn)
-                               .FirstOrDefault();
+                        using (new TransactionScope(TransactionScopeOption.Suppress))
+                        {
+                            context.History
+                                   .Select(h => h.CreatedOn)
+                                   .FirstOrDefault();
+                        }
 
                         createdOnExists = true;
                     }

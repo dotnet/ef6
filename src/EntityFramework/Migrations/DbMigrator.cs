@@ -141,8 +141,8 @@ namespace System.Data.Entity.Migrations
 
                 _providerManifestToken
                     = context.InternalContext.ModelProviderInfo != null
-                          ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
-                          : DbConfiguration
+                            ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
+                            : DbConfiguration
                                 .GetService<IManifestTokenService>()
                                 .GetProviderManifestToken(connection);
 
@@ -897,8 +897,6 @@ namespace System.Data.Entity.Migrations
             {
                 return;
             }
-
-            //Console.WriteLine(migrationStatement.Sql);
 
             if (!migrationStatement.SuppressTransaction)
             {

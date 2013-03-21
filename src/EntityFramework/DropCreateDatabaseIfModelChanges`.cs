@@ -40,13 +40,7 @@ namespace System.Data.Entity
         {
             Check.NotNull(context, "context");
 
-            bool databaseExists;
-            using (new TransactionScope(TransactionScopeOption.Suppress))
-            {
-                databaseExists = context.Database.Exists();
-            }
-
-            if (databaseExists && new DatabaseTableChecker().AnyModelTableExists(context))
+            if (context.Database.Exists() && new DatabaseTableChecker().AnyModelTableExists(context))
             {
                 if (context.Database.CompatibleWithModel(throwIfNoMetadata: true))
                 {
