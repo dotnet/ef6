@@ -82,8 +82,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             parent._funcletizer.RootContextParameter.Name));
                 }
 
-                var queryOfT = linq.Value as ObjectQuery;
-                if (null != queryOfT)
+                var queryOfT = (linq.Value as IQueryable).TryGetObjectQuery();
+                if (queryOfT != null)
                 {
                     return parent.TranslateInlineQueryOfT(queryOfT);
                 }

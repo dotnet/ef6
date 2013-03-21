@@ -189,7 +189,6 @@
     <Compile Include="Migrations\CustomHistoryScenarios.cs" />
     <Compile Include="Migrations\UpgradeScenarios.cs" />
     <Compile Include="Migrations\TestModel\TestModels.cs" />
-    <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\PluralizationServiceTests.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="Query\LinqToEntities\EnumTests.cs" />

@@ -149,9 +149,11 @@
     <Compile Include="Migrations\InitializerScenarios.cs" />
     <Compile Include="Objects\TransactionsTests.cs" />
     <Compile Include="Migrations\SpatialScenarios.cs" />
+    <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\StreamingTests.cs" />
     <Compile Include="ProductivityApi\NamespaceAndNestingTests.cs" />
     <Compile Include="Query\ApplyOpRulesTests.cs" />
+    <Compile Include="TestHelpers\StringExtensions.cs" />
     <Compile Include="ViewGeneration\PregenContextEdmxViews.cs" />
     <Compile Include="ViewGeneration\PregenContextViews.cs" />
     <Compile Include="ViewGeneration\PregeneratedViewsTests.cs" />

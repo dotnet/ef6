@@ -511,7 +511,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 Expression result = null;
-                var inlineQuery = value as ObjectQuery;
+                var inlineQuery = (value as IQueryable).TryGetObjectQuery();
                 if (inlineQuery != null)
                 {
                     result = InlineObjectQuery(inlineQuery, expression.Type);
@@ -544,7 +544,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 // Build a delegate that returns true when the inline value has changed.
                 // Outside of ObjectQuery, this amounts to a reference comparison.
-                var originalQuery = value as ObjectQuery;
+                var originalQuery = (value as IQueryable).TryGetObjectQuery();
                 if (null != originalQuery)
                 {
                     // For inline queries, we need to check merge options as well (it's mutable)
@@ -558,7 +558,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         _recompileRequiredDelegates.Add(
                             () =>
                                 {
-                                    var currentQuery = getValue() as ObjectQuery;
+                                    var currentQuery = (getValue() as IQueryable).TryGetObjectQuery();
                                     return !ReferenceEquals(originalQuery, currentQuery) ||
                                            currentQuery.QueryState.UserSpecifiedMergeOption != originalMergeOption;
                                 });

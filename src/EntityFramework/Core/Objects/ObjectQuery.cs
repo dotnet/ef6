@@ -73,6 +73,13 @@ namespace System.Data.Entity.Core.Objects
             _state = queryState;
         }
 
+        /// <summary>
+        /// For testing.
+        /// </summary>
+        internal ObjectQuery()
+        {
+        }
+
         #endregion
 
         #region Internal Properties

@@ -160,9 +160,9 @@ namespace System.Data.Entity.WrappingProvider
             MutableResolver.AddResolver<IDbProviderFactoryService>(k => new WrappingProviderFactoryService<SqlClientFactory>());
             MutableResolver.AddResolver<IProviderInvariantName>(
                 k => new WrappingProviderInvariantName
-                {
-                    Name = SqlClientInvariantName
-                });
+                    {
+                        Name = SqlClientInvariantName
+                    });
 
             var log = WrappingAdoNetProvider<SqlClientFactory>.Instance.Log;
             log.Clear();

@@ -6,6 +6,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -6551,7 +6552,29 @@ namespace System.Data.Entity
 
         #endregion
 
-        #region Private methods
+        #region Private and internal methods
+
+        internal static ObjectQuery TryGetObjectQuery(this IQueryable source)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            var direct = source as ObjectQuery;
+            if (direct != null)
+            {
+                return direct;
+            }
+
+            var indirect = source as IInternalQueryAdapter;
+            if (indirect != null)
+            {
+                return indirect.InternalQuery.ObjectQuery;
+            }
+
+            return null;
+        }
 
 #if !NET40
 

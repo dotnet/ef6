@@ -170,6 +170,13 @@ namespace System.Data.Entity.Core.Objects
         {
         }
 
+        /// <summary>
+        /// For testing.
+        /// </summary>
+        internal ObjectQuery()
+        {
+        }
+
         #endregion
 
         #region Public Properties

@@ -76,11 +76,11 @@ namespace System.Data.Entity
             public void On_IEnumerable_does_nothing()
             {
                 var enumerable = new List<FakeEntity>
-                                 {
-                                     new FakeEntity(),
-                                     new FakeEntity(),
-                                     new FakeEntity()
-                                 }.AsQueryable();
+                    {
+                        new FakeEntity(),
+                        new FakeEntity(),
+                        new FakeEntity()
+                    }.AsQueryable();
                 var afterNoTracking = enumerable.AsNoTracking();
 
                 Assert.Same(enumerable, afterNoTracking);
@@ -184,11 +184,11 @@ namespace System.Data.Entity
             public void On_IEnumerable_does_nothing()
             {
                 var enumerable = (IQueryable)new List<FakeEntity>
-                                             {
-                                                 new FakeEntity(),
-                                                 new FakeEntity(),
-                                                 new FakeEntity()
-                                             }.AsQueryable();
+                    {
+                        new FakeEntity(),
+                        new FakeEntity(),
+                        new FakeEntity()
+                    }.AsQueryable();
                 var afterAsNoTracking = enumerable.AsNoTracking();
 
                 Assert.Same(enumerable, afterAsNoTracking);
@@ -293,11 +293,11 @@ namespace System.Data.Entity
             public void On_IEnumerable_does_nothing()
             {
                 var enumerable = new List<FakeEntity>
-                                 {
-                                     new FakeEntity(),
-                                     new FakeEntity(),
-                                     new FakeEntity()
-                                 }.AsQueryable();
+                    {
+                        new FakeEntity(),
+                        new FakeEntity(),
+                        new FakeEntity()
+                    }.AsQueryable();
                 var afterAsStreaming = enumerable.AsStreaming();
 
                 Assert.Same(enumerable, afterAsStreaming);
@@ -401,11 +401,11 @@ namespace System.Data.Entity
             public void On_IEnumerable_does_nothing()
             {
                 var enumerable = (IQueryable)new List<FakeEntity>
-                                             {
-                                                 new FakeEntity(),
-                                                 new FakeEntity(),
-                                                 new FakeEntity()
-                                             }.AsQueryable();
+                    {
+                        new FakeEntity(),
+                        new FakeEntity(),
+                        new FakeEntity()
+                    }.AsQueryable();
                 var afterAsStreaming = enumerable.AsStreaming();
 
                 Assert.Same(enumerable, afterAsStreaming);
@@ -492,7 +492,8 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("path"),
-                    Assert.Throws<ArgumentException>(() =>
+                    Assert.Throws<ArgumentException>(
+                        () =>
                         IQueryableExtensions.Include(new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), null)).Message);
             }
 
@@ -501,7 +502,8 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("path"),
-                    Assert.Throws<ArgumentException>(() =>
+                    Assert.Throws<ArgumentException>(
+                        () =>
                         IQueryableExtensions.Include(new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), "")).Message);
             }
 
@@ -510,7 +512,8 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("path"),
-                    Assert.Throws<ArgumentException>(() =>
+                    Assert.Throws<ArgumentException>(
+                        () =>
                         IQueryableExtensions.Include(new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), " ")).Message);
             }
 
@@ -518,7 +521,8 @@ namespace System.Data.Entity
             public void String_Include_with_null_source_called_on_extension_method_throws()
             {
                 Assert.Equal(
-                    "source", Assert.Throws<ArgumentNullException>(() =>
+                    "source", Assert.Throws<ArgumentNullException>(
+                        () =>
                         IQueryableExtensions.Include<FakeEntity>(null, "SomePath")).ParamName);
             }
 
@@ -526,11 +530,11 @@ namespace System.Data.Entity
             public void String_Include_on_IEnumerable_does_nothing()
             {
                 var enumerable = new List<FakeEntity>
-                                 {
-                                     new FakeEntity(),
-                                     new FakeEntity(),
-                                     new FakeEntity()
-                                 }.AsQueryable();
+                    {
+                        new FakeEntity(),
+                        new FakeEntity(),
+                        new FakeEntity()
+                    }.AsQueryable();
                 var afterInclude = enumerable.Include("FakeRelationship");
 
                 Assert.Same(enumerable, afterInclude);
@@ -782,7 +786,10 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     "path",
-                    Assert.Throws<ArgumentNullException>(() => new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object).Include((Expression<Func<RootEntity, object>>)null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(
+                        () =>
+                        new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object).Include(
+                            (Expression<Func<RootEntity, object>>)null)).ParamName);
             }
 
             [Fact]
@@ -790,7 +797,8 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     new ArgumentException(Strings.DbExtensions_InvalidIncludePathExpression, "path").Message,
-                    Assert.Throws<ArgumentException>(() =>
+                    Assert.Throws<ArgumentException>(
+                        () =>
                         new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object).Include(e => new object())).Message);
             }
 
@@ -799,7 +807,8 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     new ArgumentException(Strings.DbExtensions_InvalidIncludePathExpression, "path").Message,
-                    Assert.Throws<ArgumentException>(() =>
+                    Assert.Throws<ArgumentException>(
+                        () =>
                         new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object).Include(e => e.GetType())).Message);
             }
 
@@ -808,8 +817,10 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     new ArgumentException(Strings.DbExtensions_InvalidIncludePathExpression, "path").Message,
-                    Assert.Throws<ArgumentException>(() =>
-                        new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object).Include(e => e.Level1Reference.GetType())).Message);
+                    Assert.Throws<ArgumentException>(
+                        () =>
+                        new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object).Include(e => e.Level1Reference.GetType()))
+                          .Message);
             }
 
             [Fact]
@@ -817,8 +828,10 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     new ArgumentException(Strings.DbExtensions_InvalidIncludePathExpression, "path").Message,
-                    Assert.Throws<ArgumentException>(() =>
-                        new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object).Include(e => e.Level1Reference.GetType().Assembly)).Message);
+                    Assert.Throws<ArgumentException>(
+                        () =>
+                        new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object).Include(
+                            e => e.Level1Reference.GetType().Assembly)).Message);
             }
 
             [Fact]
@@ -826,8 +839,10 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     new ArgumentException(Strings.DbExtensions_InvalidIncludePathExpression, "path").Message,
-                    Assert.Throws<ArgumentException>(() =>
-                        new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object).Include(e => e.Level1Collection.First())).Message);
+                    Assert.Throws<ArgumentException>(
+                        () =>
+                        new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object).Include(e => e.Level1Collection.First()))
+                          .Message);
             }
 
             [Fact]
@@ -835,9 +850,10 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     new ArgumentException(Strings.DbExtensions_InvalidIncludePathExpression, "path").Message,
-                    Assert.Throws<ArgumentException>(() =>
+                    Assert.Throws<ArgumentException>(
+                        () =>
                         new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object)
-                        .Include(e => e.Level1Collection.Select(l1 => l1.Level2Collection.Distinct()))).Message);
+                            .Include(e => e.Level1Collection.Select(l1 => l1.Level2Collection.Distinct()))).Message);
             }
 
             [Fact]
@@ -845,9 +861,10 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     new ArgumentException(Strings.DbExtensions_InvalidIncludePathExpression, "path").Message,
-                    Assert.Throws<ArgumentException>(() =>
+                    Assert.Throws<ArgumentException>(
+                        () =>
                         new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object)
-                        .Include(e => e.Level1Collection.Any(l1 => l1.BoolProperty))).Message);
+                            .Include(e => e.Level1Collection.Any(l1 => l1.BoolProperty))).Message);
             }
         }
 
@@ -858,8 +875,10 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("path"),
-                    Assert.Throws<ArgumentException>(() =>
-                        IQueryableExtensions.Include(new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), null)).Message);
+                    Assert.Throws<ArgumentException>(
+                        () =>
+                        IQueryableExtensions.Include(new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), null))
+                          .Message);
             }
 
             [Fact]
@@ -867,8 +886,10 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("path"),
-                    Assert.Throws<ArgumentException>(() =>
-                        IQueryableExtensions.Include(new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), "")).Message);
+                    Assert.Throws<ArgumentException>(
+                        () =>
+                        IQueryableExtensions.Include(new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), ""))
+                          .Message);
             }
 
             [Fact]
@@ -876,8 +897,10 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("path"),
-                    Assert.Throws<ArgumentException>(() =>
-                        IQueryableExtensions.Include(new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), " ")).Message);
+                    Assert.Throws<ArgumentException>(
+                        () =>
+                        IQueryableExtensions.Include(new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), " "))
+                          .Message);
             }
 
             [Fact]
@@ -886,16 +909,15 @@ namespace System.Data.Entity
                 Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => IQueryableExtensions.Include(null, "SomePath")).ParamName);
             }
 
-
             [Fact]
             public void Non_generic_String_Include_on_IEnumerable_does_nothing()
             {
                 var enumerable = (IQueryable)new List<FakeEntity>
-                                             {
-                                                 new FakeEntity(),
-                                                 new FakeEntity(),
-                                                 new FakeEntity()
-                                             }.AsQueryable();
+                    {
+                        new FakeEntity(),
+                        new FakeEntity(),
+                        new FakeEntity()
+                    }.AsQueryable();
                 var afterInclude = enumerable.Include("FakeRelationship");
 
                 Assert.Same(enumerable, afterInclude);
@@ -972,6 +994,60 @@ namespace System.Data.Entity
                 var afterInclude = source.Include("FakeRelationship");
 
                 Assert.Same(source, afterInclude);
+            }
+        }
+
+        public class TryGetObjectQuery
+        {
+            [Fact]
+            public void TryGetObjectQuery_returns_null_when_given_null()
+            {
+                Assert.Null(((IQueryable)null).TryGetObjectQuery());
+            }
+
+            [Fact]
+            public void TryGetObjectQuery_returns_null_when_given_queryable_that_is_not_DbQuery_or_ObjectQuery()
+            {
+                Assert.Null(new List<int>().AsQueryable().TryGetObjectQuery());
+            }
+
+            [Fact]
+            public void TryGetObjectQuery_returns_ObjectQuery_when_given_generic_ObjectQuery()
+            {
+                var query = new Mock<ObjectQuery<int>>().Object;
+
+                Assert.Same(query, query.TryGetObjectQuery());
+            }
+
+            [Fact]
+            public void TryGetObjectQuery_returns_ObjectQuery_when_given_non_generic_ObjectQuery()
+            {
+                var query = new Mock<ObjectQuery>().Object;
+
+                Assert.Same(query, query.TryGetObjectQuery());
+            }
+
+            [Fact]
+            public void TryGetObjectQuery_returns_ObjectQuery_when_given_generic_DbQuery()
+            {
+                var objectQuery = new Mock<ObjectQuery<int>>().Object;
+                var mockInternalQuery = new Mock<IInternalQuery<int>>();
+                mockInternalQuery.Setup(m => m.ObjectQuery).Returns(objectQuery);
+
+                Assert.Same(objectQuery, new DbQuery<int>(mockInternalQuery.Object).TryGetObjectQuery());
+            }
+
+            [Fact]
+            public void TryGetObjectQuery_returns_ObjectQuery_when_given_non_generic_DbQuery()
+            {
+                var objectQuery = new Mock<ObjectQuery<int>>().Object;
+                var mockInternalQuery = new Mock<IInternalQuery<int>>();
+                mockInternalQuery.Setup(m => m.ObjectQuery).Returns(objectQuery);
+
+                var mockDbQuery = new Mock<DbQuery>();
+                mockDbQuery.Setup(m => m.InternalQuery).Returns(mockInternalQuery.Object);
+
+                Assert.Same(objectQuery, mockDbQuery.Object.TryGetObjectQuery());
             }
         }
 
@@ -1532,41 +1608,41 @@ namespace System.Data.Entity
             providerMock.Setup(m => m.ExecuteAsync<TResult>(It.IsAny<Expression>(), It.IsAny<CancellationToken>()))
                         .Returns<Expression, CancellationToken>(
                             (e, ct) =>
-                            {
-                                var expectedMethodCall = (MethodCallExpression)testExpression.Body;
-                                var actualMethodCall = (MethodCallExpression)e;
-
-                                Assert.Equal(
-                                    expectedMethodCall.Method.Name,
-                                    actualMethodCall.Method.Name + "Async");
-
-                                var lastArgument =
-                                    expectedMethodCall.Arguments[expectedMethodCall.Arguments.Count - 1] as MemberExpression;
-
-                                var cancellationTokenPresent = lastArgument != null && lastArgument.Type == typeof(CancellationToken);
-
-                                if (cancellationTokenPresent)
                                 {
-                                    Assert.NotEqual(ct, CancellationToken.None);
-                                }
-                                else
-                                {
-                                    Assert.Equal(ct, CancellationToken.None);
-                                }
+                                    var expectedMethodCall = (MethodCallExpression)testExpression.Body;
+                                    var actualMethodCall = (MethodCallExpression)e;
 
-                                var expectedNumberOfArguments = cancellationTokenPresent
-                                                                    ? expectedMethodCall.Arguments.Count - 1
-                                                                    : expectedMethodCall.Arguments.Count;
-                                Assert.Equal(expectedNumberOfArguments, actualMethodCall.Arguments.Count);
-                                for (var i = 1; i < expectedNumberOfArguments; i++)
-                                {
-                                    var expectedArgument = expectedMethodCall.Arguments[i];
-                                    var actualArgument = actualMethodCall.Arguments[i];
-                                    Assert.Equal(expectedArgument.ToString(), actualArgument.ToString());
-                                }
+                                    Assert.Equal(
+                                        expectedMethodCall.Method.Name,
+                                        actualMethodCall.Method.Name + "Async");
 
-                                return Task.FromResult(default(TResult));
-                            });
+                                    var lastArgument =
+                                        expectedMethodCall.Arguments[expectedMethodCall.Arguments.Count - 1] as MemberExpression;
+
+                                    var cancellationTokenPresent = lastArgument != null && lastArgument.Type == typeof(CancellationToken);
+
+                                    if (cancellationTokenPresent)
+                                    {
+                                        Assert.NotEqual(ct, CancellationToken.None);
+                                    }
+                                    else
+                                    {
+                                        Assert.Equal(ct, CancellationToken.None);
+                                    }
+
+                                    var expectedNumberOfArguments = cancellationTokenPresent
+                                                                        ? expectedMethodCall.Arguments.Count - 1
+                                                                        : expectedMethodCall.Arguments.Count;
+                                    Assert.Equal(expectedNumberOfArguments, actualMethodCall.Arguments.Count);
+                                    for (var i = 1; i < expectedNumberOfArguments; i++)
+                                    {
+                                        var expectedArgument = expectedMethodCall.Arguments[i];
+                                        var actualArgument = actualMethodCall.Arguments[i];
+                                        Assert.Equal(expectedArgument.ToString(), actualArgument.ToString());
+                                    }
+
+                                    return Task.FromResult(default(TResult));
+                                });
 
             queryableMock.Setup(m => m.Provider).Returns(providerMock.Object);
 
