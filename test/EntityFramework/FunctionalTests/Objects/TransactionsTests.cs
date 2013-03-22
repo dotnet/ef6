@@ -796,32 +796,6 @@ namespace System.Data.Entity.Objects
             Assert.Equal(0, LogEntriesCount());
         }
 
-        // Fails for now - MSDTC on server 'MAUMARDEV\SQLEXPRESS' is unavailable. See Issue #771 for details
-        ////[Fact]
-        ////public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_connection_is_opened_inside_transaction_scope()
-        ////{
-        ////    try
-        ////    {
-        ////        var connection = new SqlConnection(globalConnection.ConnectionString);
-        ////        using (var transactionScope = new TransactionScope())
-        ////        {
-        ////            connection.Open();
-        ////            using (var ctx = CreateTransactionDbContext(connection, compiledModel, contextOwnsConnection: true))
-        ////            {
-        ////                var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////                Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////            }
-        ////        }
-
-        ////        // "Transaction not commited. No entities should be saved to the database."
-        ////        Assert.Equal(0, LogEntriesCount());
-        ////    }
-        ////    finally
-        ////    {
-        ////        ResetTables();
-        ////    }
-        ////}
-
         // What should be the correct behavior for this? See Issue #777 for details
         ////[Fact]
         ////public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_opened_outside_transaction_scope()
@@ -833,33 +807,6 @@ namespace System.Data.Entity.Objects
         ////        using (var transactionScope = new TransactionScope())
         ////        {
         ////            using (var ctx = CreateTransactionDbContext(entityConnection, contextOwnsConnection: true))
-        ////            {
-        ////                var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////                Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////            }
-        ////        }
-
-        ////        // "Transaction not commited. No entities should be saved to the database."
-        ////        Assert.Equal(0, LogEntriesCount());
-        ////    }
-        ////    finally
-        ////    {
-        ////        ResetTables();
-        ////    }
-        ////}
-
-        // Fails for now - MSDTC on server 'MAUMARDEV\SQLEXPRESS' is unavailable. See Issue #771 for details
-        ////[Fact]
-        ////public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_connection_is_opened_outside_transaction_scope()
-        ////{
-        ////    try
-        ////    {
-        ////        var connection = new SqlConnection(globalConnection.ConnectionString);
-
-        ////        connection.Open();
-        ////        using (var transactionScope = new TransactionScope())
-        ////        {
-        ////            using (var ctx = CreateTransactionDbContext(connection, compiledModel, contextOwnsConnection: true))
         ////            {
         ////                var transactionLogEntry = AddLogEntryToDatabase(ctx);
         ////                Assert.Equal(1, transactionLogEntry.TransactionCount);
