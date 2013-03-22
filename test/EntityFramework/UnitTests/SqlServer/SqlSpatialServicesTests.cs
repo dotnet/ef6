@@ -5,6 +5,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization.Formatters.Binary;
     using Moq;
@@ -181,7 +182,7 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void NativeTypesAvailable_returns_true_if_loader_finds_native_types()
         {
-            var mockLoader = new Mock<SqlTypesAssemblyLoader>(null);
+            var mockLoader = new Mock<SqlTypesAssemblyLoader>(Enumerable.Empty<string>());
             mockLoader.Setup(m => m.TryGetSqlTypesAssembly()).Returns(new Mock<SqlTypesAssembly>().Object);
 
             Assert.True(new SqlSpatialServices(mockLoader.Object).NativeTypesAvailable);
@@ -190,7 +191,7 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void NativeTypesAvailable_returns_false_if_loader_does_not_find_native_types()
         {
-            Assert.False(new SqlSpatialServices(new Mock<SqlTypesAssemblyLoader>(null).Object).NativeTypesAvailable);
+            Assert.False(new SqlSpatialServices(new Mock<SqlTypesAssemblyLoader>(Enumerable.Empty<string>()).Object).NativeTypesAvailable);
         }
 
         [Fact]
@@ -202,7 +203,7 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void SqlTypes_returns_assembly_from_loader()
         {
-            var mockLoader = new Mock<SqlTypesAssemblyLoader>(null);
+            var mockLoader = new Mock<SqlTypesAssemblyLoader>(Enumerable.Empty<string>());
             var sqlTypesAssembly = new Mock<SqlTypesAssembly>().Object;
             mockLoader.Setup(m => m.GetSqlTypesAssembly()).Returns(sqlTypesAssembly);
 

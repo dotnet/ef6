@@ -36,6 +36,16 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
+        /// Used to create an instance of <see cref="SqlTypesAssemblyLoader"/> for a specific SQL Types assembly
+        /// such that it can be used for converting EF spatial types backed by one version to those backed by
+        /// the version actually in use in this app domain.
+        /// </summary>
+        public SqlTypesAssemblyLoader(SqlTypesAssembly assembly)
+        {
+            _latestVersion = new Lazy<SqlTypesAssembly>(() => assembly, isThreadSafe: true);
+        }
+
+        /// <summary>
         ///     Returns the highest available version of the Microsoft.SqlServer.Types assembly that could be
         ///     located using Assembly.Load; may return <c>null</c> if no version of the assembly could be found.
         /// </summary>
@@ -46,11 +56,12 @@ namespace System.Data.Entity.SqlServer
 
         public virtual SqlTypesAssembly GetSqlTypesAssembly()
         {
-            if (_latestVersion.Value == null)
+            var value = _latestVersion.Value;
+            if (value == null)
             {
                 throw new InvalidOperationException(Strings.SqlProvider_SqlTypesAssemblyNotFound);
             }
-            return _latestVersion.Value;
+            return value;
         }
 
         public virtual bool TryGetSqlTypesAssembly(Assembly assembly, out SqlTypesAssembly sqlAssembly)

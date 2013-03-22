@@ -359,7 +359,6 @@
     <Compile Include="Config\ExecutionStrategyResolverTests.cs" />
     <Compile Include="SqlServer\SqlAzureRetriableExceptionDetectorTests.cs" />
     <Compile Include="SqlServer\SqlProviderServicesTests.cs" />
-    <Compile Include="SqlServer\SqlSpatialServicesForConversionsTests.cs" />
     <Compile Include="TestHelpers\Fake\DerivedFakeWithProps.cs" />
     <Compile Include="TestHelpers\Fake\FakeWithProps.cs" />
     <Compile Include="TestHelpers\AppConfigTestBase.cs" />

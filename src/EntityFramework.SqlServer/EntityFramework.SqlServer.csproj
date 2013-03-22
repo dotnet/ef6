@@ -106,7 +106,6 @@
     <Compile Include="SqlDdlBuilder.cs" />
     <Compile Include="SqlGen\BoolWrapper.cs" />
     <Compile Include="SqlGen\DmlSqlGenerator.cs" />
-    <Compile Include="SqlSpatialServicesForConversions.cs" />
     <Compile Include="SqlTypesAssemblyLoader.cs" />
     <Compile Include="SqlVersionUtils.cs" />
     <Compile Include="Utilities\Check.cs" />

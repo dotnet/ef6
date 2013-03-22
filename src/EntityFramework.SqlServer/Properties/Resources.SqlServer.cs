@@ -358,7 +358,7 @@ namespace System.Data.Entity.SqlServer.Resources
         }
 
         /// <summary>
-        ///     A string like "An exception has been raised that is likely due to a transient failure. If you are connecting to a SQL Azure database consider using the SQL Azure executionStrategy, see SqlAzureDbConfiguration."
+        ///     A string like "An exception has been raised that is likely due to a transient failure. If you are connecting to a SQL Azure database consider using SqlAzureExecutionStrategy."
         /// </summary>
         internal static string TransientExceptionDetected
         {

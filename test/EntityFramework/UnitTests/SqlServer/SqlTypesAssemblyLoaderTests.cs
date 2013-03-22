@@ -3,6 +3,7 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.SqlServer.Resources;
+    using Moq;
     using Xunit;
 
     public class SqlTypesAssemblyLoaderTests
@@ -36,6 +37,14 @@ namespace System.Data.Entity.SqlServer
                 Strings.SqlProvider_SqlTypesAssemblyNotFound,
                 Assert.Throws<InvalidOperationException>(
                     () => new SqlTypesAssemblyLoader(new[] { "SomeMissingAssembly" }).GetSqlTypesAssembly()).Message);
+        }
+
+        [Fact]
+        public void SqlTypes_returns_the_assembly_set_in_the_constructor()
+        {
+            var sqlTypesAssembly = new Mock<SqlTypesAssembly>().Object;
+
+            Assert.Same(sqlTypesAssembly, new SqlTypesAssemblyLoader(sqlTypesAssembly).TryGetSqlTypesAssembly());
         }
     }
 }

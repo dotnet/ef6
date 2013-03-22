@@ -16,21 +16,34 @@ namespace System.Data.Entity.Infrastructure
 
     public class ExecutionStrategyBaseTests
     {
-        //[Fact]
+        private class TestExecutionStrategy : ExecutionStrategyBase
+        {
+            public TestExecutionStrategy(int maxRetryCount, TimeSpan maxDelay)
+                : base(maxRetryCount, maxDelay)
+            {
+            }
+
+            protected override bool ShouldRetryOn(Exception exception)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [Fact]
         public void Constructor_throws_on_null_parameters()
         {
             Assert.Equal(
                 "maxRetryCount",
                 Assert.Throws<ArgumentOutOfRangeException>(
                     () =>
-                    new Mock<ExecutionStrategyBase>(
-                        /*maxRetryCount:*/ -1, /*maxDelay:*/ TimeSpan.FromTicks(0)).Object).ParamName);
+                    new TestExecutionStrategy(
+                        /*maxRetryCount:*/ -1, /*maxDelay:*/ TimeSpan.FromTicks(0))).ParamName);
             Assert.Equal(
                 "maxDelay",
                 Assert.Throws<ArgumentOutOfRangeException>(
                     () =>
-                    new Mock<ExecutionStrategyBase>(
-                        /*maxRetryCount:*/ 0, /*maxDelay:*/ TimeSpan.FromTicks(-1)).Object).ParamName);
+                    new TestExecutionStrategy(
+                        /*maxRetryCount:*/ 0, /*maxDelay:*/ TimeSpan.FromTicks(-1))).ParamName);
         }
 
         [Fact]
@@ -744,6 +757,20 @@ namespace System.Data.Entity.Infrastructure
             public void Unwraps_UpdateException()
             {
                 var innerException = new TimeoutException();
+                Assert.True(
+                    ExecutionStrategyBase.UnwrapAndHandleException(
+                        new UpdateException("", innerException),
+                        ex =>
+                            {
+                                Assert.Same(innerException, ex);
+                                return true;
+                            }));
+            }
+
+            [Fact]
+            public void Unwraps_wrapped_null_exception()
+            {
+                Exception innerException = null;
                 Assert.True(
                     ExecutionStrategyBase.UnwrapAndHandleException(
                         new UpdateException("", innerException),

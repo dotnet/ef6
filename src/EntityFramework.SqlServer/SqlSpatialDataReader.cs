@@ -16,11 +16,11 @@ namespace System.Data.Entity.SqlServer
     {
         private static readonly Lazy<Func<BinaryReader, object>> _sqlGeographyFromBinaryReader =
             new Lazy<Func<BinaryReader, object>>(
-                () => CreateBinaryReadDelegate(new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeographyType), isThreadSafe: true);
+                () => CreateBinaryReadDelegate(SqlTypesAssemblyLoader.DefaultInstance.GetSqlTypesAssembly().SqlGeographyType), isThreadSafe: true);
 
         private static readonly Lazy<Func<BinaryReader, object>> _sqlGeometryFromBinaryReader =
             new Lazy<Func<BinaryReader, object>>(
-                () => CreateBinaryReadDelegate(new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeometryType), isThreadSafe: true);
+                () => CreateBinaryReadDelegate(SqlTypesAssemblyLoader.DefaultInstance.GetSqlTypesAssembly().SqlGeometryType), isThreadSafe: true);
 
         private const string GeometrySqlType = "sys.geometry";
         private const string GeographySqlType = "sys.geography";
