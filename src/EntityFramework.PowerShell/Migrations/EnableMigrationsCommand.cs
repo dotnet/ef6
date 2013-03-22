@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Extensions;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Resources;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Utilities;
@@ -77,6 +78,11 @@ namespace System.Data.Entity.Migrations
                         else
                         {
                             tokens["contextType"] = qualifiedContextTypeName.Replace('+', '.');
+                        }
+
+                        if (Path.IsPathRooted(migrationsDirectory))
+                        {
+                            throw new MigrationsException(Strings.MigrationsDirectoryParamIsRooted(migrationsDirectory));
                         }
 
                         var path = Path.Combine(migrationsDirectory, fileName);

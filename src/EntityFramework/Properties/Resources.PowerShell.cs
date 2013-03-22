@@ -102,6 +102,14 @@ namespace System.Data.Entity.Migrations.Resources
         }
 
         /// <summary>
+        ///     A string like "The 'MigrationsDirectory' parameter was set to the absolute path '{0}'. The migrations directory must be set to a relative path for a sub-directory under the Visual Studio project root."
+        /// </summary>
+        internal static string MigrationsDirectoryParamIsRooted(object p0)
+        {
+            return EntityRes.GetString(EntityRes.MigrationsDirectoryParamIsRooted, p0);
+        }
+
+        /// <summary>
         ///     A string like "Failed to add the Entity Framework 'defaultConnectionFactory' entry to the .config file '{0}' in the current project. The default SqlConnectionFactory configured for '.\\SQLEXPRESS' will be used unless you either add the 'defaultConnectionFactory' entry to the .config file manually or specify connection strings in code. See inner exception for details."
         /// </summary>
         internal static string SaveConnectionFactoryInConfigFailed(object p0)
@@ -192,6 +200,7 @@ namespace System.Data.Entity.Migrations.Resources
         internal const string EnableMigrations_InitialScaffold = "EnableMigrations_InitialScaffold";
         internal const string GetMigrationsCommand_Intro = "GetMigrationsCommand_Intro";
         internal const string MigrationsAlreadyEnabled = "MigrationsAlreadyEnabled";
+        internal const string MigrationsDirectoryParamIsRooted = "MigrationsDirectoryParamIsRooted";
         internal const string SaveConnectionFactoryInConfigFailed = "SaveConnectionFactoryInConfigFailed";
         internal const string RescaffoldingMigration = "RescaffoldingMigration";
         internal const string DidYouMeanToRescaffold = "DidYouMeanToRescaffold";
