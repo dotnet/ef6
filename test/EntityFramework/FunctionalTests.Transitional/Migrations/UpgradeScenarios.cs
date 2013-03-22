@@ -73,7 +73,7 @@ namespace System.Data.Entity.Migrations
             migrator.Update();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, migrationsConfiguration.ContextKey);
+                = new HistoryRepository(ConnectionString, ProviderFactory, migrationsConfiguration.ContextKey, migrationsConfiguration.CommandTimeout);
 
             ExecuteOperations(
                 new MigrationOperation[]
@@ -108,7 +108,7 @@ namespace System.Data.Entity.Migrations
             migrator.Update();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey");
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
 
             // create v5 history rows
             ExecuteOperations(

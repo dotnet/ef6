@@ -230,6 +230,12 @@ namespace System.Data.Entity.Internal
             set { ObjectContextInUse.ContextOptions.UseCSharpNullComparisonBehavior = value; }
         }
 
+        public override int? CommandTimeout
+        {
+            get { return ObjectContextInUse.CommandTimeout; }
+            set { ObjectContextInUse.CommandTimeout = value; }
+        }
+
         #endregion
     }
 }

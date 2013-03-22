@@ -316,6 +316,7 @@ namespace System.Data.Entity.Internal
                 OriginalConnectionString,
                 ProviderFactory,
                 ContextKey,
+                CommandTimeout,
                 new[] { DefaultSchema });
         }
 
@@ -572,6 +573,8 @@ namespace System.Data.Entity.Internal
         ///     Gets or sets a value indicating whether C# null comparison behavior is enabled.
         /// </summary>
         public abstract bool UseCSharpNullComparisonBehavior { get; set; }
+
+        public abstract int? CommandTimeout { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether DetectChanges is called automatically in the API.

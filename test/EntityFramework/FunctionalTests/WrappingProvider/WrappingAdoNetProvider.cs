@@ -4,6 +4,10 @@ namespace System.Data.Entity.WrappingProvider
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.SqlServer;
+    using System.Data.SqlClient;
     using System.Reflection;
 
     public class WrappingAdoNetProvider<TBase> : DbProviderFactory where TBase : DbProviderFactory
@@ -24,6 +28,17 @@ namespace System.Data.Entity.WrappingProvider
             get { return _log; }
         }
 
+        public static void WrapProviders()
+        {
+            MutableResolver.AddResolver<DbProviderServices>(k => WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
+            MutableResolver.AddResolver<DbProviderFactory>(k => WrappingAdoNetProvider<SqlClientFactory>.Instance);
+            MutableResolver.AddResolver<IDbProviderFactoryService>(k => new WrappingProviderFactoryService<SqlClientFactory>());
+            MutableResolver.AddResolver<IProviderInvariantName>(
+                k => new WrappingProviderInvariantName
+                {
+                    Name = "System.Data.SqlClient"
+                });
+        }
         public override DbCommand CreateCommand()
         {
             return new WrappingCommand<TBase>(_baseProviderFactory.CreateCommand());

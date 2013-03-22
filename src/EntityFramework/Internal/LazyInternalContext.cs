@@ -62,14 +62,17 @@ namespace System.Data.Entity.Internal
         // Set to true if the context was created with an existing DbCompiledModel instance.
         private readonly bool _createdWithExistingModel;
 
-        // This flag is used to keep the users selected lazy loading option before the object context is initialized.  
+        // This flag is used to keep the user's selected lazy loading option before the ObjectContext is initialized.  
         private bool _initialLazyLoadingFlag = true;
 
-        // This flag is used to keep the users selected proxy creation option before the object context is initialized.  
+        // This flag is used to keep the user's selected proxy creation option before the ObjectContext is initialized.  
         private bool _initialProxyCreationFlag = true;
 
-        // This flag is used to keep the users C# null comparison behavior option before the object context is initialized.  
+        // This flag is used to keep the user's C# null comparison behavior option before the ObjectContext is initialized.  
         private bool _useCSharpNullComparisonBehaviorFlag;
+
+        // This flag is used to keep the user's command timeout before the ObjectContext is initialized.  
+        private int? _commandTimeout;
 
         // Set when database initialization is in-progress to prevent attempts to recursively initialize from
         // the initalizer.
@@ -154,7 +157,7 @@ namespace System.Data.Entity.Internal
         ///     The <see cref="ObjectContext" /> actually being used, which may be the
         ///     temp context for initialization or the real context.
         /// </summary>
-        private ObjectContext ObjectContextInUse
+        public virtual ObjectContext ObjectContextInUse
         {
             get { return TempObjectContext ?? _objectContext; }
         }
@@ -420,6 +423,7 @@ namespace System.Data.Entity.Internal
                     _objectContext.ContextOptions.LazyLoadingEnabled = _initialLazyLoadingFlag;
                     _objectContext.ContextOptions.ProxyCreationEnabled = _initialProxyCreationFlag;
                     _objectContext.ContextOptions.UseCSharpNullComparisonBehavior = _useCSharpNullComparisonBehaviorFlag;
+                    _objectContext.CommandTimeout = _commandTimeout;
 
                     _objectContext.ContextOptions.UseConsistentNullReferenceBehavior = true;
 
@@ -708,6 +712,27 @@ namespace System.Data.Entity.Internal
                 else
                 {
                     _useCSharpNullComparisonBehaviorFlag = value;
+                }
+            }
+        }
+
+        public override int? CommandTimeout
+        {
+            get
+            {
+                var objectContext = ObjectContextInUse;
+                return objectContext != null ? objectContext.CommandTimeout : _commandTimeout;
+            }
+            set
+            {
+                var objectContext = ObjectContextInUse;
+                if (objectContext != null)
+                {
+                    objectContext.CommandTimeout = value;
+                }
+                else
+                {
+                    _commandTimeout = value;
                 }
             }
         }

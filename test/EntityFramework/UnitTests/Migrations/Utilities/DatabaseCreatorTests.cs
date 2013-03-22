@@ -9,20 +9,26 @@ namespace System.Data.Entity.Migrations.Utilities
     public class DatabaseCreatorTests : DbTestCase
     {
         [MigrationsTheory]
-        public void Create_can_create_database()
+        public void DatabaseCreator_can_create_delete_and_check_for_existance_of_database()
         {
             DropDatabase();
-
-            Assert.False(DatabaseExists());
 
             using (var connection = ProviderFactory.CreateConnection())
             {
                 connection.ConnectionString = ConnectionString;
 
-                new DatabaseCreator().Create(connection);
-            }
+                var databaseCreator = new DatabaseCreator(33);
 
-            Assert.True(DatabaseExists());
+                Assert.False(databaseCreator.Exists(connection));
+
+                databaseCreator.Create(connection);
+
+                Assert.True(databaseCreator.Exists(connection));
+
+                databaseCreator.Delete(connection);
+
+                Assert.False(databaseCreator.Exists(connection));
+            }
         }
     }
 }

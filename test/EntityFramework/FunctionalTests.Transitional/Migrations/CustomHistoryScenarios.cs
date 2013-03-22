@@ -91,7 +91,7 @@ namespace System.Data.Entity.Migrations
             Assert.False(TableExists("MigrationsCustomers"));
             Assert.False(TableExists("__Migrations"));
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey");
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
 
             Assert.Null(historyRepository.GetLastModel());
         }

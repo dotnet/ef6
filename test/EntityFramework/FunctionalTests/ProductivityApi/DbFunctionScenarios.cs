@@ -4,13 +4,10 @@ namespace FunctionalTests.ProductivityApi
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Common;
     using System.Data.Entity;
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.SqlServer;
     using System.Data.Entity.TestHelpers;
     using System.Data.Entity.WrappingProvider;
     using System.Data.SqlClient;
@@ -3020,14 +3017,7 @@ namespace FunctionalTests.ProductivityApi
         {
             try
             {
-                MutableResolver.AddResolver<DbProviderServices>(k => WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
-                MutableResolver.AddResolver<DbProviderFactory>(k => WrappingAdoNetProvider<SqlClientFactory>.Instance);
-                MutableResolver.AddResolver<IDbProviderFactoryService>(k => new WrappingProviderFactoryService<SqlClientFactory>());
-                MutableResolver.AddResolver<IProviderInvariantName>(
-                    k => new WrappingProviderInvariantName
-                        {
-                            Name = "System.Data.SqlClient"
-                        });
+                WrappingAdoNetProvider<SqlClientFactory>.WrapProviders();
 
                 using (var context = new EntityFunctionContext())
                 {

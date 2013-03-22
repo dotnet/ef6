@@ -4,7 +4,7 @@ namespace System.Data.Entity.WrappingProvider
 {
     using System.Data.Common;
 
-    public class WrappingConnection<TBase> : DbConnection where TBase : DbProviderFactory
+    public class WrappingConnection<TBase> : DbConnection, IDisposable where TBase : DbProviderFactory
     {
         private readonly DbConnection _baseConnection;
 
@@ -84,6 +84,11 @@ namespace System.Data.Entity.WrappingProvider
         public DbConnection BaseConnection
         {
             get { return _baseConnection; }
+        }
+
+        public new void Dispose()
+        {
+            _baseConnection.Dispose();
         }
     }
 }

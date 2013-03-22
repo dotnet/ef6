@@ -5,8 +5,8 @@ namespace System.Data.Entity
     using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Config;
-    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
@@ -52,14 +52,21 @@ namespace System.Data.Entity
         #region Transactions
 
         /// <summary>
-        /// Enables the user to pass in a database transaction created outside of the <see cref="Database"/> object
-        /// if you want the Entity Framework to execute commands within that external transaction.
-        /// Alternatively, pass in null to clear the framework's knowledge of that transaction.
+        ///     Enables the user to pass in a database transaction created outside of the <see cref="Database" /> object
+        ///     if you want the Entity Framework to execute commands within that external transaction.
+        ///     Alternatively, pass in null to clear the framework's knowledge of that transaction.
         /// </summary>
         /// <param name="transaction">the external transaction</param>
         /// <exception cref="InvalidOperationException">Thrown if the transaction is already completed</exception>
-        /// <exception cref="InvalidOperationException">Thrown if the connection associated with the <see cref="Database"/> object is already enlisted in a <see cref="System.Transactions.TransactionScope"/> transaction</exception>
-        /// <exception cref="InvalidOperationException">Thrown if the connection associated with the <see cref="Database"/> object is already participating in a transaction</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown if the connection associated with the <see cref="Database" /> object is already enlisted in a
+        ///     <see
+        ///         cref="System.Transactions.TransactionScope" />
+        ///     transaction
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown if the connection associated with the <see cref="Database" /> object is already participating in a transaction
+        /// </exception>
         /// <exception cref="InvalidOperationException">Thrown if the connection associated with the transaction does not match the Entity Framework's connection</exception>
         public void UseTransaction(DbTransaction transaction)
         {
@@ -67,18 +74,22 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///    Begins a transaction on the underlying store connection
+        ///     Begins a transaction on the underlying store connection
         /// </summary>
-        /// <returns>a <see cref="DbContextTransaction"/> object wrapping access to the underlying store's transaction object</returns>
+        /// <returns>
+        ///     a <see cref="DbContextTransaction" /> object wrapping access to the underlying store's transaction object
+        /// </returns>
         public DbContextTransaction BeginTransaction()
         {
             return new DbContextTransaction((EntityConnection)_internalContext.ObjectContext.Connection);
         }
 
         /// <summary>
-        ///    Begins a transaction on the underlying store connection using the specified isolation level
+        ///     Begins a transaction on the underlying store connection using the specified isolation level
         /// </summary>
-        /// <returns>a <see cref="DbContextTransaction"/> object wrapping access to the underlying store's transaction object</returns>
+        /// <returns>
+        ///     a <see cref="DbContextTransaction" /> object wrapping access to the underlying store's transaction object
+        /// </returns>
         public DbContextTransaction BeginTransaction(IsolationLevel isolationLevel)
         {
             return new DbContextTransaction((EntityConnection)_internalContext.ObjectContext.Connection, isolationLevel);
@@ -544,5 +555,27 @@ namespace System.Data.Entity
         }
 
         #endregion
+
+        /// <summary>
+        ///     Gets or sets the timeout value, in seconds, for all context operations.
+        ///     The default value is null, where null indicates that the default value of the underlying
+        ///     provider will be used.
+        /// </summary>
+        /// <value>
+        ///     The timeout, in seconds, or null to use the provider default.
+        /// </value>
+        public int? CommandTimeout
+        {
+            get { return _internalContext.CommandTimeout; }
+            set
+            {
+                if (value.HasValue && value < 0)
+                {
+                    throw new ArgumentException(Strings.ObjectContext_InvalidCommandTimeout);
+                }
+
+                _internalContext.CommandTimeout = value;
+            }
+        }
     }
 }

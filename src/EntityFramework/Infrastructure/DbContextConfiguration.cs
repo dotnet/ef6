@@ -108,15 +108,12 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether the <see cref="DbContext.ChangeTracker.DetectChanges()" />
+        ///     Gets or sets a value indicating whether the <see cref="DbChangeTracker.DetectChanges()" />
         ///     method is called automatically by methods of <see cref="DbContext" /> and related classes.
         ///     The default value is true.
         /// </summary>
-        /// <value
-        /// <c>true</c>
-        /// if should be called automatically; otherwise,
-        /// <c>false</c>
-        /// .
+        /// <value>
+        ///     <c>true</c> if should be called automatically; otherwise, <c>false</c>.
         /// </value>
         public bool AutoDetectChangesEnabled
         {
@@ -132,7 +129,6 @@ namespace System.Data.Entity.Infrastructure
         public bool ValidateOnSaveEnabled
         {
             get { return _internalContext.ValidateOnSaveEnabled; }
-
             set { _internalContext.ValidateOnSaveEnabled = value; }
         }
 

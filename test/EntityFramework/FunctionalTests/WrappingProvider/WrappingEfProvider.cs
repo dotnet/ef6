@@ -39,11 +39,17 @@ namespace System.Data.Entity.WrappingProvider
 
         protected override void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
+            WrappingAdoNetProvider<TAdoNetBase>.Instance.Log.Add(
+                new LogItem("DbCreateDatabase", connection, new object[] { commandTimeout, storeItemCollection }));
+
             _baseServices.CreateDatabase(((WrappingConnection<TAdoNetBase>)connection).BaseConnection, commandTimeout, storeItemCollection);
         }
 
         protected override bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
+            WrappingAdoNetProvider<TAdoNetBase>.Instance.Log.Add(
+                new LogItem("DbDatabaseExists", connection, new object[] { commandTimeout, storeItemCollection }));
+
             return _baseServices.DatabaseExists(
                 ((WrappingConnection<TAdoNetBase>)connection).BaseConnection, commandTimeout, storeItemCollection);
         }
@@ -55,6 +61,9 @@ namespace System.Data.Entity.WrappingProvider
 
         protected override void DbDeleteDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
+            WrappingAdoNetProvider<TAdoNetBase>.Instance.Log.Add(
+                new LogItem("DbDeleteDatabase", connection, new object[] { commandTimeout, storeItemCollection }));
+
             _baseServices.DeleteDatabase(((WrappingConnection<TAdoNetBase>)connection).BaseConnection, commandTimeout, storeItemCollection);
         }
     }

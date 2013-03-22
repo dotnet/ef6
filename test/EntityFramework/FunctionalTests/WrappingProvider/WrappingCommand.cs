@@ -4,7 +4,7 @@ namespace System.Data.Entity.WrappingProvider
 {
     using System.Data.Common;
 
-    public class WrappingCommand<TBase> : DbCommand
+    public class WrappingCommand<TBase> : DbCommand, IDisposable
         where TBase : DbProviderFactory
     {
         private readonly DbCommand _baseCommand;
@@ -28,7 +28,12 @@ namespace System.Data.Entity.WrappingProvider
         public override int CommandTimeout
         {
             get { return _baseCommand.CommandTimeout; }
-            set { _baseCommand.CommandTimeout = value; }
+            set
+            {
+                WrappingAdoNetProvider<TBase>.Instance.Log.Add(new LogItem("Set CommandTimeout", Connection, value));
+
+                _baseCommand.CommandTimeout = value;
+            }
         }
 
         public override CommandType CommandType
@@ -100,6 +105,11 @@ namespace System.Data.Entity.WrappingProvider
             WrappingAdoNetProvider<TBase>.Instance.Log.Add(new LogItem("ExecuteScalar", Connection, CommandText));
 
             return _baseCommand.ExecuteScalar();
+        }
+
+        public new void Dispose()
+        {
+            _baseCommand.Dispose();
         }
     }
 }

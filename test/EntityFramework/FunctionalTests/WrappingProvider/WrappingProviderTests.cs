@@ -84,14 +84,7 @@ namespace System.Data.Entity.WrappingProvider
         [Fact]
         public void Correct_services_are_returned_when_wrapping_setup_at_EF_level_only()
         {
-            MutableResolver.AddResolver<DbProviderServices>(k => WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
-            MutableResolver.AddResolver<DbProviderFactory>(k => WrappingAdoNetProvider<SqlClientFactory>.Instance);
-            MutableResolver.AddResolver<IDbProviderFactoryService>(k => new WrappingProviderFactoryService<SqlClientFactory>());
-            MutableResolver.AddResolver<IProviderInvariantName>(
-                k => new WrappingProviderInvariantName
-                    {
-                        Name = SqlClientInvariantName
-                    });
+            WrappingAdoNetProvider<SqlClientFactory>.WrapProviders();
 
             Assert.Same(
                 WrappingAdoNetProvider<SqlClientFactory>.Instance,
@@ -155,14 +148,7 @@ namespace System.Data.Entity.WrappingProvider
         [Fact]
         public void Simple_query_and_update_works_with_wrapping_provider_setup_at_EF_level_only()
         {
-            MutableResolver.AddResolver<DbProviderServices>(k => WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
-            MutableResolver.AddResolver<DbProviderFactory>(k => WrappingAdoNetProvider<SqlClientFactory>.Instance);
-            MutableResolver.AddResolver<IDbProviderFactoryService>(k => new WrappingProviderFactoryService<SqlClientFactory>());
-            MutableResolver.AddResolver<IProviderInvariantName>(
-                k => new WrappingProviderInvariantName
-                    {
-                        Name = SqlClientInvariantName
-                    });
+            WrappingAdoNetProvider<SqlClientFactory>.WrapProviders();
 
             var log = WrappingAdoNetProvider<SqlClientFactory>.Instance.Log;
             log.Clear();

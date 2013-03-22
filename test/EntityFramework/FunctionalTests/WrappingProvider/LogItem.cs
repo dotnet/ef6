@@ -10,11 +10,13 @@ namespace System.Data.Entity.WrappingProvider
         {
             Method = method;
             Connection = connection == null ? "<null>" : connection.ConnectionString;
+            RawDetails = details;
             Details = details == null ? "<null>" : details.ToString();
         }
 
         public string Method { get; set; }
         public string Connection { get; set; }
         public string Details { get; set; }
+        public object RawDetails { get; set; }
     }
 }

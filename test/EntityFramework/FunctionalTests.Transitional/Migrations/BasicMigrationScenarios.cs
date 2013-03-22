@@ -359,7 +359,8 @@ namespace System.Data.Entity.Migrations
             Assert.Null(
                 new HistoryRepository(
                     ConnectionString, ProviderFactory,
-                    "System.Data.Entity.Migrations.DbMigrationsConfiguration").GetLastModel());
+                    "System.Data.Entity.Migrations.DbMigrationsConfiguration",
+                    null).GetLastModel());
 
             migrator.Update();
 
@@ -367,7 +368,8 @@ namespace System.Data.Entity.Migrations
             Assert.NotNull(
                 new HistoryRepository(
                     ConnectionString, ProviderFactory,
-                    "System.Data.Entity.Migrations.DbMigrationsConfiguration").GetLastModel());
+                    "System.Data.Entity.Migrations.DbMigrationsConfiguration",
+                    null).GetLastModel());
         }
 
         [MigrationsTheory]
@@ -375,7 +377,7 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey");
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
 
             var migrator = CreateMigrator<ShopContext_v1>(automaticDataLossEnabled: true);
 
@@ -417,7 +419,7 @@ namespace System.Data.Entity.Migrations
 
             Assert.False(TableExists("MigrationsCustomers"));
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey");
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
 
             Assert.Null(historyRepository.GetLastModel());
         }
@@ -451,7 +453,7 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey");
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
 
             var migrator = CreateMigrator<ShopContext_v1>();
 

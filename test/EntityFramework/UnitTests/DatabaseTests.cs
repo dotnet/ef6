@@ -361,5 +361,68 @@ namespace System.Data.Entity
                 Assert.False(query.InternalQuery.Streaming);
             }
         }
+
+        public class CommandTimeout
+        {
+            [Fact]
+            public void Default_value_for_CommandTimeout_is_null_and_can_be_changed_including_setting_to_null()
+            {
+                using (var context = new TimeoutContext())
+                {
+                    Assert.Null(context.Database.CommandTimeout);
+
+                    context.Database.CommandTimeout = 77;
+                    Assert.Equal(77, context.Database.CommandTimeout);
+                    
+                    context.Database.CommandTimeout = null;
+                    Assert.Null(context.Database.CommandTimeout);
+                }
+            }
+
+            [Fact]
+            public void CommandTimeout_throws_for_negative_values()
+            {
+                using (var context = new TimeoutContext())
+                {
+                    Assert.Equal(
+                        Strings.ObjectContext_InvalidCommandTimeout,
+                        Assert.Throws<ArgumentException>(
+                        () => context.Database.CommandTimeout = -1).Message);
+                }
+            }
+
+            [Fact]
+            public void CommandTimeout_can_be_set_in_constructor_and_changed_on_DbContext_without_triggering_initialization()
+            {
+                using (var context = new TimeoutContext(77))
+                {
+                    Assert.Equal(77, context.Database.CommandTimeout);
+                    Assert.Null(((LazyInternalContext)context.InternalContext).ObjectContextInUse);
+
+                    context.Database.CommandTimeout = 88;
+                    Assert.Equal(88, context.Database.CommandTimeout);
+                    Assert.Null(((LazyInternalContext)context.InternalContext).ObjectContextInUse);
+
+                    Assert.Equal(88, ((IObjectContextAdapter)context).ObjectContext.CommandTimeout);
+                }
+            }
+
+            public class TimeoutContext : DbContext
+            {
+                static TimeoutContext()
+                {
+                    Database.SetInitializer<TimeoutContext>(null);
+                }
+
+                public TimeoutContext()
+                {
+                }
+
+                public TimeoutContext(int? commandTimeout)
+                {
+                    Database.CommandTimeout = commandTimeout;
+                }
+            }
+        }
     }
 }

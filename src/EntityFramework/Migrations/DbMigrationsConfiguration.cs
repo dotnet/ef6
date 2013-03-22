@@ -36,6 +36,7 @@ namespace System.Data.Entity.Migrations
         private readonly Lazy<IDbDependencyResolver> _resolver;
         private IHistoryContextFactory _historyContextFactory;
         private string _contextKey;
+        private int? _commandTimeout;
 
         /// <summary>
         ///     Initializes a new instance of the DbMigrationsConfiguration class.
@@ -217,7 +218,19 @@ namespace System.Data.Entity.Migrations
         ///     migration. A null value indicates that the default value of the underlying
         ///     provider will be used.
         /// </summary>
-        public int? CommandTimeout { get; set; }
+        public int? CommandTimeout
+        {
+            get { return _commandTimeout; }
+            set
+            {
+                if (value.HasValue && value < 0)
+                {
+                    throw new ArgumentException(Strings.ObjectContext_InvalidCommandTimeout);
+                }
+
+                _commandTimeout = value;
+            }
+        }
 
         internal virtual void OnSeed(DbContext context)
         {

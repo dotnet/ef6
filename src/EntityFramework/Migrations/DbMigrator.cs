@@ -134,6 +134,7 @@ namespace System.Data.Entity.Migrations
                         _usersContextInfo.ConnectionString,
                         _providerFactory,
                         _configuration.ContextKey,
+                        _configuration.CommandTimeout,
                         historySchemas,
                         _migrationAssembly.MigrationIds.Any()
                             ? _configuration.HistoryContextFactory
@@ -1003,11 +1004,12 @@ namespace System.Data.Entity.Migrations
         internal override void EnsureDatabaseExists(Action mustSucceedToKeepDatabase)
         {
             var databaseCreated = false;
+            var databaseCreator = new DatabaseCreator(_configuration.CommandTimeout);
             using (var connection = CreateConnection())
             {
-                if (!Database.Exists(connection))
+                if (!databaseCreator.Exists(connection))
                 {
-                    new DatabaseCreator().Create(connection);
+                    databaseCreator.Create(connection);
 
                     databaseCreated = true;
                 }
@@ -1027,7 +1029,7 @@ namespace System.Data.Entity.Migrations
                     {
                         using (var connection = CreateConnection())
                         {
-                            new DatabaseCreator().Delete(connection);
+                            databaseCreator.Delete(connection);
                         }
                     }
                     catch

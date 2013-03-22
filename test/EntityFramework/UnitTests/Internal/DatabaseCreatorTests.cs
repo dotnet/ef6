@@ -209,6 +209,7 @@ namespace System.Data.Entity.Internal
                 mockContext.Setup(m => m.OwnerShortTypeName).Returns("Key");
                 mockContext.Setup(m => m.OriginalConnectionString).Returns("Database=Foo");
                 mockContext.Setup(m => m.ProviderName).Returns("Some.Provider");
+                mockContext.Setup(m => m.CommandTimeout).Returns(123);
 
                 var configuration = DatabaseCreator.GetMigrationsConfiguration(mockContext.Object);
 
@@ -218,6 +219,7 @@ namespace System.Data.Entity.Internal
                 Assert.Same(typeof(FakeContext).Assembly, configuration.MigrationsAssembly);
                 Assert.Equal(typeof(FakeContext).Namespace, configuration.MigrationsNamespace);
                 Assert.Equal("Key", configuration.ContextKey);
+                Assert.Equal(123, configuration.CommandTimeout);
             }
         }
 

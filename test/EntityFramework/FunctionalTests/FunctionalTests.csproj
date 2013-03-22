@@ -152,6 +152,7 @@
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\StreamingTests.cs" />
     <Compile Include="ProductivityApi\NamespaceAndNestingTests.cs" />
+    <Compile Include="ProductivityApi\TimeoutTests.cs" />
     <Compile Include="Query\ApplyOpRulesTests.cs" />
     <Compile Include="TestHelpers\StringExtensions.cs" />
     <Compile Include="ViewGeneration\PregenContextEdmxViews.cs" />

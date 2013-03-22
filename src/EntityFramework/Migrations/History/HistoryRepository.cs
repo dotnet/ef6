@@ -27,6 +27,7 @@ namespace System.Data.Entity.Migrations.History
             Assembly.GetExecutingAssembly().GetInformationalVersion();
 
         private readonly string _contextKey;
+        private readonly int? _commandTimeout;
         private readonly IEnumerable<string> _schemas;
         private readonly IHistoryContextFactory _historyContextFactory;
 
@@ -38,6 +39,7 @@ namespace System.Data.Entity.Migrations.History
             string connectionString,
             DbProviderFactory providerFactory,
             string contextKey,
+            int? commandTimeout,
             IEnumerable<string> schemas = null,
             IHistoryContextFactory historyContextFactory = null)
             : base(connectionString, providerFactory)
@@ -45,6 +47,7 @@ namespace System.Data.Entity.Migrations.History
             DebugCheck.NotEmpty(contextKey);
 
             _contextKey = contextKey;
+            _commandTimeout = commandTimeout;
 
             _schemas
                 = new[] { EdmModelExtensions.DefaultSchema }
@@ -525,9 +528,11 @@ namespace System.Data.Entity.Migrations.History
             }
         }
 
-        private HistoryContext CreateContext(DbConnection connection = null, string schema = null)
+        public HistoryContext CreateContext(DbConnection connection = null, string schema = null)
         {
-            return _historyContextFactory.Create(connection ?? CreateConnection(), connection == null, schema ?? CurrentSchema);
+            var context = _historyContextFactory.Create(connection ?? CreateConnection(), connection == null, schema ?? CurrentSchema);
+            context.Database.CommandTimeout = _commandTimeout;
+            return context;
         }
     }
 }

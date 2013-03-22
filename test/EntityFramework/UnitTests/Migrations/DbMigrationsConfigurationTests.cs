@@ -166,5 +166,16 @@ namespace System.Data.Entity.Migrations
             config.HistoryContextFactory = null;
             Assert.IsType<DefaultHistoryContextFactory>(config.HistoryContextFactory);
         }
+
+        [Fact]
+        public void CommandTimeout_throws_for_negative_values()
+        {
+            var config = new TestMigrationsConfiguration();
+            
+            Assert.Equal(
+                Strings.ObjectContext_InvalidCommandTimeout,
+                Assert.Throws<ArgumentException>(
+                    () => config.CommandTimeout = -1).Message);
+        }
     }
 }

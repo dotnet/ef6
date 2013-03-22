@@ -102,7 +102,8 @@ namespace System.Data.Entity.Internal
                     MigrationsAssembly = contextType.Assembly,
                     MigrationsNamespace = contextType.Namespace,
                     ContextKey = internalContext.ContextKey,
-                    TargetDatabase = new DbConnectionInfo(internalContext.OriginalConnectionString, internalContext.ProviderName)
+                    TargetDatabase = new DbConnectionInfo(internalContext.OriginalConnectionString, internalContext.ProviderName),
+                    CommandTimeout = internalContext.CommandTimeout
                 };
         }
     }

@@ -4,7 +4,7 @@ namespace System.Data.Entity.WrappingProvider
 {
     using System.Data.Common;
 
-    public class WrappingTransaction<TBase> : DbTransaction where TBase : DbProviderFactory
+    public class WrappingTransaction<TBase> : DbTransaction, IDisposable where TBase : DbProviderFactory
     {
         private readonly DbTransaction _baseTransaction;
 
@@ -40,6 +40,11 @@ namespace System.Data.Entity.WrappingProvider
         public DbTransaction BaseTransaction
         {
             get { return _baseTransaction; }
+        }
+
+        public new void Dispose()
+        {
+            _baseTransaction.Dispose();
         }
     }
 }
