@@ -162,6 +162,12 @@ namespace System.Data.Entity.SqlServer
         }
 
         [Fact]
+        public void GetStoreTypes_includes_SQL_Server_2008_types_on_SQL_Azure()
+        {
+            GetStoreTypesTest("2012.Azure", expectTypes: true);
+        }
+
+        [Fact]
         public void GetStoreTypes_excludes_SQL_Server_2008_types_on_SQL_Server_2005()
         {
             GetStoreTypesTest("2005", expectTypes: false);
@@ -193,6 +199,7 @@ namespace System.Data.Entity.SqlServer
             Assert.Equal(1, new SqlProviderManifest("2005").GetStoreTypes().Count(t => t.Name.ToLowerInvariant() == "xml"));
             Assert.Equal(1, new SqlProviderManifest("2008").GetStoreTypes().Count(t => t.Name.ToLowerInvariant() == "xml"));
             Assert.Equal(1, new SqlProviderManifest("2012").GetStoreTypes().Count(t => t.Name.ToLowerInvariant() == "xml"));
+            Assert.Equal(1, new SqlProviderManifest("2012.Azure").GetStoreTypes().Count(t => t.Name.ToLowerInvariant() == "xml"));
         }
 
         private static readonly string[] _functionsOnlyIn2008AndUp =
@@ -277,6 +284,12 @@ namespace System.Data.Entity.SqlServer
         }
 
         [Fact]
+        public void GetStoreFunctions_includes_SQL_Server_2008_functions_on_SQL_Azure()
+        {
+            FunctionsIncludedTest("2012.Azure", _functionsOnlyIn2008AndUp);
+        }
+
+        [Fact]
         public void GetStoreFunctions_does_not_include_SQL_Server_2008_functions_on_SQL_Server_2005()
         {
             FunctionsNotIncludedTest("2005", _functionsOnlyIn2008AndUp);
@@ -304,6 +317,12 @@ namespace System.Data.Entity.SqlServer
         public void GetStoreFunctions_includes_SQL_Server_2005_functions_on_SQL_Server_2012()
         {
             FunctionsIncludedTest("2012", _functionsOnlyIn2005AndUp);
+        }
+
+        [Fact]
+        public void GetStoreFunctions_includes_SQL_Server_2005_functions_on_SQL_Azure()
+        {
+            FunctionsIncludedTest("2012.Azure", _functionsOnlyIn2005AndUp);
         }
 
         [Fact]

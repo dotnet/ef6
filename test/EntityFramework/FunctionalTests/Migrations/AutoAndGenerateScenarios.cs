@@ -115,6 +115,53 @@ namespace System.Data.Entity.Migrations
         }
     }
 
+    public class AutoAndGenerateScenarios_AddTableWithGuidKey :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddTableWithGuidKey.V1, AutoAndGenerateScenarios_AddTableWithGuidKey.V2>
+    {
+        public AutoAndGenerateScenarios_AddTableWithGuidKey()
+        {
+            DownDataLoss = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<WithGuidKey>();
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var createTableOperation = migrationOperations.OfType<CreateTableOperation>().SingleOrDefault(o => o.Name == "dbo.WithGuidKeys");
+            Assert.NotNull(createTableOperation);
+
+            Assert.True(createTableOperation.PrimaryKey.Columns.Count == 1);
+            Assert.Equal("Id", createTableOperation.PrimaryKey.Columns.Single());
+            Assert.Equal(2, createTableOperation.Columns.Count);
+
+            var idColumn = createTableOperation.Columns.SingleOrDefault(c => c.Name == "Id");
+            Assert.NotNull(idColumn);
+            Assert.Equal(PrimitiveTypeKind.Guid, idColumn.Type);
+            Assert.False(idColumn.IsNullable.Value);
+            Assert.True(idColumn.IsIdentity);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var dropTableOperation = migrationOperations.OfType<DropTableOperation>().SingleOrDefault(o => o.Name == "dbo.WithGuidKeys");
+            Assert.NotNull(dropTableOperation);
+        }
+    }
+
     public class AutoAndGenerateScenarios_RemoveTable :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_RemoveTable.V1, AutoAndGenerateScenarios_RemoveTable.V2>
     {

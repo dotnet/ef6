@@ -43,8 +43,31 @@ namespace System.Data.Entity.SqlServer
             return SqlVersion.Sql8;
         }
 
-        internal static string GetVersionHint(SqlVersion version)
+        internal static ServerType GetServerType(DbConnection connection)
         {
+            Debug.Assert(connection.State == ConnectionState.Open, "Expected an open connection");
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "select serverproperty('EngineEdition')";
+                using (var reader = command.ExecuteReader())
+                {
+                    reader.Read();
+                    
+                    const int sqlAzureEngineEdition = 5;
+                    return reader.GetInt32(0) == sqlAzureEngineEdition ? ServerType.Cloud : ServerType.OnPremises;
+                }
+            }
+        }
+
+        internal static string GetVersionHint(SqlVersion version, ServerType serverType)
+        {
+            if (serverType == ServerType.Cloud)
+            {
+                Debug.Assert(version >= SqlVersion.Sql11);
+                return SqlProviderManifest.TokenAzure11;
+            }
+
             switch (version)
             {
                 case SqlVersion.Sql8:
@@ -80,6 +103,9 @@ namespace System.Data.Entity.SqlServer
                         return SqlVersion.Sql10;
 
                     case SqlProviderManifest.TokenSql11:
+                        return SqlVersion.Sql11;
+
+                    case SqlProviderManifest.TokenAzure11:
                         return SqlVersion.Sql11;
                 }
             }

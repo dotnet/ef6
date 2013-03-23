@@ -7,6 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.SqlClient;
     using Moq;
     using Moq.Protected;
     using Xunit;
@@ -61,6 +62,7 @@ namespace System.Data.Entity.Internal
             connectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(dbCommandMock.Object);
             connectionMock.Setup(m => m.ConnectionString).Returns("FakeConnection");
             connectionMock.Setup(m => m.DataSource).Returns("Foo");
+            connectionMock.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(SqlClientFactory.Instance);
 
             var entityType = new EntityType(
                 "FakeEntityType", "FakeNamespace", DataSpace.CSpace, new[] { "key" }, new EdmMember[] { new EdmProperty("key") });

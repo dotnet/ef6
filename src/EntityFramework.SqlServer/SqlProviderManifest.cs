@@ -25,6 +25,7 @@ namespace System.Data.Entity.SqlServer
         internal const string TokenSql9 = "2005";
         internal const string TokenSql10 = "2008";
         internal const string TokenSql11 = "2012";
+        internal const string TokenAzure11 = "2012.Azure";
 
         // '~' is the same escape character that L2S uses
         internal const char LikeEscapeChar = '~';

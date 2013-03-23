@@ -41,7 +41,7 @@ namespace System.Data.Entity.Migrations.Sql
 
                 var sql = migrationProvider.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-                Assert.True(sql.Contains("ALTER TABLE [T] ADD [C] [varbinary](max) DEFAULT 123.45"));
+                Assert.Contains("ALTER TABLE [T] ADD [C] [varbinary](max) DEFAULT 123.45", sql);
             }
             finally
             {
@@ -66,7 +66,7 @@ namespace System.Data.Entity.Migrations.Sql
 
             var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains("ALTER TABLE [T] ADD [C] rowversion NOT NULL"));
+            Assert.Contains("ALTER TABLE [T] ADD [C] rowversion NOT NULL", sql);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace System.Data.Entity.Migrations.Sql
 
             var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains("ALTER TABLE [T] ADD [C] [RowVersion] NOT NULL"));
+            Assert.Contains("ALTER TABLE [T] ADD [C] [RowVersion] NOT NULL", sql);
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace System.Data.Entity.Migrations.Sql
 
             var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains("ALTER TABLE [T] ADD [C] [timestamp] NOT NULL"));
+            Assert.Contains("ALTER TABLE [T] ADD [C] [timestamp] NOT NULL", sql);
         }
 
         [Fact]
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Migrations.Sql
 
             var sql = migrationSqlGenerator.Generate(new[] { dropPrimaryKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains("ALTER TABLE [T] DROP CONSTRAINT [PK_T]"));
+            Assert.Contains("ALTER TABLE [T] DROP CONSTRAINT [PK_T]", sql);
         }
 
         [Fact]
@@ -140,7 +140,7 @@ namespace System.Data.Entity.Migrations.Sql
 
             var sql = migrationSqlGenerator.Generate(new[] { addPrimaryKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains("ALTER TABLE [T] ADD CONSTRAINT [PK_T] PRIMARY KEY ([c1], [c2])"));
+            Assert.Contains("ALTER TABLE [T] ADD CONSTRAINT [PK_T] PRIMARY KEY ([c1], [c2])", sql);
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace System.Data.Entity.Migrations.Sql
 
             var sql = migrationSqlGenerator.Generate(new[] { addPrimaryKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains("ALTER TABLE [T] ADD CONSTRAINT [PK_T] PRIMARY KEY NONCLUSTERED ([c1], [c2])"));
+            Assert.Contains("ALTER TABLE [T] ADD CONSTRAINT [PK_T] PRIMARY KEY NONCLUSTERED ([c1], [c2])", sql);
         }
 
         [Fact]
@@ -171,7 +171,7 @@ namespace System.Data.Entity.Migrations.Sql
 
             var sql = migrationSqlGenerator.Generate(new[] { dropColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains("ALTER TABLE [Customers] DROP COLUMN [Foo]"));
+            Assert.Contains("ALTER TABLE [Customers] DROP COLUMN [Foo]", sql);
         }
 
         [Fact]
@@ -189,7 +189,7 @@ namespace System.Data.Entity.Migrations.Sql
 
             var sql = migrationSqlGenerator.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains(@"[Version] rowversion"));
+            Assert.Contains(@"[Version] rowversion", sql);
         }
 
         [Fact]
@@ -200,7 +200,7 @@ namespace System.Data.Entity.Migrations.Sql
             var sql = migrationSqlGenerator.Generate(new[] { new SqlOperation("insert into foo") }, "2008").Join(
                 s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains(@"insert into foo"));
+            Assert.Contains(@"insert into foo", sql);
         }
 
         [Fact]
@@ -229,15 +229,14 @@ namespace System.Data.Entity.Migrations.Sql
 
             var sql = migrationSqlGenerator.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(
-                sql.Contains(
+            Assert.Contains(
                     @"IF schema_id('foo') IS NULL
     EXECUTE('CREATE SCHEMA [foo]')
 CREATE TABLE [foo].[Customers] (
     [Id] [int] IDENTITY,
     [Name] [nvarchar](max) NOT NULL,
     CONSTRAINT [PK_foo.Customers] PRIMARY KEY ([Id])
-)"));
+)", sql);
         }
 
         [Fact]
@@ -270,15 +269,14 @@ CREATE TABLE [foo].[Customers] (
 
             var sql = migrationSqlGenerator.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(
-                sql.Contains(
+            Assert.Contains(
                     @"IF schema_id('foo') IS NULL
     EXECUTE('CREATE SCHEMA [foo]')
 CREATE TABLE [foo].[Customers] (
     [Id] [int] IDENTITY,
     [Name] [nvarchar](max) NOT NULL,
     CONSTRAINT [PK_foo.Customers] PRIMARY KEY NONCLUSTERED ([Id])
-)"));
+)", sql);
         }
 
 
@@ -307,8 +305,7 @@ CREATE TABLE [foo].[Customers] (
 
             var sql = migrationSqlGenerator.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(
-                sql.Contains(
+            Assert.Contains(
                     @"CREATE TABLE [Customers] (
     [Id] [int] IDENTITY,
     [Name] [nvarchar](max) NOT NULL
@@ -317,7 +314,7 @@ BEGIN TRY
     EXEC sp_MS_marksystemobject 'Customers'
 END TRY
 BEGIN CATCH
-END CATCH"));
+END CATCH", sql);
         }
 
         [Fact]
@@ -352,8 +349,7 @@ END CATCH"));
 
             var sql = migrationSqlGenerator.Generate(new[] { moveTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(
-                sql.Contains(
+            Assert.Contains(
                     @"IF schema_id('foo') IS NULL
     EXECUTE('CREATE SCHEMA [foo]')
 IF object_id('dbo.History') IS NULL BEGIN
@@ -368,7 +364,7 @@ WHERE [ContextKey] = 'MyKey'
 DELETE [dbo].[History]
 WHERE [ContextKey] = 'MyKey'
 IF NOT EXISTS(SELECT * FROM [dbo].[History])
-    DROP TABLE [dbo].[History]"));
+    DROP TABLE [dbo].[History]", sql);
         }
 
         [Fact]
@@ -409,9 +405,8 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
                         },
                     "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(
-                sql.Contains(
-                    @"CREATE UNIQUE INDEX [IX_Id] ON [Customers]([Id])"));
+            Assert.Contains(
+                    @"CREATE UNIQUE INDEX [IX_Id] ON [Customers]([Id])", sql);
         }
 
         [Fact]
@@ -453,9 +448,8 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
                         },
                     "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(
-                sql.Contains(
-                    @"CREATE UNIQUE CLUSTERED INDEX [IX_Id] ON [Customers]([Id])"));
+            Assert.Contains(
+                    @"CREATE UNIQUE CLUSTERED INDEX [IX_Id] ON [Customers]([Id])", sql);
         }
 
         [Fact]
@@ -474,9 +468,8 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
 
             var sql = migrationSqlGenerator.Generate(new[] { addForeignKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(
-                sql.Contains(
-                    @"ALTER TABLE [Orders] ADD CONSTRAINT [FK_Orders_Customers_CustomerId] FOREIGN KEY ([CustomerId]) REFERENCES [Customers] ([CustomerId]) ON DELETE CASCADE"));
+            Assert.Contains(
+                    @"ALTER TABLE [Orders] ADD CONSTRAINT [FK_Orders_Customers_CustomerId] FOREIGN KEY ([CustomerId]) REFERENCES [Customers] ([CustomerId]) ON DELETE CASCADE", sql);
         }
 
         [Fact]
@@ -487,7 +480,7 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
             var sql = migrationSqlGenerator.Generate(new[] { new DropTableOperation("Customers") }, "2008").Join(
                 s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains("DROP TABLE [Customers]"));
+            Assert.Contains("DROP TABLE [Customers]", sql);
         }
 
         [Fact]
@@ -510,9 +503,7 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
                     new[] { insertHistoryOperation },
                     "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(
-                sql.Contains(
-                    "INSERT Foo (Bar) VALUES ('Baz')"));
+            Assert.Contains("INSERT Foo (Bar) VALUES ('Baz')", sql);
         }
 
         [Fact]
@@ -535,26 +526,47 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
                     new[] { insertHistoryOperation },
                     "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(
-                sql.Contains(
-                    "DELETE Foo WHERE Bar = 'Baz'"));
+            Assert.Contains("DELETE Foo WHERE Bar = 'Baz'", sql);
         }
 
         [Fact]
-        public void Generate_can_output_add_column_statement()
+        public void Generate_can_output_add_column_statement_for_GUID_on_SQL_Server_2008()
+        {
+            Generate_can_output_add_column_statement_for_GUID("2008", "newsequentialid()");
+        }
+
+        [Fact]
+        public void Generate_can_output_add_column_statement_for_GUID_on_SQL_Server_2000()
+        {
+            Generate_can_output_add_column_statement_for_GUID("2000", "newid()");
+        }
+
+        [Fact]
+        public void Generate_can_output_add_column_statement_for_GUID_on_SQL_Server_2012()
+        {
+            Generate_can_output_add_column_statement_for_GUID("2012", "newsequentialid()");
+        }
+
+        [Fact]
+        public void Generate_can_output_add_column_statement_for_GUID_on_SQL_Azure()
+        {
+            Generate_can_output_add_column_statement_for_GUID("2012.Azure", "newid()");
+        }
+
+        public void Generate_can_output_add_column_statement_for_GUID(string providerManifestToken, string expectedGuidDefault)
         {
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var column = new ColumnModel(PrimitiveTypeKind.Guid)
-                             {
-                                 Name = "Bar",
-                                 IsIdentity = true
-                             };
+            {
+                Name = "Bar",
+                IsIdentity = true
+            };
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
-            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, providerManifestToken).Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains("ALTER TABLE [Foo] ADD [Bar] [uniqueidentifier] DEFAULT newid()"));
+            Assert.Contains(string.Format("ALTER TABLE [Foo] ADD [Bar] [uniqueidentifier] DEFAULT {0}", expectedGuidDefault), sql);
         }
 
         [Fact]
@@ -572,7 +584,7 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
 
             var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains("ALTER TABLE [Foo] ADD [Bar] [varchar](15)"));
+            Assert.Contains("ALTER TABLE [Foo] ADD [Bar] [varchar](15)", sql);
         }
 
         [Fact]
@@ -874,7 +886,7 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
 
             var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains("ALTER TABLE [Foo] ADD [Bar] [uniqueidentifier] NOT NULL DEFAULT 42"));
+            Assert.Contains("ALTER TABLE [Foo] ADD [Bar] [uniqueidentifier] NOT NULL DEFAULT 42", sql);
         }
 
         [Fact]
@@ -892,7 +904,7 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
 
             var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains("ALTER TABLE [Foo] ADD [Bar] [uniqueidentifier] NOT NULL DEFAULT 42"));
+            Assert.Contains("ALTER TABLE [Foo] ADD [Bar] [uniqueidentifier] NOT NULL DEFAULT 42", sql);
         }
 
         [Fact]
@@ -909,7 +921,7 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
 
             var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.True(sql.Contains("ALTER TABLE [Foo] ADD [Bar] [int] NOT NULL DEFAULT 0"));
+            Assert.Contains("ALTER TABLE [Foo] ADD [Bar] [int] NOT NULL DEFAULT 0", sql);
         }
 
         [Fact]

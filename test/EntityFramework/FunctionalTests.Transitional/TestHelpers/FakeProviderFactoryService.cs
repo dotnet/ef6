@@ -4,10 +4,15 @@ namespace System.Data.Entity.TestHelpers
 {
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Reflection;
 
     public class FakeProviderFactoryService : IDbProviderFactoryService
     {
-        private IDbProviderFactoryService _originalProviderFactoryService;
+        private static readonly PropertyInfo _factoryProperty 
+            = typeof(DbConnection).GetProperty("ProviderFactory", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+
+        private readonly IDbProviderFactoryService _originalProviderFactoryService;
+        
         public FakeProviderFactoryService(IDbProviderFactoryService originalProviderFactoryService)
         {
             _originalProviderFactoryService = originalProviderFactoryService;
@@ -15,15 +20,9 @@ namespace System.Data.Entity.TestHelpers
 
         public DbProviderFactory GetProviderFactory(DbConnection connection)
         {
-            var type = connection.GetType();
-            if (type.FullName.StartsWith("Castle.Proxies."))
-            {
-                return GenericProviderFactory<DbProviderFactory>.Instance;
-            }
-            else
-            {
-                return _originalProviderFactoryService.GetProviderFactory(connection);
-            }
+            return connection.GetType().FullName.StartsWith("Castle.Proxies.")
+                       ? (DbProviderFactory)_factoryProperty.GetValue(connection, null)
+                       : _originalProviderFactoryService.GetProviderFactory(connection);
         }
     }
 }

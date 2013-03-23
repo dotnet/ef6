@@ -108,6 +108,13 @@ namespace System.Data.Entity.Migrations
         public byte[] RowVersion { get; set; }
     }
 
+    public class WithGuidKey
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public string Foo { get; set; }
+    }
+
     public enum StoreKind
     {
         Mall,

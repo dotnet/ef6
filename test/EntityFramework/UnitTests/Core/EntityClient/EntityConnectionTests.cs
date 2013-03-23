@@ -5,10 +5,8 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
-    using System.Data.SqlClient;
 #if !NET40
     using System.Threading;
     using System.Threading.Tasks;
@@ -52,6 +50,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
+                dbConnectionMock.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(GenericProviderFactory<DbProviderFactory>.Instance);
 
                 Assert.Same(mockWorkspace.Object, new EntityConnection(mockWorkspace.Object, dbConnectionMock.Object).GetMetadataWorkspace());
                 Assert.Same(
@@ -449,6 +448,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.Protected().Setup("Dispose", true).Verifiable();
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Closed);
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
+                storeConnectionMock.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(GenericProviderFactory<DbProviderFactory>.Instance);
 
                 var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true);
                 entityConnection.Dispose();
@@ -465,6 +465,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.Protected().Setup("Dispose", true).Verifiable();
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Closed);
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
+                storeConnectionMock.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(GenericProviderFactory<DbProviderFactory>.Instance);
 
                 var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, false);
                 entityConnection.Dispose();
@@ -481,6 +482,7 @@ namespace System.Data.Entity.Core.EntityClient
                 storeConnectionMock.Protected().Setup("Dispose", true).Verifiable();
                 storeConnectionMock.SetupGet(m => m.State).Returns(() => ConnectionState.Closed);
                 storeConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
+                storeConnectionMock.Protected().Setup<DbProviderFactory>("DbProviderFactory").Returns(GenericProviderFactory<DbProviderFactory>.Instance);
 
                 var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object);
                 entityConnection.Dispose();

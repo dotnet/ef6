@@ -36,6 +36,7 @@ namespace System.Data.Entity.Migrations.Sql
         private const byte DefaultScale = 0;
 
         private DbProviderManifest _providerManifest;
+        private string _providerManifestToken;
         private List<MigrationStatement> _statements;
         private HashSet<string> _generatedSchemas;
 
@@ -56,6 +57,7 @@ namespace System.Data.Entity.Migrations.Sql
             _statements = new List<MigrationStatement>();
             _generatedSchemas = new HashSet<string>();
             _variableCounter = 0;
+            _providerManifestToken = providerManifestToken;
 
             using (var connection = CreateConnection())
             {
@@ -134,14 +136,14 @@ namespace System.Data.Entity.Migrations.Sql
 
             createTableOperation.Columns.Each(
                 (c, i) =>
-                {
-                    Generate(c, writer);
-
-                    if (i < columnCount - 1)
                     {
-                        writer.WriteLine(",");
-                    }
-                });
+                        Generate(c, writer);
+
+                        if (i < columnCount - 1)
+                        {
+                            writer.WriteLine(",");
+                        }
+                    });
 
             if (createTableOperation.PrimaryKey != null)
             {
@@ -694,13 +696,25 @@ namespace System.Data.Entity.Migrations.Sql
                 if ((column.Type == PrimitiveTypeKind.Guid)
                     && (column.DefaultValue == null))
                 {
-                    writer.Write(" DEFAULT newid()");
+                    writer.Write(" DEFAULT " + GuidColumnDefault);
                 }
                 else
                 {
                     writer.Write(" IDENTITY");
                 }
             }
+        }
+
+        /// <summary>
+        ///     Returns the column default value to use for store-generated GUID columns when
+        ///     no default value is explicitly specified in the migration.
+        ///     Returns newsequentialid() for on-premises SQL Server 2005 and later.
+        ///     Returns newid() for SQL Azure.
+        /// </summary>
+        /// <value>Either newsequentialid() or newid() as described above.</value>
+        protected virtual string GuidColumnDefault
+        {
+            get { return _providerManifestToken != "2012.Azure" && _providerManifestToken != "2000" ? "newsequentialid()" : "newid()"; }
         }
 
         /// <summary>
@@ -716,19 +730,19 @@ namespace System.Data.Entity.Migrations.Sql
             {
                 historyOperation.Commands.Each(
                     c =>
-                    {
-                        var sql
-                            = c.CommandText
-                               .Replace("insert ", "INSERT ")
-                               .Replace("values ", "VALUES ")
-                               .Replace("delete ", "DELETE ")
-                               .Replace("where ", "WHERE "); // prettify
+                        {
+                            var sql
+                                = c.CommandText
+                                   .Replace("insert ", "INSERT ")
+                                   .Replace("values ", "VALUES ")
+                                   .Replace("delete ", "DELETE ")
+                                   .Replace("where ", "WHERE "); // prettify
 
-                        // inline params
-                        c.Parameters.Each(p => sql = sql.Replace(p.ParameterName, Generate((dynamic)p.Value)));
+                            // inline params
+                            c.Parameters.Each(p => sql = sql.Replace(p.ParameterName, Generate((dynamic)p.Value)));
 
-                        writer.Write(sql);
-                    });
+                            writer.Write(sql);
+                        });
 
                 Statement(writer);
             }
@@ -950,10 +964,10 @@ namespace System.Data.Entity.Migrations.Sql
 
             _statements.Add(
                 new MigrationStatement
-                {
-                    Sql = sql,
-                    SuppressTransaction = suppressTransaction
-                });
+                    {
+                        Sql = sql,
+                        SuppressTransaction = suppressTransaction
+                    });
         }
 
         /// <summary>

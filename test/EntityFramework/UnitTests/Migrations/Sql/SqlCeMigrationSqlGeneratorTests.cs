@@ -2,10 +2,12 @@
 
 namespace System.Data.Entity.Migrations.Sql
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using Moq;
     using Xunit;
@@ -45,6 +47,23 @@ namespace System.Data.Entity.Migrations.Sql
             Assert.Equal(
                 "System.Data.SqlServerCe.4.0",
                 DbProviderNameAttribute.GetFromType(typeof(SqlCeMigrationSqlGenerator)).Single().Name);
+        }
+
+        [Fact]
+        public void Generate_can_output_add_column_statement_for_GUID_and_uses_newid()
+        {
+            var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();
+
+            var column = new ColumnModel(PrimitiveTypeKind.Guid)
+            {
+                Name = "Bar",
+                IsIdentity = true
+            };
+            var addColumnOperation = new AddColumnOperation("Foo", column);
+
+            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2012").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Contains("ALTER TABLE [Foo] ADD [Bar] [uniqueidentifier] DEFAULT newid()", sql);
         }
     }
 }

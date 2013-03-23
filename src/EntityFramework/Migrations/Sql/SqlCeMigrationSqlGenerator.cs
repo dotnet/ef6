@@ -143,5 +143,16 @@ namespace System.Data.Entity.Migrations.Sql
         {
             return Quote(name.ToDatabaseName().Name);
         }
+
+        /// <summary>
+        ///     Returns the column default value to use for store-generated GUID columns when
+        ///     no default value is explicitly specified in the migration.
+        ///     Always returns newid() for SQL Compact.
+        /// </summary>
+        /// <value>The string newid().</value>
+        protected override string GuidColumnDefault
+        {
+            get { return "newid()"; }
+        }
     }
 }
