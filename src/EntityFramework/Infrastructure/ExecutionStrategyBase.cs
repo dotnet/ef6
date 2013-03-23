@@ -312,8 +312,6 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The result from <paramref name="exceptionHandler"/>. </returns>
         public static T UnwrapAndHandleException<T>(Exception exception, Func<Exception, T> exceptionHandler)
         {
-            DebugCheck.NotNull(exception);
-
             var entityException = exception as EntityException;
             if (entityException != null)
             {

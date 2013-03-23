@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Query
 {
     using System.Data.Entity.TestModels.ArubaModel;
+    using System.Data.SqlClient;
     using Moq;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
@@ -42,7 +43,7 @@ namespace System.Data.Entity.Query
         {
             var providerServices =
                 (DbProviderServices)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(DbProviderServices));
-            var connection = new EntityConnection(workspace, new EntityConnection());
+            var connection = new EntityConnection(workspace, new SqlConnection());
             var commandTree = workspace.CreateQueryCommandTree(query);
 
             var entityCommand = (EntityCommand)providerServices.CreateCommandDefinition(commandTree).CreateCommand();
@@ -55,7 +56,7 @@ namespace System.Data.Entity.Query
         {
             var entityCommand = new EntityCommand();
             entityCommand.CommandText = query;
-            var connection = new EntityConnection(workspace, new EntityConnection());
+            var connection = new EntityConnection(workspace, new SqlConnection());
             entityCommand.Connection = connection;
             entityCommand.Parameters.AddRange(entityParameters);
             var command = entityCommand.ToTraceString();
@@ -127,7 +128,7 @@ namespace System.Data.Entity.Query
             {
                 var providerServices =
                     (DbProviderServices)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(DbProviderServices));
-                var connection = new EntityConnection(workspace, new EntityConnection());
+                var connection = new EntityConnection(workspace, new SqlConnection());
                 var commandTree = workspace.CreateEntitySqlParser().Parse(query).CommandTree;
                 var entityCommand = (EntityCommand)providerServices.CreateCommandDefinition(commandTree).CreateCommand();
                 entityCommand.Connection = connection;
