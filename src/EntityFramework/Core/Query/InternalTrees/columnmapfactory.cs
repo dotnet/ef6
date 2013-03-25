@@ -133,6 +133,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     and all properties of the type with a public setter taking a primitive type and having a corresponding
         ///     column in the reader.
         /// </summary>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -155,7 +156,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             // build a LINQ expression used by result assembly to create results
             var memberInfo = new List<Tuple<MemberAssignment, int, EdmProperty>>();
-            foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+            foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Select(p => p.GetPropertyInfoForSet()))
             {
                 // for enums unwrap the type if nullable
                 var propertyUnderlyingType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
@@ -167,7 +169,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 if (TryGetColumnOrdinalFromReader(reader, prop.Name, out ordinal)
                     && workspace.TryDetermineCSpaceModelType(propType, out modelType)
                     && (Helper.IsScalarType(modelType))
-                    && prop.CanWrite
+                    && prop.CanWriteExtended()
                     && prop.GetIndexParameters().Length == 0
                     && null != prop.GetSetMethod(nonPublic: true))
                 {

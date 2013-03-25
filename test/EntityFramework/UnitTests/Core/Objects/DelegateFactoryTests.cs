@@ -81,6 +81,19 @@ namespace System.Data.Entity.Core.Objects
             }
 
             [Fact]
+            public void CreateNavigationPropertySetter_creates_a_setter_delegate_for_non_public_reference_property_with_base_setter()
+            {
+                var target = new InternalClass();
+                var entity = new ClassWithoutSetters();
+
+                DelegateFactory.CreateNavigationPropertySetter(
+                    typeof(ClassWithoutSetters),
+                    typeof(ClassWithoutSetters).GetProperty("InternalNavProperty", BindingFlags.Instance | BindingFlags.NonPublic))(entity, target);
+
+                Assert.Same(target, entity.InternalNavProperty);
+            }
+
+            [Fact]
             public void CreateNavigationPropertySetter_throws_for_static_value_type_and_properties_without_setters()
             {
                 Assert.Equal(
@@ -484,6 +497,46 @@ namespace System.Data.Entity.Core.Objects
                             typeof(PublicClass1).GetProperty("NullableProperty", BindingFlags.NonPublic | BindingFlags.Instance),
                             allowNull: true)(new PublicClass1(), new DateTime())).Message);
             }
+
+            [Fact]
+            public void CreatePropertySetter_creates_a_setter_delegate_for_a_non_public_property_with_base_setter()
+            {
+                var target = new InternalClass();
+                var entity = new ClassWithoutSetters();
+
+                DelegateFactory.CreatePropertySetter(
+                    typeof(ClassWithoutSetters),
+                    typeof(ClassWithoutSetters).GetProperty("InternalNavProperty", BindingFlags.Instance | BindingFlags.NonPublic),
+                    allowNull: true)(entity, target);
+
+                Assert.Same(target, entity.InternalNavProperty);
+            }
+
+            [Fact]
+            public void CreatePropertySetter_can_create_a_delegate_for_a_value_type_with_base_setter()
+            {
+                var entity = new ClassWithoutSetters();
+
+                DelegateFactory.CreatePropertySetter(
+                    typeof(ClassWithoutSetters),
+                    typeof(ClassWithoutSetters).GetProperty("InternalValueTypeProperty", BindingFlags.NonPublic | BindingFlags.Instance),
+                    allowNull: false)(entity, 7);
+
+                Assert.Equal(7, entity.InternalValueTypeProperty);
+            }
+
+            [Fact]
+            public void CreatePropertySetter_can_create_a_delegate_for_a_nullable_type_with_base_setter()
+            {
+                var entity = new ClassWithoutSetters();
+
+                DelegateFactory.CreatePropertySetter(
+                    typeof(ClassWithoutSetters),
+                    typeof(ClassWithoutSetters).GetProperty("NullableProperty", BindingFlags.NonPublic | BindingFlags.Instance),
+                    allowNull: true)(entity, 7);
+
+                Assert.Equal(7, entity.NullableProperty);
+            }
         }
 
         private class PrivateNestedClass
@@ -531,5 +584,17 @@ namespace System.Data.Entity.Core.Objects
     public struct ValueType
     {
         public PublicClass2 ValueTypeProp { get; set; }
+    }
+
+    public class BaseWithSetters
+    {
+        public PublicClass2 PublicNavProperty { get; private set; }
+        internal InternalClass InternalNavProperty { get; private set; }
+        internal int InternalValueTypeProperty { get; private set; }
+        internal int? NullableProperty { get; private set; }
+    }
+
+    public class ClassWithoutSetters : BaseWithSetters
+    {
     }
 }

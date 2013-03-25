@@ -306,7 +306,7 @@ namespace System.Data.Entity.Internal
             {
                 var properties = type.GetProperties(PropertyBindingFlags).Where(p => p.GetIndexParameters().Length == 0);
                 setters = new Dictionary<string, Action<object, object>>(properties.Count());
-                foreach (var property in properties)
+                foreach (var property in properties.Select(p => p.GetPropertyInfoForSet()))
                 {
                     // Only create delegates for properties that are found and have a setter.
                     var setMethod = property.GetSetMethod(nonPublic: true);

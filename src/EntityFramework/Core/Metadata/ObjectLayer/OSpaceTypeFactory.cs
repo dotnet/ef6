@@ -311,7 +311,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     var needsSetter = cspaceProperty.ToEndMember.RelationshipMultiplicity != RelationshipMultiplicity.Many;
                     if (clrProperty.CanRead
-                        && (!needsSetter || clrProperty.CanWrite))
+                        && (!needsSetter || clrProperty.CanWriteExtended()))
                     {
                         typeClosureToTrack.Add(
                             new KeyValuePair<NavigationProperty, PropertyInfo>(
@@ -370,7 +370,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     if (TryGetPrimitiveType(clrProperty.PropertyType, out propertyType))
                     {
                         if (clrProperty.CanRead
-                            && clrProperty.CanWrite)
+                            && clrProperty.CanWriteExtended())
                         {
                             AddScalarMember(type, clrProperty, ospaceType, cspaceProperty, propertyType);
                         }
@@ -552,7 +552,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (CspaceToOspace.TryGetValue(cspaceProperty.TypeUsage.EdmType, out propertyType))
             {
                 if (clrProperty.CanRead
-                    && clrProperty.CanWrite)
+                    && clrProperty.CanWriteExtended())
                 {
                     AddScalarMember(type, clrProperty, ospaceType, cspaceProperty, propertyType);
                 }
@@ -577,7 +577,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(clrProperty);
-            Debug.Assert(clrProperty.CanRead && clrProperty.CanWrite, "The clr property has to have a setter and a getter.");
+            Debug.Assert(clrProperty.CanRead && clrProperty.CanWriteExtended(), "The clr property has to have a setter and a getter.");
             DebugCheck.NotNull(ospaceType);
             DebugCheck.NotNull(cspaceProperty);
             DebugCheck.NotNull(propertyType);

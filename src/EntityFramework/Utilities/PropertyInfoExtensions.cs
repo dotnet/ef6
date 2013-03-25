@@ -4,6 +4,7 @@ namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(propertyInfo);
 
             return propertyInfo.CanRead
-                   && (propertyInfo.CanWrite || propertyInfo.PropertyType.IsCollection())
+                   && (propertyInfo.CanWriteExtended() || propertyInfo.PropertyType.IsCollection())
                    && !propertyInfo.GetGetMethod(true).IsAbstract
                    && propertyInfo.GetIndexParameters().Length == 0
                    && propertyInfo.PropertyType.IsValidStructuralPropertyType();
@@ -67,6 +68,35 @@ namespace System.Data.Entity.Utilities
             }
 
             return null;
+        }
+
+        public static bool CanWriteExtended(this PropertyInfo propertyInfo)
+        {
+            DebugCheck.NotNull(propertyInfo);
+
+            return propertyInfo.CanWrite || GetDeclaredProperty(propertyInfo).CanWrite;
+        }
+
+        public static PropertyInfo GetPropertyInfoForSet(this PropertyInfo propertyInfo)
+        {
+            DebugCheck.NotNull(propertyInfo);
+
+            return propertyInfo.CanWrite ? propertyInfo : GetDeclaredProperty(propertyInfo);
+        }
+
+        private static PropertyInfo GetDeclaredProperty(PropertyInfo propertyInfo)
+        {
+            Debug.Assert(propertyInfo.DeclaringType != null);
+
+            return propertyInfo.DeclaringType == propertyInfo.ReflectedType
+                       ? propertyInfo
+                       : propertyInfo
+                             .DeclaringType
+                             .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                             .Single(
+                                 p => p.Name == propertyInfo.Name
+                                      && !p.GetIndexParameters().Any()
+                                      && p.PropertyType == propertyInfo.PropertyType);
         }
     }
 }

@@ -7,6 +7,7 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Spatial;
     using System.IO;
     using System.Reflection;
+    using Moq;
     using Xunit;
 
     public sealed class PropertyInfoExtensionsTests
@@ -47,8 +48,13 @@ namespace System.Data.Entity.Utilities
         [Fact]
         public void IsValidStructuralProperty_should_return_false_when_property_read_only()
         {
-            var mockProperty = new MockPropertyInfo();
+            var mockProperty = new MockPropertyInfo(typeof(object), "Prop");
             mockProperty.SetupGet(p => p.CanWrite).Returns(false);
+
+            var mockType = new MockType();
+            mockType.Setup(m => m.GetProperties(It.IsAny<BindingFlags>())).Returns(new[] { mockProperty.Object });
+
+            mockProperty.SetupGet(p => p.DeclaringType).Returns(mockType.Object);
 
             Assert.False(mockProperty.Object.IsValidStructuralProperty());
         }
@@ -56,8 +62,13 @@ namespace System.Data.Entity.Utilities
         [Fact]
         public void IsValidStructuralProperty_should_return_true_when_property_read_only_collection()
         {
-            var mockProperty = new MockPropertyInfo(typeof(List<string>), "P");
+            var mockProperty = new MockPropertyInfo(typeof(List<string>), "Coll");
             mockProperty.SetupGet(p => p.CanWrite).Returns(false);
+
+            var mockType = new MockType();
+            mockType.Setup(m => m.GetProperties(It.IsAny<BindingFlags>())).Returns(new[] { mockProperty.Object });
+
+            mockProperty.SetupGet(p => p.DeclaringType).Returns(mockType.Object);
 
             Assert.True(mockProperty.Object.IsValidStructuralProperty());
         }
@@ -69,6 +80,46 @@ namespace System.Data.Entity.Utilities
             mockProperty.Setup(p => p.GetIndexParameters()).Returns(new ParameterInfo[1]);
 
             Assert.False(mockProperty.Object.IsValidStructuralProperty());
+        }
+
+        [Fact]
+        public void IsValidStructuralProperty_should_return_true_when_declaring_type_can_be_set()
+        {
+            Assert.True(typeof(Derived).GetProperty("Prop").IsValidStructuralProperty());
+        }
+
+        public class Base
+        {
+            public int Prop { get; private set; }
+        }
+
+        public class Derived : Base
+        {
+        }
+
+        [Fact]
+        public void CanWriteExtended_returns_true_for_property_that_has_a_private_setter()
+        {
+            Assert.True(typeof(Base).GetProperty("Prop").CanWriteExtended());
+        }
+
+        [Fact]
+        public void CanWriteExtended_returns_true_for_property_that_has_a_private_setter_on_the_declaring_type()
+        {
+            Assert.True(typeof(Derived).GetProperty("Prop").CanWriteExtended());
+        }
+
+        [Fact]
+        public void GetPropertyInfoForSet_returns_given_property_if_it_has_a_setter()
+        {
+            var propertyInfo = typeof(Base).GetProperty("Prop");
+            Assert.Same(propertyInfo, propertyInfo.GetPropertyInfoForSet());
+        }
+
+        [Fact]
+        public void GetPropertyInfoForSet_returns_declaring_type_property_if_it_has_a_setter()
+        {
+            Assert.Same(typeof(Base).GetProperty("Prop"), typeof(Derived).GetProperty("Prop").GetPropertyInfoForSet());
         }
 
         [Fact]

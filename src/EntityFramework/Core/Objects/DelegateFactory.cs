@@ -116,7 +116,8 @@ namespace System.Data.Entity.Core.Objects
             DebugCheck.NotNull(declaringType);
             DebugCheck.NotNull(navigationProperty);
 
-            var setMethod = navigationProperty.GetSetMethod(true);
+            var propertyInfoForSet = navigationProperty.GetPropertyInfoForSet();
+            var setMethod = propertyInfoForSet.GetSetMethod(nonPublic: true);
 
             if (setMethod == null)
             {
@@ -138,7 +139,7 @@ namespace System.Data.Entity.Core.Objects
 
             return Expression.Lambda<Action<object, object>>(
                 Expression.Assign(
-                    Expression.Property(Expression.Convert(entityParameter, declaringType), navigationProperty),
+                    Expression.Property(Expression.Convert(entityParameter, declaringType), propertyInfoForSet),
                     Expression.Convert(targetParameter, navigationProperty.PropertyType)), entityParameter, targetParameter).Compile();
         }
 
@@ -264,7 +265,7 @@ namespace System.Data.Entity.Core.Objects
         /// </exception>
         internal static Action<object, object> CreatePropertySetter(Type entityDeclaringType, PropertyInfo propertyInfo, bool allowNull)
         {
-            ValidateSetterProperty(propertyInfo);
+            var propertyInfoForSet = ValidateSetterProperty(propertyInfo);
 
             var entityParameter = Expression.Parameter(typeof(object), "entity");
             var targetParameter = Expression.Parameter(typeof(object), "target");
@@ -290,7 +291,7 @@ namespace System.Data.Entity.Core.Objects
                 Expression.IfThenElse(
                     checkValidValue,
                     Expression.Assign(
-                        Expression.Property(Expression.Convert(entityParameter, entityDeclaringType), propertyInfo),
+                        Expression.Property(Expression.Convert(entityParameter, entityDeclaringType), propertyInfoForSet),
                         Expression.Convert(targetParameter, propertyInfo.PropertyType)),
                     Expression.Call(
                         _throwSetInvalidValue,
@@ -300,11 +301,13 @@ namespace System.Data.Entity.Core.Objects
                         Expression.Constant(propertyInfo.Name))), entityParameter, targetParameter).Compile();
         }
 
-        internal static void ValidateSetterProperty(PropertyInfo propertyInfo)
+        internal static PropertyInfo ValidateSetterProperty(PropertyInfo propertyInfo)
         {
             DebugCheck.NotNull(propertyInfo);
 
-            var setterMethodInfo = propertyInfo.GetSetMethod(nonPublic: true);
+            var propertyInfoForSet = propertyInfo.GetPropertyInfoForSet();
+
+            var setterMethodInfo = propertyInfoForSet.GetSetMethod(nonPublic: true);
 
             if (setterMethodInfo == null)
             {
@@ -316,20 +319,22 @@ namespace System.Data.Entity.Core.Objects
                 throw new InvalidOperationException(Strings.CodeGen_PropertyIsStatic);
             }
 
-            if (propertyInfo.DeclaringType.IsValueType)
+            if (propertyInfoForSet.DeclaringType.IsValueType)
             {
                 throw new InvalidOperationException(Strings.CodeGen_PropertyDeclaringTypeIsValueType);
             }
 
-            if (propertyInfo.GetIndexParameters().Any())
+            if (propertyInfoForSet.GetIndexParameters().Any())
             {
                 throw new InvalidOperationException(Strings.CodeGen_PropertyIsIndexed);
             }
 
-            if (propertyInfo.PropertyType.IsPointer)
+            if (propertyInfoForSet.PropertyType.IsPointer)
             {
                 throw new InvalidOperationException(Strings.CodeGen_PropertyUnsupportedType);
             }
+
+            return propertyInfoForSet;
         }
 
         /// <summary>

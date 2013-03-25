@@ -143,7 +143,7 @@ namespace System.Data.Entity.Migrations
                 {
                     foreach (var keyProperty in keyProperties)
                     {
-                        keyProperty.Single().SetValue(entity, keyProperty.Single().GetValue(existing, null), null);
+                        keyProperty.Single().GetPropertyInfoForSet().SetValue(entity, keyProperty.Single().GetValue(existing, null), null);
                     }
 
                     internalSet.InternalContext.Owner.Entry(existing).CurrentValues.SetValues(entity);

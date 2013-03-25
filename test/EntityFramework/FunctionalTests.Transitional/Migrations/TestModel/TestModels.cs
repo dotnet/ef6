@@ -8,7 +8,12 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Spatial;
     using System.Data.SqlServerCe;
 
-    public class MigrationsCustomer
+    public class MigrationsCustomerBase
+    {
+        public int Id { get; private set; }
+    }
+
+    public class MigrationsCustomer : MigrationsCustomerBase
     {
         public MigrationsCustomer()
         {
@@ -17,7 +22,6 @@ namespace System.Data.Entity.Migrations
             WorkAddress = new MigrationsAddress();
         }
 
-        public int Id { get; set; }
         public long CustomerNumber { get; set; }
         public string Name { get; set; }
         public string FullName { get; set; }

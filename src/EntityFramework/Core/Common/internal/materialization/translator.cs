@@ -417,9 +417,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     var edmProperty = mapping.GetPropertyMap(properties[i].Name).ClrProperty;
 
-                    DelegateFactory.ValidateSetterProperty(edmProperty.PropertyInfo);
-                    var propertyAccessor = edmProperty.PropertyInfo.GetSetMethod(nonPublic: true);
-                    var propertyType = edmProperty.PropertyInfo.PropertyType;
+                    var propertyInfoForSet = DelegateFactory.ValidateSetterProperty(edmProperty.PropertyInfo);
+                    var propertyAccessor = propertyInfoForSet.GetSetMethod(nonPublic: true);
+                    var propertyType = propertyInfoForSet.PropertyType;
 
                     // get translation of property value
                     var valueReader = columnMap.Properties[i].Accept(this, new TranslatorArg(propertyType)).Expression;
@@ -435,37 +435,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         _currentCoordinatorScratchpad.AddExpressionWithErrorHandling(valueReader, valueReaderWithErrorHandling);
                     }
 
-                    var binding = Expression.Bind(GetProperty(propertyAccessor, edmProperty.EntityDeclaringType), valueReader);
-                    result.Add(binding);
+                    result.Add(Expression.Bind(propertyInfoForSet, valueReader));
                 }
                 return result;
-            }
-
-            /// <summary>
-            ///     Gets the PropertyInfo representing the property with which the given setter method is associated.
-            ///     This code is taken from Expression.Bind(MethodInfo) but adapted to take a type such that it
-            ///     will work in cases in which the property was declared on a generic base class.  In such cases,
-            ///     the declaringType needs to be the actual entity type, rather than the base class type.  Note that
-            ///     declaringType can be null, in which case the setterMethod.DeclaringType is used.
-            /// </summary>
-            private static PropertyInfo GetProperty(MethodInfo setterMethod, Type declaringType)
-            {
-                if (declaringType == null)
-                {
-                    declaringType = setterMethod.DeclaringType;
-                }
-                var bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
-                foreach (var propertyInfo in declaringType.GetProperties(bindingAttr))
-                {
-                    if (propertyInfo.GetSetMethod(nonPublic: true) == setterMethod)
-                    {
-                        return propertyInfo;
-                    }
-                }
-                Debug.Assert(
-                    false,
-                    "Should always find a property for the setterMethod since we got the setter method from a property in the first place.");
-                return null;
             }
 
             /// <summary>
