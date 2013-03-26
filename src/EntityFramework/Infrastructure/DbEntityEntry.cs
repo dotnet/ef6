@@ -99,25 +99,37 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of GetDatabaseValues, which
-        ///     queries the database for copies of the values of the tracked entity as they currently exist in the database.
+        ///     Asynchronously queries the database for copies of the values of the tracked entity as they currently exist in the database.
         ///     Note that changing the values in the returned dictionary will not update the values in the database.
         ///     If the entity is not found in the database then null is returned.
         /// </summary>
-        /// <returns> A task that contains the store values. </returns>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the store values. 
+        /// </returns>
         public Task<DbPropertyValues> GetDatabaseValuesAsync()
         {
             return GetDatabaseValuesAsync(CancellationToken.None);
         }
 
         /// <summary>
-        ///     An asynchronous version of GetDatabaseValues, which
-        ///     queries the database for copies of the values of the tracked entity as they currently exist in the database.
+        ///     Asynchronously queries the database for copies of the values of the tracked entity as they currently exist in the database.
         ///     Note that changing the values in the returned dictionary will not update the values in the database.
         ///     If the entity is not found in the database then null is returned.
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A task that contains the store values. </returns>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the store values. 
+        /// </returns>
         public async Task<DbPropertyValues> GetDatabaseValuesAsync(CancellationToken cancellationToken)
         {
             var storeValues =
@@ -139,23 +151,33 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of Reload, which
-        ///     reloads the entity from the database overwriting any property values with values from the database.
+        ///     Asynchronously reloads the entity from the database overwriting any property values with values from the database.
         ///     The entity will be in the Unchanged state after calling this method.
         /// </summary>
-        /// <returns> A task representing the asynchronous operation. </returns>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        /// </returns>
         public Task ReloadAsync()
         {
             return _internalEntityEntry.ReloadAsync(CancellationToken.None);
         }
 
         /// <summary>
-        ///     An asynchronous version of Reload, which
-        ///     reloads the entity from the database overwriting any property values with values from the database.
+        ///     Asynchronously reloads the entity from the database overwriting any property values with values from the database.
         ///     The entity will be in the Unchanged state after calling this method.
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A task representing the asynchronous operation. </returns>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        /// </returns>
         public Task ReloadAsync(CancellationToken cancellationToken)
         {
             return _internalEntityEntry.ReloadAsync(cancellationToken);

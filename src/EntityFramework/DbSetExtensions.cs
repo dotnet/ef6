@@ -9,11 +9,13 @@ namespace System.Data.Entity
     using System.Threading;
     using System.Threading.Tasks;
 
+    /// <summary>
+    ///     Useful extension methods for <see cref="DbSet{TEntity}"/>.
+    /// </summary>
     public static class DbSetExtensions
     {
         /// <summary>
-        ///     An asynchronous version of Find, which
-        ///     finds an entity with the given primary key values.
+        ///     Asynchronously finds an entity with the given primary key values.
         ///     If an entity with the given primary key values exists in the context, then it is
         ///     returned immediately without making a request to the store.  Otherwise, a request
         ///     is made to the store for an entity with the given primary key values and this entity,
@@ -23,11 +25,14 @@ namespace System.Data.Entity
         /// <remarks>
         ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
         ///     the designer, by the Code First fluent API, or by the DataMember attribute.
+        ///     
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TEntity"> The type that defines the set. </typeparam>
-        /// <param name="set"> The source set. </param>
+        /// <param name="set"> The set to find entities from. </param>
         /// <param name="keyValues"> The values of the primary key for the entity to be found. </param>
-        /// <returns> A Task containing the entity found, or null. </returns>
+        /// <returns> A task that represents the asynchronous find operation. The task result contains the entity found, or null. </returns>
         public static Task<TEntity> FindAsync<TEntity>(this IDbSet<TEntity> set, params object[] keyValues)
             where TEntity : class
         {

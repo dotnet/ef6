@@ -37,8 +37,7 @@ namespace System.Data.Entity
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of Find, which
-        ///     finds an entity with the given primary key values.
+        ///     Asynchronously finds an entity with the given primary key values.
         ///     If an entity with the given primary key values exists in the context, then it is
         ///     returned immediately without making a request to the store.  Otherwise, a request
         ///     is made to the store for an entity with the given primary key values and this entity,
@@ -48,10 +47,13 @@ namespace System.Data.Entity
         /// <remarks>
         ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
         ///     the designer, by the Code First fluent API, or by the DataMember attribute.
+        ///     
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <param name="keyValues"> The values of the primary key for the entity to be found. </param>
-        /// <returns> A Task containing the entity found, or null. </returns>
+        /// <returns> A task that represents the asynchronous find operation. The task result contains the entity found, or null. </returns>
         Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues);
 
 #endif

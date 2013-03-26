@@ -521,11 +521,10 @@ namespace System.Data.Entity.Core.EntityClient
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of Open, which
-        ///     establishes a connection to the data store by calling the Open method on the underlying data provider
+        ///     Asynchronously establishes a connection to the data store by calling the Open method on the underlying data provider
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A task representing the asynchronous operation. </returns>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> A task that represents the asynchronous operation. </returns>
         public override async Task OpenAsync(CancellationToken cancellationToken)
         {
             if (_storeConnection == null)

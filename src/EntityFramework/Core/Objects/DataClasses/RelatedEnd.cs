@@ -734,11 +734,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of Load, which
-        ///     loads the related entity or entities into the related end using the default merge option.
+        ///     Asynchronously loads the related entity or entities into the related end using the default merge option.
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
-        /// <returns> A task representing the asynchronous operation. </returns>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        /// </returns>
         public Task LoadAsync(CancellationToken cancellationToken)
         {
             return LoadAsync(DefaultMergeOption, cancellationToken);
@@ -747,19 +752,24 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 #endif
 
         /// <summary>
-        ///     Loads the related entity or entities into the local related end using the supplied MergeOption.
+        ///     Loads the related entity or entities into the local related end using the supplied merge option.
         /// </summary>
         public abstract void Load(MergeOption mergeOption);
 
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of Load, which
-        ///     loads the related entity or entities into the related end using the specified merge option.
+        ///     Asynchronously loads the related entity or entities into the related end using the supplied merge option.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="mergeOption"> Merge option to use for loaded entity or entities. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
-        /// <returns> A task representing the asynchronous operation. </returns>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        /// </returns>
         public abstract Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken);
 
 #endif

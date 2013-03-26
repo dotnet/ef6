@@ -117,10 +117,14 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously executes the provided action on each element of the query result.
+        ///     Asynchronously enumerates the query results and performs the specified action on each element.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="action"> The action to be executed. </param>
-        /// <returns> A Task representing the asynchronous operation. </returns>
+        /// <returns> A task that represents the asynchronous operation. </returns>
         public Task ForEachAsync(Action<TElement> action)
         {
             Check.NotNull(action, "action");
@@ -129,11 +133,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the provided action on each element of the query result.
+        ///     Asynchronously enumerates the query results and performs the specified action on each element.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="action"> The action to be executed. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task representing the asynchronous operation. </returns>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> A task that represents the asynchronous operation. </returns>
         public Task ForEachAsync(Action<TElement> action, CancellationToken cancellationToken)
         {
             Check.NotNull(action, "action");
@@ -142,11 +150,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the result as a <see cref="List{TElement}" />.
+        ///     Creates a <see cref="List{T}" /> from the query by enumerating it asynchronously.
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the query result.
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains a <see cref="List{T}" /> that contains elements from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<List<TElement>> ToListAsync()
@@ -155,11 +167,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the result as a <see cref="List{TElement}" />.
+        ///     Creates a <see cref="List{T}" /> from the query by enumerating it asynchronously.
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the query result.
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains a <see cref="List{T}" /> that contains elements from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<List<TElement>> ToListAsync(CancellationToken cancellationToken)
@@ -167,11 +184,17 @@ namespace System.Data.Entity.Infrastructure
             return ((IDbAsyncEnumerable<TElement>)this).ToListAsync(cancellationToken);
         }
 
+
         /// <summary>
-        ///     Asynchronously executes the query and returns the result as an array.
+        ///     Creates an array from the query by enumerating it asynchronously.
         /// </summary>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the query result.
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains an array that contains elements from the input sequence.
         /// </returns>
         public Task<TElement[]> ToArrayAsync()
         {
@@ -179,11 +202,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the result as an array.
+        ///     Creates an array from the query by enumerating it asynchronously.
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the query result.
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains an array that contains elements from the input sequence.
         /// </returns>
         public Task<TElement[]> ToArrayAsync(CancellationToken cancellationToken)
         {
@@ -191,15 +219,18 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the result as a <see cref="Dictionary{TKey, TElement}" />
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from the query by enumerating it asynchronously
         ///     according to a specified key selector function.
         /// </summary>
-        /// <typeparam name="TKey">
-        ///     The type of the key returned by <paramref name="keySelector" /> .
-        /// </typeparam>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the query result.
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector)
@@ -210,16 +241,19 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the result as a <see cref="Dictionary{TKey, TElement}" />
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from the query by enumerating it asynchronously
         ///     according to a specified key selector function.
         /// </summary>
-        /// <typeparam name="TKey">
-        ///     The type of the key returned by <paramref name="keySelector" /> .
-        /// </typeparam>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the query result.
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(
@@ -231,18 +265,19 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the result as a <see cref="Dictionary{TKey, TElement}" />
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from the query by enumerating it asynchronously
         ///     according to a specified key selector function and a comparer.
         /// </summary>
-        /// <typeparam name="TKey">
-        ///     The type of the key returned by <paramref name="keySelector" /> .
-        /// </typeparam>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <param name="comparer">
-        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
-        /// </param>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the query result.
+        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(Func<TElement, TKey> keySelector, IEqualityComparer<TKey> comparer)
@@ -253,19 +288,20 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the result as a <see cref="Dictionary{TKey, TElement}" />
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from the query by enumerating it asynchronously
         ///     according to a specified key selector function and a comparer.
         /// </summary>
-        /// <typeparam name="TKey">
-        ///     The type of the key returned by <paramref name="keySelector" /> .
-        /// </typeparam>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <param name="comparer">
-        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
-        /// </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the query result.
+        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TKey>(
@@ -277,19 +313,21 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the result as a <see cref="Dictionary{TKey, TResult}" />
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from the query by enumerating it asynchronously
         ///     according to a specified key selector and an element selector function.
         /// </summary>
-        /// <typeparam name="TKey">
-        ///     The type of the key returned by <paramref name="keySelector" /> .
-        /// </typeparam>
-        /// <typeparam name="TResult">
-        ///     The type of the value returned by <paramref name="elementSelector" /> .
-        /// </typeparam>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TResult"> The type of the value returned by <paramref name="elementSelector" />. </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the query result.
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains a <see cref="Dictionary{TKey, TResult}" /> that contains values of type
+        ///     <typeparamref name="TResult" /> selected from the query.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<Dictionary<TKey, TResult>> ToDictionaryAsync<TKey, TResult>(
@@ -302,20 +340,22 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the result as a <see cref="Dictionary{TKey, TResult}" />
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from the query by enumerating it asynchronously
         ///     according to a specified key selector and an element selector function.
         /// </summary>
-        /// <typeparam name="TKey">
-        ///     The type of the key returned by <paramref name="keySelector" /> .
-        /// </typeparam>
-        /// <typeparam name="TResult">
-        ///     The type of the value returned by <paramref name="elementSelector" /> .
-        /// </typeparam>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TResult"> The type of the value returned by <paramref name="elementSelector" />. </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the query result.
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains a <see cref="Dictionary{TKey, TResult}" /> that contains values of type
+        ///     <typeparamref name="TResult" /> selected from the query.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<Dictionary<TKey, TResult>> ToDictionaryAsync<TKey, TResult>(
@@ -328,22 +368,22 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the result as a <see cref="Dictionary{TKey, TResult}" />
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from the query by enumerating it asynchronously
         ///     according to a specified key selector function, a comparer, and an element selector function.
         /// </summary>
-        /// <typeparam name="TKey">
-        ///     The type of the key returned by <paramref name="keySelector" /> .
-        /// </typeparam>
-        /// <typeparam name="TResult">
-        ///     The type of the value returned by <paramref name="elementSelector" /> .
-        /// </typeparam>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TResult"> The type of the value returned by <paramref name="elementSelector" />. </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <param name="comparer">
-        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
-        /// </param>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the query result.
+        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains a <see cref="Dictionary{TKey, TResult}" /> that contains values of type
+        ///     <typeparamref name="TResult" /> selected from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<Dictionary<TKey, TResult>> ToDictionaryAsync<TKey, TResult>(
@@ -356,23 +396,23 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the result as a <see cref="Dictionary{TKey, TResult}" />
+        ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from the query by enumerating it asynchronously
         ///     according to a specified key selector function, a comparer, and an element selector function.
         /// </summary>
-        /// <typeparam name="TKey">
-        ///     The type of the key returned by <paramref name="keySelector" /> .
-        /// </typeparam>
-        /// <typeparam name="TResult">
-        ///     The type of the value returned by <paramref name="elementSelector" /> .
-        /// </typeparam>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
+        /// <typeparam name="TResult"> The type of the value returned by <paramref name="elementSelector" />. </typeparam>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <param name="comparer">
-        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
-        /// </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the query result.
+        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains a <see cref="Dictionary{TKey, TResult}" /> that contains values of type
+        ///     <typeparamref name="TResult" /> selected from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<Dictionary<TKey, TResult>> ToDictionaryAsync<TKey, TResult>(
@@ -386,10 +426,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the first element of the result.
+        ///     Asynchronously returns the first element of the query.
         /// </summary>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the first element in the query result.
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the first element in the query result.
         /// </returns>
         /// <exception cref="InvalidOperationException">The query result is empty.</exception>
         public Task<TElement> FirstAsync()
@@ -398,11 +443,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the first element of the result.
+        ///     Asynchronously returns the first element of the query.
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns>
-        ///     A <see cref="Task" /> containing the first element in the query result.
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the first element in the query result.
         /// </returns>
         /// <exception cref="InvalidOperationException">The query result is empty.</exception>
         public Task<TElement> FirstAsync(CancellationToken cancellationToken)
@@ -411,11 +461,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the first element of the result that satisfies a specified condition.
+        ///     Asynchronously returns the first element of the query that satisfies a specified condition.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the first element in the query result that satisfies a specified condition.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the first element in the query result that satisfies a specified condition.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="predicate" />
@@ -432,12 +487,17 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the first element of the result that satisfies a specified condition.
+        ///     Asynchronously returns the first element of the query that satisfies a specified condition.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the first element in the query result that satisfies a specified condition.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the first element in the query result that satisfies a specified condition.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="predicate" />
@@ -454,10 +514,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the first element or a default value if no such element is found.
+        ///     Asynchronously returns the first element of the query, or a default value if the the query result contains no elements.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <returns>
-        ///     A <see cref="Task" /> containing <c>default</c> ( <typeparamref name="TElement" /> ) if query result is empty; otherwise, the first element in the query result.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains <c>default</c> ( <typeparamref name="TElement" /> ) if query result is empty; 
+        ///     otherwise, the first element in the query result.
         /// </returns>
         public Task<TElement> FirstOrDefaultAsync()
         {
@@ -465,11 +531,17 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the first element or a default value if no such element is found.
+        ///     Asynchronously returns the first element of the query, or a default value if the the query result contains no elements.
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing <c>default</c> ( <typeparamref name="TElement" /> ) if query result is empty; otherwise, the first element in the query result.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains <c>default</c> ( <typeparamref name="TElement" /> ) if query result is empty; 
+        ///     otherwise, the first element in the query result.
         /// </returns>
         public Task<TElement> FirstOrDefaultAsync(CancellationToken cancellationToken)
         {
@@ -477,18 +549,19 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the first element of the result that satisfies a specified condition
+        ///     Asynchronously returns the first element of the query that satisfies a specified condition
         ///     or a default value if no such element is found.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing <c>default</c> ( <typeparamref name="TElement" /> ) if query result is empty or if no element passes the test specified by
-        ///     <paramref
-        ///         name="predicate" />
-        ///     ; otherwise, the first element in the query result that passes the test specified by
-        ///     <paramref
-        ///         name="predicate" />
-        ///     .
+        ///    A task that represents the asynchronous operation. 
+        ///    The task result contains <c>default</c> ( <typeparamref name="TElement" /> ) if query result is empty 
+        ///    or if no element passes the test specified by <paramref name="predicate" />; otherwise, the first element 
+        ///    in the query result that passes the test specified by <paramref name="predicate" /> .
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="predicate" />
@@ -504,19 +577,20 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the first element of the result that satisfies a specified condition
+        ///     Asynchronously returns the first element of the query that satisfies a specified condition
         ///     or a default value if no such element is found.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing <c>default</c> ( <typeparamref name="TElement" /> ) if query result is empty or if no element passes the test specified by
-        ///     <paramref
-        ///         name="predicate" />
-        ///     ; otherwise, the first element in the query result that passes the test specified by
-        ///     <paramref
-        ///         name="predicate" />
-        ///     .
+        ///    A task that represents the asynchronous operation. 
+        ///    The task result contains <c>default</c> ( <typeparamref name="TElement" /> ) if query result is empty 
+        ///    or if no element passes the test specified by <paramref name="predicate" />; otherwise, the first element 
+        ///    in the query result that passes the test specified by <paramref name="predicate" /> .
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="predicate" />
@@ -532,11 +606,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the only element of the result
-        ///     and throws an exception if there is not exactly one such element.
+        ///     Asynchronously returns the only element of the query, and throws an exception
+        ///     if there is not exactly one element in the sequence.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <returns>
-        ///     A <see cref="Task" /> containing the single element of the query result.
+        ///      A task that represents the asynchronous operation. 
+        ///     The task result contains the single element of the query result.
         /// </returns>
         /// <exception cref="InvalidOperationException">The query result has more than one element.</exception>
         /// <exception cref="InvalidOperationException">The query result is empty.</exception>
@@ -546,12 +625,17 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the only element of the result
-        ///     and throws an exception if there is not exactly one such element.
+        ///     Asynchronously returns the only element of the query, and throws an exception
+        ///     if there is not exactly one element in the sequence.
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the single element of the query result.
+        ///      A task that represents the asynchronous operation. 
+        ///     The task result contains the single element of the query result.
         /// </returns>
         /// <exception cref="InvalidOperationException">The query result has more than one element.</exception>
         /// <exception cref="InvalidOperationException">The query result is empty.</exception>
@@ -561,15 +645,18 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the only element of the result that satisfies a specified condition
-        ///     and throws an exception if there is not exactly one such element.
+        ///     Asynchronously returns the only element of the query that satisfies a specified condition,
+        ///     and throws an exception if more than one such element exists.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the single element of the query result that satisfies the condition in
-        ///     <paramref
-        ///         name="predicate" />
-        ///     .
+        ///    A task that represents the asynchronous operation. 
+        ///    The task result contains the single element of the query result that satisfies the condition in
+        ///    <paramref name="predicate" />.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="predicate" />
@@ -595,16 +682,19 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the only element of the result that satisfies a specified condition
-        ///     and throws an exception if there is not exactly one such element.
+        ///     Asynchronously returns the only element of the query that satisfies a specified condition,
+        ///     and throws an exception if more than one such element exists.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the single element of the query result that satisfies the condition in
-        ///     <paramref
-        ///         name="predicate" />
-        ///     .
+        ///    A task that represents the asynchronous operation. 
+        ///    The task result contains the single element of the query result that satisfies the condition in
+        ///    <paramref name="predicate" />.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="predicate" />
@@ -630,15 +720,17 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the only element of the result or
-        ///     a default value if no such element exists, and throws an exception if there is more than one such element.
+        ///     Asynchronously returns the only element of a sequence, or a default value if the sequence is empty;
+        ///     this method throws an exception if there is more than one element in the sequence.
         /// </summary>
-        /// <param name="predicate"> A function to test each element for a condition. </param>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <returns>
-        ///     A <see cref="Task" /> containing the single element of the query result or <c>default</c> (
-        ///     <typeparamref
-        ///         name="TElement" />
-        ///     ) if no such element is found.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the single element of the query result, or <c>default</c> (<typeparamref name="TElement" />) 
+        ///     if the sequence contains no elements.
         /// </returns>
         /// <exception cref="InvalidOperationException">The query result has more than one element.</exception>
         public Task<TElement> SingleOrDefaultAsync()
@@ -647,16 +739,18 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the only element of the result or
-        ///     a default value if no such element exists, and throws an exception if there is more than one such element.
+        ///     Asynchronously returns the only element of a sequence, or a default value if the sequence is empty;
+        ///     this method throws an exception if there is more than one element in the sequence.
         /// </summary>
-        /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the single element of the query result or <c>default</c> (
-        ///     <typeparamref
-        ///         name="TElement" />
-        ///     ) if no such element is found.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the single element of the query result, or <c>default</c> (<typeparamref name="TElement" />) 
+        ///     if the sequence contains no elements.
         /// </returns>
         /// <exception cref="InvalidOperationException">The query result has more than one element.</exception>
         public Task<TElement> SingleOrDefaultAsync(CancellationToken cancellationToken)
@@ -665,15 +759,19 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the only element of the result that satisfies a specified condition or
-        ///     a default value if no such element exists, and throws an exception if there is more than one such element.
+        ///     Asynchronously returns the only element of the query that satisfies a specified condition or
+        ///     a default value if no such element exists; this method throws an exception if more than one element
+        ///     satisfies the condition.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the single element of the query result that satisfies the condition in
-        ///     <paramref
-        ///         name="predicate" />
-        ///     , or <c>default</c> ( <typeparamref name="TElement" /> ) if no such element is found.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the single element of the query result that satisfies the condition in
+        ///     <paramref name="predicate" />, or <c>default</c> ( <typeparamref name="TElement" /> ) if no such element is found.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="predicate" />
@@ -694,16 +792,20 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the only element of the result that satisfies a specified condition or
-        ///     a default value if no such element exists, and throws an exception if there is more than one such element.
+        ///     Asynchronously returns the only element of the query that satisfies a specified condition or
+        ///     a default value if no such element exists; this method throws an exception if more than one element
+        ///     satisfies the condition.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the single element of the query result that satisfies the condition in
-        ///     <paramref
-        ///         name="predicate" />
-        ///     , or <c>default</c> ( <typeparamref name="TElement" /> ) if no such element is found.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the single element of the query result that satisfies the condition in
+        ///     <paramref name="predicate" />, or <c>default</c> ( <typeparamref name="TElement" /> ) if no such element is found.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="predicate" />
@@ -724,11 +826,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and determines whether the result contains a specified element by using the default equality comparer.
+        ///     Asynchronously determines whether the query contains a specified element by using the default equality comparer.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="value"> The object to locate in the query result. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing <c>true</c> if the query result contains the specified value; otherwise, <c>false</c> .
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains <c>true</c> if the query result contains the specified value; otherwise, <c>false</c>. 
         /// </returns>
         public Task<bool> ContainsAsync(TElement value)
         {
@@ -736,12 +843,17 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and determines whether the result contains a specified element by using the default equality comparer.
+        ///     Asynchronously determines whether the query contains a specified element by using the default equality comparer.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="value"> The object to locate in the query result. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing <c>true</c> if the query result contains the specified value; otherwise, <c>false</c> .
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains <c>true</c> if the query result contains the specified value; otherwise, <c>false</c>. 
         /// </returns>
         public Task<bool> ContainsAsync(TElement value, CancellationToken cancellationToken)
         {
@@ -749,10 +861,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and determines whether the result contains any elements.
+        ///     Asynchronously determines whether the query contains any elements.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <returns>
-        ///     A <see cref="Task" /> containing <c>true</c> if the query result contains any elements; otherwise, <c>false</c> .
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains <c>true</c> if the query result contains any elements; otherwise, <c>false</c>.
         /// </returns>
         public Task<bool> AnyAsync()
         {
@@ -760,11 +877,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and determines whether the result contains any elements.
+        ///     Asynchronously determines whether the query contains any elements.
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing <c>true</c> if the query result contains any elements; otherwise, <c>false</c> .
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains <c>true</c> if the query result contains any elements; otherwise, <c>false</c>.
         /// </returns>
         public Task<bool> AnyAsync(CancellationToken cancellationToken)
         {
@@ -772,11 +894,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and determines whether any element of the result satisfies a condition.
+        ///     Asynchronously determines whether any element of the query satisfies a condition.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing <c>true</c> if any elements in the query result pass the test in the specified predicate; otherwise, <c>false</c> .
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains <c>true</c> if any elements in the query result pass the test in the specified predicate; otherwise, <c>false</c>.
         /// </returns>
         public Task<bool> AnyAsync(Func<TElement, bool> predicate)
         {
@@ -786,12 +913,17 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and determines whether any element of the result satisfies a condition.
+        ///     Asynchronously determines whether any element of the query satisfies a condition.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing <c>true</c> if any elements in the query result pass the test in the specified predicate; otherwise, <c>false</c> .
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains <c>true</c> if any elements in the query result pass the test in the specified predicate; otherwise, <c>false</c>.
         /// </returns>
         public Task<bool> AnyAsync(Func<TElement, bool> predicate, CancellationToken cancellationToken)
         {
@@ -801,11 +933,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and determines whether any element of the result satisfies a condition.
+        ///     Asynchronously determines whether all the elements of the query satisfy a condition.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing <c>true</c> if every element of the query result passes the test in the specified predicate; otherwise, <c>false</c> .
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains <c>true</c> if every element of the query result passes the test in the specified predicate; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="predicate" />
@@ -821,12 +958,17 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and determines whether any element of the result satisfies a condition.
+        ///     Asynchronously determines whether all the elements of the query satisfy a condition.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing <c>true</c> if every element of the query result passes the test in the specified predicate; otherwise, <c>false</c> .
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains <c>true</c> if every element of the query result passes the test in the specified predicate; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="predicate" />
@@ -842,11 +984,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the number of elements in the result.
+        ///     Asynchronously returns the number of elements in the query.
         /// </summary>
-        /// <param name="predicate"> A function to test each element for a condition. </param>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <returns>
-        ///     A <see cref="Task" /> containing the number of elements in the query result.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the number of elements in the query result.
         /// </returns>
         /// <exception cref="OverflowException">
         ///     The number of elements in the query result is larger than
@@ -859,12 +1005,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the number of elements in the result.
+        ///     Asynchronously returns the number of elements in the query.
         /// </summary>
-        /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the number of elements in the query result.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the number of elements in the query result.
         /// </returns>
         /// <exception cref="OverflowException">
         ///     The number of elements in the query result is larger than
@@ -877,11 +1027,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the number of elements in the result that satisfy a condition.
+        ///     Asynchronously returns the number of elements in the query that satisfy a condition.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the number of elements in the query result that satisfies the condition in the predicate function.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the number of elements in the query result that satisfy the condition in the predicate function.
         /// </returns>
         /// <exception cref="OverflowException">
         ///     The number of elements in the query result that satisfy the condition in the predicate function
@@ -897,12 +1052,17 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the number of elements in the result that satisfy a condition.
+        ///     Asynchronously returns the number of elements in the query that satisfy a condition.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the number of elements in the query result that satisfies the condition in the predicate function.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the number of elements in the query result that satisfy the condition in the predicate function.
         /// </returns>
         /// <exception cref="OverflowException">
         ///     The number of elements in the query result that satisfy the condition in the predicate function
@@ -918,12 +1078,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the number of elements in the result.
+        ///     Asynchronously returns an <see cref="Int64" /> that represents the total number of elements in the query.
         /// </summary>
-        /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <returns>
-        ///     A <see cref="Task" /> containing the number of elements in the query result.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the number of elements in the query result.
         /// </returns>
         /// <exception cref="OverflowException">
         ///     The number of elements in the query result is larger than
@@ -936,12 +1099,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the number of elements in the result.
+        ///     Asynchronously returns an <see cref="Int64" /> that represents the total number of elements in the query.
         /// </summary>
-        /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the number of elements in the query result.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the number of elements in the query result.
         /// </returns>
         /// <exception cref="OverflowException">
         ///     The number of elements in the query result is larger than
@@ -954,11 +1121,17 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the number of elements in the result that satisfy a condition.
+        ///     Asynchronously returns an <see cref="Int64" /> that represents the number of elements in the query
+        ///     that satisfy a condition.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the number of elements in the query result that satisfies the condition in the predicate function.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the number of elements in the query result that satisfy the condition in the predicate function.
         /// </returns>
         /// <exception cref="OverflowException">
         ///     The number of elements in the query result that satisfy the condition in the predicate function
@@ -974,12 +1147,18 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the number of elements in the result that satisfy a condition.
+        ///     Asynchronously returns an <see cref="Int64" /> that represents the number of elements in the query
+        ///     that satisfy a condition.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the number of elements in the query result that satisfies the condition in the predicate function.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the number of elements in the query result that satisfy the condition in the predicate function.
         /// </returns>
         /// <exception cref="OverflowException">
         ///     The number of elements in the query result that satisfy the condition in the predicate function
@@ -995,10 +1174,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the minimum value of the result.
+        ///     Asynchronously returns the minimum value of the query.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <returns>
-        ///     A <see cref="Task" /> containing the minimum value in the query result.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the minimum value in the query result.
         /// </returns>
         public Task<TElement> MinAsync()
         {
@@ -1006,11 +1190,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the minimum value of the result.
+        ///     Asynchronously returns the minimum value of the query.
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the minimum value in the query result.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the minimum value in the query result.
         /// </returns>
         public Task<TElement> MinAsync(CancellationToken cancellationToken)
         {
@@ -1018,10 +1207,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the maximum value of the result.
+        ///     Asynchronously returns the maximum value of the query.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <returns>
-        ///     A <see cref="Task" /> containing the minimum value in the query result.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the maximum value in the query result.
         /// </returns>
         public Task<TElement> MaxAsync()
         {
@@ -1029,11 +1223,16 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously executes the query and returns the maximum value of the result.
+        ///     Asynchronously returns the maximum value of the query.
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <returns>
-        ///     A <see cref="Task" /> containing the minimum value in the query result.
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the maximum value in the query result.
         /// </returns>
         public Task<TElement> MaxAsync(CancellationToken cancellationToken)
         {

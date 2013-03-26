@@ -10,7 +10,7 @@ namespace System.Data.Entity.Infrastructure
 
     /// <summary>
     ///     Asynchronous version of the <see cref="IEnumerable" /> interface that allows elements to be retrieved asynchronously.
-    ///     It is used to interact with Entity Framework queries and shouldn't be implemented by custom classes.
+    ///     This interface is used to interact with Entity Framework queries and shouldn't be implemented by custom classes.
     /// </summary>
     public interface IDbAsyncEnumerable
     {

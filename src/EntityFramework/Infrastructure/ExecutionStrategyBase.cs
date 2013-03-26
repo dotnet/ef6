@@ -168,7 +168,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Repetitively executes the specified asynchronous task while it satisfies the current retry policy.
         /// </summary>
-        /// <param name="taskAction">A function that returns a started task.</param>
+        /// <param name="func">A function that returns a started task.</param>
         /// <param name="cancellationToken">
         ///     A cancellation token used to cancel the retry operation, but not operations that are already in flight
         ///     or that already completed successfully.
@@ -198,7 +198,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Repeatedly executes the specified asynchronous task while it satisfies the current retry policy.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The type parameter of the <see cref="Task{T}"/> returned by <paramref name="func"/>.
+        ///     The result type of the <see cref="Task{T}"/> returned by <paramref name="func"/>.
         /// </typeparam>
         /// <param name="func">A function that returns a started task of type <typeparamref name="TResult"/>.</param>
         /// <param name="cancellationToken">

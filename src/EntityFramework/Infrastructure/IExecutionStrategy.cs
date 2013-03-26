@@ -32,7 +32,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Executes the specified asynchronous action.
         /// </summary>
-        /// <param name="taskAction">A function that returns a started task.</param>
+        /// <param name="func">A function that returns a started task.</param>
         /// <param name="cancellationToken">
         ///     A cancellation token used to cancel the retry operation, but not operations that are already in flight
         ///     or that already completed successfully.
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Executes the specified asynchronous function and returns the result.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The type parameter of the <see cref="Task{T}"/> returned by <paramref name="func"/>.
+        ///     The result type of the <see cref="Task{T}"/> returned by <paramref name="func"/>.
         /// </typeparam>
         /// <param name="func">A function that returns a started task of type <typeparamref name="TResult"/>.</param>
         /// <param name="cancellationToken">

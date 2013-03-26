@@ -474,11 +474,13 @@ namespace System.Data.Entity.Core.EntityClient
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of NextResult, which
-        ///     moves the reader to the next result set when reading a batch of statements
+        ///     Asynchronously moves the reader to the next result set when reading a batch of statements
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
-        /// <returns> A Task containing the result of the operation: true if there are more result sets; false otherwise </returns>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains true if there are more result sets; false otherwise.
+        /// </returns>
         public override async Task<bool> NextResultAsync(CancellationToken cancellationToken)
         {
             try
@@ -505,11 +507,13 @@ namespace System.Data.Entity.Core.EntityClient
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of Read, which
-        ///     moves the reader to the next row of the current result set
+        ///     Asynchronously moves the reader to the next row of the current result set
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
-        /// <returns> A Task containing the result of the operation: true if there are more rows; false otherwise. </returns>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains true if there are more rows; false otherwise. 
+        /// </returns>
         public override Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
             return _storeDataReader.ReadAsync(cancellationToken);

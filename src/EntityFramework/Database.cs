@@ -492,12 +492,18 @@ namespace System.Data.Entity
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of ExecuteSqlCommand, which
-        ///     executes the given DDL/DML command against the database.
+        ///     Asynchronously executes the given DDL/DML command against the database.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="sql"> The command string. </param>
         /// <param name="parameters"> The parameters to apply to the command string. </param>
-        /// <returns> A Task containing the result returned by the database after executing the command. </returns>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the result returned by the database after executing the command. 
+        /// </returns>
         public Task<int> ExecuteSqlCommandAsync(string sql, params object[] parameters)
         {
             Check.NotEmpty(sql, "sql");
@@ -507,13 +513,19 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     An asynchronous version of ExecuteSqlCommand, which
-        ///     executes the given DDL/DML command against the database.
+        ///     Asynchronously executes the given DDL/DML command against the database.
         /// </summary>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
         /// <param name="sql"> The command string. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
         /// <param name="parameters"> The parameters to apply to the command string. </param>
-        /// <returns> A Task containing the result returned by the database after executing the command. </returns>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the result returned by the database after executing the command. 
+        /// </returns>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public Task<int> ExecuteSqlCommandAsync(string sql, CancellationToken cancellationToken, params object[] parameters)
         {

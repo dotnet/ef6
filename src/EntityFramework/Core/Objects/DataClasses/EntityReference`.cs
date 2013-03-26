@@ -195,13 +195,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
 #if !NET40
 
-        /// <summary>
-        ///     An asynchronous version of Load, which
-        ///     loads the related entity or entities into the related end using the specified merge option.
-        /// </summary>
-        /// <param name="mergeOption"> Merge option to use for loaded entity or entities. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
-        /// <returns> A Task representing the asynchronous operation. </returns>
+        /// <inheritdoc />
         public override async Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
             CheckOwnerNull();

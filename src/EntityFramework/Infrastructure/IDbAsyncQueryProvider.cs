@@ -12,27 +12,32 @@ namespace System.Data.Entity.Infrastructure
 
     /// <summary>
     ///     Defines methods to create and asynchronously execute queries that are described by an
-    ///     <see
-    ///         cref="T:System.Linq.IQueryable" />
-    ///     object.
+    ///     <see cref="IQueryable" /> object.
+    ///     This interface is used to interact with Entity Framework queries and shouldn't be implemented by custom classes.
     /// </summary>
     public interface IDbAsyncQueryProvider : IQueryProvider
     {
         /// <summary>
         ///     Asynchronously executes the query represented by a specified expression tree.
         /// </summary>
-        /// <returns> A Task containing the value that results from executing the specified query. </returns>
         /// <param name="expression"> An expression tree that represents a LINQ query. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the value that results from executing the specified query. 
+        /// </returns>
         Task<object> ExecuteAsync(Expression expression, CancellationToken cancellationToken);
 
         /// <summary>
         ///     Asynchronously executes the strongly-typed query represented by a specified expression tree.
         /// </summary>
-        /// <returns> A Task containing the value that results from executing the specified query. </returns>
-        /// <param name="expression"> An expression tree that represents a LINQ query. </param>
         /// <typeparam name="TResult"> The type of the value that results from executing the query. </typeparam>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        /// <param name="expression"> An expression tree that represents a LINQ query. </param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        ///     The task result contains the value that results from executing the specified query. 
+        /// </returns>
         Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken);
     }
 }

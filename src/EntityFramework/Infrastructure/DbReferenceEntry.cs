@@ -87,21 +87,33 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of Load, which loads the entity from the database.
+        ///     Asynchronously loads the entity from the database.
         ///     Note that if the entity already exists in the context, then it will not overwritten with values from the database.
         /// </summary>
-        /// <returns> A Task representing the asynchronous operation. </returns>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        /// </returns>
         public Task LoadAsync()
         {
             return LoadAsync(CancellationToken.None);
         }
 
         /// <summary>
-        ///     An asynchronous version of Load, which loads the entity from the database.
+        ///     Asynchronously loads the entity from the database.
         ///     Note that if the entity already exists in the context, then it will not overwritten with values from the database.
         /// </summary>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task representing the asynchronous operation. </returns>
+        /// <remarks> 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <returns> 
+        ///     A task that represents the asynchronous operation. 
+        /// </returns>
         public Task LoadAsync(CancellationToken cancellationToken)
         {
             return _internalReferenceEntry.LoadAsync(cancellationToken);
