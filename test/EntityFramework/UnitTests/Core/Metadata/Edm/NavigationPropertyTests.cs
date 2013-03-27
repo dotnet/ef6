@@ -27,5 +27,71 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Equal(false, navigationProperty.TypeUsage.Facets[EdmConstants.Nullable].Value);
         }
+
+        [Fact]
+        public static void Create_sets_properties_and_seals_the_instance()
+        {
+            var typeUsage = TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var associationType = new AssociationType("AssociationType", "Namespace", true, DataSpace.CSpace);
+            var source = new EntityType("Source", "Namespace", DataSpace.CSpace);
+            var target = new EntityType("Target", "Namespace", DataSpace.CSpace);
+            var sourceEnd = new AssociationEndMember("SourceEnd", source);
+            var targetEnd = new AssociationEndMember("TargetEnd", target);            
+
+            var navigationProperty =
+                NavigationProperty.Create(
+                    "NavigationProperty",
+                    typeUsage,
+                    associationType,
+                    sourceEnd,
+                    targetEnd);
+
+            Assert.Equal("NavigationProperty", navigationProperty.Name);
+            Assert.Same(typeUsage, navigationProperty.TypeUsage);
+            Assert.Same(associationType, navigationProperty.RelationshipType);
+            Assert.Same(sourceEnd, navigationProperty.FromEndMember);
+            Assert.Same(targetEnd, navigationProperty.ToEndMember);
+            Assert.True(navigationProperty.IsReadOnly);
+        }
+
+        [Fact]
+        public static void Adding_a_NavigationProperty_to_an_EntityType_can_be_forced_when_read_only()
+        {
+            var typeUsage = TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var associationType = new AssociationType("AssociationType", "Namespace", true, DataSpace.CSpace);
+            var source = new EntityType("Source", "Namespace", DataSpace.CSpace);
+            var target = new EntityType("Target", "Namespace", DataSpace.CSpace);
+            var sourceEnd = new AssociationEndMember("SourceEnd", source);
+            var targetEnd = new AssociationEndMember("TargetEnd", target);
+
+            var navigationProperty =
+                NavigationProperty.Create(
+                    "NavigationProperty",
+                    typeUsage,
+                    associationType,
+                    sourceEnd,
+                    targetEnd);
+
+            source.SetReadOnly();
+            Assert.True(source.IsReadOnly);
+
+            Assert.Equal(
+                Resources.Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => source.AddMember(navigationProperty)).Message);
+
+            Assert.Equal(0, source.Members.Count);
+
+            source.AddNavigationProperty(navigationProperty);
+
+            Assert.True(source.IsReadOnly);
+            Assert.Equal(1, source.Members.Count);
+            Assert.Same(navigationProperty, source.Members[0]);
+
+            Assert.Equal(
+                Resources.Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => source.AddMember(navigationProperty)).Message);
+        }
     }
 }

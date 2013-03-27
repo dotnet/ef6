@@ -129,5 +129,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             base.SetReadOnly();
         }
+
+        /// <summary>
+        /// Creates a NavigationProperty instance from the specified parameters.
+        /// </summary>
+        /// <param name="name">The name of the navigation property.</param>
+        /// <param name="typeUsage">Specifies the navigation property type and its facets.</param>
+        /// <param name="relationshipType">The relationship type for the navigation.</param>
+        /// <param name="from">The source end member in the navigation.</param>
+        /// <param name="to">The target end member in the navigation.</param>
+        /// <returns>The newly created NavigationProperty instance.</returns>
+        public static NavigationProperty Create(
+            string name, 
+            TypeUsage typeUsage,
+            RelationshipType relationshipType, 
+            RelationshipEndMember from,
+            RelationshipEndMember to)
+        {
+            var instance = new NavigationProperty(name, typeUsage);
+
+            instance.RelationshipType = relationshipType;            
+            instance.FromEndMember = from;
+            instance.ToEndMember = to;
+
+            instance.SetReadOnly();
+
+            return instance;
+        }
     }
 }

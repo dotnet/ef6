@@ -225,7 +225,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (constraint != null)
             {
-                instance.Constraint = constraint;
+                instance.AddReferentialConstraint(constraint);
             }
 
             if (metadataProperties != null)

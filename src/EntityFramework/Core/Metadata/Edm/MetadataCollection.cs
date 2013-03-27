@@ -93,6 +93,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
+        /// Used in the OneToOneMappingBuilder for the designer to workaround the circular 
+        /// dependency between EntityType and AssociationEndMember created when adding 
+        /// navigation properties. Must not be used in other context.
+        /// </summary>
+        internal void ResetReadOnly()
+        {
+            _readOnly = false;
+        }
+
+        /// <summary>
         ///     Returns the collection as a readonly collection
         /// </summary>
         public virtual ReadOnlyCollection<T> AsReadOnly
