@@ -50,7 +50,7 @@ namespace System.Data.Entity.Config
     ///     <see cref="Func{IExecutionStrategy}" />
     ///     Object returned: An execution strategy factory for store operations
     ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
-    ///     Key is <see cref="ExecutionStrategyKey"/> consisting of the ADO.NET provider invariant name string and the database server address.
+    ///     Key is <see cref="ExecutionStrategyKey" /> consisting of the ADO.NET provider invariant name string and the database server address.
     /// </remarks>
     public interface IDbDependencyResolver
     {

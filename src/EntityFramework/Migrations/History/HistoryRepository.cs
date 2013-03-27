@@ -408,9 +408,9 @@ namespace System.Data.Entity.Migrations.History
 
                         var dropPrimaryKeyOperation
                             = new DropPrimaryKeyOperation
-                                  {
-                                      Table = tableName
-                                  };
+                                {
+                                    Table = tableName
+                                };
 
                         dropPrimaryKeyOperation.Columns.Add("MigrationId");
 
@@ -418,9 +418,9 @@ namespace System.Data.Entity.Migrations.History
 
                         var addPrimaryKeyOperation
                             = new AddPrimaryKeyOperation
-                                  {
-                                      Table = tableName
-                                  };
+                                {
+                                    Table = tableName
+                                };
 
                         addPrimaryKeyOperation.Columns.Add("MigrationId");
                         addPrimaryKeyOperation.Columns.Add("ContextKey");
@@ -489,10 +489,10 @@ namespace System.Data.Entity.Migrations.History
             {
                 var historyRow
                     = new HistoryRow
-                          {
-                              MigrationId = migrationId,
-                              ContextKey = _contextKey
-                          };
+                        {
+                            MigrationId = migrationId,
+                            ContextKey = _contextKey
+                        };
 
                 context.History.Attach(historyRow);
                 context.History.Remove(historyRow);

@@ -182,9 +182,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
 #if DEBUG
-        /// <summary>
-        ///     Get the current plan compiler phase
-        /// </summary>
+    /// <summary>
+    ///     Get the current plan compiler phase
+    /// </summary>
         internal PlanCompilerPhase Phase
         {
             get { return m_phase; }
@@ -364,7 +364,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             CodeGen.Process(this, out providerCommands, out resultColumnMap, out columnCount);
 
 #if DEBUG
-            // GC.KeepAlive makes FxCop Grumpy.
+    // GC.KeepAlive makes FxCop Grumpy.
             var size = beforePreProcessor.Length;
             size = beforeAggregatePushdown.Length;
             size = beforeNormalization.Length;

@@ -11,14 +11,15 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#if !NET40
+
 #endif
 
     /// <summary>
-    ///     A wrapper over a <see cref="DbDataReader"/> that will consume and close the supplied reader
-    ///     when <see cref="Initialize"/> is called.
+    ///     A wrapper over a <see cref="DbDataReader" /> that will consume and close the supplied reader
+    ///     when <see cref="Initialize" /> is called.
     /// </summary>
     internal class BufferedDataReader : DbDataReader
     {
@@ -231,12 +232,14 @@ namespace System.Data.Entity.Core.Objects.Internal
                             {
                                 row[i] = DBNull.Value;
                             }
-                            else if (metadata.HasSpatialColumns && metadata.GeographyColumns[i])
+                            else if (metadata.HasSpatialColumns
+                                     && metadata.GeographyColumns[i])
                             {
                                 row[i] = await metadata.SpatialDataReader.GetGeographyAsync(i, cancellationToken)
                                                        .ConfigureAwait(continueOnCapturedContext: false);
                             }
-                            else if (metadata.HasSpatialColumns && metadata.GeometryColumns[i])
+                            else if (metadata.HasSpatialColumns
+                                     && metadata.GeometryColumns[i])
                             {
                                 row[i] = await metadata.SpatialDataReader.GetGeometryAsync(i, cancellationToken)
                                                        .ConfigureAwait(continueOnCapturedContext: false);

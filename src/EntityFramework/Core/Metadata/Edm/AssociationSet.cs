@@ -156,22 +156,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Creates a read-only AssociationSet instance from the specified parameters.
+        ///     Creates a read-only AssociationSet instance from the specified parameters.
         /// </summary>
         /// <param name="name">The name of the association set.</param>
         /// <param name="type">The association type of the elements in the association set.</param>
         /// <param name="sourceSet">The entity set for the source association set end.</param>
         /// <param name="targetSet">The entity set for the target association set end.</param>
         /// <param name="metadataProperties">Metadata properties to be associated with the instance.</param>
-        /// <returns>The newly created AssociationSet instance.</returns>        
+        /// <returns>The newly created AssociationSet instance.</returns>
         /// <exception cref="System.ArgumentException">The specified name is null or empty.</exception>
         /// <exception cref="System.ArgumentNullException">The specified association type is null.</exception>
-        /// <exception cref="System.ArgumentException">The entity type of one of the ends of the specified
-        /// association type does not match the entity type of the corresponding entity set end.</exception>
+        /// <exception cref="System.ArgumentException">
+        ///     The entity type of one of the ends of the specified
+        ///     association type does not match the entity type of the corresponding entity set end.
+        /// </exception>
         public static AssociationSet Create(
-            string name, 
-            AssociationType type, 
-            EntitySet sourceSet, 
+            string name,
+            AssociationType type,
+            EntitySet sourceSet,
             EntitySet targetSet,
             IEnumerable<MetadataProperty> metadataProperties)
         {

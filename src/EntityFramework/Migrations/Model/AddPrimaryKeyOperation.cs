@@ -31,11 +31,11 @@ namespace System.Data.Entity.Migrations.Model
             {
                 var dropPrimaryKeyOperation
                     = new DropPrimaryKeyOperation
-                          {
-                              Name = Name,
-                              Table = Table,
-                              IsSystem = IsSystem
-                          };
+                        {
+                            Name = Name,
+                            Table = Table,
+                            IsSystem = IsSystem
+                        };
 
                 Columns.Each(c => dropPrimaryKeyOperation.Columns.Add(c));
 

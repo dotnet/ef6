@@ -739,9 +739,9 @@ namespace System.Data.Entity.Migrations.Sql
                                    .Replace("where ", "WHERE "); // prettify
 
                             // inline params
-                        c.Parameters
-                            .Cast<DbParameter>()
-                            .Each(p => sql = sql.Replace(p.ParameterName, Generate((dynamic)p.Value)));
+                            c.Parameters
+                             .Cast<DbParameter>()
+                             .Each(p => sql = sql.Replace(p.ParameterName, Generate((dynamic)p.Value)));
 
                             writer.Write(sql);
                         });

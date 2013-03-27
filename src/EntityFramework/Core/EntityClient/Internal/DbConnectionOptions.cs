@@ -5,10 +5,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Collections;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     ///     Copied from System.Data.dll
@@ -58,7 +56,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         internal readonly NameValuePair KeyChain;
 
         /// <summary>
-        /// For testing.
+        ///     For testing.
         /// </summary>
         internal DbConnectionOptions()
         {
@@ -535,41 +533,41 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             try
             {
 #endif
-                var nextStartPosition = 0;
-                var endPosition = connectionString.Length;
-                while (nextStartPosition < endPosition)
-                {
-                    var startPosition = nextStartPosition;
+            var nextStartPosition = 0;
+            var endPosition = connectionString.Length;
+            while (nextStartPosition < endPosition)
+            {
+                var startPosition = nextStartPosition;
 
-                    string keyname, keyvalue;
-                    nextStartPosition = GetKeyValuePair(connectionString, startPosition, buffer, out keyname, out keyvalue);
-                    if (string.IsNullOrEmpty(keyname))
-                    {
-                        // if (nextStartPosition != endPosition) { throw; }
-                        break;
-                    }
+                string keyname, keyvalue;
+                nextStartPosition = GetKeyValuePair(connectionString, startPosition, buffer, out keyname, out keyvalue);
+                if (string.IsNullOrEmpty(keyname))
+                {
+                    // if (nextStartPosition != endPosition) { throw; }
+                    break;
+                }
 
 #if DEBUG
                     Debug.Assert(IsKeyNameValid(keyname), "ParseFailure, invalid keyname");
                     Debug.Assert(IsValueValidInternal(keyvalue), "parse failure, invalid keyvalue");
 #endif
-                    var realkeyname = ((null != synonyms) ? (string)synonyms[keyname] : keyname);
-                    if (!IsKeyNameValid(realkeyname))
-                    {
-                        throw new ArgumentException(Strings.ADP_KeywordNotSupported(keyname));
-                    }
-                    parsetable[realkeyname] = keyvalue; // last key-value pair wins (or first)
-
-                    if (null != localKeychain)
-                    {
-                        localKeychain = localKeychain.Next = new NameValuePair();
-                    }
-                    else
-                    {
-                        // first time only - don't contain modified chain from UDL file
-                        keychain = localKeychain = new NameValuePair();
-                    }
+                var realkeyname = ((null != synonyms) ? (string)synonyms[keyname] : keyname);
+                if (!IsKeyNameValid(realkeyname))
+                {
+                    throw new ArgumentException(Strings.ADP_KeywordNotSupported(keyname));
                 }
+                parsetable[realkeyname] = keyvalue; // last key-value pair wins (or first)
+
+                if (null != localKeychain)
+                {
+                    localKeychain = localKeychain.Next = new NameValuePair();
+                }
+                else
+                {
+                    // first time only - don't contain modified chain from UDL file
+                    keychain = localKeychain = new NameValuePair();
+                }
+            }
 #if DEBUG
             }
             catch (ArgumentException e)

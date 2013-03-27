@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     ///     Indicates that the given method is a proxy for an EDM function.
     /// </summary>
     /// <remarks>
-    ///     Note that this attribute has been replaced by the <see cref="DbFunctionAttribute"/> starting with EF6.
+    ///     Note that this attribute has been replaced by the <see cref="DbFunctionAttribute" /> starting with EF6.
     /// </remarks>
     [Obsolete("This attribute has been replaced by System.Data.Entity.DbFunctionAttribute.")]
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]

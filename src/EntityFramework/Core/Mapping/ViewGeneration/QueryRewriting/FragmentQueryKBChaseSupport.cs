@@ -210,10 +210,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             // rules with inconsistent conditions may make the chase incomplete:
             // For instance, consider the KB {c->a, b->c, !b->a} and the condition "!a".
             // chase(!a, KB) = !a, but !a ^ KB is unsatisfiable.
-            
+
             foreach (var premise in _implications.Keys)
             {
-                if (premise.Identifier.Variable.Equals(condition.Identifier.Variable) &&
+                if (premise.Identifier.Variable.Equals(condition.Identifier.Variable)
+                    &&
                     !premise.Identifier.Range.SetEquals(condition.Identifier.Range))
                 {
                     CacheResidualFact(new OrExpr<DomainConstraint>(new NotExpr<DomainConstraint>(condition), implies));

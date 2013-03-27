@@ -573,7 +573,6 @@ namespace System.Data.Entity.Infrastructure.Pluralization
             userDictionaryEntries.Each(entry => _userDictionary.AddValue(entry.Singular, entry.Plural));
         }
 
-      
         // CONSIDER optimize the algorithm by collecting all the special cases to one single dictionary
         public string Pluralize(string word)
         {
@@ -773,11 +772,11 @@ namespace System.Data.Entity.Infrastructure.Pluralization
             // [cs]h and ss that take es as plural form
             if (PluralizationServiceUtil.TryInflectOnSuffixInWord(
                 suffixWord, new List<string>
-                                {
-                                    "ch",
-                                    "sh",
-                                    "ss"
-                                }, (s) => s + "es", _culture, out newSuffixWord))
+                    {
+                        "ch",
+                        "sh",
+                        "ss"
+                    }, (s) => s + "es", _culture, out newSuffixWord))
             {
                 return prefixWord + newSuffixWord;
             }

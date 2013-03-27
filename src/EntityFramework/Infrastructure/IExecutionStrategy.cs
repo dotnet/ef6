@@ -9,7 +9,7 @@ namespace System.Data.Entity.Infrastructure
     public interface IExecutionStrategy
     {
         /// <summary>
-        ///     Indicates whether this <see cref="IExecutionStrategy"/> might retry the execution after a failure.
+        ///     Indicates whether this <see cref="IExecutionStrategy" /> might retry the execution after a failure.
         /// </summary>
         bool RetriesOnFailure { get; }
 
@@ -22,8 +22,12 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Executes the specified function and returns the result.
         /// </summary>
-        /// <typeparam name="TResult">The return type of <paramref name="func"/>.</typeparam>
-        /// <param name="func">A delegate representing an executable action that returns the result of type <typeparamref name="TResult"/>.</param>
+        /// <typeparam name="TResult">
+        ///     The return type of <paramref name="func" />.
+        /// </typeparam>
+        /// <param name="func">
+        ///     A delegate representing an executable action that returns the result of type <typeparamref name="TResult" />.
+        /// </param>
         /// <returns>The result from the action.</returns>
         TResult Execute<TResult>(Func<TResult> func);
 
@@ -48,9 +52,11 @@ namespace System.Data.Entity.Infrastructure
         ///     Executes the specified asynchronous function and returns the result.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The result type of the <see cref="Task{T}"/> returned by <paramref name="func"/>.
+        ///     The result type of the <see cref="Task{T}" /> returned by <paramref name="func" />.
         /// </typeparam>
-        /// <param name="func">A function that returns a started task of type <typeparamref name="TResult"/>.</param>
+        /// <param name="func">
+        ///     A function that returns a started task of type <typeparamref name="TResult" />.
+        /// </param>
         /// <param name="cancellationToken">
         ///     A cancellation token used to cancel the retry operation, but not operations that are already in flight
         ///     or that already completed successfully.

@@ -66,9 +66,9 @@ namespace System.Data.Entity.Migrations.Model
             get
             {
                 return new RenameColumnOperation(Table, NewName, Name)
-                           {
-                               IsSystem = IsSystem
-                           };
+                    {
+                        IsSystem = IsSystem
+                    };
             }
         }
 

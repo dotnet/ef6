@@ -86,14 +86,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Adds a member to this type.
+        ///     Adds a member to this type.
         /// </summary>
         /// <param name="member">The member to add.</param>
-        /// <param name="forceAdd">Indicates whether the addition is forced, regardless of
-        /// whether read-only is set.</param>
-        /// <remarks>Adding a NavigationProperty to an EntityType introduces a circular dependency between 
-        /// EntityType and AssociationEndMember, which is worked around by calling this method. 
-        /// This is the case of OneToOneMappingBuilder, in the designer. Must not be used in other context.
+        /// <param name="forceAdd">
+        ///     Indicates whether the addition is forced, regardless of
+        ///     whether read-only is set.
+        /// </param>
+        /// <remarks>
+        ///     Adding a NavigationProperty to an EntityType introduces a circular dependency between
+        ///     EntityType and AssociationEndMember, which is worked around by calling this method.
+        ///     This is the case of OneToOneMappingBuilder, in the designer. Must not be used in other context.
         /// </remarks>
         internal void AddMember(EdmMember member, bool forceAdd)
         {
@@ -125,7 +128,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     DataSpace = (DataSpace)(-1);
                 }
             }
-
 
             if (_members.IsReadOnly && forceAdd)
             {

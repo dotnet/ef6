@@ -6,10 +6,11 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Collections.ObjectModel;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-#if !NET40
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
     using System.Threading.Tasks;
+#if !NET40
+
 #endif
 
     internal class BufferedDataRecord
@@ -38,7 +39,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             _dataTypeNames = dataTypeNames;
             _fieldTypes = fieldTypes;
             _columnNames = columnNames;
-            _fieldNameLookup = new Lazy<FieldNameLookup>(() => new FieldNameLookup(new ReadOnlyCollection<string>(columnNames), -1), isThreadSafe:false);
+            _fieldNameLookup = new Lazy<FieldNameLookup>(
+                () => new FieldNameLookup(new ReadOnlyCollection<string>(columnNames), -1), isThreadSafe: false);
         }
 
         public object this[string name]
@@ -72,12 +74,12 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             return GetFieldValue<byte>(ordinal);
         }
-        
+
         public char GetChar(int ordinal)
         {
             return GetFieldValue<char>(ordinal);
         }
-        
+
         public DateTime GetDateTime(int ordinal)
         {
             return GetFieldValue<DateTime>(ordinal);

@@ -137,7 +137,9 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         ///     Gets or sets the namespace used for code-based migrations.
         /// </summary>
-        public string MigrationsNamespace { get; set; } // Allowed to be null
+        public string MigrationsNamespace { get; set; }
+
+        // Allowed to be null
 
         /// <summary>
         ///     Gets or sets the sub-directory that code-based migrations are stored in.
@@ -223,7 +225,8 @@ namespace System.Data.Entity.Migrations
             get { return _commandTimeout; }
             set
             {
-                if (value.HasValue && value < 0)
+                if (value.HasValue
+                    && value < 0)
                 {
                     throw new ArgumentException(Strings.ObjectContext_InvalidCommandTimeout);
                 }

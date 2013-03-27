@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Creates a read-only AssociationEndMember instance.
+        ///     Creates a read-only AssociationEndMember instance.
         /// </summary>
         /// <param name="name">The name of the association end member.</param>
         /// <param name="endRefType">The reference type for the end.</param>
@@ -68,8 +68,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="ArgumentException">The specified name is null or empty.</exception>
         /// <exception cref="ArgumentNullException">The specified reference type is null.</exception>
         public static AssociationEndMember Create(
-            string name, 
-            RefType endRefType, 
+            string name,
+            RefType endRefType,
             RelationshipMultiplicity multiplicity,
             OperationAction deleteAction,
             IEnumerable<MetadataProperty> metadataProperties)

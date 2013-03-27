@@ -51,7 +51,8 @@ namespace System.Data.Entity.Core.Objects
                 var edmType = _edmTypes[_resultSetIndex];
                 MetadataHelper.CheckFunctionImportReturnType<TElement>(edmType, _context.MetadataWorkspace);
                 return _context.MaterializedDataRecord<TElement>(
-                    _entityCommand, storeReader, _resultSetIndex, _entitySets, _edmTypes, _mergeOption, /*useSpatialReader:*/ true, shouldReleaseConnection);
+                    _entityCommand, storeReader, _resultSetIndex, _entitySets, _edmTypes, _mergeOption, /*useSpatialReader:*/ true,
+                    shouldReleaseConnection);
             }
             else
             {

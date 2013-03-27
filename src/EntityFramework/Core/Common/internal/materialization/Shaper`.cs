@@ -50,7 +50,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #endregion
 
-        internal Shaper(DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption,
+        internal Shaper(
+            DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption,
             int stateCount, CoordinatorFactory<T> rootCoordinatorFactory, bool readerOwned, bool useSpatialReader,
             bool shouldReleaseConnection)
             : base(reader, context, workspace, mergeOption, stateCount, useSpatialReader)

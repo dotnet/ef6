@@ -12,9 +12,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Reflection;
 
     /// <summary>
-    /// This is an extraction of the code that was in <see cref="ObjectItemConventionAssemblyLoader"/> such that
-    /// it can be used outside of the context of the traditional assembly loaders--notably the CLR types to load
-    /// from are provided by Code First.
+    ///     This is an extraction of the code that was in <see cref="ObjectItemConventionAssemblyLoader" /> such that
+    ///     it can be used outside of the context of the traditional assembly loaders--notably the CLR types to load
+    ///     from are provided by Code First.
     /// </summary>
     internal abstract class OSpaceTypeFactory
     {
@@ -455,9 +455,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var property = new EdmProperty(
                     cspaceProperty.Name, TypeUsage.Create(
                         propertyType, new FacetValues
-                        {
-                            Nullable = false
-                        }), clrProperty, type);
+                            {
+                                Nullable = false
+                            }), clrProperty, type);
                 ospaceType.AddMember(property);
             }
             else
@@ -597,9 +597,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     cspaceProperty.Name,
                     TypeUsage.Create(
                         propertyType, new FacetValues
-                        {
-                            Nullable = nullableFacetValue
-                        }),
+                            {
+                                Nullable = nullableFacetValue
+                            }),
                     clrProperty,
                     type);
 

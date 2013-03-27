@@ -45,10 +45,10 @@ namespace System.Data.Entity.Migrations.Model
         {
             var dropIndexOperation
                 = new DropIndexOperation(_inverse.CreateCreateIndexOperation())
-                      {
-                          Table = DependentTable,
-                          IsSystem = IsSystem
-                      };
+                    {
+                        Table = DependentTable,
+                        IsSystem = IsSystem
+                    };
 
             DependentColumns.Each(c => dropIndexOperation.Columns.Add(c));
 

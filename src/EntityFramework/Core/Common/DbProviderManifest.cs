@@ -213,11 +213,13 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Returns a boolean that specifies whether the provider can handle expression trees 
+        ///     Returns a boolean that specifies whether the provider can handle expression trees
         ///     containing instances of DbInExpression.
         ///     The default implementation returns <c>false</c> for backwards compatibility. Derived classes can override this method.
         /// </summary>
-        /// <returns> <c>false</c> </returns>
+        /// <returns>
+        ///     <c>false</c>
+        /// </returns>
         public virtual bool SupportsInExpression()
         {
             return false;

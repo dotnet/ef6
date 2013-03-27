@@ -649,8 +649,8 @@ namespace System.Data.Entity.Core
         }
 
         internal static Dictionary<string, string> COMPILER_VERSION = new Dictionary<string, string>
-                                                                          {
-                                                                              { "CompilerVersion", "V3.5" }
-                                                                          }; //v3.5 required for compiling model files with partial methods.
+            {
+                { "CompilerVersion", "V3.5" }
+            }; //v3.5 required for compiling model files with partial methods.
     }
 }

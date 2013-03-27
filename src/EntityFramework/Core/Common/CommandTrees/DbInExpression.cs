@@ -4,9 +4,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees.Internal;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
 
     /// <summary>
@@ -24,7 +24,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             DebugCheck.NotNull(list);
             Debug.Assert(TypeSemantics.IsBooleanType(booleanResultType), "DbInExpression must have a Boolean result type");
             Debug.Assert(list.Count > 0, "DbInExpression list must not be empy");
-            Debug.Assert(list.All(e => TypeSemantics.IsEqual(e.ResultType, item.ResultType)), 
+            Debug.Assert(
+                list.All(e => TypeSemantics.IsEqual(e.ResultType, item.ResultType)),
                 "DbInExpression requires the same result type for the input expressions");
 
             _item = item;
@@ -32,7 +33,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Gets a DbExpression that specifies the item to be matched.
+        ///     Gets a DbExpression that specifies the item to be matched.
         /// </summary>
         public DbExpression Item
         {
@@ -40,7 +41,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        /// Gets the list of DbExpression to test for a match.
+        ///     Gets the list of DbExpression to test for a match.
         /// </summary>
         public IList<DbExpression> List
         {
@@ -53,7 +54,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="visitor"> An instance of DbExpressionVisitor. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="visitor" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Accept(DbExpressionVisitor visitor)
         {
             Check.NotNull(visitor, "visitor");
@@ -65,11 +67,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     The visitor pattern method for expression visitors that produce a result value of a specific type.
         /// </summary>
         /// <param name="visitor"> An instance of a typed DbExpressionVisitor that produces a result value of type TResultType. </param>
-        /// <typeparam name="TResultType"> The type of the result produced by <paramref name="visitor" /> </typeparam>
+        /// <typeparam name="TResultType">
+        ///     The type of the result produced by <paramref name="visitor" />
+        /// </typeparam>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="visitor" />
-        ///     is null</exception>
-        /// <returns> An instance of <typeparamref name="TResultType" /> . </returns>
+        ///     is null
+        /// </exception>
+        /// <returns>
+        ///     An instance of <typeparamref name="TResultType" /> .
+        /// </returns>
         public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
         {
             Check.NotNull(visitor, "visitor");

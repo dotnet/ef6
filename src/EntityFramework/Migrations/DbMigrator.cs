@@ -142,8 +142,8 @@ namespace System.Data.Entity.Migrations
 
                 _providerManifestToken
                     = context.InternalContext.ModelProviderInfo != null
-                            ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
-                            : DbConfiguration
+                          ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
+                          : DbConfiguration
                                 .GetService<IManifestTokenService>()
                                 .GetProviderManifestToken(connection);
 
@@ -993,12 +993,12 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        /// Ensures that the database exists by creating an empty database if one does not
-        /// already exist. If a new empty database is created but then the code in mustSucceedToKeepDatabase
-        /// throws an exception, then an attempt is made to clean up (delete) the new empty database.
-        /// This avoids leaving an empty database with no or incomplete metadata (e.g. MigrationHistory)
-        /// which can then cause problems for database initializers that check whether or not a database
-        /// exists.
+        ///     Ensures that the database exists by creating an empty database if one does not
+        ///     already exist. If a new empty database is created but then the code in mustSucceedToKeepDatabase
+        ///     throws an exception, then an attempt is made to clean up (delete) the new empty database.
+        ///     This avoids leaving an empty database with no or incomplete metadata (e.g. MigrationHistory)
+        ///     which can then cause problems for database initializers that check whether or not a database
+        ///     exists.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         internal override void EnsureDatabaseExists(Action mustSucceedToKeepDatabase)
@@ -1016,7 +1016,7 @@ namespace System.Data.Entity.Migrations
             }
 
             _emptyMigrationNeeded = databaseCreated;
-            
+
             try
             {
                 mustSucceedToKeepDatabase();

@@ -41,9 +41,9 @@ namespace System.Data.Entity.Internal
             var stringBuilder = new StringBuilder();
             using (var xmlWriter = XmlWriter.Create(
                 stringBuilder, new XmlWriterSettings
-                                   {
-                                       Indent = true
-                                   }))
+                    {
+                        Indent = true
+                    }))
             {
                 new SsdlSerializer().Serialize(
                     databaseMetadata,

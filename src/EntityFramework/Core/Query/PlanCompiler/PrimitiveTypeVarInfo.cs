@@ -23,9 +23,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         {
             DebugCheck.NotNull(newVar);
             m_newVars = new List<Var>
-                            {
-                                newVar
-                            };
+                {
+                    newVar
+                };
         }
 
         /// <summary>

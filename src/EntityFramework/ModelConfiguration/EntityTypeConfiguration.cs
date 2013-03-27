@@ -49,9 +49,9 @@ namespace System.Data.Entity.ModelConfiguration
             return Configuration.Property(
                 lambdaExpression.GetComplexPropertyAccess(),
                 () => new TPrimitivePropertyConfiguration
-                          {
-                              OverridableConfigurationParts = OverridableConfigurationParts.None
-                          });
+                    {
+                        OverridableConfigurationParts = OverridableConfigurationParts.None
+                    });
         }
 
         /// <summary>

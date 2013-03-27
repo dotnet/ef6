@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
 
     /// <summary>
     ///     Mapping metadata for scalar properties.
@@ -51,7 +50,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             Check.NotNull(member, "member");
             Check.NotNull(columnMember, "columnMember");
-            
+
             if (!Helper.IsScalarType(member.TypeUsage.EdmType)
                 || !Helper.IsPrimitiveType(columnMember.TypeUsage.EdmType))
             {

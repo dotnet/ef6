@@ -213,18 +213,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             Func<DbExpression, bool> inputPattern, Func<DbExpression, bool> predicatePattern)
         {
             return (e =>
-                        {
-                            if (e.ExpressionKind
-                                != DbExpressionKind.Filter)
-                            {
-                                return false;
-                            }
-                            else
-                            {
-                                var filterEx = (DbFilterExpression)e;
-                                return inputPattern(filterEx.Input.Expression) && predicatePattern(filterEx.Predicate);
-                            }
-                        });
+                {
+                    if (e.ExpressionKind
+                        != DbExpressionKind.Filter)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        var filterEx = (DbFilterExpression)e;
+                        return inputPattern(filterEx.Input.Expression) && predicatePattern(filterEx.Predicate);
+                    }
+                });
         }
 
         /// <summary>
@@ -237,18 +237,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             Func<DbExpression, bool> inputPattern, Func<DbExpression, bool> projectionPattern)
         {
             return (e =>
-                        {
-                            if (e.ExpressionKind
-                                != DbExpressionKind.Project)
-                            {
-                                return false;
-                            }
-                            else
-                            {
-                                var projectEx = (DbProjectExpression)e;
-                                return inputPattern(projectEx.Input.Expression) && projectionPattern(projectEx.Projection);
-                            }
-                        });
+                {
+                    if (e.ExpressionKind
+                        != DbExpressionKind.Project)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        var projectEx = (DbProjectExpression)e;
+                        return inputPattern(projectEx.Input.Expression) && projectionPattern(projectEx.Projection);
+                    }
+                });
         }
 
         /// <summary>
@@ -265,18 +265,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             Func<DbExpression, bool> elsePattern)
         {
             return (e =>
-                        {
-                            if (e.ExpressionKind
-                                != DbExpressionKind.Case)
-                            {
-                                return false;
-                            }
-                            else
-                            {
-                                var caseEx = (DbCaseExpression)e;
-                                return whenPattern(caseEx.When) && thenPattern(caseEx.Then) && elsePattern(caseEx.Else);
-                            }
-                        });
+                {
+                    if (e.ExpressionKind
+                        != DbExpressionKind.Case)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        var caseEx = (DbCaseExpression)e;
+                        return whenPattern(caseEx.When) && thenPattern(caseEx.Then) && elsePattern(caseEx.Else);
+                    }
+                });
         }
 
         /// <summary>
@@ -296,18 +296,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         internal static Func<DbExpression, bool> MatchNewInstance(Func<IEnumerable<DbExpression>, bool> argumentsPattern)
         {
             return (e =>
-                        {
-                            if (e.ExpressionKind
-                                != DbExpressionKind.NewInstance)
-                            {
-                                return false;
-                            }
-                            else
-                            {
-                                var newInst = (DbNewInstanceExpression)e;
-                                return argumentsPattern(newInst.Arguments);
-                            }
-                        });
+                {
+                    if (e.ExpressionKind
+                        != DbExpressionKind.NewInstance)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        var newInst = (DbNewInstanceExpression)e;
+                        return argumentsPattern(newInst.Arguments);
+                    }
+                });
         }
 
         #endregion

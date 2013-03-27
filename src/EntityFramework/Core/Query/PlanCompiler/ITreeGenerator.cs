@@ -1640,9 +1640,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Op op = _iqtCommand.CreateConditionalOp(OpType.In);
 
             var children = new List<Node>(1 + e.List.Count)
-                               {
-                                   VisitExpr(e.Item)
-                               };
+                {
+                    VisitExpr(e.Item)
+                };
             children.AddRange(e.List.Select(VisitExpr));
 
             return _iqtCommand.CreateNode(op, children);
@@ -2480,9 +2480,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 "Unrecognized JoinType specified in DbJoinExpression");
 
 #if DEBUG
-            //
-            // Assert that the DbJoinExpression is producing a collection result with a record element type.
-            // IsCollectionOfRecord() is defined only in DEBUG
+    //
+    // Assert that the DbJoinExpression is producing a collection result with a record element type.
+    // IsCollectionOfRecord() is defined only in DEBUG
             PlanCompiler.Assert(IsCollectionOfRecord(e.ResultType), "Invalid Type returned by DbJoinExpression");
 #endif
 
@@ -2585,9 +2585,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Check.NotNull(e, "e");
 
 #if DEBUG
-            //
-            // Assert that the DbJoinExpression is producing a collection result with a record element type.
-            // IsCollectionOfRecord() is defined only in DEBUG
+    //
+    // Assert that the DbJoinExpression is producing a collection result with a record element type.
+    // IsCollectionOfRecord() is defined only in DEBUG
             PlanCompiler.Assert(IsCollectionOfRecord(e.ResultType), "Invalid Type returned by DbApplyExpression");
 #endif
 
@@ -2652,7 +2652,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Check.NotNull(e, "e");
 
 #if DEBUG
-            // IsCollectionOfRecord() is defined only in DEBUG
+    // IsCollectionOfRecord() is defined only in DEBUG
             PlanCompiler.Assert(IsCollectionOfRecord(e.ResultType), "DbGroupByExpression has invalid result Type (not record collection)");
 #endif
 

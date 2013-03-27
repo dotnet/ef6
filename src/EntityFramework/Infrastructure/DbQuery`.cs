@@ -62,7 +62,7 @@ namespace System.Data.Entity.Infrastructure
         /// </remarks>
         /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
         /// <returns>
-        ///     A new <see cref="DbQuery{T}"/> with the defined query path.
+        ///     A new <see cref="DbQuery{T}" /> with the defined query path.
         /// </returns>
         public DbQuery<TResult> Include(string path)
         {

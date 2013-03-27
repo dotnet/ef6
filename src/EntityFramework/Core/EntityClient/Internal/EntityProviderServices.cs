@@ -36,7 +36,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             return CreateCommandDefinition(storeMetadata.StoreProviderFactory, commandTree);
         }
 
-        internal static EntityCommandDefinition CreateCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree, IDbDependencyResolver resolver = null)
+        internal static EntityCommandDefinition CreateCommandDefinition(
+            DbProviderFactory storeProviderFactory, DbCommandTree commandTree, IDbDependencyResolver resolver = null)
         {
             DebugCheck.NotNull(storeProviderFactory);
             DebugCheck.NotNull(commandTree);

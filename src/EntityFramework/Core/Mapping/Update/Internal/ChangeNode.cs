@@ -4,8 +4,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Globalization;
-    using System.Text;
 
     /// <summary>
     ///     This class encapsulates changes propagated to a node in an update mapping view.

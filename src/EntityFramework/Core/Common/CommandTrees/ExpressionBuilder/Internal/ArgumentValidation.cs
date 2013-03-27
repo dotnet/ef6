@@ -256,16 +256,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             var expectedParams = GetExpectedParameters(function);
             var funcArgs = CreateExpressionList(
                 args, "argument", expectedParams.Length, (exp, idx) =>
-                                                             {
-                                                                 var paramType = expectedParams[idx].TypeUsage;
-                                                                 TypeUsage elementType = null;
-                                                                 if (TypeHelpers.TryGetCollectionElementType(paramType, out elementType))
-                                                                 {
-                                                                     paramType = elementType;
-                                                                 }
+                    {
+                        var paramType = expectedParams[idx].TypeUsage;
+                        TypeUsage elementType = null;
+                        if (TypeHelpers.TryGetCollectionElementType(paramType, out elementType))
+                        {
+                            paramType = elementType;
+                        }
 
-                                                                 RequireCompatibleType(exp, paramType, "argument");
-                                                             }
+                        RequireCompatibleType(exp, paramType, "argument");
+                    }
                 );
 
             return funcArgs;
@@ -486,7 +486,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             validAggregates = aggValidator.Validate();
 
             // Either the Keys or Aggregates may be omitted, but not both
-            if (0 == validKeys.Count && 0 == validAggregates.Count)
+            if (0 == validKeys.Count
+                && 0 == validAggregates.Count)
             {
                 throw new ArgumentException(Strings.Cqt_GroupBy_AtLeastOneKeyOrAggregate);
             }
@@ -550,7 +551,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             {
                 // type of the value has to match the edm enum type or underlying types have to be the same
                 var clrEnumUnderlyingType = edmEnumType.UnderlyingType.ClrEquivalentType;
-                if (clrEnumUnderlyingType != value.GetType() 
+                if (clrEnumUnderlyingType != value.GetType()
                     && !(value.GetType().IsEnum && ClrEdmEnumTypesMatch(edmEnumType, value.GetType())))
                 {
                     throw new ArgumentException(
@@ -733,21 +734,21 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             TypeUsage commonResultType = null;
             validThens = CreateExpressionList(
                 thenExpressions, "thenExpressions", (exp, idx) =>
-                                                        {
-                                                            if (null == commonResultType)
-                                                            {
-                                                                commonResultType = exp.ResultType;
-                                                            }
-                                                            else
-                                                            {
-                                                                commonResultType = TypeHelpers.GetCommonTypeUsage(
-                                                                    exp.ResultType, commonResultType);
-                                                                if (null == commonResultType)
-                                                                {
-                                                                    throw new ArgumentException(Strings.Cqt_Case_InvalidResultType);
-                                                                }
-                                                            }
-                                                        }
+                    {
+                        if (null == commonResultType)
+                        {
+                            commonResultType = exp.ResultType;
+                        }
+                        else
+                        {
+                            commonResultType = TypeHelpers.GetCommonTypeUsage(
+                                exp.ResultType, commonResultType);
+                            if (null == commonResultType)
+                            {
+                                throw new ArgumentException(Strings.Cqt_Case_InvalidResultType);
+                            }
+                        }
+                    }
                 );
             Debug.Assert(validWhens.Count > 0, "CreateExpressionList(arguments, argumentName, validationCallback) allowed empty Thens?");
 
@@ -809,10 +810,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             validArguments = null;
             var argValidator = CreateValidator(
                 arguments, "arguments", (exp, idx) =>
-                                            {
-                                                RequireCompatibleType(exp, lambda.Variables[idx].ResultType, "arguments", idx);
-                                                return exp;
-                                            },
+                    {
+                        RequireCompatibleType(exp, lambda.Variables[idx].ResultType, "arguments", idx);
+                        return exp;
+                    },
                 expList => new DbExpressionList(expList)
                 );
             argValidator.ExpectedElementCount = lambda.Variables.Count;
@@ -840,12 +841,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             var columnTypes = new List<KeyValuePair<string, TypeUsage>>();
             var columnValidator = CreateValidator(
                 columnValues, "columnValues", (columnValue, idx) =>
-                                                  {
-                                                      CheckNamed(columnValue, "columnValues", idx);
-                                                      columnTypes.Add(
-                                                          new KeyValuePair<string, TypeUsage>(columnValue.Key, columnValue.Value.ResultType));
-                                                      return columnValue.Value;
-                                                  },
+                    {
+                        CheckNamed(columnValue, "columnValues", idx);
+                        columnTypes.Add(
+                            new KeyValuePair<string, TypeUsage>(columnValue.Key, columnValue.Value.ResultType));
+                        return columnValue.Value;
+                    },
                 expList => new DbExpressionList(expList)
                 );
             columnValidator.GetName = ((columnValue, idx) => columnValue.Key);

@@ -53,9 +53,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All DistinctOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-                                                    {
-                                                        Rule_DistinctOpOfKeys,
-                                                    };
+            {
+                Rule_DistinctOpOfKeys,
+            };
 
         #endregion
     }

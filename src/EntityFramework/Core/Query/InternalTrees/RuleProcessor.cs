@@ -124,7 +124,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                     {
                         subTreeRoot.Children[i] = ApplyRulesToSubtree(context, rules, childNode, subTreeRoot, i);
                     }
-                }                
+                }
 
                 // Apply rules to myself. If no transformations were performed, 
                 // then mark this subtree as processed, and break out

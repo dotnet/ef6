@@ -52,7 +52,7 @@ namespace System.Data.Entity.Internal
 
         #region AsStreaming
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override InternalSqlQuery AsStreaming()
         {
             return Streaming

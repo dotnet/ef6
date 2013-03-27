@@ -45,14 +45,15 @@ namespace System.Data.Entity.Edm.Serialization
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Nullability")]
         public virtual bool Serialize(
-            EdmModel dbDatabase, string namespaceName, string provider, string providerManifestToken, XmlWriter xmlWriter, bool serializeDefaultNullability = true)
+            EdmModel dbDatabase, string namespaceName, string provider, string providerManifestToken, XmlWriter xmlWriter,
+            bool serializeDefaultNullability = true)
         {
             Check.NotNull(dbDatabase, "dbDatabase");
             Check.NotEmpty(namespaceName, "namespaceName");
             Check.NotEmpty(provider, "provider");
             Check.NotEmpty(providerManifestToken, "providerManifestToken");
             Check.NotNull(xmlWriter, "xmlWriter");
-            
+
             CreateVisitor(xmlWriter, dbDatabase, serializeDefaultNullability)
                 .Visit(dbDatabase, namespaceName, provider, providerManifestToken);
 

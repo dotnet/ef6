@@ -988,20 +988,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All ApplyOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-                                                    {
-                                                        Rule_CrossApplyOverAnything,
-                                                        Rule_CrossApplyOverFilter,
-                                                        Rule_CrossApplyOverProject,
-                                                        Rule_OuterApplyOverAnything,
-                                                        Rule_OuterApplyOverProjectInternalConstantOverFilter,
-                                                        Rule_OuterApplyOverProjectNullSentinelOverFilter,
-                                                        Rule_OuterApplyIntoScalarSubquery,  // DevDiv#573440 
-                                                        Rule_OuterApplyOverProject,
-                                                        Rule_OuterApplyOverFilter,
-                                                        Rule_CrossApplyOverLeftOuterJoinOverSingleRowTable,
-                                                        Rule_CrossApplyIntoScalarSubquery,
-                                                        Rule_OuterApplyIntoScalarSubquery,
-                                                    };
+            {
+                Rule_CrossApplyOverAnything,
+                Rule_CrossApplyOverFilter,
+                Rule_CrossApplyOverProject,
+                Rule_OuterApplyOverAnything,
+                Rule_OuterApplyOverProjectInternalConstantOverFilter,
+                Rule_OuterApplyOverProjectNullSentinelOverFilter,
+                Rule_OuterApplyIntoScalarSubquery, // DevDiv#573440 
+                Rule_OuterApplyOverProject,
+                Rule_OuterApplyOverFilter,
+                Rule_CrossApplyOverLeftOuterJoinOverSingleRowTable,
+                Rule_CrossApplyIntoScalarSubquery,
+                Rule_OuterApplyIntoScalarSubquery,
+            };
 
         #endregion
     }

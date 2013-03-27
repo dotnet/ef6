@@ -557,7 +557,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             PlanCompiler.Assert(edge1.Right == edge2.Left, "need a common table for transitive predicate generation");
 
             // Ignore join edges with restricted elimination.
-            if (edge1.RestrictedElimination || edge2.RestrictedElimination)
+            if (edge1.RestrictedElimination
+                || edge2.RestrictedElimination)
             {
                 return false;
             }
@@ -813,9 +814,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <returns> </returns>
         private bool CanJoinEdgeBeTurnedIntoInnerJoin(AugmentedNode rightNode, JoinEdge joinEdge)
         {
-            return !joinEdge.RestrictedElimination 
-                && AreAllTableRowsPreserved(rightNode, joinEdge.Right) 
-                && IsConstraintPresentForTurningIntoInnerJoin(joinEdge);
+            return !joinEdge.RestrictedElimination
+                   && AreAllTableRowsPreserved(rightNode, joinEdge.Right)
+                   && IsConstraintPresentForTurningIntoInnerJoin(joinEdge);
         }
 
         /// <summary>

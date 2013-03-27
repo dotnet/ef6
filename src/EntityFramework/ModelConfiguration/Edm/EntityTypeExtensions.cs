@@ -73,7 +73,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             foreach (var declaringType in entityType.ToHierarchy().Reverse())
             {
-                if (declaringType.BaseType == null && declaringType.KeyProperties.Any())
+                if (declaringType.BaseType == null
+                    && declaringType.KeyProperties.Any())
                 {
                     if (keyProps != null)
                     {
@@ -264,11 +265,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             var navigationProperty
                 = new NavigationProperty(name, TypeUsage.Create(typeUsage))
-                      {
-                          RelationshipType = associationType,
-                          FromEndMember = associationType.SourceEnd,
-                          ToEndMember = associationType.TargetEnd
-                      };
+                    {
+                        RelationshipType = associationType,
+                        FromEndMember = associationType.SourceEnd,
+                        ToEndMember = associationType.TargetEnd
+                    };
 
             entityType.AddMember(navigationProperty);
 

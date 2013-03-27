@@ -350,14 +350,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                     modelNamespace ?? DefaultModelNamespace,
                     false,
                     DataSpace.CSpace)
-                      {
-                          SourceEnd =
-                              new AssociationEndMember(
-                              name + "_Source", sourceEntityType.GetReferenceType(), sourceAssociationEndKind),
-                          TargetEnd =
-                              new AssociationEndMember(
-                              name + "_Target", targetEntityType.GetReferenceType(), targetAssociationEndKind)
-                      };
+                    {
+                        SourceEnd =
+                            new AssociationEndMember(
+                                name + "_Source", sourceEntityType.GetReferenceType(), sourceAssociationEndKind),
+                        TargetEnd =
+                            new AssociationEndMember(
+                                name + "_Target", targetEntityType.GetReferenceType(), targetAssociationEndKind)
+                    };
 
             model.AddAssociationType(associationType);
 
@@ -461,10 +461,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             var associationSet
                 = new AssociationSet(name, associationType)
-                      {
-                          SourceSet = model.GetEntitySet(associationType.SourceEnd.GetEntityType()),
-                          TargetSet = model.GetEntitySet(associationType.TargetEnd.GetEntityType())
-                      };
+                    {
+                        SourceSet = model.GetEntitySet(associationType.SourceEnd.GetEntityType()),
+                        TargetSet = model.GetEntitySet(associationType.TargetEnd.GetEntityType())
+                    };
 
             model.Containers.Single().AddEntitySetBase(associationSet);
 

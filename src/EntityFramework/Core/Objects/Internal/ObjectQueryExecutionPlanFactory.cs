@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityClient.Internal;

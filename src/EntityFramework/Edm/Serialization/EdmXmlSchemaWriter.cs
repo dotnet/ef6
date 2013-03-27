@@ -8,6 +8,7 @@ namespace System.Data.Entity.Edm.Serialization
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Xml;
@@ -148,30 +149,30 @@ namespace System.Data.Entity.Edm.Serialization
 
         private static readonly string[] _syndicationItemToTargetPath
             = new[]
-                  {
-                      String.Empty,
-                      // SyndicationItemProperty.Custom
-                      SyndicationXmlConstants.SyndAuthorEmail,
-                      SyndicationXmlConstants.SyndAuthorName,
-                      SyndicationXmlConstants.SyndAuthorUri,
-                      SyndicationXmlConstants.SyndContributorEmail,
-                      SyndicationXmlConstants.SyndContributorName,
-                      SyndicationXmlConstants.SyndContributorUri,
-                      SyndicationXmlConstants.SyndUpdated,
-                      SyndicationXmlConstants.SyndPublished,
-                      SyndicationXmlConstants.SyndRights,
-                      SyndicationXmlConstants.SyndSummary,
-                      SyndicationXmlConstants.SyndTitle,
-                      SyndicationXmlConstants.SyndCategoryLabel,
-                      SyndicationXmlConstants.SyndCategoryScheme,
-                      SyndicationXmlConstants.SyndCategoryTerm,
-                      SyndicationXmlConstants.SyndLinkHref,
-                      SyndicationXmlConstants.SyndLinkHrefLang,
-                      SyndicationXmlConstants.SyndLinkLength,
-                      SyndicationXmlConstants.SyndLinkRel,
-                      SyndicationXmlConstants.SyndLinkTitle,
-                      SyndicationXmlConstants.SyndLinkType
-                  };
+                {
+                    String.Empty,
+                    // SyndicationItemProperty.Custom
+                    SyndicationXmlConstants.SyndAuthorEmail,
+                    SyndicationXmlConstants.SyndAuthorName,
+                    SyndicationXmlConstants.SyndAuthorUri,
+                    SyndicationXmlConstants.SyndContributorEmail,
+                    SyndicationXmlConstants.SyndContributorName,
+                    SyndicationXmlConstants.SyndContributorUri,
+                    SyndicationXmlConstants.SyndUpdated,
+                    SyndicationXmlConstants.SyndPublished,
+                    SyndicationXmlConstants.SyndRights,
+                    SyndicationXmlConstants.SyndSummary,
+                    SyndicationXmlConstants.SyndTitle,
+                    SyndicationXmlConstants.SyndCategoryLabel,
+                    SyndicationXmlConstants.SyndCategoryScheme,
+                    SyndicationXmlConstants.SyndCategoryTerm,
+                    SyndicationXmlConstants.SyndLinkHref,
+                    SyndicationXmlConstants.SyndLinkHrefLang,
+                    SyndicationXmlConstants.SyndLinkLength,
+                    SyndicationXmlConstants.SyndLinkRel,
+                    SyndicationXmlConstants.SyndLinkTitle,
+                    SyndicationXmlConstants.SyndLinkType
+                };
 
         private static string SyndicationTextContentKindToString(object value)
         {
@@ -180,12 +181,12 @@ namespace System.Data.Entity.Edm.Serialization
 
         private static readonly string[] _syndicationTextContentKindToString
             = new[]
-                  {
-                      SyndicationXmlConstants.
-                          SyndContentKindPlaintext,
-                      SyndicationXmlConstants.SyndContentKindHtml,
-                      SyndicationXmlConstants.SyndContentKindXHtml
-                  };
+                {
+                    SyndicationXmlConstants.
+                        SyndContentKindPlaintext,
+                    SyndicationXmlConstants.SyndContentKindHtml,
+                    SyndicationXmlConstants.SyndContentKindXHtml
+                };
 
         public EdmXmlSchemaWriter()
         {
@@ -433,7 +434,7 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteEndElement();
         }
 
-        [Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal void WritePropertyElementHeader(EdmProperty property)
         {
             DebugCheck.NotNull(property);
@@ -553,34 +554,39 @@ namespace System.Data.Entity.Edm.Serialization
             {
                 _xmlWriter.WriteAttributeString(XmlConstants.MaxLengthElement, XmlConstants.Max);
             }
-            else if (!property.IsMaxLengthConstant && property.MaxLength.HasValue)
+            else if (!property.IsMaxLengthConstant
+                     && property.MaxLength.HasValue)
             {
                 _xmlWriter.WriteAttributeString(
                     XmlConstants.MaxLengthElement,
                     property.MaxLength.Value.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (!property.IsFixedLengthConstant && property.IsFixedLength.HasValue)
+            if (!property.IsFixedLengthConstant
+                && property.IsFixedLength.HasValue)
             {
                 _xmlWriter.WriteAttributeString(
                     XmlConstants.FixedLengthElement,
                     GetLowerCaseStringFromBoolValue(property.IsFixedLength.Value));
             }
 
-            if (!property.IsUnicodeConstant && property.IsUnicode.HasValue)
+            if (!property.IsUnicodeConstant
+                && property.IsUnicode.HasValue)
             {
                 _xmlWriter.WriteAttributeString(
                     XmlConstants.UnicodeElement, GetLowerCaseStringFromBoolValue(property.IsUnicode.Value));
             }
 
-            if (!property.IsPrecisionConstant && property.Precision.HasValue)
+            if (!property.IsPrecisionConstant
+                && property.Precision.HasValue)
             {
                 _xmlWriter.WriteAttributeString(
                     XmlConstants.PrecisionElement,
                     property.Precision.Value.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (!property.IsScaleConstant && property.Scale.HasValue)
+            if (!property.IsScaleConstant
+                && property.Scale.HasValue)
             {
                 _xmlWriter.WriteAttributeString(
                     XmlConstants.ScaleElement, property.Scale.Value.ToString(CultureInfo.InvariantCulture));
@@ -733,7 +739,7 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteAttributeString(XmlConstants.Name, functionImport.Name);
             _xmlWriter.WriteAttributeString(
                 XmlConstants.ReturnType, GetTypeName(functionImport.ReturnParameter.TypeUsage.EdmType));
-            
+
             if (functionImport.IsComposableAttribute)
             {
                 _xmlWriter.WriteAttributeString(XmlConstants.IsComposable, XmlConstants.True);
@@ -796,10 +802,10 @@ namespace System.Data.Entity.Edm.Serialization
         {
             if (type.BuiltInTypeKind == BuiltInTypeKind.CollectionType)
             {
-                return 
+                return
                     string.Format(
-                        CultureInfo.InvariantCulture, 
-                        "Collection({0})", 
+                        CultureInfo.InvariantCulture,
+                        "Collection({0})",
                         GetTypeName(((CollectionType)type).TypeUsage.EdmType));
             }
 

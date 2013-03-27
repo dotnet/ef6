@@ -7,9 +7,12 @@ namespace System.Data.Entity
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    /// Wraps access to the transaction object on the underlying store connection and ensures that the
-    /// Entity Framework executes commands on the database within the context of that transaction.
-    /// An instance of this class is retrieved by calling BeginTransaction() on the <see cref="DbContext"/> <see cref="Database"/> object.
+    ///     Wraps access to the transaction object on the underlying store connection and ensures that the
+    ///     Entity Framework executes commands on the database within the context of that transaction.
+    ///     An instance of this class is retrieved by calling BeginTransaction() on the <see cref="DbContext" />
+    ///     <see
+    ///         cref="Database" />
+    ///     object.
     /// </summary>
     public class DbContextTransaction : IDisposable
     {

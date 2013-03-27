@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        /// For testing.
+        ///     For testing.
         /// </summary>
         internal RelationshipManager(ExpensiveOSpaceLoader expensiveLoader)
         {
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ----------
 
         /// <summary>
-        /// For testing.
+        ///     For testing.
         /// </summary>
         internal void SetExpensiveLoader(ExpensiveOSpaceLoader loader)
         {
@@ -672,7 +672,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     var fullName = _relationships
                         .Select(r => r.RelationshipName)
                         .FirstOrDefault(n => n.Substring(n.LastIndexOf('.') + 1) == relationshipName);
-                    
+
                     if (fullName != null)
                     {
                         return fullName;
@@ -776,7 +776,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 EntityProxyFactory.TryGetAssociationTypeFromProxyInfo(WrappedOwner, relationshipName, out associationType);
             }
 
-            if (associationType == null && _relationships != null)
+            if (associationType == null
+                && _relationships != null)
             {
                 associationType = _relationships
                     .Where(e => e.RelationshipName == relationshipName)

@@ -199,16 +199,16 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static Action<object, object> AddToCollection<T>()
         {
             return (collectionArg, item) =>
-                       {
-                           var collection = (ICollection<T>)collectionArg;
-                           var array = collection as Array;
-                           if (array != null
-                               && array.IsFixedSize)
-                           {
-                               throw new InvalidOperationException(Strings.RelatedEnd_CannotAddToFixedSizeArray(array.GetType()));
-                           }
-                           collection.Add((T)item);
-                       };
+                {
+                    var collection = (ICollection<T>)collectionArg;
+                    var array = collection as Array;
+                    if (array != null
+                        && array.IsFixedSize)
+                    {
+                        throw new InvalidOperationException(Strings.RelatedEnd_CannotAddToFixedSizeArray(array.GetType()));
+                    }
+                    collection.Add((T)item);
+                };
         }
 
         #endregion
@@ -262,16 +262,16 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static Func<object, object, bool> RemoveFromCollection<T>()
         {
             return (collectionArg, item) =>
-                       {
-                           var collection = (ICollection<T>)collectionArg;
-                           var array = collection as Array;
-                           if (array != null
-                               && array.IsFixedSize)
-                           {
-                               throw new InvalidOperationException(Strings.RelatedEnd_CannotRemoveFromFixedSizeArray(array.GetType()));
-                           }
-                           return collection.Remove((T)item);
-                       };
+                {
+                    var collection = (ICollection<T>)collectionArg;
+                    var array = collection as Array;
+                    if (array != null
+                        && array.IsFixedSize)
+                    {
+                        throw new InvalidOperationException(Strings.RelatedEnd_CannotRemoveFromFixedSizeArray(array.GetType()));
+                    }
+                    return collection.Remove((T)item);
+                };
         }
 
         #endregion

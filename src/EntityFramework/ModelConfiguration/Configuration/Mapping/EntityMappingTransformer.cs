@@ -189,11 +189,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         var dependentColumns = propertyMappings.Select(pm => pm.ColumnProperty);
 
                         dependentTableInfos = new[]
-                                                  {
-                                                      new KeyValuePair
-                                                          <EntityType, IEnumerable<EdmProperty>>(
-                                                          dependentTable, dependentColumns)
-                                                  };
+                            {
+                                new KeyValuePair
+                                    <EntityType, IEnumerable<EdmProperty>>(
+                                    dependentTable, dependentColumns)
+                            };
                     }
 
                     foreach (var tableInfo in dependentTableInfos)
@@ -260,10 +260,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 = new ForeignKeyBuilder(
                     database,
                     database.EntityTypes.SelectMany(t => t.ForeignKeyBuilders).UniquifyName(fk.Name))
-                      {
-                          PrincipalTable = fk.PrincipalTable,
-                          DeleteAction = fk.DeleteAction
-                      };
+                    {
+                        PrincipalTable = fk.PrincipalTable,
+                        DeleteAction = fk.DeleteAction
+                    };
 
             var dependentColumns
                 = GetDependentColumns(fk.DependentColumns, toTable.Properties);
@@ -639,9 +639,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         entityType.Name,
                         principalTable.Name,
                         dependentTable.Name))
-                      {
-                          PrincipalTable = principalTable
-                      };
+                    {
+                        PrincipalTable = principalTable
+                    };
 
             dependentTable.AddForeignKey(foreignKeyConstraintMetadata);
 

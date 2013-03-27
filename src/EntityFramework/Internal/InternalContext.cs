@@ -112,12 +112,13 @@ namespace System.Data.Entity.Internal
             new Dictionary<Type, IInternalSetAdapter>();
 
         // Used to create validators to validate entities or properties and contexts for validating entities and properties.
-        private readonly ValidationProvider _validationProvider = new ValidationProvider(null, DbConfiguration.GetService<AttributeProvider>());
+        private readonly ValidationProvider _validationProvider = new ValidationProvider(
+            null, DbConfiguration.GetService<AttributeProvider>());
 
         private bool _oSpaceLoadingForced;
 
         private DbProviderFactory _providerFactory;
-        
+
         public event EventHandler<EventArgs> OnDisposing;
 
         /// <summary>
@@ -416,7 +417,6 @@ namespace System.Data.Entity.Internal
                 var shouldDetectChanges = AutoDetectChangesEnabled && !ValidateOnSaveEnabled;
                 var saveOptions = SaveOptions.AcceptAllChangesAfterSave |
                                   (shouldDetectChanges ? SaveOptions.DetectChangesBeforeSave : 0);
-
 
                 return ObjectContext.SaveChanges(saveOptions);
             }
@@ -869,28 +869,28 @@ namespace System.Data.Entity.Internal
 
             return new LazyAsyncEnumerator<TElement>(
                 async cancellationToken =>
-                          {
-                              // Not initializing asynchronously as it's not expected to be done frequently
-                              Initialize();
+                    {
+                        // Not initializing asynchronously as it's not expected to be done frequently
+                        Initialize();
 
-                              var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
-                                  sql, new ExecutionOptions(MergeOption.AppendOnly, streaming), cancellationToken, parameters)
-                                                                            .ConfigureAwait(
-                                                                                continueOnCapturedContext: false);
+                        var disposableEnumerable = await ObjectContext.ExecuteStoreQueryAsync<TElement>(
+                            sql, new ExecutionOptions(MergeOption.AppendOnly, streaming), cancellationToken, parameters)
+                                                                      .ConfigureAwait(
+                                                                          continueOnCapturedContext: false);
 
-                              try
-                              {
-                                  return ((IDbAsyncEnumerable<TElement>)disposableEnumerable).GetAsyncEnumerator();
-                              }
-                              catch
-                              {
-                                  // if there is a problem creating the enumerator, we should dispose
-                                  // the enumerable (if there is no problem, the enumerator will take 
-                                  // care of the dispose)
-                                  disposableEnumerable.Dispose();
-                                  throw;
-                              }
-                          });
+                        try
+                        {
+                            return ((IDbAsyncEnumerable<TElement>)disposableEnumerable).GetAsyncEnumerator();
+                        }
+                        catch
+                        {
+                            // if there is a problem creating the enumerator, we should dispose
+                            // the enumerable (if there is no problem, the enumerator will take 
+                            // care of the dispose)
+                            disposableEnumerable.Dispose();
+                            throw;
+                        }
+                    });
         }
 
 #endif

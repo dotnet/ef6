@@ -2,10 +2,6 @@
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
-    using System.Data.Entity.Core.Metadata.Edm;
-    using System.Diagnostics;
-    using System.Globalization;
-
 #if DEBUG
     /// <summary>
     ///     The BasicValidator validates the shape of the IQT. It ensures that the

@@ -19,7 +19,8 @@ namespace System.Data.Entity.Config
                 var executionStrategyKey = key as ExecutionStrategyKey;
                 if (executionStrategyKey == null)
                 {
-                    throw new ArgumentException(Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, typeof(IExecutionStrategy)));
+                    throw new ArgumentException(
+                        Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, typeof(IExecutionStrategy)));
                 }
 
                 var providerServices = DbConfiguration.GetService<DbProviderServices>(

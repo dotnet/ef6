@@ -77,13 +77,15 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Asynchronously loads the related entity or entities into the related end using the default merge option.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         /// </returns>
         Task LoadAsync(CancellationToken cancellationToken);
 
@@ -100,14 +102,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Asynchronously loads the related entity or entities into the related end using the specified merge option.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="mergeOption"> Merge option to use for loaded entity or entities. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         /// </returns>
         Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken);
 

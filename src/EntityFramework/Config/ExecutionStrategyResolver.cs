@@ -14,10 +14,12 @@ namespace System.Data.Entity.Config
         private readonly string _serverName;
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="ExecutionStrategyResolver{T}"/>
+        ///     Initializes a new instance of <see cref="ExecutionStrategyResolver{T}" />
         /// </summary>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this execution strategy will be used. </param>
-        /// <param name="serverName">A string that will be matched against the server name in the connection string. <c>null</c> will match anything.</param>
+        /// <param name="serverName">
+        ///     A string that will be matched against the server name in the connection string. <c>null</c> will match anything.
+        /// </param>
         /// <param name="getExecutionStrategy">A function that returns a new instance of an execution strategy.</param>
         public ExecutionStrategyResolver(string providerInvariantName, string serverName, Func<T> getExecutionStrategy)
         {
@@ -36,7 +38,8 @@ namespace System.Data.Entity.Config
                 var executionStrategyKey = key as ExecutionStrategyKey;
                 if (executionStrategyKey == null)
                 {
-                    throw new ArgumentException(Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, "Func<IExecutionStrategy>"));
+                    throw new ArgumentException(
+                        Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, "Func<IExecutionStrategy>"));
                 }
 
                 if (!executionStrategyKey.ProviderInvariantName.Equals(_providerInvariantName, StringComparison.Ordinal))

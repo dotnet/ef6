@@ -52,12 +52,12 @@ namespace System.Data.Entity.Migrations.Builders
         {
             Check.NotNull(keyExpression, "keyExpression");
 
-            var addPrimaryKeyOperation 
+            var addPrimaryKeyOperation
                 = new AddPrimaryKeyOperation(anonymousArguments)
-                                             {
-                                                 Name = name,
-                                                 IsClustered = clustered
-                                             };
+                    {
+                        Name = name,
+                        IsClustered = clustered
+                    };
 
             keyExpression
                 .GetPropertyAccessList()
@@ -81,20 +81,20 @@ namespace System.Data.Entity.Migrations.Builders
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public TableBuilder<TColumns> Index(
-            Expression<Func<TColumns, object>> indexExpression, 
+            Expression<Func<TColumns, object>> indexExpression,
             bool unique = false,
-            bool clustered = false, 
+            bool clustered = false,
             object anonymousArguments = null)
         {
             Check.NotNull(indexExpression, "indexExpression");
 
             var createIndexOperation
                 = new CreateIndexOperation(anonymousArguments)
-                      {
-                          Table = _createTableOperation.Name,
-                          IsUnique = unique,
-                          IsClustered = clustered
-                      };
+                    {
+                        Table = _createTableOperation.Name,
+                        IsUnique = unique,
+                        IsClustered = clustered
+                    };
 
             indexExpression
                 .GetPropertyAccessList()
@@ -129,12 +129,12 @@ namespace System.Data.Entity.Migrations.Builders
             Check.NotNull(dependentKeyExpression, "dependentKeyExpression");
 
             var addForeignKeyOperation = new AddForeignKeyOperation(anonymousArguments)
-                                             {
-                                                 Name = name,
-                                                 PrincipalTable = principalTable,
-                                                 DependentTable = _createTableOperation.Name,
-                                                 CascadeDelete = cascadeDelete
-                                             };
+                {
+                    Name = name,
+                    PrincipalTable = principalTable,
+                    DependentTable = _createTableOperation.Name,
+                    CascadeDelete = cascadeDelete
+                };
 
             dependentKeyExpression
                 .GetPropertyAccessList()

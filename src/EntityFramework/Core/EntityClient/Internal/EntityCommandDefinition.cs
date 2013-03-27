@@ -22,9 +22,10 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
-#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#if !NET40
+
 #endif
 
     internal class EntityCommandDefinition : DbCommandDefinition
@@ -143,9 +144,9 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 
                     var storeCommandDefinition = storeProviderServices.CreateCommandDefinition(providerCommandTree);
                     _mappedCommandDefinitions = new List<DbCommandDefinition>(1)
-                                                    {
-                                                        storeCommandDefinition
-                                                    };
+                        {
+                            storeCommandDefinition
+                        };
 
                     var firstResultEntitySet = mapping.FunctionImport.EntitySets.FirstOrDefault();
                     if (firstResultEntitySet != null)

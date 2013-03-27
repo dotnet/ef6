@@ -37,12 +37,16 @@ namespace System.Data.Entity.Core.Objects
         {
         }
 
-        internal ObjectResult(Shaper<T> shaper, EntitySet singleEntitySet, TypeUsage resultItemType, bool readerOwned, bool shouldReleaseConnection)
-            : this(shaper, singleEntitySet, resultItemType, readerOwned, shouldReleaseConnection, nextResultGenerator: null, onReaderDispose: null)
+        internal ObjectResult(
+            Shaper<T> shaper, EntitySet singleEntitySet, TypeUsage resultItemType, bool readerOwned, bool shouldReleaseConnection)
+            : this(
+                shaper, singleEntitySet, resultItemType, readerOwned, shouldReleaseConnection, nextResultGenerator: null,
+                onReaderDispose: null)
         {
         }
 
-        internal ObjectResult(Shaper<T> shaper, EntitySet singleEntitySet, TypeUsage resultItemType, bool readerOwned,
+        internal ObjectResult(
+            Shaper<T> shaper, EntitySet singleEntitySet, TypeUsage resultItemType, bool readerOwned,
             bool shouldReleaseConnection, NextResultGenerator nextResultGenerator, Action<object, EventArgs> onReaderDispose)
         {
             _shaper = shaper;
@@ -114,7 +118,9 @@ namespace System.Data.Entity.Core.Objects
             {
                 // This case includes when the ObjectResult is disposed before it 
                 // created an ObjectQueryEnumeration; at this time, the connection can be released
-                if (_shaper.Context != null && _readerOwned && _shouldReleaseConnection)
+                if (_shaper.Context != null
+                    && _readerOwned
+                    && _shouldReleaseConnection)
                 {
                     _shaper.Context.ReleaseConnection();
                 }

@@ -8,7 +8,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Asynchronous version of the <see cref="System.Collections.Generic.IEnumerable{T}"/> interface that allows elements of the enumerable sequence to be retrieved asynchronously.
+    ///     Asynchronous version of the <see cref="System.Collections.Generic.IEnumerable{T}" /> interface that allows elements of the enumerable sequence to be retrieved asynchronously.
     ///     This interface is used to interact with Entity Framework queries and shouldn't be implemented by custom classes.
     /// </summary>
     /// <typeparam name="T"> The type of objects to enumerate. </typeparam>

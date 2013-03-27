@@ -51,13 +51,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var foreignKeyConstraint
                 = new ForeignKeyBuilder(databaseMapping.Database, associationType.Name)
-                      {
-                          PrincipalTable =
-                              principalEntityTypeMapping.MappingFragments.Single().Table,
-                          DeleteAction = principalEnd.DeleteBehavior != OperationAction.None
-                                             ? principalEnd.DeleteBehavior
-                                             : OperationAction.None
-                      };
+                    {
+                        PrincipalTable =
+                            principalEntityTypeMapping.MappingFragments.Single().Table,
+                        DeleteAction = principalEnd.DeleteBehavior != OperationAction.None
+                                           ? principalEnd.DeleteBehavior
+                                           : OperationAction.None
+                    };
 
             dependentEntityTypeMapping
                 .MappingFragments
@@ -211,12 +211,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var foreignKeyConstraint
                 = new ForeignKeyBuilder(databaseMapping.Database, name)
-                      {
-                          PrincipalTable = principalTable,
-                          DeleteAction = associationEndMapping.EndMember.DeleteBehavior != OperationAction.None
-                                             ? associationEndMapping.EndMember.DeleteBehavior
-                                             : OperationAction.None
-                      };
+                    {
+                        PrincipalTable = principalTable,
+                        DeleteAction = associationEndMapping.EndMember.DeleteBehavior != OperationAction.None
+                                           ? associationEndMapping.EndMember.DeleteBehavior
+                                           : OperationAction.None
+                    };
 
             var principalNavigationProperty
                 = databaseMapping.Model.EntityTypes

@@ -7,7 +7,7 @@ namespace System.Data.Entity.Infrastructure
 
     /// <summary>
     ///     Used by <see cref="IDbDependencyResolver" /> and <see cref="DbConfiguration" /> when resolving
-    ///     a provider invariant name from a <see cref="DbProviderFactory" />. 
+    ///     a provider invariant name from a <see cref="DbProviderFactory" />.
     /// </summary>
     public interface IProviderInvariantName
     {

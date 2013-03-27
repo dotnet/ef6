@@ -680,7 +680,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             }
 
             [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
-                MessageId = "System.Data.Entity.Core.Common.Utils.TreeNode.#ctor(System.String,System.Data.Entity.Core.Common.Utils.TreeNode[])"
+                MessageId =
+                    "System.Data.Entity.Core.Common.Utils.TreeNode.#ctor(System.String,System.Data.Entity.Core.Common.Utils.TreeNode[])"
                 )]
             public override TreeNode Visit(DbInExpression e)
             {

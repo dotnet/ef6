@@ -11,7 +11,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     public interface IDbMigration
     {
         /// <summary>
-        ///     Adds a custom <see cref="MigrationOperation"/> to the migration.
+        ///     Adds a custom <see cref="MigrationOperation" /> to the migration.
         ///     Custom operation implementors are encouraged to create extension methods on
         ///     <see cref="IDbMigration" /> that provide a fluent-style API for adding new operations.
         /// </summary>

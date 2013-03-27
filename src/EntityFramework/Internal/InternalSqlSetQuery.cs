@@ -41,7 +41,7 @@ namespace System.Data.Entity.Internal
 
         #region AsNoTracking
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override InternalSqlQuery AsNoTracking()
         {
             return _isNoTracking
@@ -66,7 +66,7 @@ namespace System.Data.Entity.Internal
 
         #region AsStreaming
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override InternalSqlQuery AsStreaming()
         {
             return Streaming

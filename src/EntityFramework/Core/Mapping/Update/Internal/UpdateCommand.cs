@@ -5,11 +5,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Internal;
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
-    using IEntityStateEntry = System.Data.Entity.Core.IEntityStateEntry;
 
     internal enum UpdateCommandKind
     {

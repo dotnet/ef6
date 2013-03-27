@@ -232,7 +232,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The factory method for constructing the EntityContainer object.
+        ///     The factory method for constructing the EntityContainer object.
         /// </summary>
         /// <param name="name">The name of the entity container to be created.</param>
         /// <param name="dataSpace">DataSpace in which this entity container belongs to.</param>
@@ -240,8 +240,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="functionImports">Functions that will be included in the new container. Can be null.</param>
         /// <exception cref="System.ArgumentException">Thrown if the name argument is null or empty string.</exception>
         /// <notes>The newly created EntityContainer will be read only.</notes>
-        public static EntityContainer Create(string name, DataSpace dataSpace, IEnumerable<EntitySetBase> entitySets,
-                                             IEnumerable<EdmFunction> functionImports)
+        public static EntityContainer Create(
+            string name, DataSpace dataSpace, IEnumerable<EntitySetBase> entitySets,
+            IEnumerable<EdmFunction> functionImports)
         {
             Check.NotEmpty(name, "name");
 

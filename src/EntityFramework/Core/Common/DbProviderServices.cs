@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Common
         {
             Check.NotNull(commandTree, "commandTree");
             ValidateDataSpace(commandTree);
-            
+
             var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
 
             Debug.Assert(
@@ -247,8 +247,8 @@ namespace System.Data.Entity.Core.Common
         protected abstract DbProviderManifest GetDbProviderManifest(string manifestToken);
 
         /// <summary>
-        ///     Returns the provider-specific execution strategy. This method will only be invoked if there's no 
-        ///     <see cref="IDbDependencyResolver"/> registered for <see cref="Func{IExecutionStrategy}"/> that handles this provider.
+        ///     Returns the provider-specific execution strategy. This method will only be invoked if there's no
+        ///     <see cref="IDbDependencyResolver" /> registered for <see cref="Func{IExecutionStrategy}" /> that handles this provider.
         /// </summary>
         /// <returns> The execution strategy factory for this provider. </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
@@ -258,21 +258,25 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Gets the <see cref="IExecutionStrategy"/> that will be used to execute methods that use the specified connection.
+        ///     Gets the <see cref="IExecutionStrategy" /> that will be used to execute methods that use the specified connection.
         /// </summary>
         /// <param name="connection">The database connection</param>
-        /// <returns>A new instance of <see cref="ExecutionStrategyBase"/></returns>
+        /// <returns>
+        ///     A new instance of <see cref="ExecutionStrategyBase" />
+        /// </returns>
         public static IExecutionStrategy GetExecutionStrategy(DbConnection connection)
         {
             return GetExecutionStrategy(connection, GetProviderFactory(connection));
         }
 
         /// <summary>
-        ///     Gets the <see cref="IExecutionStrategy"/> that will be used to execute methods that use the specified connection.
+        ///     Gets the <see cref="IExecutionStrategy" /> that will be used to execute methods that use the specified connection.
         ///     Uses MetadataWorkspace for faster lookup.
         /// </summary>
         /// <param name="connection">The database connection</param>
-        /// <returns>A new instance of <see cref="ExecutionStrategyBase"/></returns>
+        /// <returns>
+        ///     A new instance of <see cref="ExecutionStrategyBase" />
+        /// </returns>
         internal static IExecutionStrategy GetExecutionStrategy(
             DbConnection connection,
             MetadataWorkspace metadataWorkspace)
@@ -489,7 +493,8 @@ namespace System.Data.Entity.Core.Common
         /// <param name="connection"> Connection to a non-existent database that needs to be created and be populated with the store objects indicated by the storeItemCollection </param>
         /// <param name="commandTimeout"> Execution timeout for any commands needed to create the database. </param>
         /// <param name="storeItemCollection">
-        ///     The collection of all store items based on which the script should be created </param>
+        ///     The collection of all store items based on which the script should be created
+        /// </param>
         public void CreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
             Check.NotNull(connection, "connection");

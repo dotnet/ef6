@@ -142,7 +142,7 @@ namespace System.Data.Entity.Infrastructure
 
             return Dispatch(true, (b, i) => i.ConnectionOpening(entityConnection) && b);
         }
-        
+
         private TResult Dispatch<TResult>(
             TResult result,
             Func<TResult, IDbInterceptor, TResult> accumulator)

@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
                 foreach (var p in 
                     new PropertyFilter()
-                    .GetProperties(edmDataModelItem.GetClrType(), declaredOnly: false, includePrivate: true))
+                        .GetProperties(edmDataModelItem.GetClrType(), declaredOnly: false, includePrivate: true))
                 {
                     var property
                         = edmDataModelItem

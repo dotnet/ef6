@@ -363,11 +363,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All GroupByOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-                                                    {
-                                                        Rule_GroupByOpWithSimpleVarRedefinitions,
-                                                        Rule_GroupByOverProject,
-                                                        Rule_GroupByOpWithNoAggregates,
-                                                    };
+            {
+                Rule_GroupByOpWithSimpleVarRedefinitions,
+                Rule_GroupByOverProject,
+                Rule_GroupByOpWithNoAggregates,
+            };
 
         #endregion
     }

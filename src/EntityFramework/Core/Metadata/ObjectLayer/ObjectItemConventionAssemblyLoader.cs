@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        public virtual new MutableAssemblyCacheEntry CacheEntry
+        public new virtual MutableAssemblyCacheEntry CacheEntry
         {
             get { return (MutableAssemblyCacheEntry)base.CacheEntry; }
         }

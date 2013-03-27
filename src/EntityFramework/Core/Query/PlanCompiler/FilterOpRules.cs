@@ -787,20 +787,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All FilterOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-                                                    {
-                                                        Rule_FilterWithConstantPredicate,
-                                                        Rule_FilterOverCrossJoin,
-                                                        Rule_FilterOverDistinct,
-                                                        Rule_FilterOverExcept,
-                                                        Rule_FilterOverFilter,
-                                                        Rule_FilterOverGroupBy,
-                                                        Rule_FilterOverInnerJoin,
-                                                        Rule_FilterOverIntersect,
-                                                        Rule_FilterOverLeftOuterJoin,
-                                                        Rule_FilterOverProject,
-                                                        Rule_FilterOverUnionAll,
-                                                        Rule_FilterOverOuterApply,
-                                                    };
+            {
+                Rule_FilterWithConstantPredicate,
+                Rule_FilterOverCrossJoin,
+                Rule_FilterOverDistinct,
+                Rule_FilterOverExcept,
+                Rule_FilterOverFilter,
+                Rule_FilterOverGroupBy,
+                Rule_FilterOverInnerJoin,
+                Rule_FilterOverIntersect,
+                Rule_FilterOverLeftOuterJoin,
+                Rule_FilterOverProject,
+                Rule_FilterOverUnionAll,
+                Rule_FilterOverOuterApply,
+            };
 
         #endregion
     }

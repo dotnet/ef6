@@ -235,11 +235,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The factory method for constructing the <see cref="RowType"/> object.
+        ///     The factory method for constructing the <see cref="RowType" /> object.
         /// </summary>
         /// <param name="properties">Properties of the row type object.</param>
         /// <param name="metadataProperties">Metadata properties that will be added to the function. Can be null.</param>
-        /// <returns>A new, read-only instance of the <see cref="RowType"/> object.</returns>
+        /// <returns>
+        ///     A new, read-only instance of the <see cref="RowType" /> object.
+        /// </returns>
         public static RowType Create(IEnumerable<EdmProperty> properties, IEnumerable<MetadataProperty> metadataProperties)
         {
             Check.NotNull(properties, "properties");

@@ -476,9 +476,11 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         ///     Asynchronously moves the reader to the next result set when reading a batch of statements
         /// </summary>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains true if there are more result sets; false otherwise.
         /// </returns>
         public override async Task<bool> NextResultAsync(CancellationToken cancellationToken)
@@ -509,10 +511,12 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         ///     Asynchronously moves the reader to the next row of the current result set
         /// </summary>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains true if there are more rows; false otherwise. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains true if there are more rows; false otherwise.
         /// </returns>
         public override Task<bool> ReadAsync(CancellationToken cancellationToken)
         {

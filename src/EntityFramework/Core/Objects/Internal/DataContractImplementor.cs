@@ -20,9 +20,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             typeof(DataContractAttribute).GetConstructor(Type.EmptyTypes);
 
         private static readonly PropertyInfo[] _dataContractProperties = new[]
-                                                                             {
-                                                                                 typeof(DataContractAttribute).GetProperty("IsReference")
-                                                                             };
+            {
+                typeof(DataContractAttribute).GetProperty("IsReference")
+            };
 
         private readonly Type _baseClrType;
         private readonly DataContractAttribute _dataContract;
@@ -44,10 +44,10 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 // Use base data contract properties to help determine values of properties the proxy type's data contract.
                 var propertyValues = new object[]
-                                         {
-                                             // IsReference
-                                             _dataContract.IsReference
-                                         };
+                    {
+                        // IsReference
+                        _dataContract.IsReference
+                    };
 
                 var attributeBuilder = new CustomAttributeBuilder(
                     _dataContractAttributeConstructor, new object[0], _dataContractProperties, propertyValues);

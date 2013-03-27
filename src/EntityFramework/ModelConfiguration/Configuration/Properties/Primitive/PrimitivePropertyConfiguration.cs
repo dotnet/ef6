@@ -164,7 +164,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         internal void ConfigureFunctionParameters(IEnumerable<FunctionParameter> parameters)
         {
             DebugCheck.NotNull(parameters);
-            
+
             parameters.Each(ConfigureParameterName);
         }
 
@@ -192,9 +192,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             var renamedParameters
                 = new List<FunctionParameter>
-                      {
-                          parameter
-                      };
+                    {
+                        parameter
+                    };
 
             // re-uniquify the conflicting parameters
             pendingRenames
@@ -280,11 +280,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                         && ((configuration == null) || (configuration.ColumnName == null))
                   select c;
 
-            var renamedColumns 
+            var renamedColumns
                 = new List<EdmProperty>
-                                     {
-                                         column
-                                     };
+                    {
+                        column
+                    };
 
             // re-uniquify the conflicting columns
             pendingRenames
@@ -322,7 +322,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 ColumnName = other.ColumnName;
             }
             if (ParameterName == null
-               && !inCSpace)
+                && !inCSpace)
             {
                 ParameterName = other.ParameterName;
             }

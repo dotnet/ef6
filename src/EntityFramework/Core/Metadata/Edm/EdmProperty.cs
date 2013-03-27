@@ -50,10 +50,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Creates a new instance of EdmProperty type.
+        ///     Creates a new instance of EdmProperty type.
         /// </summary>
         /// <param name="name">Name of the property.</param>
-        /// <param name="typeUsage">Property <see cref="TypeUsage" /></param>
+        /// <param name="typeUsage">
+        ///     Property <see cref="TypeUsage" />
+        /// </param>
         /// <returns>A new instance of EdmProperty type</returns>
         public static EdmProperty Create(string name, TypeUsage typeUsage)
         {
@@ -62,8 +64,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             var edmType = typeUsage.EdmType;
             if (!(Helper.IsPrimitiveType(edmType)
-                || Helper.IsEnumType(edmType)
-                || Helper.IsComplexType(edmType)))
+                  || Helper.IsEnumType(edmType)
+                  || Helper.IsComplexType(edmType)))
             {
                 throw new ArgumentException(Strings.EdmProperty_InvalidPropertyType(edmType.FullName));
             }
@@ -394,9 +396,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     TypeUsage = TypeUsage.ShallowCopy(
                         new FacetValues
-                        {
-                            MaxLength = value
-                        });
+                            {
+                                MaxLength = value
+                            });
                 }
             }
         }
@@ -417,9 +419,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     TypeUsage = TypeUsage.ShallowCopy(
                         new FacetValues
-                        {
-                            MaxLength = EdmConstants.UnboundedValue
-                        });
+                            {
+                                MaxLength = EdmConstants.UnboundedValue
+                            });
                 }
             }
         }
@@ -452,9 +454,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     TypeUsage = TypeUsage.ShallowCopy(
                         new FacetValues
-                        {
-                            FixedLength = value
-                        });
+                            {
+                                FixedLength = value
+                            });
                 }
             }
         }
@@ -487,9 +489,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     TypeUsage = TypeUsage.ShallowCopy(
                         new FacetValues
-                        {
-                            Unicode = value
-                        });
+                            {
+                                Unicode = value
+                            });
                 }
             }
         }
@@ -522,9 +524,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     TypeUsage = TypeUsage.ShallowCopy(
                         new FacetValues
-                        {
-                            Precision = value
-                        });
+                            {
+                                Precision = value
+                            });
                 }
             }
         }
@@ -557,9 +559,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     TypeUsage = TypeUsage.ShallowCopy(
                         new FacetValues
-                        {
-                            Scale = value
-                        });
+                            {
+                                Scale = value
+                            });
                 }
             }
         }

@@ -691,7 +691,9 @@ namespace System.Data.Entity.Internal.Linq
         ///     materializing entities into the entity set that backs this set.
         /// </summary>
         /// <param name="sql"> The SQL query. </param>
-        /// <param name="asNoTracking"> If <c>true</c> then the entities are not tracked, otherwise they are. </param>
+        /// <param name="asNoTracking">
+        ///     If <c>true</c> then the entities are not tracked, otherwise they are.
+        /// </param>
         /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> The query results. </returns>
@@ -733,7 +735,9 @@ namespace System.Data.Entity.Internal.Linq
         ///     materializing entities into the entity set that backs this set.
         /// </summary>
         /// <param name="sql"> The SQL query. </param>
-        /// <param name="asNoTracking"> If <c>true</c> then the entities are not tracked, otherwise they are. </param>
+        /// <param name="asNoTracking">
+        ///     If <c>true</c> then the entities are not tracked, otherwise they are.
+        /// </param>
         /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> The query results. </returns>
@@ -749,24 +753,24 @@ namespace System.Data.Entity.Internal.Linq
 
             return new LazyAsyncEnumerator<TEntity>(
                 async cancellationToken =>
-                          {
-                              var disposableEnumerable = await InternalContext.ObjectContext.ExecuteStoreQueryAsync<TEntity>(
-                                  sql, EntitySetName, new ExecutionOptions(mergeOption, streaming), cancellationToken, parameters)
-                                                                              .ConfigureAwait(continueOnCapturedContext: false);
+                    {
+                        var disposableEnumerable = await InternalContext.ObjectContext.ExecuteStoreQueryAsync<TEntity>(
+                            sql, EntitySetName, new ExecutionOptions(mergeOption, streaming), cancellationToken, parameters)
+                                                                        .ConfigureAwait(continueOnCapturedContext: false);
 
-                              try
-                              {
-                                  return ((IDbAsyncEnumerable<TEntity>)disposableEnumerable).GetAsyncEnumerator();
-                              }
-                              catch
-                              {
-                                  // if there is a problem creating the enumerator, we should dispose
-                                  // the enumerable (if there is no problem, the enumerator will take 
-                                  // care of the dispose)
-                                  disposableEnumerable.Dispose();
-                                  throw;
-                              }
-                          });
+                        try
+                        {
+                            return ((IDbAsyncEnumerable<TEntity>)disposableEnumerable).GetAsyncEnumerator();
+                        }
+                        catch
+                        {
+                            // if there is a problem creating the enumerator, we should dispose
+                            // the enumerable (if there is no problem, the enumerator will take 
+                            // care of the dispose)
+                            disposableEnumerable.Dispose();
+                            throw;
+                        }
+                    });
         }
 
 #endif

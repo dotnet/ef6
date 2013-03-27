@@ -696,9 +696,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     property.Name,
                     TypeUsage.Create(
                         primitiveType, new FacetValues
-                                           {
-                                               Nullable = isNullable
-                                           }),
+                            {
+                                Nullable = isNullable
+                            }),
                     property, clrType);
             }
             return member;
@@ -738,9 +738,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     clrProperty.Name,
                     TypeUsage.Create(
                         propertyType, new FacetValues
-                                          {
-                                              Nullable = edmScalarPropertyAttribute.IsNullable
-                                          }),
+                            {
+                                Nullable = edmScalarPropertyAttribute.IsNullable
+                            }),
                     clrProperty,
                     declaringType.ClrType);
 
@@ -776,9 +776,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     clrProperty.Name,
                     TypeUsage.Create(
                         propertyType, new FacetValues
-                                          {
-                                              Nullable = false
-                                          }),
+                            {
+                                Nullable = false
+                            }),
                     clrProperty, type.ClrType);
 
                 type.AddMember(newProperty);

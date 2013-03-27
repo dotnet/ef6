@@ -8,7 +8,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.IO;
     using System.Text.RegularExpressions;
 
     /// <summary>

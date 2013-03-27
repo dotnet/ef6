@@ -38,15 +38,15 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             var result = (RecordStateFactory)Activator.CreateInstance(
                 typeof(RecordStateFactory), new object[]
-                                                {
-                                                    StateSlotNumber,
-                                                    ColumnCount,
-                                                    nestedRecordStateFactories,
-                                                    DataRecordInfo,
-                                                    GatherData,
-                                                    PropertyNames,
-                                                    TypeUsages
-                                                });
+                    {
+                        StateSlotNumber,
+                        ColumnCount,
+                        nestedRecordStateFactories,
+                        DataRecordInfo,
+                        GatherData,
+                        PropertyNames,
+                        TypeUsages
+                    });
             return result;
         }
     }

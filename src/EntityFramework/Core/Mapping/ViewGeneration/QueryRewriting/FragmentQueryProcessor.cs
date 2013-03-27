@@ -114,7 +114,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
                         foreach (var value in conditionValues.Values)
                         {
                             // construct constraint: X = value
-                            var constraint = new DomainConstraint<BoolLiteral, Constant>(
+                            var constraint = new BoolDomainConstraint(
                                 var,
                                 new Set<Constant>(new[] { value }, Constant.EqualityComparer));
                             // is this constraint implied by the where clause?
@@ -122,7 +122,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
                                 new AndExpr<DomainConstraint<BoolLiteral, Constant>>(
                                     view.Condition.Tree,
                                     new NotExpr<DomainConstraint<BoolLiteral, Constant>>(
-                                        new TermExpr<DomainConstraint<BoolLiteral, Constant>>(constraint))));
+                                        new TermExpr<BoolDomainConstraint>(constraint))));
                             var isImplied = false == IsSatisfiable(exclusion);
                             if (isImplied)
                             {

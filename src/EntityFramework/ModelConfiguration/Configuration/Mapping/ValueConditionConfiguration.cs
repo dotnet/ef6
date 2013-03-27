@@ -195,9 +195,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                 discriminatorColumn
                     = new EdmProperty(Discriminator, typeUsage)
-                          {
-                              Nullable = false
-                          };
+                        {
+                            Nullable = false
+                        };
 
                 TablePrimitiveOperations.AddColumn(fragment.Table, discriminatorColumn);
             }

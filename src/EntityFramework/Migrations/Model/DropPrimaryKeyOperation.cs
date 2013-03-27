@@ -30,11 +30,11 @@ namespace System.Data.Entity.Migrations.Model
             {
                 var addPrimaryKeyOperation
                     = new AddPrimaryKeyOperation
-                          {
-                              Name = Name,
-                              Table = Table,
-                              IsSystem = IsSystem
-                          };
+                        {
+                            Name = Name,
+                            Table = Table,
+                            IsSystem = IsSystem
+                        };
 
                 Columns.Each(c => addPrimaryKeyOperation.Columns.Add(c));
 

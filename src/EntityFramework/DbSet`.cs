@@ -82,11 +82,12 @@ namespace System.Data.Entity
         /// <remarks>
         ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
         ///     the designer, by the Code First fluent API, or by the DataMember attribute.
-        ///     
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <param name="keyValues"> The values of the primary key for the entity to be found. </param>
         /// <returns> A task that represents the asynchronous find operation. The task result contains the entity found, or null. </returns>
         /// <exception cref="InvalidOperationException">Thrown if multiple entities exist in the context with the primary key values given.</exception>
@@ -267,7 +268,9 @@ namespace System.Data.Entity
             Check.NotEmpty(sql, "sql");
             Check.NotNull(parameters, "parameters");
 
-            return new DbSqlQuery<TEntity>(new InternalSqlSetQuery(_internalSet, sql, /*isNoTracking:*/ false, /*streaming:*/ false, parameters));
+            return
+                new DbSqlQuery<TEntity>(
+                    new InternalSqlSetQuery(_internalSet, sql, /*isNoTracking:*/ false, /*streaming:*/ false, parameters));
         }
 
         #endregion

@@ -179,7 +179,7 @@ namespace System.Data.Entity.Core.Mapping
 
         public ReadOnlyCollection<FunctionImportMapping> FunctionImportMappings
         {
-            get { return m_functionImportMappings.Values.ToList().AsReadOnly();  }
+            get { return m_functionImportMappings.Values.ToList().AsReadOnly(); }
         }
 
         /// <summary>

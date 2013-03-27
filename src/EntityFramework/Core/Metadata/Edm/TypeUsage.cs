@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
     using System.Threading;
@@ -382,16 +383,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     keep this sorted for binary searching
         /// </remarks>
         private static readonly string[] _identityFacets = new[]
-                                                               {
-                                                                   DbProviderManifest.DefaultValueFacetName,
-                                                                   DbProviderManifest.FixedLengthFacetName,
-                                                                   DbProviderManifest.MaxLengthFacetName,
-                                                                   DbProviderManifest.NullableFacetName,
-                                                                   DbProviderManifest.PrecisionFacetName,
-                                                                   DbProviderManifest.ScaleFacetName,
-                                                                   DbProviderManifest.UnicodeFacetName,
-                                                                   DbProviderManifest.SridFacetName
-                                                               };
+            {
+                DbProviderManifest.DefaultValueFacetName,
+                DbProviderManifest.FixedLengthFacetName,
+                DbProviderManifest.MaxLengthFacetName,
+                DbProviderManifest.NullableFacetName,
+                DbProviderManifest.PrecisionFacetName,
+                DbProviderManifest.ScaleFacetName,
+                DbProviderManifest.UnicodeFacetName,
+                DbProviderManifest.SridFacetName
+            };
 
         internal static readonly EdmConstants.Unbounded DefaultMaxLengthFacetValue = EdmConstants.UnboundedValue;
         internal static readonly EdmConstants.Unbounded DefaultPrecisionFacetValue = EdmConstants.UnboundedValue;
@@ -440,7 +441,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Returns a Model type usage for a provider type
         /// </summary>
         /// <returns> model (CSpace) type usage </returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public TypeUsage GetModelTypeUsage()
         {
             if (_modelTypeUsage == null)

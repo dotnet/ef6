@@ -178,7 +178,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         private static T GetExistingEdmType<T>(EdmModel model, Type type) where T : EdmType
         {
             var edmType = model.GetStructuralOrEnumType(type.Name);
-            if (edmType != null && type != edmType.GetClrType())
+            if (edmType != null
+                && type != edmType.GetClrType())
             {
                 throw new NotSupportedException(Strings.SimpleNameCollision(type.FullName, edmType.GetClrType().FullName, type.Name));
             }

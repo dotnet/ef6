@@ -54,9 +54,9 @@ namespace System.Data.Entity.Migrations.Model
             get
             {
                 return new DropColumnOperation(Table, Column.Name)
-                           {
-                               IsSystem = IsSystem
-                           };
+                    {
+                        IsSystem = IsSystem
+                    };
             }
         }
 

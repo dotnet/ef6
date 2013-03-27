@@ -107,13 +107,13 @@ namespace System.Data.Entity.Infrastructure
         ///     Note that changing the values in the returned dictionary will not update the values in the database.
         ///     If the entity is not found in the database then null is returned.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains the store values. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the store values.
         /// </returns>
         public Task<DbPropertyValues> GetDatabaseValuesAsync()
         {
@@ -125,14 +125,16 @@ namespace System.Data.Entity.Infrastructure
         ///     Note that changing the values in the returned dictionary will not update the values in the database.
         ///     If the entity is not found in the database then null is returned.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains the store values. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the store values.
         /// </returns>
         public async Task<DbPropertyValues> GetDatabaseValuesAsync(CancellationToken cancellationToken)
         {
@@ -158,12 +160,12 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously reloads the entity from the database overwriting any property values with values from the database.
         ///     The entity will be in the Unchanged state after calling this method.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         /// </returns>
         public Task ReloadAsync()
         {
@@ -174,13 +176,15 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously reloads the entity from the database overwriting any property values with values from the database.
         ///     The entity will be in the Unchanged state after calling this method.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         /// </returns>
         public Task ReloadAsync(CancellationToken cancellationToken)
         {

@@ -60,7 +60,7 @@ namespace System.Data.Entity.Internal
 
             return _contextType == other._contextType
                    && string.Equals(_providerName, other._providerName)
-                   && string.Equals(_providerType, other._providerType)
+                   && Equals(_providerType, other._providerType)
                    && string.Equals(_customKey, other._customKey);
         }
     }

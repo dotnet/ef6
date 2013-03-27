@@ -513,20 +513,20 @@ namespace System.Data.Entity.Migrations.Builders
         {
             var column
                 = new ColumnModel(primitiveTypeKind)
-                      {
-                          IsNullable = nullable,
-                          MaxLength = maxLength,
-                          Precision = precision,
-                          Scale = scale,
-                          IsUnicode = unicode,
-                          IsFixedLength = fixedLength,
-                          IsIdentity = identity,
-                          DefaultValue = defaultValue,
-                          DefaultValueSql = defaultValueSql,
-                          IsTimestamp = timestamp,
-                          Name = name,
-                          StoreType = storeType
-                      };
+                    {
+                        IsNullable = nullable,
+                        MaxLength = maxLength,
+                        Precision = precision,
+                        Scale = scale,
+                        IsUnicode = unicode,
+                        IsFixedLength = fixedLength,
+                        IsIdentity = identity,
+                        DefaultValue = defaultValue,
+                        DefaultValueSql = defaultValueSql,
+                        IsTimestamp = timestamp,
+                        Name = name,
+                        StoreType = storeType
+                    };
 
             return column;
         }

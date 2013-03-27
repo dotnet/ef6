@@ -132,7 +132,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Dictionary<md.EdmFunction, md.EdmProperty[]> tvfResultKeys)
         {
 #if DEBUG
-            //string phase0 = Dump.ToXml(compilerState.Command);
+    //string phase0 = Dump.ToXml(compilerState.Command);
             Validator.Validate(compilerState);
 #endif
 
@@ -142,7 +142,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             PropertyPushdownHelper.Process(compilerState.Command, out varPropertyMap, out nodePropertyMap);
 
 #if DEBUG
-            //string phase1 = Dump.ToXml(compilerState.Command);
+    //string phase1 = Dump.ToXml(compilerState.Command);
             Validator.Validate(compilerState);
 #endif
 
@@ -152,15 +152,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             nte.Process();
 
 #if DEBUG
-            //string phase2 = Dump.ToXml(compilerState.Command);
+    //string phase2 = Dump.ToXml(compilerState.Command);
             Validator.Validate(compilerState);
 #endif
 
 #if DEBUG
-            //To avoid garbage collection
-            //int size = phase0.Length;
-            //size = phase1.Length;
-            //size = phase2.Length;
+    //To avoid garbage collection
+    //int size = phase0.Length;
+    //size = phase1.Length;
+    //size = phase2.Length;
 #endif
         }
 

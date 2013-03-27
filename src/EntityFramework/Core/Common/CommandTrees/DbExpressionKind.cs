@@ -309,7 +309,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     internal static class DbExpressionKindHelper
     {
         /// <summary>
-        /// The last value in the DbExpressionKind enumeration.
+        ///     The last value in the DbExpressionKind enumeration.
         /// </summary>
         public static readonly DbExpressionKind Last = DbExpressionKind.In;
     }

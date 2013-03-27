@@ -32,11 +32,11 @@ namespace System.Data.Entity.Core.Objects
     using System.Reflection;
     using System.Runtime.Versioning;
     using System.Text;
-#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
-#endif
     using System.Transactions;
+#if !NET40
+#endif
 
     /// <summary>
     ///     ObjectContext is the top-level object that encapsulates a connection between the CLR and the database,
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Objects
         private readonly ColumnMapFactory _columnMapFactory;
 
         private readonly ObjectContextOptions _options = new ObjectContextOptions();
-        
+
         private const string UseLegacyPreserveChangesBehavior = "EntityFramework_UseLegacyPreserveChangesBehavior";
 
         private readonly ThrowingMonitor _asyncMonitor = new ThrowingMonitor();
@@ -385,7 +385,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Get <see cref="ObjectContextOptions" /> instance that contains options 
+        ///     Get <see cref="ObjectContextOptions" /> instance that contains options
         ///     that affect the behavior of the ObjectContext.
         /// </summary>
         /// <value>
@@ -1513,14 +1513,14 @@ namespace System.Data.Entity.Core.Objects
 
                 await EnsureContextIsEnlistedInCurrentTransaction(
                     currentTransaction, async () =>
-                                                  {
-                                                      await
-                                                          Connection.OpenAsync(cancellationToken).ConfigureAwait(
-                                                              continueOnCapturedContext: false);
-                                                      _openedConnection = true;
-                                                      _connectionRequestCount++;
-                                                      return true;
-                                                  },
+                        {
+                            await
+                                Connection.OpenAsync(cancellationToken).ConfigureAwait(
+                                    continueOnCapturedContext: false);
+                            _openedConnection = true;
+                            _connectionRequestCount++;
+                            return true;
+                        },
                     Task.FromResult(false)).ConfigureAwait(continueOnCapturedContext: false);
 
                 // If we get here, we have an open connection, either enlisted in the current
@@ -1689,7 +1689,9 @@ namespace System.Data.Entity.Core.Objects
         /// <typeparam name="T"> Type of the query result </typeparam>
         /// <param name="queryString"> The query string to be executed </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
-        /// <returns> An <see cref="ObjectQuery{T}"/> instance, ready to be executed </returns>
+        /// <returns>
+        ///     An <see cref="ObjectQuery{T}" /> instance, ready to be executed
+        /// </returns>
         public virtual ObjectQuery<T> CreateQuery<T>(string queryString, params ObjectParameter[] parameters)
         {
             Check.NotNull(queryString, "queryString");
@@ -2086,14 +2088,14 @@ namespace System.Data.Entity.Core.Objects
         ///     Asynchronously refreshes cache data with store data for specific entities.
         ///     The order in which entites are refreshed is non-deterministic.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
         /// <param name="collection"> The entities to refresh. Must not be null and all entities must be attached to this context. May be empty. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         /// </returns>
         /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
         /// <exception cref="ArgumentNullException">collection is null</exception>
@@ -2107,15 +2109,17 @@ namespace System.Data.Entity.Core.Objects
         ///     Asynchronously refreshes cache data with store data for specific entities.
         ///     The order in which entites are refreshed is non-deterministic.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
         /// <param name="collection"> The entities to refresh. Must not be null and all entities must be attached to this context. May be empty. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         /// </returns>
         /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
         /// <exception cref="ArgumentNullException">collection is null</exception>
@@ -2134,14 +2138,14 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Asynchronously refreshes cache data with store data for a specific entity.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
         /// <param name="entity"> The entity to refresh. This must be a non-null entity that is attached to this context </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         /// </returns>
         /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
         /// <exception cref="ArgumentNullException">entity is null</exception>
@@ -2154,15 +2158,17 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Asynchronously refreshes cache data with store data for a specific entity.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
         /// <param name="entity"> The entity to refresh. This must be a non-null entity that is attached to this context </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         /// </returns>
         /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
         /// <exception cref="ArgumentNullException">entity is null</exception>
@@ -2646,13 +2652,13 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Asynchronously persists all updates to the store.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
         ///     in the ObjectStateManager when SaveChanges was called.
         /// </returns>
         public Task<Int32> SaveChangesAsync()
@@ -2663,14 +2669,16 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Asynchronously persists all updates to the store.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
         ///     in the ObjectStateManager when SaveChanges was called.
         /// </returns>
         public Task<Int32> SaveChangesAsync(CancellationToken cancellationToken)
@@ -2733,14 +2741,14 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Asynchronously persists all updates to the store.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="options"> Describes behavior options of SaveChanges </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
         ///     in the ObjectStateManager when SaveChanges was called.
         /// </returns>
         public Task<Int32> SaveChangesAsync(SaveOptions options)
@@ -2751,15 +2759,17 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Asynchronously persists all updates to the store.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="options"> Describes behavior options of SaveChanges </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
         ///     in the ObjectStateManager when SaveChanges was called.
         /// </returns>
         public virtual Task<Int32> SaveChangesAsync(SaveOptions options, CancellationToken cancellationToken)
@@ -2786,8 +2796,8 @@ namespace System.Data.Entity.Core.Objects
                     entriesAffected = await executionStrategy.ExecuteAsync(
                         () => SaveChangesToStoreAsync(
                             options,
-                            /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure, cancellationToken),
-                            cancellationToken)
+                                  /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure, cancellationToken),
+                        cancellationToken)
                                                              .ConfigureAwait(continueOnCapturedContext: false);
                 }
 
@@ -2909,14 +2919,16 @@ namespace System.Data.Entity.Core.Objects
         ///     A local transaction is created only if there are no existing local nor ambient transactions.
         ///     This method will ensure that the connection is opened and release it if an exception is thrown.
         ///     The caller is responsible of releasing the connection if no exception is thrown, unless
-        ///     <paramref name="releaseConnectionOnSuccess"/> is set to <c>true</c>.
+        ///     <paramref name="releaseConnectionOnSuccess" /> is set to <c>true</c>.
         /// </remarks>
         /// <typeparam name="T"> Type of the result. </typeparam>
         /// <param name="func"> The function to invoke. </param>
         /// <param name="throwOnExistingTransaction"> Whether to throw on an existing transaction. </param>
         /// <param name="startLocalTransaction"> Whether should start a new local transaction when there's no existing one. </param>
         /// <param name="releaseConnectionOnSucces"> Whether the connection will also be released when no exceptions are thrown. </param>
-        /// <returns> The result from invoking <paramref name="func"/>. </returns>
+        /// <returns>
+        ///     The result from invoking <paramref name="func" />.
+        /// </returns>
         internal virtual T ExecuteInTransaction<T>(
             Func<T> func, bool throwOnExistingTransaction, bool startLocalTransaction, bool releaseConnectionOnSuccess)
         {
@@ -2987,7 +2999,7 @@ namespace System.Data.Entity.Core.Objects
         ///     A local transaction is created only if there are no existing local nor ambient transactions.
         ///     This method will ensure that the connection is opened and release it if an exception is thrown.
         ///     The caller is responsible of releasing the connection if no exception is thrown, unless
-        ///     <paramref name="releaseConnectionOnSuccess"/> is set to <c>true</c>.
+        ///     <paramref name="releaseConnectionOnSuccess" /> is set to <c>true</c>.
         /// </remarks>
         /// <typeparam name="T"> Type of the result. </typeparam>
         /// <param name="func"> The function to invoke. </param>
@@ -2995,7 +3007,9 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="startLocalTransaction"> Whether should start a new local transaction when there's no existing one. </param>
         /// <param name="releaseConnectionOnSuccess"> Whether the connection will also be released when no exceptions are thrown. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A task containing the result from invoking <paramref name="func"/>. </returns>
+        /// <returns>
+        ///     A task containing the result from invoking <paramref name="func" />.
+        /// </returns>
         internal virtual async Task<T> ExecuteInTransactionAsync<T>(
             Func<Task<T>> func, bool throwOnExistingTransaction,
             bool startLocalTransaction, bool releaseConnectionOnSuccess, CancellationToken cancellationToken)
@@ -3446,16 +3460,16 @@ namespace System.Data.Entity.Core.Objects
                 // its GetEnumerator is called explicitly, and the resulting enumerator is never disposed.
                 var onReaderDisposeHasRun = false;
                 Action<object, EventArgs> onReaderDispose = (object sender, EventArgs e) =>
-                                                                {
-                                                                    if (!onReaderDisposeHasRun)
-                                                                    {
-                                                                        onReaderDisposeHasRun = true;
-                                                                        // consume the store reader
-                                                                        CommandHelper.ConsumeReader(storeReader);
-                                                                        // trigger event callback
-                                                                        entityCommand.NotifyDataReaderClosing();
-                                                                    }
-                                                                };
+                    {
+                        if (!onReaderDisposeHasRun)
+                        {
+                            onReaderDisposeHasRun = true;
+                            // consume the store reader
+                            CommandHelper.ConsumeReader(storeReader);
+                            // trigger event callback
+                            entityCommand.NotifyDataReaderClosing();
+                        }
+                    };
 
                 if (shaperOwnsReader)
                 {
@@ -3530,7 +3544,7 @@ namespace System.Data.Entity.Core.Objects
                         // loading the type. We don't care if the type still cannot be loaded - in this case the result TypeUsage will be null
                         // which we handle later.
                         if (!Perspective.TryGetTypeByName(
-                                objectParameter.MappableType.FullNameWithNesting(), /*ignoreCase */ false, out typeUsage))
+                            objectParameter.MappableType.FullNameWithNesting(), /*ignoreCase */ false, out typeUsage))
                         {
                             MetadataWorkspace.ImplicitLoadAssemblyForType(objectParameter.MappableType, null);
                             Perspective.TryGetTypeByName(
@@ -3735,15 +3749,15 @@ namespace System.Data.Entity.Core.Objects
         ///     Asynchronously executes a command against the database server that does not return a sequence of objects.
         ///     The command is specified using the server's native query language, such as SQL.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="commandText"> The command specified in the server's native query language. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains a single integer return value. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains a single integer return value.
         /// </returns>
         public Task<int> ExecuteStoreCommandAsync(string commandText, params object[] parameters)
         {
@@ -3754,16 +3768,18 @@ namespace System.Data.Entity.Core.Objects
         ///     Asynchronously executes a command against the database server that does not return a sequence of objects.
         ///     The command is specified using the server's native query language, such as SQL.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="commandText"> The command specified in the server's native query language. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains a single integer return value. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains a single integer return value.
         /// </returns>
         public virtual Task<int> ExecuteStoreCommandAsync(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
@@ -3856,7 +3872,7 @@ namespace System.Data.Entity.Core.Objects
         /// <typeparam name="TElement"> The element type of the resulting sequence </typeparam>
         /// <param name="commandText"> The DbDataReader to translate </param>
         /// <param name="entitySetName"> The entity set in which results should be tracked. Null indicates there is no entity set. </param>
-        /// <param name="executionOptions"> The options for executing this query. </param> 
+        /// <param name="executionOptions"> The options for executing this query. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
         ///     An enumeration of objects of type <typeparamref name="TElement" /> .
@@ -3960,15 +3976,15 @@ namespace System.Data.Entity.Core.Objects
         ///     Asynchronously executes the sequence returning query against the database server.
         ///     The query is specified using the server's native query language, such as SQL.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -3981,16 +3997,18 @@ namespace System.Data.Entity.Core.Objects
         ///     Asynchronously executes the sequence returning query against the database server.
         ///     The query is specified using the server's native query language, such as SQL.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -4013,16 +4031,16 @@ namespace System.Data.Entity.Core.Objects
         ///     Asynchronously executes the sequence returning query against the database server.
         ///     The query is specified using the server's native query language, such as SQL.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
-        /// <param name="executionOptions"> The options for executing this query. </param> 
+        /// <param name="executionOptions"> The options for executing this query. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -4046,17 +4064,19 @@ namespace System.Data.Entity.Core.Objects
         ///     Asynchronously executes the sequence returning query against the database server.
         ///     The query is specified using the server's native query language, such as SQL.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
-        /// <param name="executionOptions"> The options for executing this query. </param> 
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="executionOptions"> The options for executing this query. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -4080,17 +4100,17 @@ namespace System.Data.Entity.Core.Objects
         ///     Asynchronously executes the sequence returning query against the database server.
         ///     The query is specified using the server's native query language, such as SQL.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TElement"> The element type of the resulting sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="entitySetName"> The entity set in which results should be tracked. Null indicates there is no entity set. </param>
-        /// <param name="executionOptions"> The options for executing this query. </param> 
+        /// <param name="executionOptions"> The options for executing this query. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -4104,18 +4124,20 @@ namespace System.Data.Entity.Core.Objects
         ///     Asynchronously executes the sequence returning query against the database server.
         ///     The query is specified using the server's native query language, such as SQL.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TElement"> The element type of the resulting sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="entitySetName"> The entity set in which results should be tracked. Null indicates there is no entity set. </param>
-        /// <param name="executionOptions"> The options for executing this query. </param> 
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="executionOptions"> The options for executing this query. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]

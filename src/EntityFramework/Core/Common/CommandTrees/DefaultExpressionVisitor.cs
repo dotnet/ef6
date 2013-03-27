@@ -187,17 +187,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             var result = lambda;
             var newFormals = VisitList(
                 lambda.Variables, varRef =>
-                                      {
-                                          var newVarType = VisitTypeUsage(varRef.ResultType);
-                                          if (!ReferenceEquals(varRef.ResultType, newVarType))
-                                          {
-                                              return CqtBuilder.Variable(newVarType, varRef.VariableName);
-                                          }
-                                          else
-                                          {
-                                              return varRef;
-                                          }
-                                      }
+                    {
+                        var newVarType = VisitTypeUsage(varRef.ResultType);
+                        if (!ReferenceEquals(varRef.ResultType, newVarType))
+                        {
+                            return CqtBuilder.Variable(newVarType, varRef.VariableName);
+                        }
+                        else
+                        {
+                            return varRef;
+                        }
+                    }
                 );
             EnterScope(newFormals.ToArray()); // ToArray: Don't pass the List instance directly to OnEnterScope
             var newBody = VisitExpression(lambda.Body);
@@ -654,7 +654,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             NotifyIfChanged(expression, result);
             return result;
         }
-
 
         public override DbExpression Visit(DbNotExpression expression)
         {

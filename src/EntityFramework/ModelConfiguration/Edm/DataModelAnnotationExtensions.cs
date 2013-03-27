@@ -100,9 +100,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             {
                 dataModelAnnotations.Add(
                     annotation = new DataModelAnnotation
-                                     {
-                                         Name = name
-                                     });
+                        {
+                            Name = name
+                        });
             }
 
             annotation.Value = value;

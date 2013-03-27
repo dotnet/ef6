@@ -138,24 +138,24 @@ namespace System.Data.Entity.Infrastructure
 
             var tcs = new TaskCompletionSource<List<T>>();
             var list = new List<T>();
-            source.ForEachAsync(list.Add, cancellationToken).ContinueWith(t =>
-            {
-                if (t.IsFaulted)
-                {
-                    tcs.TrySetException(t.Exception.InnerExceptions);
-                }
-                else if (t.IsCanceled)
-                {
-                    tcs.TrySetCanceled();
-                }
-                else
-                {
-                    tcs.TrySetResult(list);
-                }
-            }, TaskContinuationOptions.ExecuteSynchronously);
+            source.ForEachAsync(list.Add, cancellationToken).ContinueWith(
+                t =>
+                    {
+                        if (t.IsFaulted)
+                        {
+                            tcs.TrySetException(t.Exception.InnerExceptions);
+                        }
+                        else if (t.IsCanceled)
+                        {
+                            tcs.TrySetCanceled();
+                        }
+                        else
+                        {
+                            tcs.TrySetResult(list);
+                        }
+                    }, TaskContinuationOptions.ExecuteSynchronously);
 
             return tcs.Task;
-
         }
 
         /// <summary>

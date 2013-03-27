@@ -4,7 +4,6 @@ namespace System.Data.Entity.Internal.Validation
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity.Config;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
 

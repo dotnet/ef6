@@ -57,12 +57,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                             = declaringEntity.NavigationProperties
                                              .Where(n => n.ResultEnd.GetEntityType() == entityType)
                         select new
-                                   {
-                                       DeclaringEnd = declaringEnd,
-                                       AssociationType = associationType,
-                                       DeclaringEntityType = declaringEntity,
-                                       NavigationProperties = navigationProperties.ToList()
-                                   }
+                            {
+                                DeclaringEnd = declaringEnd,
+                                AssociationType = associationType,
+                                DeclaringEntityType = declaringEntity,
+                                NavigationProperties = navigationProperties.ToList()
+                            }
                   where matchingAssociations.All(
                       a => a.AssociationType.Constraint == null // (4)
                            && a.AssociationType.GetConfiguration() == null // (5)
@@ -71,10 +71,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                            && a.NavigationProperties.All(n => n.GetConfiguration() == null))
                   // (8)
                   select new
-                             {
-                                 EntityType = entityType,
-                                 MatchingAssociations = matchingAssociations.ToList(),
-                             };
+                      {
+                          EntityType = entityType,
+                          MatchingAssociations = matchingAssociations.ToList(),
+                      };
 
             // Transform candidate entities into complex types
             foreach (var candidate in candidates.ToList())

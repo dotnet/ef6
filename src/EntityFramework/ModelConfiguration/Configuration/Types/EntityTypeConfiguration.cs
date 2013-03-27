@@ -455,10 +455,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 var primaryKeys
                     = from p in _keyProperties
                       select new
-                                 {
-                                     PropertyInfo = p,
-                                     Property(new PropertyPath(p)).ColumnOrder
-                                 };
+                          {
+                              PropertyInfo = p,
+                              Property(new PropertyPath(p)).ColumnOrder
+                          };
 
                 if ((_keyProperties.Count > 1)
                     && primaryKeys.Any(p => !p.ColumnOrder.HasValue))
@@ -598,7 +598,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
-        private void ConfigureModificationFunctions(DbDatabaseMapping databaseMapping, EntityType entityType, DbProviderManifest providerManifest)
+        private void ConfigureModificationFunctions(
+            DbDatabaseMapping databaseMapping, EntityType entityType, DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(entityType);
             DebugCheck.NotNull(databaseMapping);
@@ -622,8 +623,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         private void ConfigurePropertyMappings(
-            DbDatabaseMapping databaseMapping, 
-            EntityType entityType, 
+            DbDatabaseMapping databaseMapping,
+            EntityType entityType,
             DbProviderManifest providerManifest,
             bool allowOverride = false)
         {
@@ -635,9 +636,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             var propertyMappings
                 = (from etm in entityTypeMappings
-                  from etmf in etm.MappingFragments
-                  from pm in etmf.ColumnMappings
-                  select Tuple.Create(pm, etmf.Table))
+                   from etmf in etm.MappingFragments
+                   from pm in etmf.ColumnMappings
+                   select Tuple.Create(pm, etmf.Table))
                     .ToList();
 
             ConfigurePropertyMappings(propertyMappings, providerManifest, allowOverride);

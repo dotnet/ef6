@@ -44,9 +44,9 @@ namespace System.Data.Entity.Internal
         ///     The existing <see cref="ObjectContext" /> .
         /// </param>
         public EagerInternalContext(
-            DbContext owner, 
-            ObjectContext objectContext, 
-            bool objectContextOwned, 
+            DbContext owner,
+            ObjectContext objectContext,
+            bool objectContextOwned,
             Interception interception = null)
             : base(owner, interception)
         {

@@ -121,7 +121,8 @@ namespace System.Data.Entity.Core.Mapping
         private Node m_internalTreeNode;
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ReadOnlyCollection<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>> StructuralTypeMappings
+        public ReadOnlyCollection<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>>
+            StructuralTypeMappings
         {
             get { return m_structuralTypeMappings == null ? null : m_structuralTypeMappings.AsReadOnly(); }
         }
@@ -502,18 +503,18 @@ namespace System.Data.Entity.Core.Mapping
             var column = rowType.Properties[0];
 
             Func<DbExpression, DbExpression> scalarView = (DbExpression row) =>
-                                                              {
-                                                                  var propertyAccess = row.Property(column);
-                                                                  if (TypeSemantics.IsEqual(
-                                                                      functionImportReturnType.TypeUsage, column.TypeUsage))
-                                                                  {
-                                                                      return propertyAccess;
-                                                                  }
-                                                                  else
-                                                                  {
-                                                                      return propertyAccess.CastTo(functionImportReturnType.TypeUsage);
-                                                                  }
-                                                              };
+                {
+                    var propertyAccess = row.Property(column);
+                    if (TypeSemantics.IsEqual(
+                        functionImportReturnType.TypeUsage, column.TypeUsage))
+                    {
+                        return propertyAccess;
+                    }
+                    else
+                    {
+                        return propertyAccess.CastTo(functionImportReturnType.TypeUsage);
+                    }
+                };
 
             queryExpression = queryExpression.Select(row => scalarView(row));
             return queryExpression;

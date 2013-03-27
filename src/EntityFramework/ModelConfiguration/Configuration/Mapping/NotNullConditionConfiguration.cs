@@ -90,11 +90,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             // Make the property required
             var newConfiguration = new PrimitivePropertyConfiguration
-                                       {
-                                           IsNullable = false,
-                                           OverridableConfigurationParts =
-                                               OverridableConfigurationParts.OverridableInSSpace
-                                       };
+                {
+                    IsNullable = false,
+                    OverridableConfigurationParts =
+                        OverridableConfigurationParts.OverridableInSSpace
+                };
 
             newConfiguration.Configure(edmPropertyPath.Single().Last());
 

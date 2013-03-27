@@ -29,8 +29,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // an assembly
         private readonly KnownAssembliesSet _knownAssemblies;
         private readonly LockedAssemblyCache _lockedAssemblyCache;
-        private readonly HashSet<ObjectItemAssemblyLoader> _loadersThatNeedLevel1PostSessionProcessing = new HashSet<ObjectItemAssemblyLoader>();
-        private readonly HashSet<ObjectItemAssemblyLoader> _loadersThatNeedLevel2PostSessionProcessing = new HashSet<ObjectItemAssemblyLoader>();
+
+        private readonly HashSet<ObjectItemAssemblyLoader> _loadersThatNeedLevel1PostSessionProcessing =
+            new HashSet<ObjectItemAssemblyLoader>();
+
+        private readonly HashSet<ObjectItemAssemblyLoader> _loadersThatNeedLevel2PostSessionProcessing =
+            new HashSet<ObjectItemAssemblyLoader>();
 
         private readonly EdmItemCollection _edmItemCollection;
         private Dictionary<string, KeyValuePair<EdmType, int>> _conventionCSpaceTypeNames;
@@ -147,7 +151,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// For testing.
+        ///     For testing.
         /// </summary>
         internal ObjectItemLoadingSessionData()
         {

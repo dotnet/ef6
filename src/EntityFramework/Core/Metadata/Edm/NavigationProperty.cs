@@ -131,7 +131,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Creates a NavigationProperty instance from the specified parameters.
+        ///     Creates a NavigationProperty instance from the specified parameters.
         /// </summary>
         /// <param name="name">The name of the navigation property.</param>
         /// <param name="typeUsage">Specifies the navigation property type and its facets.</param>
@@ -140,15 +140,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="to">The target end member in the navigation.</param>
         /// <returns>The newly created NavigationProperty instance.</returns>
         public static NavigationProperty Create(
-            string name, 
+            string name,
             TypeUsage typeUsage,
-            RelationshipType relationshipType, 
+            RelationshipType relationshipType,
             RelationshipEndMember from,
             RelationshipEndMember to)
         {
             var instance = new NavigationProperty(name, typeUsage);
 
-            instance.RelationshipType = relationshipType;            
+            instance.RelationshipType = relationshipType;
             instance.FromEndMember = from;
             instance.ToEndMember = to;
 

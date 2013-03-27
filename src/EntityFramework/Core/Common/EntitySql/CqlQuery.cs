@@ -124,20 +124,20 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             return CompileCommon(
                 queryCommandText, parserOptions, (astCommand, validatedParserOptions) =>
-                                                     {
-                                                         var lambda = AnalyzeQueryExpressionSemantics(
-                                                             astCommand,
-                                                             perspective,
-                                                             validatedParserOptions,
-                                                             parameters,
-                                                             variables);
+                    {
+                        var lambda = AnalyzeQueryExpressionSemantics(
+                            astCommand,
+                            perspective,
+                            validatedParserOptions,
+                            parameters,
+                            variables);
 
-                                                         TypeHelpers.AssertEdmType(lambda.Body.ResultType);
+                        TypeHelpers.AssertEdmType(lambda.Body.ResultType);
 
-                                                         Debug.Assert(lambda != null, "lambda != null post-condition FAILED");
+                        Debug.Assert(lambda != null, "lambda != null post-condition FAILED");
 
-                                                         return lambda;
-                                                     });
+                        return lambda;
+                    });
         }
 
         #region Private

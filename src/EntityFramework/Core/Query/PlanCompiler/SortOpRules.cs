@@ -43,9 +43,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All SortOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-                                                    {
-                                                        Rule_SortOpOverAtMostOneRow,
-                                                    };
+            {
+                Rule_SortOpOverAtMostOneRow,
+            };
 
         #endregion
     }

@@ -53,22 +53,23 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
         {
             DebugCheck.NotNull(propertyInfo);
 
-            return _discoveredAttributes.GetOrAdd(propertyInfo, (pi) =>
-                {
-                    var typeDescriptor = GetTypeDescriptor(propertyInfo.DeclaringType);
-                    var propertyCollection = typeDescriptor.GetProperties();
-                    var propertyDescriptor = propertyCollection[propertyInfo.Name];
+            return _discoveredAttributes.GetOrAdd(
+                propertyInfo, (pi) =>
+                    {
+                        var typeDescriptor = GetTypeDescriptor(propertyInfo.DeclaringType);
+                        var propertyCollection = typeDescriptor.GetProperties();
+                        var propertyDescriptor = propertyCollection[propertyInfo.Name];
 
-                    var propertyAttributes
-                        = (propertyDescriptor != null)
-                              ? propertyDescriptor.Attributes.Cast<Attribute>()
-                        // Fallback to standard reflection (non-public properties)
-                              : propertyInfo.GetCustomAttributes(true).Cast<Attribute>();
+                        var propertyAttributes
+                            = (propertyDescriptor != null)
+                                  ? propertyDescriptor.Attributes.Cast<Attribute>()
+                                  // Fallback to standard reflection (non-public properties)
+                                  : propertyInfo.GetCustomAttributes(true).Cast<Attribute>();
 
-                    // Get the attributes for the property's type and exclude them
-                    var propertyTypeAttributes = GetAttributes(propertyInfo.PropertyType);
-                    return propertyAttributes.Except(propertyTypeAttributes);
-                });
+                        // Get the attributes for the property's type and exclude them
+                        var propertyTypeAttributes = GetAttributes(propertyInfo.PropertyType);
+                        return propertyAttributes.Except(propertyTypeAttributes);
+                    });
         }
 
         private static ICustomTypeDescriptor GetTypeDescriptor(Type type)

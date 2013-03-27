@@ -26,14 +26,16 @@ namespace System.Data.Entity.Spatial
         /// </summary>
         /// <remarks>
         ///     Providers should override with an appropriate implementation.
-        ///     The default implementation invokes the synchronous <see cref="GetGeography"/> method and returns
+        ///     The default implementation invokes the synchronous <see cref="GetGeography" /> method and returns
         ///     a completed task, blocking the calling thread.
         /// </remarks>
         /// <param name="ordinal"> The ordinal of the column that contains the geography value. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains the instance of <see cref="DbGeography" /> at the specified column value. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the instance of <see cref="DbGeography" /> at the specified column value.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Exception provided in the returned task.")]
@@ -70,14 +72,16 @@ namespace System.Data.Entity.Spatial
         /// </summary>
         /// <remarks>
         ///     Providers should override with an appropriate implementation.
-        ///     The default implementation invokes the synchronous <see cref="GetGeometry"/> method and returns
+        ///     The default implementation invokes the synchronous <see cref="GetGeometry" /> method and returns
         ///     a completed task, blocking the calling thread.
         /// </remarks>
         /// <param name="ordinal"> The ordinal of the data record column that contains the provider-specific geometry data. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains the instance of <see cref="DbGeometry" /> at the specified column value. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the instance of <see cref="DbGeometry" /> at the specified column value.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Exception provided in the returned task.")]

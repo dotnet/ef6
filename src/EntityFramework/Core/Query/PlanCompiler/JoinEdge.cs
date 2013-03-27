@@ -109,7 +109,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         ///     Gets a flag that indicates whether elimination is restricted for this join edge.
-        ///     Returns true if this is not a transitive join edge and one or both participating 
+        ///     Returns true if this is not a transitive join edge and one or both participating
         ///     tables are not visible at the join node, otherwise false.
         /// </summary>
         internal bool RestrictedElimination
@@ -117,8 +117,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             get
             {
                 return m_joinNode != null
-                    && (m_left.LastVisibleId < m_joinNode.Id
-                        || m_right.LastVisibleId < m_joinNode.Id);
+                       && (m_left.LastVisibleId < m_joinNode.Id
+                           || m_right.LastVisibleId < m_joinNode.Id);
             }
         }
 

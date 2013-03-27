@@ -34,16 +34,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             var columnMetadata
                 = new EdmProperty(tableColumn.Name, tableColumn.TypeUsage)
-                      {
-                          Nullable = tableColumn.Nullable,
-                          StoreGeneratedPattern = tableColumn.StoreGeneratedPattern,
-                          IsFixedLength = tableColumn.IsFixedLength,
-                          IsMaxLength = tableColumn.IsMaxLength,
-                          IsUnicode = tableColumn.IsUnicode,
-                          MaxLength = tableColumn.MaxLength,
-                          Precision = tableColumn.Precision,
-                          Scale = tableColumn.Scale
-                      };
+                    {
+                        Nullable = tableColumn.Nullable,
+                        StoreGeneratedPattern = tableColumn.StoreGeneratedPattern,
+                        IsFixedLength = tableColumn.IsFixedLength,
+                        IsMaxLength = tableColumn.IsMaxLength,
+                        IsUnicode = tableColumn.IsUnicode,
+                        MaxLength = tableColumn.MaxLength,
+                        Precision = tableColumn.Precision,
+                        Scale = tableColumn.Scale
+                    };
 
             tableColumn.Annotations.Each(a => columnMetadata.Annotations.Add(a));
 

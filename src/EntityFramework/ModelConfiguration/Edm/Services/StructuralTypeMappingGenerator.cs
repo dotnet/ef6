@@ -35,9 +35,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var tableColumnMetadata
                 = new EdmProperty(columnName, storeTypeUsage)
-                      {
-                          Nullable = isInstancePropertyOnDerivedType || property.Nullable
-                      };
+                    {
+                        Nullable = isInstancePropertyOnDerivedType || property.Nullable
+                    };
 
             if (tableColumnMetadata.IsPrimaryKeyColumn)
             {

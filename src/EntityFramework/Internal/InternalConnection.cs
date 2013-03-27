@@ -8,7 +8,6 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
-    using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -210,6 +209,5 @@ namespace System.Data.Entity.Internal
 
             return connectionString;
         }
-
     }
 }

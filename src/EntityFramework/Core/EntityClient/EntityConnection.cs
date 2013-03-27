@@ -120,7 +120,7 @@ namespace System.Data.Entity.Core.EntityClient
             MetadataWorkspace workspace,
             DbConnection connection,
             bool skipInitialization,
-            bool entityConnectionOwnsStoreConnection, 
+            bool entityConnectionOwnsStoreConnection,
             Interception interception = null)
         {
             if (!skipInitialization)
@@ -540,7 +540,9 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         ///     Asynchronously establishes a connection to the data store by calling the Open method on the underlying data provider
         /// </summary>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns> A task that represents the asynchronous operation. </returns>
         public override async Task OpenAsync(CancellationToken cancellationToken)
         {
@@ -664,13 +666,13 @@ namespace System.Data.Entity.Core.EntityClient
             if (_fakeConnectionState != null)
             {
                 return new EntityTransaction();
-            } 
-            
+            }
+
             if (CurrentTransaction != null)
             {
                 throw new InvalidOperationException(Strings.EntityClient_TransactionAlreadyStarted);
             }
-            
+
             if (_storeConnection == null)
             {
                 throw Error.EntityClient_ConnectionStringNeededBeforeOperation();

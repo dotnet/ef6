@@ -188,10 +188,10 @@ namespace System.Data.Entity.Edm.Serialization
 
             _xmlWriter.WriteStartElement(StorageMslConstructs.FunctionImportMappingElement);
             _xmlWriter.WriteAttributeString(
-                StorageMslConstructs.FunctionImportMappingFunctionNameAttribute, 
+                StorageMslConstructs.FunctionImportMappingFunctionNameAttribute,
                 functionImportMapping.TargetFunction.FullName);
             _xmlWriter.WriteAttributeString(
-                StorageMslConstructs.FunctionImportMappingFunctionImportNameAttribute, 
+                StorageMslConstructs.FunctionImportMappingFunctionImportNameAttribute,
                 functionImportMapping.FunctionImport.Name);
             _xmlWriter.WriteStartElement(StorageMslConstructs.FunctionImportMappingResultMapping);
 

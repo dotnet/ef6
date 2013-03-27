@@ -24,9 +24,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : base(name,
                 TypeUsage.Create(
                     endRefType, new FacetValues
-                                    {
-                                        Nullable = false
-                                    }))
+                        {
+                            Nullable = false
+                        }))
         {
             _relationshipMultiplicity = multiplicity;
             _deleteBehavior = OperationAction.None;

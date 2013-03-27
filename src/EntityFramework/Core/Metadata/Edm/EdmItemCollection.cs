@@ -119,22 +119,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary> 
-        /// constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors 
-        /// encountered during load as the out parameter errors.
-        /// </summary> 
+        /// <summary>
+        ///     constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
+        ///     encountered during load as the out parameter errors.
+        /// </summary>
         /// <param name="xmlReaders">xmlReaders where the CDM schemas are loaded</param>
         /// <param name="filePaths">Paths (URIs)to the CSDL files or resources</param>
         /// <param name="errors">An out parameter to return the collection of errors encountered while loading</param>
-        private EdmItemCollection(IEnumerable<XmlReader> xmlReaders,
-                                   ReadOnlyCollection<string> filePaths,
-                                   out IList<EdmSchemaError> errors)
+        private EdmItemCollection(
+            IEnumerable<XmlReader> xmlReaders,
+            ReadOnlyCollection<string> filePaths,
+            out IList<EdmSchemaError> errors)
             : base(DataSpace.CSpace)
         {
             DebugCheck.NotNull(xmlReaders);
             // filePaths is allowed to be null 
 
-            errors = this.Init(xmlReaders, filePaths, false /*throwOnErrors*/);
+            errors = Init(xmlReaders, filePaths, false /*throwOnErrors*/);
         }
 
         // the most basic initialization
@@ -480,18 +481,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Factory method that creates an <see cref="EdmItemCollection"/>. 
+        ///     Factory method that creates an <see cref="EdmItemCollection" />.
         /// </summary>
-        /// <param name="xmlReaders">CSDL artifacts to load. Must not be <c>null</c>.</param>
+        /// <param name="xmlReaders">
+        ///     CSDL artifacts to load. Must not be <c>null</c>.
+        /// </param>
         /// <param name="filePaths">
-        /// Paths to CSDL artifacts. Used in error messages. Can be <c>null</c> in which case 
-        /// the base Uri of the XmlReader will be used as a path.
+        ///     Paths to CSDL artifacts. Used in error messages. Can be <c>null</c> in which case
+        ///     the base Uri of the XmlReader will be used as a path.
         /// </param>
         /// <param name="errors">
-        /// The collection of errors encountered while loading.
+        ///     The collection of errors encountered while loading.
         /// </param>
         /// <returns>
-        /// <see cref="EdmItemCollection"/> instance if no errors encountered. Otherwise <c>null</c>.
+        ///     <see cref="EdmItemCollection" /> instance if no errors encountered. Otherwise <c>null</c>.
         /// </returns>
         public static EdmItemCollection Create(
             IEnumerable<XmlReader> xmlReaders,

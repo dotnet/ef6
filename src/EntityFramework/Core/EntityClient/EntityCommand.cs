@@ -17,9 +17,10 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#if !NET40
+
 #endif
 
     /// <summary>
@@ -482,9 +483,9 @@ namespace System.Data.Entity.Core.EntityClient
         ///     Asynchronously executes the command and returns a data reader for reading the results. May only
         ///     be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
         /// </summary>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains an EntityDataReader object. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains an EntityDataReader object.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         ///     For stored procedure commands, if called
@@ -499,10 +500,12 @@ namespace System.Data.Entity.Core.EntityClient
         ///     Asynchronously executes the command and returns a data reader for reading the results. May only
         ///     be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
         /// </summary>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains an EntityDataReader object. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains an EntityDataReader object.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         ///     For stored procedure commands, if called
@@ -518,9 +521,9 @@ namespace System.Data.Entity.Core.EntityClient
         ///     be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
         /// </summary>
         /// <param name="behavior"> The behavior to use when executing the command </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains an EntityDataReader object. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains an EntityDataReader object.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         ///     For stored procedure commands, if called
@@ -536,10 +539,12 @@ namespace System.Data.Entity.Core.EntityClient
         ///     be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
         /// </summary>
         /// <param name="behavior"> The behavior to use when executing the command </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains an EntityDataReader object. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains an EntityDataReader object.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         ///     For stored procedure commands, if called
@@ -579,8 +584,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="behavior"> The behavior to use when executing the command </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains a DbDataReader object.
         /// </returns>
         protected override async Task<DbDataReader> ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
@@ -608,9 +613,11 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         ///     Asynchronously executes the command and discard any results returned from the command
         /// </summary>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the number of rows affected.
         /// </returns>
         public override async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)

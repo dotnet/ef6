@@ -302,7 +302,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         {
             Check.NotNull(argument, "argument");
 
-            var arguments = new DbExpressionList(new[] { argument }); ;
+            var arguments = new DbExpressionList(new[] { argument });
+            ;
             var resultType = TypeHelpers.CreateCollectionTypeUsage(argument.ResultType);
             return new DbGroupAggregate(resultType, arguments);
         }
@@ -961,7 +962,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         public static DbNullExpression Null(this TypeUsage nullType)
         {
             Check.NotNull(nullType, "nullType");
-            
+
             ArgumentValidation.CheckType(nullType, "nullType");
 
             return new DbNullExpression(nullType);
@@ -1174,19 +1175,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="DbInExpression" /> that matches the result of the specified 
+        ///     Creates a <see cref="DbInExpression" /> that matches the result of the specified
         ///     expression with the results of the constant expressions in the specified list.
         /// </summary>
         /// <param name="expression"> A DbExpression to be matched. </param>
         /// <param name="values"> A list of DbConstantExpression to test for a match. </param>
-        /// <returns> 
+        /// <returns>
         ///     A new DbInExpression with the specified arguments if the DbConstantExpression list
-        ///     is not empty, otherwise a false constant expression. 
+        ///     is not empty, otherwise a false constant expression.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="expression" /> 
-        ///     or 
-        ///     <paramref name="list" /> 
+        ///     <paramref name="expression" />
+        ///     or
+        ///     <paramref name="list" />
         ///     is null.
         /// </exception>
         /// <exception cref="ArgumentException">
@@ -1477,7 +1478,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
                 order = TypeSemantics.IsOrderComparableTo(left.ResultType, right.ResultType);
             }
             else if (DbExpressionKind.Equals == kind
-                || DbExpressionKind.NotEquals == kind)
+                     || DbExpressionKind.NotEquals == kind)
             {
                 equality = TypeSemantics.IsEqualComparableTo(left.ResultType, right.ResultType);
             }
@@ -1486,7 +1487,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
                 order = TypeSemantics.IsOrderComparableTo(left.ResultType, right.ResultType);
             }
 
-            if (!equality || !order)
+            if (!equality
+                || !order)
             {
                 throw new ArgumentException(Strings.Cqt_Comparison_ComparableRequired);
             }
@@ -2986,22 +2988,22 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             TypeUsage commonElementType = null;
             validElements = ArgumentValidation.CreateExpressionList(
                 elements, "elements", (exp, idx) =>
-                {
-                    if (commonElementType == null)
                     {
-                        commonElementType = exp.ResultType;
-                    }
-                    else
-                    {
-                        commonElementType = TypeSemantics.GetCommonType(commonElementType, exp.ResultType);
-                    }
+                        if (commonElementType == null)
+                        {
+                            commonElementType = exp.ResultType;
+                        }
+                        else
+                        {
+                            commonElementType = TypeSemantics.GetCommonType(commonElementType, exp.ResultType);
+                        }
 
-                    if (commonElementType == null)
-                    {
-                        throw new ArgumentException(
-                            Strings.Cqt_Factory_NewCollectionInvalidCommonType, "collectionElements");
-                    }
-                });
+                        if (commonElementType == null)
+                        {
+                            throw new ArgumentException(
+                                Strings.Cqt_Factory_NewCollectionInvalidCommonType, "collectionElements");
+                        }
+                    });
 
             Debug.Assert(
                 validElements.Count > 0, "CreateExpressionList(arguments, argumentName, validationCallback) allowed empty elements list?");
@@ -3173,7 +3175,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         private static string ExtractAlias(MethodInfo method)
         {
-            DebugCheck.NotNull(method); 
+            DebugCheck.NotNull(method);
             var aliases = ExtractAliases(method);
             Debug.Assert(aliases.Length > 0, "Incompatible method: at least one parameter is required");
             return aliases[0];
@@ -3181,7 +3183,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         internal static string[] ExtractAliases(MethodInfo method)
         {
-            DebugCheck.NotNull(method); 
+            DebugCheck.NotNull(method);
             var methodParams = method.GetParameters();
             int start;
             int paramCount;
@@ -4596,7 +4598,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
             if (DbExpressionKind.CrossJoin == joinKind)
             {
-                Debug.Assert(joinCondition == null , "Condition should not be specified for CrossJoin");
+                Debug.Assert(joinCondition == null, "Condition should not be specified for CrossJoin");
                 return CrossJoin(new DbExpressionBinding[2] { input1, input2 });
             }
             else
@@ -4748,7 +4750,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         {
             DebugCheck.NotNull(type);
 
-            return TypeUsage.Create(TypeHelpers.CreateCollectionType(TypeUsage.Create(type))); ;
+            return TypeUsage.Create(TypeHelpers.CreateCollectionType(TypeUsage.Create(type)));
+            ;
         }
 
         private static TypeUsage CreateCollectionResultType(TypeUsage elementType)

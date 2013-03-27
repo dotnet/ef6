@@ -15,7 +15,7 @@ namespace System.Data.Entity.Internal
         // This is field is not volatile because we need stronger guarantees than volatile provides.
         // Instead we use Thread.MemoryBarrier to ensure freshness (Interlocked methods also use it internally).
         private int _isInCriticalSection;
-        
+
         /// <summary>
         ///     Acquires an exclusive lock on this instance.
         ///     Any subsequent call to Enter before a call to Exit will result in an exception.

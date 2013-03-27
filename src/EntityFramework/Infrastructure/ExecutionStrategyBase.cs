@@ -17,7 +17,6 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     /// <remarks>
     ///     A new instance will be created each time an action is executed.
-    /// 
     ///     The following formula is used to calculate the delay after <c>retryCount</c> number of attempts:
     ///     <code>min(random(1, 1.1) * (2 ^ retryCount - 1), maxDelay)</code>
     ///     The <c>retryCount</c> starts at 0.
@@ -58,7 +57,7 @@ namespace System.Data.Entity.Infrastructure
         private static readonly TimeSpan DefaultMaxDelay = TimeSpan.FromSeconds(30);
 
         /// <summary>
-        ///     Creates a new instance of <see cref="ExecutionStrategyBase"/>.
+        ///     Creates a new instance of <see cref="ExecutionStrategyBase" />.
         /// </summary>
         /// <remarks>
         ///     The default retry limit is 5, which means that the total amout of time spent between retries is 26 seconds plus the random factor.
@@ -69,7 +68,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a new instance of <see cref="ExecutionStrategyBase"/> with the specified limits for number of retries and the delay between retries.
+        ///     Creates a new instance of <see cref="ExecutionStrategyBase" /> with the specified limits for number of retries and the delay between retries.
         /// </summary>
         /// <param name="maxRetryCount"> The maximum number of retry attempts. </param>
         /// <param name="maxDelay"> The maximum delay in milliseconds between retries. </param>
@@ -88,7 +87,7 @@ namespace System.Data.Entity.Infrastructure
             _maxDelay = maxDelay;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool RetriesOnFailure
         {
             get { return true; }
@@ -117,7 +116,9 @@ namespace System.Data.Entity.Infrastructure
         ///     Repetitively executes the specified action while it satisfies the current retry policy.
         /// </summary>
         /// <typeparam name="TResult">The type of result expected from the executable action.</typeparam>
-        /// <param name="func">A delegate representing an executable action that returns the result of type <typeparamref name="TResult"/>.</param>
+        /// <param name="func">
+        ///     A delegate representing an executable action that returns the result of type <typeparamref name="TResult" />.
+        /// </param>
         /// <returns>The result from the action.</returns>
         /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the action shouldn't be retried anymore</exception>
         /// <exception cref="InvalidOperationException">if an existing transaction is detected and the execution strategy doesn't support it</exception>
@@ -188,19 +189,21 @@ namespace System.Data.Entity.Infrastructure
 
             return ProtectedExecuteAsync(
                 async () =>
-                          {
-                              await func().ConfigureAwait(continueOnCapturedContext: false);
-                              return true;
-                          }, cancellationToken);
+                    {
+                        await func().ConfigureAwait(continueOnCapturedContext: false);
+                        return true;
+                    }, cancellationToken);
         }
 
         /// <summary>
         ///     Repeatedly executes the specified asynchronous task while it satisfies the current retry policy.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The result type of the <see cref="Task{T}"/> returned by <paramref name="func"/>.
+        ///     The result type of the <see cref="Task{T}" /> returned by <paramref name="func" />.
         /// </typeparam>
-        /// <param name="func">A function that returns a started task of type <typeparamref name="TResult"/>.</param>
+        /// <param name="func">
+        ///     A function that returns a started task of type <typeparamref name="TResult" />.
+        /// </param>
         /// <param name="cancellationToken">
         ///     A cancellation token used to cancel the retry operation, but not operations that are already in flight
         ///     or that already completed successfully.
@@ -303,13 +306,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Recursively gets InnerException from <paramref name="exception"/> as long as it's an 
-        ///     <see cref="EntityException"/>, <see cref="DbUpdateException"/> or <see cref="UpdateException"/>
-        ///     and passes it to <paramref name="exceptionHandler"/>
+        ///     Recursively gets InnerException from <paramref name="exception" /> as long as it's an
+        ///     <see cref="EntityException" />, <see cref="DbUpdateException" /> or <see cref="UpdateException" />
+        ///     and passes it to <paramref name="exceptionHandler" />
         /// </summary>
         /// <param name="exception"> The exception to be unwrapped. </param>
         /// <param name="exceptionHandler"> A delegate that will be called with the unwrapped exception. </param>
-        /// <returns> The result from <paramref name="exceptionHandler"/>. </returns>
+        /// <returns>
+        ///     The result from <paramref name="exceptionHandler" />.
+        /// </returns>
         public static T UnwrapAndHandleException<T>(Exception exception, Func<Exception, T> exceptionHandler)
         {
             var entityException = exception as EntityException;
@@ -337,7 +342,9 @@ namespace System.Data.Entity.Infrastructure
         ///     Determines whether the specified exception represents a transient failure that can be compensated by a retry.
         /// </summary>
         /// <param name="ex">The exception object to be verified.</param>
-        /// <returns><c>true</c> if the specified exception is considered as transient, otherwise <c>false</c>.</returns>
+        /// <returns>
+        ///     <c>true</c> if the specified exception is considered as transient, otherwise <c>false</c>.
+        /// </returns>
         protected abstract bool ShouldRetryOn(Exception exception);
     }
 }

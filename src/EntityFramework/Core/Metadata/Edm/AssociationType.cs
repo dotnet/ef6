@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Debug.Assert(
                     IsReadOnly,
                     "this is a wrapper around this.Members, don't call it during metadata loading, only call it after the metadata is set to read-only");
-            
+
                 if (null == _associationEndMembers)
                 {
                     Interlocked.CompareExchange(
@@ -185,7 +185,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Creates a read-only AssociationType instance from the specified parameters.
+        ///     Creates a read-only AssociationType instance from the specified parameters.
         /// </summary>
         /// <param name="name">The name of the association type.</param>
         /// <param name="namespaceName">The namespace of the association type.</param>
@@ -199,9 +199,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">The specified name is null or empty.</exception>
         /// <exception cref="System.ArgumentException">The specified namespace is null or empty.</exception>
         public static AssociationType Create(
-            string name, 
-            string namespaceName, 
-            bool foreignKey, 
+            string name,
+            string namespaceName,
+            bool foreignKey,
             DataSpace dataSpace,
             AssociationEndMember sourceEnd,
             AssociationEndMember targetEnd,

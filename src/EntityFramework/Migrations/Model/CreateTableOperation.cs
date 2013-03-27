@@ -70,9 +70,9 @@ namespace System.Data.Entity.Migrations.Model
             get
             {
                 return new DropTableOperation(Name)
-                           {
-                               IsSystem = IsSystem
-                           };
+                    {
+                        IsSystem = IsSystem
+                    };
             }
         }
 

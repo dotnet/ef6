@@ -75,10 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         public bool EdmV3FeaturesSupported
         {
-            get
-            {
-                return _modelBuilderVersion.GetEdmVersion() >= XmlConstants.EdmVersionForV3;
-            }
+            get { return _modelBuilderVersion.GetEdmVersion() >= XmlConstants.EdmVersionForV3; }
         }
 
         public bool Ef6FeaturesSupported

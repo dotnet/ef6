@@ -28,394 +28,394 @@ namespace System.Data.Entity
 
         private static readonly MethodInfo _first = GetMethod(
             "First", (T) => new[]
-                                {
-                                    typeof(IQueryable<>).MakeGenericType(T)
-                                });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
 
         private static readonly MethodInfo _first_Predicate = GetMethod(
             "First", (T) => new[]
-                                {
-                                    typeof(IQueryable<>).MakeGenericType(T),
-                                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                                });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
 
         private static readonly MethodInfo _firstOrDefault = GetMethod(
             "FirstOrDefault", (T) => new[]
-                                         {
-                                             typeof(IQueryable<>).MakeGenericType(T)
-                                         });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
 
         private static readonly MethodInfo _firstOrDefault_Predicate = GetMethod(
             "FirstOrDefault", (T) => new[]
-                                         {
-                                             typeof(IQueryable<>).MakeGenericType(T),
-                                             typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                                         });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
 
         private static readonly MethodInfo _single = GetMethod(
             "Single", (T) => new[]
-                                 {
-                                     typeof(IQueryable<>).MakeGenericType(T)
-                                 });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
 
         private static readonly MethodInfo _single_Predicate = GetMethod(
             "Single", (T) => new[]
-                                 {
-                                     typeof(IQueryable<>).MakeGenericType(T),
-                                     typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                                 });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
 
         private static readonly MethodInfo _singleOrDefault = GetMethod(
             "SingleOrDefault", (T) => new[]
-                                          {
-                                              typeof(IQueryable<>).MakeGenericType(T)
-                                          });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
 
         private static readonly MethodInfo _singleOrDefault_Predicate = GetMethod(
             "SingleOrDefault", (T) => new[]
-                                          {
-                                              typeof(IQueryable<>).MakeGenericType(T),
-                                              typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                                          });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
 
         private static readonly MethodInfo _contains = GetMethod(
             "Contains", (T) => new[]
-                                   {
-                                       typeof(IQueryable<>).MakeGenericType(T),
-                                       T
-                                   });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    T
+                });
 
         private static readonly MethodInfo _any = GetMethod(
             "Any", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T)
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
 
         private static readonly MethodInfo _any_Predicate = GetMethod(
             "Any", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T),
-                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
 
         private static readonly MethodInfo _all_Predicate = GetMethod(
             "All", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T),
-                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
 
         private static readonly MethodInfo _count = GetMethod(
             "Count", (T) => new[]
-                                {
-                                    typeof(IQueryable<>).MakeGenericType(T)
-                                });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
 
         private static readonly MethodInfo _count_Predicate = GetMethod(
             "Count", (T) => new[]
-                                {
-                                    typeof(IQueryable<>).MakeGenericType(T),
-                                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                                });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
 
         private static readonly MethodInfo _longCount = GetMethod(
             "LongCount", (T) => new[]
-                                    {
-                                        typeof(IQueryable<>).MakeGenericType(T)
-                                    });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
 
         private static readonly MethodInfo _longCount_Predicate = GetMethod(
             "LongCount", (T) => new[]
-                                    {
-                                        typeof(IQueryable<>).MakeGenericType(T),
-                                        typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
-                                    });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(bool)))
+                });
 
         private static readonly MethodInfo _min = GetMethod(
             "Min", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T)
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
 
         private static readonly MethodInfo _min_Selector = GetMethod(
             "Min", (T, U) => new[]
-                                 {
-                                     typeof(IQueryable<>).MakeGenericType(T),
-                                     typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, U))
-                                 });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, U))
+                });
 
         private static readonly MethodInfo _max = GetMethod(
             "Max", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T)
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T)
+                });
 
         private static readonly MethodInfo _max_Selector = GetMethod(
             "Max", (T, U) => new[]
-                                 {
-                                     typeof(IQueryable<>).MakeGenericType(T),
-                                     typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, U))
-                                 });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, U))
+                });
 
         private static readonly MethodInfo _sum_Int = GetMethod(
             "Sum", () => new[]
-                             {
-                                 typeof(IQueryable<int>)
-                             });
+                {
+                    typeof(IQueryable<int>)
+                });
 
         private static readonly MethodInfo _sum_IntNullable = GetMethod(
             "Sum", () => new[]
-                             {
-                                 typeof(IQueryable<int?>)
-                             });
+                {
+                    typeof(IQueryable<int?>)
+                });
 
         private static readonly MethodInfo _sum_Long = GetMethod(
             "Sum", () => new[]
-                             {
-                                 typeof(IQueryable<long>)
-                             });
+                {
+                    typeof(IQueryable<long>)
+                });
 
         private static readonly MethodInfo _sum_LongNullable = GetMethod(
             "Sum", () => new[]
-                             {
-                                 typeof(IQueryable<long?>)
-                             });
+                {
+                    typeof(IQueryable<long?>)
+                });
 
         private static readonly MethodInfo _sum_Float = GetMethod(
             "Sum", () => new[]
-                             {
-                                 typeof(IQueryable<float>)
-                             });
+                {
+                    typeof(IQueryable<float>)
+                });
 
         private static readonly MethodInfo _sum_FloatNullable = GetMethod(
             "Sum", () => new[]
-                             {
-                                 typeof(IQueryable<float?>)
-                             });
+                {
+                    typeof(IQueryable<float?>)
+                });
 
         private static readonly MethodInfo _sum_Double = GetMethod(
             "Sum", () => new[]
-                             {
-                                 typeof(IQueryable<double>)
-                             });
+                {
+                    typeof(IQueryable<double>)
+                });
 
         private static readonly MethodInfo _sum_DoubleNullable = GetMethod(
             "Sum", () => new[]
-                             {
-                                 typeof(IQueryable<double?>)
-                             });
+                {
+                    typeof(IQueryable<double?>)
+                });
 
         private static readonly MethodInfo _sum_Decimal = GetMethod(
             "Sum", () => new[]
-                             {
-                                 typeof(IQueryable<decimal>)
-                             });
+                {
+                    typeof(IQueryable<decimal>)
+                });
 
         private static readonly MethodInfo _sum_DecimalNullable = GetMethod(
             "Sum", () => new[]
-                             {
-                                 typeof(IQueryable<decimal?>)
-                             });
+                {
+                    typeof(IQueryable<decimal?>)
+                });
 
         private static readonly MethodInfo _sum_Int_Selector = GetMethod(
             "Sum", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T),
-                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int)))
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int)))
+                });
 
         private static readonly MethodInfo _sum_IntNullable_Selector = GetMethod(
             "Sum", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T),
-                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int?)))
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int?)))
+                });
 
         private static readonly MethodInfo _sum_Long_Selector = GetMethod(
             "Sum", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T),
-                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long)))
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long)))
+                });
 
         private static readonly MethodInfo _sum_LongNullable_Selector = GetMethod(
             "Sum", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T),
-                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long?)))
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long?)))
+                });
 
         private static readonly MethodInfo _sum_Float_Selector = GetMethod(
             "Sum", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T),
-                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float)))
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float)))
+                });
 
         private static readonly MethodInfo _sum_FloatNullable_Selector = GetMethod(
             "Sum", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T),
-                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float?)))
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float?)))
+                });
 
         private static readonly MethodInfo _sum_Double_Selector = GetMethod(
             "Sum", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T),
-                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double)))
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double)))
+                });
 
         private static readonly MethodInfo _sum_DoubleNullable_Selector = GetMethod(
             "Sum", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T),
-                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double?)))
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double?)))
+                });
 
         private static readonly MethodInfo _sum_Decimal_Selector = GetMethod(
             "Sum", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T),
-                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal)))
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal)))
+                });
 
         private static readonly MethodInfo _sum_DecimalNullable_Selector = GetMethod(
             "Sum", (T) => new[]
-                              {
-                                  typeof(IQueryable<>).MakeGenericType(T),
-                                  typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal?)))
-                              });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal?)))
+                });
 
         private static readonly MethodInfo _average_Int = GetMethod(
             "Average", () => new[]
-                                 {
-                                     typeof(IQueryable<int>)
-                                 });
+                {
+                    typeof(IQueryable<int>)
+                });
 
         private static readonly MethodInfo _average_IntNullable = GetMethod(
             "Average", () => new[]
-                                 {
-                                     typeof(IQueryable<int?>)
-                                 });
+                {
+                    typeof(IQueryable<int?>)
+                });
 
         private static readonly MethodInfo _average_Long = GetMethod(
             "Average", () => new[]
-                                 {
-                                     typeof(IQueryable<long>)
-                                 });
+                {
+                    typeof(IQueryable<long>)
+                });
 
         private static readonly MethodInfo _average_LongNullable = GetMethod(
             "Average", () => new[]
-                                 {
-                                     typeof(IQueryable<long?>)
-                                 });
+                {
+                    typeof(IQueryable<long?>)
+                });
 
         private static readonly MethodInfo _average_Float = GetMethod(
             "Average", () => new[]
-                                 {
-                                     typeof(IQueryable<float>)
-                                 });
+                {
+                    typeof(IQueryable<float>)
+                });
 
         private static readonly MethodInfo _average_FloatNullable = GetMethod(
             "Average", () => new[]
-                                 {
-                                     typeof(IQueryable<float?>)
-                                 });
+                {
+                    typeof(IQueryable<float?>)
+                });
 
         private static readonly MethodInfo _average_Double = GetMethod(
             "Average", () => new[]
-                                 {
-                                     typeof(IQueryable<double>)
-                                 });
+                {
+                    typeof(IQueryable<double>)
+                });
 
         private static readonly MethodInfo _average_DoubleNullable = GetMethod(
             "Average", () => new[]
-                                 {
-                                     typeof(IQueryable<double?>)
-                                 });
+                {
+                    typeof(IQueryable<double?>)
+                });
 
         private static readonly MethodInfo _average_Decimal = GetMethod(
             "Average", () => new[]
-                                 {
-                                     typeof(IQueryable<decimal>)
-                                 });
+                {
+                    typeof(IQueryable<decimal>)
+                });
 
         private static readonly MethodInfo _average_DecimalNullable = GetMethod(
             "Average", () => new[]
-                                 {
-                                     typeof(IQueryable<decimal?>)
-                                 });
+                {
+                    typeof(IQueryable<decimal?>)
+                });
 
         private static readonly MethodInfo _average_Int_Selector = GetMethod(
             "Average", (T) => new[]
-                                  {
-                                      typeof(IQueryable<>).MakeGenericType(T),
-                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int)))
-                                  });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int)))
+                });
 
         private static readonly MethodInfo _average_IntNullable_Selector = GetMethod(
             "Average", (T) => new[]
-                                  {
-                                      typeof(IQueryable<>).MakeGenericType(T),
-                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int?)))
-                                  });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(int?)))
+                });
 
         private static readonly MethodInfo _average_Long_Selector = GetMethod(
             "Average", (T) => new[]
-                                  {
-                                      typeof(IQueryable<>).MakeGenericType(T),
-                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long)))
-                                  });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long)))
+                });
 
         private static readonly MethodInfo _average_LongNullable_Selector = GetMethod(
             "Average", (T) => new[]
-                                  {
-                                      typeof(IQueryable<>).MakeGenericType(T),
-                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long?)))
-                                  });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(long?)))
+                });
 
         private static readonly MethodInfo _average_Float_Selector = GetMethod(
             "Average", (T) => new[]
-                                  {
-                                      typeof(IQueryable<>).MakeGenericType(T),
-                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float)))
-                                  });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float)))
+                });
 
         private static readonly MethodInfo _average_FloatNullable_Selector = GetMethod(
             "Average", (T) => new[]
-                                  {
-                                      typeof(IQueryable<>).MakeGenericType(T),
-                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float?)))
-                                  });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(float?)))
+                });
 
         private static readonly MethodInfo _average_Double_Selector = GetMethod(
             "Average", (T) => new[]
-                                  {
-                                      typeof(IQueryable<>).MakeGenericType(T),
-                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double)))
-                                  });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double)))
+                });
 
         private static readonly MethodInfo _average_DoubleNullable_Selector = GetMethod(
             "Average", (T) => new[]
-                                  {
-                                      typeof(IQueryable<>).MakeGenericType(T),
-                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double?)))
-                                  });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(double?)))
+                });
 
         private static readonly MethodInfo _average_Decimal_Selector = GetMethod(
             "Average", (T) => new[]
-                                  {
-                                      typeof(IQueryable<>).MakeGenericType(T),
-                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal)))
-                                  });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal)))
+                });
 
         private static readonly MethodInfo _average_DecimalNullable_Selector = GetMethod(
             "Average", (T) => new[]
-                                  {
-                                      typeof(IQueryable<>).MakeGenericType(T),
-                                      typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal?)))
-                                  });
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(T, typeof(decimal?)))
+                });
 
 #endif
 
@@ -429,21 +429,23 @@ namespace System.Data.Entity
         ///     Specifies the related objects to include in the query results.
         /// </summary>
         /// <remarks>
-        ///     This extension method calls the Include(String) method of the source <see cref="IQueryable{T}"/> object,
-        ///     if such a method exists. If the source <see cref="IQueryable{T}"/> does not have a matching method,
-        ///     then this method does nothing. The <see cref="ObjectQuery{T}"/>, <see cref="ObjectSet{T}"/>,
-        ///     <see cref="DbQuery{TResult}"/> and <see cref="DbSet{T}"/> types all have an appropriate Include method to call.
+        ///     This extension method calls the Include(String) method of the source <see cref="IQueryable{T}" /> object,
+        ///     if such a method exists. If the source <see cref="IQueryable{T}" /> does not have a matching method,
+        ///     then this method does nothing. The <see cref="ObjectQuery{T}" />, <see cref="ObjectSet{T}" />,
+        ///     <see cref="DbQuery{TResult}" /> and <see cref="DbSet{T}" /> types all have an appropriate Include method to call.
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
-        ///     the returned instance of the <see cref="IQueryable{T}"/>. Other instances of <see cref="IQueryable{T}"/>
+        ///     the returned instance of the <see cref="IQueryable{T}" />. Other instances of <see cref="IQueryable{T}" />
         ///     and the object context itself are not affected. Because the Include method returns the query object,
-        ///     you can call this method multiple times on an <see cref="IQueryable{T}"/> to specify multiple paths for the query.
+        ///     you can call this method multiple times on an <see cref="IQueryable{T}" /> to specify multiple paths for the query.
         /// </remarks>
         /// <typeparam name="T"> The type of entity being queried. </typeparam>
-        /// <param name="source"> The source <see cref="IQueryable{T}"/> on which to call Include. </param>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable{T}" /> on which to call Include.
+        /// </param>
         /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
         /// <returns>
-        ///     A new <see cref="IQueryable{T}"/> with the defined query path.
+        ///     A new <see cref="IQueryable{T}" /> with the defined query path.
         /// </returns>
         public static IQueryable<T> Include<T>(this IQueryable<T> source, string path) where T : class
         {
@@ -479,19 +481,23 @@ namespace System.Data.Entity
         ///     Specifies the related objects to include in the query results.
         /// </summary>
         /// <remarks>
-        ///     This extension method calls the Include(String) method of the source <see cref="IQueryable"/> object,
-        ///     if such a method exists. If the source <see cref="IQueryable"/> does not have a matching method,
-        ///     then this method does nothing. The <see cref="ObjectQuery"/>, <see cref="ObjectSet{T}"/>,
-        ///     <see cref="DbQuery"/> and <see cref="DbSet"/> types all have an appropriate Include method to call.
+        ///     This extension method calls the Include(String) method of the source <see cref="IQueryable" /> object,
+        ///     if such a method exists. If the source <see cref="IQueryable" /> does not have a matching method,
+        ///     then this method does nothing. The <see cref="ObjectQuery" />, <see cref="ObjectSet{T}" />,
+        ///     <see cref="DbQuery" /> and <see cref="DbSet" /> types all have an appropriate Include method to call.
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
-        ///     the returned instance of the <see cref="IQueryable"/>. Other instances of <see cref="IQueryable"/>
+        ///     the returned instance of the <see cref="IQueryable" />. Other instances of <see cref="IQueryable" />
         ///     and the object context itself are not affected. Because the Include method returns the query object,
-        ///     you can call this method multiple times on an <see cref="IQueryable"/> to specify multiple paths for the query.
+        ///     you can call this method multiple times on an <see cref="IQueryable" /> to specify multiple paths for the query.
         /// </remarks>
-        /// <param name="source"> The source <see cref="IQueryable"/> on which to call Include. </param>
+        /// <param name="source">
+        ///     The source <see cref="IQueryable" /> on which to call Include.
+        /// </param>
         /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
-        /// <returns> A new <see cref="IQueryable"/> with the defined query path. </returns>
+        /// <returns>
+        ///     A new <see cref="IQueryable" /> with the defined query path.
+        /// </returns>
         public static IQueryable Include(this IQueryable source, string path)
         {
             Check.NotNull(source, "source");
@@ -649,8 +655,12 @@ namespace System.Data.Entity
         ///     the AsStreaming method of the underlying query object. If the underlying query object does not have
         ///     an AsStreaming method, then calling this method will have no affect.
         /// </summary>
-        /// <typeparam name="T"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to apply AsStreaming to. </param>
+        /// <typeparam name="T">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to apply AsStreaming to.
+        /// </param>
         /// <returns> A new query with AsStreaming applied, or the source query if AsStreaming is not supported. </returns>
         public static IQueryable<T> AsStreaming<T>(this IQueryable<T> source) where T : class
         {
@@ -665,7 +675,9 @@ namespace System.Data.Entity
         ///     the AsStreaming method of the underlying query object. If the underlying query object does not have
         ///     an AsStreaming method, then calling this method will have no affect.
         /// </summary>
-        /// <param name="source"> An <see cref="IQueryable" /> to apply AsStreaming to. </param>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to apply AsStreaming to.
+        /// </param>
         /// <returns> A new query with AsStreaming applied, or the source query if AsStreaming is not supported. </returns>
         public static IQueryable AsStreaming(this IQueryable source)
         {
@@ -771,7 +783,9 @@ namespace System.Data.Entity
         ///     This is equivalent to calling ToList and then throwing away the list without the overhead of actually creating the list.
         /// </summary>
         /// <param name="source"> The source query. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
         /// </returns>
@@ -793,11 +807,13 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously enumerates the query results and performs the specified action on each element.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="source"> An <see cref="IQueryable" /> to enumerate. </param>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to enumerate.
+        /// </param>
         /// <param name="action"> The action to perform on each element. </param>
         /// <returns> A task that represents the asynchronous operation. </returns>
         public static Task ForEachAsync(this IQueryable source, Action<object> action)
@@ -811,13 +827,17 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously enumerates the query results and performs the specified action on each element.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="source"> An <see cref="IQueryable" /> to enumerate. </param>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to enumerate.
+        /// </param>
         /// <param name="action"> The action to perform on each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns> A task that represents the asynchronous operation. </returns>
         public static Task ForEachAsync(this IQueryable source, Action<object> action, CancellationToken cancellationToken)
         {
@@ -830,12 +850,16 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously enumerates the query results and performs the specified action on each element.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="T"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to enumerate. </param>
+        /// <typeparam name="T">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to enumerate.
+        /// </param>
         /// <param name="action"> The action to perform on each element. </param>
         /// <returns> A task that represents the asynchronous operation. </returns>
         public static Task ForEachAsync<T>(this IQueryable<T> source, Action<T> action)
@@ -849,14 +873,20 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously enumerates the query results and performs the specified action on each element.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="T"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to enumerate. </param>
+        /// <typeparam name="T">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to enumerate.
+        /// </param>
         /// <param name="action"> The action to perform on each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns> A task that represents the asynchronous operation. </returns>
         public static Task ForEachAsync<T>(this IQueryable<T> source, Action<T> action, CancellationToken cancellationToken)
         {
@@ -877,13 +907,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Creates a <see cref="List{Object}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="source"> An <see cref="IQueryable" /> to create a <see cref="List{Object}" /> from. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to create a <see cref="List{Object}" /> from.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains a <see cref="List{Object}" /> that contains elements from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -897,14 +929,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Creates a <see cref="List{Object}" /> from an <see cref="IQueryable" /> by enumerating it asynchronously.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="source"> An <see cref="IQueryable" /> to create a <see cref="List{Object}" /> from. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to create a <see cref="List{Object}" /> from.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains a <see cref="List{Object}" /> that contains elements from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -918,14 +954,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to create a <see cref="List{T}" /> from. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to create a <see cref="List{T}" /> from.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains a <see cref="List{T}" /> that contains elements from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -939,15 +979,21 @@ namespace System.Data.Entity
         /// <summary>
         ///     Creates a <see cref="List{T}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to create a list from. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to create a list from.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains a <see cref="List{T}" /> that contains elements from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -961,14 +1007,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Creates an array from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to create an array from. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to create an array from.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains an array that contains elements from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -982,15 +1032,21 @@ namespace System.Data.Entity
         /// <summary>
         ///     Creates an array from an <see cref="IQueryable{T}" /> by enumerating it asynchronously.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to create an array from. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to create an array from.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains an array that contains elements from the input sequence.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -1005,16 +1061,22 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously
         ///     according to a specified key selector function.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -1031,17 +1093,25 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously
         ///     according to a specified key selector function.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -1058,17 +1128,25 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously
         ///     according to a specified key selector function and a comparer.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -1085,18 +1163,28 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously
         ///     according to a specified key selector function and a comparer.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -1114,18 +1202,26 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously
         ///     according to a specified key selector and an element selector function.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <typeparam name="TElement">
+        ///     The type of the value returned by <paramref name="elementSelector" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
         ///     <typeparamref name="TElement" /> selected from the input sequence.
         /// </returns>
@@ -1144,19 +1240,29 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously
         ///     according to a specified key selector and an element selector function.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <typeparam name="TElement">
+        ///     The type of the value returned by <paramref name="elementSelector" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
         ///     <typeparamref name="TElement" /> selected from the input sequence.
         /// </returns>
@@ -1176,19 +1282,29 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously
         ///     according to a specified key selector function, a comparer, and an element selector function.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <typeparam name="TElement">
+        ///     The type of the value returned by <paramref name="elementSelector" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
         ///     <typeparamref name="TElement" /> selected from the input sequence.
         /// </returns>
@@ -1208,20 +1324,32 @@ namespace System.Data.Entity
         ///     Creates a <see cref="Dictionary{TKey, TValue}" /> from an <see cref="IQueryable{T}" /> by enumerating it asynchronously
         ///     according to a specified key selector function, a comparer, and an element selector function.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <typeparam name="TKey"> The type of the key returned by <paramref name="keySelector" /> . </typeparam>
-        /// <typeparam name="TElement"> The type of the value returned by <paramref name="elementSelector" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        ///     The type of the key returned by <paramref name="keySelector" /> .
+        /// </typeparam>
+        /// <typeparam name="TElement">
+        ///     The type of the value returned by <paramref name="elementSelector" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to create a <see cref="Dictionary{TKey, TValue}" /> from.
+        /// </param>
         /// <param name="keySelector"> A function to extract a key from each element. </param>
         /// <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
-        /// <param name="comparer"> An <see cref="IEqualityComparer{TKey}" /> to compare keys. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="comparer">
+        ///     An <see cref="IEqualityComparer{TKey}" /> to compare keys.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains a <see cref="Dictionary{TKey, TElement}" /> that contains values of type
         ///     <typeparamref name="TElement" /> selected from the input sequence.
         /// </returns>
@@ -1248,14 +1376,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the first element of a sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the first element of. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the first element of.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the first element in <paramref name="source" />.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -1275,15 +1407,21 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the first element of a sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the first element of. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the first element of.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the first element in <paramref name="source" />.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -1323,15 +1461,19 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the first element of a sequence that satisfies a specified condition.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the first element of. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the first element of.
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the first element in <paramref name="source" /> that passes the test in
         ///     <paramref name="predicate" />.
         /// </returns>
@@ -1367,16 +1509,22 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the first element of a sequence that satisfies a specified condition.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the first element of. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the first element of.
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the first element in <paramref name="source" /> that passes the test in
         ///     <paramref name="predicate" />.
         /// </returns>
@@ -1427,14 +1575,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the first element of a sequence, or a default value if the sequence contains no elements.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the first element of. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the first element of.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains <c>default</c> ( <typeparamref name="TSource" /> ) if
         ///     <paramref name="source" /> is empty; otherwise, the first element in <paramref name="source" />.
         /// </returns>
@@ -1460,15 +1612,21 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the first element of a sequence, or a default value if the sequence contains no elements.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the first element of. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the first element of.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains <c>default</c> ( <typeparamref name="TSource" /> ) if
         ///     <paramref name="source" /> is empty; otherwise, the first element in <paramref name="source" />.
         /// </returns>
@@ -1509,17 +1667,21 @@ namespace System.Data.Entity
         ///     Asynchronously returns the first element of a sequence that satisfies a specified condition
         ///     or a default value if no such element is found.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the first element of. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the first element of.
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains <c>default</c> ( <typeparamref name="TSource" /> ) if <paramref name="source" />
-        ///     is empty or if no element passes the test specified by <paramref name="predicate" /> ; otherwise, the first 
+        ///     is empty or if no element passes the test specified by <paramref name="predicate" /> ; otherwise, the first
         ///     element in <paramref name="source" /> that passes the test specified by <paramref name="predicate" />.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -1550,18 +1712,24 @@ namespace System.Data.Entity
         ///     Asynchronously returns the first element of a sequence that satisfies a specified condition
         ///     or a default value if no such element is found.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the first element of. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the first element of.
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains <c>default</c> ( <typeparamref name="TSource" /> ) if <paramref name="source" />
-        ///     is empty or if no element passes the test specified by <paramref name="predicate" /> ; otherwise, the first 
+        ///     is empty or if no element passes the test specified by <paramref name="predicate" /> ; otherwise, the first
         ///     element in <paramref name="source" /> that passes the test specified by <paramref name="predicate" />.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -1611,14 +1779,18 @@ namespace System.Data.Entity
         ///     Asynchronously returns the only element of a sequence, and throws an exception
         ///     if there is not exactly one element in the sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the single element of. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the single element of.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the single element of the input sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -1645,15 +1817,21 @@ namespace System.Data.Entity
         ///     Asynchronously returns the only element of a sequence, and throws an exception
         ///     if there is not exactly one element in the sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the single element of. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the single element of.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the single element of the input sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -1698,15 +1876,19 @@ namespace System.Data.Entity
         ///     Asynchronously returns the only element of a sequence that satisfies a specified condition,
         ///     and throws an exception if more than one such element exists.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the the single element of. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the the single element of.
+        /// </param>
         /// <param name="predicate"> A function to test an element for a condition. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the single element of the input sequence that satisfies the condition in
         ///     <paramref name="predicate" />.
         /// </returns>
@@ -1748,16 +1930,22 @@ namespace System.Data.Entity
         ///     Asynchronously returns the only element of a sequence that satisfies a specified condition,
         ///     and throws an exception if more than one such element exists.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the single element of. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the single element of.
+        /// </param>
         /// <param name="predicate"> A function to test an element for a condition. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the single element of the input sequence that satisfies the condition in
         ///     <paramref name="predicate" />.
         /// </returns>
@@ -1814,15 +2002,19 @@ namespace System.Data.Entity
         ///     Asynchronously returns the only element of a sequence, or a default value if the sequence is empty;
         ///     this method throws an exception if there is more than one element in the sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the single element of. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains the single element of the input sequence, or <c>default</c> (<typeparamref name="TSource" />) 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the single element of.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the single element of the input sequence, or <c>default</c> (<typeparamref name="TSource" />)
         ///     if the sequence contains no elements.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -1852,16 +2044,22 @@ namespace System.Data.Entity
         ///     Asynchronously returns the only element of a sequence, or a default value if the sequence is empty;
         ///     this method throws an exception if there is more than one element in the sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the single element of. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains the single element of the input sequence, or <c>default</c> (<typeparamref name="TSource" />) 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the single element of.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the single element of the input sequence, or <c>default</c> (<typeparamref name="TSource" />)
         ///     if the sequence contains no elements.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -1906,15 +2104,19 @@ namespace System.Data.Entity
         ///     a default value if no such element exists; this method throws an exception if more than one element
         ///     satisfies the condition.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the single element of. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the single element of.
+        /// </param>
         /// <param name="predicate"> A function to test an element for a condition. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the single element of the input sequence that satisfies the condition in
         ///     <paramref name="predicate" />, or <c>default</c> ( <typeparamref name="TSource" /> ) if no such element is found.
         /// </returns>
@@ -1947,16 +2149,22 @@ namespace System.Data.Entity
         ///     a default value if no such element exists; this method throws an exception if more than one element
         ///     satisfies the condition.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the single element of. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the single element of.
+        /// </param>
         /// <param name="predicate"> A function to test an element for a condition. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the single element of the input sequence that satisfies the condition in
         ///     <paramref name="predicate" />, or <c>default</c> ( <typeparamref name="TSource" /> ) if no such element is found.
         /// </returns>
@@ -2002,16 +2210,20 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether a sequence contains a specified element by using the default equality comparer.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the single element of. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the single element of.
+        /// </param>
         /// <param name="item"> The object to locate in the sequence. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains <c>true</c> if the input sequence contains the specified value; otherwise, <c>false</c>. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains <c>true</c> if the input sequence contains the specified value; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
@@ -2035,17 +2247,23 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether a sequence contains a specified element by using the default equality comparer.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to return the single element of. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to return the single element of.
+        /// </param>
         /// <param name="item"> The object to locate in the sequence. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains <c>true</c> if the input sequence contains the specified value; otherwise, <c>false</c>. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains <c>true</c> if the input sequence contains the specified value; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
@@ -2083,14 +2301,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether a sequence contains any elements.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to check for being empty. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to check for being empty.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains <c>true</c> if the source sequence contains any elements; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2115,15 +2337,21 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether a sequence contains any elements.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> to check for being empty. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> to check for being empty.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains <c>true</c> if the source sequence contains any elements; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2162,15 +2390,19 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether any element of a sequence satisfies a condition.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> whose elements to test for a condition. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> whose elements to test for a condition.
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains <c>true</c> if any elements in the source sequence pass the test in the specified predicate; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2200,16 +2432,22 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether any element of a sequence satisfies a condition.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> whose elements to test for a condition. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> whose elements to test for a condition.
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains <c>true</c> if any elements in the source sequence pass the test in the specified predicate; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2254,15 +2492,19 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether all the elements of a sequence satisfy a condition.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> whose elements to test for a condition. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> whose elements to test for a condition.
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains <c>true</c> if every element of the source sequence passes the test in the specified predicate; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2292,16 +2534,22 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously determines whether all the elements of a sequence satisfy a condition.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> whose elements to test for a condition. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> whose elements to test for a condition.
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains <c>true</c> if every element of the source sequence passes the test in the specified predicate; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2346,14 +2594,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the number of elements in a sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to be counted. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to be counted.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the number of elements in the input sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2385,15 +2637,21 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the number of elements in a sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to be counted. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to be counted.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the number of elements in the input sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2439,15 +2697,19 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the number of elements in a sequence that satisfy a condition.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to be counted. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to be counted.
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the number of elements in the sequence that satisfy the condition in the predicate function.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2485,16 +2747,22 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the number of elements in a sequence that satisfy a condition.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to be counted. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to be counted.
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the number of elements in the sequence that satisfy the condition in the predicate function.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2547,14 +2815,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns an <see cref="Int64" /> that represents the total number of elements in a sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to be counted. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to be counted.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the number of elements in the input sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2586,15 +2858,21 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns an <see cref="Int64" /> that represents the total number of elements in a sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to be counted. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to be counted.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the number of elements in the input sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2641,15 +2919,19 @@ namespace System.Data.Entity
         ///     Asynchronously returns an <see cref="Int64" /> that represents the number of elements in a sequence
         ///     that satisfy a condition.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to be counted. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to be counted.
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the number of elements in the sequence that satisfy the condition in the predicate function.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2688,16 +2970,22 @@ namespace System.Data.Entity
         ///     Asynchronously returns an <see cref="Int64" /> that represents the number of elements in a sequence
         ///     that satisfy a condition.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to be counted. </param>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to be counted.
+        /// </param>
         /// <param name="predicate"> A function to test each element for a condition. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the number of elements in the sequence that satisfy the condition in the predicate function.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2750,14 +3038,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the minimum value of a sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to determine the minimum of. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to determine the minimum of.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the minimum value in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2782,15 +3074,21 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the minimum value of a sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to determine the minimum of. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to determine the minimum of.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the minimum value in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2829,18 +3127,22 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously invokes a projection function on each element of a sequence and returns the minimum resulting value.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
         /// <typeparam name="TResult">
         ///     The type of the value returned by the function represented by <paramref name="selector" /> .
         /// </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to determine the minimum of. </param>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to determine the minimum of.
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the minimum value in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2870,19 +3172,25 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously invokes a projection function on each element of a sequence and returns the minimum resulting value.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
         /// <typeparam name="TResult">
         ///     The type of the value returned by the function represented by <paramref name="selector" /> .
         /// </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to determine the minimum of. </param>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to determine the minimum of.
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the minimum value in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2927,14 +3235,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the maximum value of a sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to determine the maximum of. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to determine the maximum of.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the maximum value in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -2959,15 +3271,21 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously returns the maximum value of a sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to determine the maximum of. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to determine the maximum of.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the maximum value in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3006,18 +3324,22 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously invokes a projection function on each element of a sequence and returns the maximum resulting value.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
         /// <typeparam name="TResult">
         ///     The type of the value returned by the function represented by <paramref name="selector" /> .
         /// </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to determine the maximum of. </param>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to determine the maximum of.
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the maximum value in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3047,19 +3369,25 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously invokes a projection function on each element of a sequence and returns the maximum resulting value.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TSource"> The type of the elements of <paramref name="source" />. </typeparam>
+        /// <typeparam name="TSource">
+        ///     The type of the elements of <paramref name="source" />.
+        /// </typeparam>
         /// <typeparam name="TResult">
         ///     The type of the value returned by the function represented by <paramref name="selector" /> .
         /// </typeparam>
-        /// <param name="source"> An <see cref="IQueryable{T}" /> that contains the elements to determine the maximum of. </param>
+        /// <param name="source">
+        ///     An <see cref="IQueryable{T}" /> that contains the elements to determine the maximum of.
+        /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the maximum value in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3104,15 +3432,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Int32" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Int32" /> values to calculate the sum of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains  the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3144,16 +3472,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Int32" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Int32" /> values to calculate the sum of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3199,15 +3529,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Int32" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Int32" /> values to calculate the sum of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3240,16 +3570,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Int32" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Int32" /> values to calculate the sum of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3296,15 +3628,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Int64" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Int64" /> values to calculate the sum of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3336,16 +3668,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Int64" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Int64" /> values to calculate the sum of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3391,15 +3725,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Int64" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Int64" /> values to calculate the sum of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3432,16 +3766,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Int64" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Int64" /> values to calculate the sum of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3488,15 +3824,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Single" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Single" /> values to calculate the sum of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3521,16 +3857,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Single" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Single" /> values to calculate the sum of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3569,15 +3907,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Single" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Single" /> values to calculate the sum of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3603,16 +3941,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Single" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Single" /> values to calculate the sum of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3652,15 +3992,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Double" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Double" /> values to calculate the sum of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3685,16 +4025,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Double" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Double" /> values to calculate the sum of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3733,15 +4075,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Double" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Double" /> values to calculate the sum of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3767,16 +4109,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Double" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Double" /> values to calculate the sum of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3816,15 +4160,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Decimal" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Decimal" /> values to calculate the sum of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3849,16 +4193,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of <see cref="Decimal" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Decimal" /> values to calculate the sum of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3897,15 +4243,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Decimal" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Decimal" /> values to calculate the sum of.
         /// </param>
         /// <returns>
-        ///      A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3931,16 +4277,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of nullable <see cref="Decimal" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Decimal" /> values to calculate the sum of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///      A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the values in the sequence.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -3988,8 +4336,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4000,7 +4348,7 @@ namespace System.Data.Entity
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4038,8 +4386,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4049,9 +4397,11 @@ namespace System.Data.Entity
         ///     A sequence of values of type <typeparamref name="TSource" /> .
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4104,8 +4454,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4116,7 +4466,7 @@ namespace System.Data.Entity
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4154,8 +4504,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4165,9 +4515,11 @@ namespace System.Data.Entity
         ///     A sequence of values of type <typeparamref name="TSource" /> .
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4220,8 +4572,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4232,7 +4584,7 @@ namespace System.Data.Entity
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4270,8 +4622,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4281,9 +4633,11 @@ namespace System.Data.Entity
         ///     A sequence of values of type <typeparamref name="TSource" /> .
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4336,8 +4690,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4348,7 +4702,7 @@ namespace System.Data.Entity
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4386,8 +4740,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4397,9 +4751,11 @@ namespace System.Data.Entity
         ///     A sequence of values of type <typeparamref name="TSource" /> .
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4452,8 +4808,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4464,7 +4820,7 @@ namespace System.Data.Entity
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4495,8 +4851,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4506,9 +4862,11 @@ namespace System.Data.Entity
         ///     A sequence of values of type <typeparamref name="TSource" /> .
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4554,8 +4912,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4566,7 +4924,7 @@ namespace System.Data.Entity
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4597,8 +4955,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4608,9 +4966,11 @@ namespace System.Data.Entity
         ///     A sequence of values of type <typeparamref name="TSource" /> .
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4656,8 +5016,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4668,8 +5028,8 @@ namespace System.Data.Entity
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///    A task that represents the asynchronous operation. 
-        ///    The task result contains the sum of the projected values.
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="source" />
@@ -4699,8 +5059,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4710,9 +5070,11 @@ namespace System.Data.Entity
         ///     A sequence of values of type <typeparamref name="TSource" /> .
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4758,8 +5120,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4770,7 +5132,7 @@ namespace System.Data.Entity
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4801,8 +5163,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4812,9 +5174,11 @@ namespace System.Data.Entity
         ///     A sequence of values of type <typeparamref name="TSource" /> .
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4860,8 +5224,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4872,7 +5236,7 @@ namespace System.Data.Entity
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4910,8 +5274,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4921,9 +5285,11 @@ namespace System.Data.Entity
         ///     A sequence of values of type <typeparamref name="TSource" /> .
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -4976,8 +5342,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -4988,7 +5354,7 @@ namespace System.Data.Entity
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5026,8 +5392,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the sum of the sequence of nullable <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -5037,9 +5403,11 @@ namespace System.Data.Entity
         ///     A sequence of values of type <typeparamref name="TSource" /> .
         /// </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the sum of the projected values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5091,15 +5459,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Int32" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Int32" /> values to calculate the average of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5128,16 +5496,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Int32" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Int32" /> values to calculate the average of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5180,15 +5550,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int32" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Int32" /> values to calculate the average of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5214,16 +5584,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int32" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Int32" /> values to calculate the average of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5263,15 +5635,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Int64" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Int64" /> values to calculate the average of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5300,16 +5672,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Int64" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Int64" /> values to calculate the average of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5352,15 +5726,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int64" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Int64" /> values to calculate the average of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5386,16 +5760,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int64" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Int64" /> values to calculate the average of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5435,15 +5811,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Single" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Single" /> values to calculate the average of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5472,16 +5848,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Single" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Single" /> values to calculate the average of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5524,15 +5902,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Single" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Single" /> values to calculate the average of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5558,16 +5936,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Single" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Single" /> values to calculate the average of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5607,15 +5987,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Double" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Double" /> values to calculate the average of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5644,16 +6024,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Double" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Double" /> values to calculate the average of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5696,15 +6078,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Double" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Double" /> values to calculate the average of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5730,16 +6112,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Double" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Double" /> values to calculate the average of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5779,15 +6163,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Decimal" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Decimal" /> values to calculate the average of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5816,16 +6200,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of <see cref="Decimal" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of <see cref="Decimal" /> values to calculate the average of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5868,15 +6254,15 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Decimal" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Decimal" /> values to calculate the average of.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5902,16 +6288,18 @@ namespace System.Data.Entity
         /// <summary>
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Decimal" /> values.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="source">
         ///     A sequence of nullable <see cref="Decimal" /> values to calculate the average of.
         /// </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5952,8 +6340,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -5962,7 +6350,7 @@ namespace System.Data.Entity
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -5997,8 +6385,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6006,9 +6394,11 @@ namespace System.Data.Entity
         /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6058,8 +6448,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6068,7 +6458,7 @@ namespace System.Data.Entity
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6099,8 +6489,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int32" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6108,9 +6498,11 @@ namespace System.Data.Entity
         /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6156,8 +6548,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6166,7 +6558,7 @@ namespace System.Data.Entity
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6201,8 +6593,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6210,9 +6602,11 @@ namespace System.Data.Entity
         /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6262,8 +6656,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6272,7 +6666,7 @@ namespace System.Data.Entity
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6303,8 +6697,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Int64" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6312,9 +6706,11 @@ namespace System.Data.Entity
         /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6360,8 +6756,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6370,7 +6766,7 @@ namespace System.Data.Entity
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6405,8 +6801,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6414,9 +6810,11 @@ namespace System.Data.Entity
         /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6466,8 +6864,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6476,7 +6874,7 @@ namespace System.Data.Entity
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6507,8 +6905,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Single" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6516,9 +6914,11 @@ namespace System.Data.Entity
         /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6564,8 +6964,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6574,7 +6974,7 @@ namespace System.Data.Entity
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6609,8 +7009,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6618,9 +7018,11 @@ namespace System.Data.Entity
         /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6670,8 +7072,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6680,7 +7082,7 @@ namespace System.Data.Entity
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6711,8 +7113,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Double" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6720,9 +7122,11 @@ namespace System.Data.Entity
         /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6768,8 +7172,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6778,7 +7182,7 @@ namespace System.Data.Entity
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6813,8 +7217,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6822,9 +7226,11 @@ namespace System.Data.Entity
         /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6874,8 +7280,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6884,7 +7290,7 @@ namespace System.Data.Entity
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -6915,8 +7321,8 @@ namespace System.Data.Entity
         ///     Asynchronously computes the average of a sequence of nullable <see cref="Decimal" /> values that is obtained
         ///     by invoking a projection function on each element of the input sequence.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TSource">
@@ -6924,9 +7330,11 @@ namespace System.Data.Entity
         /// </typeparam>
         /// <param name="source"> A sequence of values to calculate the average of. </param>
         /// <param name="selector"> A projection function to apply to each element. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation. 
+        ///     A task that represents the asynchronous operation.
         ///     The task result contains the average of the sequence of values.
         /// </returns>
         /// <exception cref="ArgumentNullException">

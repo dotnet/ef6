@@ -187,7 +187,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     var tree = DbQueryCommandTree.FromValidExpression(ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
                     plan = _objectQueryExecutionPlanFactory.Prepare(
-                        ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, converter.PropagatedSpan, null, converter.AliasGenerator);
+                        ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, converter.PropagatedSpan, null,
+                        converter.AliasGenerator);
 
                     // If caching is enabled then update the cache now.
                     // Note: the logic is the same as in EntitySqlQueryState.

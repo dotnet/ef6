@@ -161,17 +161,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The factory method for constructing the EntitySet object.
+        ///     The factory method for constructing the EntitySet object.
         /// </summary>
         /// <param name="name">The name of the EntitySet.</param>
         /// <param name="schema">The db schema. Can be null.</param>
         /// <param name="table">The db table. Can be null.</param>
         /// <param name="definingQuery">
-        /// The provider specific query that should be used to retrieve data for this EntitySet. Can be null.
+        ///     The provider specific query that should be used to retrieve data for this EntitySet. Can be null.
         /// </param>
         /// <param name="entityType">The entity type of the entities that this entity set type contains.</param>
         /// <param name="metadataProperties">
-        /// Metadata properties that will be added to the newly created EntitySet. Can be null.
+        ///     Metadata properties that will be added to the newly created EntitySet. Can be null.
         /// </param>
         /// <exception cref="System.ArgumentException">Thrown if the name argument is null or empty string.</exception>
         /// <notes>The newly created EntitySet will be read only.</notes>

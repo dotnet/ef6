@@ -50,8 +50,9 @@ namespace System.Data.Entity.Config
             _configuration = new Lazy<InternalConfiguration>(
                 () =>
                     {
-                        var configuration = _newConfiguration 
-                            ?? _newConfigurationType.CreateInstance<DbConfiguration>(Strings.CreateInstance_BadDbConfigurationType);
+                        var configuration = _newConfiguration
+                                            ?? _newConfigurationType.CreateInstance<DbConfiguration>(
+                                                Strings.CreateInstance_BadDbConfigurationType);
                         configuration.InternalConfiguration.Lock();
                         return configuration.InternalConfiguration;
                     });

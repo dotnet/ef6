@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq.Expressions;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     ///     Used in the Translator to aggregate information about a (nested) reader
@@ -175,18 +174,18 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             var result =
                 (CoordinatorFactory)Activator.CreateInstance(
                     typeof(CoordinatorFactory<>).MakeGenericType(_elementType), new object[]
-                                                                                    {
-                                                                                        Depth,
-                                                                                        StateSlotNumber,
-                                                                                        HasData,
-                                                                                        SetKeys,
-                                                                                        CheckKeys,
-                                                                                        nestedCoordinators,
-                                                                                        element,
-                                                                                        elementWithErrorHandling,
-                                                                                        InitializeCollection,
-                                                                                        recordStateFactories
-                                                                                    });
+                        {
+                            Depth,
+                            StateSlotNumber,
+                            HasData,
+                            SetKeys,
+                            CheckKeys,
+                            nestedCoordinators,
+                            element,
+                            elementWithErrorHandling,
+                            InitializeCollection,
+                            recordStateFactories
+                        });
             return result;
         }
 

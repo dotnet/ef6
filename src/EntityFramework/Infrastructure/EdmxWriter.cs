@@ -4,7 +4,6 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Internal;
-    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Serialization;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;

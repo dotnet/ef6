@@ -107,10 +107,10 @@ namespace System.Data.Entity.Internal
             }
 
             return o =>
-                       {
-                           var parent = parentGetter(o);
-                           return parent == null ? null : getter(parent);
-                       };
+                {
+                    var parent = parentGetter(o);
+                    return parent == null ? null : getter(parent);
+                };
         }
 
         /// <summary>
@@ -132,15 +132,15 @@ namespace System.Data.Entity.Internal
             }
 
             return (o, v) =>
-                       {
-                           var parent = parentGetter(o);
-                           if (parent == null)
-                           {
-                               throw Error.DbPropertyValues_CannotSetPropertyOnNullCurrentValue(
-                                   Name, ParentPropertyEntry.Name);
-                           }
-                           setter(parentGetter(o), v);
-                       };
+                {
+                    var parent = parentGetter(o);
+                    if (parent == null)
+                    {
+                        throw Error.DbPropertyValues_CannotSetPropertyOnNullCurrentValue(
+                            Name, ParentPropertyEntry.Name);
+                    }
+                    setter(parentGetter(o), v);
+                };
         }
 
         /// <summary>

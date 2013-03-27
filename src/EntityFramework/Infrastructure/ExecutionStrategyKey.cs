@@ -5,13 +5,13 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     A key used for resolving <see cref="Func{IExecutionStrategy}"/>. It consists of the ADO.NET provider invariant name
+    ///     A key used for resolving <see cref="Func{IExecutionStrategy}" />. It consists of the ADO.NET provider invariant name
     ///     and the database server name as specified in the connection string.
     /// </summary>
     public class ExecutionStrategyKey
     {
         /// <summary>
-        ///     Initializes a new instance of <see cref="ExecutionStrategyKey"/>
+        ///     Initializes a new instance of <see cref="ExecutionStrategyKey" />
         /// </summary>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this execution strategy will be used. </param>
         /// <param name="serverName">A string that will be matched against the server name in the connection string.</param>

@@ -18,10 +18,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             : this(name, namespaceName, dataSpace, new EdmFunctionPayload())
         {
             // testing only
-
         }
 
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity"), SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal EdmFunction(string name, string namespaceName, DataSpace dataSpace, EdmFunctionPayload payload)
             : base(name, namespaceName, dataSpace)
         {
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (returnParameter == null)
                 {
-                    throw new ArgumentException(Strings.ADP_CollectionParameterElementIsNull("ReturnParameters"));    
+                    throw new ArgumentException(Strings.ADP_CollectionParameterElementIsNull("ReturnParameters"));
                 }
 
                 if (returnParameter.Mode != ParameterMode.ReturnValue)
@@ -428,20 +428,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The factory method for constructing the <see cref="EdmFunction"/> object.
+        ///     The factory method for constructing the <see cref="EdmFunction" /> object.
         /// </summary>
         /// <param name="name">The name of the function.</param>
         /// <param name="namespaceName">The namespace of the function.</param>
         /// <param name="dataSpace">The namespace the function belongs to.</param>
         /// <param name="payload">Additional function attributes and properties.</param>
         /// <param name="metadataProperties">Metadata properties that will be added to the function. Can be null.</param>
-        /// <returns>A new, read-only instance of the <see cref="EdmFunction"/> type.</returns>
+        /// <returns>
+        ///     A new, read-only instance of the <see cref="EdmFunction" /> type.
+        /// </returns>
         public static EdmFunction Create(
-                   string name,
-                   string namespaceName,
-                   DataSpace dataSpace,
-                   EdmFunctionPayload payload,
-                   IEnumerable<MetadataProperty> metadataProperties)
+            string name,
+            string namespaceName,
+            DataSpace dataSpace,
+            EdmFunctionPayload payload,
+            IEnumerable<MetadataProperty> metadataProperties)
         {
             Check.NotNull(name, "name");
             Check.NotNull(namespaceName, "namespaceName");
@@ -460,23 +462,25 @@ namespace System.Data.Entity.Core.Metadata.Edm
     }
 
     /// <summary>
-    /// Contains additional attributes and properties of the <see cref="EdmFunction"/>
+    ///     Contains additional attributes and properties of the <see cref="EdmFunction" />
     /// </summary>
     /// <remarks>
-    /// Note that <see cref="EdmFunctionPayload"/> objects are short lived and exist only to
-    /// make <see cref="EdmFunction"/> initialization easier. Instance of this type are not
-    /// compared to each other and arrays returned by array properties are copied to internal
-    /// collections in the <see cref="EdmFunction"/> ctor. Therefore it is fine to suppress the
-    /// Code Analysis messages.
+    ///     Note that <see cref="EdmFunctionPayload" /> objects are short lived and exist only to
+    ///     make <see cref="EdmFunction" /> initialization easier. Instance of this type are not
+    ///     compared to each other and arrays returned by array properties are copied to internal
+    ///     collections in the <see cref="EdmFunction" /> ctor. Therefore it is fine to suppress the
+    ///     Code Analysis messages.
     /// </remarks>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
+    [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
     public struct EdmFunctionPayload
     {
         public string Schema { get; set; }
         public string StoreFunctionName { get; set; }
         public string CommandText { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         public EntitySet[] EntitySets { get; set; }
+
         public bool? IsAggregate { get; set; }
         public bool? IsBuiltIn { get; set; }
         public bool? IsNiladic { get; set; }
@@ -484,10 +488,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public bool? IsFromProviderManifest { get; set; }
         public bool? IsCachedStoreFunction { get; set; }
         public bool? IsFunctionImport { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         public FunctionParameter[] ReturnParameters { get; set; }
+
         public ParameterTypeSemantics? ParameterTypeSemantics { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+
+        [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         public FunctionParameter[] Parameters { get; set; }
     }
 }

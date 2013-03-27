@@ -96,6 +96,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 _definingQuery = value;
             }
         }
+
         /// <summary>
         ///     Gets/Sets the name of this entity set
         /// </summary>
@@ -151,7 +152,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets or sets the database table for this entity set.
+        ///     Gets or sets the database table for this entity set.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when EntitySetBase instance is in ReadOnly state</exception>
@@ -169,7 +170,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Gets or sets the database schema for this entity set.
+        ///     Gets or sets the database schema for this entity set.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when EntitySetBase instance is in ReadOnly state</exception>

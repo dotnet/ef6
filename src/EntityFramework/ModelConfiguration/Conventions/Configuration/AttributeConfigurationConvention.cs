@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         private readonly AttributeProvider _attributeProvider;
 
         protected AttributeConfigurationConvention()
-            :this(DbConfiguration.GetService<AttributeProvider>())
+            : this(DbConfiguration.GetService<AttributeProvider>())
         {
         }
 

@@ -51,10 +51,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var columnOrders
                 = from c in columns
                   select new
-                             {
-                                 Column = c,
-                                 Order = c.GetOrder() ?? int.MaxValue
-                             };
+                      {
+                          Column = c,
+                          Order = c.GetOrder() ?? int.MaxValue
+                      };
 
             return columnOrders
                 .OrderBy(c => c.Order)

@@ -441,7 +441,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="expression"> The DbInExpression that is being visited. </param>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
-        ///     is null</exception>
+        ///     is null
+        /// </exception>
         public override void Visit(DbInExpression expression)
         {
             Check.NotNull(expression, "expression");

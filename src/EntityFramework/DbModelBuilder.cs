@@ -403,12 +403,12 @@ namespace System.Data.Entity
             DebugCheck.NotNull(model);
 
             var typeMapper = new TypeMapper(
-                                    new MappingContext(
-                                        _modelConfiguration,
-                                        _conventionsConfiguration,
-                                        model,
-                                        _modelBuilderVersion,
-                                        DbConfiguration.GetService<AttributeProvider>()));
+                new MappingContext(
+                    _modelConfiguration,
+                    _conventionsConfiguration,
+                    model,
+                    _modelBuilderVersion,
+                    DbConfiguration.GetService<AttributeProvider>()));
 
             _modelConfiguration.Entities
                                .Where(type => typeMapper.MapEntityType(type) == null)

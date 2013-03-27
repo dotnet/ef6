@@ -222,7 +222,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// The factory method for constructing the EntityType object.
+        ///     The factory method for constructing the EntityType object.
         /// </summary>
         /// <param name="name">The name of the entity type.</param>
         /// <param name="namespaceName">The namespace of the entity type.</param>
@@ -254,8 +254,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Adds the specified navigation property to the members of this type.
-        /// The navigation property is added regardless of the read-only flag.
+        ///     Adds the specified navigation property to the members of this type.
+        ///     The navigation property is added regardless of the read-only flag.
         /// </summary>
         /// <param name="property">The navigation property to be added.</param>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]

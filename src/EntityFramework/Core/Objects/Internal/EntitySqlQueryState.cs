@@ -188,7 +188,8 @@ namespace System.Data.Entity.Core.Objects
                 Debug.Assert(queryExpression != null, "EntitySqlQueryState.Parse returned null expression?");
                 var tree = DbQueryCommandTree.FromValidExpression(ObjectContext.MetadataWorkspace, DataSpace.CSpace, queryExpression);
                 plan = _objectQueryExecutionPlanFactory.Prepare(
-                    ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, Span, null, DbExpressionBuilder.AliasGenerator);
+                    ObjectContext, tree, ElementType, mergeOption, EffectiveStreamingBehaviour, Span, null,
+                    DbExpressionBuilder.AliasGenerator);
 
                 // If caching is enabled then update the cache now.
                 // Note: the logic is the same as in ELinqQueryState.

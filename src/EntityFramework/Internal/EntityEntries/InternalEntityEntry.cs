@@ -332,7 +332,7 @@ namespace System.Data.Entity.Internal
 
             _internalContext.ObjectContext.Refresh(RefreshMode.StoreWins, Entity);
         }
-        
+
 #if !NET40
 
         /// <summary>

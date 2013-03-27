@@ -6,7 +6,6 @@ namespace System.Data.Entity
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Transactions;
 
     /// <summary>
     ///     An implementation of IDatabaseInitializer that will recreate and optionally re-seed the
@@ -32,7 +31,8 @@ namespace System.Data.Entity
         {
             Check.NotNull(context, "context");
 
-            if (context.Database.Exists() && new DatabaseTableChecker().AnyModelTableExists(context))
+            if (context.Database.Exists()
+                && new DatabaseTableChecker().AnyModelTableExists(context))
             {
                 // If there is no metadata either in the model or in the database, then
                 // we assume that the database matches the model because the common cases for

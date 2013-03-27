@@ -5,10 +5,11 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+
 #endif
 
     /// <summary>
-    ///     An <see cref="IExecutionStrategy"/> that doesn't retry operations if they fail.
+    ///     An <see cref="IExecutionStrategy" /> that doesn't retry operations if they fail.
     /// </summary>
     public class NonRetryingExecutionStrategy : IExecutionStrategy
     {
@@ -49,7 +50,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Executes the specified asynchronous task once, without retrying on failure.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The result type of the <see cref="Task{T}"/> returned by <paramref name="func"/>.
+        ///     The result type of the <see cref="Task{T}" /> returned by <paramref name="func" />.
         /// </typeparam>
         /// <param name="func">A function that returns a started task.</param>
         /// <param name="cancellationToken">

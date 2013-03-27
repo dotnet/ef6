@@ -9,7 +9,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
 
     internal partial class Propagator
     {
@@ -19,14 +18,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         internal class ExtentPlaceholderCreator
         {
-            /// <summary>
-            ///     Constructs a new placeholder creator.
-            /// </summary>
-            internal ExtentPlaceholderCreator()
-            {
-            }
-
             private static readonly Dictionary<PrimitiveTypeKind, object> _typeDefaultMap = InitializeTypeDefaultMap();
+
             private static readonly Lazy<Dictionary<PrimitiveTypeKind, object>> _spatialTypeDefaultMap =
                 new Lazy<Dictionary<PrimitiveTypeKind, object>>(InitializeSpatialTypeDefaultMap);
 
@@ -105,7 +98,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            /// Attempts to retrieve the the default value for the specified primitive type.
+            ///     Attempts to retrieve the the default value for the specified primitive type.
             /// </summary>
             /// <param name="primitiveType">A primitive type.</param>
             /// <param name="defaultValue">The default value for the primitive type.</param>
@@ -115,8 +108,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var primitiveTypeKind = primitiveType.PrimitiveTypeKind;
 
                 return Helper.IsSpatialType(primitiveType)
-                    ? _spatialTypeDefaultMap.Value.TryGetValue(primitiveTypeKind, out defaultValue)
-                    : _typeDefaultMap.TryGetValue(primitiveTypeKind, out defaultValue);
+                           ? _spatialTypeDefaultMap.Value.TryGetValue(primitiveTypeKind, out defaultValue)
+                           : _typeDefaultMap.TryGetValue(primitiveTypeKind, out defaultValue);
             }
 
             /// <summary>

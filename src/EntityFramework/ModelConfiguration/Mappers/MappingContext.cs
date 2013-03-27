@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.ModelConfiguration.Mappers
 {
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -58,5 +57,5 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         {
             get { return _modelBuilderVersion; }
         }
-}
+    }
 }

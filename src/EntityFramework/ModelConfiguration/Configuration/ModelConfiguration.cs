@@ -159,9 +159,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 _entityConfigurations.Add(
                     entityType,
                     entityTypeConfiguration = new EntityTypeConfiguration(entityType)
-                                                  {
-                                                      IsExplicitEntity = explicitEntity
-                                                  });
+                        {
+                            IsExplicitEntity = explicitEntity
+                        });
             }
 
             return entityTypeConfiguration;
@@ -383,9 +383,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             foreach (var structuralTypeConfiguration
                 in databaseMapping.Model.ComplexTypes
-                      .Select(ct => ct.GetConfiguration())
-                      .Cast<StructuralTypeConfiguration>()
-                      .Where(c => c != null))
+                                  .Select(ct => ct.GetConfiguration())
+                                  .Cast<StructuralTypeConfiguration>()
+                                  .Where(c => c != null))
             {
                 structuralTypeConfiguration.ConfigureFunctionParameters(
                     databaseMapping.GetComplexParameterBindings(structuralTypeConfiguration.ClrType).ToList());
@@ -675,16 +675,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             // Remove all the default discriminators where there is only one table using it
             (from esm in databaseMapping.GetEntitySetMappings()
              select new
-                        {
-                            Set = esm,
-                            Fragments =
+                 {
+                     Set = esm,
+                     Fragments =
                  (from etm in esm.EntityTypeMappings
                   from etmf in etm.MappingFragments
                   group etmf by etmf.Table
                   into g
                   where g.Count(x => x.GetDefaultDiscriminator() != null) == 1
                   select g.Single(x => x.GetDefaultDiscriminator() != null))
-                        })
+                 })
                 .Each(x => x.Fragments.Each(f => f.RemoveDefaultDiscriminator(x.Set)));
         }
 

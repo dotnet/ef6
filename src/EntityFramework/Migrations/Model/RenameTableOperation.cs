@@ -57,9 +57,9 @@ namespace System.Data.Entity.Migrations.Model
                 var newTable = DatabaseName.Parse(_newName).Name;
 
                 return new RenameTableOperation(new DatabaseName(newTable, originalName.Schema).ToString(), originalName.Name)
-                           {
-                               IsSystem = IsSystem
-                           };
+                    {
+                        IsSystem = IsSystem
+                    };
             }
         }
 

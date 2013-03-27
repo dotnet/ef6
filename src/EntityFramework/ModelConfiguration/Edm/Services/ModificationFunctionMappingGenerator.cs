@@ -277,11 +277,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var functionPayload
                 = new EdmFunctionPayload
-                      {
-                          ReturnParameters = new FunctionParameter[0],
-                          Parameters = parameters.ToArray(),
-                          IsComposable = false
-                      };
+                    {
+                        ReturnParameters = new FunctionParameter[0],
+                        Parameters = parameters.ToArray(),
+                        IsComposable = false
+                    };
 
             var function
                 = databaseMapping.Database

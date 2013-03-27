@@ -4839,47 +4839,47 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Plus, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                      {
-                                          var args = ConvertPlusOperands(bltInExpr, sr);
+                    {
+                        var args = ConvertPlusOperands(bltInExpr, sr);
 
-                                          if (TypeSemantics.IsNumericType(args.Left.ResultType))
-                                          {
-                                              return args.Left.Plus(args.Right);
-                                          }
-                                          else
-                                          {
-                                              //
-                                              // fold '+' operator into concat canonical function
-                                              //
-                                              MetadataFunctionGroup function;
-                                              if (!sr.TypeResolver.TryGetFunctionFromMetadata("Edm", "Concat", out function))
-                                              {
-                                                  var errCtx = bltInExpr.ErrCtx;
-                                                  var message = Strings.ConcatBuiltinNotSupported;
-                                                  throw EntitySqlException.Create(errCtx, message, null);
-                                              }
+                        if (TypeSemantics.IsNumericType(args.Left.ResultType))
+                        {
+                            return args.Left.Plus(args.Right);
+                        }
+                        else
+                        {
+                            //
+                            // fold '+' operator into concat canonical function
+                            //
+                            MetadataFunctionGroup function;
+                            if (!sr.TypeResolver.TryGetFunctionFromMetadata("Edm", "Concat", out function))
+                            {
+                                var errCtx = bltInExpr.ErrCtx;
+                                var message = Strings.ConcatBuiltinNotSupported;
+                                throw EntitySqlException.Create(errCtx, message, null);
+                            }
 
-                                              var argTypes = new List<TypeUsage>(2);
-                                              argTypes.Add(args.Left.ResultType);
-                                              argTypes.Add(args.Right.ResultType);
+                            var argTypes = new List<TypeUsage>(2);
+                            argTypes.Add(args.Left.ResultType);
+                            argTypes.Add(args.Right.ResultType);
 
-                                              var isAmbiguous = false;
-                                              var concatFunction = SemanticResolver.ResolveFunctionOverloads(
-                                                  function.FunctionMetadata,
-                                                  argTypes,
-                                                  false /* isGroupAggregate */,
-                                                  out isAmbiguous);
+                            var isAmbiguous = false;
+                            var concatFunction = SemanticResolver.ResolveFunctionOverloads(
+                                function.FunctionMetadata,
+                                argTypes,
+                                false /* isGroupAggregate */,
+                                out isAmbiguous);
 
-                                              if (null == concatFunction || isAmbiguous)
-                                              {
-                                                  var errCtx = bltInExpr.ErrCtx;
-                                                  var message = Strings.ConcatBuiltinNotSupported;
-                                                  throw EntitySqlException.Create(errCtx, message, null);
-                                              }
+                            if (null == concatFunction || isAmbiguous)
+                            {
+                                var errCtx = bltInExpr.ErrCtx;
+                                var message = Strings.ConcatBuiltinNotSupported;
+                                throw EntitySqlException.Create(errCtx, message, null);
+                            }
 
-                                              return concatFunction.Invoke(new[] { args.Left, args.Right });
-                                          }
-                                      });
+                            return concatFunction.Invoke(new[] { args.Left, args.Right });
+                        }
+                    });
 
             #endregion
 
@@ -4891,11 +4891,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Minus, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                       {
-                                           var args = ConvertArithmeticArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertArithmeticArgs(bltInExpr, sr);
 
-                                           return args.Left.Minus(args.Right);
-                                       });
+                        return args.Left.Minus(args.Right);
+                    });
 
             #endregion
 
@@ -4907,11 +4907,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Multiply, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                          {
-                                              var args = ConvertArithmeticArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertArithmeticArgs(bltInExpr, sr);
 
-                                              return args.Left.Multiply(args.Right);
-                                          });
+                        return args.Left.Multiply(args.Right);
+                    });
 
             #endregion
 
@@ -4923,11 +4923,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Divide, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                        {
-                                            var args = ConvertArithmeticArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertArithmeticArgs(bltInExpr, sr);
 
-                                            return args.Left.Divide(args.Right);
-                                        });
+                        return args.Left.Divide(args.Right);
+                    });
 
             #endregion
 
@@ -4939,11 +4939,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Modulus, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                         {
-                                             var args = ConvertArithmeticArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertArithmeticArgs(bltInExpr, sr);
 
-                                             return args.Left.Modulo(args.Right);
-                                         });
+                        return args.Left.Modulo(args.Right);
+                    });
 
             #endregion
 
@@ -4955,24 +4955,24 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.UnaryMinus, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                            {
-                                                var argument = ConvertArithmeticArgs(bltInExpr, sr).Left;
-                                                if (TypeSemantics.IsUnsignedNumericType(argument.ResultType))
-                                                {
-                                                    TypeUsage closestPromotableType = null;
-                                                    if (
-                                                        !TypeHelpers.TryGetClosestPromotableType(
-                                                            argument.ResultType, out closestPromotableType))
-                                                    {
-                                                        var message = Strings.InvalidUnsignedTypeForUnaryMinusOperation(
-                                                            argument.ResultType.EdmType.FullName);
-                                                        throw new EntitySqlException(message);
-                                                    }
-                                                }
+                    {
+                        var argument = ConvertArithmeticArgs(bltInExpr, sr).Left;
+                        if (TypeSemantics.IsUnsignedNumericType(argument.ResultType))
+                        {
+                            TypeUsage closestPromotableType = null;
+                            if (
+                                !TypeHelpers.TryGetClosestPromotableType(
+                                    argument.ResultType, out closestPromotableType))
+                            {
+                                var message = Strings.InvalidUnsignedTypeForUnaryMinusOperation(
+                                    argument.ResultType.EdmType.FullName);
+                                throw new EntitySqlException(message);
+                            }
+                        }
 
-                                                DbExpression unaryExpr = argument.UnaryMinus();
-                                                return unaryExpr;
-                                            });
+                        DbExpression unaryExpr = argument.UnaryMinus();
+                        return unaryExpr;
+                    });
 
             #endregion
 
@@ -5001,11 +5001,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.And, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                     {
-                                         var args = ConvertLogicalArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertLogicalArgs(bltInExpr, sr);
 
-                                         return args.Left.And(args.Right);
-                                     });
+                        return args.Left.And(args.Right);
+                    });
 
             #endregion
 
@@ -5018,11 +5018,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Or, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                    {
-                                        var args = ConvertLogicalArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertLogicalArgs(bltInExpr, sr);
 
-                                        return args.Left.Or(args.Right);
-                                    });
+                        return args.Left.Or(args.Right);
+                    });
 
             #endregion
 
@@ -5051,11 +5051,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Equal, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                       {
-                                           var args = ConvertEqualCompArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertEqualCompArgs(bltInExpr, sr);
 
-                                           return args.Left.Equal(args.Right);
-                                       });
+                        return args.Left.Equal(args.Right);
+                    });
 
             #endregion
 
@@ -5067,14 +5067,14 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.NotEqual, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                          {
-                                              var args = ConvertEqualCompArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertEqualCompArgs(bltInExpr, sr);
 
-                                              // This was originally CreateNotExpression(CreateEqualsExpression(left, right))
-                                              // and this semantic is maintained with left.Equal(right).Not(), even though left.NotEqual
-                                              // seems like the more obvious (correct?) implementation.
-                                              return args.Left.Equal(args.Right).Not();
-                                          });
+                        // This was originally CreateNotExpression(CreateEqualsExpression(left, right))
+                        // and this semantic is maintained with left.Equal(right).Not(), even though left.NotEqual
+                        // seems like the more obvious (correct?) implementation.
+                        return args.Left.Equal(args.Right).Not();
+                    });
 
             #endregion
 
@@ -5086,11 +5086,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.GreaterEqual, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                              {
-                                                  var args = ConvertOrderCompArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertOrderCompArgs(bltInExpr, sr);
 
-                                                  return args.Left.GreaterThanOrEqual(args.Right);
-                                              });
+                        return args.Left.GreaterThanOrEqual(args.Right);
+                    });
 
             #endregion
 
@@ -5102,11 +5102,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.GreaterThan, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                             {
-                                                 var args = ConvertOrderCompArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertOrderCompArgs(bltInExpr, sr);
 
-                                                 return args.Left.GreaterThan(args.Right);
-                                             });
+                        return args.Left.GreaterThan(args.Right);
+                    });
 
             #endregion
 
@@ -5118,11 +5118,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.LessEqual, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                           {
-                                               var args = ConvertOrderCompArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertOrderCompArgs(bltInExpr, sr);
 
-                                               return args.Left.LessThanOrEqual(args.Right);
-                                           });
+                        return args.Left.LessThanOrEqual(args.Right);
+                    });
 
             #endregion
 
@@ -5134,11 +5134,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.LessThan, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                          {
-                                              var args = ConvertOrderCompArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertOrderCompArgs(bltInExpr, sr);
 
-                                              return args.Left.LessThan(args.Right);
-                                          });
+                        return args.Left.LessThan(args.Right);
+                    });
 
             #endregion
 
@@ -5154,11 +5154,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Union, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                       {
-                                           var args = ConvertSetArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertSetArgs(bltInExpr, sr);
 
-                                           return args.Left.UnionAll(args.Right).Distinct();
-                                       });
+                        return args.Left.UnionAll(args.Right).Distinct();
+                    });
 
             #endregion
 
@@ -5170,11 +5170,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.UnionAll, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                          {
-                                              var args = ConvertSetArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertSetArgs(bltInExpr, sr);
 
-                                              return args.Left.UnionAll(args.Right);
-                                          });
+                        return args.Left.UnionAll(args.Right);
+                    });
 
             #endregion
 
@@ -5186,11 +5186,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Intersect, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                           {
-                                               var args = ConvertSetArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertSetArgs(bltInExpr, sr);
 
-                                               return args.Left.Intersect(args.Right);
-                                           });
+                        return args.Left.Intersect(args.Right);
+                    });
 
             #endregion
 
@@ -5202,11 +5202,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Overlaps, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                          {
-                                              var args = ConvertSetArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertSetArgs(bltInExpr, sr);
 
-                                              return args.Left.Intersect(args.Right).IsEmpty().Not();
-                                          });
+                        return args.Left.Intersect(args.Right).IsEmpty().Not();
+                    });
 
             #endregion
 
@@ -5241,11 +5241,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Except, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                        {
-                                            var args = ConvertSetArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertSetArgs(bltInExpr, sr);
 
-                                            return args.Left.Except(args.Right);
-                                        });
+                        return args.Left.Except(args.Right);
+                    });
 
             #endregion
 
@@ -5269,31 +5269,31 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Flatten, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                         {
-                                             var elemExpr = ConvertValueExpression(bltInExpr.Arg1, sr);
+                    {
+                        var elemExpr = ConvertValueExpression(bltInExpr.Arg1, sr);
 
-                                             if (!TypeSemantics.IsCollectionType(elemExpr.ResultType))
-                                             {
-                                                 var errCtx = bltInExpr.Arg1.ErrCtx;
-                                                 var message = Strings.InvalidFlattenArgument;
-                                                 throw EntitySqlException.Create(errCtx, message, null);
-                                             }
+                        if (!TypeSemantics.IsCollectionType(elemExpr.ResultType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.InvalidFlattenArgument;
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                             if (!TypeSemantics.IsCollectionType(TypeHelpers.GetElementTypeUsage(elemExpr.ResultType)))
-                                             {
-                                                 var errCtx = bltInExpr.Arg1.ErrCtx;
-                                                 var message = Strings.InvalidFlattenArgument;
-                                                 throw EntitySqlException.Create(errCtx, message, null);
-                                             }
+                        if (!TypeSemantics.IsCollectionType(TypeHelpers.GetElementTypeUsage(elemExpr.ResultType)))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.InvalidFlattenArgument;
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                             var leftExpr = elemExpr.BindAs(sr.GenerateInternalName("l_flatten"));
+                        var leftExpr = elemExpr.BindAs(sr.GenerateInternalName("l_flatten"));
 
-                                             var rightExpr = leftExpr.Variable.BindAs(sr.GenerateInternalName("r_flatten"));
+                        var rightExpr = leftExpr.Variable.BindAs(sr.GenerateInternalName("r_flatten"));
 
-                                             var applyBinding = leftExpr.CrossApply(rightExpr).BindAs(sr.GenerateInternalName("flatten"));
+                        var applyBinding = leftExpr.CrossApply(rightExpr).BindAs(sr.GenerateInternalName("flatten"));
 
-                                             return applyBinding.Project(applyBinding.Variable.Property(rightExpr.VariableName));
-                                         });
+                        return applyBinding.Project(applyBinding.Variable.Property(rightExpr.VariableName));
+                    });
 
             #endregion
 
@@ -5305,38 +5305,38 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.In, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                    {
-                                        var args = ConvertInExprArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertInExprArgs(bltInExpr, sr);
 
-                                        //
-                                        // Convert "x in multiset(y1, y2, ..., yn)" into x = y1 or x = y2 or x = y3 ...
-                                        //
-                                        if (args.Right.ExpressionKind
-                                            == DbExpressionKind.NewInstance)
-                                        {
-                                            return ConvertSimpleInExpression(args.Left, args.Right);
-                                        }
-                                        else
-                                        {
-                                            var rSet = args.Right.BindAs(sr.GenerateInternalName("in-filter"));
+                        //
+                        // Convert "x in multiset(y1, y2, ..., yn)" into x = y1 or x = y2 or x = y3 ...
+                        //
+                        if (args.Right.ExpressionKind
+                            == DbExpressionKind.NewInstance)
+                        {
+                            return ConvertSimpleInExpression(args.Left, args.Right);
+                        }
+                        else
+                        {
+                            var rSet = args.Right.BindAs(sr.GenerateInternalName("in-filter"));
 
-                                            var leftIn = args.Left;
-                                            DbExpression rightSet = rSet.Variable;
+                            var leftIn = args.Left;
+                            DbExpression rightSet = rSet.Variable;
 
-                                            DbExpression exists = rSet.Filter(leftIn.Equal(rightSet)).IsEmpty().Not();
+                            DbExpression exists = rSet.Filter(leftIn.Equal(rightSet)).IsEmpty().Not();
 
-                                            var whenExpr = new List<DbExpression>(1);
-                                            whenExpr.Add(leftIn.IsNull());
-                                            var thenExpr = new List<DbExpression>(1);
-                                            thenExpr.Add(TypeResolver.BooleanType.Null());
+                            var whenExpr = new List<DbExpression>(1);
+                            whenExpr.Add(leftIn.IsNull());
+                            var thenExpr = new List<DbExpression>(1);
+                            thenExpr.Add(TypeResolver.BooleanType.Null());
 
-                                            DbExpression left = DbExpressionBuilder.Case(whenExpr, thenExpr, DbExpressionBuilder.False);
+                            DbExpression left = DbExpressionBuilder.Case(whenExpr, thenExpr, DbExpressionBuilder.False);
 
-                                            DbExpression converted = left.Or(exists);
+                            DbExpression converted = left.Or(exists);
 
-                                            return converted;
-                                        }
-                                    });
+                            return converted;
+                        }
+                    });
 
             #endregion
 
@@ -5348,35 +5348,35 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.NotIn, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                       {
-                                           var args = ConvertInExprArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertInExprArgs(bltInExpr, sr);
 
-                                           if (args.Right.ExpressionKind
-                                               == DbExpressionKind.NewInstance)
-                                           {
-                                               return ConvertSimpleInExpression(args.Left, args.Right).Not();
-                                           }
-                                           else
-                                           {
-                                               var rSet = args.Right.BindAs(sr.GenerateInternalName("in-filter"));
+                        if (args.Right.ExpressionKind
+                            == DbExpressionKind.NewInstance)
+                        {
+                            return ConvertSimpleInExpression(args.Left, args.Right).Not();
+                        }
+                        else
+                        {
+                            var rSet = args.Right.BindAs(sr.GenerateInternalName("in-filter"));
 
-                                               var leftIn = args.Left;
-                                               DbExpression rightSet = rSet.Variable;
+                            var leftIn = args.Left;
+                            DbExpression rightSet = rSet.Variable;
 
-                                               DbExpression exists = rSet.Filter(leftIn.Equal(rightSet)).IsEmpty();
+                            DbExpression exists = rSet.Filter(leftIn.Equal(rightSet)).IsEmpty();
 
-                                               var whenExpr = new List<DbExpression>(1);
-                                               whenExpr.Add(leftIn.IsNull());
-                                               var thenExpr = new List<DbExpression>(1);
-                                               thenExpr.Add(TypeResolver.BooleanType.Null());
+                            var whenExpr = new List<DbExpression>(1);
+                            whenExpr.Add(leftIn.IsNull());
+                            var thenExpr = new List<DbExpression>(1);
+                            thenExpr.Add(TypeResolver.BooleanType.Null());
 
-                                               DbExpression left = DbExpressionBuilder.Case(whenExpr, thenExpr, DbExpressionBuilder.True);
+                            DbExpression left = DbExpressionBuilder.Case(whenExpr, thenExpr, DbExpressionBuilder.True);
 
-                                               DbExpression converted = left.And(exists);
+                            DbExpression converted = left.And(exists);
 
-                                               return converted;
-                                           }
-                                       });
+                            return converted;
+                        }
+                    });
 
             #endregion
 
@@ -5388,11 +5388,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Distinct, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                          {
-                                              var args = ConvertSetArgs(bltInExpr, sr);
+                    {
+                        var args = ConvertSetArgs(bltInExpr, sr);
 
-                                              return args.Left.Distinct();
-                                          });
+                        return args.Left.Distinct();
+                    });
 
             #endregion
 
@@ -5408,22 +5408,22 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.IsNull, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                        {
-                                            var isNullExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg1, sr);
+                    {
+                        var isNullExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg1, sr);
 
-                                            //
-                                            // Ensure expression edmType is valid for this operation.
-                                            //
-                                            if (isNullExpr != null
-                                                && !TypeHelpers.IsValidIsNullOpType(isNullExpr.ResultType))
-                                            {
-                                                var errCtx = bltInExpr.Arg1.ErrCtx;
-                                                var message = Strings.IsNullInvalidType;
-                                                throw EntitySqlException.Create(errCtx, message, null);
-                                            }
+                        //
+                        // Ensure expression edmType is valid for this operation.
+                        //
+                        if (isNullExpr != null
+                            && !TypeHelpers.IsValidIsNullOpType(isNullExpr.ResultType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.IsNullInvalidType;
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                            return isNullExpr != null ? (DbExpression)isNullExpr.IsNull() : DbExpressionBuilder.True;
-                                        });
+                        return isNullExpr != null ? (DbExpression)isNullExpr.IsNull() : DbExpressionBuilder.True;
+                    });
 
             #endregion
 
@@ -5435,24 +5435,24 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.IsNotNull, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                           {
-                                               var isNullExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg1, sr);
+                    {
+                        var isNullExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg1, sr);
 
-                                               //
-                                               // Ensure expression edmType is valid for this operation.
-                                               //
-                                               if (isNullExpr != null
-                                                   && !TypeHelpers.IsValidIsNullOpType(isNullExpr.ResultType))
-                                               {
-                                                   var errCtx = bltInExpr.Arg1.ErrCtx;
-                                                   var message = Strings.IsNullInvalidType;
-                                                   throw EntitySqlException.Create(errCtx, message, null);
-                                               }
+                        //
+                        // Ensure expression edmType is valid for this operation.
+                        //
+                        if (isNullExpr != null
+                            && !TypeHelpers.IsValidIsNullOpType(isNullExpr.ResultType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.IsNullInvalidType;
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                               return isNullExpr != null
-                                                          ? (DbExpression)isNullExpr.IsNull().Not()
-                                                          : DbExpressionBuilder.False;
-                                           });
+                        return isNullExpr != null
+                                   ? (DbExpression)isNullExpr.IsNull().Not()
+                                   : DbExpressionBuilder.False;
+                    });
 
             #endregion
 
@@ -5468,97 +5468,97 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.IsOf, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                      {
-                                          var exprToFilter = ConvertValueExpression(bltInExpr.Arg1, sr);
-                                          var typeToFilterTo = ConvertTypeName(bltInExpr.Arg2, sr);
+                    {
+                        var exprToFilter = ConvertValueExpression(bltInExpr.Arg1, sr);
+                        var typeToFilterTo = ConvertTypeName(bltInExpr.Arg2, sr);
 
-                                          var isOnly = (bool)((Literal)bltInExpr.Arg3).Value;
-                                          var isNot = (bool)((Literal)bltInExpr.Arg4).Value;
-                                          var isNominalTypeAllowed = sr.ParserOptions.ParserCompilationMode
-                                                                     == ParserOptions.CompilationMode.RestrictedViewGenerationMode;
+                        var isOnly = (bool)((Literal)bltInExpr.Arg3).Value;
+                        var isNot = (bool)((Literal)bltInExpr.Arg4).Value;
+                        var isNominalTypeAllowed = sr.ParserOptions.ParserCompilationMode
+                                                   == ParserOptions.CompilationMode.RestrictedViewGenerationMode;
 
-                                          if (!isNominalTypeAllowed
-                                              && !TypeSemantics.IsEntityType(exprToFilter.ResultType))
-                                          {
-                                              var errCtx = bltInExpr.Arg1.ErrCtx;
-                                              var message = Strings.ExpressionTypeMustBeEntityType(
-                                                  Strings.CtxIsOf,
-                                                  exprToFilter.ResultType.EdmType.BuiltInTypeKind.ToString(),
-                                                  exprToFilter.ResultType.EdmType.FullName);
-                                              throw EntitySqlException.Create(errCtx, message, null);
-                                          }
-                                          else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(exprToFilter.ResultType))
-                                          {
-                                              var errCtx = bltInExpr.Arg1.ErrCtx;
-                                              var message = Strings.ExpressionTypeMustBeNominalType(
-                                                  Strings.CtxIsOf,
-                                                  exprToFilter.ResultType.EdmType.BuiltInTypeKind.ToString(),
-                                                  exprToFilter.ResultType.EdmType.FullName);
-                                              throw EntitySqlException.Create(errCtx, message, null);
-                                          }
+                        if (!isNominalTypeAllowed
+                            && !TypeSemantics.IsEntityType(exprToFilter.ResultType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.ExpressionTypeMustBeEntityType(
+                                Strings.CtxIsOf,
+                                exprToFilter.ResultType.EdmType.BuiltInTypeKind.ToString(),
+                                exprToFilter.ResultType.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
+                        else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(exprToFilter.ResultType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.ExpressionTypeMustBeNominalType(
+                                Strings.CtxIsOf,
+                                exprToFilter.ResultType.EdmType.BuiltInTypeKind.ToString(),
+                                exprToFilter.ResultType.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                          if (!isNominalTypeAllowed
-                                              && !TypeSemantics.IsEntityType(typeToFilterTo))
-                                          {
-                                              var errCtx = bltInExpr.Arg2.ErrCtx;
-                                              var message = Strings.TypeMustBeEntityType(
-                                                  Strings.CtxIsOf,
-                                                  typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
-                                                  typeToFilterTo.EdmType.FullName);
-                                              throw EntitySqlException.Create(errCtx, message, null);
-                                          }
-                                          else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(typeToFilterTo))
-                                          {
-                                              var errCtx = bltInExpr.Arg2.ErrCtx;
-                                              var message = Strings.TypeMustBeNominalType(
-                                                  Strings.CtxIsOf,
-                                                  typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
-                                                  typeToFilterTo.EdmType.FullName);
-                                              throw EntitySqlException.Create(errCtx, message, null);
-                                          }
+                        if (!isNominalTypeAllowed
+                            && !TypeSemantics.IsEntityType(typeToFilterTo))
+                        {
+                            var errCtx = bltInExpr.Arg2.ErrCtx;
+                            var message = Strings.TypeMustBeEntityType(
+                                Strings.CtxIsOf,
+                                typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
+                                typeToFilterTo.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
+                        else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(typeToFilterTo))
+                        {
+                            var errCtx = bltInExpr.Arg2.ErrCtx;
+                            var message = Strings.TypeMustBeNominalType(
+                                Strings.CtxIsOf,
+                                typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
+                                typeToFilterTo.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                          if (!TypeSemantics.IsPolymorphicType(exprToFilter.ResultType))
-                                          {
-                                              var errCtx = bltInExpr.Arg1.ErrCtx;
-                                              var message = Strings.TypeMustBeInheritableType;
-                                              throw EntitySqlException.Create(errCtx, message, null);
-                                          }
+                        if (!TypeSemantics.IsPolymorphicType(exprToFilter.ResultType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.TypeMustBeInheritableType;
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                          if (!TypeSemantics.IsPolymorphicType(typeToFilterTo))
-                                          {
-                                              var errCtx = bltInExpr.Arg2.ErrCtx;
-                                              var message = Strings.TypeMustBeInheritableType;
-                                              throw EntitySqlException.Create(errCtx, message, null);
-                                          }
+                        if (!TypeSemantics.IsPolymorphicType(typeToFilterTo))
+                        {
+                            var errCtx = bltInExpr.Arg2.ErrCtx;
+                            var message = Strings.TypeMustBeInheritableType;
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                          if (!IsSubOrSuperType(exprToFilter.ResultType, typeToFilterTo))
-                                          {
-                                              var errCtx = bltInExpr.ErrCtx;
-                                              var message = Strings.NotASuperOrSubType(
-                                                  exprToFilter.ResultType.EdmType.FullName,
-                                                  typeToFilterTo.EdmType.FullName);
-                                              throw EntitySqlException.Create(errCtx, message, null);
-                                          }
+                        if (!IsSubOrSuperType(exprToFilter.ResultType, typeToFilterTo))
+                        {
+                            var errCtx = bltInExpr.ErrCtx;
+                            var message = Strings.NotASuperOrSubType(
+                                exprToFilter.ResultType.EdmType.FullName,
+                                typeToFilterTo.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                          typeToFilterTo = TypeHelpers.GetReadOnlyType(typeToFilterTo);
+                        typeToFilterTo = TypeHelpers.GetReadOnlyType(typeToFilterTo);
 
-                                          DbExpression retExpr = null;
-                                          if (isOnly)
-                                          {
-                                              retExpr = exprToFilter.IsOfOnly(typeToFilterTo);
-                                          }
-                                          else
-                                          {
-                                              retExpr = exprToFilter.IsOf(typeToFilterTo);
-                                          }
+                        DbExpression retExpr = null;
+                        if (isOnly)
+                        {
+                            retExpr = exprToFilter.IsOfOnly(typeToFilterTo);
+                        }
+                        else
+                        {
+                            retExpr = exprToFilter.IsOf(typeToFilterTo);
+                        }
 
-                                          if (isNot)
-                                          {
-                                              retExpr = retExpr.Not();
-                                          }
+                        if (isNot)
+                        {
+                            retExpr = retExpr.Not();
+                        }
 
-                                          return retExpr;
-                                      });
+                        return retExpr;
+                    });
 
             #endregion
 
@@ -5570,82 +5570,82 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Treat, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                       {
-                                           var exprToTreat = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg1, sr);
-                                           var typeToTreatTo = ConvertTypeName(bltInExpr.Arg2, sr);
+                    {
+                        var exprToTreat = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg1, sr);
+                        var typeToTreatTo = ConvertTypeName(bltInExpr.Arg2, sr);
 
-                                           var isNominalTypeAllowed = sr.ParserOptions.ParserCompilationMode
-                                                                      == ParserOptions.CompilationMode.RestrictedViewGenerationMode;
+                        var isNominalTypeAllowed = sr.ParserOptions.ParserCompilationMode
+                                                   == ParserOptions.CompilationMode.RestrictedViewGenerationMode;
 
-                                           if (!isNominalTypeAllowed
-                                               && !TypeSemantics.IsEntityType(typeToTreatTo))
-                                           {
-                                               var errCtx = bltInExpr.Arg2.ErrCtx;
-                                               var message = Strings.TypeMustBeEntityType(
-                                                   Strings.CtxTreat,
-                                                   typeToTreatTo.EdmType.BuiltInTypeKind.ToString(),
-                                                   typeToTreatTo.EdmType.FullName);
-                                               throw EntitySqlException.Create(errCtx, message, null);
-                                           }
-                                           else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(typeToTreatTo))
-                                           {
-                                               var errCtx = bltInExpr.Arg2.ErrCtx;
-                                               var message = Strings.TypeMustBeNominalType(
-                                                   Strings.CtxTreat,
-                                                   typeToTreatTo.EdmType.BuiltInTypeKind.ToString(),
-                                                   typeToTreatTo.EdmType.FullName);
-                                               throw EntitySqlException.Create(errCtx, message, null);
-                                           }
+                        if (!isNominalTypeAllowed
+                            && !TypeSemantics.IsEntityType(typeToTreatTo))
+                        {
+                            var errCtx = bltInExpr.Arg2.ErrCtx;
+                            var message = Strings.TypeMustBeEntityType(
+                                Strings.CtxTreat,
+                                typeToTreatTo.EdmType.BuiltInTypeKind.ToString(),
+                                typeToTreatTo.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
+                        else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(typeToTreatTo))
+                        {
+                            var errCtx = bltInExpr.Arg2.ErrCtx;
+                            var message = Strings.TypeMustBeNominalType(
+                                Strings.CtxTreat,
+                                typeToTreatTo.EdmType.BuiltInTypeKind.ToString(),
+                                typeToTreatTo.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                           if (exprToTreat == null)
-                                           {
-                                               exprToTreat = typeToTreatTo.Null();
-                                           }
-                                           else if (!isNominalTypeAllowed
-                                                    && !TypeSemantics.IsEntityType(exprToTreat.ResultType))
-                                           {
-                                               var errCtx = bltInExpr.Arg1.ErrCtx;
-                                               var message = Strings.ExpressionTypeMustBeEntityType(
-                                                   Strings.CtxTreat,
-                                                   exprToTreat.ResultType.EdmType.BuiltInTypeKind.ToString(),
-                                                   exprToTreat.ResultType.EdmType.FullName);
-                                               throw EntitySqlException.Create(errCtx, message, null);
-                                           }
-                                           else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(exprToTreat.ResultType))
-                                           {
-                                               var errCtx = bltInExpr.Arg1.ErrCtx;
-                                               var message = Strings.ExpressionTypeMustBeNominalType(
-                                                   Strings.CtxTreat,
-                                                   exprToTreat.ResultType.EdmType.BuiltInTypeKind.ToString(),
-                                                   exprToTreat.ResultType.EdmType.FullName);
-                                               throw EntitySqlException.Create(errCtx, message, null);
-                                           }
+                        if (exprToTreat == null)
+                        {
+                            exprToTreat = typeToTreatTo.Null();
+                        }
+                        else if (!isNominalTypeAllowed
+                                 && !TypeSemantics.IsEntityType(exprToTreat.ResultType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.ExpressionTypeMustBeEntityType(
+                                Strings.CtxTreat,
+                                exprToTreat.ResultType.EdmType.BuiltInTypeKind.ToString(),
+                                exprToTreat.ResultType.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
+                        else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(exprToTreat.ResultType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.ExpressionTypeMustBeNominalType(
+                                Strings.CtxTreat,
+                                exprToTreat.ResultType.EdmType.BuiltInTypeKind.ToString(),
+                                exprToTreat.ResultType.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                           if (!TypeSemantics.IsPolymorphicType(exprToTreat.ResultType))
-                                           {
-                                               var errCtx = bltInExpr.Arg1.ErrCtx;
-                                               var message = Strings.TypeMustBeInheritableType;
-                                               throw EntitySqlException.Create(errCtx, message, null);
-                                           }
+                        if (!TypeSemantics.IsPolymorphicType(exprToTreat.ResultType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.TypeMustBeInheritableType;
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                           if (!TypeSemantics.IsPolymorphicType(typeToTreatTo))
-                                           {
-                                               var errCtx = bltInExpr.Arg2.ErrCtx;
-                                               var message = Strings.TypeMustBeInheritableType;
-                                               throw EntitySqlException.Create(errCtx, message, null);
-                                           }
+                        if (!TypeSemantics.IsPolymorphicType(typeToTreatTo))
+                        {
+                            var errCtx = bltInExpr.Arg2.ErrCtx;
+                            var message = Strings.TypeMustBeInheritableType;
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                           if (!IsSubOrSuperType(exprToTreat.ResultType, typeToTreatTo))
-                                           {
-                                               var errCtx = bltInExpr.Arg1.ErrCtx;
-                                               var message = Strings.NotASuperOrSubType(
-                                                   exprToTreat.ResultType.EdmType.FullName,
-                                                   typeToTreatTo.EdmType.FullName);
-                                               throw EntitySqlException.Create(errCtx, message, null);
-                                           }
+                        if (!IsSubOrSuperType(exprToTreat.ResultType, typeToTreatTo))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.NotASuperOrSubType(
+                                exprToTreat.ResultType.EdmType.FullName,
+                                typeToTreatTo.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                           return exprToTreat.TreatAs(TypeHelpers.GetReadOnlyType(typeToTreatTo));
-                                       });
+                        return exprToTreat.TreatAs(TypeHelpers.GetReadOnlyType(typeToTreatTo));
+                    });
 
             #endregion
 
@@ -5657,45 +5657,45 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Cast, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                      {
-                                          var exprToCast = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg1, sr);
-                                          var typeToCastTo = ConvertTypeName(bltInExpr.Arg2, sr);
+                    {
+                        var exprToCast = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg1, sr);
+                        var typeToCastTo = ConvertTypeName(bltInExpr.Arg2, sr);
 
-                                          //
-                                          // Ensure CAST target edmType is scalar.
-                                          //
-                                          if (!TypeSemantics.IsScalarType(typeToCastTo))
-                                          {
-                                              var errCtx = bltInExpr.Arg2.ErrCtx;
-                                              var message = Strings.InvalidCastType;
-                                              throw EntitySqlException.Create(errCtx, message, null);
-                                          }
+                        //
+                        // Ensure CAST target edmType is scalar.
+                        //
+                        if (!TypeSemantics.IsScalarType(typeToCastTo))
+                        {
+                            var errCtx = bltInExpr.Arg2.ErrCtx;
+                            var message = Strings.InvalidCastType;
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                          if (exprToCast == null)
-                                          {
-                                              return typeToCastTo.Null();
-                                          }
+                        if (exprToCast == null)
+                        {
+                            return typeToCastTo.Null();
+                        }
 
-                                          //
-                                          // Ensure CAST source edmType is scalar.
-                                          //
-                                          if (!TypeSemantics.IsScalarType(exprToCast.ResultType))
-                                          {
-                                              var errCtx = bltInExpr.Arg1.ErrCtx;
-                                              var message = Strings.InvalidCastExpressionType;
-                                              throw EntitySqlException.Create(errCtx, message, null);
-                                          }
+                        //
+                        // Ensure CAST source edmType is scalar.
+                        //
+                        if (!TypeSemantics.IsScalarType(exprToCast.ResultType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.InvalidCastExpressionType;
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                          if (!TypeSemantics.IsCastAllowed(exprToCast.ResultType, typeToCastTo))
-                                          {
-                                              var errCtx = bltInExpr.Arg1.ErrCtx;
-                                              var message = Strings.InvalidCast(
-                                                  exprToCast.ResultType.EdmType.FullName, typeToCastTo.EdmType.FullName);
-                                              throw EntitySqlException.Create(errCtx, message, null);
-                                          }
+                        if (!TypeSemantics.IsCastAllowed(exprToCast.ResultType, typeToCastTo))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.InvalidCast(
+                                exprToCast.ResultType.EdmType.FullName, typeToCastTo.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                          return exprToCast.CastTo(TypeHelpers.GetReadOnlyType(typeToCastTo));
-                                      });
+                        return exprToCast.CastTo(TypeHelpers.GetReadOnlyType(typeToCastTo));
+                    });
 
             #endregion
 
@@ -5707,85 +5707,85 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.OfType, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                        {
-                                            var exprToFilter = ConvertValueExpression(bltInExpr.Arg1, sr);
-                                            var typeToFilterTo = ConvertTypeName(bltInExpr.Arg2, sr);
+                    {
+                        var exprToFilter = ConvertValueExpression(bltInExpr.Arg1, sr);
+                        var typeToFilterTo = ConvertTypeName(bltInExpr.Arg2, sr);
 
-                                            var isOnly = (bool)((Literal)bltInExpr.Arg3).Value;
+                        var isOnly = (bool)((Literal)bltInExpr.Arg3).Value;
 
-                                            var isNominalTypeAllowed = sr.ParserOptions.ParserCompilationMode
-                                                                       == ParserOptions.CompilationMode.RestrictedViewGenerationMode;
+                        var isNominalTypeAllowed = sr.ParserOptions.ParserCompilationMode
+                                                   == ParserOptions.CompilationMode.RestrictedViewGenerationMode;
 
-                                            if (!TypeSemantics.IsCollectionType(exprToFilter.ResultType))
-                                            {
-                                                var errCtx = bltInExpr.Arg1.ErrCtx;
-                                                var message = Strings.ExpressionMustBeCollection;
-                                                throw EntitySqlException.Create(errCtx, message, null);
-                                            }
+                        if (!TypeSemantics.IsCollectionType(exprToFilter.ResultType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.ExpressionMustBeCollection;
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                            var elementType = TypeHelpers.GetElementTypeUsage(exprToFilter.ResultType);
-                                            if (!isNominalTypeAllowed
-                                                && !TypeSemantics.IsEntityType(elementType))
-                                            {
-                                                var errCtx = bltInExpr.Arg1.ErrCtx;
-                                                var message = Strings.OfTypeExpressionElementTypeMustBeEntityType(
-                                                    elementType.EdmType.BuiltInTypeKind.ToString(), elementType);
-                                                throw EntitySqlException.Create(errCtx, message, null);
-                                            }
-                                            else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(elementType))
-                                            {
-                                                var errCtx = bltInExpr.Arg1.ErrCtx;
-                                                var message = Strings.OfTypeExpressionElementTypeMustBeNominalType(
-                                                    elementType.EdmType.BuiltInTypeKind.ToString(), elementType);
-                                                throw EntitySqlException.Create(errCtx, message, null);
-                                            }
+                        var elementType = TypeHelpers.GetElementTypeUsage(exprToFilter.ResultType);
+                        if (!isNominalTypeAllowed
+                            && !TypeSemantics.IsEntityType(elementType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.OfTypeExpressionElementTypeMustBeEntityType(
+                                elementType.EdmType.BuiltInTypeKind.ToString(), elementType);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
+                        else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(elementType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.OfTypeExpressionElementTypeMustBeNominalType(
+                                elementType.EdmType.BuiltInTypeKind.ToString(), elementType);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                            if (!isNominalTypeAllowed
-                                                && !TypeSemantics.IsEntityType(typeToFilterTo))
-                                            {
-                                                var errCtx = bltInExpr.Arg2.ErrCtx;
-                                                var message = Strings.TypeMustBeEntityType(
-                                                    Strings.CtxOfType, typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
-                                                    typeToFilterTo.EdmType.FullName);
-                                                throw EntitySqlException.Create(errCtx, message, null);
-                                            }
-                                            else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(typeToFilterTo))
-                                            {
-                                                var errCtx = bltInExpr.Arg2.ErrCtx;
-                                                var message = Strings.TypeMustBeNominalType(
-                                                    Strings.CtxOfType, typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
-                                                    typeToFilterTo.EdmType.FullName);
-                                                throw EntitySqlException.Create(errCtx, message, null);
-                                            }
+                        if (!isNominalTypeAllowed
+                            && !TypeSemantics.IsEntityType(typeToFilterTo))
+                        {
+                            var errCtx = bltInExpr.Arg2.ErrCtx;
+                            var message = Strings.TypeMustBeEntityType(
+                                Strings.CtxOfType, typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
+                                typeToFilterTo.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
+                        else if (isNominalTypeAllowed && !TypeSemantics.IsNominalType(typeToFilterTo))
+                        {
+                            var errCtx = bltInExpr.Arg2.ErrCtx;
+                            var message = Strings.TypeMustBeNominalType(
+                                Strings.CtxOfType, typeToFilterTo.EdmType.BuiltInTypeKind.ToString(),
+                                typeToFilterTo.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                            if (isOnly && typeToFilterTo.EdmType.Abstract)
-                                            {
-                                                var errCtx = bltInExpr.Arg2.ErrCtx;
-                                                var message = Strings.OfTypeOnlyTypeArgumentCannotBeAbstract(
-                                                    typeToFilterTo.EdmType.FullName);
-                                                throw EntitySqlException.Create(errCtx, message, null);
-                                            }
+                        if (isOnly && typeToFilterTo.EdmType.Abstract)
+                        {
+                            var errCtx = bltInExpr.Arg2.ErrCtx;
+                            var message = Strings.OfTypeOnlyTypeArgumentCannotBeAbstract(
+                                typeToFilterTo.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                            if (!IsSubOrSuperType(elementType, typeToFilterTo))
-                                            {
-                                                var errCtx = bltInExpr.Arg1.ErrCtx;
-                                                var message = Strings.NotASuperOrSubType(
-                                                    elementType.EdmType.FullName, typeToFilterTo.EdmType.FullName);
-                                                throw EntitySqlException.Create(errCtx, message, null);
-                                            }
+                        if (!IsSubOrSuperType(elementType, typeToFilterTo))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.NotASuperOrSubType(
+                                elementType.EdmType.FullName, typeToFilterTo.EdmType.FullName);
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                            DbExpression ofTypeExpression = null;
-                                            if (isOnly)
-                                            {
-                                                ofTypeExpression = exprToFilter.OfTypeOnly(TypeHelpers.GetReadOnlyType(typeToFilterTo));
-                                            }
-                                            else
-                                            {
-                                                ofTypeExpression = exprToFilter.OfType(TypeHelpers.GetReadOnlyType(typeToFilterTo));
-                                            }
+                        DbExpression ofTypeExpression = null;
+                        if (isOnly)
+                        {
+                            ofTypeExpression = exprToFilter.OfTypeOnly(TypeHelpers.GetReadOnlyType(typeToFilterTo));
+                        }
+                        else
+                        {
+                            ofTypeExpression = exprToFilter.OfType(TypeHelpers.GetReadOnlyType(typeToFilterTo));
+                        }
 
-                                            return ofTypeExpression;
-                                        });
+                        return ofTypeExpression;
+                    });
 
             #endregion
 
@@ -5797,56 +5797,56 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
             builtInExprConverter.Add(
                 BuiltInKind.Like, delegate(BuiltInExpr bltInExpr, SemanticResolver sr)
-                                      {
-                                          DbExpression likeExpr = null;
+                    {
+                        DbExpression likeExpr = null;
 
-                                          var matchExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg1, sr);
-                                          if (matchExpr == null)
-                                          {
-                                              matchExpr = TypeResolver.StringType.Null();
-                                          }
-                                          else if (!IsStringType(matchExpr.ResultType))
-                                          {
-                                              var errCtx = bltInExpr.Arg1.ErrCtx;
-                                              var message = Strings.LikeArgMustBeStringType;
-                                              throw EntitySqlException.Create(errCtx, message, null);
-                                          }
+                        var matchExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg1, sr);
+                        if (matchExpr == null)
+                        {
+                            matchExpr = TypeResolver.StringType.Null();
+                        }
+                        else if (!IsStringType(matchExpr.ResultType))
+                        {
+                            var errCtx = bltInExpr.Arg1.ErrCtx;
+                            var message = Strings.LikeArgMustBeStringType;
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                          var patternExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg2, sr);
-                                          if (patternExpr == null)
-                                          {
-                                              patternExpr = TypeResolver.StringType.Null();
-                                          }
-                                          else if (!IsStringType(patternExpr.ResultType))
-                                          {
-                                              var errCtx = bltInExpr.Arg2.ErrCtx;
-                                              var message = Strings.LikeArgMustBeStringType;
-                                              throw EntitySqlException.Create(errCtx, message, null);
-                                          }
+                        var patternExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg2, sr);
+                        if (patternExpr == null)
+                        {
+                            patternExpr = TypeResolver.StringType.Null();
+                        }
+                        else if (!IsStringType(patternExpr.ResultType))
+                        {
+                            var errCtx = bltInExpr.Arg2.ErrCtx;
+                            var message = Strings.LikeArgMustBeStringType;
+                            throw EntitySqlException.Create(errCtx, message, null);
+                        }
 
-                                          if (3 == bltInExpr.ArgCount)
-                                          {
-                                              var escapeExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg3, sr);
-                                              if (escapeExpr == null)
-                                              {
-                                                  escapeExpr = TypeResolver.StringType.Null();
-                                              }
-                                              else if (!IsStringType(escapeExpr.ResultType))
-                                              {
-                                                  var errCtx = bltInExpr.Arg3.ErrCtx;
-                                                  var message = Strings.LikeArgMustBeStringType;
-                                                  throw EntitySqlException.Create(errCtx, message, null);
-                                              }
+                        if (3 == bltInExpr.ArgCount)
+                        {
+                            var escapeExpr = ConvertValueExpressionAllowUntypedNulls(bltInExpr.Arg3, sr);
+                            if (escapeExpr == null)
+                            {
+                                escapeExpr = TypeResolver.StringType.Null();
+                            }
+                            else if (!IsStringType(escapeExpr.ResultType))
+                            {
+                                var errCtx = bltInExpr.Arg3.ErrCtx;
+                                var message = Strings.LikeArgMustBeStringType;
+                                throw EntitySqlException.Create(errCtx, message, null);
+                            }
 
-                                              likeExpr = matchExpr.Like(patternExpr, escapeExpr);
-                                          }
-                                          else
-                                          {
-                                              likeExpr = matchExpr.Like(patternExpr);
-                                          }
+                            likeExpr = matchExpr.Like(patternExpr, escapeExpr);
+                        }
+                        else
+                        {
+                            likeExpr = matchExpr.Like(patternExpr);
+                        }
 
-                                          return likeExpr;
-                                      });
+                        return likeExpr;
+                    });
 
             #endregion
 

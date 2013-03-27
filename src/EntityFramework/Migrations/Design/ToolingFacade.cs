@@ -573,18 +573,18 @@ namespace System.Data.Entity.Migrations.Design
                     types => types.Where(t => !typeof(HistoryContext).IsAssignableFrom(t)),
                     Error.EnableMigrations_NoContext,
                     (assembly, types) =>
-                    {
-                        var message = new StringBuilder();
-                        message.Append(Strings.EnableMigrations_MultipleContexts(assembly));
-
-                        foreach (var type in types)
                         {
-                            message.AppendLine();
-                            message.Append(Strings.EnableMigrationsForContext(type.FullName));
-                        }
+                            var message = new StringBuilder();
+                            message.Append(Strings.EnableMigrations_MultipleContexts(assembly));
 
-                        return new MigrationsException(message.ToString());
-                    },
+                            foreach (var type in types)
+                            {
+                                message.AppendLine();
+                                message.Append(Strings.EnableMigrationsForContext(type.FullName));
+                            }
+
+                            return new MigrationsException(message.ToString());
+                        },
                     Error.EnableMigrations_NoContextWithName,
                     Error.EnableMigrations_MultipleContextsWithName);
 

@@ -188,7 +188,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             return TryGetProxyType(wrappedEntity.Entity.GetType(), out proxyInfo)
                        ? proxyInfo.GetAllAssociationTypes()
                        : null;
-
         }
 
         /// <summary>
@@ -303,18 +302,18 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             var propertyName = propertyInfo.Name;
             return (entity) =>
-                       {
-                           var type = entity.GetType();
-                           if (IsProxyType(type))
-                           {
-                               object value;
-                               if (TryGetBasePropertyValue(type, propertyName, entity, out value))
-                               {
-                                   return value;
-                               }
-                           }
-                           return nonProxyGetter(entity);
-                       };
+                {
+                    var type = entity.GetType();
+                    if (IsProxyType(type))
+                    {
+                        object value;
+                        if (TryGetBasePropertyValue(type, propertyName, entity, out value))
+                        {
+                            return value;
+                        }
+                    }
+                    return nonProxyGetter(entity);
+                };
         }
 
         private static bool TryGetBasePropertyValue(Type proxyType, string propertyName, object entity, out object value)
@@ -338,17 +337,17 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             var propertyName = propertyInfo.Name;
             return (entity, value) =>
-                       {
-                           var type = entity.GetType();
-                           if (IsProxyType(type))
-                           {
-                               if (TrySetBasePropertyValue(type, propertyName, entity, value))
-                               {
-                                   return;
-                               }
-                           }
-                           nonProxySetter(entity, value);
-                       };
+                {
+                    var type = entity.GetType();
+                    if (IsProxyType(type))
+                    {
+                        if (TrySetBasePropertyValue(type, propertyName, entity, value))
+                        {
+                            return;
+                        }
+                    }
+                    nonProxySetter(entity, value);
+                };
         }
 
         private static bool TrySetBasePropertyValue(Type proxyType, string propertyName, object entity, object value)
@@ -369,7 +368,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <param name="ospaceEntityType"> EntityType in O-Space that represents the CLR type to be proxied. </param>
         /// <returns> EntityProxyTypeInfo object that contains the constructed proxy type, along with any behaviors associated with that type; or null if a proxy type cannot be constructed for the specified EntityType. </returns>
         private static EntityProxyTypeInfo BuildType(
-            ModuleBuilder moduleBuilder, 
+            ModuleBuilder moduleBuilder,
             ClrEntityType ospaceEntityType,
             MetadataWorkspace workspace)
         {
@@ -495,11 +494,11 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static Action<object> GetResetFKSetterFlagDelegate(Func<object, object> getEntityWrapperDelegate)
         {
             return (proxy) =>
-                       {
-                           Debug.Assert(getEntityWrapperDelegate != null, "entityWrapperDelegate must not be null");
+                {
+                    Debug.Assert(getEntityWrapperDelegate != null, "entityWrapperDelegate must not be null");
 
-                           ResetFKSetterFlag(getEntityWrapperDelegate(proxy));
-                       };
+                    ResetFKSetterFlag(getEntityWrapperDelegate(proxy));
+                };
         }
 
         /// <summary>

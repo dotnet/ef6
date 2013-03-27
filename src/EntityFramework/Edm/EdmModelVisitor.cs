@@ -230,7 +230,8 @@ namespace System.Data.Entity.Edm
             VisitMetadataItem(item);
             if (item != null)
             {
-                if (item.BaseType == null && item.KeyProperties.Any())
+                if (item.BaseType == null
+                    && item.KeyProperties.Any())
                 {
                     VisitKeyProperties(item, item.KeyProperties);
                 }

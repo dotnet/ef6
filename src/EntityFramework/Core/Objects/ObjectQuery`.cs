@@ -171,7 +171,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        /// For testing.
+        ///     For testing.
         /// </summary>
         internal ObjectQuery()
         {
@@ -224,14 +224,14 @@ namespace System.Data.Entity.Core.Objects
         ///     Asynchronously allows explicit query evaluation with a specified merge
         ///     option which will override the merge option property.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains an enumerable for the ObjectQuery results. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains an enumerable for the ObjectQuery results.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public new Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption)
@@ -243,15 +243,17 @@ namespace System.Data.Entity.Core.Objects
         ///     Asynchronously allows explicit query evaluation with a specified merge
         ///     option which will override the merge option property.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
-        ///     The task result contains an enumerable for the ObjectQuery results. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains an enumerable for the ObjectQuery results.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public new Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption, CancellationToken cancellationToken)
@@ -374,7 +376,7 @@ namespace System.Data.Entity.Core.Objects
             var clrOfType = typeof(TResultType);
             EdmType ofType;
             if (!QueryState.ObjectContext.MetadataWorkspace.GetItemCollection(DataSpace.OSpace).TryGetType(
-                    clrOfType.Name, clrOfType.NestingNamespace() ?? string.Empty, out ofType)
+                clrOfType.Name, clrOfType.NestingNamespace() ?? string.Empty, out ofType)
                 || !(Helper.IsEntityType(ofType) || Helper.IsComplexType(ofType)))
             {
                 var message = Strings.ObjectQuery_QueryBuilder_InvalidResultType(typeof(TResultType).FullName);
@@ -583,22 +585,22 @@ namespace System.Data.Entity.Core.Objects
 
             return new LazyAsyncEnumerator<T>(
                 async cancellationToken =>
-                          {
-                              var disposableEnumerable =
-                                  await GetResultsAsync(null, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
-                              try
-                              {
-                                  return ((IDbAsyncEnumerable<T>)disposableEnumerable).GetAsyncEnumerator();
-                              }
-                              catch
-                              {
-                                  // if there is a problem creating the enumerator, we should dispose
-                                  // the enumerable (if there is no problem, the enumerator will take 
-                                  // care of the dispose)
-                                  disposableEnumerable.Dispose();
-                                  throw;
-                              }
-                          });
+                    {
+                        var disposableEnumerable =
+                            await GetResultsAsync(null, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                        try
+                        {
+                            return ((IDbAsyncEnumerable<T>)disposableEnumerable).GetAsyncEnumerator();
+                        }
+                        catch
+                        {
+                            // if there is a problem creating the enumerator, we should dispose
+                            // the enumerable (if there is no problem, the enumerator will take 
+                            // care of the dispose)
+                            disposableEnumerable.Dispose();
+                            throw;
+                        }
+                    });
         }
 
 #endif
@@ -706,7 +708,8 @@ namespace System.Data.Entity.Core.Objects
         private ObjectResult<T> GetResults(MergeOption? forMergeOption)
         {
             QueryState.ObjectContext.AsyncMonitor.EnsureNotEntered();
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(QueryState.ObjectContext.Connection, QueryState.ObjectContext.MetadataWorkspace);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(
+                QueryState.ObjectContext.Connection, QueryState.ObjectContext.MetadataWorkspace);
 
             if (executionStrategy.RetriesOnFailure
                 && QueryState.EffectiveStreamingBehaviour)
@@ -728,7 +731,8 @@ namespace System.Data.Entity.Core.Objects
         {
             QueryState.ObjectContext.AsyncMonitor.EnsureNotEntered();
 
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(QueryState.ObjectContext.Connection, QueryState.ObjectContext.MetadataWorkspace);
+            var executionStrategy = DbProviderServices.GetExecutionStrategy(
+                QueryState.ObjectContext.Connection, QueryState.ObjectContext.MetadataWorkspace);
             if (executionStrategy.RetriesOnFailure
                 && QueryState.EffectiveStreamingBehaviour)
             {

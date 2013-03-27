@@ -2,11 +2,6 @@
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
-    using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Query.InternalTrees;
-    using System.Diagnostics;
-    using System.Text;
-
 #if DEBUG
     /// <summary>
     ///     The Validator class extends the BasicValidator and enforces that the ITree is valid

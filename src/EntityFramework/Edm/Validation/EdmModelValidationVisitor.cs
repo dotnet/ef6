@@ -34,7 +34,7 @@ namespace System.Data.Entity.Edm.Validation
         private void EvaluateItem(IMetadataItem item)
         {
             DebugCheck.NotNull(item);
-            
+
             foreach (var rule in _ruleSet.GetRules(item))
             {
                 rule.Evaluate(_context, item);
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Edm.Validation
         internal void Visit(EdmModel model)
         {
             DebugCheck.NotNull(model);
-            
+
             EvaluateItem(model);
 
             VisitEdmModel(model);

@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="ComplexType "/> type.
+        ///     Creates a new instance of the <see cref="ComplexType " /> type.
         /// </summary>
         /// <param name="name">The name of the complex type.</param>
         /// <param name="namespaceName">The namespace of the complex type.</param>
@@ -86,8 +86,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="members">Members of the complex type.</param>
         /// <param name="metadataProperties"></param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or members argument is null.</exception>
-        /// <returns>A new instance a the <see cref="ComplexType "/> type.</returns>
-        /// <notes>The newly created <see cref="ComplexType "/> will be read only.</notes>
+        /// <returns>
+        ///     A new instance a the <see cref="ComplexType " /> type.
+        /// </returns>
+        /// <notes>
+        ///     The newly created <see cref="ComplexType " /> will be read only.
+        /// </notes>
         public static ComplexType Create(
             string name,
             string namespaceName,

@@ -81,11 +81,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region All SetOp Rules
 
         internal static readonly Rule[] Rules = new Rule[]
-                                                    {
-                                                        Rule_UnionAllOverEmptySet,
-                                                        Rule_IntersectOverEmptySet,
-                                                        Rule_ExceptOverEmptySet,
-                                                    };
+            {
+                Rule_UnionAllOverEmptySet,
+                Rule_IntersectOverEmptySet,
+                Rule_ExceptOverEmptySet,
+            };
 
         #endregion
     }

@@ -6,7 +6,7 @@ namespace System.Data.Entity.Infrastructure.Pluralization
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents a custom pluralization term to be used by the <see cref="EnglishPluralizationService"/>
+    ///     Represents a custom pluralization term to be used by the <see cref="EnglishPluralizationService" />
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Pluralization")]
     public class CustomPluralizationEntry

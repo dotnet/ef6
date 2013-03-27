@@ -202,8 +202,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _cachedWorkspaces.Clear();
 
             Interlocked.CompareExchange(
-                ref _artifactLoaderCache, 
-                new Memoizer<string, List<MetadataArtifactLoader>>(SplitPaths, null), 
+                ref _artifactLoaderCache,
+                new Memoizer<string, List<MetadataArtifactLoader>>(SplitPaths, null),
                 _artifactLoaderCache);
         }
 
