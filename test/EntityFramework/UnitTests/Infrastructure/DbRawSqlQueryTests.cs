@@ -434,14 +434,10 @@ namespace System.Data.Entity.Infrastructure
                                 }
                                 return sum;
                             });
-                    AssertSameResult(
-                        testCase,
-                        q => q.ToArrayAsync().Result,
-                        e => e.ToArray());
-                    AssertSameResult(
+                    AssertSameResult<List<object>>(
                         testCase,
                         q => q.ToListAsync().Result,
-                        e => e.ToList());
+                        e => e.ToList<object>());
 
                     //CancellationToken overloads
                     AssertSameResult<int>(
@@ -461,14 +457,10 @@ namespace System.Data.Entity.Infrastructure
                                 }
                                 return sum;
                             });
-                    AssertSameResult(
-                        testCase,
-                        q => q.ToArrayAsync(CancellationToken.None).Result,
-                        e => e.ToArray());
-                    AssertSameResult(
+                    AssertSameResult<List<object>>(
                         testCase,
                         q => q.ToListAsync(CancellationToken.None).Result,
-                        e => e.ToList());
+                        e => e.ToList<object>());
                 }
             }
 

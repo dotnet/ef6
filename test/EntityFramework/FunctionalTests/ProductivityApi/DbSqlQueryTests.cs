@@ -471,7 +471,7 @@ namespace ProductivityApiTests
         public void Non_generic_SQL_query_can_be_used_to_materialize_unmapped_types_async()
         {
             SQL_query_can_be_used_to_materialize_unmapped_types_implementation(
-                (c, s) => c.Database.SqlQuery(typeof(UnMappedProduct), s).ToListAsync<UnMappedProduct>().Result);
+                (c, s) => c.Database.SqlQuery(typeof(UnMappedProduct), s).ToListAsync().Result.ToList<UnMappedProduct>());
         }
 
 #endif
@@ -517,7 +517,7 @@ namespace ProductivityApiTests
         public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_unmapped_types_async()
         {
             SQL_query_with_parameters_can_be_used_to_materialize_unmapped_types_implementation(
-                (c, s, p) => c.Database.SqlQuery(typeof(UnMappedProduct), s, p).ToListAsync<UnMappedProduct>().Result);
+                (c, s, p) => c.Database.SqlQuery(typeof(UnMappedProduct), s, p).ToListAsync().Result.ToList<UnMappedProduct>());
         }
 
 #endif
@@ -639,7 +639,7 @@ namespace ProductivityApiTests
         public void Non_generic_SQL_query_can_be_used_to_materialize_value_types_async()
         {
             SQL_query_can_be_used_to_materialize_value_types_implementation(
-                (c, s) => c.Database.SqlQuery(typeof(int), s).ToListAsync<int>().Result);
+                (c, s) => c.Database.SqlQuery(typeof(int), s).ToListAsync().Result.ToList<int>());
         }
 
 #endif
@@ -685,7 +685,7 @@ namespace ProductivityApiTests
         public void Non_generic_SQL_query_can_be_used_to_materialize_complex_types_async()
         {
             SQL_query_can_be_used_to_materialize_complex_types_implementation(
-                (c, s) => c.Database.SqlQuery(typeof(SiteInfo), s).ToListAsync<SiteInfo>().Result);
+                (c, s) => c.Database.SqlQuery(typeof(SiteInfo), s).ToListAsync().Result.ToList<SiteInfo>());
         }
 
 #endif
@@ -745,7 +745,7 @@ namespace ProductivityApiTests
             {
                 var query = context.Database.SqlQuery(typeof(int), "select Id from Products");
 
-                Assert.True(query.ToListAsync<int>().Result.SequenceEqual(query.ToListAsync<int>().Result));
+                Assert.True(query.ToListAsync().Result.SequenceEqual(query.ToListAsync().Result));
             }
         }
 

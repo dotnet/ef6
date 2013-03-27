@@ -330,7 +330,7 @@ namespace System.Data.Entity.ProductivityApi
             using (var context = new TimeoutContext())
             {
                 context.Database.CommandTimeout = 66;
-                context.Set(typeof(SomeTime)).SqlQuery("select * from SomeTimes").ToListAsync<SomeTime>().Wait();
+                context.Set(typeof(SomeTime)).SqlQuery("select * from SomeTimes").ToListAsync().Wait();
 
                 Assert.Equal("66", GetLoggedTimeout());
             }
@@ -354,7 +354,7 @@ namespace System.Data.Entity.ProductivityApi
             using (var context = new TimeoutContext())
             {
                 context.Database.CommandTimeout = 66;
-                context.Database.SqlQuery(typeof(SomeTime), "select * from SomeTimes").ToListAsync<SomeTime>().Wait();
+                context.Database.SqlQuery(typeof(SomeTime), "select * from SomeTimes").ToListAsync().Wait();
 
                 Assert.Equal("66", GetLoggedTimeout());
             }
