@@ -122,14 +122,26 @@ namespace System.Data.Entity.Infrastructure
 #endif
 
         /// <summary>
-        ///     Gets a value indicating whether the collection of entities has been loaded from the database.
+        ///     Gets or sets a value indicating whether all entities of this collection have been loaded from the database.
         /// </summary>
+        /// <remarks>
+        ///     Loading the related entities from the database either using lazy-loading, as part of a query, or explicitly
+        ///     with one of the Load methods will set the IsLoaded flag to true.
+        ///     IsLoaded can be explicitly set to true to prevent the related entities of this collection from being lazy-loaded.
+        ///     This can be useful if the application has caused a subset of related entities to be loaded into this collection
+        ///     and wants to prevent any other entities from being loaded automatically.
+        ///     Note that explict loading using one of the Load methods will load all related entities from the database
+        ///     regardless of whether or not IsLoaded is true.
+        ///     When any related entity in the collection is detached the IsLoaded flag is reset to false indicating that the
+        ///     not all related entities are now loaded.
+        /// </remarks>
         /// <value>
-        ///     <c>true</c> if the collection is loaded; otherwise, <c>false</c> .
+        ///     <c>true</c> if all the related entities are loaded or the IsLoaded has been explicitly set to true; otherwise, <c>false</c>.
         /// </value>
         public bool IsLoaded
         {
             get { return _internalCollectionEntry.IsLoaded; }
+            set { _internalCollectionEntry.IsLoaded = value; }
         }
 
         /// <summary>

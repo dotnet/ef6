@@ -104,12 +104,12 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously loads the collection of entities from the database.
         ///     Note that entities that already exist in the context are not overwritten with values from the database.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         /// </returns>
         public Task LoadAsync()
         {
@@ -120,13 +120,15 @@ namespace System.Data.Entity.Infrastructure
         ///     Asynchronously loads the collection of entities from the database.
         ///     Note that entities that already exist in the context are not overwritten with values from the database.
         /// </summary>
-        /// <remarks> 
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure 
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete. </param>
-        /// <returns> 
-        ///     A task that represents the asynchronous operation. 
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
         /// </returns>
         public Task LoadAsync(CancellationToken cancellationToken)
         {
@@ -136,14 +138,26 @@ namespace System.Data.Entity.Infrastructure
 #endif
 
         /// <summary>
-        ///     Gets a value indicating whether the collection of entities has been loaded from the database.
+        ///     Gets or sets a value indicating whether all entities of this collection have been loaded from the database.
         /// </summary>
+        /// <remarks>
+        ///     Loading the related entities from the database either using lazy-loading, as part of a query, or explicitly
+        ///     with one of the Load methods will set the IsLoaded flag to true.
+        ///     IsLoaded can be explicitly set to true to prevent the related entities of this collection from being lazy-loaded.
+        ///     This can be useful if the application has caused a subset of related entities to be loaded into this collection
+        ///     and wants to prevent any other entities from being loaded automatically.
+        ///     Note that explict loading using one of the Load methods will load all related entities from the database
+        ///     regardless of whether or not IsLoaded is true.
+        ///     When any related entity in the collection is detached the IsLoaded flag is reset to false indicating that the
+        ///     not all related entities are now loaded.
+        /// </remarks>
         /// <value>
-        ///     <c>true</c> if the collection is loaded; otherwise, <c>false</c> .
+        ///     <c>true</c> if all the related entities are loaded or the IsLoaded has been explicitly set to true; otherwise, <c>false</c>.
         /// </value>
         public bool IsLoaded
         {
             get { return _internalCollectionEntry.IsLoaded; }
+            set { _internalCollectionEntry.IsLoaded = value; }
         }
 
         /// <summary>

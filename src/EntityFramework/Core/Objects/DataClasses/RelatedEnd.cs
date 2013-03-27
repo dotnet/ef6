@@ -281,9 +281,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             get { return _fromEndMember; }
         }
 
-        /// <summary>
-        ///     IsLoaded returns true if and only if Load was called.
-        /// </summary>
+        /// <inheritdoc />
         [SoapIgnore]
         [XmlIgnore]
         public bool IsLoaded
@@ -293,11 +291,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 CheckOwnerNull();
                 return _isLoaded;
             }
-        }
+            set
+            {
+                CheckOwnerNull();
 
-        internal void SetIsLoaded(bool value)
-        {
-            _isLoaded = value;
+                _isLoaded = value;
+            }
         }
 
         /// <summary>

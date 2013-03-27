@@ -21,6 +21,7 @@ namespace System.Data.Entity.Infrastructure
             v.VerifySetter(e => e.CurrentValue = currentValue, m => m.CurrentValue = currentValue);
             v.VerifyGetter(e => e.EntityEntry, m => m.InternalEntityEntry);
             v.VerifyGetter(e => e.IsLoaded, m => m.IsLoaded);
+            v.VerifySetter(e => e.IsLoaded = true, m => m.IsLoaded = true);
             v.VerifyGetter(e => e.Name, m => m.Name);
             v.VerifyMethod(e => e.GetValidationErrors(), m => m.GetValidationErrors());
             v.VerifyMethod(e => e.Load(), m => m.Load());
@@ -41,6 +42,7 @@ namespace System.Data.Entity.Infrastructure
             v.VerifySetter(e => e.CurrentValue = currentValue, m => m.CurrentValue = currentValue);
             v.VerifyGetter(e => e.EntityEntry, m => m.InternalEntityEntry);
             v.VerifyGetter(e => e.IsLoaded, m => m.IsLoaded);
+            v.VerifySetter(e => e.IsLoaded = true, m => m.IsLoaded = true);
             v.VerifyGetter(e => e.Name, m => m.Name);
             v.VerifyMethod(e => e.GetValidationErrors(), m => m.GetValidationErrors());
             v.VerifyMethod(e => e.Load(), m => m.Load());

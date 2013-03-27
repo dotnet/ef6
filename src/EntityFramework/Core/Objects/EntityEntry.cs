@@ -3570,7 +3570,7 @@ namespace System.Data.Entity.Core.Objects
         internal void FixupEntityReferenceByForeignKey(EntityReference reference)
         {
             // The FK is changing, so the reference is no longer loaded from the store, even if we do fixup
-            reference.SetIsLoaded(false);
+            reference.IsLoaded = false;
 
             // Remove the existing CachedForeignKey
             var hasConceptualNullFk = ForeignKeyFactory.IsConceptualNullKey(reference.CachedForeignKey);
@@ -3708,7 +3708,7 @@ namespace System.Data.Entity.Core.Objects
                     }
                     if (setIsLoaded && principalEntry.State != EntityState.Added)
                     {
-                        relatedEnd.SetIsLoaded(true);
+                        relatedEnd.IsLoaded = true;
                     }
                 }
                 else
@@ -3736,7 +3736,7 @@ namespace System.Data.Entity.Core.Objects
                     // other end of the relationship is as loaded as it is possible to be.  Therefore, we
                     // set the IsLoaded flag so that if a user asks we will tell them that (based on last known
                     // state of the database) there is no need to do a load.
-                    relatedEnd.SetIsLoaded(true);
+                    relatedEnd.IsLoaded = true;
                 }
             }
         }

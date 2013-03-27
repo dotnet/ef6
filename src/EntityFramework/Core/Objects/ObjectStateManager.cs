@@ -897,7 +897,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 if (setIsLoaded)
                 {
-                    relatedEnd.SetIsLoaded(true);
+                    relatedEnd.IsLoaded = true;
                 }
                 // else we just want to leave IsLoaded alone, not set it to false
 
@@ -1393,7 +1393,7 @@ namespace System.Data.Entity.Core.Objects
                         ((AssociationSet)relationshipEntry.EntitySet).ElementType.FullName, targetRoleName) as EntityReference;
                 if (reference != null)
                 {
-                    reference.SetIsLoaded(false);
+                    reference.IsLoaded = false;
                 }
             }
         }

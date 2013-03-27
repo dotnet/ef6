@@ -251,6 +251,10 @@ namespace System.Data.Entity.Internal
                 Assert.Equal(
                     Strings.DbPropertyEntry_NotSupportedForDetached("IsLoaded", "Reference", "FakeEntity"),
                     Assert.Throws<InvalidOperationException>(() => { var _ = internalEntry.IsLoaded; }).Message);
+
+                Assert.Equal(
+                    Strings.DbPropertyEntry_NotSupportedForDetached("IsLoaded", "Reference", "FakeEntity"),
+                    Assert.Throws<InvalidOperationException>(() => { internalEntry.IsLoaded = true; }).Message);
             }
         }
 

@@ -225,6 +225,217 @@ namespace ProductivityApiTests
             }
         }
 
+        [Fact]
+        public void Related_reference_is_not_lazy_loaded_when_IsLoaded_is_set_to_true()
+        {
+            using (var context = new F1Context())
+            {
+                var driver = context.Drivers.Single(d => d.Name == "Jenson Button");
+                var teamReference = context.Entry(driver).Reference(d => d.Team);
+                
+                teamReference.IsLoaded = true;
+
+                Assert.True(teamReference.IsLoaded);
+                Assert.Null(driver.Team);
+                Assert.Null(teamReference.CurrentValue);
+            }
+        }
+
+        [Fact]
+        public void Related_reference_can_still_be_explicitly_loaded_when_IsLoaded_is_set_to_true()
+        {
+            using (var context = new F1Context())
+            {
+                var driver = context.Drivers.Single(d => d.Name == "Jenson Button");
+                var teamReference = context.Entry(driver).Reference(d => d.Team);
+                
+                teamReference.IsLoaded = true;
+
+                Assert.True(teamReference.IsLoaded);
+                Assert.Null(driver.Team);
+                Assert.Null(teamReference.CurrentValue);
+
+                teamReference.Load();
+
+                Assert.True(teamReference.IsLoaded);
+                Assert.Equal(Team.McLaren, driver.Team.Id);
+                Assert.Equal(Team.McLaren, teamReference.CurrentValue.Id);
+            }
+        }
+
+        [Fact]
+        public void Related_reference_is_lazy_loaded_again_when_IsLoaded_is_changed_back_to_false()
+        {
+            using (var context = new F1Context())
+            {
+                var driver = context.Drivers.Single(d => d.Name == "Jenson Button");
+                var teamReference = context.Entry(driver).Reference(d => d.Team);
+
+                teamReference.IsLoaded = true;
+
+                Assert.True(teamReference.IsLoaded);
+                Assert.Null(driver.Team);
+                Assert.Null(teamReference.CurrentValue);
+
+                teamReference.IsLoaded = false;
+
+                Assert.Equal(Team.McLaren, driver.Team.Id);
+                Assert.Equal(Team.McLaren, teamReference.CurrentValue.Id);
+                Assert.True(teamReference.IsLoaded);
+            }
+        }
+
+        [Fact]
+        public void Related_collection_is_not_lazy_loaded_when_IsLoaded_is_set_to_true()
+        {
+            using (var context = new F1Context())
+            {
+                var team = context.Teams.Find(Team.McLaren);
+                var driversCollection = context.Entry(team).Collection(t => t.Drivers);
+
+                driversCollection.IsLoaded = true;
+
+                Assert.True(driversCollection.IsLoaded);
+                Assert.Empty(team.Drivers);
+                Assert.Empty(driversCollection.CurrentValue);
+            }
+        }
+
+        [Fact]
+        public void Related_collection_can_still_be_explicitly_loaded_when_IsLoaded_is_set_to_true()
+        {
+            using (var context = new F1Context())
+            {
+                var team = context.Teams.Find(Team.McLaren);
+                var driversCollection = context.Entry(team).Collection(t => t.Drivers);
+
+                driversCollection.IsLoaded = true;
+
+                Assert.True(driversCollection.IsLoaded);
+                Assert.Empty(team.Drivers);
+                Assert.Empty(driversCollection.CurrentValue);
+
+                driversCollection.Load();
+
+                Assert.True(driversCollection.IsLoaded);
+                Assert.Equal(3, team.Drivers.Count);
+            }
+        }
+
+        [Fact]
+        public void Related_collection_is_lazy_loaded_again_when_IsLoaded_is_changed_back_to_false()
+        {
+            using (var context = new F1Context())
+            {
+                var team = context.Teams.Find(Team.McLaren);
+                var driversCollection = context.Entry(team).Collection(t => t.Drivers);
+
+                driversCollection.IsLoaded = true;
+
+                Assert.True(driversCollection.IsLoaded);
+                Assert.Empty(team.Drivers);
+                Assert.Empty(driversCollection.CurrentValue);
+
+                driversCollection.IsLoaded = false;
+
+                Assert.Equal(3, team.Drivers.Count);
+                Assert.Equal(3, driversCollection.CurrentValue.Count);
+                Assert.True(driversCollection.IsLoaded);
+            }
+        }
+
+        [Fact]
+        public void Related_reference_IsLoaded_is_reset_when_foreign_key_is_changed()
+        {
+            using (var context = new F1Context())
+            {
+                var driver = context.Drivers.Single(d => d.Name == "Jenson Button");
+                var teamReference = context.Entry(driver).Reference(d => d.Team);
+
+                teamReference.IsLoaded = true;
+
+                Assert.True(teamReference.IsLoaded);
+                Assert.Null(driver.Team);
+                Assert.Null(teamReference.CurrentValue);
+
+                driver.TeamId = Team.Ferrari;
+
+                Assert.True(teamReference.IsLoaded); // Because changes have not been detected yet
+                teamReference = context.Entry(driver).Reference(d => d.Team); // Calls DetectChanges
+                Assert.False(teamReference.IsLoaded);
+
+                Assert.Equal(Team.Ferrari, driver.Team.Id);
+                Assert.Equal(Team.Ferrari, teamReference.CurrentValue.Id);
+                Assert.True(teamReference.IsLoaded);
+            }
+        }
+
+        [Fact]
+        public void Related_reference_IsLoaded_is_reset_when_related_entity_is_detached()
+        {
+            using (var context = new F1Context())
+            {
+                var driver = context.Drivers.Single(d => d.Name == "Jenson Button");
+                var teamReference = context.Entry(driver).Reference(d => d.Team);
+                var originalTeam = driver.Team;
+
+                Assert.True(teamReference.IsLoaded);
+
+                context.Entry(originalTeam).State = EntityState.Detached;
+
+                Assert.False(teamReference.IsLoaded);
+
+                var newTeam = driver.Team;
+                Assert.True(teamReference.IsLoaded);
+                Assert.Equal(originalTeam.Id, newTeam.Id);
+                Assert.NotSame(originalTeam, newTeam);
+            }
+        }
+
+        [Fact]
+        public void Related_collection_IsLoaded_is_reset_when_one_of_the_related_entities_is_detached()
+        {
+            using (var context = new F1Context())
+            {
+                var team = context.Teams.Find(Team.McLaren);
+                var driversCollection = context.Entry(team).Collection(t => t.Drivers);
+
+                Assert.Equal(3, team.Drivers.Count);
+                Assert.True(driversCollection.IsLoaded);
+
+                var originalDriver = team.Drivers.OrderBy(d => d.Id).First();
+                context.Entry(originalDriver).State = EntityState.Detached;
+
+                Assert.False(driversCollection.IsLoaded);
+                Assert.Equal(3, team.Drivers.Count);
+                Assert.True(driversCollection.IsLoaded);
+
+                var newDriver = team.Drivers.OrderBy(d => d.Id).First();
+                Assert.Equal(originalDriver.Id, newDriver.Id);
+                Assert.NotSame(originalDriver, newDriver);
+            }
+        }
+
+        [Fact]
+        public void Related_collection_reload_after_detach_can_be_avoided_by_setting_IsLoaded_to_true()
+        {
+            using (var context = new F1Context())
+            {
+                var team = context.Teams.Find(Team.McLaren);
+                var driversCollection = context.Entry(team).Collection(t => t.Drivers);
+
+                Assert.Equal(3, team.Drivers.Count);
+                Assert.True(driversCollection.IsLoaded);
+
+                context.Entry(team.Drivers.First()).State = EntityState.Detached;
+
+                Assert.False(driversCollection.IsLoaded);
+
+                driversCollection.IsLoaded = true;
+                Assert.Equal(2, team.Drivers.Count);
+            }
+        }
+
         #endregion
 
         #region Tests for loading navigation properties asynchronously

@@ -541,7 +541,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
             if (forceToTrue || MergeOption == MergeOption.OverwriteChanges)
             {
-                relatedEnd.SetIsLoaded(true);
+                relatedEnd.IsLoaded = true;
             }
         }
 

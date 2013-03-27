@@ -74,6 +74,12 @@ namespace System.Data.Entity.Internal
 
                 return _relatedEnd.IsLoaded;
             }
+            set
+            {
+                ValidateNotDetached("IsLoaded");
+
+                _relatedEnd.IsLoaded = value;
+            }
         }
 
         /// <summary>

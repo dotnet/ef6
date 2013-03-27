@@ -19,9 +19,29 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ----------
 
         /// <summary>
-        ///     IsLoaded returns true if and only if Load was called.
+        ///     Gets or sets a value that indicates whether all related objects have been loaded.
         /// </summary>
-        bool IsLoaded { get; }
+        /// <remarks>
+        ///     Loading entities from the database either using lazy-loading, as part of a query, or explicitly with one of
+        ///     the Load methods will set the IsLoaded flag to true.
+        ///     IsLoaded can be set to true to prevent related entities from being lazy-loaded. This can be useful
+        ///     if the application has caused a subset of related entities to be loaded and wants to prevent any other
+        ///     entities from being loaded automatically.
+        ///     Calling the Clear method on an <see cref="EntityCollection{TEntity}" /> sets IsLoaded to false.
+        ///     An <see cref="EntityCollection{TEntity}" /> or <see cref="EntityReference{TEntity}" /> may also be loaded if
+        ///     the related end is included in the query path. For more information about span,
+        ///     see http://msdn.microsoft.com/en-us/library/acd0tfbe.aspx.
+        ///     Note that the explict loading methods such as <see cref="Load()" /> will load related objects from the data
+        ///     source whether or not IsLoaded is true.
+        ///     When a related entity is detached the IsLoaded flag is reset to false indicating that all entities are no
+        ///     longer loaded.
+        ///     To guarantee that a related end is fully you should check whether IsLoaded is false. If IsLoaded is false,
+        ///     then you should call one of the Load methods to ensure related entities have been loaded.
+        /// </remarks>
+        /// <param name="value">
+        ///     <c>true</c> if the related end contains all the related objects from the database; otherwise, <c>false</c>.
+        /// </param>
+        bool IsLoaded { get; set; }
 
         /// <summary>
         ///     Name of the relationship in which this IRelatedEnd is participating
