@@ -29,6 +29,12 @@ namespace System.Data.Entity.Core.Common
         private readonly Dictionary<string, PrimitiveType> _storeTypeNameToEdmPrimitiveType = new Dictionary<string, PrimitiveType>();
         private readonly Dictionary<string, PrimitiveType> _storeTypeNameToStorePrimitiveType = new Dictionary<string, PrimitiveType>();
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.DbXmlEnabledProviderManifest" /> class.
+        /// </summary>
+        /// <param name="reader">
+        ///     An <see cref="T:System.Xml.XmlReader" /> object that provides access to the XML data in the provider manifest file.
+        /// </param>
         protected DbXmlEnabledProviderManifest(XmlReader reader)
         {
             if (reader == null)
@@ -41,16 +47,22 @@ namespace System.Data.Entity.Core.Common
 
         #region Protected Properties For Fields
 
+        /// <summary>Gets the namespace name supported by this provider manifest.</summary>
+        /// <returns>The namespace name supported by this provider manifest.</returns>
         public override string NamespaceName
         {
             get { return _namespaceName; }
         }
 
+        /// <summary>Gets the best mapped equivalent Entity Data Model (EDM) type for a specified storage type name.</summary>
+        /// <returns>The best mapped equivalent EDM type for a specified storage type name.</returns>
         protected Dictionary<string, PrimitiveType> StoreTypeNameToEdmPrimitiveType
         {
             get { return _storeTypeNameToEdmPrimitiveType; }
         }
 
+        /// <summary>Gets the best mapped equivalent storage primitive type for a specified storage type name.</summary>
+        /// <returns>The best mapped equivalent storage primitive type for a specified storage type name.</returns>
         protected Dictionary<string, PrimitiveType> StoreTypeNameToStorePrimitiveType
         {
             get { return _storeTypeNameToStorePrimitiveType; }
@@ -58,26 +70,32 @@ namespace System.Data.Entity.Core.Common
 
         #endregion
 
-        /// <summary>
-        ///     Returns all the FacetDescriptions for a particular edmType
-        /// </summary>
-        /// <param name="edmType"> the edmType to return FacetDescriptions for. </param>
-        /// <returns> The FacetDescriptions for the edmType given. </returns>
+        /// <summary>Returns the list of facet descriptions for the specified Entity Data Model (EDM) type.</summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of facet descriptions for the specified EDM type.
+        /// </returns>
+        /// <param name="type">
+        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> for which the facet descriptions are to be retrieved.
+        /// </param>
         public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType edmType)
         {
             Debug.Assert(edmType is PrimitiveType, "DbXmlEnabledProviderManifest.GetFacetDescriptions(): Argument is not a PrimitiveType");
             return GetReadOnlyCollection(edmType as PrimitiveType, _facetDescriptions, Helper.EmptyFacetDescriptionEnumerable);
         }
 
+        /// <summary>Returns the list of primitive types supported by the storage provider.</summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of primitive types supported by the storage provider.
+        /// </returns>
         public override ReadOnlyCollection<PrimitiveType> GetStoreTypes()
         {
             return _primitiveTypes;
         }
 
-        /// <summary>
-        ///     Returns all the edm functions supported by the provider manifest.
-        /// </summary>
-        /// <returns> A collection of edm functions. </returns>
+        /// <summary>Returns the list of provider-supported functions.</summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of provider-supported functions.
+        /// </returns>
         public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
         {
             return _functions;

@@ -7,9 +7,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Diagnostics;
     using System.Globalization;
 
-    /// <summary>
-    ///     Represents the type comparison of a single argument against the specified type.
-    /// </summary>
+    /// <summary>Represents the type comparison of a single argument against the specified type. This class cannot be inherited. </summary>
     public sealed class DbIsOfExpression : DbUnaryExpression
     {
         private readonly TypeUsage _ofType;
@@ -27,22 +25,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             _ofType = isOfType;
         }
 
-        /// <summary>
-        ///     Gets the type metadata that the type metadata of the argument should be compared to.
-        /// </summary>
+        /// <summary>Gets the type metadata that the type metadata of the argument should be compared to.</summary>
+        /// <returns>The type metadata that the type metadata of the argument should be compared to.</returns>
         public TypeUsage OfType
         {
             get { return _ofType; }
         }
 
-        /// <summary>
-        ///     The visitor pattern method for expression visitors that do not produce a result value.
-        /// </summary>
-        /// <param name="visitor"> An instance of DbExpressionVisitor. </param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="visitor" />
-        ///     is null
-        /// </exception>
+        /// <summary>Implements the visitor pattern for expressions that do not produce a result value.</summary>
+        /// <param name="visitor">
+        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// </param>
+        /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override void Accept(DbExpressionVisitor visitor)
         {
             Check.NotNull(visitor, "visitor");
@@ -50,20 +44,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             visitor.Visit(this);
         }
 
-        /// <summary>
-        ///     The visitor pattern method for expression visitors that produce a result value of a specific type.
-        /// </summary>
-        /// <param name="visitor"> An instance of a typed DbExpressionVisitor that produces a result value of type TResultType. </param>
-        /// <typeparam name="TResultType">
-        ///     The type of the result produced by <paramref name="visitor" />
-        /// </typeparam>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="visitor" />
-        ///     is null
-        /// </exception>
+        /// <summary>Implements the visitor pattern for expressions that produce a result value of a specific type.</summary>
         /// <returns>
-        ///     An instance of <typeparamref name="TResultType" /> .
+        ///     A result value of a specific type produced by
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
+        ///     .
         /// </returns>
+        /// <param name="visitor">
+        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
+        /// </param>
+        /// <typeparam name="TResultType">The type of the result produced by  visitor .</typeparam>
+        /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
         {
             Check.NotNull(visitor, "visitor");

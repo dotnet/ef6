@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core
 {
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core
         private PropertyConstraintExceptionState _state;
 
         /// <summary>
-        ///     constructor with default message
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class with default message.
         /// </summary>
         public PropertyConstraintException() // required ctor
         {
@@ -27,9 +27,9 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     costructor with supplied message
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class with supplied message.
         /// </summary>
-        /// <param name="message"> localized error message </param>
+        /// <param name="message">A localized error message.</param>
         public PropertyConstraintException(string message) // required ctor
             : base(message)
         {
@@ -37,10 +37,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     costructor with supplied message and inner exception
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class with supplied message and inner exception.
         /// </summary>
-        /// <param name="message"> localized error message </param>
-        /// <param name="innerException"> inner exception </param>
+        /// <param name="message">A localized error message.</param>
+        /// <param name="innerException">The inner exception.</param>
         public PropertyConstraintException(string message, Exception innerException) // required ctor
             : base(message, innerException)
         {
@@ -48,9 +48,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     default constructor
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class.
         /// </summary>
-        /// <param name="message"> localized error message </param>
+        /// <param name="message">A localized error message.</param>
+        /// <param name="propertyName">The name of the property.</param>
         public PropertyConstraintException(string message, string propertyName) // required ctor
             : base(message)
         {
@@ -61,10 +62,11 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     constructor
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class.
         /// </summary>
-        /// <param name="message"> localized error message </param>
-        /// <param name="innerException"> inner exception </param>
+        /// <param name="message">A localized error message.</param>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <param name="innerException">The inner exception.</param>
         public PropertyConstraintException(string message, string propertyName, Exception innerException) // required ctor
             : base(message, innerException)
         {
@@ -74,9 +76,8 @@ namespace System.Data.Entity.Core
             SubscribeToSerializeObjectState();
         }
 
-        /// <summary>
-        ///     Gets the name of the property that violated the constraint.
-        /// </summary>
+        /// <summary>Gets the name of the property that violated the constraint.</summary>
+        /// <returns>The name of the property that violated the constraint.</returns>
         public string PropertyName
         {
             get { return _state.PropertyName; }

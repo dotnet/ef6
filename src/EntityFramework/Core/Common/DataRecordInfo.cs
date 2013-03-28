@@ -22,11 +22,17 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Construct DataRecordInfo with list of EdmMembers.
-        ///     Each memberInfo must be a member of metadata.
+        ///     Initializes a new <see cref="T:System.Data.Common.DbDataRecord" /> object for a specific type with an enumerable collection of data fields.
         /// </summary>
-        /// <param name="metadata"> </param>
-        /// <param name="memberInfo"> </param>
+        /// <param name="metadata">
+        ///     The metadata for the type represented by this object, supplied by
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     .
+        /// </param>
+        /// <param name="memberInfo">
+        ///     An enumerable collection of <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmMember" /> objects that represent column information.
+        /// </param>
         public DataRecordInfo(TypeUsage metadata, IEnumerable<EdmMember> memberInfo)
         {
             Check.NotNull(metadata, "metadata");
@@ -107,16 +113,25 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Column information.
+        ///     Gets <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> for this
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.IExtendedDataRecord.DataRecordInfo" />
+        ///     object.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object.
+        /// </returns>
         public ReadOnlyCollection<FieldMetadata> FieldMetadata
         {
             get { return _fieldMetadata; }
         }
 
         /// <summary>
-        ///     Type information.
+        ///     Gets type info for this object as a <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> value.
+        /// </returns>
         public virtual TypeUsage RecordType
         {
             get { return _metadata; }

@@ -40,26 +40,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _value = value;
         }
 
-        /// <summary>
-        ///     Gets the kind of this type.
-        /// </summary>
+        /// <summary> Gets the kind of this type. </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.EnumMember; }
         }
 
-        /// <summary>
-        ///     Gets the name of this enumeration member.
-        /// </summary>
+        /// <summary> Gets the name of this enumeration member. </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public string Name
         {
             get { return _name; }
         }
 
-        /// <summary>
-        ///     Gets the value of this enumeration member.
-        /// </summary>
+        /// <summary> Gets the value of this enumeration member. </summary>
         [MetadataProperty(BuiltInTypeKind.PrimitiveType, false)]
         public object Value
         {
@@ -74,9 +68,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return Name; }
         }
 
-        /// <summary>
-        ///     Overriding System.Object.ToString to provide better String representation for this type.
-        /// </summary>
+        /// <summary> Overriding System.Object.ToString to provide better String representation for this type. </summary>
         public override string ToString()
         {
             return Name;

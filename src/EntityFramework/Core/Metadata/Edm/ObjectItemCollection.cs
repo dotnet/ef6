@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public class ObjectItemCollection : ItemCollection
     {
         /// <summary>
-        ///     The ObjectItemCollection that loads metadata from assemblies
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.ObjectItemCollection" /> class.
         /// </summary>
         public ObjectItemCollection()
             : this(null)
@@ -82,21 +82,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        ///     Load metadata from the given assembly
-        /// </summary>
-        /// <param name="assembly"> The assembly from which to load metadata </param>
-        /// <exception cref="System.ArgumentNullException">thrown if assembly argument is null</exception>
+        /// <summary>Loads metadata from the given assembly.</summary>
+        /// <param name="assembly">The assembly from which the metadata will be loaded.</param>
         public void LoadFromAssembly(Assembly assembly)
         {
             ExplicitLoadFromAssembly(assembly, null, null);
         }
 
-        /// <summary>
-        ///     Load metadata from the given assembly
-        /// </summary>
-        /// <param name="assembly"> The assembly from which to load metadata </param>
-        /// <exception cref="System.ArgumentNullException">thrown if assembly argument is null</exception>
+        /// <summary>Loads metadata from the given assembly.</summary>
+        /// <param name="assembly">The assembly from which the metadata will be loaded.</param>
+        /// <param name="edmItemCollection">The EDM metadata source for the O space metadata.</param>
+        /// <param name="logLoadMessage">The delegate to which log messages are sent.</param>
         public void LoadFromAssembly(Assembly assembly, EdmItemCollection edmItemCollection, Action<String> logLoadMessage)
         {
             Check.NotNull(assembly, "assembly");
@@ -106,6 +102,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ExplicitLoadFromAssembly(assembly, edmItemCollection, logLoadMessage);
         }
 
+        /// <summary>Loads metadata from the specified assembly.</summary>
+        /// <param name="assembly">The assembly from which the metadata will be loaded.</param>
+        /// <param name="edmItemCollection">The EDM metadata source for the O space metadata.</param>
         public void LoadFromAssembly(Assembly assembly, EdmItemCollection edmItemCollection)
         {
             Check.NotNull(assembly, "assembly");
@@ -288,10 +287,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             AtomicAddRange(globalItems);
         }
 
-        /// <summary>
-        ///     Get the list of primitive types for the given space
-        /// </summary>
-        /// <returns> </returns>
+        /// <summary>Returns a collection of primitive type objects.</summary>
+        /// <returns>A collection of primitive type objects.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IEnumerable<PrimitiveType> GetPrimitiveTypes()
         {
@@ -299,11 +296,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The method returns the underlying CLR type for the specified OSpace type argument.
-        ///     If the DataSpace of the parameter is not OSpace, an ArgumentException is thrown.
+        ///     Returns the CLR type that corresponds to the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> supplied by the objectSpaceType parameter.
         /// </summary>
-        /// <param name="objectSpaceType"> The OSpace type to look up </param>
-        /// <returns> The CLR type of the OSpace argument </returns>
+        /// <returns>The CLR type of the OSpace argument.</returns>
+        /// <param name="objectSpaceType">
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> that represents the object space type.
+        /// </param>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public Type GetClrType(StructuralType objectSpaceType)
         {
@@ -311,39 +309,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The method returns the underlying CLR type for the specified OSpace type argument.
-        ///     If the DataSpace of the parameter is not OSpace, the method returns false and sets
-        ///     the out parameter to null.
+        ///     Returns a CLR type corresponding to the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> supplied by the objectSpaceType parameter.
         /// </summary>
-        /// <param name="objectSpaceType"> The OSpace type to look up </param>
-        /// <param name="clrType"> The CLR type of the OSpace argument </param>
-        /// <returns> true on success, false on failure </returns>
+        /// <returns>true if there is a type that matches the search criteria; otherwise, false.</returns>
+        /// <param name="objectSpaceType">
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> that represents the object space type.
+        /// </param>
+        /// <param name="clrType">The CLR type.</param>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public bool TryGetClrType(StructuralType objectSpaceType, out Type clrType)
         {
             return TryGetClrType((EdmType)objectSpaceType, out clrType);
         }
 
-        /// <summary>
-        ///     The method returns the underlying CLR type for the specified OSpace type argument.
-        ///     If the DataSpace of the parameter is not OSpace, an ArgumentException is thrown.
-        /// </summary>
-        /// <param name="objectSpaceType"> The OSpace type to look up </param>
-        /// <returns> The CLR type of the OSpace argument </returns>
+        /// <summary> The method returns the underlying CLR type for the specified OSpace type argument. If the DataSpace of the parameter is not OSpace, an ArgumentException is thrown. </summary>
+        /// <returns>The CLR type of the OSpace argument.</returns>
+        /// <param name="objectSpaceType">The OSpace type to look up.</param>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public Type GetClrType(EnumType objectSpaceType)
         {
             return GetClrType((EdmType)objectSpaceType);
         }
 
-        /// <summary>
-        ///     The method returns the underlying CLR type for the specified OSpace enum type argument.
-        ///     If the DataSpace of the parameter is not OSpace, the method returns false and sets
-        ///     the out parameter to null.
-        /// </summary>
-        /// <param name="objectSpaceType"> The OSpace enum type to look up </param>
-        /// <param name="clrType"> The CLR enum type of the OSpace argument </param>
-        /// <returns> true on success, false on failure </returns>
+        /// <summary>Returns the underlying CLR type for the specified OSpace enum type argument. If the DataSpace of the parameter is not OSpace, the method returns false and sets the out parameter to null. </summary>
+        /// <returns>true on success, false on failure</returns>
+        /// <param name="objectSpaceType">The OSpace enum type to look up</param>
+        /// <param name="clrType">The CLR enum type of the OSpace argument</param>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public bool TryGetClrType(EnumType objectSpaceType, out Type clrType)
         {
@@ -480,6 +471,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return edmType.Identity;
         }
 
+        /// <summary>Returns all the items of the specified type from this item collection.</summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all items of the specified type.
+        /// </returns>
+        /// <typeparam name="T">The type returned by the method.</typeparam>
         public override ReadOnlyCollection<T> GetItems<T>()
         {
             return base.InternalGetItems(typeof(T)) as ReadOnlyCollection<T>;

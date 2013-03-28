@@ -34,7 +34,8 @@ namespace System.Data.Entity.Core.Objects
 
 #endif
 
-        /// <inheritdoc />
+        /// <summary>Returns an enumerator that iterates through the query results.</summary>
+        /// <returns>An enumerator that iterates through the query results.</returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -53,10 +54,10 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        ///     IListSource.GetList implementation
-        /// </summary>
-        /// <returns> IList interface over the data to bind </returns>
+        /// <summary>Returns the results in a format useful for data binding.</summary>
+        /// <returns>
+        ///     An <see cref="T:System.Collections.IList" /> of entity objects.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
         {
@@ -65,11 +66,18 @@ namespace System.Data.Entity.Core.Objects
 
         #endregion
 
+        /// <summary>
+        ///     When overridden in a derived class, gets the type of the generic
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />
+        ///     .
+        /// </summary>
+        /// <returns>
+        ///     The type of the generic <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />.
+        /// </returns>
         public abstract Type ElementType { get; }
 
-        /// <summary>
-        ///     Performs tasks associated with freeing, releasing, or resetting resources.
-        /// </summary>
+        /// <summary>Performs tasks associated with freeing, releasing, or resetting resources.</summary>
         public void Dispose()
         {
             Dispose(true);
@@ -81,13 +89,9 @@ namespace System.Data.Entity.Core.Objects
 
         protected abstract void Dispose(bool disposing);
 
-        /// <summary>
-        ///     Get the next result set of a stored procedure.
-        /// </summary>
-        /// <returns>
-        ///     An <see cref="ObjectResult" /> that enumerates the values of the next result set;
-        ///     <c>null</c>, if there are no more, or if the the ObjectResult is not the result of a stored procedure call.
-        /// </returns>
+        /// <summary>Gets the next result set of a stored procedure.</summary>
+        /// <returns>An ObjectResult that enumerates the values of the next result set. Null, if there are no more, or if the ObjectResult is not the result of a stored procedure call.</returns>
+        /// <typeparam name="TElement">The type of the element.</typeparam>
         public ObjectResult<TElement> GetNextResult<TElement>()
         {
             return GetNextResultInternal<TElement>();

@@ -77,10 +77,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         #region Publics
 
-        /// <summary>
-        ///     The storage state of this EntityObject
-        /// </summary>
-        /// <value> This property returns a value from the EntityState enum. </value>
+        /// <summary>Gets the entity state of the object.</summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.EntityState" /> of this object.
+        /// </returns>
         [Browsable(false)]
         [XmlIgnore]
         public EntityState EntityState
@@ -100,9 +100,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         #region IEntityWithKey
 
-        /// <summary>
-        ///     Returns the EntityKey for this EntityObject.
-        /// </summary>
+        /// <summary>Gets or sets the key for this object.</summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.EntityKey" /> for this object.
+        /// </returns>
         [Browsable(false)]
         [DataMember]
         public EntityKey EntityKey
@@ -179,12 +180,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         #region Protected Change Tracking Methods
 
-        /// <summary>
-        ///     This method is called whenever a change is going to be made to an EntityObject
-        ///     property.
-        /// </summary>
-        /// <param name="property"> The name of the changing property. </param>
-        /// <exception cref="System.ArgumentNullException">When parameter member is null (Nothing in Visual Basic).</exception>
+        /// <summary>Notifies the change tracker that a property change is pending.</summary>
+        /// <param name="property">The name of the changing property.</param>
+        /// <exception cref="T:System.ArgumentNullException"> property  is null.</exception>
         protected override sealed void ReportPropertyChanging(
             string property)
         {
@@ -199,12 +197,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             EntityChangeTracker.EntityMemberChanging(property);
         }
 
-        /// <summary>
-        ///     This method is called whenever a change is made to an EntityObject
-        ///     property.
-        /// </summary>
-        /// <param name="property"> The name of the changed property. </param>
-        /// <exception cref="System.ArgumentNullException">When parameter member is null (Nothing in Visual Basic).</exception>
+        /// <summary>Notifies the change tracker that a property has changed.</summary>
+        /// <param name="property">The name of the changed property.</param>
+        /// <exception cref="T:System.ArgumentNullException"> property  is null.</exception>
         protected override sealed void ReportPropertyChanged(
             string property)
         {

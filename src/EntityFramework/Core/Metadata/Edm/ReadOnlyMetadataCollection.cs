@@ -52,9 +52,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             private readonly IList<T> _parent;
             private T _current;
 
-            /// <summary>
-            ///     Gets the member at the current position
-            /// </summary>
+            /// <summary>Gets the member at the current position. </summary>
+            /// <returns>The member at the current position.</returns>
             public T Current
             {
                 get { return _current; }
@@ -68,17 +67,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 get { return Current; }
             }
 
-            /// <summary>
-            ///     Dispose this enumerator
-            /// </summary>
+            /// <summary>Disposes of this enumerator.</summary>
             public void Dispose()
             {
             }
 
             /// <summary>
-            ///     Move to the next member in the collection
+            ///     Moves to the next member in the collection of type
+            ///     <see
+            ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1.Enumerator" />
+            ///     .
             /// </summary>
-            /// <returns> True if the enumerator is moved </returns>
+            /// <returns>
+            ///     true if the enumerator is moved in the collection of type
+            ///     <see
+            ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1.EnumeratortaCollection" />
+            ///     ; otherwise, false.
+            /// </returns>
             public bool MoveNext()
             {
                 if ((uint)_nextIndex
@@ -94,7 +99,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             /// <summary>
-            ///     Sets the enumerator to the initial position before the first member
+            ///     Positions the enumerator before the first position in the collection of type
+            ///     <see
+            ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" />
+            ///     .
             /// </summary>
             public void Reset()
             {
@@ -103,21 +111,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        ///     Gets whether the collection is a readonly collection
-        /// </summary>
+        /// <summary>Gets a value indicating whether this collection is read-only.</summary>
+        /// <returns>true if this collection is read-only; otherwise, false.</returns>
         public bool IsReadOnly
         {
             get { return true; }
         }
 
-        /// <summary>
-        ///     Gets an item from the collection with the given identity
-        /// </summary>
-        /// <param name="identity"> The identity of the item to search for </param>
-        /// <returns> An item from the collection </returns>
-        /// <exception cref="System.ArgumentNullException">Thrown if identity argument passed in is null</exception>
-        /// <exception cref="System.NotSupportedException">Thrown if setter is called</exception>
+        /// <summary>Gets an item from this collection by using the specified identity.</summary>
+        /// <returns>An item from this collection.</returns>
+        /// <param name="identity">The identity of the item to be searched for.</param>
         public virtual T this[string identity]
         {
             get { return (((MetadataCollection<T>)Items)[identity]); }
@@ -131,58 +134,48 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return (MetadataCollection<T>)Items; }
         }
 
-        /// <summary>
-        ///     Gets an item from the collection with the given identity
-        /// </summary>
-        /// <param name="identity"> The identity of the item to search for </param>
-        /// <param name="ignoreCase"> Whether case is ignore in the search </param>
-        /// <returns> An item from the collection </returns>
-        /// <exception cref="System.ArgumentNullException">Thrown if identity argument passed in is null</exception>
-        /// <exception cref="System.ArgumentException">Thrown if the Collection does not have an item with the given identity</exception>
+        /// <summary>Retrieves an item from this collection by using the specified identity.</summary>
+        /// <returns>An item from this collection.</returns>
+        /// <param name="identity">The identity of the item to be searched for.</param>
+        /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false. </param>
         public virtual T GetValue(string identity, bool ignoreCase)
         {
             return ((MetadataCollection<T>)Items).GetValue(identity, ignoreCase);
         }
 
-        /// <summary>
-        ///     Determines if this collection contains an item of the given identity
-        /// </summary>
-        /// <param name="identity"> The identity of the item to check for </param>
-        /// <returns> True if the collection contains the item with the given identity </returns>
-        /// <exception cref="System.ArgumentNullException">Thrown if identity argument passed in is null</exception>
-        /// <exception cref="System.ArgumentException">Thrown if identity argument passed in is empty string</exception>
+        /// <summary>Determines whether the collection contains an item with the specified identity.</summary>
+        /// <returns>true if the collection contains the item to be searched for; otherwise, false. The default is false.</returns>
+        /// <param name="identity">The identity of the item.</param>
         public virtual bool Contains(string identity)
         {
             return ((MetadataCollection<T>)Items).ContainsIdentity(identity);
         }
 
-        /// <summary>
-        ///     Gets an item from the collection with the given identity
-        /// </summary>
-        /// <param name="identity"> The identity of the item to search for </param>
-        /// <param name="ignoreCase"> Whether case is ignored in the search </param>
-        /// <param name="item"> An item from the collection, null if the item is not found </param>
-        /// <returns> True an item is retrieved </returns>
-        /// <exception cref="System.ArgumentNullException">if identity argument is null</exception>
+        /// <summary>Retrieves an item from this collection by using the specified identity.</summary>
+        /// <returns>true if there is an item that matches the search criteria; otherwise, false. </returns>
+        /// <param name="identity">The identity of the item to be searched for.</param>
+        /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false. </param>
+        /// <param name="item">When this method returns, this output parameter contains an item from the collection. If there is no matched item, this output parameter contains null.</param>
         public virtual bool TryGetValue(string identity, bool ignoreCase, out T item)
         {
             return ((MetadataCollection<T>)Items).TryGetValue(identity, ignoreCase, out item);
         }
 
-        /// <summary>
-        ///     Gets the enumerator over this collection
-        /// </summary>
-        /// <returns> </returns>
+        /// <summary>Returns an enumerator that can iterate through this collection.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1.Enumerator" /> that can be used to iterate through this
+        ///     <see
+        ///         cref="T:System.Data.Metadata.Edm.ReadOnlyMetadataCollection" />
+        ///     .
+        /// </returns>
         public new Enumerator GetEnumerator()
         {
             return new Enumerator(Items);
         }
 
-        /// <summary>
-        ///     Workaround for bug
-        /// </summary>
-        /// <param name="value"> </param>
-        /// <returns> </returns>
+        /// <summary>Returns the index of the specified value in this collection.</summary>
+        /// <returns>The index of the specified value in this collection.</returns>
+        /// <param name="value">A value to seek.</param>
         public new virtual int IndexOf(T value)
         {
             return base.IndexOf(value);

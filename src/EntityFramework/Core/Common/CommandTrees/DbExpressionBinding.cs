@@ -30,32 +30,36 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="DbExpression" /> that defines the input set.
+        ///     Gets or sets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the input set.
         /// </summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the input set.
+        /// </returns>
+        /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression is not associated with the command tree of the binding, or its result type is not equal or promotable to the result type of the current value of the property.</exception>
         public DbExpression Expression
         {
             get { return _expr; }
         }
 
-        /// <summary>
-        ///     Gets the name assigned to the element variable.
-        /// </summary>
+        /// <summary>Gets the name assigned to the element variable.</summary>
+        /// <returns>The name assigned to the element variable.</returns>
         public string VariableName
         {
             get { return _varRef.VariableName; }
         }
 
-        /// <summary>
-        ///     Gets the type metadata of the element variable.
-        /// </summary>
+        /// <summary>Gets the type metadata of the element variable.</summary>
+        /// <returns>The type metadata of the element variable. </returns>
         public TypeUsage VariableType
         {
             get { return _varRef.ResultType; }
         }
 
         /// <summary>
-        ///     Gets the <see cref="DbVariableReferenceExpression" /> that references the element variable.
+        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> that references the element variable.
         /// </summary>
+        /// <returns>The variable reference.</returns>
         public DbVariableReferenceExpression Variable
         {
             get { return _varRef; }

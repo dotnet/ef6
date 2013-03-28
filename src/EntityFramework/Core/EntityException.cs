@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core
     public class EntityException : DataException
     {
         /// <summary>
-        ///     Constructor with default message
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityException" /> class.
         /// </summary>
         public EntityException() // required ctor
             : base(Strings.EntityClient_ProviderGeneralError)
@@ -20,29 +20,33 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Constructor that accepts a pre-formatted message
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityException" /> class.
         /// </summary>
-        /// <param name="message"> localized error message </param>
+        /// <param name="message">The message that describes the error.</param>
         public EntityException(string message)
             : base(message)
         {
         }
 
         /// <summary>
-        ///     Constructor that accepts a pre-formatted message and an inner exception
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityException" /> class.
         /// </summary>
-        /// <param name="message"> localized error message </param>
-        /// <param name="innerException"> inner exception </param>
+        /// <param name="message">The error message that explains the reason for the exception.</param>
+        /// <param name="innerException">The exception that caused the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
         public EntityException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        ///     Constructor for deserialization
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityException" /> class.
         /// </summary>
-        /// <param name="info"> </param>
-        /// <param name="context"> </param>
+        /// <param name="info">
+        ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized object data about the exception being thrown.
+        /// </param>
+        /// <param name="context">
+        ///     The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.
+        /// </param>
         protected EntityException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

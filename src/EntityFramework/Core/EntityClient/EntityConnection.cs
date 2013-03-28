@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.EntityClient
 {
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.EntityClient
         private ConnectionState? _fakeConnectionState;
 
         /// <summary>
-        ///     Constructs the EntityConnection object with a connection not yet associated to a particular store
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> class.
         /// </summary>
         [ResourceExposure(ResourceScope.None)] //We are not exposing any resource
         [ResourceConsumption(ResourceScope.Machine, ResourceScope.Machine)]
@@ -71,9 +71,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Constructs the EntityConnection object with a connection string
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> class, based on the connection string.
         /// </summary>
-        /// <param name="connectionString"> The connection string, may contain a list of settings for the connection or just the name of the connection to use </param>
+        /// <param name="connectionString">The provider-specific connection string.</param>
+        /// <exception cref="T:System.ArgumentException">An invalid connection string keyword has been provided, or a required connection string keyword has not been provided.</exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)]
@@ -88,10 +89,26 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Constructs the EntityConnection from Metadata loaded in memory
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> class with a specified
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" />
+        ///     and
+        ///     <see
+        ///         cref="T:System.Data.Common.DbConnection" />
+        ///     .
         /// </summary>
-        /// <param name="workspace"> Workspace containing metadata information. </param>
-        /// <param name="connection"> Store connection. </param>
+        /// <param name="workspace">
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> to be associated with this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     .
+        /// </param>
+        /// <param name="connection">
+        ///     The underlying data source connection for this <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> object.
+        /// </param>
+        /// <exception cref="T:System.ArgumentNullException">The  workspace  or  connection  parameter is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The conceptual model is missing from the workspace.-or-The mapping file is missing from the workspace.-or-The storage model is missing from the workspace.-or-The  connection  is not in a closed state.</exception>
+        /// <exception cref="T:System.Data.Entity.Core.ProviderIncompatibleException">The  connection  is not from an ADO.NET Entity Framework-compatible provider.</exception>
         [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope",
             Justification = "Object is in fact passed to property of the class and gets Disposed properly in the Dispose() method.")]
         public EntityConnection(MetadataWorkspace workspace, DbConnection connection)
@@ -194,8 +211,25 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Get or set the entity connection string associated with this connection object
+        ///     Gets or sets the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> connection string.
         /// </summary>
+        /// <returns>The connection string required to establish the initial connection to a data source. The default value is an empty string. On a closed connection, the currently set value is returned. If no value has been set, an empty string is returned.</returns>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     An attempt was made to set the <see cref="P:System.Data.Entity.Core.EntityClient.EntityConnection.ConnectionString" /> property after the
+        ///     <see
+        ///         cref="EntityConnection" />
+        ///     ’s <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> was initialized. The
+        ///     <see
+        ///         cref="MetadataWorkspace" />
+        ///     is initialized either when the <see cref="EntityConnection" /> instance is constructed through the overload that takes a
+        ///     <see
+        ///         cref="MetadataWorkspace" />
+        ///     as a parameter, or when the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     instance has been opened.
+        /// </exception>
+        /// <exception cref="T:System.ArgumentException">An invalid connection string keyword has been provided or a required connection string keyword has not been provided.</exception>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public override string ConnectionString
         {
@@ -288,9 +322,9 @@ namespace System.Data.Entity.Core.EntityClient
             return providerString.Trim().Replace("\"", "\\\"");
         }
 
-        /// <summary>
-        ///     Get the time to wait when attempting to establish a connection before ending the try and generating an error
-        /// </summary>
+        /// <summary>Gets the number of seconds to wait when attempting to establish a connection before ending the attempt and generating an error.</summary>
+        /// <returns>The time (in seconds) to wait for a connection to open. The default value is the underlying data provider's default time-out. </returns>
+        /// <exception cref="T:System.ArgumentException">The value set is less than 0. </exception>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public override int ConnectionTimeout
         {
@@ -317,26 +351,53 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     Get the name of the current database or the database that will be used after a connection is opened
-        /// </summary>
+        /// <summary>Gets the name of the current database, or the database that will be used after a connection is opened.</summary>
+        /// <returns>The value of the Database property of the underlying data provider.</returns>
+        /// <exception cref="T:System.InvalidOperationException">The underlying data provider is not known. </exception>
         public override string Database
         {
             get { return String.Empty; }
         }
 
         /// <summary>
-        ///     Gets the ConnectionState property of the EntityConnection
+        ///     Gets the <see cref="T:System.Data.ConnectionState" /> property of the underlying provider if the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     is open. Otherwise, returns
+        ///     <see
+        ///         cref="F:System.Data.ConnectionState.Closed" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     <see cref="F:System.Data.ConnectionState.Open" />, if and only if both the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     ’s internal state and the underlying provider's
+        ///     <see
+        ///         cref="T:System.Data.ConnectionState" />
+        ///     are open. If the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     ’s state is open but the provider's
+        ///     <see
+        ///         cref="T:System.Data.ConnectionState" />
+        ///     is closed, this property returns
+        ///     <see
+        ///         cref="F:System.Data.ConnectionState.Broken" />
+        ///     . Otherwise, it returns
+        ///     <see
+        ///         cref="F:System.Data.ConnectionState.Closed" />
+        ///     .
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public override ConnectionState State
         {
             get { return _fakeConnectionState ?? _entityClientConnectionState; }
         }
 
-        /// <summary>
-        ///     Gets the name or network address of the data source to connect to
-        /// </summary>
+        /// <summary>Gets the name or network address of the data source to connect to.</summary>
+        /// <returns>The name of the data source. The default value is an empty string.</returns>
+        /// <exception cref="T:System.InvalidOperationException">The underlying data provider is not known. </exception>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public override string DataSource
         {
@@ -363,9 +424,9 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     Gets a string that contains the version of the data store to which the client is connected
-        /// </summary>
+        /// <summary>Gets a string that contains the version of the data source to which the client is connected.</summary>
+        /// <returns>The version of the data source that is contained in the provider connection string.</returns>
+        /// <exception cref="T:System.InvalidOperationException">The connection is closed. </exception>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public override string ServerVersion
         {
@@ -414,16 +475,32 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the DbConnection for the underlying provider connection
+        ///     Provides access to the underlying data source connection that is used by the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     object.
         /// </summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Common.DbConnection" /> for the data source connection.
+        /// </returns>
         public virtual DbConnection StoreConnection
         {
             get { return _storeConnection; }
         }
 
         /// <summary>
-        ///     Gets the metadata workspace used by this connection
+        ///     Returns the <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> associated with this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> associated with this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     .
+        /// </returns>
+        /// <exception cref="T:System.Data.Entity.Core.MetadataException">The inline connection string contains an invalid Metadata keyword value.</exception>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [CLSCompliant(false)]
         public virtual MetadataWorkspace GetMetadataWorkspace()
@@ -475,9 +552,9 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     Establish a connection to the data store by calling the Open method on the underlying data provider
-        /// </summary>
+        /// <summary>Establishes a connection to the data source by calling the underlying data provider's Open method.</summary>
+        /// <exception cref="T:System.InvalidOperationException">An error occurs when you open the connection, or the name of the underlying data provider is not known.</exception>
+        /// <exception cref="T:System.Data.Entity.Core.MetadataException">The inline connection string contains an invalid Metadata keyword value.</exception>
         public override void Open()
         {
             _fakeConnectionState = null;
@@ -597,8 +674,18 @@ namespace System.Data.Entity.Core.EntityClient
 #endif
 
         /// <summary>
-        ///     Create a new command object that uses this connection object.
+        ///     Creates a new instance of an <see cref="T:System.Data.Entity.Core.EntityClient.EntityCommand" />, with the
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.EntityClient.EntityCommand.Connection" />
+        ///     set to this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.EntityClient.EntityCommand" /> object.
+        /// </returns>
+        /// <exception cref="T:System.InvalidOperationException">The name of the underlying data provider is not known.</exception>
         public new virtual EntityCommand CreateCommand()
         {
             return new EntityCommand(null, this);
@@ -612,9 +699,8 @@ namespace System.Data.Entity.Core.EntityClient
             return CreateCommand();
         }
 
-        /// <summary>
-        ///     Close the connection to the data store
-        /// </summary>
+        /// <summary>Closes the connection to the database.</summary>
+        /// <exception cref="T:System.InvalidOperationException">An error occurred when closing the connection.</exception>
         public override void Close()
         {
             _fakeConnectionState = null;
@@ -628,29 +714,70 @@ namespace System.Data.Entity.Core.EntityClient
             StoreCloseHelper(); // note: we will update our own state since we are subscribed to event on underlying store connection
         }
 
-        /// <summary>
-        ///     Changes the current database for this connection
-        /// </summary>
-        /// <param name="databaseName"> The name of the database to change to </param>
+        /// <summary>Not supported.</summary>
+        /// <param name="databaseName">Not supported. </param>
+        /// <exception cref="T:System.NotSupportedException">When the method is called. </exception>
         public override void ChangeDatabase(string databaseName)
         {
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        ///     Begins a database transaction
-        /// </summary>
-        /// <returns> An object representing the new transaction </returns>
+        /// <summary>Begins a transaction by using the underlying provider. </summary>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.EntityClient.EntityTransaction" />. The returned
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityTransaction" />
+        ///     instance can later be associated with the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityCommand" />
+        ///     to execute the command under that transaction.
+        /// </returns>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     The underlying provider is not known.-or-The call to
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.EntityClient.EntityConnection.BeginTransaction" />
+        ///     was made on an
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     that already has a current transaction.-or-The state of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     is not
+        ///     <see
+        ///         cref="F:System.Data.ConnectionState.Open" />
+        ///     .
+        /// </exception>
         public new virtual EntityTransaction BeginTransaction()
         {
             return base.BeginTransaction() as EntityTransaction;
         }
 
-        /// <summary>
-        ///     Begins a database transaction
-        /// </summary>
-        /// <param name="isolationLevel"> The isolation level of the transaction </param>
-        /// <returns> An object representing the new transaction </returns>
+        /// <summary>Begins a transaction with the specified isolation level by using the underlying provider. </summary>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.EntityClient.EntityTransaction" />. The returned
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityTransaction" />
+        ///     instance can later be associated with the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityCommand" />
+        ///     to execute the command under that transaction.
+        /// </returns>
+        /// <param name="isolationLevel">The isolation level of the transaction.</param>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     The underlying provider is not known.-or-The call to
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.EntityClient.EntityConnection.BeginTransaction" />
+        ///     was made on an
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     that already has a current transaction.-or-The state of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     is not
+        ///     <see
+        ///         cref="F:System.Data.ConnectionState.Open" />
+        ///     .
+        /// </exception>
         public new virtual EntityTransaction BeginTransaction(IsolationLevel isolationLevel)
         {
             return base.BeginTransaction(isolationLevel) as EntityTransaction;
@@ -777,9 +904,15 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Enlist in the given transaction
+        ///     Enlists this <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> in the specified transaction.
         /// </summary>
-        /// <param name="transaction"> The transaction object to enlist into </param>
+        /// <param name="transaction">The transaction object to enlist into.</param>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     The state of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> is not
+        ///     <see
+        ///         cref="F:System.Data.ConnectionState.Open" />
+        ///     .
+        /// </exception>
         public override void EnlistTransaction(Transaction transaction)
         {
             if (_storeConnection == null)

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity
 {
@@ -19,10 +19,10 @@ namespace System.Data.Entity
         private readonly string _functionName;
 
         /// <summary>
-        ///     Creates a new DbFunctionAttribute instance.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.DbFunctionAttribute" /> class.
         /// </summary>
-        /// <param name="namespaceName"> The namespace name of the EDM function represented by the attributed method. </param>
-        /// <param name="functionName"> The function name of the EDM function represented by the attributed method. </param>
+        /// <param name="namespaceName">The namespace of the mapped-to function.</param>
+        /// <param name="functionName">The name of the mapped-to function.</param>
         public DbFunctionAttribute(string namespaceName, string functionName)
         {
             Check.NotEmpty(namespaceName, "namespaceName");
@@ -32,17 +32,15 @@ namespace System.Data.Entity
             _functionName = functionName;
         }
 
-        /// <summary>
-        ///     The namespace name of the EDM function represented by the attributed method.
-        /// </summary>
+        /// <summary>The namespace of the mapped-to function.</summary>
+        /// <returns>The namespace of the mapped-to function.</returns>
         public string NamespaceName
         {
             get { return _namespaceName; }
         }
 
-        /// <summary>
-        ///     The function name of the EDM function represented by the attributed method.
-        /// </summary>
+        /// <summary>The name of the mapped-to function.</summary>
+        /// <returns>The name of the mapped-to function.</returns>
         public string FunctionName
         {
             get { return _functionName; }

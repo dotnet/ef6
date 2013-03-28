@@ -111,24 +111,39 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly object _value;
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />
+        ///     .
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.Facet; }
         }
 
         /// <summary>
-        ///     Gets the description object for describing the facet
+        ///     Gets the description of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.FacetDescription" /> object that represents the description of this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />
+        ///     .
+        /// </returns>
         public FacetDescription Description
         {
             get { return _facetDescription; }
         }
 
         /// <summary>
-        ///     Gets/Sets the name of the facet
+        ///     Gets the name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </summary>
+        /// <returns>
+        ///     The name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
+        /// </returns>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public virtual String Name
         {
@@ -136,8 +151,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets/Sets the type of the facet
+        ///     Gets the type of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type of this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />
+        ///     .
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.EdmType, false)]
         public EdmType FacetType
         {
@@ -145,8 +166,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets/Sets the value of the facet
+        ///     Gets the value of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </summary>
+        /// <returns>
+        ///     The value of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
+        /// </returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the Facet instance is in ReadOnly state</exception>
         [MetadataProperty(typeof(Object), false)]
         public virtual Object Value
@@ -162,18 +186,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _facetDescription.FacetName; }
         }
 
-        /// <summary>
-        ///     Indicates whether the value of the facet is unbounded
-        /// </summary>
+        /// <summary>Gets a value indicating whether the value of the facet is unbounded.</summary>
+        /// <returns>true if the value of the facet is unbounded; otherwise, false.</returns>
         public bool IsUnbounded
         {
             get { return ReferenceEquals(Value, EdmConstants.UnboundedValue); }
         }
 
         /// <summary>
-        ///     Overriding System.Object.ToString to provide better String representation
-        ///     for this type.
+        ///     Returns the name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </summary>
+        /// <returns>
+        ///     The name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
+        /// </returns>
         public override string ToString()
         {
             return Name;

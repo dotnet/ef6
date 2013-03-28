@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Spatial
 {
@@ -13,10 +13,10 @@ namespace System.Data.Entity.Spatial
     public abstract class DbSpatialDataReader
     {
         /// <summary>
-        ///     Reads an instance of <see cref="DbGeography" /> from the column at the specified column ordinal.
+        ///     When implemented in derived types, reads an instance of <see cref="T:System.Data.Entity.Spatial.DbGeography" /> from the column at the specified column ordinal.
         /// </summary>
-        /// <param name="ordinal"> The ordinal of the column that contains the geography value. </param>
-        /// <returns> The instance of DbGeography at the specified column value. </returns>
+        /// <returns>The instance of DbGeography at the specified column value</returns>
+        /// <param name="ordinal">The ordinal of the column that contains the geography value</param>
         public abstract DbGeography GetGeography(int ordinal);
 
 #if !NET40
@@ -59,10 +59,10 @@ namespace System.Data.Entity.Spatial
 #endif
 
         /// <summary>
-        ///     Reads an instance of <see cref="DbGeometry" /> from the column at the specified column ordinal.
+        ///     When implemented in derived types, reads an instance of <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> from the column at the specified column ordinal.
         /// </summary>
-        /// <param name="ordinal"> The ordinal of the data record column that contains the provider-specific geometry data. </param>
-        /// <returns> The instance of DbGeometry at the specified column value. </returns>
+        /// <returns>The instance of DbGeometry at the specified column value</returns>
+        /// <param name="ordinal">The ordinal of the data record column that contains the provider-specific geometry data</param>
         public abstract DbGeometry GetGeometry(int ordinal);
 
 #if !NET40

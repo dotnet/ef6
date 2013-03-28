@@ -32,16 +32,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly EntityTypeBase _elementType;
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" />
+        ///     .
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.RefType; }
         }
 
         /// <summary>
-        ///     The entity type that this ref type references
+        ///     Gets the entity type referenced by this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" />.
         /// </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityTypeBase" /> object that represents the entity type referenced by this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" />
+        ///     .
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.EntityTypeBase, false)]
         public virtual EntityTypeBase ElementType
         {

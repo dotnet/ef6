@@ -6,9 +6,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    ///     Represents the restriction of the number of elements in the Argument collection to the specified Limit value.
-    /// </summary>
+    /// <summary>Represents the restriction of the number of elements in the argument collection to the specified limit value.</summary>
     public sealed class DbLimitExpression : DbExpression
     {
         private readonly DbExpression _argument;
@@ -28,38 +26,57 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             _withTies = withTies;
         }
 
-        /// <summary>
-        ///     Gets the expression that specifies the input collection.
-        /// </summary>
+        /// <summary>Gets or sets an expression that specifies the input collection.</summary>
+        /// <returns>An expression that specifies the input collection.</returns>
+        /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
+        /// <exception cref="T:System.ArgumentException">
+        ///     The expression is not associated with the command tree of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" />
+        ///     , or its result type is not a collection type.
+        /// </exception>
         public DbExpression Argument
         {
             get { return _argument; }
         }
 
-        /// <summary>
-        ///     Gets the expression that specifies the limit on the number of elements returned from the input collection.
-        /// </summary>
+        /// <summary>Gets or sets an expression that specifies the limit on the number of elements returned from the input collection.</summary>
+        /// <returns>An expression that specifies the limit on the number of elements returned from the input collection.</returns>
+        /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
+        /// <exception cref="T:System.ArgumentException">
+        ///     The expression is not associated with the command tree of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" />
+        ///     , or is not one of
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" />
+        ///     or
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" />
+        ///     , or its result type is not equal or promotable to a 64-bit integer type.
+        /// </exception>
         public DbExpression Limit
         {
             get { return _limit; }
         }
 
         /// <summary>
-        ///     Gets whether the limit operation will include tied results, which could produce more results than specifed by the Limit value if ties are present.
+        ///     Gets whether the limit operation will include tied results. Including tied results might produce more results than specified by the
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression.Limit" />
+        ///     value.
         /// </summary>
+        /// <returns>true if the limit operation will include tied results; otherwise, false. The default is false.</returns>
         public bool WithTies
         {
             get { return _withTies; }
         }
 
-        /// <summary>
-        ///     The visitor pattern method for expression visitors that do not produce a result value.
-        /// </summary>
-        /// <param name="visitor"> An instance of DbExpressionVisitor. </param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="visitor" />
-        ///     is null
-        /// </exception>
+        /// <summary>Implements the visitor pattern for expressions that do not produce a result value.</summary>
+        /// <param name="visitor">
+        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// </param>
+        /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override void Accept(DbExpressionVisitor visitor)
         {
             Check.NotNull(visitor, "visitor");
@@ -67,20 +84,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             visitor.Visit(this);
         }
 
-        /// <summary>
-        ///     The visitor pattern method for expression visitors that produce a result value of a specific type.
-        /// </summary>
-        /// <param name="visitor"> An instance of a typed DbExpressionVisitor that produces a result value of type TResultType. </param>
-        /// <typeparam name="TResultType">
-        ///     The type of the result produced by <paramref name="visitor" />
-        /// </typeparam>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="visitor" />
-        ///     is null
-        /// </exception>
+        /// <summary>Implements the visitor pattern for expressions that produce a result value of a specific type.</summary>
         /// <returns>
-        ///     An instance of <typeparamref name="TResultType" /> .
+        ///     A result value of a specific type produced by
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
+        ///     .
         /// </returns>
+        /// <param name="visitor">
+        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
+        /// </param>
+        /// <typeparam name="TResultType">The type of the result produced by  visitor .</typeparam>
+        /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
         {
             Check.NotNull(visitor, "visitor");

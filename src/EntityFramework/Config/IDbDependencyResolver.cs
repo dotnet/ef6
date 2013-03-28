@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+ï»¿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Config
 {
@@ -17,39 +17,39 @@ namespace System.Data.Entity.Config
     ///     The public services currently resolved using IDbDependencyResolver are:
     ///     <see cref="IDatabaseInitializer{TContext}" />
     ///     Object returned: A database initializer for the given context type
-    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Lifetime of returned service: Singletonâ€”same object may be used multiple times by different threads
     ///     Key is not used; will be null
     ///     <see cref="MigrationSqlGenerator" />
     ///     Object returned: A SQL generator that can be used for Migrations and other actions that cause a database to be created
-    ///     Lifetime of returned service: Transient—a new object should be returned each time GetService is called
+    ///     Lifetime of returned service: Transientâ€”a new object should be returned each time GetService is called
     ///     Key is the ADO.NET provider invariant name string
     ///     <see cref="DbProviderServices" />
     ///     Object returned: An EF provider
-    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Lifetime of returned service: Singletonâ€”same object may be used multiple times by different threads
     ///     Key is the ADO.NET provider invariant name string
     ///     <see cref="IDbConnectionFactory" />
     ///     Object returned: The default connection factory that will be used when EF creates a database connection by convention
-    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Lifetime of returned service: Singletonâ€”same object may be used multiple times by different threads
     ///     Key is not used; will be null
     ///     <see cref="IManifestTokenService" />
     ///     Object returned: A service that can generated a provider manifest token from a connection
-    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Lifetime of returned service: Singletonâ€”same object may be used multiple times by different threads
     ///     Key is not used; will be null
     ///     <see cref="IDbProviderFactoryService" />
     ///     Object returned: A service that can obtain a provider factory from a given connection
-    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Lifetime of returned service: Singletonâ€”same object may be used multiple times by different threads
     ///     Key is not used; will be null
     ///     <see cref="IDbModelCacheKeyFactory" />
     ///     Object returned: A factory that will generate a model cache key for a given context
-    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Lifetime of returned service: Singletonâ€”same object may be used multiple times by different threads
     ///     Key is not used; will be null
     ///     <see cref="DbSpatialServices" />
     ///     Object returned: an EF spatial provider
-    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Lifetime of returned service: Singletonâ€”same object may be used multiple times by different threads
     ///     Key is not used; will be null
     ///     <see cref="Func{IExecutionStrategy}" />
     ///     Object returned: An execution strategy factory for store operations
-    ///     Lifetime of returned service: Singleton—same object may be used multiple times by different threads
+    ///     Lifetime of returned service: Singletonâ€”same object may be used multiple times by different threads
     ///     Key is <see cref="ExecutionStrategyKey" /> consisting of the ADO.NET provider invariant name string and the database server address.
     /// </remarks>
     public interface IDbDependencyResolver

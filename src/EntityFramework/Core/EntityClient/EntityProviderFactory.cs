@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.EntityClient
 {
@@ -33,75 +33,108 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Creates a EntityCommand object and returns it
+        ///     Returns a new instance of the provider's class that implements the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityCommand" />
+        ///     class.
         /// </summary>
-        /// <returns> A EntityCommand object </returns>
+        /// <returns>
+        ///     A new instance of <see cref="T:System.Data.Entity.Core.EntityClient.EntityCommand" />.
+        /// </returns>
         public override DbCommand CreateCommand()
         {
             return new EntityCommand();
         }
 
         /// <summary>
-        ///     Creates a EntityCommandBuilder object and returns it
+        ///     Throws a <see cref="T:System.NotSupportedException" />. This method is currently not supported.
         /// </summary>
-        /// <returns> A EntityCommandBuilder object </returns>
-        /// <exception cref="NotSupportedException"></exception>
+        /// <returns>This method is currently not supported.</returns>
         public override DbCommandBuilder CreateCommandBuilder()
         {
             throw new NotSupportedException();
         }
 
         /// <summary>
-        ///     Creates a EntityConnection object and returns it
+        ///     Returns a new instance of the provider's class that implements the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        ///     class.
         /// </summary>
-        /// <returns> A EntityConnection object </returns>
+        /// <returns>
+        ///     A new instance of <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />.
+        /// </returns>
         public override DbConnection CreateConnection()
         {
             return new EntityConnection();
         }
 
         /// <summary>
-        ///     Creates a EntityConnectionStringBuilder object and returns it
+        ///     Returns a new instance of the provider's class that implements the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        ///     class.
         /// </summary>
-        /// <returns> A EntityConnectionStringBuilder object </returns>
+        /// <returns>
+        ///     A new instance of <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />.
+        /// </returns>
         public override DbConnectionStringBuilder CreateConnectionStringBuilder()
         {
             return new EntityConnectionStringBuilder();
         }
 
         /// <summary>
-        ///     Creates a DbDataAdapter object and returns it, this method is currently not supported
+        ///     Throws a <see cref="T:System.NotSupportedException" />. This method is currently not supported.
         /// </summary>
-        /// <returns> A DbDataAdapter object </returns>
-        /// <exception cref="NotSupportedException"></exception>
+        /// <returns>This method is currently not supported.</returns>
+
         public override DbDataAdapter CreateDataAdapter()
         {
             throw new NotSupportedException();
         }
 
         /// <summary>
-        ///     Creates a EntityParameter object and returns it
+        ///     Returns a new instance of the provider's class that implements the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />
+        ///     class.
         /// </summary>
-        /// <returns> A EntityParameter object </returns>
+        /// <returns>
+        ///     A new instance of <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />.
+        /// </returns>
         public override DbParameter CreateParameter()
         {
             return new EntityParameter();
         }
 
         /// <summary>
-        ///     Creates a CodeAccessPermission object and returns it
+        ///     Throws a <see cref="T:System.NotSupportedException" />. This method is currently not supported.
         /// </summary>
-        /// <param name="state"> The permission state level for the code access </param>
-        /// <returns> A CodeAccessPermission object </returns>
+        /// <returns>This method is currently not supported.</returns>
+
         public override CodeAccessPermission CreatePermission(PermissionState state)
         {
             throw new NotSupportedException();
         }
 
         /// <summary>
-        ///     Extension mechanism for additional services;
+        ///     Returns the requested <see cref="T:System.IServiceProvider" /> class.
         /// </summary>
-        /// <returns> requested service provider or null. </returns>
+        /// <returns>
+        ///     A new instance of <see cref="T:System.IServiceProvider" />. The supported types are
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.DbProviderServices" />
+        ///     ,
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.DbCommandDefinitionBuilder" />
+        ///     , and
+        ///     <see
+        ///         cref="T:System.Data.IEntityAdapter" />
+        ///     . Returns null (or Nothing in Visual Basic) for every other type.
+        /// </returns>
+        /// <param name="serviceType">
+        ///     The <see cref="T:System.Type" /> to return.
+        /// </param>
         object IServiceProvider.GetService(Type serviceType)
         {
             object result = null;

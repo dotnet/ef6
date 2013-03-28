@@ -20,10 +20,13 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the parameter from the collection at the specified index
+        ///     Gets the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> at the specified index.
         /// </summary>
-        /// <param name="index"> The index of the parameter to retrieved </param>
-        /// <returns> The parameter at the index </returns>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> at the specified index.
+        /// </returns>
+        /// <param name="index">The zero-based index of the parameter to retrieve. </param>
+        /// <exception cref="T:System.IndexOutOfRangeException">The specified index does not exist. </exception>
         public new EntityParameter this[int index]
         {
             get { return (EntityParameter)GetParameter(index); }
@@ -31,10 +34,13 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the parameter with the given name from the collection
+        ///     Gets the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> with the specified name.
         /// </summary>
-        /// <param name="parameterName"> The name of the parameter to retrieved </param>
-        /// <returns> The parameter with the given name </returns>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> with the specified name.
+        /// </returns>
+        /// <param name="parameterName">The name of the parameter to retrieve. </param>
+        /// <exception cref="T:System.IndexOutOfRangeException">The specified name does not exist. </exception>
         public new EntityParameter this[string parameterName]
         {
             get { return (EntityParameter)GetParameter(parameterName); }
@@ -67,10 +73,27 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Add a EntityParameter to the collection
+        ///     Adds the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object to the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        ///     .
         /// </summary>
-        /// <param name="value"> The parameter to add to the collection </param>
-        /// <returns> The index of the new parameter within the collection </returns>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
+        /// </returns>
+        /// <param name="value">
+        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> to add to the collection.
+        /// </param>
+        /// <exception cref="T:System.ArgumentException">
+        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> specified in the  value  parameter is already added to this or another
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        ///     .
+        /// </exception>
+        /// <exception cref="T:System.InvalidCastException">
+        ///     The parameter passed was not a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />.
+        /// </exception>
+        /// <exception cref="T:System.ArgumentNullException">The  value  parameter is null. </exception>
         public EntityParameter Add(EntityParameter value)
         {
             Add((object)value);
@@ -78,11 +101,13 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Add a EntityParameter with the given name and value to the collection
+        ///     Adds a value to the end of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />.
         /// </summary>
-        /// <param name="parameterName"> The name of the parameter to add </param>
-        /// <param name="value"> The value of the parameter to add </param>
-        /// <returns> The index of the new parameter within the collection </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
+        /// </returns>
+        /// <param name="parameterName">The name of the parameter.</param>
+        /// <param name="value">The value to be added.</param>
         public EntityParameter AddWithValue(string parameterName, object value)
         {
             var param = new EntityParameter();
@@ -92,72 +117,129 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Adds a EntityParameter with the given name and type to the collection
+        ///     Adds a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> to the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        ///     given the parameter name and the data type.
         /// </summary>
-        /// <param name="parameterName"> The name of the parameter to add </param>
-        /// <param name="dbType"> The type of the parameter </param>
-        /// <returns> The index of the new parameter within the collection </returns>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
+        /// </returns>
+        /// <param name="parameterName">The name of the parameter. </param>
+        /// <param name="dbType">
+        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// </param>
         public EntityParameter Add(string parameterName, DbType dbType)
         {
             return Add(new EntityParameter(parameterName, dbType));
         }
 
         /// <summary>
-        ///     Add a EntityParameter with the given name, type, and size to the collection
+        ///     Adds a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> to the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        ///     with the parameter name, the data type, and the column length.
         /// </summary>
-        /// <param name="parameterName"> The name of the parameter to add </param>
-        /// <param name="dbType"> The type of the parameter </param>
-        /// <param name="size"> The size of the parameter </param>
-        /// <returns> The index of the new parameter within the collection </returns>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
+        /// </returns>
+        /// <param name="parameterName">The name of the parameter.</param>
+        /// <param name="dbType">
+        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// </param>
+        /// <param name="size">The column length.</param>
         public EntityParameter Add(string parameterName, DbType dbType, int size)
         {
             return Add(new EntityParameter(parameterName, dbType, size));
         }
 
         /// <summary>
-        ///     Adds a range of EntityParameter objects to this collection
+        ///     Adds an array of <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> values to the end of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        ///     .
         /// </summary>
-        /// <param name="values"> The arary of EntityParameter objects to add </param>
+        /// <param name="values">
+        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> values to add.
+        /// </param>
         public void AddRange(EntityParameter[] values)
         {
             AddRange((Array)values);
         }
 
         /// <summary>
-        ///     Check if the collection has a parameter with the given parameter name
+        ///     Determines whether the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> is in this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        ///     .
         /// </summary>
-        /// <param name="parameterName"> The parameter name to look for </param>
-        /// <returns> True if the collection has a parameter with the given name </returns>
+        /// <returns>
+        ///     true if the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" /> contains the value; otherwise false.
+        /// </returns>
+        /// <param name="parameterName">
+        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> value.
+        /// </param>
         public override bool Contains(string parameterName)
         {
             return IndexOf(parameterName) != -1;
         }
 
         /// <summary>
-        ///     Copies the given array of parameters into this collection
+        ///     Copies all the elements of the current <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" /> to the specified
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        ///     starting at the specified destination index.
         /// </summary>
-        /// <param name="array"> The array to copy into </param>
-        /// <param name="index"> The index in the array where the copy starts </param>
+        /// <param name="array">
+        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" /> that is the destination of the elements copied from the current
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        ///     .
+        /// </param>
+        /// <param name="index">
+        ///     A 32-bit integer that represents the index in the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        ///     at which copying starts.
+        /// </param>
         public void CopyTo(EntityParameter[] array, int index)
         {
             CopyTo((Array)array, index);
         }
 
         /// <summary>
-        ///     Finds the index in the collection of the given parameter object
+        ///     Gets the location of the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> in the collection.
         /// </summary>
-        /// <param name="value"> The parameter to search for </param>
-        /// <returns> The index of the parameter, -1 if not found </returns>
+        /// <returns>
+        ///     The zero-based location of the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> that is a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />
+        ///     in the collection. Returns -1 when the object does not exist in the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        ///     .
+        /// </returns>
+        /// <param name="value">
+        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> to find.
+        /// </param>
         public int IndexOf(EntityParameter value)
         {
             return IndexOf((object)value);
         }
 
         /// <summary>
-        ///     Add a EntityParameter with the given value to the collection at a location indicated by the index
+        ///     Inserts a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object into the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        ///     at the specified index.
         /// </summary>
-        /// <param name="index"> The index at which the parameter is to be inserted </param>
-        /// <param name="value"> The value of the parameter </param>
+        /// <param name="index">The zero-based index at which value should be inserted.</param>
+        /// <param name="value">
+        ///     A <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object to be inserted in the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        ///     .
+        /// </param>
         public void Insert(int index, EntityParameter value)
         {
             Insert(index, (object)value);
@@ -172,9 +254,15 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Remove a EntityParameter with the given value from the collection
+        ///     Removes the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> from the collection.
         /// </summary>
-        /// <param name="value"> The parameter to remove </param>
+        /// <param name="value">
+        ///     A <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object to remove from the collection.
+        /// </param>
+        /// <exception cref="T:System.InvalidCastException">
+        ///     The parameter is not a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />.
+        /// </exception>
+        /// <exception cref="T:System.SystemException">The parameter does not exist in the collection. </exception>
         public void Remove(EntityParameter value)
         {
             Remove((object)value);

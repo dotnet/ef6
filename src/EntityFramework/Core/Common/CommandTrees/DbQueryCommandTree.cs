@@ -9,9 +9,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Utilities;
     using System.Linq;
 
-    /// <summary>
-    ///     Represents a query operation expressed as a canonical command tree.
-    /// </summary>
+    /// <summary>Represents a query operation expressed as a command tree. This class cannot be inherited.  </summary>
     public sealed class DbQueryCommandTree : DbCommandTree
     {
         // Query expression
@@ -80,8 +78,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets a <see cref="DbExpression" /> that defines the logic of the query.
+        ///     Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the logic of the query operation.
         /// </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the logic of the query operation.
+        /// </returns>
+        /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression is associated with a different command tree.</exception>
         public DbExpression Query
         {
             get { return _query; }

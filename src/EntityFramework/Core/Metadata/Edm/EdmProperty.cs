@@ -148,15 +148,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private Action<object, object> _memberSetter;
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" />
+        ///     .
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.EdmProperty; }
         }
 
         /// <summary>
-        ///     Returns true if this property is nullable.
+        ///     Gets a value indicating whether this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" /> can have a null value.
         /// </summary>
         /// <remarks>
         ///     Nullability in the conceptual model and store model is a simple indication of whether or not
@@ -175,6 +181,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     There is no good reason to set a non-nullable CLR type as nullable in the object model and this
         ///     should not be done even though the attribute allows it.
         /// </remarks>
+        /// <returns>
+        ///     true if this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" /> can have a null value; otherwise, false.
+        /// </returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when the EdmProperty instance is in ReadOnly state</exception>
         public bool Nullable
         {
@@ -197,8 +206,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the default value for this property
+        ///     Gets the default value for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" />.
         /// </summary>
+        /// <returns>
+        ///     The default value for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" />.
+        /// </returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when the EdmProperty instance is in ReadOnly state</exception>
         public Object DefaultValue
         {

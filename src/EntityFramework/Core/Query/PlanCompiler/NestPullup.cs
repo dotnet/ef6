@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+ï»¿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 using md = System.Data.Entity.Core.Metadata.Edm;
 
@@ -431,7 +431,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         //
                         //      Project(Collect(PhysicalProject(...)))
                         //
-                        // isn’t good enough, because that will get converted to a MultiStreamNest, with
+                        // isnâ€™t good enough, because that will get converted to a MultiStreamNest, with
                         // the SingleStreamNest as the input to the MultiStreamNest.
                         throw new InvalidOperationException(
                             Strings.ADP_InternalProviderError((int)EntityUtil.InternalErrorCode.JoinOverSingleStreamNest));
@@ -619,8 +619,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     DistinctOp
         /// </summary>
         /// <remarks>
-        ///     The input to a DistinctOp cannot be a NestOp – that would imply that
-        ///     we support distinctness over collections - which we don’t.
+        ///     The input to a DistinctOp cannot be a NestOp â€“ that would imply that
+        ///     we support distinctness over collections - which we donâ€™t.
         /// </remarks>
         /// <param name="op"> </param>
         /// <param name="n"> </param>
@@ -774,7 +774,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     ProjectOp(MsnOp(X,Y,...)) => MsnOp'(ProjectOp'(X),Y,...)
         ///     Where:
         ///     ProjectOp' is ProjectOp plus any additional Vars needed by NestOp
-        ///     (see NestOp.Outputs – except the collection vars)
+        ///     (see NestOp.Outputs â€“ except the collection vars)
         ///     MsnOp'     should be MsnOp. Additionally, its Outputs should be enhanced
         ///     to include any Vars produced by the ProjectOp
         ///     (3) The combination of both (1) and (2) -- both the vars define a collection,
@@ -1070,7 +1070,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     // rest of the in the VarDefList; we can't just pitch them, but we also 
                     // really want to have the input be a nestop.
                     //
-                    // What we do is essentially push any non-collection VarDef’s down under 
+                    // What we do is essentially push any non-collection VarDefâ€™s down under 
                     // the driving node of the MSN:
                     //
                     //      Project[Z,Y,W](Msn(X,Y),VarDef(Z=blah),VarDef(W=Collect(etc)) ==> MSN(MSN(Project[Z](X,VarDef(Z=blah)),Y),W)
@@ -1508,11 +1508,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     SetOp common processing
         /// </summary>
         /// <remarks>
-        ///     The input to an IntersectOp or an ExceptOp cannot be a NestOp – that
+        ///     The input to an IntersectOp or an ExceptOp cannot be a NestOp â€“ that
         ///     would imply that we support distinctness over collections  - which
-        ///     we don’t.
+        ///     we donâ€™t.
         ///     UnionAllOp is somewhat trickier. We would need a way to percolate keys
-        ///     up the UnionAllOp – and I’m ok with not supporting this case for now.
+        ///     up the UnionAllOp â€“ and Iâ€™m ok with not supporting this case for now.
         /// </remarks>
         /// <param name="op"> </param>
         /// <param name="n"> </param>
@@ -1548,7 +1548,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <remarks>
         ///     If the input to a SortOp is a NestOp, then none of the sort
-        ///     keys can be collection Vars of the NestOp – we don't support
+        ///     keys can be collection Vars of the NestOp â€“ we don't support
         ///     sorts over collections.
         /// </remarks>
         /// <param name="op"> </param>
@@ -1714,7 +1714,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     UnnestOp. We then use this map as we walk up the tree, and replace any references
         ///     to the Unnest Vars by the new Vars.
         ///     To simplify this process, as part of the ITreeGenerator, whenever we generate
-        ///     an UnnestOp, we will generate a ProjectOp above it – which simply selects out
+        ///     an UnnestOp, we will generate a ProjectOp above it â€“ which simply selects out
         ///     all Vars from the UnnestOp; and has no local definitions. This allows us to
         ///     restrict the Var->Var replacement to just ProjectOp.
         /// </remarks>

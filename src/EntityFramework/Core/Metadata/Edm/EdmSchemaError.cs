@@ -99,9 +99,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        ///     Creates a string representation of the error.
-        /// </summary>
+        /// <summary>Returns the error message.</summary>
+        /// <returns>The error message.</returns>
         public override string ToString()
         {
             string text;
@@ -145,59 +144,56 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return text;
         }
 
-        /// <summary>
-        ///     Gets the ErrorCode.
-        /// </summary>
+        /// <summary>Gets the error code.</summary>
+        /// <returns>The error code.</returns>
         public int ErrorCode
         {
             get { return _errorCode; }
         }
 
-        /// <summary>
-        ///     Gets the Severity of the error.
-        /// </summary>
+        /// <summary>Gets the severity level of the error.</summary>
+        /// <returns>
+        ///     One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmSchemaErrorSeverity" /> values. The default is
+        ///     <see
+        ///         cref="F:System.Data.Entity.Core.Metadata.Edm.EdmSchemaErrorSeverity.Warning" />
+        ///     .
+        /// </returns>
         public EdmSchemaErrorSeverity Severity
         {
             get { return _severity; }
             set { _severity = value; }
         }
 
-        /// <summary>
-        ///     Gets the LineNumber that the error occured on.
-        /// </summary>
+        /// <summary>Gets the line number where the error occurred.</summary>
+        /// <returns>The line number where the error occurred.</returns>
         public int Line
         {
             get { return _line; }
         }
 
-        /// <summary>
-        ///     Gets the column that the error occured in.
-        /// </summary>
+        /// <summary>Gets the column where the error occurred.</summary>
+        /// <returns>The column where the error occurred.</returns>
         public int Column
         {
             get { return _column; }
         }
 
-        /// <summary>
-        ///     Gets the of the schema that contains the error.
-        /// </summary>
+        /// <summary>Gets the location of the schema that contains the error. This string also includes the name of the schema at the end.</summary>
+        /// <returns>The location of the schema that contains the error.</returns>
         public string SchemaLocation
         {
             get { return _schemaLocation; }
         }
 
-        /// <summary>
-        ///     Gets the of the schema that contains the error.
-        /// </summary>
+        /// <summary>Gets the name of the schema that contains the error.</summary>
+        /// <returns>The name of the schema that contains the error.</returns>
         public string SchemaName
         {
             get { return GetNameFromSchemaLocation(SchemaLocation); }
         }
 
-        /// <summary>
-        ///     Gets the stack trace of when the error occured.
-        /// </summary>
-        /// <value> </value>
+        /// <summary>Gets a string representation of the stack trace at the time the error occurred.</summary>
+        /// <returns>A string representation of the stack trace at the time the error occurred.</returns>
         public string StackTrace
         {
             get { return _stackTrace; }

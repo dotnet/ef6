@@ -35,9 +35,14 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Protected constructor; the command is assumed to be a prototype
-        ///     that will be cloned on CreateCommand, and the cloned command will be executed.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.DbCommandDefinition" /> class using the supplied
+        ///     <see
+        ///         cref="T:System.Data.Common.DbCommand" />
+        ///     .
         /// </summary>
+        /// <param name="prototype">
+        ///     The supplied <see cref="T:System.Data.Common.DbCommand" />.
+        /// </param>
         protected DbCommandDefinition(DbCommand prototype)
         {
             Check.NotNull(prototype, "prototype");
@@ -49,16 +54,16 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Constructor overload for subclasses to use
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.DbCommandDefinition" /> class.
         /// </summary>
         protected DbCommandDefinition()
         {
         }
 
         /// <summary>
-        ///     Create a DbCommand object from the definition, that can be executed.
+        ///     Creates and returns a <see cref="T:System.Data.Common.DbCommand" /> object that can be executed.
         /// </summary>
-        /// <returns> </returns>
+        /// <returns>The command for database.</returns>
         public virtual DbCommand CreateCommand()
         {
             return (DbCommand)_prototype.Clone();

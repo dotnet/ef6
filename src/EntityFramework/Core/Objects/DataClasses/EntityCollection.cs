@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ------------
 
         /// <summary>
-        ///     Creates an empty EntityCollection.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" /> class.
         /// </summary>
         public EntityCollection()
         {
@@ -98,9 +98,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ICollection Properties
         // ----------------------
 
-        /// <summary>
-        ///     Count of entities in the collection.
-        /// </summary>
+        /// <summary>Gets the number of objects that are contained in the collection.</summary>
+        /// <returns>
+        ///     The number of elements that are contained in the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
+        ///     .
+        /// </returns>
         public int Count
         {
             get
@@ -120,8 +124,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Whether or not the collection is read-only.
+        ///     Gets a value that indicates whether the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
+        ///     is read-only.
         /// </summary>
+        /// <returns>Always returns false.</returns>
         public bool IsReadOnly
         {
             get { return false; }
@@ -165,9 +173,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // IListSource  method
         // ----------------------
         /// <summary>
-        ///     IListSource.GetList implementation
+        ///     Returns the collection as an <see cref="T:System.Collections.IList" /> used for data binding.
         /// </summary>
-        /// <returns> IList interface over the data to bind </returns>
+        /// <returns>
+        ///     An <see cref="T:System.Collections.IList" /> of entity objects.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
         {
@@ -200,7 +210,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return ObjectViewFactory.CreateViewForEntityCollection(rootEntityType, this);
         }
 
-        /// <inheritdoc />
+        /// <summary>Loads related objects into the collection, using the specified merge option.</summary>
+        /// <param name="mergeOption">
+        ///     Specifies how the objects in this collection should be merged with the objects that might have been returned from previous queries against the same
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        ///     .
+        /// </param>
         public override void Load(MergeOption mergeOption)
         {
             CheckOwnerNull();
@@ -228,23 +244,22 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
 #endif
 
-        /// <summary>
+        /// <summary>Defines relationships between an object and a collection of related objects in an object context.</summary>
+        /// <remarks>
         ///     Loads related entities into the local collection. If the collection is already filled
         ///     or partially filled, merges existing entities with the given entities. The given
         ///     entities are not assumed to be the complete set of related entities.
         ///     Owner and all entities passed in must be in Unchanged or Modified state. We allow
         ///     deleted elements only when the state manager is already tracking the relationship
         ///     instance.
-        /// </summary>
-        /// <param name="entities"> Result of query returning related entities </param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when
-        ///     <paramref name="entities" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        ///     Thrown when an entity in the given
-        ///     collection cannot be related via the current relationship end.
+        /// </remarks>
+        /// <param name="entities">Collection of objects in the object context that are related to the source object.</param>
+        /// <exception cref="T:System.ArgumentNullException"> entities  collection is null.</exception>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     The source object or an object in the  entities  collection is null or is not in an
+        ///     <see
+        ///         cref="F:System.Data.Entity.EntityState.Unchanged" />
+        ///     or <see cref="F:System.Data.Entity.EntityState.Modified" /> state.-or-The relationship cannot be defined based on the EDM metadata. This can occur when the association in the conceptual schema does not support a relationship between the two types.
         /// </exception>
         public void Attach(IEnumerable<TEntity> entities)
         {
@@ -258,21 +273,15 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             Attach(wrappedEntities, true);
         }
 
-        /// <summary>
-        ///     Attaches an entity to the EntityCollection. If the EntityCollection is already filled
-        ///     or partially filled, this merges the existing entities with the given entity. The given
-        ///     entity is not assumed to be the complete set of related entities.
-        ///     Owner and all entities passed in must be in Unchanged or Modified state.
-        ///     Deleted elements are allowed only when the state manager is already tracking the relationship
-        ///     instance.
-        /// </summary>
-        /// <param name="entity"> The entity to attach to the EntityCollection </param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when
-        ///     <paramref name="entity" />
-        ///     is null.
+        /// <summary>Defines a relationship between two attached objects in an object context.</summary>
+        /// <param name="entity">The object being attached.</param>
+        /// <exception cref="T:System.ArgumentNullException">When the  entity  is null.</exception>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     When the  entity  cannot be related to the source object. This can occur when the association in the conceptual schema does not support a relationship between the two types.-or-When either object is null or is not in an
+        ///     <see
+        ///         cref="F:System.Data.Entity.EntityState.Unchanged" />
+        ///     or <see cref="F:System.Data.Entity.EntityState.Modified" /> state.
         /// </exception>
-        /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
         public void Attach(TEntity entity)
         {
             Check.NotNull(entity, "entity");
@@ -366,6 +375,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
 #endif
 
+        /// <summary>Adds an object to the collection.</summary>
+        /// <param name="entity">
+        ///     An object to add to the collection.  entity  must implement
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.IEntityWithRelationships" />
+        ///     .
+        /// </param>
+        /// <exception cref="T:System.ArgumentNullException"> entity  is null.</exception>
         public void Add(TEntity item)
         {
             Check.NotNull(item, "item");
@@ -417,13 +434,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return result;
         }
 
-        /// <summary>
-        ///     Removes an entity from the EntityCollection.  If the owner is
-        ///     attached to a context, Remove marks the relationship for deletion and if
-        ///     the relationship is composition also marks the entity for deletion.
-        /// </summary>
-        /// <param name="entity"> Entity instance to remove from the EntityCollection </param>
-        /// <returns> Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd. </returns>
+        /// <summary>Removes an object from the collection and marks the relationship for deletion.</summary>
+        /// <returns>true if item was successfully removed; otherwise, false. </returns>
+        /// <param name="entity">The object to remove from the collection.</param>
+        /// <exception cref="T:System.ArgumentNullException"> entity  object is null.</exception>
+        /// <exception cref="T:System.InvalidOperationException">The  entity  object is not attached to the same object context.-or-The  entity  object does not have a valid relationship manager.</exception>
         public bool Remove(TEntity item)
         {
             Check.NotNull(item, "item");
@@ -672,15 +687,31 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ICollection Methods
         // -------------------
 
-        /// <summary>
-        ///     Get an enumerator for the collection.
-        /// </summary>
+        /// <summary>Returns an enumerator that is used to iterate through the objects in the collection.</summary>
+        /// <returns>
+        ///     An <see cref="T:System.Collections.IEnumerator" /> that iterates through the set of values cached by
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
+        ///     .
+        /// </returns>
         public new IEnumerator<TEntity> GetEnumerator()
         {
             DeferredLoad();
             return WrappedRelatedEntities.Keys.GetEnumerator();
         }
 
+        /// <summary>
+        ///     Returns an enumerator that is used to iterate through the set of values cached by
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
+        ///     .
+        /// </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Collections.IEnumerator" /> that iterates through the set of values cached by
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
+        ///     .
+        /// </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             DeferredLoad();
@@ -697,10 +728,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return WrappedRelatedEntities.Values;
         }
 
-        /// <summary>
-        ///     Removes all entities from the locally cached collection.  Also removes
-        ///     relationships related to this entities from the ObjectStateManager.
-        /// </summary>
+        /// <summary>Removes all entities from the collection. </summary>
         public void Clear()
         {
             DeferredLoad();
@@ -756,23 +784,22 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        ///     Determine if the collection contains a specific object by reference.
-        /// </summary>
-        /// <return>
-        ///     true if the collection contains the object by reference;
-        ///     otherwise, false
-        /// </return>
+        /// <summary>Determines whether a specific object exists in the collection.</summary>
+        /// <returns>
+        ///     true if the object is found in the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />; otherwise, false.
+        /// </returns>
+        /// <param name="entity">
+        ///     The object to locate in the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />.
+        /// </param>
         public bool Contains(TEntity item)
         {
             DeferredLoad();
             return _wrappedRelatedEntities == null ? false : _wrappedRelatedEntities.ContainsKey(item);
         }
 
-        /// <summary>
-        ///     Copies the contents of the collection to an array,
-        ///     starting at a particular array index.
-        /// </summary>
+        /// <summary>Copies all the contents of the collection to an array, starting at the specified index of the target array.</summary>
+        /// <param name="array">The array to copy to.</param>
+        /// <param name="arrayIndex">The zero-based index in the array at which copying begins.</param>
         public void CopyTo(TEntity[] array, int arrayIndex)
         {
             DeferredLoad();
@@ -843,6 +870,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // raw entities that will be serialized.
         // Note that this is only expected to work for non-POCO entities, since serialization of POCO
         // entities will not result in serialization of the RelationshipManager or its related objects.
+        /// <summary>Used internally to serialize entity objects.</summary>
+        /// <param name="context">The streaming context.</param>
         [SuppressMessage("Microsoft.Usage", "CA2238:ImplementSerializationMethodsCorrectly")]
         [OnSerializing]
         [Browsable(false)]
@@ -861,6 +890,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // entities from it.  This is because the dictionary is not serialized.
         // Note that this is only expected to work for non-POCO entities, since serialization of POCO
         // entities will not result in serialization of the RelationshipManager or its related objects.
+        /// <summary>Used internally to deserialize entity objects.</summary>
+        /// <param name="context">The streaming context.</param>
         [OnDeserialized]
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -882,6 +913,17 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         // Identical code is in EntityReference, but this can't be moved to the base class because it relies on the
         // knowledge of the generic type, and the base class isn't generic
+        /// <summary>Returns an object query that, when it is executed, returns the same set of objects that exists in the current collection. </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> that represents the entity collection.
+        /// </returns>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     When the object is in an <see cref="F:System.Data.Entity.EntityState.Added" /> state 
+        ///     or when the object is in a
+        ///     <see cref="F:System.Data.Entity.EntityState.Detached" /> state with a
+        ///     <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> other than
+        ///     <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
+        /// </exception>
         public ObjectQuery<TEntity> CreateSourceQuery()
         {
             CheckOwnerNull();

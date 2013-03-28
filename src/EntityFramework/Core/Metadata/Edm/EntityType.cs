@@ -91,8 +91,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
+        ///     .
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.EntityType; }
@@ -118,8 +124,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the list of Navigation Properties for this entity type
+        ///     Gets the navigation properties of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />.
         /// </summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of navigation properties on this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
+        ///     .
+        /// </returns>
         public ReadOnlyMetadataCollection<NavigationProperty> NavigationProperties
         {
             get
@@ -140,9 +152,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns just the properties from the collection
-        ///     of members on this type
+        ///     Gets the list of properties for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />.
         /// </summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of properties for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
+        ///     .
+        /// </returns>
         public virtual ReadOnlyMetadataCollection<EdmProperty> Properties
         {
             get
@@ -165,9 +182,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the Reference type pointing to this entity type
+        ///     Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" /> object that references this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
+        ///     .
         /// </summary>
-        /// <returns> </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" /> object that references this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
+        ///     .
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public RefType GetReferenceType()
         {

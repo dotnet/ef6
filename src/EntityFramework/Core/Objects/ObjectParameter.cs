@@ -48,19 +48,12 @@ namespace System.Data.Entity.Core.Objects
         #region ObjectParameter (string, Type)
 
         /// <summary>
-        ///     This constructor creates an unbound (i.e., value-less) parameter from the
-        ///     specified name and type. The value can be set at any time through the
-        ///     public 'Value' property.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> class with the specified name and type.
         /// </summary>
-        /// <param name="name"> The parameter name. </param>
-        /// <param name="type"> The CLR type of the parameter. </param>
-        /// <returns> A new unbound ObjectParameter instance. </returns>
-        /// <exception cref="ArgumentNullException">If the value of either argument is null.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     If the value of the name argument is invalid. Parameter names must start
-        ///     with a letter and may only contain letters (A-Z, a-z), numbers (0-9) and
-        ///     underscores (_).
-        /// </exception>
+        /// <param name="name">The parameter name. This name should not include the "@" parameter marker that is used in the Entity SQL statements, only the actual name. The first character of the expression must be a letter. Any successive characters in the expression must be either letters, numbers, or an underscore (_) character.</param>
+        /// <param name="type">The common language runtime (CLR) type of the parameter.</param>
+        /// <exception cref="T:System.ArgumentNullException">If the value of either argument is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">If the value of the name argument is invalid. Parameter names must start with a letter and can only contain letters, numbers, and underscores.</exception>
         public ObjectParameter(string name, Type type)
         {
             Check.NotNull(name, "name");
@@ -84,19 +77,12 @@ namespace System.Data.Entity.Core.Objects
         #region ObjectParameter (string, object)
 
         /// <summary>
-        ///     This constructor creates a fully-bound (i.e., valued) parameter from the
-        ///     specified name and value. The type is inferred from the initial value, but
-        ///     the value can be changed at any time through the public 'Value' property.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> class with the specified name and value.
         /// </summary>
-        /// <param name="name"> The parameter name. </param>
-        /// <param name="value"> The initial value (and inherently, type) of the parameter. </param>
-        /// <returns> A new fully-bound ObjectParameter instance. </returns>
-        /// <exception cref="ArgumentNullException">If the value of either argument is null.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     If the value of the name argument is invalid. Parameter names must start
-        ///     with a letter and may only contain letters (A-Z, a-z), numbers (0-9) and
-        ///     underscores (_).
-        /// </exception>
+        /// <param name="name">The parameter name. This name should not include the "@" parameter marker that is used in Entity SQL statements, only the actual name. The first character of the expression must be a letter. Any successive characters in the expression must be either letters, numbers, or an underscore (_) character.</param>
+        /// <param name="value">The initial value (and inherently, the type) of the parameter.</param>
+        /// <exception cref="T:System.ArgumentNullException">If the value of either argument is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">If the value of the name argument is not valid. Parameter names must start with a letter and can only contain letters, numbers, and underscores.</exception>
         public ObjectParameter(string name, object value)
         {
             Check.NotNull(name, "name");
@@ -189,29 +175,24 @@ namespace System.Data.Entity.Core.Objects
         // Public Properties
         // -----------------
 
-        /// <summary>
-        ///     The parameter name, which can only be set through a constructor.
-        /// </summary>
+        /// <summary>Gets the parameter name, which can only be set through a constructor.</summary>
+        /// <returns>The parameter name, which can only be set through a constructor.</returns>
         public string Name
         {
             get { return _name; }
         }
 
-        /// <summary>
-        ///     The parameter type, which can only be set through a constructor.
-        /// </summary>
+        /// <summary>Gets the parameter type.</summary>
+        /// <returns>
+        ///     The <see cref="T:System.Type" /> of the parameter.
+        /// </returns>
         public Type ParameterType
         {
             get { return _type; }
         }
 
-        /// <summary>
-        ///     The parameter value, which can be set at any time (and subsequently
-        ///     changed) before query execution. Note that type-checking is not
-        ///     enforced between the declared parameter type and the type of the
-        ///     specified value; such validation is left up to the underlying
-        ///     provider(s) at execution time.
-        /// </summary>
+        /// <summary>Gets or sets the parameter value.</summary>
+        /// <returns>The parameter value.</returns>
         public object Value
         {
             get { return _value; }

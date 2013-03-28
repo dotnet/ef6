@@ -45,16 +45,31 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly TypeUsage _typeUsage;
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.CollectionType" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.CollectionType" />
+        ///     .
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.CollectionType; }
         }
 
         /// <summary>
-        ///     The type of the element that this collection type contains
+        ///     Gets the instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> class that contains the type of the element that this current
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.CollectionType" />
+        ///     object includes and facets for that type.
         /// </summary>
+        /// <returns>
+        ///     The instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> class that contains the type of the element that this current
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.CollectionType" />
+        ///     object includes and facets for that type.
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
         public virtual TypeUsage TypeUsage
         {

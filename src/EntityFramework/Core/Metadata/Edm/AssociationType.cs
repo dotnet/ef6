@@ -42,16 +42,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private bool _isForeignKey;
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationType" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationType" />
+        ///     .
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.AssociationType; }
         }
 
         /// <summary>
-        ///     Returns the list of ends for this association type
+        ///     Gets the list of ends for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationType" />.
         /// </summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of ends for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationType" />
+        ///     .
+        /// </returns>
         public ReadOnlyMetadataCollection<AssociationEndMember> AssociationEndMembers
         {
             get
@@ -132,17 +144,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the list of constraints for this association type
+        ///     Gets the list of constraints for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationType" />.
         /// </summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of constraints for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationType" />
+        ///     .
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.ReferentialConstraint, true)]
         public ReadOnlyMetadataCollection<ReferentialConstraint> ReferentialConstraints
         {
             get { return _referentialConstraints; }
         }
 
-        /// <summary>
-        ///     Indicates whether this is a foreign key relationship.
-        /// </summary>
+        /// <summary>Gets the Boolean property value that specifies whether the column is a foreign key.</summary>
+        /// <returns>A Boolean value that specifies whether the column is a foreign key. If true, the column is a foreign key. If false (default), the column is not a foreign key.</returns>
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
         public bool IsForeignKey
         {

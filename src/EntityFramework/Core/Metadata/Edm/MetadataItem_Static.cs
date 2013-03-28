@@ -562,16 +562,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the list of EDM builtin types
+        ///     Returns a conceptual model built-in type that matches one of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" />
+        ///     values.
         /// </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the built-in type in the EDM.
+        /// </returns>
+        /// <param name="builtInTypeKind">
+        ///     One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> values.
+        /// </param>
         public static EdmType GetBuiltInType(BuiltInTypeKind builtInTypeKind)
         {
             return _builtInTypes[(int)builtInTypeKind];
         }
 
-        /// <summary>
-        ///     Returns the list of facet descriptions for a given type
-        /// </summary>
+        /// <summary>Returns the list of the general facet descriptions for a specified type.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> object that represents the list of the general facet descriptions for a specified type.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public static ReadOnlyCollection<FacetDescription> GetGeneralFacetDescriptions()
         {

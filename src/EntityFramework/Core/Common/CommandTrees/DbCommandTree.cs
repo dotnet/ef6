@@ -11,9 +11,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.IO;
     using System.Text.RegularExpressions;
 
-    /// <summary>
-    ///     DbCommandTree is the abstract base type for the Delete, Query, Insert and Update DbCommandTree types.
-    /// </summary>
+    /// <summary>An immutable class that implements the basic functionality for the Query, Insert, Update, Delete, and function invocation command tree types. </summary>
     public abstract class DbCommandTree
     {
         // Metadata collection
@@ -45,8 +43,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the name and corresponding type of each parameter that can be referenced within this command tree.
+        ///     Gets the name and corresponding type of each parameter that can be referenced within this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCommandTree" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     The name and corresponding type of each parameter that can be referenced within this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCommandTree" />
+        ///     .
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public IEnumerable<KeyValuePair<string, TypeUsage>> Parameters
         {

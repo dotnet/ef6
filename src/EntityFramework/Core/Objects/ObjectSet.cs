@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects
 {
@@ -36,8 +36,11 @@ namespace System.Data.Entity.Core.Objects
         #region Public Properties
 
         /// <summary>
-        ///     Provides metadata for the EntitySet that is represented by the ObjectSet
+        ///     Gets the metadata of the entity set represented by this <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" /> instance.
         /// </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> object.
+        /// </returns>
         public EntitySet EntitySet
         {
             get { return _entitySet; }
@@ -47,34 +50,29 @@ namespace System.Data.Entity.Core.Objects
 
         #region Public Methods
 
-        /// <summary>
-        ///     Adds an object to the ObjectContext using the EntitySet referenced by this ObjectSet.
-        ///     See ObjectContext.AddObject for more details.
-        /// </summary>
-        /// <param name="entity"> Entity to be added </param>
+        /// <summary>Adds an object to the object context in the current entity set. </summary>
+        /// <param name="entity">The object to add.</param>
         public void AddObject(TEntity entity)
         {
             // this method is expected to behave exactly like ObjectContext.AddObject -- see devnote at the top of this class
             Context.AddObject(FullyQualifiedEntitySetName, entity);
         }
 
-        /// <summary>
-        ///     Attaches an object to the ObjectContext using the EntitySet referenced by this ObjectSet.
-        ///     See ObjectContext.AttachTo for more details.
-        /// </summary>
-        /// <param name="entity"> Entity to be attached </param>
+        /// <summary>Attaches an object or object graph to the object context in the current entity set. </summary>
+        /// <param name="entity">The object to attach.</param>
         public void Attach(TEntity entity)
         {
             // this method is expected to behave exactly like ObjectContext.AttachTo -- see devnote at the top of this class
             Context.AttachTo(FullyQualifiedEntitySetName, entity);
         }
 
-        /// <summary>
-        ///     Deletes an object from the ObjectContext. Validates that the object is in the referenced EntitySet in the context.
-        ///     See ObjectContext.DeleteObject for more details.
-        /// </summary>
-        /// <param name="entity"> Entity to be deleted. </param>
-        /// <exception cref="InvalidOperationException">Throws if the specified object is not in the EntitySet.</exception>
+        /// <summary>Marks an object for deletion. </summary>
+        /// <param name="entity">
+        ///     An object that represents the entity to delete. The object can be in any state except
+        ///     <see
+        ///         cref="F:System.Data.Entity.EntityState.Detached" />
+        ///     .
+        /// </param>
         public void DeleteObject(TEntity entity)
         {
             // this method is expected to behave exactly like ObjectContext.DeleteObject -- see devnote at the top of this class
@@ -83,12 +81,13 @@ namespace System.Data.Entity.Core.Objects
             Context.DeleteObject(entity, EntitySet);
         }
 
-        /// <summary>
-        ///     Detaches an object from the ObjectContext. Validates that the object is in the referenced EntitySet in the context.
-        ///     See ObjectContext.Detach for more details.
-        /// </summary>
-        /// <param name="entity"> Entity to be detached. </param>
-        /// <exception cref="InvalidOperationException">Throws if the specified object is not in the EntitySet.</exception>
+        /// <summary>Removes the object from the object context.</summary>
+        /// <param name="entity">
+        ///     Object to be detached. Only the  entity  is removed; if there are any related objects that are being tracked by the same
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
+        ///     , those will not be detached automatically.
+        /// </param>
         public void Detach(TEntity entity)
         {
             // this method is expected to behave exactly like ObjectContext.Detach -- see devnote at the top of this class
@@ -98,10 +97,21 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Applies changes from one object to another with the same key in the ObjectContext.
-        ///     See ObjectContext.ApplyCurrentValues for more details.
+        ///     Copies the scalar values from the supplied object into the object in the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        ///     that has the same key.
         /// </summary>
-        /// <param name="TEntity"> Entity that contains changes to be applied. </param>
+        /// <returns>The updated object.</returns>
+        /// <param name="currentEntity">
+        ///     The detached object that has property updates to apply to the original object. The entity key of  currentEntity  must match the
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.EntityKey" />
+        ///     property of an entry in the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        ///     .
+        /// </param>
         public TEntity ApplyCurrentValues(TEntity currentEntity)
         {
             // this method is expected to behave exactly like ObjectContext.ApplyCurrentValues -- see devnote at the top of this class
@@ -109,39 +119,37 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Apply modified properties to the original object with the same key in the ObjectContext.
-        ///     See ObjectContext.ApplyOriginalValues for more details.
+        ///     Sets the <see cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.OriginalValues" /> property of an
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        ///     to match the property values of a supplied object.
         /// </summary>
-        /// <param name="TEntity"> Entity that contains values to be applied. </param>
+        /// <returns>The updated object.</returns>
+        /// <param name="originalEntity">
+        ///     The detached object that has property updates to apply to the original object. The entity key of  originalEntity  must match the
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.EntityKey" />
+        ///     property of an entry in the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        ///     .
+        /// </param>
         public TEntity ApplyOriginalValues(TEntity originalEntity)
         {
             // this method is expected to behave exactly like ObjectContext.ApplyOriginalValues -- see devnote at the top of this class
             return Context.ApplyOriginalValues(FullyQualifiedEntitySetName, originalEntity);
         }
 
-        /// <summary>
-        ///     Create an instance of the type <typeparamref name="TEntity" />.
-        /// </summary>
-        /// <returns>
-        ///     An instance of an object of type <typeparamref name="TEntity" /> . The object will either be an instance of the exact type
-        ///     <typeparamref
-        ///         name="TEntity" />
-        ///     , or possibly an instance of the proxy type that corresponds to <typeparamref name="TEntity" /> .
-        /// </returns>
+        /// <summary>Creates a new entity type object.</summary>
+        /// <returns>The new entity type object, or an instance of a proxy type that corresponds to the entity type.</returns>
         public TEntity CreateObject()
         {
             return Context.CreateObject<TEntity>();
         }
 
-        /// <summary>
-        ///     Create an instance of the type <typeparamref name="TEntity" />.
-        /// </summary>
-        /// <returns>
-        ///     An instance of an object of type <typeparamref name="TEntity" /> . The object will either be an instance of the exact type
-        ///     <typeparamref
-        ///         name="TEntity" />
-        ///     , or possibly an instance of the proxy type that corresponds to <typeparamref name="TEntity" /> .
-        /// </returns>
+        /// <summary>Creates an instance of the specified type.</summary>
+        /// <returns>An instance of the requested type  T , or an instance of a proxy type that corresponds to the type  T .</returns>
+        /// <typeparam name="T">Type of object to be returned.</typeparam>
         public T CreateObject<T>() where T : class, TEntity
         {
             return Context.CreateObject<T>();

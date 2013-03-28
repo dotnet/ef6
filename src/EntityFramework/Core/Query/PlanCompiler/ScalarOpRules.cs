@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
@@ -213,7 +213,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     WHEN W1 THEN T1
         ///     WHEN W2 THEN T2 ...
         ///     ELSE (CASE
-        ///     WHEN WN1 THEN TN1, �
+        ///     WHEN WN1 THEN TN1, …
         ///     ELSE E)
         ///     Is transformed into
         ///     CASE

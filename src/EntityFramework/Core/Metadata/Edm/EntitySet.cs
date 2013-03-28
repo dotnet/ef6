@@ -39,16 +39,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private volatile bool _hasIndependentRelationships;
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
+        ///     .
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.EntitySet; }
         }
 
         /// <summary>
-        ///     Gets/Sets the entity type of this entity set
+        ///     Gets the entity type of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />.
         /// </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" /> object that represents the entity type of this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
+        ///     .
+        /// </returns>
         public new virtual EntityType ElementType
         {
             get { return (EntityType)base.ElementType; }

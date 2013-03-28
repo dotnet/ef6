@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 using OM = System.Collections.ObjectModel;
 
@@ -39,28 +39,35 @@ namespace System.Data.Entity.Core.Objects
             _query = (LambdaExpression)funcletizer.Funcletize(query, out recompiledRequire);
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TArg3"> The scalar type of parameter 3. </typeparam>
-        /// <typeparam name="TArg4"> The scalar type of parameter 4. </typeparam>
-        /// <typeparam name="TArg5"> The scalar type of parameter 5. </typeparam>
-        /// <typeparam name="TArg6"> The scalar type of parameter 6. </typeparam>
-        /// <typeparam name="TArg7"> The scalar type of parameter 7. </typeparam>
-        /// <typeparam name="TArg8"> The scalar type of parameter 8. </typeparam>
-        /// <typeparam name="TArg9"> The scalar type of parameter 9. </typeparam>
-        /// <typeparam name="TArg10"> The scalar type of parameter 10. </typeparam>
-        /// <typeparam name="TArg11"> The scalar type of parameter 11. </typeparam>
-        /// <typeparam name="TArg12"> The scalar type of parameter 12. </typeparam>
-        /// <typeparam name="TArg13"> The scalar type of parameter 13. </typeparam>
-        /// <typeparam name="TArg14"> The scalar type of parameter 14. </typeparam>
-        /// <typeparam name="TArg15"> The scalar type of parameter 15. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`17" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg3">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg3  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg4">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg4  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg5">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg5  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg6">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg6  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg7">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg7  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg8">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg8  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg9">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg9  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg10">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg10  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg11">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg11  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg12">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg12  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg13">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg13  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg14">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg14  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg15">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg15  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``17(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14,``15,``16}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static
         Func<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TResult>
@@ -78,27 +85,34 @@ namespace System.Data.Entity.Core.Objects
                         TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TArg3"> The scalar type of parameter 3. </typeparam>
-        /// <typeparam name="TArg4"> The scalar type of parameter 4. </typeparam>
-        /// <typeparam name="TArg5"> The scalar type of parameter 5. </typeparam>
-        /// <typeparam name="TArg6"> The scalar type of parameter 6. </typeparam>
-        /// <typeparam name="TArg7"> The scalar type of parameter 7. </typeparam>
-        /// <typeparam name="TArg8"> The scalar type of parameter 8. </typeparam>
-        /// <typeparam name="TArg9"> The scalar type of parameter 9. </typeparam>
-        /// <typeparam name="TArg10"> The scalar type of parameter 10. </typeparam>
-        /// <typeparam name="TArg11"> The scalar type of parameter 11. </typeparam>
-        /// <typeparam name="TArg12"> The scalar type of parameter 12. </typeparam>
-        /// <typeparam name="TArg13"> The scalar type of parameter 13. </typeparam>
-        /// <typeparam name="TArg14"> The scalar type of parameter 14. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`16" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg3">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg3  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg4">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg4  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg5">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg5  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg6">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg6  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg7">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg7  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg8">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg8  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg9">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg9  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg10">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg10  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg11">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg11  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg12">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg12  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg13">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg13  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg14">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg14  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``16(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14,``15}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static
         Func<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TResult> Compile
@@ -112,26 +126,33 @@ namespace System.Data.Entity.Core.Objects
                     <TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TArg3"> The scalar type of parameter 3. </typeparam>
-        /// <typeparam name="TArg4"> The scalar type of parameter 4. </typeparam>
-        /// <typeparam name="TArg5"> The scalar type of parameter 5. </typeparam>
-        /// <typeparam name="TArg6"> The scalar type of parameter 6. </typeparam>
-        /// <typeparam name="TArg7"> The scalar type of parameter 7. </typeparam>
-        /// <typeparam name="TArg8"> The scalar type of parameter 8. </typeparam>
-        /// <typeparam name="TArg9"> The scalar type of parameter 9. </typeparam>
-        /// <typeparam name="TArg10"> The scalar type of parameter 10. </typeparam>
-        /// <typeparam name="TArg11"> The scalar type of parameter 11. </typeparam>
-        /// <typeparam name="TArg12"> The scalar type of parameter 12. </typeparam>
-        /// <typeparam name="TArg13"> The scalar type of parameter 13. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`15" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg3">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg3  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg4">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg4  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg5">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg5  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg6">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg6  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg7">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg7  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg8">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg8  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg9">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg9  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg10">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg10  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg11">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg11  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg12">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg12  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg13">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg13  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``15(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13,``14}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TResult>
             Compile<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TResult>(
@@ -143,25 +164,32 @@ namespace System.Data.Entity.Core.Objects
                     <TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TArg3"> The scalar type of parameter 3. </typeparam>
-        /// <typeparam name="TArg4"> The scalar type of parameter 4. </typeparam>
-        /// <typeparam name="TArg5"> The scalar type of parameter 5. </typeparam>
-        /// <typeparam name="TArg6"> The scalar type of parameter 6. </typeparam>
-        /// <typeparam name="TArg7"> The scalar type of parameter 7. </typeparam>
-        /// <typeparam name="TArg8"> The scalar type of parameter 8. </typeparam>
-        /// <typeparam name="TArg9"> The scalar type of parameter 9. </typeparam>
-        /// <typeparam name="TArg10"> The scalar type of parameter 10. </typeparam>
-        /// <typeparam name="TArg11"> The scalar type of parameter 11. </typeparam>
-        /// <typeparam name="TArg12"> The scalar type of parameter 12. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`14" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg3">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg3  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg4">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg4  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg5">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg5  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg6">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg6  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg7">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg7  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg8">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg8  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg9">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg9  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg10">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg10  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg11">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg11  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg12">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg12  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``14(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12,``13}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TResult> Compile
             <TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TResult>(
@@ -173,24 +201,31 @@ namespace System.Data.Entity.Core.Objects
                     <TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TArg3"> The scalar type of parameter 3. </typeparam>
-        /// <typeparam name="TArg4"> The scalar type of parameter 4. </typeparam>
-        /// <typeparam name="TArg5"> The scalar type of parameter 5. </typeparam>
-        /// <typeparam name="TArg6"> The scalar type of parameter 6. </typeparam>
-        /// <typeparam name="TArg7"> The scalar type of parameter 7. </typeparam>
-        /// <typeparam name="TArg8"> The scalar type of parameter 8. </typeparam>
-        /// <typeparam name="TArg9"> The scalar type of parameter 9. </typeparam>
-        /// <typeparam name="TArg10"> The scalar type of parameter 10. </typeparam>
-        /// <typeparam name="TArg11"> The scalar type of parameter 11. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`13" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg3">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg3  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg4">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg4  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg5">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg5  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg6">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg6  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg7">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg7  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg8">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg8  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg9">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg9  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg10">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg10  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg11">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg11  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``13(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11,``12}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TResult> Compile
             <TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TResult>(
@@ -202,23 +237,30 @@ namespace System.Data.Entity.Core.Objects
                     <TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TArg3"> The scalar type of parameter 3. </typeparam>
-        /// <typeparam name="TArg4"> The scalar type of parameter 4. </typeparam>
-        /// <typeparam name="TArg5"> The scalar type of parameter 5. </typeparam>
-        /// <typeparam name="TArg6"> The scalar type of parameter 6. </typeparam>
-        /// <typeparam name="TArg7"> The scalar type of parameter 7. </typeparam>
-        /// <typeparam name="TArg8"> The scalar type of parameter 8. </typeparam>
-        /// <typeparam name="TArg9"> The scalar type of parameter 9. </typeparam>
-        /// <typeparam name="TArg10"> The scalar type of parameter 10. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`12" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg3">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg3  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg4">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg4  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg5">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg5  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg6">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg6  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg7">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg7  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg8">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg8  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg9">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg9  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg10">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg10  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``12(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10,``11}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TResult> Compile
             <TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TResult>(
@@ -228,22 +270,29 @@ namespace System.Data.Entity.Core.Objects
             return new CompiledQuery(query).Invoke<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TArg3"> The scalar type of parameter 3. </typeparam>
-        /// <typeparam name="TArg4"> The scalar type of parameter 4. </typeparam>
-        /// <typeparam name="TArg5"> The scalar type of parameter 5. </typeparam>
-        /// <typeparam name="TArg6"> The scalar type of parameter 6. </typeparam>
-        /// <typeparam name="TArg7"> The scalar type of parameter 7. </typeparam>
-        /// <typeparam name="TArg8"> The scalar type of parameter 8. </typeparam>
-        /// <typeparam name="TArg9"> The scalar type of parameter 9. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`11" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg3">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg3  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg4">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg4  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg5">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg5  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg6">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg6  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg7">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg7  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg8">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg8  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg9">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg9  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``11(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9,``10}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TResult> Compile
             <TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TResult>(
@@ -253,21 +302,28 @@ namespace System.Data.Entity.Core.Objects
             return new CompiledQuery(query).Invoke<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TArg3"> The scalar type of parameter 3. </typeparam>
-        /// <typeparam name="TArg4"> The scalar type of parameter 4. </typeparam>
-        /// <typeparam name="TArg5"> The scalar type of parameter 5. </typeparam>
-        /// <typeparam name="TArg6"> The scalar type of parameter 6. </typeparam>
-        /// <typeparam name="TArg7"> The scalar type of parameter 7. </typeparam>
-        /// <typeparam name="TArg8"> The scalar type of parameter 8. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`10" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg3">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg3  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg4">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg4  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg5">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg5  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg6">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg6  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg7">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg7  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg8">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg8  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``10(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8,``9}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TResult> Compile
             <TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TResult>(
@@ -276,20 +332,27 @@ namespace System.Data.Entity.Core.Objects
             return new CompiledQuery(query).Invoke<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TArg3"> The scalar type of parameter 3. </typeparam>
-        /// <typeparam name="TArg4"> The scalar type of parameter 4. </typeparam>
-        /// <typeparam name="TArg5"> The scalar type of parameter 5. </typeparam>
-        /// <typeparam name="TArg6"> The scalar type of parameter 6. </typeparam>
-        /// <typeparam name="TArg7"> The scalar type of parameter 7. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`9" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg3">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg3  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg4">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg4  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg5">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg5  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg6">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg6  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg7">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg7  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``9(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7,``8}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TResult> Compile
@@ -299,19 +362,26 @@ namespace System.Data.Entity.Core.Objects
             return new CompiledQuery(query).Invoke<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TArg3"> The scalar type of parameter 3. </typeparam>
-        /// <typeparam name="TArg4"> The scalar type of parameter 4. </typeparam>
-        /// <typeparam name="TArg5"> The scalar type of parameter 5. </typeparam>
-        /// <typeparam name="TArg6"> The scalar type of parameter 6. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`8" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg3">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg3  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg4">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg4  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg5">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg5  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg6">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg6  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``8(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6,``7}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TResult> Compile
@@ -321,18 +391,25 @@ namespace System.Data.Entity.Core.Objects
             return new CompiledQuery(query).Invoke<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TArg3"> The scalar type of parameter 3. </typeparam>
-        /// <typeparam name="TArg4"> The scalar type of parameter 4. </typeparam>
-        /// <typeparam name="TArg5"> The scalar type of parameter 5. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`7" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg3">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg3  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg4">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg4  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg5">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg5  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``7(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5,``6}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TResult> Compile<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TResult>(
@@ -341,17 +418,24 @@ namespace System.Data.Entity.Core.Objects
             return new CompiledQuery(query).Invoke<TArg0, TArg1, TArg2, TArg3, TArg4, TArg5, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TArg3"> The scalar type of parameter 3. </typeparam>
-        /// <typeparam name="TArg4"> The scalar type of parameter 4. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`6" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg3">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg3  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg4">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg4  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``6(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4,``5}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TArg1, TArg2, TArg3, TArg4, TResult> Compile<TArg0, TArg1, TArg2, TArg3, TArg4, TResult>(
@@ -360,16 +444,23 @@ namespace System.Data.Entity.Core.Objects
             return new CompiledQuery(query).Invoke<TArg0, TArg1, TArg2, TArg3, TArg4, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TArg3"> The scalar type of parameter 3. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`5" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg3">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg3  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``5(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3,``4}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TArg1, TArg2, TArg3, TResult> Compile<TArg0, TArg1, TArg2, TArg3, TResult>(
@@ -378,15 +469,22 @@ namespace System.Data.Entity.Core.Objects
             return new CompiledQuery(query).Invoke<TArg0, TArg1, TArg2, TArg3, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TArg2"> The scalar type of parameter 2. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`4" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1  must be a primitive type.</typeparam>
+        /// <typeparam name="TArg2">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg2  must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``4(System.Linq.Expressions.Expression{System.Func{``0,``1,``2,``3}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TArg1, TArg2, TResult> Compile<TArg0, TArg1, TArg2, TResult>(
@@ -395,14 +493,21 @@ namespace System.Data.Entity.Core.Objects
             return new CompiledQuery(query).Invoke<TArg0, TArg1, TArg2, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TArg1"> The scalar type of parameter 1. </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`3" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TArg1">Represents the type of the parameter that has to be passed in when executing the delegate returned by this method.  TArg1 must be a primitive type.</typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``3(System.Linq.Expressions.Expression{System.Func{``0,``1,``2}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TArg1, TResult> Compile<TArg0, TArg1, TResult>(Expression<Func<TArg0, TArg1, TResult>> query)
@@ -411,13 +516,20 @@ namespace System.Data.Entity.Core.Objects
             return new CompiledQuery(query).Invoke<TArg0, TArg1, TResult>;
         }
 
-        /// <summary>
-        ///     Creates a CompiledQuery delegate from an ELinq expression.
-        /// </summary>
-        /// <typeparam name="TArg0"> An ObjectContext derived type </typeparam>
-        /// <typeparam name="TResult"> The return type of the delegate. </typeparam>
-        /// <param name="query"> The lambda expression to compile. </param>
-        /// <returns> The CompiledQuery delegate. </returns>
+        /// <summary>Creates a new delegate that represents the compiled LINQ to Entities query.</summary>
+        /// <returns>
+        ///     <see cref="T:System.Func`2" />, a generic delegate that represents the compiled LINQ to Entities query.
+        /// </returns>
+        /// <param name="query">The lambda expression to compile.</param>
+        /// <typeparam name="TArg0">
+        ///     A type derived from <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />.
+        /// </typeparam>
+        /// <typeparam name="TResult">
+        ///     The type  T  of the query results returned by executing the delegate returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.CompiledQuery.Compile``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})" />
+        ///     method.
+        /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static Func<TArg0, TResult> Compile<TArg0, TResult>(Expression<Func<TArg0, TResult>> query) where TArg0 : ObjectContext

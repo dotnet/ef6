@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
@@ -157,7 +157,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             // build a LINQ expression used by result assembly to create results
             var memberInfo = new List<Tuple<MemberAssignment, int, EdmProperty>>();
             foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Select(p => p.GetPropertyInfoForSet()))
+                                     .Select(p => p.GetPropertyInfoForSet()))
             {
                 // for enums unwrap the type if nullable
                 var propertyUnderlyingType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;

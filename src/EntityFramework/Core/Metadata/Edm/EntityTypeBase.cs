@@ -30,9 +30,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _keyMembers = new ReadOnlyMetadataCollection<EdmMember>(new MetadataCollection<EdmMember>());
         }
 
-        /// <summary>
-        ///     Returns the list of all the key members for this entity type
-        /// </summary>
+        /// <summary>Gets the list of all the key members for the current entity or relationship type.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> object that represents the list of key members for the current entity or relationship type.
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.EdmMember, true)]
         public virtual ReadOnlyMetadataCollection<EdmMember> KeyMembers
         {

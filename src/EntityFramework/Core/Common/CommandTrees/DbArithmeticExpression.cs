@@ -9,11 +9,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents an arithmetic operation (addition, subtraction, multiplication, division, modulo or negation) applied to two numeric arguments.
+    ///     Represents an arithmetic operation applied to numeric arguments.
+    ///     Addition, subtraction, multiplication, division, modulo, and negation are arithmetic operations.
+    ///     This class cannot be inherited.
     /// </summary>
-    /// <remarks>
-    ///     DbArithmeticExpression requires that its arguments have a common numeric result type
-    /// </remarks>
     public sealed class DbArithmeticExpression : DbExpression
     {
         private readonly DbExpressionList _args;
@@ -45,26 +44,21 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the list of expressions that define the current arguments.
+        ///     Gets the list of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> elements that define the current arguments.
         /// </summary>
-        /// <remarks>
-        ///     The <code>Arguments</code> property returns a fixed-size list of <see cref="DbExpression" /> elements.
-        ///     <see cref="DbArithmeticExpression" /> requires that all elements of it's <code>Arguments</code> list
-        ///     have a common numeric result type.
-        /// </remarks>
+        /// <returns>
+        ///     A fixed-size list of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> elements.
+        /// </returns>
         public IList<DbExpression> Arguments
         {
             get { return _args; }
         }
 
-        /// <summary>
-        ///     The visitor pattern method for expression visitors that do not produce a result value.
-        /// </summary>
-        /// <param name="visitor"> An instance of DbExpressionVisitor. </param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="visitor" />
-        ///     is null
-        /// </exception>
+        /// <summary>Implements the visitor pattern for expressions that do not produce a result value.</summary>
+        /// <param name="visitor">
+        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// </param>
+        /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override void Accept(DbExpressionVisitor visitor)
         {
             Check.NotNull(visitor, "visitor");
@@ -72,20 +66,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             visitor.Visit(this);
         }
 
-        /// <summary>
-        ///     The visitor pattern method for expression visitors that produce a result value of a specific type.
-        /// </summary>
-        /// <param name="visitor"> An instance of a typed DbExpressionVisitor that produces a result value of type TResultType. </param>
-        /// <typeparam name="TResultType">
-        ///     The type of the result produced by <paramref name="visitor" />
-        /// </typeparam>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="visitor" />
-        ///     is null
-        /// </exception>
+        /// <summary>Implements the visitor pattern for expressions that produce a result value of a specific type.</summary>
         /// <returns>
-        ///     An instance of <typeparamref name="TResultType" /> .
+        ///     A result value of a specific type produced by
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
+        ///     .
         /// </returns>
+        /// <param name="visitor">
+        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
+        /// </param>
+        /// <typeparam name="TResultType">The type of the result produced by  visitor .</typeparam>
+        /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
         {
             Check.NotNull(visitor, "visitor");

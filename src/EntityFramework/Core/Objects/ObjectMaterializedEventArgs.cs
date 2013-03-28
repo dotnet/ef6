@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects
 {
@@ -23,9 +23,8 @@ namespace System.Data.Entity.Core.Objects
             _entity = entity;
         }
 
-        /// <summary>
-        ///     The object that was materialized.
-        /// </summary>
+        /// <summary>Gets the entity object that was created.</summary>
+        /// <returns>The entity object that was created.</returns>
         public object Entity
         {
             get { return _entity; }

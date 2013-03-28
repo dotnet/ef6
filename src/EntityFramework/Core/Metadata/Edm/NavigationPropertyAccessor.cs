@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
@@ -33,8 +33,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     cached dynamic method to get the property value from a CLR instance
-        /// </summary>
+///     cached dynamic method to get the property value from a CLR instance
+/// </summary>
         public Func<object, object> ValueGetter
         {
             get { return _memberGetter; }
@@ -47,8 +47,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     cached dynamic method to set the property value from a CLR instance
-        /// </summary>
+///     cached dynamic method to set the property value from a CLR instance
+/// </summary>
         public Action<object, object> ValueSetter
         {
             get { return _memberSetter; }

@@ -38,9 +38,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private Memoizer<Type, ICollection> _itemsCache;
         private int _itemCount;
 
-        /// <summary>
-        ///     Dataspace associated with ItemCollection
-        /// </summary>
+        /// <summary>Gets the data model associated with this item collection. </summary>
+        /// <returns>The data model associated with this item collection. </returns>
         public DataSpace DataSpace
         {
             get { return _space; }
@@ -106,45 +105,46 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns strongly typed MetadataItem from the collection that has
-        ///     the passed in identity.
+        ///     Returns a strongly typed <see cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" /> object by using the specified identity.
         /// </summary>
-        /// <typeparam name="T"> </typeparam>
-        /// <param name="identity"> Identity of the item to look up for </param>
-        /// <returns> returns the item if a match is found, otherwise throwns an exception </returns>
-        /// <exception cref="System.ArgumentNullException">Thrown if identity argument passed in is null</exception>
-        /// <exception cref="System.ArgumentException">Thrown if the Collection does not have an item with the given identity</exception>
+        /// <returns>The item that is specified by the identity.</returns>
+        /// <param name="identity">The identity of the item.</param>
+        /// <typeparam name="T">The type returned by the method.</typeparam>
         public T GetItem<T>(string identity) where T : GlobalItem
         {
             return GetItem<T>(identity, false /*ignoreCase*/);
         }
 
         /// <summary>
-        ///     Returns strongly typed MetadataItem from the collection that has
-        ///     the passed in identity.
-        ///     Returns null if the item is not found.
+        ///     Returns a strongly typed <see cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" /> object by using the specified identity from this item collection.
         /// </summary>
-        /// <typeparam name="T"> </typeparam>
-        /// <param name="identity"> </param>
-        /// <param name="item"> </param>
-        /// <returns> </returns>
-        /// <exception cref="System.ArgumentNullException">if identity argument is null</exception>
+        /// <returns>true if there is an item that matches the search criteria; otherwise, false.</returns>
+        /// <param name="identity">The identity of the item.</param>
+        /// <param name="item">
+        ///     When this method returns, the output parameter contains a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" />
+        ///     object. If there is no global item with the specified identity in the item collection, this output parameter contains null.
+        /// </param>
+        /// <typeparam name="T">The type returned by the method.</typeparam>
         public bool TryGetItem<T>(string identity, out T item) where T : GlobalItem
         {
             return TryGetItem(identity, false /*ignorecase*/, out item);
         }
 
         /// <summary>
-        ///     Returns strongly typed MetadataItem from the collection that has
-        ///     the passed in identity.
-        ///     Returns null if the item is not found.
+        ///     Returns a strongly typed <see cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" /> object by using the specified identity from this item collection.
         /// </summary>
-        /// <typeparam name="T"> </typeparam>
-        /// <param name="identity"> identity of the type to look up for </param>
-        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
-        /// <param name="item"> item with the given identity if a match is found, otherwise returns null </param>
-        /// <returns> returns true if a match is found, otherwise returns false </returns>
-        /// <exception cref="System.ArgumentNullException">if identity argument is null</exception>
+        /// <returns>true if there is an item that matches the search criteria; otherwise, false.</returns>
+        /// <param name="identity">The identity of the item.</param>
+        /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
+        /// <param name="item">
+        ///     When this method returns, the output parameter contains a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" />
+        ///     object. If there is no global item with the specified identity in the item collection, this output parameter contains null.
+        /// </param>
+        /// <typeparam name="T">The type returned by the method.</typeparam>
         public bool TryGetItem<T>(string identity, bool ignoreCase, out T item) where T : GlobalItem
         {
             GlobalItem outItem = null;
@@ -154,15 +154,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns strongly typed MetadataItem from the collection that has
-        ///     the passed in identity with either case sensitive or case insensitive search
+        ///     Returns a strongly typed <see cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" /> object by using the specified identity with either case-sensitive or case-insensitive search.
         /// </summary>
-        /// <typeparam name="T"> </typeparam>
-        /// <param name="identity"> identity of the type to look up for </param>
-        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
-        /// <returns> returns item if a match is found, otherwise returns throws an argument exception </returns>
-        /// <exception cref="System.ArgumentNullException">Thrown if identity argument passed in is null</exception>
-        /// <exception cref="System.ArgumentException">Thrown if no item is found with the given identity</exception>
+        /// <returns>The item that is specified by the identity.</returns>
+        /// <param name="identity">The identity of the item.</param>
+        /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
+        /// <typeparam name="T">The type returned by the method.</typeparam>
         public T GetItem<T>(string identity, bool ignoreCase) where T : GlobalItem
         {
             T item;
@@ -173,12 +170,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             throw new ArgumentException(Strings.ItemInvalidIdentity(identity), "identity");
         }
 
-        /// <summary>
-        ///     Returns ReadOnlyCollection of the Items of the given type
-        ///     in the item collection.
-        /// </summary>
-        /// <typeparam name="T"> </typeparam>
-        /// <returns> </returns>
+        /// <summary>Returns all the items of the specified type from this item collection.</summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the items of the specified type.
+        /// </returns>
+        /// <typeparam name="T">The type returned by the method.</typeparam>
         public virtual ReadOnlyCollection<T> GetItems<T>() where T : GlobalItem
         {
             var currentValueForItemCache = _itemsCache;
@@ -225,39 +221,44 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Search for a type metadata with the specified name and namespace name in the given space.
+        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name and the namespace name in this item collection.
         /// </summary>
-        /// <param name="name"> name of the type </param>
-        /// <param name="namespaceName"> namespace of the type </param>
-        /// <returns> Returns null if no match found. </returns>
-        /// <exception cref="System.ArgumentNullException">Thrown if name or namespaceName arguments passed in are null</exception>
-        /// <exception cref="System.ArgumentException">Thrown if the ItemCollection for this space does not have a type with the given name and namespaceName</exception>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type that matches the specified type name and the namespace name in this item collection. If there is no matched type, this method returns null.
+        /// </returns>
+        /// <param name="name">The name of the type.</param>
+        /// <param name="namespaceName">The namespace of the type.</param>
         public EdmType GetType(string name, string namespaceName)
         {
             return GetType(name, namespaceName, false /*ignoreCase*/);
         }
 
         /// <summary>
-        ///     Search for a type metadata with the specified name and namespace name in the given space.
+        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name and the namespace name from this item collection.
         /// </summary>
-        /// <param name="name"> name of the type </param>
-        /// <param name="namespaceName"> namespace of the type </param>
-        /// <param name="type"> The type that needs to be filled with the return value </param>
-        /// <returns> Returns null if no match found. </returns>
-        /// <exception cref="System.ArgumentNullException">if name or namespaceName argument is null</exception>
+        /// <returns>true if there is a type that matches the search criteria; otherwise, false.</returns>
+        /// <param name="name">The name of the type.</param>
+        /// <param name="namespaceName">The namespace of the type.</param>
+        /// <param name="type">
+        ///     When this method returns, this output parameter contains an
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        ///     object. If there is no type with the specified name and namespace name in this item collection, this output parameter contains null.
+        /// </param>
         public bool TryGetType(string name, string namespaceName, out EdmType type)
         {
             return TryGetType(name, namespaceName, false /*ignoreCase*/, out type);
         }
 
         /// <summary>
-        ///     Search for a type metadata with the specified key.
+        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name and the namespace name from this item collection.
         /// </summary>
-        /// <param name="name"> name of the type </param>
-        /// <param name="namespaceName"> namespace of the type </param>
-        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
-        /// <returns> Returns null if no match found. </returns>
-        /// <exception cref="System.ArgumentNullException">Thrown if name or namespaceName arguments passed in are null</exception>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type that matches the specified type name and the namespace name in this item collection. If there is no matched type, this method returns null.
+        /// </returns>
+        /// <param name="name">The name of the type.</param>
+        /// <param name="namespaceName">The namespace of the type.</param>
+        /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
         public EdmType GetType(string name, string namespaceName, bool ignoreCase)
         {
             Check.NotNull(name, "name");
@@ -266,14 +267,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Search for a type metadata with the specified name and namespace name in the given space.
+        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name and the namespace name from this item collection.
         /// </summary>
-        /// <param name="name"> name of the type </param>
-        /// <param name="namespaceName"> namespace of the type </param>
-        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
-        /// <param name="type"> The type that needs to be filled with the return value </param>
-        /// <returns> Returns null if no match found. </returns>
-        /// <exception cref="System.ArgumentNullException">if name or namespaceName argument is null</exception>
+        /// <returns>true if there is a type that matches the search criteria; otherwise, false. </returns>
+        /// <param name="name">The name of the type.</param>
+        /// <param name="namespaceName">The namespace of the type.</param>
+        /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
+        /// <param name="type">
+        ///     When this method returns, this output parameter contains an
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        ///     object. If there is no type with the specified name and namespace name in this item collection, this output parameter contains null.
+        /// </param>
         public bool TryGetType(string name, string namespaceName, bool ignoreCase, out EdmType type)
         {
             Check.NotNull(name, "name");
@@ -284,37 +289,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return type != null;
         }
 
-        /// <summary>
-        ///     Get all the overloads of the function with the given name
-        /// </summary>
-        /// <param name="functionName"> The full name of the function </param>
-        /// <returns> A collection of all the functions with the given name in the given data space </returns>
-        /// <exception cref="System.ArgumentNullException">Thrown if functionaName argument passed in is null</exception>
+        /// <summary>Returns all the overloads of the functions by using the specified name from this item collection.</summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the functions that have the specified name.
+        /// </returns>
+        /// <param name="functionName">The full name of the function.</param>
         public ReadOnlyCollection<EdmFunction> GetFunctions(string functionName)
         {
             return GetFunctions(functionName, false /*ignoreCase*/);
         }
 
-        /// <summary>
-        ///     Get all the overloads of the function with the given name
-        /// </summary>
-        /// <param name="functionName"> The full name of the function </param>
-        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
-        /// <returns> A collection of all the functions with the given name in the given data space </returns>
-        /// <exception cref="System.ArgumentNullException">Thrown if functionaName argument passed in is null</exception>
+        /// <summary>Returns all the overloads of the functions by using the specified name from this item collection.</summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the functions that have the specified name.
+        /// </returns>
+        /// <param name="functionName">The full name of the function.</param>
+        /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
         public ReadOnlyCollection<EdmFunction> GetFunctions(string functionName, bool ignoreCase)
         {
             return GetFunctions(FunctionLookUpTable, functionName, ignoreCase);
         }
 
-        /// <summary>
-        ///     Look for the functions in the given collection and
-        ///     returns all the functions with the given name
-        /// </summary>
-        /// <param name="functionCollection"> </param>
-        /// <param name="functionName"> </param>
-        /// <param name="ignoreCase"> </param>
-        /// <returns> </returns>
+        /// <summary>Returns all the overloads of the functions by using the specified name from this item collection.</summary>
+        /// <returns>A collection of type ReadOnlyCollection that contains all the functions that have the specified name.</returns>
+        /// <param name="functionCollection">A dictionary of functions.</param>
+        /// <param name="functionName">The full name of the function.</param>
+        /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         protected static ReadOnlyCollection<EdmFunction> GetFunctions(
             Dictionary<string, ReadOnlyCollection<EdmFunction>> functionCollection,
@@ -390,12 +390,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get an entity container based upon the strong name of the container
-        ///     If no entity container is found, returns null, else returns the first one///
+        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name.
         /// </summary>
-        /// <param name="name"> name of the entity container </param>
-        /// <returns> The EntityContainer </returns>
-        /// <exception cref="System.ArgumentNullException">Thrown if name argument passed in is null</exception>
+        /// <returns>If there is no entity container, this method returns null; otherwise, it returns the first one.</returns>
+        /// <param name="name">The name of the entity container.</param>
         public EntityContainer GetEntityContainer(string name)
         {
             Check.NotNull(name, "name");
@@ -403,12 +401,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get an entity container based upon the strong name of the container
-        ///     If no entity container is found, returns null, else returns the first one///
+        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name. If there is no entity container, the output parameter contains null; otherwise, it contains the first entity container.
         /// </summary>
-        /// <param name="name"> name of the entity container </param>
-        /// <param name="entityContainer"> </param>
-        /// <exception cref="System.ArgumentNullException">if name argument is null</exception>
+        /// <returns>true if there is an entity container that matches the search criteria; otherwise, false.</returns>
+        /// <param name="name">The name of the entity container.</param>
+        /// <param name="entityContainer">
+        ///     When this method returns, it contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object. If there is no entity container, this output parameter contains null; otherwise, it contains the first entity container.
+        /// </param>
         public bool TryGetEntityContainer(string name, out EntityContainer entityContainer)
         {
             Check.NotNull(name, "name");
@@ -416,14 +415,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get an entity container based upon the strong name of the container
-        ///     If no entity container is found, returns null, else returns the first one///
+        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name.
         /// </summary>
-        /// <param name="name"> name of the entity container </param>
-        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
-        /// <returns> The EntityContainer </returns>
-        /// <exception cref="System.ArgumentNullException">Thrown if name argument passed in is null</exception>
-        /// <exception cref="System.ArgumentException">Thrown if no entity container with the given name is found</exception>
+        /// <returns>If there is no entity container, this method returns null; otherwise, it returns the first entity container.</returns>
+        /// <param name="name">The name of the entity container.</param>
+        /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
         public EntityContainer GetEntityContainer(string name, bool ignoreCase)
         {
             var container = GetValue(name, ignoreCase) as EntityContainer;
@@ -435,13 +431,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get an entity container based upon the strong name of the container
-        ///     If no entity container is found, returns null, else returns the first one///
+        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name. If there is no entity container, this output parameter contains null; otherwise, it contains the first entity container.
         /// </summary>
-        /// <param name="name"> name of the entity container </param>
-        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
-        /// <param name="entityContainer"> </param>
-        /// <exception cref="System.ArgumentNullException">if name argument is null</exception>
+        /// <returns>true if there is an entity container that matches the search criteria; otherwise, false.</returns>
+        /// <param name="name">The name of the entity container.</param>
+        /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
+        /// <param name="entityContainer">
+        ///     When this method returns, it contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object. If there is no entity container, this output parameter contains null; otherwise, it contains the first entity container.
+        /// </param>
         public bool TryGetEntityContainer(string name, bool ignoreCase, out EntityContainer entityContainer)
         {
             Check.NotNull(name, "name");

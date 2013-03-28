@@ -13,7 +13,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Reflection;
 
     /// <summary>
-    ///     Represents a Lambda function that can be invoked to produce a <see cref="DbLambdaExpression" />.
+    ///     Represents a Lambda function that can be invoked to produce a
+    ///     <see
+    ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambdaExpression" />
+    ///     .
     /// </summary>
     public sealed class DbLambda
     {
@@ -29,43 +32,36 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             _body = bodyExp;
         }
 
-        /// <summary>
-        ///     Gets the <see cref="DbExpression" /> that provides the definition of the Lambda function
-        /// </summary>
+        /// <summary>Gets the body of the lambda expression.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that represents the body of the lambda function.
+        /// </returns>
         public DbExpression Body
         {
             get { return _body; }
         }
 
-        /// <summary>
-        ///     Gets the <see cref="DbVariableReferenceExpression" />s that represent the parameters to the Lambda function and are in scope within
-        ///     <see
-        ///         cref="Body" />
-        ///     .
-        /// </summary>
+        /// <summary>Gets the parameters of the lambda expression.</summary>
+        /// <returns>The list of lambda function parameters represented as DbVariableReferenceExpression objects.</returns>
         public IList<DbVariableReferenceExpression> Variables
         {
             get { return _variables; }
         }
 
         /// <summary>
-        ///     Creates a <see cref="DbLambda" /> with the specified inline Lambda function implementation and formal parameters.
+        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with the specified inline Lambda function implementation and formal parameters.
         /// </summary>
-        /// <param name="body"> An expression that defines the logic of the Lambda function </param>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters</returns>
+        /// <param name="body">An expression that defines the logic of the Lambda function</param>
         /// <param name="variables">
-        ///     A <see cref="DbVariableReferenceExpression" /> collection that represents the formal parameters to the Lambda function. These variables are valid for use in the
-        ///     <paramref
-        ///         name="body" />
-        ///     expression.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> collection that represents the formal parameters to the Lambda function.    These variables are valid for use in the body expression.
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="variables" />
         ///     is null or contains null, or
         ///     <paramref name="body" />
         ///     is null
         /// </exception>
-        /// .
         /// <exception cref="ArgumentException">
         ///     <paramref name="variables" />
         ///     contains more than one element with the same variable name.
@@ -76,23 +72,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a <see cref="DbLambda" /> with the specified inline Lambda function implementation and formal parameters.
+        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with the specified inline Lambda function implementation and formal parameters.
         /// </summary>
-        /// <param name="body"> An expression that defines the logic of the Lambda function </param>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters</returns>
+        /// <param name="body">An expression that defines the logic of the Lambda function</param>
         /// <param name="variables">
-        ///     A <see cref="DbVariableReferenceExpression" /> collection that represents the formal parameters to the Lambda function. These variables are valid for use in the
-        ///     <paramref
-        ///         name="body" />
-        ///     expression.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> collection that represents the formal parameters to the Lambda function.    These variables are valid for use in the body expression.
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="variables" />
         ///     is null or contains null, or
         ///     <paramref name="body" />
-        ///     is null
+        ///     is null.
         /// </exception>
-        /// .
         /// <exception cref="ArgumentException">
         ///     <paramref name="variables" />
         ///     contains more than one element with the same variable name.
@@ -103,15 +95,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with a single argument of the specified type, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with a single argument of the specified type, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and single formal parameter.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and single formal parameter. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null, or
@@ -130,24 +124,25 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
         ///     <paramref name="argument2Type" />
-        ///     is null,
-        ///     or
+        ///     is null, or
         ///     <paramref name="lambdaFunction" />
         ///     is null or produces a result of null.
         /// </exception>
@@ -165,29 +160,30 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
         ///     <paramref name="argument2Type" />
         ///     is null,
         ///     <paramref name="argument3Type" />
-        ///     is null
-        ///     or
+        ///     is null, or
         ///     <paramref name="lambdaFunction" />
         ///     is null or produces a result of null.
         /// </exception>
@@ -207,24 +203,26 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="argument4Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
@@ -254,27 +252,29 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="argument4Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
         /// </param>
         /// <param name="argument5Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
@@ -289,6 +289,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     <paramref name="lambdaFunction" />
         ///     is null or produces a result of null.
         /// </exception>
+
         public static DbLambda Create(
             TypeUsage argument1Type, TypeUsage argument2Type, TypeUsage argument3Type, TypeUsage argument4Type, TypeUsage argument5Type,
             Func<DbExpression, DbExpression, DbExpression, DbExpression, DbExpression, DbExpression> lambdaFunction)
@@ -308,30 +309,32 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="argument4Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
         /// </param>
         /// <param name="argument5Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
         /// </param>
         /// <param name="argument6Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
@@ -344,8 +347,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     <paramref name="argument5Type" />
         ///     is null,
         ///     <paramref name="argument6Type" />
-        ///     is null,
-        ///     or
+        ///     is null, or
         ///     <paramref name="lambdaFunction" />
         ///     is null or produces a result of null.
         /// </exception>
@@ -370,33 +372,35 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="argument4Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
         /// </param>
         /// <param name="argument5Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
         /// </param>
         /// <param name="argument6Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
         /// </param>
         /// <param name="argument7Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
@@ -439,36 +443,38 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="argument4Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
         /// </param>
         /// <param name="argument5Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
         /// </param>
         /// <param name="argument6Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
         /// </param>
         /// <param name="argument7Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
         /// </param>
         /// <param name="argument8Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
@@ -516,39 +522,41 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="argument4Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
         /// </param>
         /// <param name="argument5Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
         /// </param>
         /// <param name="argument6Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
         /// </param>
         /// <param name="argument7Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
         /// </param>
         /// <param name="argument8Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
         /// </param>
         /// <param name="argument9Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
@@ -567,8 +575,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     <paramref name="argument8Type" />
         ///     is null,
         ///     <paramref name="argument9Type" />
-        ///     is null,
-        ///     or
+        ///     is null, or
         ///     <paramref name="lambdaFunction" />
         ///     is null or produces a result of null.
         /// </exception>
@@ -600,42 +607,44 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="argument4Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
         /// </param>
         /// <param name="argument5Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
         /// </param>
         /// <param name="argument6Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
         /// </param>
         /// <param name="argument7Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
         /// </param>
         /// <param name="argument8Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
         /// </param>
         /// <param name="argument9Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
         /// </param>
         /// <param name="argument10Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
@@ -690,45 +699,47 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="argument4Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
         /// </param>
         /// <param name="argument5Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
         /// </param>
         /// <param name="argument6Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
         /// </param>
         /// <param name="argument7Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
         /// </param>
         /// <param name="argument8Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
         /// </param>
         /// <param name="argument9Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
         /// </param>
         /// <param name="argument10Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
         /// </param>
         /// <param name="argument11Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eleventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eleventh argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
@@ -787,48 +798,50 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="argument4Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
         /// </param>
         /// <param name="argument5Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
         /// </param>
         /// <param name="argument6Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
         /// </param>
         /// <param name="argument7Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
         /// </param>
         /// <param name="argument8Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
         /// </param>
         /// <param name="argument9Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
         /// </param>
         /// <param name="argument10Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
         /// </param>
         /// <param name="argument11Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eleventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eleventh argument to the Lambda function
         /// </param>
         /// <param name="argument12Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the twelfth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the twelfth argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
@@ -853,8 +866,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     <paramref name="argument11Type" />
         ///     is null,
         ///     <paramref name="argument12Type" />
-        ///     is null,
-        ///     or
+        ///     is null, or
         ///     <paramref name="lambdaFunction" />
         ///     is null or produces a result of null.
         /// </exception>
@@ -891,51 +903,53 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="argument4Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
         /// </param>
         /// <param name="argument5Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
         /// </param>
         /// <param name="argument6Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
         /// </param>
         /// <param name="argument7Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
         /// </param>
         /// <param name="argument8Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
         /// </param>
         /// <param name="argument9Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
         /// </param>
         /// <param name="argument10Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
         /// </param>
         /// <param name="argument11Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eleventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eleventh argument to the Lambda function
         /// </param>
         /// <param name="argument12Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the twelfth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the twelfth argument to the Lambda function
         /// </param>
         /// <param name="argument13Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the thirteenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the thirteenth argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
@@ -965,7 +979,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///     is null, or
         ///     <paramref name="lambdaFunction" />
         ///     is null or produces a result of null.
-        /// </exception>
+        /// </exception>        
         public static DbLambda Create(
             TypeUsage argument1Type, TypeUsage argument2Type, TypeUsage argument3Type, TypeUsage argument4Type, TypeUsage argument5Type,
             TypeUsage argument6Type, TypeUsage argument7Type, TypeUsage argument8Type, TypeUsage argument9Type, TypeUsage argument10Type,
@@ -1000,54 +1014,56 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="argument4Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
         /// </param>
         /// <param name="argument5Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
         /// </param>
         /// <param name="argument6Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
         /// </param>
         /// <param name="argument7Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
         /// </param>
         /// <param name="argument8Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
         /// </param>
         /// <param name="argument9Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
         /// </param>
         /// <param name="argument10Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
         /// </param>
         /// <param name="argument11Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eleventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eleventh argument to the Lambda function
         /// </param>
         /// <param name="argument12Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the twelfth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the twelfth argument to the Lambda function
         /// </param>
         /// <param name="argument13Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the thirteenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the thirteenth argument to the Lambda function
         /// </param>
         /// <param name="argument14Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourteenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourteenth argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
@@ -1115,57 +1131,59 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="argument4Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
         /// </param>
         /// <param name="argument5Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
         /// </param>
         /// <param name="argument6Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
         /// </param>
         /// <param name="argument7Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
         /// </param>
         /// <param name="argument8Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
         /// </param>
         /// <param name="argument9Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
         /// </param>
         /// <param name="argument10Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
         /// </param>
         /// <param name="argument11Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eleventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eleventh argument to the Lambda function
         /// </param>
         /// <param name="argument12Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the twelfth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the twelfth argument to the Lambda function
         /// </param>
         /// <param name="argument13Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the thirteenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the thirteenth argument to the Lambda function
         /// </param>
         /// <param name="argument14Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourteenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourteenth argument to the Lambda function
         /// </param>
         /// <param name="argument15Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifteenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifteenth argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,
@@ -1239,60 +1257,62 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambda" /> with arguments of the specified types, as defined by the specified function.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with arguments of the specified types, as defined by the specified function.
         /// </summary>
+        /// <returns>A new DbLambda that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="argument1Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the first argument to the Lambda function
         /// </param>
         /// <param name="argument2Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the second argument to the Lambda function
         /// </param>
         /// <param name="argument3Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the third argument to the Lambda function
         /// </param>
         /// <param name="argument4Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourth argument to the Lambda function
         /// </param>
         /// <param name="argument5Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifth argument to the Lambda function
         /// </param>
         /// <param name="argument6Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the sixth argument to the Lambda function
         /// </param>
         /// <param name="argument7Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the seventh argument to the Lambda function
         /// </param>
         /// <param name="argument8Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eighth argument to the Lambda function
         /// </param>
         /// <param name="argument9Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the ninth argument to the Lambda function
         /// </param>
         /// <param name="argument10Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the tenth argument to the Lambda function
         /// </param>
         /// <param name="argument11Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the eleventh argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the eleventh argument to the Lambda function
         /// </param>
         /// <param name="argument12Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the twelfth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the twelfth argument to the Lambda function
         /// </param>
         /// <param name="argument13Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the thirteenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the thirteenth argument to the Lambda function
         /// </param>
         /// <param name="argument14Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fourteenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fourteenth argument to the Lambda function
         /// </param>
         /// <param name="argument15Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the fifteenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the fifteenth argument to the Lambda function
         /// </param>
         /// <param name="argument16Type">
-        ///     A <see cref="TypeUsage" /> that defines the EDM type of the sixteenth argument to the Lambda function
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> that defines the EDM type of the sixteenth argument to the Lambda function
         /// </param>
         /// <param name="lambdaFunction">
-        ///     A function that defines the logic of the Lambda function as a <see cref="DbExpression" />
+        ///     A function that defines the logic of the Lambda function as a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters. </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="argument1Type" />
         ///     is null,

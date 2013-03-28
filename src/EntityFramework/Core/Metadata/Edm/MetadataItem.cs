@@ -69,14 +69,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return annotationsList; }
         }
 
-        /// <summary>
-        ///     Returns the kind of the type
-        /// </summary>
+        /// <summary>Gets the built-in type kind for this type.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this type.
+        /// </returns>
         public abstract BuiltInTypeKind BuiltInTypeKind { get; }
 
-        /// <summary>
-        ///     List of item attributes on this type
-        /// </summary>
+        /// <summary>Gets the list of properties of the current type.</summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of properties of the current type.
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.MetadataProperty, true)]
         public virtual ReadOnlyMetadataCollection<MetadataProperty> MetadataProperties
         {
@@ -104,9 +106,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _itemAttributes; }
         }
 
-        /// <summary>
-        ///     List of item attributes on this type
-        /// </summary>
+        /// <summary>Gets or sets the documentation associated with this type.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" /> object that represents the documentation on this type.
+        /// </returns>
         public Documentation Documentation { get; set; }
 
         /// <summary>

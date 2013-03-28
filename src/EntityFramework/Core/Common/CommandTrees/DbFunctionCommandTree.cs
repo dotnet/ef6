@@ -9,9 +9,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    ///     Represents a function invocation expressed as a canonical command tree
-    /// </summary>
+    /// <summary>Represents the invocation of a database function. </summary>
     public sealed class DbFunctionCommandTree : DbCommandTree
     {
         private readonly EdmFunction _edmFunction;
@@ -61,18 +59,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="EdmFunction" /> that represents the function to invoke
+        ///     Gets the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> that represents the function that is being invoked.
         /// </summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> that represents the function that is being invoked.
+        /// </returns>
         public EdmFunction EdmFunction
         {
             get { return _edmFunction; }
         }
 
-        /// <summary>
-        ///     Gets the result type of the function; currently constrained to be a Collection of
-        ///     RowTypes. Unlike typical RowType instance, merely indicates name/type not parameter
-        ///     order.
-        /// </summary>
+        /// <summary>Gets the expected result type for the function’s first result set.</summary>
+        /// <returns>The expected result type for the function’s first result set.</returns>
         public TypeUsage ResultType
         {
             get { return _resultType; }

@@ -44,9 +44,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _identity ?? Name; }
         }
 
-        /// <summary>
-        ///     Returns the name of the member
-        /// </summary>
+        /// <summary>Gets the name of this member.</summary>
+        /// <returns>The name of this member.</returns>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public virtual string Name
         {
@@ -78,18 +77,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        ///     Returns the declaring type of the member
-        /// </summary>
+        /// <summary>Gets the type on which this member is declared.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the type on which this member is declared.
+        /// </returns>
         public virtual StructuralType DeclaringType
         {
             get { return _declaringType; }
         }
 
         /// <summary>
-        ///     Returns the TypeUsage object containing the type information and facets
-        ///     about the type
+        ///     Gets the instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> class that contains both the type of the member and facets for the type.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object that contains both the type of the member and facets for the type.
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
         public virtual TypeUsage TypeUsage
         {
@@ -103,10 +105,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        ///     Overriding System.Object.ToString to provide better String representation
-        ///     for this type.
-        /// </summary>
+        /// <summary>Returns the name of this member.</summary>
+        /// <returns>The name of this member.</returns>
         public override string ToString()
         {
             return Name;

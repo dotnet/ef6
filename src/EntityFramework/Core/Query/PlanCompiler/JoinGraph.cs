@@ -1,6 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
-
-using md = System.Data.Entity.Core.Metadata.Edm;
+ï»¿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 //
 // The JoinGraph module is responsible for performing the following kinds of 
@@ -33,6 +31,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using md = System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
     ///     Represents a join graph. The uber-class for join elimination
@@ -1721,11 +1720,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     child Left Outer Join parent
         ///     join, given a fk constraint
         ///     More specific:
-        ///     P(p1, p2, p3,…) is the parent table, and C(c1, c2, c3, …) is the child table.
+        ///     P(p1, p2, p3,â€¦) is the parent table, and C(c1, c2, c3, â€¦) is the child table.
         ///     Say p1,p2 is the PK of P, and c1,c2 is the FK from C to P
-        ///     SELECT …
+        ///     SELECT â€¦
         ///     From C LOJ P ON (p1 = c1 and p2 = c2)
-        ///     WHERE …
+        ///     WHERE â€¦
         ///     If only the keys are used from P, we should but should be carefull about composite keys with nullable foreign key columns.
         ///     If a composite foreign key has been defined on columns that allow nulls,
         ///     and at least one of the columns, upon the insert or update of a row, is set to null, then the foreign key constraint will be satisfied

@@ -8,9 +8,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     public interface IEntityWithChangeTracker
     {
         /// <summary>
-        ///     Used by the change tracker to provide an interface that the data class will use to report changes.
+        ///     Gets or sets the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.IEntityChangeTracker" /> used to report changes.
         /// </summary>
-        /// <param name="changeTracker"> Reference to the change tracker that is managing this entity </param>
+        /// <param name="changeTracker">
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.DataClasses.IEntityChangeTracker" /> used to report changes.
+        /// </param>
         void SetChangeTracker(IEntityChangeTracker changeTracker);
     }
 }

@@ -13,18 +13,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Private variables corresponding to their properties.
         private bool _isNullable = true;
 
-        /// <summary>
-        ///     The property is allowed to have a value of NULL.
-        /// </summary>
+        /// <summary>Gets or sets the value that indicates whether the property can have a null value.</summary>
+        /// <returns>The value that indicates whether the property can have a null value.</returns>
         public bool IsNullable
         {
             get { return _isNullable; }
             set { _isNullable = value; }
         }
 
-        /// <summary>
-        ///     The property is a key.
-        /// </summary>
+        /// <summary>Gets or sets the value that indicates whether the property is part of the entity key.</summary>
+        /// <returns>The value that indicates whether the property is part of the entity key.</returns>
         public bool EntityKeyProperty { get; set; }
     }
 }

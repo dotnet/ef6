@@ -112,41 +112,38 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // we need to differentiate when the default value is null vs when the default value is not initialized
         private static readonly object _notInitializedSentinel = new object();
 
-        /// <summary>
-        ///     Gets the name of this facet
-        /// </summary>
+        /// <summary>Gets the name of this facet.</summary>
+        /// <returns>The name of this facet.</returns>
         public virtual string FacetName
         {
             get { return _facetName; }
         }
 
-        /// <summary>
-        ///     Gets the type of this facet
-        /// </summary>
+        /// <summary>Gets the type of this facet.</summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type of this facet.
+        /// </returns>
         public EdmType FacetType
         {
             get { return _facetType; }
         }
 
-        /// <summary>
-        ///     Gets the lower bound a facet with this facet description can take
-        /// </summary>
+        /// <summary>Gets the minimum value for this facet.</summary>
+        /// <returns>The minimum value for this facet.</returns>
         public int? MinValue
         {
             get { return _minValue; }
         }
 
-        /// <summary>
-        ///     Gets the upper bound a facet with this facet description can take
-        /// </summary>
+        /// <summary>Gets the maximum value for this facet.</summary>
+        /// <returns>The maximum value for this facet.</returns>
         public int? MaxValue
         {
             get { return _maxValue; }
         }
 
-        /// <summary>
-        ///     Gets the default value of a facet with this facet description
-        /// </summary>
+        /// <summary>Gets the default value of a facet with this facet description.</summary>
+        /// <returns>The default value of a facet with this facet description.</returns>
         public object DefaultValue
         {
             get
@@ -159,17 +156,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        ///     Gets whether the value of this facet must be constant
-        /// </summary>
+        /// <summary>Gets a value indicating whether the value of this facet is a constant.</summary>
+        /// <returns>true if this facet is a constant; otherwise, false. </returns>
         public virtual bool IsConstant
         {
             get { return _isConstant; }
         }
 
-        /// <summary>
-        ///     Gets whether this facet is a required facet or not
-        /// </summary>
+        /// <summary>Gets a value indicating whether this facet is a required facet.</summary>
+        /// <returns>true if this facet is a required facet; otherwise, false.</returns>
         public bool IsRequired
         {
             get { return _defaultValue == _notInitializedSentinel; }
@@ -207,10 +202,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        ///     Overriding System.Object.ToString to provide better String representation
-        ///     for this type.
-        /// </summary>
+        /// <summary>Returns the name of this facet. </summary>
+        /// <returns>The name of this facet.</returns>
         public override string ToString()
         {
             return FacetName;

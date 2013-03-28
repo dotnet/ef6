@@ -70,16 +70,12 @@ namespace System.Data.Entity.Core.Objects
         #region Constructors
 
         /// <summary>
-        ///     This constructor creates a new ObjectQuery instance using the specified Entity-SQL
-        ///     command as the initial query. The context specifies the connection on
-        ///     which to execute the query as well as the metadata and result cache.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance using the specified Entity SQL command as the initial query.
         /// </summary>
-        /// <param name="commandText"> The Entity-SQL query string that initially defines the query. </param>
+        /// <param name="commandText">The Entity SQL query.</param>
         /// <param name="context">
-        ///     The ObjectContext containing the metadata workspace the query will be built against, the connection
-        ///     on which to execute the query, and the cache to store the results in.
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> on which to execute the query.
         /// </param>
-        /// <returns> A new ObjectQuery instance. </returns>
         public ObjectQuery(string commandText, ObjectContext context)
             : this(new EntitySqlQueryState(typeof(T), commandText, false, context, null, null))
         {
@@ -95,18 +91,18 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     This constructor creates a new ObjectQuery instance using the specified Entity-SQL
-        ///     command as the initial query. The context specifies the connection on
-        ///     which to execute the query as well as the metadata and result cache.
-        ///     The merge option specifies how the cache should be populated/updated.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance using the specified Entity SQL command as the initial query and the specified merge option.
         /// </summary>
-        /// <param name="commandText"> The Entity-SQL query string that initially defines the query. </param>
+        /// <param name="commandText">The Entity SQL query.</param>
         /// <param name="context">
-        ///     The ObjectContext containing the metadata workspace the query will be built against, the connection
-        ///     on which to execute the query, and the cache to store the results in.
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> on which to execute the query.
         /// </param>
-        /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
-        /// <returns> A new ObjectQuery instance. </returns>
+        /// <param name="mergeOption">
+        ///     Specifies how the entities that are retrieved through this query should be merged with the entities that have been returned from previous queries against the same
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        ///     .
+        /// </param>
         public ObjectQuery(string commandText, ObjectContext context, MergeOption mergeOption)
             : this(new EntitySqlQueryState(typeof(T), commandText, false, context, null, null))
         {
@@ -181,11 +177,11 @@ namespace System.Data.Entity.Core.Objects
 
         #region Public Properties
 
-        /// <summary>
-        ///     The name of the query, which can be used to identify the current sequence
-        ///     by name in query-builder methods. By default, the value is "it".
-        /// </summary>
-        /// <exception cref="ArgumentException">If the value specified on set is invalid.</exception>
+        /// <summary>Gets or sets the name of this object query.</summary>
+        /// <returns>
+        ///     A string value that is the name of this <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" />.
+        /// </returns>
+        /// <exception cref="T:System.ArgumentException">The value specified on set is not valid.</exception>
         public string Name
         {
             get { return _name; }
@@ -206,12 +202,16 @@ namespace System.Data.Entity.Core.Objects
 
         #region Public Methods
 
-        /// <summary>
-        ///     This method allows explicit query evaluation with a specified merge
-        ///     option which will override the merge option property.
-        /// </summary>
-        /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
-        /// <returns> An enumerable for the ObjectQuery results. </returns>
+        /// <summary>Executes the object query with the specified merge option.</summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> that contains a collection of entity objects returned by the query.
+        /// </returns>
+        /// <param name="mergeOption">
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. The default is
+        ///     <see
+        ///         cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />
+        ///     .
+        /// </param>
         public new ObjectResult<T> Execute(MergeOption mergeOption)
         {
             EntityUtil.CheckArgumentMergeOption(mergeOption);
@@ -265,11 +265,13 @@ namespace System.Data.Entity.Core.Objects
 
 #endif
 
-        /// <summary>
-        ///     Adds a path to the set of navigation property span paths included in the results of this query
-        /// </summary>
-        /// <param name="path"> The new span path </param>
-        /// <returns> A new ObjectQuery that includes the specified span path </returns>
+        /// <summary>Specifies the related objects to include in the query results.</summary>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> with the defined query path.
+        /// </returns>
+        /// <param name="path">Dot-separated list of related objects to return in the query results.</param>
+        /// <exception cref="T:System.ArgumentNullException"> path  is null.</exception>
+        /// <exception cref="T:System.ArgumentException"> path  is empty.</exception>
         public ObjectQuery<T> Include(string path)
         {
             Check.NotEmpty(path, "path");
@@ -282,11 +284,10 @@ namespace System.Data.Entity.Core.Objects
         // Query-builder Methods
         // ---------------------
 
-        /// <summary>
-        ///     This query-builder method creates a new query whose results are the
-        ///     unique results of this query.
-        /// </summary>
-        /// <returns> a new ObjectQuery instance. </returns>
+        /// <summary>Limits the query to unique results.</summary>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with SELECT DISTINCT applied.
+        /// </returns>
         public ObjectQuery<T> Distinct()
         {
             if (IsLinqQuery(this))
@@ -316,14 +317,18 @@ namespace System.Data.Entity.Core.Objects
             return new ObjectQuery<T>(EntitySqlQueryBuilder.Except(QueryState, query.QueryState));
         }
 
-        /// <summary>
-        ///     This query-builder method creates a new query whose results are the results
-        ///     of this query, grouped by some criteria.
-        /// </summary>
-        /// <param name="keys"> The group keys. </param>
-        /// <param name="projection"> The projection list. To project the group, use the keyword "group". </param>
-        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
-        /// <returns> a new ObjectQuery instance. </returns>
+        /// <summary>Groups the query results by the specified criteria.</summary>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance of type
+        ///     <see
+        ///         cref="T:System.Data.Common.DbDataRecord" />
+        ///     that is equivalent to the original instance with GROUP BY applied.
+        /// </returns>
+        /// <param name="keys">The key columns by which to group the results.</param>
+        /// <param name="projection">The list of selected properties that defines the projection. </param>
+        /// <param name="parameters">Zero or more parameters that are used in this method.</param>
+        /// <exception cref="T:System.ArgumentNullException">The  query  parameter is null or an empty string 
+        /// or the  projection  parameter is null or an empty string.</exception>
         public ObjectQuery<DbDataRecord> GroupBy(string keys, string projection, params ObjectParameter[] parameters)
         {
             Check.NotEmpty(keys, "keys");
@@ -352,12 +357,14 @@ namespace System.Data.Entity.Core.Objects
             return new ObjectQuery<T>(EntitySqlQueryBuilder.Intersect(QueryState, query.QueryState));
         }
 
-        /// <summary>
-        ///     This query-builder method creates a new query whose results are filtered
-        ///     to include only those of the specified type.
-        /// </summary>
-        /// <returns> a new ObjectQuery instance. </returns>
-        /// <exception cref="EntitySqlException">If the type specified is invalid.</exception>
+        /// <summary>Limits the query to only results of a specific type.</summary>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with OFTYPE applied.
+        /// </returns>
+        /// <typeparam name="TResultType">
+        ///     The type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> returned when the query is executed with the applied filter.
+        /// </typeparam>
+        /// <exception cref="T:System.Data.Entity.Core.EntitySqlException">The type specified is not valid.</exception>
         public ObjectQuery<TResultType> OfType<TResultType>()
         {
             if (IsLinqQuery(this))
@@ -386,18 +393,14 @@ namespace System.Data.Entity.Core.Objects
             return new ObjectQuery<TResultType>(EntitySqlQueryBuilder.OfType(QueryState, ofType, clrOfType));
         }
 
-        /// <summary>
-        ///     This query-builder method creates a new query whose results are the
-        ///     results of this query, ordered by some criteria. Note that any relational
-        ///     operations performed after an OrderBy have the potential to "undo" the
-        ///     ordering, so OrderBy should be considered a terminal query-building
-        ///     operation.
-        /// </summary>
-        /// <param name="keys"> The sort keys. </param>
-        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
-        /// <returns> a new ObjectQuery instance. </returns>
-        /// <exception cref="ArgumentNullException">If either argument is null.</exception>
-        /// <exception cref="ArgumentException">If the sort key command text is empty.</exception>
+        /// <summary>Orders the query results by the specified criteria.</summary>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with ORDER BY applied.
+        /// </returns>
+        /// <param name="keys">The key columns by which to order the results.</param>
+        /// <param name="parameters">Zero or more parameters that are used in this method.</param>
+        /// <exception cref="T:System.ArgumentNullException">The  keys  or  parameters  parameter is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The  key  is an empty string.</exception>
         public ObjectQuery<T> OrderBy(string keys, params ObjectParameter[] parameters)
         {
             Check.NotEmpty(keys, "keys");
@@ -406,15 +409,17 @@ namespace System.Data.Entity.Core.Objects
             return new ObjectQuery<T>(EntitySqlQueryBuilder.OrderBy(QueryState, Name, keys, parameters));
         }
 
-        /// <summary>
-        ///     This query-builder method creates a new query whose results are data
-        ///     records containing selected fields of the results of this query.
-        /// </summary>
-        /// <param name="projection"> The projection list. </param>
-        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
-        /// <returns> a new ObjectQuery instance. </returns>
-        /// <exception cref="ArgumentNullException">If either argument is null.</exception>
-        /// <exception cref="ArgumentException">If the projection list command text is empty.</exception>
+        /// <summary>Limits the query results to only the properties that are defined in the specified projection.</summary>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance of type
+        ///     <see
+        ///         cref="T:System.Data.Common.DbDataRecord" />
+        ///     that is equivalent to the original instance with SELECT applied.
+        /// </returns>
+        /// <param name="projection">The list of selected properties that defines the projection.</param>
+        /// <param name="parameters">Zero or more parameters that are used in this method.</param>
+        /// <exception cref="T:System.ArgumentNullException"> projection  is null or parameters is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The  projection  is an empty string.</exception>
         public ObjectQuery<DbDataRecord> Select(string projection, params ObjectParameter[] parameters)
         {
             Check.NotEmpty(projection, "projection");
@@ -423,15 +428,23 @@ namespace System.Data.Entity.Core.Objects
             return new ObjectQuery<DbDataRecord>(EntitySqlQueryBuilder.Select(QueryState, Name, projection, parameters));
         }
 
-        /// <summary>
-        ///     This query-builder method creates a new query whose results are a sequence
-        ///     of values projected from the results of this query.
-        /// </summary>
-        /// <param name="projection"> The projection list. </param>
-        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
-        /// <returns> a new ObjectQuery instance. </returns>
-        /// <exception cref="ArgumentNullException">If either argument is null.</exception>
-        /// <exception cref="ArgumentException">If the projection list command text is empty.</exception>
+        /// <summary>Limits the query results to only the property specified in the projection.</summary>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance of a type compatible with the specific projection. The returned
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" />
+        ///     is equivalent to the original instance with SELECT VALUE applied.
+        /// </returns>
+        /// <param name="projection">The projection list.</param>
+        /// <param name="parameters">An optional set of query parameters that should be in scope when parsing.</param>
+        /// <typeparam name="TResultType">
+        ///     The type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> returned by the
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.ObjectQuery`1.SelectValue``1(System.String,System.Data.Entity.Core.Objects.ObjectParameter[])" />
+        ///     method.
+        /// </typeparam>
+        /// <exception cref="T:System.ArgumentNullException"> projection  is null or parameters  is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The  projection  is an empty string.</exception>
         public ObjectQuery<TResultType> SelectValue<TResultType>(string projection, params ObjectParameter[] parameters)
         {
             Check.NotEmpty(projection, "projection");
@@ -445,17 +458,15 @@ namespace System.Data.Entity.Core.Objects
                     EntitySqlQueryBuilder.SelectValue(QueryState, Name, projection, parameters, typeof(TResultType)));
         }
 
-        /// <summary>
-        ///     This query-builder method creates a new query whose results are the
-        ///     results of this query, ordered by some criteria and with the specified
-        ///     number of results 'skipped', or paged-over.
-        /// </summary>
-        /// <param name="keys"> The sort keys. </param>
-        /// <param name="count"> Specifies the number of results to skip. This must be either a constant or a parameter reference. </param>
-        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
-        /// <returns> a new ObjectQuery instance. </returns>
-        /// <exception cref="ArgumentNullException">If any argument is null.</exception>
-        /// <exception cref="ArgumentException">If the sort key or skip count command text is empty.</exception>
+        /// <summary>Orders the query results by the specified criteria and skips a specified number of results.</summary>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with both ORDER BY and SKIP applied.
+        /// </returns>
+        /// <param name="keys">The key columns by which to order the results.</param>
+        /// <param name="count">The number of results to skip. This must be either a constant or a parameter reference.</param>
+        /// <param name="parameters">An optional set of query parameters that should be in scope when parsing.</param>
+        /// <exception cref="T:System.ArgumentNullException">Any argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException"> keys  is an empty string or count  is an empty string.</exception>
         public ObjectQuery<T> Skip(string keys, string count, params ObjectParameter[] parameters)
         {
             Check.NotEmpty(keys, "keys");
@@ -465,15 +476,14 @@ namespace System.Data.Entity.Core.Objects
             return new ObjectQuery<T>(EntitySqlQueryBuilder.Skip(QueryState, Name, keys, count, parameters));
         }
 
-        /// <summary>
-        ///     This query-builder method creates a new query whose results are the
-        ///     first 'count' results of this query.
-        /// </summary>
-        /// <param name="count"> Specifies the number of results to return. This must be either a constant or a parameter reference. </param>
-        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
-        /// <returns> a new ObjectQuery instance. </returns>
-        /// <exception cref="ArgumentNullException">If the top count command text is null.</exception>
-        /// <exception cref="ArgumentException">If the top count command text is empty.</exception>
+        /// <summary>Limits the query results to a specified number of items.</summary>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with TOP applied.
+        /// </returns>
+        /// <param name="count">The number of items in the results as a string. </param>
+        /// <param name="parameters">An optional set of query parameters that should be in scope when parsing.</param>
+        /// <exception cref="T:System.ArgumentNullException"> count  is null.</exception>
+        /// <exception cref="T:System.ArgumentException"> count  is an empty string.</exception>
         public ObjectQuery<T> Top(string count, params ObjectParameter[] parameters)
         {
             Check.NotEmpty(count, "count");
@@ -516,15 +526,14 @@ namespace System.Data.Entity.Core.Objects
             return new ObjectQuery<T>(EntitySqlQueryBuilder.UnionAll(QueryState, query.QueryState));
         }
 
-        /// <summary>
-        ///     This query-builder method creates a new query whose results are the
-        ///     results of this query filtered by some criteria.
-        /// </summary>
-        /// <param name="predicate"> The filter predicate. </param>
-        /// <param name="parameters"> An optional set of query parameters that should be in scope when parsing. </param>
-        /// <returns> a new ObjectQuery instance. </returns>
-        /// <exception cref="ArgumentNullException">If either argument is null.</exception>
-        /// <exception cref="ArgumentException">If the filter predicate command text is empty.</exception>
+        /// <summary>Limits the query to results that match specified filtering criteria.</summary>
+        /// <returns>
+        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with WHERE applied.
+        /// </returns>
+        /// <param name="predicate">The filter predicate.</param>
+        /// <param name="parameters">Zero or more parameters that are used in this method.</param>
+        /// <exception cref="T:System.ArgumentNullException"> predicate  is null or parameters  is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The  predicate  is an empty string.</exception>
         public ObjectQuery<T> Where(string predicate, params ObjectParameter[] parameters)
         {
             Check.NotEmpty(predicate, "predicate");

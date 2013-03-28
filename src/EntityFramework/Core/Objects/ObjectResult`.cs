@@ -68,7 +68,8 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>Returns an enumerator that iterates through the query results.</summary>
+        /// <returns>An enumerator that iterates through the query results.</returns>
         public IEnumerator<T> GetEnumerator()
         {
             return GetDbEnumerator();
@@ -166,6 +167,12 @@ namespace System.Data.Entity.Core.Objects
             return null != _nextResultGenerator ? _nextResultGenerator.GetNextResult<TElement>(_reader, _shouldReleaseConnection) : null;
         }
 
+        /// <summary>
+        ///     Gets the type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Type" /> that is the type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />.
+        /// </returns>
         public override Type ElementType
         {
             get { return typeof(T); }

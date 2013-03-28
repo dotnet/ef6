@@ -116,10 +116,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Public constructor that loads the metadata files from the specified xmlReaders.
-        ///     Throws when encounter errors.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" /> class using the specified XMLReader.
         /// </summary>
-        /// <param name="xmlReaders"> xmlReaders where the CDM schemas are loaded </param>
+        /// <param name="xmlReaders">The XMLReader used to create metadata.</param>
         public StoreItemCollection(IEnumerable<XmlReader> xmlReaders)
             : base(DataSpace.SSpace)
         {
@@ -167,13 +166,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Constructs the new instance of StoreItemCollection
-        ///     with the list of CDM files provided.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" /> class using the specified file paths.
         /// </summary>
-        /// <param name="filePaths"> paths where the CDM schemas are loaded </param>
-        /// <exception cref="ArgumentException">Thrown if path name is not valid</exception>
-        /// <exception cref="System.ArgumentNullException">thrown if paths argument is null</exception>
-        /// <exception cref="System.Data.Entity.Core.MetadataException">For errors related to invalid schemas.</exception>
+        /// <param name="filePaths">The file paths used to create metadata.</param>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file path names which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)]
         //For MetadataArtifactLoader.CreateCompositeFromFilePaths method call but we do not create the file paths in this method 
@@ -283,9 +278,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _providerInvariantName; }
         }
 
-        /// <summary>
-        ///     Version of this StoreItemCollection represents.
-        /// </summary>
+        /// <summary>Gets the version of the store schema for this collection.</summary>
+        /// <returns>The version of the store schema for this collection.</returns>
         public Double StoreSchemaVersion
         {
             get { return _schemaVersion; }
@@ -293,9 +287,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get the list of primitive types for the given space
+        ///     Returns a collection of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" /> objects.
         /// </summary>
-        /// <returns> </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> object that represents the collection of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        ///     objects.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public virtual ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes()
         {

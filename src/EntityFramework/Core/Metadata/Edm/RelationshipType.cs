@@ -30,9 +30,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        /// <summary>
-        ///     Returns the list of ends for this relationship type
-        /// </summary>
+        /// <summary>Gets the list of ends for this relationship type. </summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of Ends for this relationship type.
+        /// </returns>
         public ReadOnlyMetadataCollection<RelationshipEndMember> RelationshipEndMembers
         {
             get

@@ -102,10 +102,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method for creating a "readonly" TypeUsage with specified EdmType
+        ///     Creates a <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object with the specified conceptual model type.
         /// </summary>
-        /// <param name="edmType"> An EdmType for which to create a TypeUsage </param>
-        /// <returns> A TypeUsage instance with default facet values for the specified EdmType </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object with the default facet values for the specified
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        ///     .
+        /// </returns>
+        /// <param name="edmType">
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> for which the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     object is created.
+        /// </param>
         public static TypeUsage CreateDefaultTypeUsage(EdmType edmType)
         {
             Check.NotNull(edmType, "edmType");
@@ -115,13 +125,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method for creating a string TypeUsage object with the specified facets
+        ///     Creates a <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object to describe a string type by using the specified facet values.
         /// </summary>
-        /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
-        /// <param name="isUnicode"> Whether the string type is unicode or not </param>
-        /// <param name="isFixedLength"> Whether the string type is fixed length or not </param>
-        /// <param name="maxLength"> The max length of the string type </param>
-        /// <returns> A TypeUsage object describing a string type with the given facet values </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object describing a string type by using the specified facet values.
+        /// </returns>
+        /// <param name="primitiveType">
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" /> for which the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     object is created.
+        /// </param>
+        /// <param name="isUnicode">true to set the character-encoding standard of the string type to Unicode; otherwise, false.</param>
+        /// <param name="isFixedLength">true to set the character-encoding standard of the string type to Unicode; otherwise, false.</param>
+        /// <param name="maxLength">true to set the length of the string type to fixed; otherwise, false.</param>
         public static TypeUsage CreateStringTypeUsage(
             PrimitiveType primitiveType,
             bool isUnicode,
@@ -150,13 +167,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method for creating a string TypeUsage object with the specified facets and
-        ///     unbounded MaxLength
+        ///     Creates a <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object to describe a string type by using the specified facet values and unbounded MaxLength.
         /// </summary>
-        /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
-        /// <param name="isUnicode"> Whether the string type is unicode or not </param>
-        /// <param name="isFixedLength"> Whether the string type is fixed length or not </param>
-        /// <returns> A TypeUsage object describing a string type with the given facet values and unbounded MaxLength </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object describing a string type by using the specified facet values and unbounded MaxLength.
+        /// </returns>
+        /// <param name="primitiveType">
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" /> for which the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     object is created.
+        /// </param>
+        /// <param name="isUnicode">true to set the character-encoding standard of the string type to Unicode; otherwise, false.</param>
+        /// <param name="isFixedLength">true to set the length of the string type to fixed; otherwise, false</param>
         public static TypeUsage CreateStringTypeUsage(
             PrimitiveType primitiveType,
             bool isUnicode,
@@ -181,12 +204,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method for creating a Binary TypeUsage object with the specified facets
+        ///     Creates a <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object to describe a binary type by using the specified facet values.
         /// </summary>
-        /// <param name="primitiveType"> A PrimitiveType for which to construct TypeUsage </param>
-        /// <param name="isFixedLength"> Whether the binary type is fixed length or not </param>
-        /// <param name="maxLength"> The max length of the binary type </param>
-        /// <returns> A TypeUsage object describing a binary type with the given facet values </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object describing a binary type by using the specified facet values.
+        /// </returns>
+        /// <param name="primitiveType">
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" /> for which the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     object is created.
+        /// </param>
+        /// <param name="isFixedLength">true to set the length of the binary type to fixed; otherwise, false.</param>
+        /// <param name="maxLength">The maximum length of the binary type.</param>
         public static TypeUsage CreateBinaryTypeUsage(
             PrimitiveType primitiveType,
             bool isFixedLength,
@@ -213,12 +243,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method for creating a Binary TypeUsage object with the specified facets and
-        ///     unbounded MaxLength
+        ///     Creates a <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object to describe a binary type by using the specified facet values.
         /// </summary>
-        /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
-        /// <param name="isFixedLength"> Whether the binary type is fixed length or not </param>
-        /// <returns> A TypeUsage object describing a binary type with the given facet values </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object describing a binary type by using the specified facet values.
+        /// </returns>
+        /// <param name="primitiveType">
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" /> for which the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     object is created.
+        /// </param>
+        /// <param name="isFixedLength">true to set the length of the binary type to fixed; otherwise, false. </param>
         public static TypeUsage CreateBinaryTypeUsage(PrimitiveType primitiveType, bool isFixedLength)
         {
             Check.NotNull(primitiveType, "primitiveType");
@@ -239,11 +275,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method for creating a DateTime TypeUsage object with the specified facets
+        ///     Creates a <see cref="T:System.Data.Metadata.Edm.DateTimeTypeUsage" /> object of the type that the parameters describe.
         /// </summary>
-        /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
-        /// <param name="precision"> Precision for seconds </param>
-        /// <returns> A TypeUsage object describing a DateTime type with the given facet values </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Metadata.Edm.DateTimeTypeUsage" /> object.
+        /// </returns>
+        /// <param name="primitiveType">
+        ///     The simple type that defines the units of measurement of the <see cref="T:System." />DateTime object.
+        /// </param>
+        /// <param name="precision">
+        ///     The degree of granularity of the <see cref="T:System." />DateTimeOffset in fractions of a second, based on the number of decimal places supported. For example a precision of 3 means the granularity supported is milliseconds.
+        /// </param>
         public static TypeUsage CreateDateTimeTypeUsage(
             PrimitiveType primitiveType,
             byte? precision)
@@ -265,11 +307,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method for creating a DateTimeOffset TypeUsage object with the specified facets
+        ///     Creates a <see cref="T:System.Data.Metadata.Edm.DateTimeOffsetTypeUsage" /> object of the type that the parameters describe.
         /// </summary>
-        /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
-        /// <param name="precision"> Precision for seconds </param>
-        /// <returns> A TypeUsage object describing a DateTime type with the given facet values </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Metadata.Edm.DateTimeOffsetTypeUsage" /> object.
+        /// </returns>
+        /// <param name="primitiveType">The simple type that defines the units of measurement of the offset.</param>
+        /// <param name="precision">
+        ///     The degree of granularity of the <see cref="T:System." />DateTimeOffset in fractions of a second, based on the number of decimal places supported. For example a precision of 3 means the granularity supported is milliseconds.
+        /// </param>
         public static TypeUsage CreateDateTimeOffsetTypeUsage(
             PrimitiveType primitiveType,
             byte? precision)
@@ -292,11 +338,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method for creating a Time TypeUsage object with the specified facets
+        ///     Creates a <see cref="T:System.Data.Metadata.Edm.TimeTypeUsage" /> object of the type that the parameters describe.
         /// </summary>
-        /// <param name="primitiveType"> A PrimitiveType for which to construct the TypeUsage </param>
-        /// <param name="precision"> Precision for seconds </param>
-        /// <returns> A TypeUsage object describing a Time type with the given facet values </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Metadata.Edm.TimeTypeUsage" /> object.
+        /// </returns>
+        /// <param name="primitiveType">
+        ///     The simple type that defines the units of measurement of the <see cref="T:System." />DateTime object.
+        /// </param>
+        /// <param name="precision">
+        ///     The degree of granularity of the <see cref="T:System." />DateTimeOffset in fractions of a second, based on the number of decimal places supported. For example a precision of 3 means the granularity supported is milliseconds.
+        /// </param>
         public static TypeUsage CreateTimeTypeUsage(
             PrimitiveType primitiveType,
             byte? precision)
@@ -318,12 +370,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method for creating a Decimal TypeUsage object with the specified facets
+        ///     Creates a <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object to describe a decimal type by using the specified facet values.
         /// </summary>
-        /// <param name="primitiveType"> A PrimitiveType for which to construct type usage </param>
-        /// <param name="precision"> The precision of the decimal type </param>
-        /// <param name="scale"> The scale of the decimal type </param>
-        /// <returns> A TypeUsage object describing a decimal type with the given facet values </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object describing a decimal type by using the specified facet values.
+        /// </returns>
+        /// <param name="primitiveType">
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" /> for which the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     object is created.
+        /// </param>
+        /// <param name="precision">
+        ///     The precision of the decimal type as type <see cref="T:System.Byte" />.
+        /// </param>
+        /// <param name="scale">
+        ///     The scale of the decimal type as type <see cref="T:System.Byte" />.
+        /// </param>
         public static TypeUsage CreateDecimalTypeUsage(
             PrimitiveType primitiveType,
             byte precision,
@@ -348,10 +411,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method for creating a Decimal TypeUsage object with unbounded precision and scale
+        ///     Creates a <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object to describe a decimal type with unbounded precision and scale facet values.
         /// </summary>
-        /// <param name="primitiveType"> The PrimitiveType for which to construct type usage </param>
-        /// <returns> A TypeUsage object describing a decimal type with unbounded precision and scale </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object describing a decimal type with unbounded precision and scale facet values.
+        /// </returns>
+        /// <param name="primitiveType">
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" /> for which the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     object is created.
+        /// </param>
         public static TypeUsage CreateDecimalTypeUsage(PrimitiveType primitiveType)
         {
             Check.NotNull(primitiveType, "primitiveType");
@@ -402,16 +472,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal static readonly byte? DefaultDateTimePrecisionFacetValue = null;
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     .
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.TypeUsage; }
         }
 
         /// <summary>
-        ///     Gets the type that this TypeUsage describes
+        ///     Gets the type information described by this <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />.
         /// </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type information described by this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     .
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.EdmType, false)]
         public virtual EdmType EdmType
         {
@@ -419,8 +501,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the list of facets for the type in this TypeUsage
+        ///     Gets the list of facets for the type that is described by this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of facets for the type that is described by this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     .
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.Facet, true)]
         public virtual ReadOnlyMetadataCollection<Facet> Facets
         {
@@ -512,10 +603,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     check if "this" is a subtype of the specified TypeUsage
+        ///     Checks whether this <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> is a subtype of the specified
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     .
         /// </summary>
-        /// <param name="typeUsage"> The typeUsage to be checked </param>
-        /// <returns> true if this typeUsage is a subtype of the specified typeUsage </returns>
+        /// <returns>
+        ///     true if this <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> is a subtype of the specified
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        ///     ; otherwise, false.
+        /// </returns>
+        /// <param name="typeUsage">
+        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object to be checked.
+        /// </param>
         public bool IsSubtypeOf(TypeUsage typeUsage)
         {
             if (EdmType == null
@@ -641,7 +742,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
+        ///     Returns the full name of the type described by this <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />.
         /// </summary>
+        /// <returns>
+        ///     The full name of the type described by this <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> as string.
+        /// </returns>
         public override string ToString()
         {
             // Note that ToString is actually used to get the full name of the type, so changing the value returned here

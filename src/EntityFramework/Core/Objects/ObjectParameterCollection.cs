@@ -65,9 +65,10 @@ namespace System.Data.Entity.Core.Objects
 
         #region Public Properties
 
-        /// <summary>
-        ///     The number of parameters currently in the collection.
-        /// </summary>
+        /// <summary>Gets the number of parameters currently in the collection.</summary>
+        /// <returns>
+        ///     The number of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects that are currently in the collection.
+        /// </returns>
         public int Count
         {
             get { return _parameters.Count; }
@@ -88,14 +89,12 @@ namespace System.Data.Entity.Core.Objects
 
         #region Public Indexers
 
-        /// <summary>
-        ///     This indexer allows callers to retrieve parameters by name. If no
-        ///     parameter by the given name exists, an exception is thrown. For
-        ///     safe existence-checking, use the Contains method instead.
-        /// </summary>
-        /// <param name="name"> The name of the parameter to find. </param>
-        /// <returns> The parameter object with the specified name. </returns>
-        /// <exception cref="ArgumentOutOfRangeException">If no parameter with the specified name is found in the collection.</exception>
+        /// <summary>Provides an indexer that allows callers to retrieve parameters by name.</summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> instance.
+        /// </returns>
+        /// <param name="name">The name of the parameter to find. This name should not include the "@" parameter marker that is used in the Entity SQL statements, only the actual name.</param>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">No parameter with the specified name is found in the collection.</exception>
         public ObjectParameter this[string name]
         {
             get
@@ -118,25 +117,17 @@ namespace System.Data.Entity.Core.Objects
         #region Add
 
         /// <summary>
-        ///     This method adds the specified parameter object to the collection. If
-        ///     the parameter object already exists in the collection, an exception is
-        ///     thrown.
+        ///     Adds the specified <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> to the collection.
         /// </summary>
-        /// <param name="item"> The parameter object to add to the collection. </param>
-        /// <returns> </returns>
-        /// <exception cref="ArgumentNullException">If the value of the parameter argument is null.</exception>
-        /// <exception cref="ArgumentException">
-        ///     If the parameter argument already exists in the collection. This
-        ///     behavior differs from that of most collections which allow duplicate
-        ///     entries.
+        /// <param name="parameter">The parameter to add to the collection.</param>
+        /// <exception cref="T:System.ArgumentNullException">The  parameter  argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">
+        ///     The  parameter  argument already exists in the collection. This behavior differs from that of most collections that allow duplicate entries. -or-Another parameter with the same name as the  parameter  argument already exists in the collection. Note that the lookup is case-insensitive. This behavior differs from that of most collections, and is more like that of a
+        ///     <see
+        ///         cref="T:System.Collections.Generic.Dictionary" />
+        ///     .
         /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     If another parameter with the same name as the parameter argument
-        ///     already exists in the collection. Note that the lookup is case-
-        ///     insensitive. This behavior differs from that of most collections,
-        ///     and is more like that of a Dictionary.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">If the type of the specified parameter is invalid.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">The type of the  parameter  is not valid.</exception>
         public void Add(ObjectParameter item)
         {
             Check.NotNull(item, "item");
@@ -167,9 +158,8 @@ namespace System.Data.Entity.Core.Objects
         #region Clear
 
         /// <summary>
-        ///     This method empties the entire parameter collection.
+        ///     Deletes all <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> instances from the collection.
         /// </summary>
-        /// <returns> </returns>
         public void Clear()
         {
             CheckUnlocked();
@@ -182,12 +172,13 @@ namespace System.Data.Entity.Core.Objects
         #region Contains (ObjectParameter)
 
         /// <summary>
-        ///     This methods checks for the existence of a given parameter object in the
-        ///     collection by reference.
+        ///     Checks for the existence of a specified <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> in the collection by reference.
         /// </summary>
-        /// <param name="item"> The parameter object to look for in the collection. </param>
-        /// <returns> True if the parameter object was found in the collection, false otherwise. Note that this is a reference-based lookup, which means that if the para- meter argument has the same name as a parameter object in the collection, this method will only return true if it's the same object. </returns>
-        /// <exception cref="ArgumentNullException">If the value of the parameter argument is null.</exception>
+        /// <returns>Returns true if the parameter object was found in the collection; otherwise, false.  </returns>
+        /// <param name="parameter">
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> to find in the collection.
+        /// </param>
+        /// <exception cref="T:System.ArgumentNullException">The  parameter  argument is null.</exception>
         public bool Contains(ObjectParameter item)
         {
             Check.NotNull(item, "item");
@@ -200,12 +191,11 @@ namespace System.Data.Entity.Core.Objects
         #region Contains (string)
 
         /// <summary>
-        ///     This method checks for the existence of a given parameter in the collection
-        ///     by name.
+        ///     Determines whether an <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> with the specified name is in the collection.
         /// </summary>
-        /// <param name="name"> The name of the parameter to look for in the collection. </param>
-        /// <returns> True if a parameter with the specified name was found in the collection, false otherwise. Note that the lookup is case-insensitive. </returns>
-        /// <exception cref="ArgumentNullException">If the value of the parameter argument is null.</exception>
+        /// <returns>Returns true if a parameter with the specified name was found in the collection; otherwise, false.</returns>
+        /// <param name="name">The name of the parameter to look for in the collection. This name should not include the "@" parameter marker that is used in the Entity SQL statements, only the actual name.</param>
+        /// <exception cref="T:System.ArgumentNullException">The  name  parameter is null.</exception>
         public bool Contains(string name)
         {
             Check.NotNull(name, "name");
@@ -223,13 +213,9 @@ namespace System.Data.Entity.Core.Objects
 
         #region CopyTo
 
-        /// <summary>
-        ///     This method allows the parameters in the collection to be copied into a
-        ///     supplied array, beginning at the specified index therein.
-        /// </summary>
-        /// <param name="array"> The array into which to copy the parameters. </param>
-        /// <param name="arrayIndex"> The index in the array at which to start copying the parameters. </param>
-        /// <returns> </returns>
+        /// <summary>Allows the parameters in the collection to be copied into a supplied array, starting with the object at the specified index.</summary>
+        /// <param name="array">The array into which to copy the parameters.</param>
+        /// <param name="index">The index in the array at which to start copying the parameters.</param>
         public void CopyTo(ObjectParameter[] array, int arrayIndex)
         {
             _parameters.CopyTo(array, arrayIndex);
@@ -240,14 +226,11 @@ namespace System.Data.Entity.Core.Objects
         #region Remove
 
         /// <summary>
-        ///     This method removes an instance of a parameter from the collection by
-        ///     reference if it exists in the collection.  To remove a parameter by name,
-        ///     first use the Contains(name) method or this[name] indexer to retrieve
-        ///     the parameter instance, then remove it using this method.
+        ///     Removes an instance of an <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> from the collection by reference if it exists in the collection.
         /// </summary>
-        /// <param name="item"> The parameter object to remove from the collection. </param>
-        /// <returns> True if the parameter object was found and removed from the collection, false otherwise. Note that this is a reference-based lookup, which means that if the parameter argument has the same name as a parameter object in the collection, this method will remove it only if it's the same object. </returns>
-        /// <exception cref="ArgumentNullException">If the value of the parameter argument is null.</exception>
+        /// <returns>Returns true if the parameter object was found and removed from the collection; otherwise, false. </returns>
+        /// <param name="parameter">An object to remove from the collection.</param>
+        /// <exception cref="T:System.ArgumentNullException">The  parameter  argument is null.</exception>
         public bool Remove(ObjectParameter item)
         {
             Check.NotNull(item, "item");
@@ -281,6 +264,10 @@ namespace System.Data.Entity.Core.Objects
             return ((ICollection<ObjectParameter>)_parameters).GetEnumerator();
         }
 
+        /// <summary>Returns an untyped enumerator over the collection. </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Collections.IEnumerator" /> instance.
+        /// </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return ((ICollection)_parameters).GetEnumerator();

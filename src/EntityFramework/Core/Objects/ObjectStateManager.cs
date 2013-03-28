@@ -81,9 +81,11 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     ObjectStateManager constructor.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" /> class.
         /// </summary>
-        /// <param name="metadataWorkspace"> </param>
+        /// <param name="metadataWorkspace">
+        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" />, which supplies mapping and metadata information.
+        /// </param>
         [CLSCompliant(false)]
         public ObjectStateManager(MetadataWorkspace metadataWorkspace)
         {
@@ -140,9 +142,14 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     MetadataWorkspace property
+        ///     Gets the <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> associated with this state manager.
         /// </summary>
-        /// <returns> MetadataWorkspace </returns>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> associated with this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
+        ///     .
+        /// </returns>
         [CLSCompliant(false)]
         public virtual MetadataWorkspace MetadataWorkspace
         {
@@ -151,9 +158,7 @@ namespace System.Data.Entity.Core.Objects
 
         #region events ObjectStateManagerChanged / EntityDeleted
 
-        /// <summary>
-        ///     Event to notify changes in the collection.
-        /// </summary>
+        /// <summary>Occurs when entities are added to or removed from the state manager.</summary>
         public event CollectionChangeEventHandler ObjectStateManagerChanged
         {
             add { onObjectStateManagerChangedDelegate += value; }
@@ -1780,9 +1785,23 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Returns all CacheEntries in the given state.
+        ///     Returns a collection of <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> objects for objects or relationships with the given state.
         /// </summary>
-        /// <exception cref="ArgumentException">if EntityState.Detached flag is set in state</exception>
+        /// <returns>
+        ///     A collection of <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> objects in the given
+        ///     <see
+        ///         cref="T:System.Data.Entity.EntityState" />
+        ///     .
+        /// </returns>
+        /// <param name="state">
+        ///     An <see cref="T:System.Data.Entity.EntityState" /> used to filter the returned
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        ///     objects.
+        /// </param>
+        /// <exception cref="T:System.ArgumentException">
+        ///     When  state  is <see cref="F:System.Data.Entity.EntityState.Detached" />.
+        /// </exception>
         public virtual IEnumerable<ObjectStateEntry> GetObjectStateEntries(EntityState state)
         {
             if ((EntityState.Detached & state) != 0)
@@ -2171,13 +2190,20 @@ namespace System.Data.Entity.Core.Objects
         #endregion
 
         /// <summary>
-        ///     Finds an ObjectStateEntry for the given entity and changes its state to the new state.
-        ///     The operation does not trigger cascade deletion.
-        ///     The operation may change state of adjacent relationships.
+        ///     Changes state of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for a specific object to the specified  entityState .
         /// </summary>
-        /// <param name="entity"> entity which state should be changed </param>
-        /// <param name="entityState"> new state of the entity </param>
-        /// <returns> entry associated with entity </returns>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the supplied  entity .
+        /// </returns>
+        /// <param name="entity">The object for which the state must be changed.</param>
+        /// <param name="entityState">The new state of the object.</param>
+        /// <exception cref="T:System.ArgumentNullException">When  entity  is null.</exception>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     When the object is not detached and does not have an entry in the state manager
+        ///     or when you try to change the state to <see cref="F:System.Data.Entity.EntityState.Detached" />
+        ///     from any other <see cref="T:System.Data.Entity.EntityState." />
+        ///     or when  state  is not a valid <seecref="T:System.Data.Entity.EntityState" /> value.
+        /// </exception>
         public virtual ObjectStateEntry ChangeObjectState(object entity, EntityState entityState)
         {
             Check.NotNull(entity, "entity");
@@ -2212,17 +2238,30 @@ namespace System.Data.Entity.Core.Objects
             return entry;
         }
 
-        /// <summary>
-        ///     Changes state of a relationship between two entities.
-        /// </summary>
-        /// <remarks>
-        ///     Both entities must be already tracked by the ObjectContext.
-        /// </remarks>
-        /// <param name="sourceEntity"> The instance of the source entity or the EntityKey of the source entity </param>
-        /// <param name="targetEntity"> The instance of the target entity or the EntityKey of the target entity </param>
-        /// <param name="navigationProperty"> The name of the navigation property on the source entity </param>
-        /// <param name="relationshipState"> The requested state of the relationship </param>
-        /// <returns> The ObjectStateEntry for changed relationship </returns>
+        /// <summary>Changes the state of the relationship between two entity objects that is specified based on the two related objects and the name of the navigation property.</summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the relationship that was changed.
+        /// </returns>
+        /// <param name="sourceEntity">
+        ///     The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the source entity at one end of the relationship.
+        /// </param>
+        /// <param name="targetEntity">
+        ///     The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the target entity at the other end of the relationship.
+        /// </param>
+        /// <param name="navigationProperty">The name of the navigation property on  source  that returns the specified  target .</param>
+        /// <param name="relationshipState">
+        ///     The requested <see cref="T:System.Data.Entity.EntityState" /> of the specified relationship.
+        /// </param>
+        /// <exception cref="T:System.ArgumentNullException">When  source  or  target  is null.</exception>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     When trying to change the state of the relationship to a state other than 
+        ///         <see cref="F:System.Data.Entity.EntityState.Deleted" /> or <see cref="F:System.Data.Entity.EntityState.Detached" /> 
+        ///     when either  source  or  target  is in a <see cref="F:System.Data.Entity.EntityState.Deleted" /> state 
+        ///     or when you try to change the state of the relationship to a state other than
+        ///     <see cref="F:System.Data.Entity.EntityState.Added" /> or <see cref="F:System.Data.Entity.EntityState.Detached" />
+        ///     when either  source  or  target  is in an <see ref="F:System.Data.Entity.EntityState.Added" /> state 
+        ///     or when  state  is not a valid <see cref="T:System.Data.Entity.EntityState" /> value
+        /// </exception>
         public virtual ObjectStateEntry ChangeRelationshipState(
             object sourceEntity,
             object targetEntity,
@@ -2240,17 +2279,33 @@ namespace System.Data.Entity.Core.Objects
             return ChangeRelationshipState(sourceEntry, targetEntry, relatedEnd, relationshipState);
         }
 
-        /// <summary>
-        ///     Changes state of a relationship between two entities.
-        /// </summary>
-        /// <remarks>
-        ///     Both entities must be already tracked by the ObjectContext.
-        /// </remarks>
-        /// <param name="sourceEntity"> The instance of the source entity or the EntityKey of the source entity </param>
-        /// <param name="targetEntity"> The instance of the target entity or the EntityKey of the target entity </param>
-        /// <param name="navigationPropertySelector"> A LINQ expression specifying the navigation property </param>
-        /// <param name="relationshipState"> The requested state of the relationship </param>
-        /// <returns> The ObjectStateEntry for changed relationship </returns>
+        /// <summary>Changes the state of the relationship between two entity objects that is specified based on the two related objects and a LINQ expression that defines the navigation property.</summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the relationship that was changed.
+        /// </returns>
+        /// <param name="sourceEntity">
+        ///     The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the source entity at one end of the relationship.
+        /// </param>
+        /// <param name="targetEntity">
+        ///     The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the target entity at the other end of the relationship.
+        /// </param>
+        /// <param name="navigationPropertySelector">A LINQ expression that selects the navigation property on  source  that returns the specified  target .</param>
+        /// <param name="relationshipState">
+        ///     The requested <see cref="T:System.Data.Entity.EntityState" /> of the specified relationship.
+        /// </param>
+        /// <typeparam name="TEntity">The entity type of the  source  object.</typeparam>
+        /// <exception cref="T:System.ArgumentNullException">When  source ,  target , or  selector  is null.</exception>
+        /// <exception cref="T:System.ArgumentException"> selector  is malformed or cannot return a navigation property.</exception>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     When you try to change the state of the relationship to a state other than
+        ///     <see cref="F:System.Data.Entity.EntityState.Deleted" />  or <see cref="F:System.Data.Entity.EntityState.Detached" /> 
+        ///     when either  source  or  target  is in a
+        ///     <see cref="F:System.Data.Entity.EntityState.Deleted" /> state
+        ///     or when you try to change the state of the relationship to a state other than
+        ///     <see  cref="F:System.Data.Entity.EntityState.Added" />  or <see  cref="F:System.Data.Entity.EntityState.Detached" />
+        ///     when either  source  or  target  is in an <see cref="F:System.Data.Entity.EntityState.Added" /> state 
+        ///     or when  state  is not a valid <see cref="T:System.Data.Entity.EntityState" /> value.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual ObjectStateEntry ChangeRelationshipState<TEntity>(
             TEntity sourceEntity,
@@ -2274,18 +2329,32 @@ namespace System.Data.Entity.Core.Objects
             return ChangeRelationshipState(sourceEntry, targetEntry, relatedEnd, relationshipState);
         }
 
-        /// <summary>
-        ///     Changes state of a relationship between two entities.
-        /// </summary>
-        /// <remarks>
-        ///     Both entities must be already tracked by the ObjectContext.
-        /// </remarks>
-        /// <param name="sourceEntity"> The instance of the source entity or the EntityKey of the source entity </param>
-        /// <param name="targetEntity"> The instance of the target entity or the EntityKey of the target entity </param>
-        /// <param name="relationshipName"> The name of relationship </param>
-        /// <param name="targetRoleName"> The target role name of the relationship </param>
-        /// <param name="relationshipState"> The requested state of the relationship </param>
-        /// <returns> The ObjectStateEntry for changed relationship </returns>
+        /// <summary>Changes the state of the relationship between two entity objects that is specified based on the two related objects and the properties of the relationship.</summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the relationship that was changed.
+        /// </returns>
+        /// <param name="sourceEntity">
+        ///     The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the source entity at one end of the relationship.
+        /// </param>
+        /// <param name="targetEntity">
+        ///     The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the target entity at the other end of the relationship.
+        /// </param>
+        /// <param name="relationshipName">The name of the relationship.</param>
+        /// <param name="targetRoleName">The role name at the  target  end of the relationship.</param>
+        /// <param name="relationshipState">
+        ///     The requested <see cref="T:System.Data.Entity.EntityState" /> of the specified relationship.
+        /// </param>
+        /// <exception cref="T:System.ArgumentNullException">When  source  or  target  is null.</exception>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     When you try to change the state of the relationship to a state other than
+        ///     <see cref="F:System.Data.Entity.EntityState.Deleted" /> or <see cref="F:System.Data.Entity.EntityState.Detached" /> 
+        ///     when either  source  or  target  is in a <see cref="F:System.Data.Entity.EntityState.Deleted" /> state 
+        ///     or when you try to change the state of the relationship to a state other than
+        ///     <see cref="F:System.Data.Entity.EntityState.Added" /> or <see cref="F:System.Data.Entity.EntityState.Detached" />
+        ///     when either  source  or  target  is in an
+        ///     <see cref="F:System.Data.Entity.EntityState.Added" /> state 
+        ///     or when  state  is not a valid  <see cref="T:System.Data.Entity.EntityState" /> value.
+        /// </exception>
         public virtual ObjectStateEntry ChangeRelationshipState(
             object sourceEntity,
             object targetEntity,
@@ -2460,10 +2529,25 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieve the corresponding ObjectStateEntry for the given EntityKey.
+        ///     Returns an <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the object or relationship entry with the specified key.
         /// </summary>
-        /// <exception cref="ArgumentNullException">if key is null</exception>
-        /// <exception cref="ArgumentException">if key is not found</exception>
+        /// <returns>
+        ///     The corresponding <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the given
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityKey" />
+        ///     .
+        /// </returns>
+        /// <param name="key">
+        ///     The <see cref="T:System.Data.Entity.Core.EntityKey" />.
+        /// </param>
+        /// <exception cref="T:System.ArgumentNullException">When  key  is null.</exception>
+        /// <exception cref="T:System.ArgumentException">When the specified  key  cannot be found in the state manager.</exception>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     No entity with the specified <see cref="T:System.Data.Entity.Core.EntityKey" /> exists in the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
+        ///     .
+        /// </exception>
         public virtual ObjectStateEntry GetObjectStateEntry(EntityKey key)
         {
             ObjectStateEntry entry;
@@ -2485,10 +2569,26 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Given an entity, of type object, return the corresponding ObjectStateEntry.
+        ///     Returns an <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the specified object.
         /// </summary>
-        /// <param name="entity"> </param>
-        /// <returns> The corresponding ObjectStateEntry for this object. </returns>
+        /// <returns>
+        ///     The corresponding <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the given
+        ///     <see
+        ///         cref="T:System.Object" />
+        ///     .
+        /// </returns>
+        /// <param name="entity">
+        ///     The <see cref="T:System.Object" /> to which the retrieved
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        ///     belongs.
+        /// </param>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     No entity for the specified <see cref="T:System.Object" /> exists in the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
+        ///     .
+        /// </exception>
         public virtual ObjectStateEntry GetObjectStateEntry(object entity)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
@@ -2514,11 +2614,29 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieve the corresponding ObjectStateEntry for the given object.
+        ///     Tries to retrieve the corresponding <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the specified
+        ///     <see
+        ///         cref="T:System.Object" />
+        ///     .
         /// </summary>
-        /// <param name="entity"> </param>
-        /// <param name="entry"> </param>
-        /// <returns> true if the corresponding ObjectStateEntry was found </returns>
+        /// <returns>
+        ///     A Boolean value that is true if there is a corresponding
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        ///     for the given object; otherwise, false.
+        /// </returns>
+        /// <param name="entity">
+        ///     The <see cref="T:System.Object" /> to which the retrieved
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        ///     belongs.
+        /// </param>
+        /// <param name="entry">
+        ///     When this method returns, contains the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the given
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityKey" />
+        ///     This parameter is passed uninitialized.
+        /// </param>
         public virtual bool TryGetObjectStateEntry(object entity, out ObjectStateEntry entry)
         {
             Check.NotNull(entity, "entity");
@@ -2578,10 +2696,30 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieve the corresponding ObjectStateEntry for the given EntityKey.
+        ///     Tries to retrieve the corresponding <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the object or relationship with the specified
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityKey" />
+        ///     .
         /// </summary>
-        /// <returns> true if the corresponding ObjectStateEntry was found </returns>
-        /// <exception cref="ArgumentNullException">if key is null</exception>
+        /// <returns>
+        ///     A Boolean value that is true if there is a corresponding
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        ///     for the given
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityKey" />
+        ///     ; otherwise, false.
+        /// </returns>
+        /// <param name="key">
+        ///     The given <see cref="T:System.Data.Entity.Core.EntityKey" />.
+        /// </param>
+        /// <param name="entry">
+        ///     When this method returns, contains an <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the given
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityKey" />
+        ///     This parameter is passed uninitialized.
+        /// </param>
+        /// <exception cref="T:System.ArgumentNullException">A null (Nothing in Visual Basic) value is provided for  key .</exception>
         public virtual bool TryGetObjectStateEntry(EntityKey key, out ObjectStateEntry entry)
         {
             bool result;
@@ -2660,16 +2798,17 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Gets a RelationshipManager for the given entity.  For entities that implement IEntityWithRelationships,
-        ///     the RelationshipManager is obtained through that interface.  For other types of entity, the RelationshipManager
-        ///     that is being tracked internally is returned.  This means that a RelationshipManager for an entity that
-        ///     does not implement IEntityWithRelationships can only be obtained if the entity is being tracked by the
-        ///     ObjectStateManager.
-        ///     Note that all code generated entities that inherit from EntityObject automatically implement IEntityWithRelationships.
+        ///     Returns the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> that is used by the specified object.
         /// </summary>
-        /// <param name="entity"> The entity for which to return a RelationshipManager </param>
-        /// <returns> The RelationshipManager </returns>
-        /// <exception cref="InvalidOperationException">The entity does not implement IEntityWithRelationships and is not tracked by this ObjectStateManager</exception>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> for the specified object.
+        /// </returns>
+        /// <param name="entity">
+        ///     The object for which to return the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" />.
+        /// </param>
+        /// <exception cref="InvalidOperationException">
+        ///     The entity does not implement IEntityWithRelationships and is not tracked by this ObjectStateManager
+        /// </exception>
         public virtual RelationshipManager GetRelationshipManager(object entity)
         {
             RelationshipManager rm;
@@ -2681,16 +2820,20 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Gets a RelationshipManager for the given entity.  For entities that implement IEntityWithRelationships,
-        ///     the RelationshipManager is obtained through that interface.  For other types of entity, the RelationshipManager
-        ///     that is being tracked internally is returned.  This means that a RelationshipManager for an entity that
-        ///     does not implement IEntityWithRelationships can only be obtained if the entity is being tracked by the
-        ///     ObjectStateManager.
-        ///     Note that all code generated entities that inherit from EntityObject automatically implement IEntityWithRelationships.
+        ///     Returns the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> that is used by the specified object.
         /// </summary>
-        /// <param name="entity"> The entity for which to return a RelationshipManager </param>
-        /// <param name="relationshipManager"> The RelationshipManager, or null if none was found </param>
-        /// <returns> True if a RelationshipManager was found; false if The entity does not implement IEntityWithRelationships and is not tracked by this ObjectStateManager </returns>
+        /// <returns>
+        ///     true if a <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> instance was returned for the supplied  entity ; otherwise false.
+        /// </returns>
+        /// <param name="entity">
+        ///     The object for which to return the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" />.
+        /// </param>
+        /// <param name="relationshipManager">
+        ///     When this method returns, contains the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" />
+        ///     for the  entity .
+        /// </param>
         public virtual bool TryGetRelationshipManager(object entity, out RelationshipManager relationshipManager)
         {
             Check.NotNull(entity, "entity");

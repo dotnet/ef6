@@ -5,7 +5,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Describes the different "kinds" (classes) of expressions
+    ///     Contains values that each expression class uses to denote the operation it represents. The
+    ///     <see
+    ///         cref="P:System.Data.Entity.Core.Common.CommandTrees.DbExpression.ExpressionKind" />
+    ///     property of an
+    ///     <see
+    ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
+    ///     can be retrieved to determine which operation that expression represents.
     /// </summary>
     public enum DbExpressionKind
     {

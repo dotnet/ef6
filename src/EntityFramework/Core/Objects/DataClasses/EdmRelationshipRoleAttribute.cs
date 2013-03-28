@@ -20,11 +20,20 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private readonly bool _isForeignKey;
 
         /// <summary>
-        ///     Attribute containing the details for a relationship
-        ///     This should match the C-Space relationship information, but having it available in this
-        ///     attribute allows us access to this information even in O-Space when there is no context.
-        ///     There can be multiple attributes of this type in an assembly.
+        ///     Creates an instance of the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EdmRelationshipAttribute" /> class.
         /// </summary>
+        /// <param name="relationshipNamespaceName">The name of the namespace for the association in which this entity participates.</param>
+        /// <param name="relationshipName">The name of a relationship in which this entity participates. </param>
+        /// <param name="role1Name">Name of the role for the type at one end of the association.</param>
+        /// <param name="role1Multiplicity">
+        ///     A value of <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> that indicates the multiplicity at one end of the association, such as one or many.
+        /// </param>
+        /// <param name="role1Type">The type of the entity at one end of the association.</param>
+        /// <param name="role2Name">Name of the role for the type at the other end of the association.</param>
+        /// <param name="role2Multiplicity">
+        ///     A value of <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> that indicates the multiplicity at the other end of the association, such as one or many.
+        /// </param>
+        /// <param name="role2Type">The type of the entity at the other end of the association.</param>
         public EdmRelationshipAttribute(
             string relationshipNamespaceName,
             string relationshipName,
@@ -48,11 +57,24 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Attribute containing the details for a relationship
-        ///     This should match the C-Space relationship information, but having it available in this
-        ///     attribute allows us access to this information even in O-Space when there is no context.
-        ///     There can be multiple attributes of this type in an assembly.
+        ///     Initializes a new instance of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EdmRelationshipAttribute" />
+        ///     class.
         /// </summary>
+        /// <param name="relationshipNamespaceName">The name of the namespace for the association in which this entity participates.</param>
+        /// <param name="relationshipName">The name of a relationship in which this entity participates.</param>
+        /// <param name="role1Name">Name of the role for the type at one end of the association.</param>
+        /// <param name="role1Multiplicity">
+        ///     A value of <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> that indicates the multiplicity at one end of the association, such as one or many.
+        /// </param>
+        /// <param name="role1Type">The type of the entity at one end of the association.</param>
+        /// <param name="role2Name">Name of the role for the type at the other end of the association.</param>
+        /// <param name="role2Multiplicity">
+        ///     A value of <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> that indicates the multiplicity at the other end of the association, such as one or many.
+        /// </param>
+        /// <param name="role2Type">The type of the entity at the other end of the association.</param>
+        /// <param name="isForeignKey">A value that indicates whether the relationship is based on the foreign key value.</param>
         public EdmRelationshipAttribute(
             string relationshipNamespaceName,
             string relationshipName,
@@ -78,73 +100,83 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             _isForeignKey = isForeignKey;
         }
 
-        /// <summary>
-        ///     The name of the namespace that the relationship is in
-        /// </summary>
+        /// <summary>The namespace for the relationship.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.String" /> that is the namespace for the relationship.
+        /// </returns>
         public string RelationshipNamespaceName
         {
             get { return _relationshipNamespaceName; }
         }
 
-        /// <summary>
-        ///     The name of a relationship
-        /// </summary>
+        /// <summary>Name of the relationship. </summary>
+        /// <returns>
+        ///     A <see cref="T:System.String" /> that is the name of a relationship that is defined by this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EdmRelationshipAttribute" />
+        ///     .
+        /// </returns>
         public string RelationshipName
         {
             get { return _relationshipName; }
         }
 
-        /// <summary>
-        ///     The name of the role
-        /// </summary>
+        /// <summary>Name of the role at one end of the relationship.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.String" /> that is the name of the role.
+        /// </returns>
         public string Role1Name
         {
             get { return _role1Name; }
         }
 
-        /// <summary>
-        ///     The multiplicity of the the RoleName in RelationshipName
-        /// </summary>
+        /// <summary>Multiplicity at one end of the relationship.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> value that indicates the multiplicity.
+        /// </returns>
         public RelationshipMultiplicity Role1Multiplicity
         {
             get { return _role1Multiplicity; }
         }
 
-        /// <summary>
-        ///     The CLR type for the role associated with this relationship
-        /// </summary>
+        /// <summary>Type of the entity at one end of the relationship.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.Type" /> that is the type of the object at this end of the association.
+        /// </returns>
         public Type Role1Type
         {
             get { return _role1Type; }
         }
 
-        /// <summary>
-        ///     The name of the role
-        /// </summary>
+        /// <summary>Name of the role at the other end of the relationship.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.String" /> that is the name of the role.
+        /// </returns>
         public string Role2Name
         {
             get { return _role2Name; }
         }
 
-        /// <summary>
-        ///     The multiplicity of the the RoleName in RelationshipName
-        /// </summary>
+        /// <summary>Multiplicity at the other end of the relationship.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> value that indicates the multiplicity.
+        /// </returns>
         public RelationshipMultiplicity Role2Multiplicity
         {
             get { return _role2Multiplicity; }
         }
 
-        /// <summary>
-        ///     The CLR type for the role associated with this relationship
-        /// </summary>
+        /// <summary>Type of the entity at the other end of the relationship.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.Type" /> that is the type of the object t the other end of the association.
+        /// </returns>
         public Type Role2Type
         {
             get { return _role2Type; }
         }
 
-        /// <summary>
-        ///     Indicates whether this is a common-value (or FK-based) relationship.
-        /// </summary>
+        /// <summary>Gets a Boolean value that indicates whether the relationship is based on the foreign key value.</summary>
+        /// <returns>true if the relationship is based on the foreign key value; otherwise false.</returns>
         public bool IsForeignKey
         {
             get { return _isForeignKey; }

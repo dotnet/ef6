@@ -9,40 +9,32 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// </summary>
     public interface IEntityChangeTracker
     {
-        /// <summary>
-        ///     Used to report that a scalar entity property is about to change
-        /// </summary>
-        /// <param name="entityMemberName"> The name of the entity property that is changing </param>
+        /// <summary>Notifies the change tracker of a pending change to a property of an entity type.</summary>
+        /// <param name="entityMemberName">The name of the property that is changing.</param>
         void EntityMemberChanging(string entityMemberName);
 
-        /// <summary>
-        ///     Used to report that a scalar entity property has been changed
-        /// </summary>
-        /// <param name="entityMemberName"> The name of the entity property that has changed </param>
+        /// <summary>Notifies the change tracker that a property of an entity type has changed.</summary>
+        /// <param name="entityMemberName">The name of the property that has changed.</param>
         void EntityMemberChanged(string entityMemberName);
 
-        /// <summary>
-        ///     Used to report that a complex property is about to change
-        /// </summary>
-        /// <param name="entityMemberName"> The name of the top-level entity property that is changing </param>
-        /// <param name="complexObject"> The complex object that contains the property that is changing </param>
-        /// <param name="complexObjectMemberName"> The name of the property that is changing on complexObject </param>
+        /// <summary>Notifies the change tracker of a pending change to a complex property.</summary>
+        /// <param name="entityMemberName">The name of the top-level entity property that is changing.</param>
+        /// <param name="complexObject">The complex type that contains the property that is changing.</param>
+        /// <param name="complexObjectMemberName">The name of the property that is changing on complex type.</param>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object")]
         void EntityComplexMemberChanging(string entityMemberName, object complexObject, string complexObjectMemberName);
 
-        /// <summary>
-        ///     Used to report that a complex property has been changed
-        /// </summary>
-        /// <param name="entityMemberName"> The name of the top-level entity property that has changed </param>
-        /// <param name="complexObject"> The complex object that contains the property that changed </param>
-        /// <param name="complexObjectMemberName"> The name of the property that changed on complexObject </param>
+        /// <summary>Notifies the change tracker that a property of a complex type has changed.</summary>
+        /// <param name="entityMemberName">The name of the complex property of the entity type that has changed.</param>
+        /// <param name="complexObject">The complex type that contains the property that changed.</param>
+        /// <param name="complexObjectMemberName">The name of the property that changed on complex type.</param>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "object")]
         void EntityComplexMemberChanged(string entityMemberName, object complexObject, string complexObjectMemberName);
 
-        /// <summary>
-        ///     Returns the EntityState from the change tracker, or EntityState.Detached if this
-        ///     entity is not being managed by a change tracker
-        /// </summary>
+        /// <summary>Gets current state of a tracked object.</summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.EntityState" /> that is the state of the tracked object.For more information, see Identity Resolution, State Managment, and Change Tracking and Tracking Changes in POCO Entities.
+        /// </returns>
         EntityState EntityState { get; }
     }
 }

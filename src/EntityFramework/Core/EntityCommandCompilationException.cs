@@ -18,8 +18,7 @@ namespace System.Data.Entity.Core
         #region Constructors
 
         /// <summary>
-        ///     initializes a new instance of EntityCommandCompilationException, no message, no inner exception.  Probably shouldn't
-        ///     exist, but it makes FxCop happy.
+        ///     Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntityCommandCompilationException" />.
         /// </summary>
         public EntityCommandCompilationException()
         {
@@ -27,9 +26,9 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     initializes a new instance of EntityCommandCompilationException, with message, no inner exception.  Probably shouldn't
-        ///     exist, but it makes FxCop happy.
+        ///     Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntityCommandCompilationException" />.
         /// </summary>
+        /// <param name="message">The message that describes the error.</param>
         public EntityCommandCompilationException(string message)
             : base(message)
         {
@@ -37,10 +36,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     initializes a new instance of EntityCommandCompilationException with message and an inner exception instance
+        ///     Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntityCommandCompilationException" />.
         /// </summary>
-        /// <param name="message"> </param>
-        /// <param name="innerException"> </param>
+        /// <param name="message">The error message that explains the reason for the exception.</param>
+        /// <param name="innerException">The exception that caused the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
         public EntityCommandCompilationException(string message, Exception innerException)
             : base(message, innerException)
         {

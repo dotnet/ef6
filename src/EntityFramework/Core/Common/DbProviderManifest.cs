@@ -96,62 +96,45 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         public const string IsStrictFacetName = "IsStrict";
 
-        /// <summary>
-        ///     Returns the namespace used by this provider manifest
-        /// </summary>
+        /// <summary>Gets the namespace used by this provider manifest.</summary>
+        /// <returns>The namespace used by this provider manifest.</returns>
         public abstract string NamespaceName { get; }
 
-        /// <summary>
-        ///     Return the set of types supported by the store
-        /// </summary>
-        /// <returns> A collection of primitive types </returns>
+        /// <summary>When overridden in a derived class, returns the set of primitive types supported by the data source.</summary>
+        /// <returns>The set of types supported by the data source.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public abstract ReadOnlyCollection<PrimitiveType> GetStoreTypes();
 
-        /// <summary>
-        ///     Returns all the edm functions supported by the provider manifest.
-        /// </summary>
-        /// <returns> A collection of edm functions. </returns>
+        /// <summary>When overridden in a derived class, returns a collection of EDM functions supported by the provider manifest.</summary>
+        /// <returns>A collection of EDM functions.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public abstract ReadOnlyCollection<EdmFunction> GetStoreFunctions();
 
-        /// <summary>
-        ///     Returns all the FacetDescriptions for a particular edmType
-        /// </summary>
-        /// <param name="edmType"> the edmType to return FacetDescriptions for </param>
-        /// <returns> The FacetDescriptions for the edmType given </returns>
+        /// <summary>Returns the FacetDescription objects for a particular type.</summary>
+        /// <returns>The FacetDescription objects for the specified EDM type.</returns>
+        /// <param name="edmType">The EDM type to return the facet description for.</param>
         public abstract ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType edmType);
 
-        /// <summary>
-        ///     This method allows a provider writer to take a edmType and a set of facets
-        ///     and reason about what the best mapped equivalent edmType in EDM would be.
-        /// </summary>
-        /// <param name="storeType"> A TypeUsage encapsulating a store edmType and a set of facets </param>
-        /// <returns> A TypeUsage encapsulating an EDM edmType and a set of facets </returns>
+        /// <summary>When overridden in a derived class, this method maps the specified storage type and a set of facets for that type to an EDM type.</summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> instance that describes an EDM type and a set of facets for that type.
+        /// </returns>
+        /// <param name="storeType">The TypeUsage instance that describes a storage type and a set of facets for that type to be mapped to the EDM type.</param>
         public abstract TypeUsage GetEdmType(TypeUsage storeType);
 
-        /// <summary>
-        ///     This method allows a provider writer to take a edmType and a set of facets
-        ///     and reason about what the best mapped equivalent edmType in the store would be.
-        /// </summary>
-        /// <param name="storeType"> A TypeUsage encapsulating an EDM edmType and a set of facets </param>
-        /// <returns> A TypeUsage encapsulating a store edmType and a set of facets </returns>
+        /// <summary>When overridden in a derived class, this method maps the specified EDM type and a set of facets for that type to a storage type.</summary>
+        /// <returns>The TypeUsage instance that describes a storage type and a set of facets for that type.</returns>
+        /// <param name="edmType">The TypeUsage instance that describes the EDM type and a set of facets for that type to be mapped to a storage type.</param>
         public abstract TypeUsage GetStoreType(TypeUsage edmType);
 
-        /// <summary>
-        ///     Providers should override this to return information specific to their provider.
-        ///     This method should never return null.
-        /// </summary>
-        /// <param name="informationType"> The name of the information to be retrieved. </param>
-        /// <returns> An XmlReader at the begining of the information requested. </returns>
+        /// <summary>When overridden in a derived class, this method returns provider-specific information.</summary>
+        /// <returns>The XmlReader object that represents the mapping to the underlying data store catalog.</returns>
+        /// <param name="informationType">The type of the information to return.</param>
         protected abstract XmlReader GetDbInformation(string informationType);
 
-        /// <summary>
-        ///     Gets framework and provider specific information
-        ///     This method should never return null.
-        /// </summary>
-        /// <param name="informationType"> The name of the information to be retrieved. </param>
-        /// <returns> An XmlReader at the begining of the information requested. </returns>
+        /// <summary>Gets the provider-specific information.</summary>
+        /// <returns>The provider-specific information.</returns>
+        /// <param name="informationType">The type of the information to return.</param>
         public XmlReader GetInformation(string informationType)
         {
             XmlReader reader = null;
@@ -185,13 +168,9 @@ namespace System.Data.Entity.Core.Common
             return reader;
         }
 
-        /// <summary>
-        ///     Does the provider support escaping strings to be used as patterns in a Like expression.
-        ///     If the provider overrides this method to return true, <cref = "EscapeLikeArgument" /> should
-        ///     also be overridden.
-        /// </summary>
-        /// <param name="escapeCharacter"> If the provider supports escaping, the character that would be used as the escape character </param>
-        /// <returns> True, if this provider supports escaping strings to be used as patterns in a Like expression, false otherwise. The default implementation returns false. </returns>
+        /// <summary>Indicates if the provider supports escaping strings to be used as patterns in a Like expression.</summary>
+        /// <returns>True if this provider supports escaping strings to be used as patterns in a Like expression; otherwise, false.</returns>
+        /// <param name="escapeCharacter">If the provider supports escaping, the character that would be used as the escape character.</param>
         [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "0#")]
         public virtual bool SupportsEscapingLikeArgument(out char escapeCharacter)
         {
@@ -199,12 +178,9 @@ namespace System.Data.Entity.Core.Common
             return false;
         }
 
-        /// <summary>
-        ///     Provider writers should override this method to returns the argument with the wildcards and the escape
-        ///     character escaped.  This method is only used if <cref = "SupportsEscapingLikeArgument" /> returns true.
-        /// </summary>
-        /// <param name="argument"> The argument to be escaped </param>
-        /// <returns> The argument with the wildcards and the escape character escaped </returns>
+        /// <summary>Provider writers should override this method to return the argument with the wildcards and the escape character escaped. This method is only used if SupportsEscapingLikeArgument returns true.</summary>
+        /// <returns>The argument with the wildcards and the escape character escaped.</returns>
+        /// <param name="argument">The argument to be escaped.</param>
         public virtual string EscapeLikeArgument(string argument)
         {
             Check.NotNull(argument, "argument");

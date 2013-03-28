@@ -22,16 +22,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the relationship type associated with this relationship set
+        ///     Gets the relationship type of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" />.
         /// </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipType" /> object that represents the relationship type of this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" />
+        ///     .
+        /// </returns>
         public new RelationshipType ElementType
         {
             get { return (RelationshipType)base.ElementType; }
         }
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" />
+        ///     .
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.RelationshipSet; }

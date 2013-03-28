@@ -55,7 +55,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
         }
 
-        /// <summary>
+        /// <summary>Returns the key for the related object. </summary>
+        /// <remarks>
         ///     Returns the EntityKey of the target entity associated with this EntityReference.
         ///     Is non-null in the following scenarios:
         ///     (a) Entities are tracked by a context and an Unchanged or Added client-side relationships exists for this EntityReference's owner with the
@@ -71,7 +72,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///     (b) Entities are tracked by a context and a relationship exists, but the target entity has a temporary key (i.e. it is Added) or the key
         ///     is one of the special keys
         ///     (c) Entities are detached and the relationship was explicitly created by the user.
-        /// </summary>
+        /// </remarks>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.EntityKey" /> that is the key of the related object.
+        /// </returns>
         [DataMember]
         public EntityKey EntityKey
         {

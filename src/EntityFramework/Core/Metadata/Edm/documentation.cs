@@ -18,16 +18,25 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" />
+        ///     .
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.Documentation; }
         }
 
         /// <summary>
-        ///     Gets the Summary for this Documentation instance.
+        ///     Gets the summary for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" />.
         /// </summary>
+        /// <returns>
+        ///     The summary for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" />.
+        /// </returns>
         public string Summary
         {
             get { return _summary; }
@@ -45,8 +54,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the LongDescription for this Documentation instance.
+        ///     Gets the long description for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" />.
         /// </summary>
+        /// <returns>
+        ///     The long description for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" />.
+        /// </returns>
         public string LongDescription
         {
             get { return _longDescription; }
@@ -73,8 +85,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns true if this Documentation instance contains only null/empty summary and longDescription
+        ///     Gets a value indicating whether this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" /> object contains only a null or an empty
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.Metadata.Edm.Documentation.Summary" />
+        ///     and a
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.Metadata.Edm.Documentation.Longdescription" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     true if this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" /> object contains only a null or an empty
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.Metadata.Edm.Documentation.Summary" />
+        ///     and a
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.Metadata.Edm.Documentation.LongDescription" />
+        ///     ; otherwise, false.
+        /// </returns>
         public bool IsEmpty
         {
             get
@@ -90,7 +117,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
+        ///     Returns the summary for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" />.
         /// </summary>
+        /// <returns>
+        ///     The summary for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" />.
+        /// </returns>
         public override string ToString()
         {
             return _summary;

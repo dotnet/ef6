@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core
         private EntitySqlExceptionState _state;
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="EntitySqlException" /> with the generic error message.
+        ///     Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntitySqlException" />.
         /// </summary>
         public EntitySqlException()
             : this(Strings.GeneralQueryError)
@@ -37,8 +37,9 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="EntitySqlException" /> with the given message.
+        ///     Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntitySqlException" /> with a specialized error message.
         /// </summary>
+        /// <param name="message">The message that describes the error.</param>
         public EntitySqlException(string message)
             : base(message)
         {
@@ -48,8 +49,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="EntitySqlException" /> with the given message and innerException instance.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntitySqlException" /> class that uses a specified error message and a reference to the inner exception that is the cause of this exception.
         /// </summary>
+        /// <param name="message">The error message that explains the reason for the exception.</param>
+        /// <param name="innerException">The exception that caused the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
         public EntitySqlException(string message, Exception innerException)
             : base(message, innerException)
         {
@@ -106,33 +109,29 @@ namespace System.Data.Entity.Core
             SubscribeToSerializeObjectState();
         }
 
-        /// <summary>
-        ///     Gets the error description explaining the reason why the query was not accepted or an empty String.Empty
-        /// </summary>
+        /// <summary>Gets a description of the error.</summary>
+        /// <returns>A string that describes the error.</returns>
         public string ErrorDescription
         {
             get { return _state.ErrorDescription ?? String.Empty; }
         }
 
-        /// <summary>
-        ///     Gets the approximate context where the error occurred if available.
-        /// </summary>
+        /// <summary>Gets the approximate context where the error occurred, if available.</summary>
+        /// <returns>A string that describes the approximate context where the error occurred, if available.</returns>
         public string ErrorContext
         {
             get { return _state.ErrorContext ?? String.Empty; }
         }
 
-        /// <summary>
-        ///     Returns the the approximate line number where the error occurred
-        /// </summary>
+        /// <summary>Gets the approximate line number where the error occurred.</summary>
+        /// <returns>An integer that describes the line number where the error occurred.</returns>
         public int Line
         {
             get { return _state.Line; }
         }
 
-        /// <summary>
-        ///     Returns the the approximate column number where the error occurred
-        /// </summary>
+        /// <summary>Gets the approximate column number where the error occurred.</summary>
+        /// <returns>An integer that describes the column number where the error occurred.</returns>
         public int Column
         {
             get { return _state.Column; }

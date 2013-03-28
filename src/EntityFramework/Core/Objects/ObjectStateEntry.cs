@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects
 {
@@ -43,10 +43,17 @@ namespace System.Data.Entity.Core.Objects
         #region Public members
 
         /// <summary>
-        ///     ObjectStateManager property of ObjectStateEntry.
+        ///     Gets the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" /> for the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        ///     .
         /// </summary>
-        /// <param> </param>
-        /// <returns> ObjectStateManager </returns>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" /> for the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        ///     .
+        /// </returns>
         public ObjectStateManager ObjectStateManager
         {
             get
@@ -57,10 +64,11 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Extent property of ObjectStateEntry.
+        ///     Gets the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySetBase" /> for the object or relationship.
         /// </summary>
-        /// <param> </param>
-        /// <returns> Extent </returns>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySetBase" /> for the object or relationship.
+        /// </returns>
         public EntitySetBase EntitySet
         {
             get
@@ -71,31 +79,31 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     State property of ObjectStateEntry.
+        ///     Gets or sets the state of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />.
         /// </summary>
-        /// <param> </param>
-        /// <returns> DataRowState </returns>
+        /// <returns>
+        ///     The state of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />.
+        /// </returns>
         public EntityState State
         {
             get { return _state; }
             internal set { _state = value; }
         }
 
-        /// <summary>
-        ///     Entity property of ObjectStateEntry.
-        /// </summary>
-        /// <param> </param>
-        /// <returns> The entity encapsulated by this entry. </returns>
+        /// <summary>Gets the entity object.</summary>
+        /// <returns>The entity object.</returns>
         public abstract object Entity { get; }
 
-        /// <summary>
-        ///     The EntityKey associated with the ObjectStateEntry
-        /// </summary>
+        /// <summary>Gets or sets the entity key.</summary>
+        /// <returns>The entity key.</returns>
         public abstract EntityKey EntityKey { get; internal set; }
 
         /// <summary>
-        ///     Determines if this ObjectStateEntry represents a relationship
+        ///     Gets a value that indicates whether the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> represents a relationship.
         /// </summary>
+        /// <returns>
+        ///     true if the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> represents a relationship; otherwise, false.
+        /// </returns>
         public abstract bool IsRelationship { get; }
 
         /// <summary>
@@ -108,116 +116,97 @@ namespace System.Data.Entity.Core.Objects
             get { return ModifiedProperties; }
         }
 
-        /// <summary>
-        ///     Original values
-        /// </summary>
-        /// <param> </param>
-        /// <returns> DbDataRecord </returns>
+        /// <summary>Gets the read-only version of original values of the object or relationship.</summary>
+        /// <returns>The read-only version of original values of the relationship set entry or entity.</returns>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public abstract DbDataRecord OriginalValues { get; }
 
+        /// <summary>
+        ///     Gets the updatable version of original values of the object associated with this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        ///     .
+        /// </summary>
+        /// <returns>The updatable original values of object data.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public abstract OriginalValueRecord GetUpdatableOriginalValues();
 
         /// <summary>
-        ///     Current values
+        ///     Gets the current property values of the object or relationship associated with this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        ///     .
         /// </summary>
-        /// <param> </param>
-        /// <returns> DbUpdatableDataRecord </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Objects.CurrentValueRecord" /> that contains the current values of the object or relationship associated with this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        ///     .
+        /// </returns>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public abstract CurrentValueRecord CurrentValues { get; }
 
-        /// <summary>
-        ///     API to accept the current values as original values and  mark the entity as Unchanged.
-        /// </summary>
-        /// <param> </param>
-        /// <returns> </returns>
+        /// <summary>Accepts the current values as original values.</summary>
         public abstract void AcceptChanges();
 
-        /// <summary>
-        ///     API to mark the entity deleted. if entity is in added state, it will be detached
-        /// </summary>
-        /// <param> </param>
-        /// <returns> </returns>
+        /// <summary>Marks an entity as deleted.</summary>
         public abstract void Delete();
 
         /// <summary>
-        ///     API to return properties that are marked modified
+        ///     Returns the names of an object’s properties that have changed since the last time
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" />
+        ///     was called.
         /// </summary>
-        /// <param> </param>
-        /// <returns> IEnumerable of modified properties names, names are in term of c-space </returns>
+        /// <returns>
+        ///     An <see cref="T:System.Collections.Generic.IEnumerable`1" /> collection of names as string.
+        /// </returns>
         public abstract IEnumerable<string> GetModifiedProperties();
 
-        /// <summary>
-        ///     set the state to Modified.
-        /// </summary>
-        /// <param> </param>
-        /// <returns> </returns>
+        /// <summary>Sets the state of the object or relationship to modify.</summary>
         /// <exception cref="InvalidOperationException">If State is not Modified or Unchanged</exception>
         public abstract void SetModified();
 
-        /// <summary>
-        ///     Marks specified property as modified.
-        /// </summary>
-        /// <param name="propertyName"> This API recognizes the names in terms of OSpace </param>
-        /// <exception cref="InvalidOperationException">If State is not Modified or Unchanged</exception>
+        /// <summary>Marks the specified property as modified.</summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <exception cref="InvalidOperationException"> If State is not Modified or Unchanged </exception>
         public abstract void SetModifiedProperty(string propertyName);
 
-        /// <summary>
-        ///     Rejects any changes made to the property with the given name since the property was last loaded,
-        ///     attached, saved, or changes were accepted. The orginal value of the property is stored and the
-        ///     property will no longer be marked as modified.
-        /// </summary>
-        /// <remarks>
-        ///     If the result is that no properties of the entity are marked as modified, then the entity will
-        ///     be marked as Unchanged.
-        ///     Changes to properties can only rejected for entities that are in the Modified or Unchanged state.
-        ///     Calling this method for entities in other states (Added, Deleted, or Detached) will result in
-        ///     an exception being thrown.
-        ///     Rejecting changes to properties of an Unchanged entity or unchanged properties of a Modifed
-        ///     is a no-op.
-        /// </remarks>
-        /// <param name="propertyName"> The name of the property to change. </param>
+        /// <summary>Rejects any changes made to the property with the given name since the property was last loaded, attached, saved, or changes were accepted. The orginal value of the property is stored and the property will no longer be marked as modified.</summary>
+        /// <param name="propertyName">The name of the property to change.</param>
         public abstract void RejectPropertyChanges(string propertyName);
 
-        /// <summary>
-        ///     Uses DetectChanges to determine whether or not the current value of the property with the given
-        ///     name is different from its original value. Note that this may be different from the property being
-        ///     marked as modified since a property which has not changed can still be marked as modified.
-        /// </summary>
-        /// <remarks>
-        ///     For complex properties, a new instance of the complex object which has all the same property
-        ///     values as the original instance is not considered to be different by this method.
-        /// </remarks>
-        /// <param name="propertyName"> The name of the property. </param>
-        /// <returns> True if the property has changed; false otherwise. </returns>
+        /// <summary>Uses DetectChanges to determine whether or not the current value of the property with the given name is different from its original value. Note that this may be different from the property being marked as modified since a property which has not changed can still be marked as modified.</summary>
+        /// <returns>true if the property has changed; otherwise, false.</returns>
+        /// <param name="propertyName">The name of the property.</param>
         public abstract bool IsPropertyChanged(string propertyName);
 
         /// <summary>
-        ///     Returns the RelationshipManager for the entity represented by this ObjectStateEntry.
-        ///     Note that a RelationshipManager objects can only be returned if this entry represents a
-        ///     full entity.  Key-only entries (stubs) and entries representing relationships do not
-        ///     have associated RelationshipManagers.
+        ///     Gets the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> instance for the object represented by entry.
         /// </summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> object.
+        /// </returns>
         /// <exception cref="InvalidOperationException">The entry is a stub or represents a relationship</exception>
         public abstract RelationshipManager RelationshipManager { get; }
 
         /// <summary>
-        ///     Changes state of the entry to the specified <paramref name="state" />
+        ///     Changes state of the entry to the specified <see cref="T:System.Data.Entity.EntityState" /> value.
         /// </summary>
-        /// <param name="state"> The requested state </param>
+        /// <param name="state">
+        ///     The <see cref="T:System.Data.Entity.EntityState" /> value to set for the
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.State" />
+        ///     property of the entry.
+        /// </param>
         public abstract void ChangeState(EntityState state);
 
-        /// <summary>
-        ///     Apply modified properties to the original object.
-        /// </summary>
-        /// <param name="current"> object with modified properties </param>
+        /// <summary>Sets the current values of the entry to match the property values of a supplied object.</summary>
+        /// <param name="currentEntity">The detached object that has updated values to apply to the object.  currentEntity  can also be the object’s entity key.</param>
         public abstract void ApplyCurrentValues(object currentEntity);
 
-        /// <summary>
-        ///     Apply original values to the entity.
-        /// </summary>
-        /// <param name="original"> The object with original values </param>
+        /// <summary>Sets the original values of the entry to match the property values of a supplied object.</summary>
+        /// <param name="originalEntity">The detached object that has original values to apply to the object.  originalEntity  can also be the object’s entity key.</param>
         public abstract void ApplyOriginalValues(object originalEntity);
 
         #endregion // Public members

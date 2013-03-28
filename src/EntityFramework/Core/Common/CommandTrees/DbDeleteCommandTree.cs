@@ -6,9 +6,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    ///     Represents a single row delete operation expressed as a canonical command tree.
-    /// </summary>
+    /// <summary>Represents a single row delete operation expressed as a command tree. This class cannot be inherited.  </summary>
     public class DbDeleteCommandTree : DbModificationCommandTree
     {
         private readonly DbExpression _predicate;
@@ -26,7 +24,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets an <see cref="DbExpression" /> that specifies the predicate used to determine which members of the target collection should be deleted.
+        ///     Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the predicate used to determine which members of the target collection should be deleted.
         /// </summary>
         /// <remarks>
         ///     The predicate can include only the following elements:
@@ -40,7 +38,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         ///         <item>Or expression</item>
         ///         <item>Not expression</item>
         ///     </list>
-        /// </remarks>
+        /// </remarks>        
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the predicate used to determine which members of the target collection should be deleted.
+        /// </returns>
         public DbExpression Predicate
         {
             get { return _predicate; }

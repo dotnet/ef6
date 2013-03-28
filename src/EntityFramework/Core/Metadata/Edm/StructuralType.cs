@@ -37,9 +37,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _readOnlyMembers = _members.AsReadOnlyMetadataCollection();
         }
 
-        /// <summary>
-        ///     Returns the collection of members.
-        /// </summary>
+        /// <summary>Gets the list of members on this type.</summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains a set of members on this type.
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.EdmMember, true)]
         public ReadOnlyMetadataCollection<EdmMember> Members
         {

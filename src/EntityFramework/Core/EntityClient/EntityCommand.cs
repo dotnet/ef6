@@ -19,6 +19,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+
 #if !NET40
 
 #endif
@@ -47,7 +48,7 @@ namespace System.Data.Entity.Core.EntityClient
         private readonly IDbDependencyResolver _dependencyResolver;
 
         /// <summary>
-        ///     Constructs the EntityCommand object not yet associated to a connection object
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityCommand" /> class using the specified values.
         /// </summary>
         public EntityCommand()
             : this(new EntityDataReaderFactory())
@@ -71,9 +72,9 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Constructs the EntityCommand object with the given eSQL statement, but not yet associated to a connection object
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityCommand" /> class with the specified statement.
         /// </summary>
-        /// <param name="statement"> The eSQL command text to execute </param>
+        /// <param name="statement">The text of the command.</param>
         public EntityCommand(string statement)
             : this(statement, new EntityDataReaderFactory())
         {
@@ -98,10 +99,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Constructs the EntityCommand object with the given eSQL statement and the connection object to use
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityCommand" /> class with the specified statement and connection.
         /// </summary>
-        /// <param name="statement"> The eSQL command text to execute </param>
-        /// <param name="connection"> The connection object </param>
+        /// <param name="statement">The text of the command.</param>
+        /// <param name="connection">A connection to the data source.</param>
         public EntityCommand(string statement, EntityConnection connection)
             : this(statement, connection, new EntityDataReaderFactory())
         {
@@ -114,11 +115,11 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Constructs the EntityCommand object with the given eSQL statement and the connection object to use
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityCommand" /> class with the specified statement, connection and transaction.
         /// </summary>
-        /// <param name="statement"> The eSQL command text to execute </param>
-        /// <param name="connection"> The connection object </param>
-        /// <param name="transaction"> The transaction object this command executes in </param>
+        /// <param name="statement">The text of the command.</param>
+        /// <param name="connection">A connection to the data source.</param>
+        /// <param name="transaction">The transaction in which the command executes.</param>
         public EntityCommand(string statement, EntityConnection connection, EntityTransaction transaction)
             : this(statement, connection, transaction, new EntityDataReaderFactory())
         {
@@ -170,8 +171,12 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     The connection object used for executing the command
+        ///     Gets or sets the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> used by the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityCommand" />
+        ///     .
         /// </summary>
+        /// <returns>The connection used by the entity command.</returns>
         public new virtual EntityConnection Connection
         {
             get { return _connection; }
@@ -200,9 +205,8 @@ namespace System.Data.Entity.Core.EntityClient
             set { Connection = (EntityConnection)value; }
         }
 
-        /// <summary>
-        ///     The eSQL statement to execute, only one of the command tree or the command text can be set, not both
-        /// </summary>
+        /// <summary>Gets or sets an Entity SQL statement that specifies a command or stored procedure to execute.</summary>
+        /// <returns>The Entity SQL statement that specifies a command or stored procedure to execute.</returns>
         public override string CommandText
         {
             get
@@ -239,9 +243,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     The command tree to execute, only one of the command tree or the command text can be set, not both.
-        /// </summary>
+        /// <summary>Gets or sets the command tree to execute; only one of the command tree or the command text can be set, not both.</summary>
+        /// <returns>The command tree to execute.</returns>
         public virtual DbCommandTree CommandTree
         {
             get
@@ -285,9 +288,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     Get or set the time in seconds to wait for the command to execute
-        /// </summary>
+        /// <summary>Gets or sets the amount of time to wait before timing out.</summary>
+        /// <returns>The time in seconds to wait for the command to execute.</returns>
         public override int CommandTimeout
         {
             get
@@ -319,8 +321,14 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     The type of command being executed, only applicable when the command is using an eSQL statement and not the tree
+        ///     Gets or sets a value that indicates how the
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.EntityClient.EntityCommand.CommandText" />
+        ///     property is to be interpreted.
         /// </summary>
+        /// <returns>
+        ///     One of the <see cref="T:System.Data.CommandType" /> enumeration values.
+        /// </returns>
         public override CommandType CommandType
         {
             get { return _commandType; }
@@ -339,9 +347,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     The collection of parameters for this command
-        /// </summary>
+        /// <summary>Gets the parameters of the Entity SQL statement or stored procedure.</summary>
+        /// <returns>The parameters of the Entity SQL statement or stored procedure.</returns>
         public new virtual EntityParameterCollection Parameters
         {
             get { return _parameters; }
@@ -356,8 +363,11 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     The transaction object used for executing the command
+        ///     Gets or sets the transaction within which the <see cref="T:System.Data.SqlClient.SqlCommand" /> executes.
         /// </summary>
+        /// <returns>
+        ///     The transaction within which the <see cref="T:System.Data.SqlClient.SqlCommand" /> executes.
+        /// </returns>
         public new virtual EntityTransaction Transaction
         {
             get
@@ -381,9 +391,10 @@ namespace System.Data.Entity.Core.EntityClient
             set { Transaction = (EntityTransaction)value; }
         }
 
-        /// <summary>
-        ///     Gets or sets how command results are applied to the DataRow when used by the Update method of a DbDataAdapter
-        /// </summary>
+        /// <summary>Gets or sets how command results are applied to rows being updated.</summary>
+        /// <returns>
+        ///     One of the <see cref="T:System.Data.UpdateRowSource" /> values.
+        /// </returns>
         public override UpdateRowSource UpdatedRowSource
         {
             get { return _updatedRowSource; }
@@ -394,9 +405,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     Hidden property used by the designers
-        /// </summary>
+        /// <summary>Gets or sets a value that indicates whether the command object should be visible in a Windows Form Designer control.</summary>
+        /// <returns>true if the command object should be visible in a Windows Form Designer control; otherwise, false.</returns>
         public override bool DesignTimeVisible
         {
             get { return _designTimeVisible; }
@@ -408,9 +418,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     Enables/Disables query plan caching for this EntityCommand
-        /// </summary>
+        /// <summary>Gets or sets a value that indicates whether the query plan caching is enabled.</summary>
+        /// <returns>true if the query plan caching is enabled; otherwise, false.</returns>
         public virtual bool EnablePlanCaching
         {
             get { return _enableQueryPlanCaching; }
@@ -422,15 +431,18 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Cancel the execution of the command
+        ///     Cancels the execution of an <see cref="T:System.Data.Entity.Core.EntityClient.EntityCommand" />.
         /// </summary>
         public override void Cancel()
         {
         }
 
         /// <summary>
-        ///     Create and return a new parameter object representing a parameter in the eSQL statement
+        ///     Creates a new instance of an <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
         /// </summary>
+        /// <returns>
+        ///     A new instance of an <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
+        /// </returns>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public new virtual EntityParameter CreateParameter()
         {
@@ -445,25 +457,30 @@ namespace System.Data.Entity.Core.EntityClient
             return CreateParameter();
         }
 
-        /// <summary>
-        ///     Executes the command and returns a data reader for reading the results
-        /// </summary>
-        /// <returns> An EntityDataReader object </returns>
+        /// <summary>Executes the command and returns a data reader.</summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> that contains the results.
+        /// </returns>
         public new virtual EntityDataReader ExecuteReader()
         {
             return ExecuteReader(CommandBehavior.Default);
         }
 
         /// <summary>
-        ///     Executes the command and returns a data reader for reading the results. May only
-        ///     be called on CommandType.CommandText (otherwise, use the standard Execute* methods)
+        ///     Compiles the <see cref="P:System.Data.Entity.Core.EntityClient.EntityCommand.CommandText" /> into a command tree and passes it to the underlying store provider for execution, then builds an
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" />
+        ///     out of the produced result set using the specified
+        ///     <see
+        ///         cref="T:System.Data.CommandBehavior" />
+        ///     .
         /// </summary>
-        /// <param name="behavior"> The behavior to use when executing the command </param>
-        /// <returns> An EntityDataReader object </returns>
-        /// <exception cref="InvalidOperationException">
-        ///     For stored procedure commands, if called
-        ///     for anything but an entity collection result
-        /// </exception>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> that contains the results.
+        /// </returns>
+        /// <param name="behavior">
+        ///     One of the <see cref="T:System.Data.CommandBehavior" /> values.
+        /// </param>
         public new virtual EntityDataReader ExecuteReader(CommandBehavior behavior)
         {
             // prepare the query first
@@ -592,10 +609,8 @@ namespace System.Data.Entity.Core.EntityClient
 
 #endif
 
-        /// <summary>
-        ///     Executes the command and discard any results returned from the command
-        /// </summary>
-        /// <returns> Number of rows affected </returns>
+        /// <summary>Executes the current command.</summary>
+        /// <returns>The number of rows affected.</returns>
         public override int ExecuteNonQuery()
         {
             using (var reader = ExecuteReader(CommandBehavior.SequentialAccess))
@@ -632,10 +647,8 @@ namespace System.Data.Entity.Core.EntityClient
 
 #endif
 
-        /// <summary>
-        ///     Executes the command and return the first column in the first row of the result, extra results are ignored
-        /// </summary>
-        /// <returns> The result in the first column in the first row </returns>
+        /// <summary>Executes the command, and returns the first column of the first row in the result set. Additional columns or rows are ignored.</summary>
+        /// <returns>The first column of the first row in the result set, or a null reference (Nothing in Visual Basic) if the result set is empty.</returns>
         public override object ExecuteScalar()
         {
             using (var reader = ExecuteReader(CommandBehavior.SequentialAccess))
@@ -660,9 +673,7 @@ namespace System.Data.Entity.Core.EntityClient
             _parameters.ResetIsDirty();
         }
 
-        /// <summary>
-        ///     Creates a prepared version of this command
-        /// </summary>
+        /// <summary>Compiles the entity-level command and creates a prepared version of the command.</summary>
         public override void Prepare()
         {
             ThrowIfDataReaderIsOpen();
@@ -809,10 +820,8 @@ namespace System.Data.Entity.Core.EntityClient
             return Connection.CurrentTransaction;
         }
 
-        /// <summary>
-        ///     Returns the store command text.
-        /// </summary>
-        /// <returns> </returns>
+        /// <summary>Compiles the entity-level command and returns the store command text.</summary>
+        /// <returns>The store command text.</returns>
         [Browsable(false)]
         public virtual string ToTraceString()
         {

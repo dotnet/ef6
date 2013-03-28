@@ -28,17 +28,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly AssociationEndMember _endMember;
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSetEnd" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSetEnd" />
+        ///     .
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.AssociationSetEnd; }
         }
 
         /// <summary>
-        ///     The parent association set for this AssociationSetEnd.
+        ///     Gets the parent association set of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSetEnd" />.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException">Thrown if the value passed in for the setter is null</exception>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSet" /> object that represents the parent association set of this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSetEnd" />
+        ///     .
+        /// </returns>
         /// <exception cref="System.InvalidOperationException">Thrown if Setter is called when the AssociationSetEnd instance is in ReadOnly state</exception>
         [MetadataProperty(BuiltInTypeKind.AssociationSet, false)]
         public AssociationSet ParentAssociationSet
@@ -47,9 +58,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The EndMember which this AssociationSetEnd corresponds to.
+        ///     Gets the End member that this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSetEnd" /> object corresponds to.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException">Thrown if the value passed in for the setter is null</exception>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationEndMember" /> object that represents the End member that this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSetEnd" />
+        ///     object corresponds to.
+        /// </returns>
         /// <exception cref="System.InvalidOperationException">Thrown if Setter is called when the AssociationSetEnd instance is in ReadOnly state</exception>
         [MetadataProperty(BuiltInTypeKind.AssociationEndMember, false)]
         public AssociationEndMember CorrespondingAssociationEndMember
@@ -58,8 +74,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Name of the end
+        ///     Gets the name of the End for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSetEnd" />.
         /// </summary>
+        /// <returns>
+        ///     The name of the End for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSetEnd" />.
+        /// </returns>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public string Name
         {
@@ -67,9 +86,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Name of the end role
+        ///     Gets the name of the End role for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSetEnd" />.
         /// </summary>
-        /// <exception cref="System.ArgumentNullException">Thrown if the value passed in for the setter is null</exception>
+        /// <returns>
+        ///     The name of the End role for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSetEnd" />.
+        /// </returns>
         /// <exception cref="System.InvalidOperationException">Thrown if Setter is called when the AssociationSetEnd instance is in ReadOnly state</exception>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         [Obsolete("This property is going away, please use the Name property instead")]
@@ -78,9 +99,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return Name; }
         }
 
-        /// <summary>
-        ///     Returns the entity set referred by this end role
-        /// </summary>
+        /// <summary>Gets the entity set referenced by this End role. </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> object that represents the entity set referred by this End role.
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.EntitySet, false)]
         public EntitySet EntitySet
         {
@@ -96,9 +118,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Overriding System.Object.ToString to provide better String representation
-        ///     for this type.
+        ///     Returns the name of the End role for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSetEnd" />.
         /// </summary>
+        /// <returns>
+        ///     The name of the End role for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSetEnd" />.
+        /// </returns>
         public override string ToString()
         {
             return Name;

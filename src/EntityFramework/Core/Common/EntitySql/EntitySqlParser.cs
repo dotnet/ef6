@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Common.EntitySql
 {
@@ -23,14 +23,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
             _perspective = perspective;
         }
 
-        /// <summary>
-        ///     Parse the specified <paramref name="query" /> with the specified <paramref name="parameters" />.
-        /// </summary>
-        /// <param name="query"> EntitySQL query to be parsed. </param>
-        /// <param name="parameters"> optional query parameters </param>
+        /// <summary>Parse the specified query with the specified parameters.</summary>
         /// <returns>
-        ///     <see cref="ParseResult" /> containing <see cref="DbCommandTree" /> and information describing inline function definitions if any.
+        ///     The <see cref="T:System.Data.Entity.Core.Common.EntitySql.ParseResult" /> containing
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCommandTree" />
+        ///     and information describing inline function definitions if any.
         /// </returns>
+        /// <param name="query">The EntitySQL query to be parsed.</param>
+        /// <param name="parameters">The optional query parameters.</param>
         public ParseResult Parse(string query, params DbParameterReferenceExpression[] parameters)
         {
             Check.NotNull(query, "query");
@@ -45,8 +46,19 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Parse a specific query with a specific set variables and produce a <see cref="DbLambda" />.
+        ///     Parse a specific query with a specific set variables and produce a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Common.EntitySql.ParseResult" /> containing
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCommandTree" />
+        ///     and information describing inline function definitions if any.
+        /// </returns>
+        /// <param name="query">The query to be parsed.</param>
+        /// <param name="variables">The optional query variables.</param>
         public DbLambda ParseLambda(string query, params DbVariableReferenceExpression[] variables)
         {
             Check.NotNull(query, "query");

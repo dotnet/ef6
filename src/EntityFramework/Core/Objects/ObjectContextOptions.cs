@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects
 {
@@ -14,44 +14,39 @@ namespace System.Data.Entity.Core.Objects
             ProxyCreationEnabled = true;
         }
 
-        /// <summary>
-        ///     Get or set boolean that determines if related ends can be loaded on demand
-        ///     when they are accessed through a navigation property.
-        /// </summary>
-        /// <value> True if related ends can be loaded on demand; otherwise false. </value>
+        /// <summary>Gets or sets a Boolean value that determines whether related objects are loaded automatically when a navigation property is accessed.</summary>
+        /// <returns>true if lazy loading is enabled; otherwise, false.</returns>
         public bool LazyLoadingEnabled { get; set; }
 
-        /// <summary>
-        ///     Get or set boolean that determines whether proxy instances will be create
-        ///     for CLR types with a corresponding proxy type.
-        /// </summary>
-        /// <value> True if proxy instances should be created; otherwise false to create "normal" instances of the type. </value>
+        /// <summary>Gets or sets a Boolean value that determines whether proxy instances are created for custom data classes that are persistence ignorant.</summary>
+        /// <returns>true if proxies are created; otherwise, false. The default value is true.</returns>
         public bool ProxyCreationEnabled { get; set; }
 
-        /// <summary>
-        ///     Get or set a boolean that determines whether to use the legacy MergeOption.PreserveChanges behavior
-        ///     when querying for entities using MergeOption.PreserveChanges
-        /// </summary>
-        /// <value> True if the legacy MergeOption.PreserveChanges behavior should be used; otherwise false. </value>
+        /// <summary>Gets or sets a Boolean value that determines whether to use the legacy PreserveChanges behavior.</summary>
+        /// <returns>true if the legacy PreserveChanges behavior should be used; otherwise, false.</returns>
         public bool UseLegacyPreserveChangesBehavior { get; set; }
 
-        /// <summary>
-        ///     If this flag is set to false then setting the Value property of the <see cref="EntityReference{TEntity}" /> for an
+        /// <summary>Gets or sets a Boolean value that determines whether to use the consistent NullReference behavior.</summary>
+        /// <remarks>
+        ///     If this flag is set to false then setting the Value property of the <see cref="EntityReference{TElement}" /> for an
         ///     FK relationship to null when it is already null will have no effect. When this flag is set to true, then
         ///     setting the value to null will always cause the FK to be nulled and the relationship to be deleted
         ///     even if the value is currently null. The default value is false when using ObjectContext and true
         ///     when using DbContext.
-        /// </summary>
+        /// </remarks>
+        /// <returns>true if the consistent NullReference behavior should be used; otherwise, false.</returns>
         public bool UseConsistentNullReferenceBehavior { get; set; }
 
-        /// <summary>
+        /// <summary>Gets or sets a Boolean value that determines whether to use the C# NullComparison behavior.</summary>
+        /// <remarks>
         ///     This flag determines whether C# behavior should be exhibited when comparing null values in LinqToEntities.
         ///     If this flag is set, then any equality comparison between two operands, both of which are potentially
         ///     nullable, will be rewritten to show C# null comparison semantics. As an example:
         ///     (operand1 = operand2) will be rewritten as
         ///     (((operand1 = operand2) AND NOT (operand1 IS NULL OR operand2 IS NULL)) || (operand1 IS NULL && operand2 IS NULL))
         ///     The default value is false when using <see cref="ObjectContext" />.
-        /// </summary>
+        /// </remarks>
+        /// <returns>true if the C# NullComparison behavior should be used; otherwise, false.</returns>
         public bool UseCSharpNullComparisonBehavior { get; set; }
     }
 }

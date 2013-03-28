@@ -15,8 +15,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private readonly string _targetRoleName;
 
         /// <summary>
-        ///     Attribute identifying the Ends defined for a RelationshipSet
+        ///     Initializes a new instance of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute" />
+        ///     class.
         /// </summary>
+        /// <param name="relationshipNamespaceName">The namespace name of the relationship property.</param>
+        /// <param name="relationshipName">The name of the relationship. The relationship name is not namespace qualified.</param>
+        /// <param name="targetRoleName">The role name at the other end of the relationship.</param>
         public EdmRelationshipNavigationPropertyAttribute(string relationshipNamespaceName, string relationshipName, string targetRoleName)
         {
             _relationshipNamespaceName = relationshipNamespaceName;
@@ -24,25 +30,24 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             _targetRoleName = targetRoleName;
         }
 
-        /// <summary>
-        ///     the namespace name of the relationship
-        /// </summary>
+        /// <summary>The namespace name of the navigation property.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.String" /> that is the namespace name.
+        /// </returns>
         public string RelationshipNamespaceName
         {
             get { return _relationshipNamespaceName; }
         }
 
-        /// <summary>
-        ///     the relationship name
-        /// </summary>
+        /// <summary>Gets the unqualified relationship name. </summary>
+        /// <returns>The relationship name.</returns>
         public string RelationshipName
         {
             get { return _relationshipName; }
         }
 
-        /// <summary>
-        ///     the target role name
-        /// </summary>
+        /// <summary>Gets the role name at the other end of the relationship.</summary>
+        /// <returns>The target role name is specified by the Role attribute of the other End element in the association that defines this relationship in the conceptual model. For more information, see Association (EDM).</returns>
         public string TargetRoleName
         {
             get { return _targetRoleName; }

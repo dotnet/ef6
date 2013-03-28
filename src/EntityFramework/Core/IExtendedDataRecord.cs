@@ -12,19 +12,33 @@ namespace System.Data.Entity.Core
     public interface IExtendedDataRecord : IDataRecord
     {
         /// <summary>
-        ///     DataRecordInfo property describing the contents of the record.
+        ///     Gets <see cref="T:System.Data.Entity.Core.Common.DataRecordInfo" /> for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.IExtendedDataRecord" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Common.DataRecordInfo" /> object.
+        /// </returns>
         DataRecordInfo DataRecordInfo { get; }
 
         /// <summary>
-        ///     Used to return a nested DbDataRecord.
+        ///     Gets a <see cref="T:System.Data.Common.DbDataRecord" /> object with the specified index.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Common.DbDataRecord" /> object.
+        /// </returns>
+        /// <param name="i">The index of the row.</param>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "i")]
         DbDataRecord GetDataRecord(int i);
 
         /// <summary>
-        ///     Used to return a nested result
+        ///     Returns nested readers as <see cref="T:System.Data.Common.DbDataReader" /> objects.
         /// </summary>
+        /// <returns>
+        ///     Nested readers as <see cref="T:System.Data.Common.DbDataReader" /> objects.
+        /// </returns>
+        /// <param name="i">The ordinal of the column.</param>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "i")]
         DbDataReader GetDataReader(int i);
     }

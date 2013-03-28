@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.EntityClient
 {
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Core.EntityClient
         private string _storeProviderConnectionString;
 
         /// <summary>
-        ///     Constructs the EntityConnectionStringBuilder object
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> class.
         /// </summary>
         public EntityConnectionStringBuilder()
         {
@@ -51,17 +51,16 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Constructs the EntityConnectionStringBuilder object with a connection string
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> class using the supplied connection string.
         /// </summary>
-        /// <param name="connectionString"> The connection string to initialize this builder </param>
+        /// <param name="connectionString">A provider-specific connection string to the underlying data source.</param>
         public EntityConnectionStringBuilder(string connectionString)
         {
             ConnectionString = connectionString;
         }
 
-        /// <summary>
-        ///     Gets or sets the named connection name in the connection string
-        /// </summary>
+        /// <summary>Gets or sets the name of a section as defined in a configuration file.</summary>
+        /// <returns>The name of a section in a configuration file.</returns>
         [DisplayName("Name")]
         [EntityResCategory(EntityRes.EntityDataCategory_NamedConnectionString)]
         [EntityResDescription(EntityRes.EntityConnectionString_Name)]
@@ -76,9 +75,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     Gets or sets the name of the underlying .NET Framework data provider in the connection string
-        /// </summary>
+        /// <summary>Gets or sets the name of the underlying .NET Framework data provider in the connection string.</summary>
+        /// <returns>The invariant name of the underlying .NET Framework data provider.</returns>
         [DisplayName("Provider")]
         [EntityResCategory(EntityRes.EntityDataCategory_Source)]
         [EntityResDescription(EntityRes.EntityConnectionString_Provider)]
@@ -93,10 +91,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     Gets or sets the metadata locations in the connection string, which is a pipe-separated sequence
-        ///     of paths to folders and individual files
-        /// </summary>
+        /// <summary>Gets or sets the metadata locations in the connection string.</summary>
+        /// <returns>Gets or sets the metadata locations in the connection string.</returns>
         [DisplayName("Metadata")]
         [EntityResCategory(EntityRes.EntityDataCategory_Context)]
         [EntityResDescription(EntityRes.EntityConnectionString_Metadata)]
@@ -111,9 +107,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     Gets or sets the inner connection string in the connection string
-        /// </summary>
+        /// <summary>Gets or sets the inner, provider-specific connection string.</summary>
+        /// <returns>The inner, provider-specific connection string.</returns>
         [DisplayName("Provider Connection String")]
         [EntityResCategory(EntityRes.EntityDataCategory_Source)]
         [EntityResDescription(EntityRes.EntityConnectionString_ProviderConnectionString)]
@@ -129,16 +124,34 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets whether the EntityConnectionStringBuilder has a fixed size
+        ///     Gets a value that indicates whether the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        ///     has a fixed size.
         /// </summary>
+        /// <returns>
+        ///     Returns true in every case, because the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        ///     supplies a fixed-size collection of keyword/value pairs.
+        /// </returns>
         public override bool IsFixedSize
         {
             get { return true; }
         }
 
         /// <summary>
-        ///     Gets a collection of all keywords used by EntityConnectionStringBuilder
+        ///     Gets an <see cref="T:System.Collections.ICollection" /> that contains the keys in the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Collections.ICollection" /> that contains the keys in the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        ///     .
+        /// </returns>
         public override ICollection Keys
         {
             get { return new ReadOnlyCollection<string>(_validKeywords); }
@@ -166,9 +179,12 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     Gets or sets the value associated with the keyword
-        /// </summary>
+        /// <summary>Gets or sets the value associated with the specified key. In C#, this property is the indexer.</summary>
+        /// <returns>The value associated with the specified key. </returns>
+        /// <param name="keyword">The key of the item to get or set.</param>
+        /// <exception cref="T:System.ArgumentNullException"> keyword  is a null reference (Nothing in Visual Basic).</exception>
+        /// <exception cref="T:System.Collections.Generic.KeyNotFoundException">Tried to add a key that does not exist in the available keys.</exception>
+        /// <exception cref="T:System.FormatException">Invalid value in the connection string (specifically, a Boolean or numeric value was expected but not supplied).</exception>
         public override object this[string keyword]
         {
             get
@@ -240,7 +256,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Clear all the parameters in the connection string
+        ///     Clears the contents of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> instance.
         /// </summary>
         public override void Clear()
         {
@@ -252,10 +268,14 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Determine if this connection string builder contains a specific key
+        ///     Determines whether the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> contains a specific key.
         /// </summary>
-        /// <param name="keyword"> The keyword to find in this connection string builder </param>
-        /// <returns> True if this connections string builder contains the specific key </returns>
+        /// <returns>
+        ///     Returns true if the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> contains an element that has the specified key; otherwise, false.
+        /// </returns>
+        /// <param name="keyword">
+        ///     The key to locate in the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />.
+        /// </param>
         public override bool ContainsKey(string keyword)
         {
             Check.NotNull(keyword, "keyword");
@@ -272,11 +292,15 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the value of the given keyword, returns false if there isn't a value with the given keyword
+        ///     Retrieves a value corresponding to the supplied key from this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        ///     .
         /// </summary>
-        /// <param name="keyword"> The keyword specifying the name of the parameter to retrieve </param>
-        /// <param name="value"> The value retrieved </param>
-        /// <returns> True if the value is retrieved </returns>
+        /// <returns>Returns true if  keyword  was found in the connection string; otherwise, false.</returns>
+        /// <param name="keyword">The key of the item to retrieve.</param>
+        /// <param name="value">The value corresponding to  keyword. </param>
+        /// <exception cref="T:System.ArgumentNullException"> keyword  contains a null value (Nothing in Visual Basic).</exception>
         public override bool TryGetValue(string keyword, out object value)
         {
             Check.NotNull(keyword, "keyword");
@@ -292,10 +316,19 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Removes a parameter from the builder
+        ///     Removes the entry with the specified key from the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        ///     instance.
         /// </summary>
-        /// <param name="keyword"> The keyword specifying the name of the parameter to remove </param>
-        /// <returns> True if the parameter is removed </returns>
+        /// <returns>Returns true if the key existed in the connection string and was removed; false if the key did not exist.</returns>
+        /// <param name="keyword">
+        ///     The key of the keyword/value pair to be removed from the connection string in this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        ///     .
+        /// </param>
+        /// <exception cref="T:System.ArgumentNullException"> keyword  is null (Nothing in Visual Basic)</exception>
         public override bool Remove(string keyword)
         {
             // Convert the given object into a string

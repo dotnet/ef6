@@ -61,11 +61,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             _parentPropertyName = null;
         }
 
-        /// <summary>
-        ///     Reports that a change is about to occur to one of the properties of this instance
-        ///     to the containing object and then continues default change
-        ///     reporting behavior.
-        /// </summary>
+        /// <summary>Notifies the change tracker that a property change is pending on a complex object.</summary>
+        /// <param name="property">The name of the changing property.</param>
+        /// <exception cref="T:System.ArgumentNullException"> property  is null.</exception>
         protected override sealed void ReportPropertyChanging(
             string property)
         {
@@ -77,11 +75,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             ReportComplexPropertyChanging(null, this, property);
         }
 
-        /// <summary>
-        ///     Reports a change to one of the properties of this instance
-        ///     to the containing object and then continues default change
-        ///     reporting behavior.
-        /// </summary>
+        /// <summary>Notifies the change tracker that a property of a complex object has changed.</summary>
+        /// <param name="property">The name of the changed property.</param>
+        /// <exception cref="T:System.ArgumentNullException"> property  is null.</exception>
         protected override sealed void ReportPropertyChanged(
             string property)
         {

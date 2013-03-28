@@ -37,17 +37,19 @@ namespace System.Data.Entity.Core.EntityClient
         private bool? _isNullable;
 
         /// <summary>
-        ///     Constructs the EntityParameter object
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the default values.
         /// </summary>
         public EntityParameter()
         {
         }
 
         /// <summary>
-        ///     Constructs the EntityParameter object with the given parameter name and the type of the parameter
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the specified parameter name and data type.
         /// </summary>
-        /// <param name="parameterName"> The name of the parameter </param>
-        /// <param name="dbType"> The type of the parameter </param>
+        /// <param name="parameterName">The name of the parameter.</param>
+        /// <param name="dbType">
+        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(string parameterName, DbType dbType)
         {
@@ -56,12 +58,13 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Constructs the EntityParameter object with the given parameter name, the type of the parameter, and the size of the
-        ///     parameter
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the specified parameter name, data type and size.
         /// </summary>
-        /// <param name="parameterName"> The name of the parameter </param>
-        /// <param name="dbType"> The type of the parameter </param>
-        /// <param name="size"> The size of the parameter </param>
+        /// <param name="parameterName">The name of the parameter.</param>
+        /// <param name="dbType">
+        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// </param>
+        /// <param name="size">The size of the parameter.</param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(string parameterName, DbType dbType, int size)
         {
@@ -71,13 +74,14 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Constructs the EntityParameter object with the given parameter name, the type of the parameter, the size of the
-        ///     parameter, and the name of the source column
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the specified properties.
         /// </summary>
-        /// <param name="parameterName"> The name of the parameter </param>
-        /// <param name="dbType"> The type of the parameter </param>
-        /// <param name="size"> The size of the parameter </param>
-        /// <param name="sourceColumn"> The name of the source column mapped to the data set, used for loading the parameter value </param>
+        /// <param name="parameterName">The name of the parameter.</param>
+        /// <param name="dbType">
+        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// </param>
+        /// <param name="size">The size of the parameter.</param>
+        /// <param name="sourceColumn">The name of the source column.</param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(string parameterName, DbType dbType, int size, string sourceColumn)
         {
@@ -88,19 +92,24 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Constructs the EntityParameter object with the given parameter name, the type of the parameter, the size of the
-        ///     parameter, and the name of the source column
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the specified properties.
         /// </summary>
-        /// <param name="parameterName"> The name of the parameter </param>
-        /// <param name="dbType"> The type of the parameter </param>
-        /// <param name="size"> The size of the parameter </param>
-        /// <param name="direction"> The direction of the parameter, whether it's input/output/both/return value </param>
-        /// <param name="isNullable"> If the parameter is nullable </param>
-        /// <param name="precision"> The floating point precision of the parameter, valid only if the parameter type is a floating point type </param>
-        /// <param name="scale"> The scale of the parameter, valid only if the parameter type is a floating point type </param>
-        /// <param name="sourceColumn"> The name of the source column mapped to the data set, used for loading the parameter value </param>
-        /// <param name="sourceVersion"> The data row version to use when loading the parameter value </param>
-        /// <param name="value"> The value of the parameter </param>
+        /// <param name="parameterName">The name of the parameter.</param>
+        /// <param name="dbType">
+        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// </param>
+        /// <param name="size">The size of the parameter.</param>
+        /// <param name="direction">
+        ///     One of the <see cref="T:System.Data.ParameterDirection" /> values.
+        /// </param>
+        /// <param name="isNullable">true to indicate that the parameter accepts null values; otherwise, false.</param>
+        /// <param name="precision">The number of digits used to represent the value.</param>
+        /// <param name="scale">The number of decimal places to which value is resolved.</param>
+        /// <param name="sourceColumn">The name of the source column.</param>
+        /// <param name="sourceVersion">
+        ///     One of the <see cref="T:System.Data.DataRowVersion" /> values.
+        /// </param>
+        /// <param name="value">The value of the parameter.</param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(
             string parameterName,
@@ -140,9 +149,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     The name of the parameter
-        /// </summary>
+        /// <summary>Gets or sets the name of the entity parameter.</summary>
+        /// <returns>The name of the entity parameter.</returns>
         public override string ParameterName
         {
             get { return _parameterName ?? ""; }
@@ -170,8 +178,11 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     The type of the parameter, EdmType may also be set, and may provide more detailed information.
+        ///     Gets or sets the <see cref="T:System.Data.DbType" /> of the parameter.
         /// </summary>
+        /// <returns>
+        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// </returns>
         public override DbType DbType
         {
             get
@@ -215,12 +226,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     The type of the parameter, expressed as an EdmType.
-        ///     May be null (which is what it will be if unset).  This means
-        ///     that the DbType contains all the type information.
-        ///     Non-null values must not contradict DbType (only restate or specialize).
-        /// </summary>
+        /// <summary>Gets or sets the type of the parameter, expressed as an EdmType.</summary>
+        /// <returns>The type of the parameter, expressed as an EdmType.</returns>
         public virtual EdmType EdmType
         {
             get { return _edmType; }
@@ -238,8 +245,12 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     The precision of the parameter if the parameter is a floating point type
+        ///     Gets or sets the number of digits used to represent the
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.EntityClient.EntityParameter.Value" />
+        ///     property.
         /// </summary>
+        /// <returns>The number of digits used to represent the value.</returns>
         public virtual byte Precision
         {
             get
@@ -255,8 +266,12 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     The scale of the parameter if the parameter is a floating point type
+        ///     Gets or sets the number of decimal places to which
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.EntityClient.EntityParameter.Value" />
+        ///     is resolved.
         /// </summary>
+        /// <returns>The number of decimal places to which value is resolved.</returns>
         public virtual byte Scale
         {
             get
@@ -271,9 +286,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        ///     The value of the parameter
-        /// </summary>
+        /// <summary>Gets or sets the value of the parameter.</summary>
+        /// <returns>The value of the parameter.</returns>
         public override object Value
         {
             get { return _value; }
@@ -366,6 +380,10 @@ namespace System.Data.Entity.Core.EntityClient
             get { return _size.HasValue; }
         }
 
+        /// <summary>Gets or sets the direction of the parameter.</summary>
+        /// <returns>
+        ///     One of the <see cref="T:System.Data.ParameterDirection" /> values.
+        /// </returns>
         [RefreshProperties(RefreshProperties.All)]
         [EntityResCategory(EntityRes.DataCategory_Data)]
         [EntityResDescription(EntityRes.DbParameter_Direction)]
@@ -399,6 +417,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+        /// <summary>Gets or sets a value that indicates whether the parameter accepts null values.</summary>
+        /// <returns>true if null values are accepted; otherwise, false.</returns>
         public override bool IsNullable
         {
             get
@@ -409,6 +429,8 @@ namespace System.Data.Entity.Core.EntityClient
             set { _isNullable = value; }
         }
 
+        /// <summary>Gets or sets the maximum size of the data within the column.</summary>
+        /// <returns>The maximum size of the data within the column.</returns>
         [EntityResCategory(EntityRes.DataCategory_Data)]
         [EntityResDescription(EntityRes.DbParameter_Size)]
         public override int Size
@@ -446,6 +468,13 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the name of the source column mapped to the <see cref="T:System.Data.DataSet" /> and used for loading or returning the
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.EntityClient.EntityParameter.Value" />
+        ///     .
+        /// </summary>
+        /// <returns>The name of the source column mapped to the dataset and used for loading or returning the value.</returns>
         [EntityResCategory(EntityRes.DataCategory_Update)]
         [EntityResDescription(EntityRes.DbParameter_SourceColumn)]
         public override string SourceColumn
@@ -458,12 +487,20 @@ namespace System.Data.Entity.Core.EntityClient
             set { _sourceColumn = value; }
         }
 
+        /// <summary>Gets or sets a value that indicates whether source column is nullable.</summary>
+        /// <returns>true if source column is nullable; otherwise, false.</returns>
         public override bool SourceColumnNullMapping
         {
             get { return _sourceColumnNullMapping; }
             set { _sourceColumnNullMapping = value; }
         }
 
+        /// <summary>
+        ///     Gets or sets the <see cref="T:System.Data.DataRowVersion" /> to use when loading the value.
+        /// </summary>
+        /// <returns>
+        ///     One of the <see cref="T:System.Data.DataRowVersion" /> values.
+        /// </returns>
         [EntityResCategory(EntityRes.DataCategory_Update)]
         [EntityResDescription(EntityRes.DbParameter_SourceVersion)]
         public override DataRowVersion SourceVersion
@@ -493,7 +530,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Resets the DbType property to its original settings
+        ///     Resets the type associated with the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />.
         /// </summary>
         public override void ResetDbType()
         {
@@ -686,6 +723,8 @@ namespace System.Data.Entity.Core.EntityClient
             _parent = null;
         }
 
+        /// <summary>Returns a string representation of the parameter.</summary>
+        /// <returns>A string representation of the parameter.</returns>
         public override string ToString()
         {
             return ParameterName;

@@ -191,16 +191,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Sets the current plan compiler trace function to <paramref name="traceCallback" />, enabling plan compiler tracing
-        /// </summary>
+///     Sets the current plan compiler trace function to <paramref name="traceCallback" />, enabling plan compiler tracing
+/// </summary>
         internal static void TraceOn(Action<string, object> traceCallback)
         {
             s_traceCallback = traceCallback;
         }
 
         /// <summary>
-        ///     Sets the current plan compiler trace function to <c>null</c>, disabling plan compiler tracing
-        /// </summary>
+///     Sets the current plan compiler trace function to <c>null</c>, disabling plan compiler tracing
+/// </summary>
         internal static void TraceOff()
         {
             s_traceCallback = null;

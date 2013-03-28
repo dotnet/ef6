@@ -35,9 +35,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private OperationAction _deleteBehavior;
         private RelationshipMultiplicity _relationshipMultiplicity;
 
-        /// <summary>
-        ///     Returns the operational behaviour for this end
-        /// </summary>
+        /// <summary>Gets the operational behavior of this relationship end member.</summary>
+        /// <returns>
+        ///     One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.OperationAction" /> values. The default is
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.Metadata.Edm.OperationAction.None" />
+        ///     .
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.OperationAction, true)]
         public OperationAction DeleteBehavior
         {
@@ -49,9 +53,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        ///     Returns the multiplicity for this relationship end
-        /// </summary>
+        /// <summary>Gets the multiplicity of this relationship end member.</summary>
+        /// <returns>
+        ///     One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> values.
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.RelationshipMultiplicity, false)]
         public RelationshipMultiplicity RelationshipMultiplicity
         {
@@ -64,6 +69,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Access the EntityType of the EndMember in an association.</summary>
+        /// <returns>The EntityType of the EndMember in an association.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public EntityType GetEntityType()
         {

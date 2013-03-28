@@ -30,8 +30,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.NavigationProperty" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.NavigationProperty" />
+        ///     .
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.NavigationProperty; }
@@ -45,23 +51,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         private readonly NavigationPropertyAccessor _accessor;
 
-        /// <summary>
-        ///     Gets/Sets the relationship type that this navigation property operates on
-        /// </summary>
+        /// <summary>Gets the relationship type that this navigation property operates on.</summary>
+        /// <returns>The relationship type that this navigation property operates on.</returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the NavigationProperty instance is in ReadOnly state</exception>
         [MetadataProperty(BuiltInTypeKind.RelationshipType, false)]
         public RelationshipType RelationshipType { get; internal set; }
 
-        /// <summary>
-        ///     Gets/Sets the to relationship end member in the navigation
-        /// </summary>
+        /// <summary>Gets the "to" relationship end member of this navigation.</summary>
+        /// <returns>The "to" relationship end member of this navigation.</returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the NavigationProperty instance is in ReadOnly state</exception>
         [MetadataProperty(BuiltInTypeKind.RelationshipEndMember, false)]
         public RelationshipEndMember ToEndMember { get; internal set; }
 
-        /// <summary>
-        ///     Gets/Sets the from relationship end member in the navigation
-        /// </summary>
+        /// <summary>Gets the "from" relationship end member in this navigation.</summary>
+        /// <returns>The "from" relationship end member in this navigation.</returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the NavigationProperty instance is in ReadOnly state</exception>
         [MetadataProperty(BuiltInTypeKind.RelationshipEndMember, false)]
         public RelationshipEndMember FromEndMember { get; internal set; }
@@ -86,7 +89,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     returns the foreign key properties. Otherwise, returns an empty set. We will return the members in the order
         ///     of the principal end key properties.
         /// </summary>
-        /// <returns> Foreign key properties </returns>
+        /// <returns>A collection of the foreign key properties.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public IEnumerable<EdmProperty> GetDependentProperties()
         {

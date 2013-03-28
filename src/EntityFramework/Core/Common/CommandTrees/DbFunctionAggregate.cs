@@ -6,9 +6,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    ///     The aggregate type that corresponds to the invocation of an aggregate function.
-    /// </summary>
+    /// <summary>Supports standard aggregate functions, such as MIN, MAX, AVG, SUM, and so on. This class cannot be inherited.</summary>
     public sealed class DbFunctionAggregate : DbAggregate
     {
         private readonly bool _distinct;
@@ -23,17 +21,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             _distinct = isDistinct;
         }
 
-        /// <summary>
-        ///     Gets a value indicating whether the aggregate function is applied in a distinct fashion
-        /// </summary>
+        /// <summary>Gets a value indicating whether this aggregate is a distinct aggregate.</summary>
+        /// <returns>true if the aggregate is a distinct aggregate; otherwise, false. </returns>
         public bool Distinct
         {
             get { return _distinct; }
         }
 
-        /// <summary>
-        ///     Gets the method metadata that specifies the aggregate function to invoke.
-        /// </summary>
+        /// <summary>Gets the method metadata that specifies the aggregate function to invoke.</summary>
+        /// <returns>The method metadata that specifies the aggregate function to invoke.</returns>
         public EdmFunction Function
         {
             get { return _aggregateFunction; }

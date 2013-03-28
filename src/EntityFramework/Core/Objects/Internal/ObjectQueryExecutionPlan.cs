@@ -16,6 +16,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+
 #if !NET40
 
 #endif

@@ -8,11 +8,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    ///     Aggregates are pseudo-expressions. They look and feel like expressions, but
-    ///     are severely restricted in where they can appear - only in the aggregates clause
-    ///     of a group-by expression.
-    /// </summary>
+    /// <summary>Implements the basic functionality required by aggregates in a GroupBy clause. </summary>
     public abstract class DbAggregate
     {
         private readonly DbExpressionList _args;
@@ -29,16 +25,28 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the result type of this aggregate
+        ///     Gets the result type of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" />.
         /// </summary>
+        /// <returns>
+        ///     The result type of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" />.
+        /// </returns>
         public TypeUsage ResultType
         {
             get { return _type; }
         }
 
         /// <summary>
-        ///     Gets the list of expressions that define the arguments to the aggregate.
+        ///     Gets the list of expressions that define the arguments to this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     The list of expressions that define the arguments to this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" />
+        ///     .
+        /// </returns>
         public IList<DbExpression> Arguments
         {
             get { return _args; }

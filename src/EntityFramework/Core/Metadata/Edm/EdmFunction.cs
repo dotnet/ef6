@@ -151,24 +151,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly ReadOnlyMetadataCollection<EntitySet> _entitySets;
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />.
         /// </summary>
+        /// <returns>
+        ///     One of the enumeration values of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> enumeration.
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.EdmFunction; }
         }
 
-        /// <summary>
-        ///     Returns the full name of this type, which is namespace + "." + name.
-        /// </summary>
+        /// <summary>Returns the full name (namespace plus name) of this type. </summary>
+        /// <returns>The full name of the type.</returns>
         public override string FullName
         {
             get { return NamespaceName + "." + Name; }
         }
 
         /// <summary>
-        ///     Gets the collection of parameters
+        ///     Gets the parameters of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />.
         /// </summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the parameters of this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />
+        ///     .
+        /// </returns>
         public ReadOnlyMetadataCollection<FunctionParameter> Parameters
         {
             get { return _parameters; }
@@ -204,8 +212,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the return parameter of this function
+        ///     Gets the return parameter of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" /> object that represents the return parameter of this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />
+        ///     .
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.FunctionParameter, false)]
         public FunctionParameter ReturnParameter
         {
@@ -213,8 +227,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the return parameters of this function
+        ///     Gets the return parameters of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />.
         /// </summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that represents the return parameters of this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />
+        ///     .
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.FunctionParameter, true)]
         public ReadOnlyMetadataCollection<FunctionParameter> ReturnParameters
         {
@@ -258,6 +278,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return GetFunctionAttribute(FunctionAttributes.NiladicFunction); }
         }
 
+        /// <summary>Gets or sets whether this instance is mapped to a function or to a stored procedure.</summary>
+        /// <returns>true if this instance is mapped to a function; false if this instance is mapped to a stored procedure.</returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Composable")]
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
         public bool IsComposableAttribute
@@ -265,6 +287,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return GetFunctionAttribute(FunctionAttributes.IsComposable); }
         }
 
+        /// <summary>Gets a query in the language that is used by the database management system or storage model. </summary>
+        /// <returns>
+        ///     A string value in the syntax used by the database management system or storage model that contains the query or update statement of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />
+        ///     .
+        /// </returns>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public string CommandTextAttribute
         {

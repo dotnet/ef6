@@ -9,9 +9,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Utilities;
     using System.Linq;
 
-    /// <summary>
-    ///     Represents a DML operation expressed as a canonical command tree
-    /// </summary>
+    /// <summary>Represents a data manipulation language (DML) operation expressed as a command tree.</summary>
     public abstract class DbModificationCommandTree : DbCommandTree
     {
         private readonly DbExpressionBinding _target;
@@ -30,8 +28,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="DbExpressionBinding" /> that specifies the target table for the DML operation.
+        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the target table for the data manipulation language (DML) operation.
         /// </summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the target table for the DML operation.
+        /// </returns>
         public DbExpressionBinding Target
         {
             get { return _target; }

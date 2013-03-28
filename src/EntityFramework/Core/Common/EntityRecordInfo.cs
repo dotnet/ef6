@@ -17,10 +17,22 @@ namespace System.Data.Entity.Core.Common
         private readonly EntityKey _entityKey;
 
         /// <summary>
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.EntityRecordInfo" /> class of a specific entity type with an enumerable collection of data fields and with specific key and entity set information.
         /// </summary>
-        /// <param name="metadata"> </param>
-        /// <param name="memberInfo"> </param>
-        /// <param name="entityKey"> </param>
+        /// <param name="metadata">
+        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" /> of the entity represented by the
+        ///     <see
+        ///         cref="T:System.Data.Common.DbDataRecord" />
+        ///     described by this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.EntityRecordInfo" />
+        ///     object.
+        /// </param>
+        /// <param name="memberInfo">
+        ///     An enumerable collection of <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmMember" /> objects that represent column information.
+        /// </param>
+        /// <param name="entityKey">The key for the entity.</param>
+        /// <param name="entitySet">The entity set to which the entity belongs.</param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityRecordInfo(EntityType metadata, IEnumerable<EdmMember> memberInfo, EntityKey entityKey, EntitySet entitySet)
             : base(TypeUsage.Create(metadata), memberInfo)
@@ -79,8 +91,9 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     the EntityKey
+        ///     Gets the <see cref="T:System.Data.Entity.Core.EntityKey" /> for the entity.
         /// </summary>
+        /// <returns>The key for the entity.</returns>
         public EntityKey EntityKey
         {
             get { return _entityKey; }

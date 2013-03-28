@@ -96,26 +96,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        ///     Returns the kind of the type
-        /// </summary>
+        /// <summary> Returns the kind of the type </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.EnumType; }
         }
 
-        /// <summary>
-        ///     Gets a collection of enumeration members for this enumeration type.
-        /// </summary>
+        /// <summary> Gets a collection of enumeration members for this enumeration type. </summary>
         [MetadataProperty(BuiltInTypeKind.EnumMember, true)]
         public ReadOnlyMetadataCollection<EnumMember> Members
         {
             get { return _members; }
         }
 
-        /// <summary>
-        ///     Gets a value indicating whether the enum type is defined as flags (i.e. can be treated as a bit field)
-        /// </summary>
+        /// <summary> Gets a value indicating whether the enum type is defined as flags (i.e. can be treated as a bit field) </summary>
         [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags")]
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
         public bool IsFlags
@@ -129,9 +123,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        ///     Gets the underlying type for this enumeration type.
-        /// </summary>
+        /// <summary> Gets the underlying type for this enumeration type. </summary>
         [MetadataProperty(BuiltInTypeKind.PrimitiveType, false)]
         public PrimitiveType UnderlyingType
         {

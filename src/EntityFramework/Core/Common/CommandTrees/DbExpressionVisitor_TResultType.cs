@@ -4,313 +4,522 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 {
     using System.Data.Entity.Resources;
 
-    /// <summary>
-    ///     The expression visitor pattern abstract base class that should be implemented by visitors that return a result value of a specific type.
-    /// </summary>
-    /// <typeparam name="TResultType"> The type of the result value produced by the visitor. </typeparam>
+    /// <summary>Defines the basic functionality that should be implemented by visitors that return a result value of a specific type. </summary>
+    /// <typeparam name="TResultType">The type of the result produced by the visitor.</typeparam>
     public abstract class DbExpressionVisitor<TResultType>
     {
-        /// <summary>
-        ///     Called when an expression of an otherwise unrecognized type is encountered.
-        /// </summary>
-        /// <param name="expression"> The expression. </param>
+        /// <summary>When overridden in a derived class, handles any expression of an unrecognized type.</summary>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbAndExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAndExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbAndExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAndExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbAndExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbApplyExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbApplyExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbApplyExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbArithmeticExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbArithmeticExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbArithmeticExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbCaseExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbCaseExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbCaseExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbCastExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCastExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbCastExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCastExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbCastExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbComparisonExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbComparisonExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbComparisonExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbConstantExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbConstantExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbConstantExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbCrossJoinExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCrossJoinExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbCrossJoinExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCrossJoinExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbCrossJoinExpression expression);
 
         /// <summary>
-        ///     Visitor pattern method for DbDerefExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbDerefExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbDerefExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbDerefExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbDerefExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbDistinctExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbDistinctExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbDistinctExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbDistinctExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbDistinctExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbElementExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbElementExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbElementExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbElementExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbElementExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbExceptExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExceptExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbExceptExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExceptExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbExceptExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbFilterExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFilterExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbFilterExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFilterExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbFilterExpression expression);
 
         /// <summary>
-        ///     Visitor pattern method for DbFunctionExpression
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbFunctionExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbFunctionExpression expression);
 
         /// <summary>
-        ///     Visitor pattern method for DbEntityRefExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbEntityRefExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbEntityRefExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbEntityRefExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbEntityRefExpression expression);
 
         /// <summary>
-        ///     Visitor pattern method for DbRefKeyExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefKeyExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbRefKeyExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefKeyExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbRefKeyExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbGroupByExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupByExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbGroupByExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupByExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbGroupByExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbIntersectExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIntersectExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbIntersectExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIntersectExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbIntersectExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbIsEmptyExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsEmptyExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbIsEmptyExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsEmptyExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbIsEmptyExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbIsNullExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsNullExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbIsNullExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsNullExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbIsNullExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbIsOfExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsOfExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbIsOfExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsOfExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbIsOfExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbJoinExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbJoinExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbJoinExpression expression);
 
         /// <summary>
-        ///     Visitor pattern method for DbLambdaExpression.
+        ///     When overridden in a derived class, implements the visitor pattern method for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambdaExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbLambdaExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambdaExpression" /> that is being visited.
+        /// </param>
         public virtual TResultType Visit(DbLambdaExpression expression)
         {
             throw new NotSupportedException();
         }
 
         /// <summary>
-        ///     Visitor pattern method for DbLikeExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbLikeExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbLikeExpression expression);
 
         /// <summary>
-        ///     Visitor pattern method for DbLimitExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbLimitExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbLimitExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbNewInstanceExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbNewInstanceExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbNewInstanceExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbNotExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNotExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbNotExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNotExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbNotExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbNullExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNullExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbNullExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNullExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbNullExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbOfTypeExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbOfTypeExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbOfTypeExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbOfTypeExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbOfTypeExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbOrExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbOrExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbOrExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbOrExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbOrExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbParameterReferenceExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbParameterReferenceExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbParameterReferenceExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbProjectExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbProjectExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbProjectExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbPropertyExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbPropertyExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbPropertyExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbQuantifierExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbQuantifierExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbQuantifierExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbRefExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbRefExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbRefExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbRelationshipNavigationExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRelationshipNavigationExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbRelationshipNavigationExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRelationshipNavigationExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbRelationshipNavigationExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbScanExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbScanExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbScanExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbScanExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbScanExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbSortExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbSortExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbSortExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbSkipExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSkipExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbSkipExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSkipExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbSkipExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbTreatExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbTreatExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbTreatExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbTreatExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbTreatExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbUnionAllExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbUnionAllExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbUnionAllExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbUnionAllExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbUnionAllExpression expression);
 
         /// <summary>
-        ///     Typed visitor pattern method for DbVariableReferenceExpression.
+        ///     When overridden in a derived class, implements the visitor pattern for
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" />
+        ///     .
         /// </summary>
-        /// <param name="expression"> The DbVariableReferenceExpression that is being visited. </param>
-        /// <returns> An instance of TResultType. </returns>
+        /// <returns>A result value of a specific type.</returns>
+        /// <param name="expression">
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> that is being visited.
+        /// </param>
         public abstract TResultType Visit(DbVariableReferenceExpression expression);
 
         /// <summary>

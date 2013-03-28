@@ -26,33 +26,25 @@ namespace System.Data.Entity.Core.Common.EntitySql
             _endPosition = endPosition;
         }
 
-        /// <summary>
-        ///     Function name.
-        /// </summary>
+        /// <summary> Function name. </summary>
         public string Name
         {
             get { return _name; }
         }
 
-        /// <summary>
-        ///     Function body and parameters.
-        /// </summary>
+        /// <summary> Function body and parameters. </summary>
         public DbLambda Lambda
         {
             get { return _lambda; }
         }
 
-        /// <summary>
-        ///     Start position of the function definition in the eSQL query text.
-        /// </summary>
+        /// <summary> Start position of the function definition in the eSQL query text. </summary>
         public int StartPosition
         {
             get { return _startPosition; }
         }
 
-        /// <summary>
-        ///     End position of the function definition in the eSQL query text.
-        /// </summary>
+        /// <summary> End position of the function definition in the eSQL query text. </summary>
         public int EndPosition
         {
             get { return _endPosition; }

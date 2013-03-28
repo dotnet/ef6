@@ -48,8 +48,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly ReadOnlyMetadataCollection<EdmProperty> _toProperties;
 
         /// <summary>
-        ///     Returns the kind of the type
+        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint" />
+        ///     .
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.ReferentialConstraint; }
@@ -64,8 +70,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the FromRole which takes part in this referential constraint
+        ///     Gets the "from role" that takes part in this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipEndMember" /> object that represents the "from role" that takes part in this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint" />
+        ///     .
+        /// </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the ReferentialConstraint instance is in ReadOnly state</exception>
         [MetadataProperty(BuiltInTypeKind.RelationshipEndMember, false)]
@@ -82,8 +97,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the ToRole which takes part in this referential constraint
+        ///     Gets the "to role" that takes part in this <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipEndMember" /> object that represents the "to role" that takes part in this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint" />
+        ///     .
+        /// </returns>
         /// <exception cref="System.ArgumentNullException">Thrown if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the ReferentialConstraint instance is in ReadOnly state</exception>
         [MetadataProperty(BuiltInTypeKind.RelationshipEndMember, false)]
@@ -105,8 +126,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the collection of properties on the from role on which the constraint is defined on
+        ///     Gets the list of properties for the "from role" on which this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint" />
+        ///     is defined.
         /// </summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of properties for "from role" on which this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint" />
+        ///     is defined.
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.EdmProperty, true)]
         public ReadOnlyMetadataCollection<EdmProperty> FromProperties
         {
@@ -124,8 +154,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the collection of properties on the ToRole on whose value the constraint is defined on
+        ///     Gets the list of properties for the "to role" on which this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint" />
+        ///     is defined.
         /// </summary>
+        /// <returns>
+        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of properties for the "to role" on which this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint" />
+        ///     is defined.
+        /// </returns>
         [MetadataProperty(BuiltInTypeKind.EdmProperty, true)]
         public ReadOnlyMetadataCollection<EdmProperty> ToProperties
         {
@@ -133,9 +172,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Overriding System.Object.ToString to provide better String representation
-        ///     for this type.
+        ///     Returns the combination of the names of the
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint.FromRole" />
+        ///     and the
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint.ToRole" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     The combination of the names of the
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint.FromRole" />
+        ///     and the
+        ///     <see
+        ///         cref="P:System.Data.Entity.Core.Metadata.Edm.ReferentialConstraint.ToRole" />
+        ///     .
+        /// </returns>
         public override string ToString()
         {
             return FromRole.Name + "_" + ToRole.Name;

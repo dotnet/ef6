@@ -83,17 +83,27 @@ namespace System.Data.Entity.Core
         #region Public Constructors
 
         /// <summary>
-        ///     Constructs an empty EntityKey. For use during XmlSerialization.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKey" /> class.
         /// </summary>
         public EntityKey()
         {
         }
 
         /// <summary>
-        ///     Constructs an EntityKey with the given key values.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKey" /> class with an entity set name and a generic
+        ///     <see
+        ///         cref="T:System.Collections.Generic.KeyValuePair" />
+        ///     collection.
         /// </summary>
-        /// <param name="qualifiedEntitySetName"> The EntitySet name, qualified by the EntityContainer name, of the entity </param>
-        /// <param name="entityKeyValues"> The key-value pairs that identify the entity </param>
+        /// <param name="qualifiedEntitySetName">
+        ///     A <see cref="T:System.String" /> that is the entity set name qualified by the entity container name.
+        /// </param>
+        /// <param name="entityKeyValues">
+        ///     A generic <see cref="T:System.Collections.Generic.KeyValuePair" /> collection.Each key/value pair has a property name as the key and the value of that property as the value. There should be one pair for each property that is part of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityKey" />
+        ///     . The order of the key/value pairs is not important, but each key property should be included. The property names are simple names that are not qualified with an entity type name or the schema name.
+        /// </param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public EntityKey(string qualifiedEntitySetName, IEnumerable<KeyValuePair<string, object>> entityKeyValues)
         {
@@ -108,10 +118,23 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Constructs an EntityKey with the given key values.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKey" /> class with an entity set name and an
+        ///     <see
+        ///         cref="T:System.Collections.Generic.IEnumerable`1" />
+        ///     collection of
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityKeyMember" />
+        ///     objects.
         /// </summary>
-        /// <param name="qualifiedEntitySetName"> The EntitySet name, qualified by the EntityContainer name, of the entity </param>
-        /// <param name="entityKeyValues"> The key-value pairs that identify the entity </param>
+        /// <param name="qualifiedEntitySetName">
+        ///     A <see cref="T:System.String" /> that is the entity set name qualified by the entity container name.
+        /// </param>
+        /// <param name="entityKeyValues">
+        ///     An <see cref="T:System.Collections.Generic.IEnumerable`1" /> collection of
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityKeyMember" />
+        ///     objects with which to initialize the key.
+        /// </param>
         public EntityKey(string qualifiedEntitySetName, IEnumerable<EntityKeyMember> entityKeyValues)
         {
             Check.NotEmpty(qualifiedEntitySetName, "qualifiedEntitySetName");
@@ -125,11 +148,17 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Constructs an EntityKey with the given single key name and value.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKey" /> class with an entity set name and specific entity key pair.
         /// </summary>
-        /// <param name="qualifiedEntitySetName"> The EntitySet name, qualified by the EntityContainer name, of the entity </param>
-        /// <param name="keyName"> The key name that identifies the entity </param>
-        /// <param name="keyValue"> The key value that identifies the entity </param>
+        /// <param name="qualifiedEntitySetName">
+        ///     A <see cref="T:System.String" /> that is the entity set name qualified by the entity container name.
+        /// </param>
+        /// <param name="keyName">
+        ///     A <see cref="T:System.String" /> that is the name of the key.
+        /// </param>
+        /// <param name="keyValue">
+        ///     An <see cref="T:System.Object" /> that is the key value.
+        /// </param>
         public EntityKey(string qualifiedEntitySetName, string keyName, object keyValue)
         {
             Check.NotEmpty(qualifiedEntitySetName, "qualifiedEntitySetName");
@@ -268,9 +297,13 @@ namespace System.Data.Entity.Core
             get { return _entityNotValidKey; }
         }
 
-        /// <summary>
-        ///     Gets the EntitySet name identifying the entity set that contains the entity.
-        /// </summary>
+        /// <summary>Gets or sets the name of the entity set.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.String" /> value that is the name of the entity set for the entity to which the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityKey" />
+        ///     belongs.
+        /// </returns>
         [DataMember]
         public string EntitySetName
         {
@@ -282,9 +315,13 @@ namespace System.Data.Entity.Core
             }
         }
 
-        /// <summary>
-        ///     Gets the EntityContainer name identifying the entity container that contains the entity.
-        /// </summary>
+        /// <summary>Gets or sets the name of the entity container.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.String" /> value that is the name of the entity container for the entity to which the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityKey" />
+        ///     belongs.
+        /// </returns>
         [DataMember]
         public string EntityContainerName
         {
@@ -297,8 +334,14 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Gets the key values that identify the entity.
+        ///     Gets or sets the key values associated with this <see cref="T:System.Data.Entity.Core.EntityKey" />.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> of key values for this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityKey" />
+        ///     .
+        /// </returns>
         [DataMember]
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Required for this feature")]
         public EntityKeyMember[] EntityKeyValues
@@ -345,8 +388,11 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Gets a value indicating whether this key is a temporary key.
+        ///     Gets a value that indicates whether the <see cref="T:System.Data.Entity.Core.EntityKey" /> is temporary.
         /// </summary>
+        /// <returns>
+        ///     true if the <see cref="T:System.Data.Entity.Core.EntityKey" /> is temporary; otherwise, false.
+        /// </returns>
         public bool IsTemporary
         {
             get { return (SingletonKeyValue == null) && (CompositeKeyValues == null); }
@@ -376,13 +422,12 @@ namespace System.Data.Entity.Core
             }
         }
 
-        /// <summary>
-        ///     Gets the entity set for this entity key from the given metadata workspace, by
-        ///     entity container name and entity set name.
-        /// </summary>
-        /// <param name="metadataWorkspace"> workspace in which to look up the entity set </param>
-        /// <returns> the entity set from the given workspace for this entity key </returns>
-        /// <exception cref="ArgumentException">the entity set could not be located in the workspace</exception>
+        /// <summary>Gets the entity set for this entity key from the given metadata workspace.</summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> for the entity key.
+        /// </returns>
+        /// <param name="metadataWorkspace">The metadata workspace that contains the entity.</param>
+        /// <exception cref="T:System.ArgumentException">The entity set could not be located in the specified metadata workspace.</exception>
         public EntitySet GetEntitySet(MetadataWorkspace metadataWorkspace)
         {
             Check.NotNull(metadataWorkspace, "metadataWorkspace");
@@ -405,30 +450,40 @@ namespace System.Data.Entity.Core
 
         #region Equality/Hashing
 
-        /// <summary>
-        ///     Compares this instance to a given key by their values.
-        /// </summary>
-        /// <param name="obj"> the key to compare against this instance </param>
-        /// <returns> true if this instance is equal to the given key, and false otherwise </returns>
+        /// <summary>Returns a value that indicates whether this instance is equal to a specified object. </summary>
+        /// <returns>true if this instance and  obj  have equal values; otherwise, false. </returns>
+        /// <param name="obj">
+        ///     An <see cref="T:System.Object" /> to compare with this instance.
+        /// </param>
         public override bool Equals(object obj)
         {
             return InternalEquals(this, obj as EntityKey, compareEntitySets: true);
         }
 
         /// <summary>
-        ///     Compares this instance to a given key by their values.
+        ///     Returns a value that indicates whether this instance is equal to a specified
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.EntityKey" />
+        ///     .
         /// </summary>
-        /// <param name="other"> the key to compare against this instance </param>
-        /// <returns> true if this instance is equal to the given key, and false otherwise </returns>
+        /// <returns>true if this instance and  other  have equal values; otherwise, false. </returns>
+        /// <param name="other">
+        ///     An <see cref="T:System.Data.Entity.Core.EntityKey" /> object to compare with this instance.
+        /// </param>
         public bool Equals(EntityKey other)
         {
             return InternalEquals(this, other, compareEntitySets: true);
         }
 
         /// <summary>
-        ///     Returns a value-based hash code, to allow EntityKey to be used in hash tables.
+        ///     Serves as a hash function for the current <see cref="T:System.Data.Entity.Core.EntityKey" /> object.
+        ///     <see
+        ///         cref="M:System.Data.Entity.Core.EntityKey.GetHashCode" />
+        ///     is suitable for hashing algorithms and data structures such as a hash table.
         /// </summary>
-        /// <returns> the hash value of this EntityKey </returns>
+        /// <returns>
+        ///     A hash code for the current <see cref="T:System.Data.Entity.Core.EntityKey" />.
+        /// </returns>
         public override int GetHashCode()
         {
             var hashCode = _hashCode;
@@ -495,22 +550,30 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Compares two keys by their values.
+        ///     Compares two <see cref="T:System.Data.Entity.Core.EntityKey" /> objects.
         /// </summary>
-        /// <param name="key1"> a key to compare </param>
-        /// <param name="key2"> a key to compare </param>
-        /// <returns> true if the two keys are equal, false otherwise </returns>
+        /// <returns>true if the  key1  and  key2  values are equal; otherwise, false.</returns>
+        /// <param name="key1">
+        ///     A <see cref="T:System.Data.Entity.Core.EntityKey" /> to compare.
+        /// </param>
+        /// <param name="key2">
+        ///     A <see cref="T:System.Data.Entity.Core.EntityKey" /> to compare.
+        /// </param>
         public static bool operator ==(EntityKey key1, EntityKey key2)
         {
             return InternalEquals(key1, key2, compareEntitySets: true);
         }
 
         /// <summary>
-        ///     Compares two keys by their values.
+        ///     Compares two <see cref="T:System.Data.Entity.Core.EntityKey" /> objects.
         /// </summary>
-        /// <param name="key1"> a key to compare </param>
-        /// <param name="key2"> a key to compare </param>
-        /// <returns> true if the two keys are not equal, false otherwise </returns>
+        /// <returns>true if the  key1  and  key2  values are not equal; otherwise, false.</returns>
+        /// <param name="key1">
+        ///     A <see cref="T:System.Data.Entity.Core.EntityKey" /> to compare.
+        /// </param>
+        /// <param name="key2">
+        ///     A <see cref="T:System.Data.Entity.Core.EntityKey" /> to compare.
+        /// </param>
         public static bool operator !=(EntityKey key1, EntityKey key2)
         {
             return !InternalEquals(key1, key2, compareEntitySets: true);
@@ -1200,8 +1263,9 @@ namespace System.Data.Entity.Core
         #region Serialization
 
         /// <summary>
+        ///     Helper method that is used to deserialize an <see cref="T:System.Data.Entity.Core.EntityKey" />.
         /// </summary>
-        /// <param name="context"> </param>
+        /// <param name="context">Describes the source and destination of a given serialized stream, and provides an additional caller-defined context.</param>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
         [OnDeserializing]
@@ -1215,8 +1279,9 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
+        ///     Helper method that is used to deserialize an <see cref="T:System.Data.Entity.Core.EntityKey" />.
         /// </summary>
-        /// <param name="context"> </param>
+        /// <param name="context">Describes the source and destination of a given serialized stream and provides an additional caller-defined context.</param>
         [OnDeserialized]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]

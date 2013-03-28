@@ -114,9 +114,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Events
         // ------
 
-        /// <summary>
-        ///     Event to notify changes in the Associations.
-        /// </summary>
+        /// <summary>Occurs when a change is made to a related end.</summary>
         public event CollectionChangeEventHandler AssociationChanged
         {
             add
@@ -169,9 +167,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             get { return _navigation; }
         }
 
-        /// <summary>
-        ///     Name of the relationship in which this RelatedEnd is participating
-        /// </summary>
+        /// <summary>Gets the name of the relationship in which this related end participates.</summary>
+        /// <returns>
+        ///     The name of the relationship in which this <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd" /> participates. The relationship name is not namespace qualified.
+        /// </returns>
         [SoapIgnore]
         [XmlIgnore]
         public string RelationshipName
@@ -183,9 +182,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        ///     Name of the relationship source role used to generate this RelatedEnd
-        /// </summary>
+        /// <summary>Gets the role name at the source end of the relationship.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.String" /> that is the role name.
+        /// </returns>
         [SoapIgnore]
         [XmlIgnore]
         public virtual string SourceRoleName
@@ -197,9 +197,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        ///     Name of the relationship target role used to generate this RelatedEnd
-        /// </summary>
+        /// <summary>Gets the role name at the target end of the relationship.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.String" /> that is the role name.
+        /// </returns>
         [SoapIgnore]
         [XmlIgnore]
         public virtual string TargetRoleName
@@ -240,11 +241,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        ///     Returns the relationship metadata associated with this RelatedEnd.
-        ///     This value is available once the RelatedEnd is attached to an ObjectContext
-        ///     or is retrieved with MergeOption.NoTracking
-        /// </summary>
+        /// <summary>Gets a reference to the metadata for the related end.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" /> object that contains metadata for the end of a relationship.
+        /// </returns>
         [SoapIgnore]
         [XmlIgnore]
         public virtual RelationshipSet RelationshipSet
@@ -281,7 +281,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             get { return _fromEndMember; }
         }
 
-        /// <inheritdoc />
+        /// <summary>Gets a value that indicates whether all related objects have been loaded.</summary>
+        /// <returns>true if the related end contains all the related objects from the database; otherwise, false.</returns>
         [SoapIgnore]
         [XmlIgnore]
         public bool IsLoaded
@@ -721,9 +722,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Methods
         // -------
 
-        /// <summary>
-        ///     Loads the related entity or entities into the local related end using the default merge option.
-        /// </summary>
+        /// <summary>When overridden in a derived class, loads the related object or objects into the related end with the default merge option.</summary>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     When the source object was retrieved by using a <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" /> query 
+        ///     and the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> is not <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />
+        ///     or the related objects are already loaded
+        ///     or when the source object is not attached to the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        ///     or when the source object is being tracked but is in the
+        ///     <see cref="F:System.Data.Entity.EntityState.Added" /> or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state
+        ///     or the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
+        ///     used for <see cref="M:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd.Load" />
+        ///     is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
+        /// </exception>
         public void Load()
         {
             // CheckOwnerNull is called in the impementation
@@ -752,9 +762,25 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
 #endif
 
-        /// <summary>
-        ///     Loads the related entity or entities into the local related end using the supplied merge option.
-        /// </summary>
+        /// <summary>When overridden in a derived class, loads an object or objects from the related end with the specified merge option.</summary>
+        /// <param name="mergeOption">
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when merging objects into an existing
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
+        ///     .
+        /// </param>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     When the source object was retrieved by using a <see  cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />  query 
+        ///     and the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
+        ///     is not <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />
+        ///     or the related objects are already loaded
+        ///     or when the source object is not attached to the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        ///     or when the source object is being tracked but is in the
+        ///     <see cref="F:System.Data.Entity.EntityState.Added" />  or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state 
+        ///     or the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
+        ///     used for <see cref="M:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd.Load" />
+        ///     is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
+        /// </exception>
         public abstract void Load(MergeOption mergeOption);
 
 #if !NET40
@@ -2003,6 +2029,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return true;
         }
 
+        /// <summary>
+        ///     Returns an <see cref="T:System.Collections.IEnumerator" /> that iterates through the collection of related objects.
+        /// </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Collections.IEnumerator" /> that iterates through the collection of related objects.
+        /// </returns>
         public IEnumerator GetEnumerator()
         {
             //CheckOwnerNull() is called in GetInternalEnumerable()
@@ -2595,6 +2627,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // In particular, it recreates a entity wrapper from the serialized owner.
         // Note that this is only expected to work for non-POCO entities, since serialization of POCO
         // entities will not result in serialization of the RelationshipManager or its related objects.
+        /// <summary>
+        ///     Used internally to deserialize entity objects along with the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" />
+        ///     instances.
+        /// </summary>
+        /// <param name="context">The serialized stream.</param>
         [OnDeserialized]
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]

@@ -9,7 +9,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents a Case When...Then...Else logical operation.
+    ///     Represents the When, Then, and Else clauses of the
+    ///     <see
+    ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />
+    ///     . This class cannot be inherited.
     /// </summary>
     public sealed class DbCaseExpression : DbExpression
     {
@@ -31,37 +34,53 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the When clauses of this DbCaseExpression.
+        ///     Gets the When clauses of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
         /// </summary>
+        /// <returns>
+        ///     The When clauses of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
+        /// </returns>
         public IList<DbExpression> When
         {
             get { return _when; }
         }
 
         /// <summary>
-        ///     Gets the Then clauses of this DbCaseExpression.
+        ///     Gets the Then clauses of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
         /// </summary>
+        /// <returns>
+        ///     The Then clauses of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
+        /// </returns>
         public IList<DbExpression> Then
         {
             get { return _then; }
         }
 
         /// <summary>
-        ///     Gets the Else clause of this DbCaseExpression.
+        ///     Gets or sets the Else clause of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
         /// </summary>
+        /// <returns>
+        ///     The Else clause of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
+        /// </returns>
+        /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
+        /// <exception cref="T:System.ArgumentException">
+        ///     The expression is not associated with the command tree of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />
+        ///     ,or its result type is not equal or promotable to the result type of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />
+        ///     .
+        /// </exception>
         public DbExpression Else
         {
             get { return _else; }
         }
 
-        /// <summary>
-        ///     The visitor pattern method for expression visitors that do not produce a result value.
-        /// </summary>
-        /// <param name="visitor"> An instance of DbExpressionVisitor. </param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="visitor" />
-        ///     is null
-        /// </exception>
+        /// <summary>Implements the visitor pattern for expressions that do not produce a result value.</summary>
+        /// <param name="visitor">
+        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// </param>
+        /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override void Accept(DbExpressionVisitor visitor)
         {
             Check.NotNull(visitor, "visitor");
@@ -69,20 +88,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             visitor.Visit(this);
         }
 
-        /// <summary>
-        ///     The visitor pattern method for expression visitors that produce a result value of a specific type.
-        /// </summary>
-        /// <param name="visitor"> An instance of a typed DbExpressionVisitor that produces a result value of type TResultType. </param>
-        /// <typeparam name="TResultType">
-        ///     The type of the result produced by <paramref name="visitor" />
-        /// </typeparam>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="visitor" />
-        ///     is null
-        /// </exception>
+        /// <summary>Implements the visitor pattern for expressions that produce a result value of a specific type.</summary>
         /// <returns>
-        ///     An instance of <typeparamref name="TResultType" /> .
+        ///     A result value of a specific type produced by
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
+        ///     .
         /// </returns>
+        /// <param name="visitor">
+        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
+        /// </param>
+        /// <typeparam name="TResultType">The type of the result produced by  visitor. </typeparam>
+        /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
         {
             Check.NotNull(visitor, "visitor");

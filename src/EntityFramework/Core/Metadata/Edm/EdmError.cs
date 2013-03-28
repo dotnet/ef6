@@ -24,9 +24,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _message = message;
         }
 
-        /// <summary>
-        ///     Gets the error message.
-        /// </summary>
+        /// <summary>Gets the error message.</summary>
+        /// <returns>The error message.</returns>
         public string Message
         {
             get { return _message; }

@@ -19,17 +19,17 @@ namespace System.Data.Entity.Core
         private object _keyValue;
 
         /// <summary>
-        ///     Creates an empty EntityKeyMember. This constructor is used by serialization.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKeyMember" /> class.
         /// </summary>
         public EntityKeyMember()
         {
         }
 
         /// <summary>
-        ///     Creates a new EntityKeyMember with the specified key name and value.
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKeyMember" /> class with the specified entity key pair.
         /// </summary>
-        /// <param name="keyName"> The key name </param>
-        /// <param name="keyValue"> The key value </param>
+        /// <param name="keyName">The name of the key.</param>
+        /// <param name="keyValue">The key value.</param>
         public EntityKeyMember(string keyName, object keyValue)
         {
             Check.NotNull(keyName, "keyName");
@@ -38,9 +38,8 @@ namespace System.Data.Entity.Core
             _keyValue = keyValue;
         }
 
-        /// <summary>
-        ///     The key name
-        /// </summary>
+        /// <summary>Gets or sets the name of the entity key.</summary>
+        /// <returns>The key name.</returns>
         [DataMember]
         public string Key
         {
@@ -54,9 +53,8 @@ namespace System.Data.Entity.Core
             }
         }
 
-        /// <summary>
-        ///     The key value
-        /// </summary>
+        /// <summary>Gets or sets the value of the entity key.</summary>
+        /// <returns>The key value.</returns>
         [DataMember]
         public object Value
         {
@@ -70,10 +68,8 @@ namespace System.Data.Entity.Core
             }
         }
 
-        /// <summary>
-        ///     Returns a string representation of the EntityKeyMember
-        /// </summary>
-        /// <returns> A string representation of the EntityKeyMember </returns>
+        /// <summary>Returns a string representation of the entity key.</summary>
+        /// <returns>A string representation of the entity key.</returns>
         public override string ToString()
         {
             return String.Format(CultureInfo.CurrentCulture, "[{0}, {1}]", _keyName, _keyValue);

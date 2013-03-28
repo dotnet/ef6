@@ -12,11 +12,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
+    /// <summary>Represents a single-row update operation expressed as a command tree. This class cannot be inherited.  </summary>
+    /// <remarks>
     ///     Represents a single-row update operation expressed as a canonical command tree.
     ///     When the <see cref="Returning" /> property is set, the command returns a reader; otherwise,
     ///     it returns a scalar indicating the number of rows affected.
-    /// </summary>
+    /// </remarks>
     public class DbUpdateCommandTree : DbModificationCommandTree
     {
         private readonly DbExpression _predicate;
@@ -41,46 +42,30 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             _returning = returning;
         }
 
-        /// <summary>
-        ///     Gets the list of update set clauses that define the update operation.
-        /// </summary>
+        /// <summary>Gets the list of update set clauses that define the update operation.</summary>
+        /// <returns>The list of update set clauses that define the update operation.</returns>
         public IList<DbModificationClause> SetClauses
         {
             get { return _setClauses; }
         }
 
         /// <summary>
-        ///     Gets an <see cref="DbExpression" /> that specifies a projection of results to be returned based on the modified rows.
-        ///     If null, indicates no results should be returned from this command.
+        ///     Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies a projection of results to be returned, based on the modified rows.
         /// </summary>
-        /// <remarks>
-        ///     The returning projection includes only the following elements:
-        ///     <list>
-        ///         <item>NewInstance expression</item>
-        ///         <item>Property expression</item>
-        ///     </list>
-        /// </remarks>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies a projection of results to be returned based, on the modified rows. null indicates that no results should be returned from this command.
+        /// </returns>
         public DbExpression Returning
         {
             get { return _returning; }
         }
 
         /// <summary>
-        ///     Gets an <see cref="DbExpression" /> that specifies the predicate used to determine which members of the target collection should be updated.
+        ///     Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the predicate used to determine which members of the target collection should be updated.
         /// </summary>
-        /// <remarks>
-        ///     The predicate includes only the following elements:
-        ///     <list>
-        ///         <item>Equality expression</item>
-        ///         <item>Constant expression</item>
-        ///         <item>IsNull expression</item>
-        ///         <item>Property expression</item>
-        ///         <item>Reference expression to the target</item>
-        ///         <item>And expression</item>
-        ///         <item>Or expression</item>
-        ///         <item>Not expression</item>
-        ///     </list>
-        /// </remarks>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the predicate used to determine which members of the target collection should be updated.
+        /// </returns>
         public DbExpression Predicate
         {
             get { return _predicate; }

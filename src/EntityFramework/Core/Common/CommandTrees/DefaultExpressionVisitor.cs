@@ -11,37 +11,52 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Linq;
     using CqtBuilder = System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.DbExpressionBuilder;
 
-    /// <summary>
-    ///     Visits each element of an expression tree from a given root expression. If any element changes, the tree is
-    ///     rebuilt back to the root and the new root expression is returned; otherwise the original root expression is returned.
-    /// </summary>
+    /// <summary> Visits each element of an expression tree from a given root expression. If any element changes, the tree is rebuilt back to the root and the new root expression is returned; otherwise the original root expression is returned. </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class DefaultExpressionVisitor : DbExpressionVisitor<DbExpression>
     {
         private readonly Dictionary<DbVariableReferenceExpression, DbVariableReferenceExpression> varMappings =
             new Dictionary<DbVariableReferenceExpression, DbVariableReferenceExpression>();
 
+        /// <summary>
+        ///     Initializes a new instance of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DefaultExpressionVisitor" />
+        ///     class.
+        /// </summary>
         protected DefaultExpressionVisitor()
         {
         }
 
+        /// <summary>Replaces an old expression with a new one for the expression visitor.</summary>
+        /// <param name="oldExpression">The old expression.</param>
+        /// <param name="newExpression">The new expression.</param>
         protected virtual void OnExpressionReplaced(DbExpression oldExpression, DbExpression newExpression)
         {
         }
 
+        /// <summary>Represents an event when the variable is rebound for the expression visitor.</summary>
+        /// <param name="fromVarRef">The location of the variable.</param>
+        /// <param name="toVarRef">The reference of the variable where it is rebounded.</param>
         [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "toVar")]
         protected virtual void OnVariableRebound(DbVariableReferenceExpression fromVarRef, DbVariableReferenceExpression toVarRef)
         {
         }
 
+        /// <summary>Represents an event when entering the scope for the expression visitor with specified scope variables.</summary>
+        /// <param name="scopeVariables">The collection of scope variables.</param>
         protected virtual void OnEnterScope(IEnumerable<DbVariableReferenceExpression> scopeVariables)
         {
         }
 
+        /// <summary>Exits the scope for the expression visitor.</summary>
         protected virtual void OnExitScope()
         {
         }
 
+        /// <summary>Implements the visitor pattern for the expression.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="expression">The expression.</param>
         protected virtual DbExpression VisitExpression(DbExpression expression)
         {
             DbExpression newValue = null;
@@ -53,11 +68,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return newValue;
         }
 
+        /// <summary>Implements the visitor pattern for the expression list.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="list">The expression list.</param>
         protected virtual IList<DbExpression> VisitExpressionList(IList<DbExpression> list)
         {
             return VisitList(list, VisitExpression);
         }
 
+        /// <summary>Implements the visitor pattern for expression binding.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="binding">The expression binding.</param>
         protected virtual DbExpressionBinding VisitExpressionBinding(DbExpressionBinding binding)
         {
             var result = binding;
@@ -73,11 +94,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the expression binding list.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="list">The expression binding list.</param>
         protected virtual IList<DbExpressionBinding> VisitExpressionBindingList(IList<DbExpressionBinding> list)
         {
             return VisitList(list, VisitExpressionBinding);
         }
 
+        /// <summary>Implements the visitor pattern for the group expression binding.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="binding">The binding.</param>
         protected virtual DbGroupExpressionBinding VisitGroupExpressionBinding(DbGroupExpressionBinding binding)
         {
             var result = binding;
@@ -94,6 +121,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the sort clause.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="clause">The sort clause.</param>
         protected virtual DbSortClause VisitSortClause(DbSortClause clause)
         {
             var result = clause;
@@ -119,11 +149,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the sort order.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="sortOrder">The sort order.</param>
         protected virtual IList<DbSortClause> VisitSortOrder(IList<DbSortClause> sortOrder)
         {
             return VisitList(sortOrder, VisitSortClause);
         }
 
+        /// <summary>Implements the visitor pattern for the aggregate.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="aggregate">The aggregate.</param>
         protected virtual DbAggregate VisitAggregate(DbAggregate aggregate)
         {
             // Currently only function or group aggregate are possible
@@ -137,6 +173,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitGroupAggregate(groupAggregate);
         }
 
+        /// <summary>Implements the visitor pattern for the function aggregate.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="aggregate">The aggregate.</param>
         protected virtual DbFunctionAggregate VisitFunctionAggregate(DbFunctionAggregate aggregate)
         {
             var result = aggregate;
@@ -164,6 +203,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the group aggregate.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="aggregate">The aggregate.</param>
         protected virtual DbGroupAggregate VisitGroupAggregate(DbGroupAggregate aggregate)
         {
             var result = aggregate;
@@ -180,6 +222,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the Lambda function.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="lambda">The lambda function.</param>
         protected virtual DbLambda VisitLambda(DbLambda lambda)
         {
             Check.NotNull(lambda, "lambda");
@@ -213,21 +258,33 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         // Metadata 'Visitor' methods
+        /// <summary>Implements the visitor pattern for the type.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="type">The type.</param>
         protected virtual EdmType VisitType(EdmType type)
         {
             return type;
         }
 
+        /// <summary>Implements the visitor pattern for the type usage.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="type">The type.</param>
         protected virtual TypeUsage VisitTypeUsage(TypeUsage type)
         {
             return type;
         }
 
+        /// <summary>Implements the visitor pattern for the entity set.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="entitySet">The entity set.</param>
         protected virtual EntitySetBase VisitEntitySet(EntitySetBase entitySet)
         {
             return entitySet;
         }
 
+        /// <summary>Implements the visitor pattern for the function.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="functionMetadata">The function metadata.</param>
         protected virtual EdmFunction VisitFunction(EdmFunction functionMetadata)
         {
             return functionMetadata;
@@ -403,6 +460,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         #region DbExpressionVisitor<DbExpression> Members
 
+        /// <summary>Implements the visitor pattern for the basic functionality required by expression types.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -410,6 +470,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             throw new NotSupportedException(Strings.Cqt_General_UnsupportedExpression(expression.GetType().FullName));
         }
 
+        /// <summary>Implements the visitor pattern for the different kinds of constants.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The constant expression.</param>
         public override DbExpression Visit(DbConstantExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -419,6 +482,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitTerminal(expression, newType => CqtBuilder.Constant(newType, expression.GetValue()));
         }
 
+        /// <summary>Implements the visitor pattern for a reference to a typed null literal.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbNullExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -426,6 +492,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitTerminal(expression, CqtBuilder.Null);
         }
 
+        /// <summary>Implements the visitor pattern for a reference to a variable that is currently in scope.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbVariableReferenceExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -440,6 +509,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for a reference to a parameter declared on the command tree that contains this expression.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbParameterReferenceExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -447,6 +519,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitTerminal(expression, newType => CqtBuilder.Parameter(newType, expression.ParameterName));
         }
 
+        /// <summary>Implements the visitor pattern for an invocation of a function.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The function expression.</param>
         public override DbExpression Visit(DbFunctionExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -465,6 +540,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the application of a lambda function to arguments represented by DbExpression objects.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbLambdaExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -483,6 +561,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for retrieving an instance property.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbPropertyExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -497,6 +578,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the comparison operation applied to two arguments.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The cast expression.</param>
         public override DbExpression Visit(DbComparisonExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -526,6 +610,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
         }
 
+        /// <summary>Implements the visitor pattern for a string comparison against the specified pattern with an optional escape string.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbLikeExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -548,6 +635,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the restriction of the number of elements in the argument collection to the specified limit value.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbLimitExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -568,6 +658,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the null determination applied to a single argument.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbIsNullExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -580,6 +673,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                     : CqtBuilder.IsNull(exp));
         }
 
+        /// <summary>Implements the visitor pattern for the arithmetic operation applied to numeric arguments.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The arithmetic expression.</param>
         public override DbExpression Visit(DbArithmeticExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -622,6 +718,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the logical AND expression.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The logical AND expression.</param>
         public override DbExpression Visit(DbAndExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -629,6 +728,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitBinary(expression, CqtBuilder.And);
         }
 
+        /// <summary>Implements the visitor pattern for the logical OR of two Boolean arguments.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbOrExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -655,6 +757,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the logical NOT of a single Boolean argument.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbNotExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -662,6 +767,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitUnary(expression, CqtBuilder.Not);
         }
 
+        /// <summary>Implements the visitor pattern for the removed duplicate elements from the specified set argument.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The distinct expression.</param>
         public override DbExpression Visit(DbDistinctExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -669,6 +777,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitUnary(expression, CqtBuilder.Distinct);
         }
 
+        /// <summary>Implements the visitor pattern for the conversion of the specified set argument to a singleton the conversion of the specified set argument to a singleton.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The element expression.</param>
         public override DbExpression Visit(DbElementExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -679,6 +790,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                                 : CqtBuilder.Element);
         }
 
+        /// <summary>Implements the visitor pattern for an empty set determination applied to a single set argument.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbIsEmptyExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -686,6 +800,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitUnary(expression, CqtBuilder.IsEmpty);
         }
 
+        /// <summary>Implements the visitor pattern for the set union operation between the left and right operands.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbUnionAllExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -693,6 +810,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitBinary(expression, CqtBuilder.UnionAll);
         }
 
+        /// <summary>Implements the visitor pattern for the set intersection operation between the left and right operands.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbIntersectExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -700,6 +820,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitBinary(expression, CqtBuilder.Intersect);
         }
 
+        /// <summary>Implements the visitor pattern for the set subtraction operation between the left and right operands.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbExceptExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -707,6 +830,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitBinary(expression, CqtBuilder.Except);
         }
 
+        /// <summary>Implements the visitor pattern for a type conversion operation applied to a polymorphic argument.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbTreatExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -714,6 +840,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitTypeUnary(expression, expression.ResultType, CqtBuilder.TreatAs);
         }
 
+        /// <summary>Implements the visitor pattern for the type comparison of a single argument against the specified type.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbIsOfExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -729,6 +858,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
         }
 
+        /// <summary>Implements the visitor pattern for the type conversion of a single argument to the specified type.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The cast expression.</param>
         public override DbExpression Visit(DbCastExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -736,6 +868,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitTypeUnary(expression, expression.ResultType, CqtBuilder.CastTo);
         }
 
+        /// <summary>Implements the visitor pattern for the When, Then, and Else clauses.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The case expression.</param>
         public override DbExpression Visit(DbCaseExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -758,6 +893,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the retrieval of elements of the specified type from the given set argument.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbOfTypeExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -773,6 +911,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
         }
 
+        /// <summary>Implements the visitor pattern for the construction of a new instance of a given type, including set and record types.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbNewInstanceExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -802,6 +943,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for a strongly typed reference to a specific instance within an entity set.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbRefExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -825,6 +969,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the navigation of a relationship.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbRelationshipNavigationExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -848,6 +995,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the expression that retrieves an entity based on the specified reference.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The DEREF expression.</param>
         public override DbExpression Visit(DbDerefExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -855,6 +1005,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitUnary(expression, CqtBuilder.Deref);
         }
 
+        /// <summary>Implements the visitor pattern for the retrieval of the key value from the underlying reference value.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbRefKeyExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -862,6 +1015,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitUnary(expression, CqtBuilder.GetRefKey);
         }
 
+        /// <summary>Implements the visitor pattern for the expression that extracts a reference from the underlying entity instance.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The entity reference expression.</param>
         public override DbExpression Visit(DbEntityRefExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -869,6 +1025,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitUnary(expression, CqtBuilder.GetEntityRef);
         }
 
+        /// <summary>Implements the visitor pattern for a scan over an entity set or relationship set, as indicated by the Target property.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbScanExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -884,6 +1043,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for a predicate applied to filter an input set.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The filter expression.</param>
         public override DbExpression Visit(DbFilterExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -903,6 +1065,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the projection of a given input set over the specified expression.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbProjectExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -922,6 +1087,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the unconditional join operation between the given collection arguments.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The join expression.</param>
         public override DbExpression Visit(DbCrossJoinExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -937,6 +1105,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for an inner, left outer, or full outer join operation between the given collection arguments on the specified join condition.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbJoinExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -978,6 +1149,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the invocation of the specified function for each element in the specified input set.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The APPLY expression.</param>
         public override DbExpression Visit(DbApplyExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -1009,6 +1183,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for a group by operation.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbGroupByExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -1041,6 +1218,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for the skip expression.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbSkipExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -1064,6 +1244,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for a sort key that can be used as part of the sort order.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbSortExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -1084,6 +1267,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return result;
         }
 
+        /// <summary>Implements the visitor pattern for a quantifier operation of the specified kind over the elements of the specified input set.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbQuantifierExpression expression)
         {
             Check.NotNull(expression, "expression");

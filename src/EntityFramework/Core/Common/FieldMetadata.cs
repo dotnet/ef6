@@ -16,10 +16,10 @@ namespace System.Data.Entity.Core.Common
         private readonly int _ordinal;
 
         /// <summary>
-        ///     Used to construct a field metadata object relating a column ordinal and an ImemberMetadata.
+        ///     Initializes a new <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object with the specified ordinal value and field type.
         /// </summary>
-        /// <param name="ordinal"> Column oridnal </param>
-        /// <param name="fieldType"> Metadata member </param>
+        /// <param name="ordinal">An integer specified the location of the metadata.</param>
+        /// <param name="fieldType">The field type.</param>
         public FieldMetadata(int ordinal, EdmMember fieldType)
         {
             if (ordinal < 0)
@@ -33,16 +33,20 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Metadata member.
+        ///     Gets the type of field for this <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object.
         /// </summary>
+        /// <returns>
+        ///     The type of field for this <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object.
+        /// </returns>
         public EdmMember FieldType
         {
             get { return _fieldType; }
         }
 
         /// <summary>
-        ///     Column ordinal.
+        ///     Gets the ordinal for this <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object.
         /// </summary>
+        /// <returns>An integer representing the ordinal value.</returns>
         public int Ordinal
         {
             get { return _ordinal; }

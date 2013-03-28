@@ -9,7 +9,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents a skip operation of the specified number of elements of the input set after the ordering described in the given sort keys is applied.
+    ///     Skips a specified number of elements in the input set.
+    ///     <see
+    ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSkipExpression" />
+    ///     can only be used after the input collection has been sorted as specified by the sort keys.
     /// </summary>
     public sealed class DbSkipExpression : DbExpression
     {
@@ -32,37 +35,52 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="DbExpressionBinding" /> that specifies the input set.
+        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the input set.
         /// </summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the input set.
+        /// </returns>
         public DbExpressionBinding Input
         {
             get { return _input; }
         }
 
         /// <summary>
-        ///     Gets a <see cref="DbSortClause" /> list that defines the sort order.
+        ///     Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> list that defines the sort order.
         /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> list that defines the sort order.
+        /// </returns>
         public IList<DbSortClause> SortOrder
         {
             get { return _keys; }
         }
 
-        /// <summary>
-        ///     Gets the expression that specifies the number of elements from the input collection to skip.
-        /// </summary>
+        /// <summary>Gets or sets an expression that specifies the number of elements to skip from the input collection.</summary>
+        /// <returns>An expression that specifies the number of elements to skip from the input collection.</returns>
+        /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
+        /// <exception cref="T:System.ArgumentException">
+        ///     The expression is not associated with the command tree of the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSkipExpression" />
+        ///     ; the expression is not either a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" />
+        ///     or a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" />
+        ///     ; or the result type of the expression is not equal or promotable to a 64-bit integer type.
+        /// </exception>
         public DbExpression Count
         {
             get { return _count; }
         }
 
-        /// <summary>
-        ///     The visitor pattern method for expression visitors that do not produce a result value.
-        /// </summary>
-        /// <param name="visitor"> An instance of DbExpressionVisitor. </param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="visitor" />
-        ///     is null
-        /// </exception>
+        /// <summary>Implements the visitor pattern for expressions that do not produce a result value.</summary>
+        /// <param name="visitor">
+        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// </param>
+        /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override void Accept(DbExpressionVisitor visitor)
         {
             Check.NotNull(visitor, "visitor");
@@ -70,20 +88,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             visitor.Visit(this);
         }
 
-        /// <summary>
-        ///     The visitor pattern method for expression visitors that produce a result value of a specific type.
-        /// </summary>
-        /// <param name="visitor"> An instance of a typed DbExpressionVisitor that produces a result value of type TResultType. </param>
-        /// <typeparam name="TResultType">
-        ///     The type of the result produced by <paramref name="visitor" />
-        /// </typeparam>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="visitor" />
-        ///     is null
-        /// </exception>
+        /// <summary>Implements the visitor pattern for expressions that produce a result value of a specific type.</summary>
         /// <returns>
-        ///     An instance of <typeparamref name="TResultType" /> .
+        ///     A result value of a specific type produced by
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
+        ///     .
         /// </returns>
+        /// <param name="visitor">
+        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
+        /// </param>
+        /// <typeparam name="TResultType">The type of the result produced by  visitor .</typeparam>
+        /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
         {
             Check.NotNull(visitor, "visitor");

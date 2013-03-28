@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Common.EntitySql
 {
@@ -24,16 +24,14 @@ namespace System.Data.Entity.Core.Common.EntitySql
             _functionDefs = functionDefs.AsReadOnly();
         }
 
-        /// <summary>
-        ///     A command tree produced during parsing.
-        /// </summary>
+        /// <summary> A command tree produced during parsing. </summary>
         public DbCommandTree CommandTree
         {
             get { return _commandTree; }
         }
 
         /// <summary>
-        ///     List of <see cref="FunctionDefinition" /> objects describing query inline function definitions.
+        ///     List of <see cref="T:System.Data.Entity.Core.Common.EntitySql.FunctionDefinition" /> objects describing query inline function definitions.
         /// </summary>
         public ReadOnlyCollection<FunctionDefinition> FunctionDefinitions
         {

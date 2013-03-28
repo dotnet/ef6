@@ -5,7 +5,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Specifies a sort key that can be used as part of the sort order in a DbSortExpression.
+    ///     Specifies a sort key that can be used as part of the sort order in a
+    ///     <see
+    ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" />
+    ///     . This class cannot be inherited.
     /// </summary>
     public sealed class DbSortClause
     {
@@ -22,25 +25,26 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             _coll = collation;
         }
 
-        /// <summary>
-        ///     Gets a Boolean value indicating whether or not this sort key is sorted ascending.
-        /// </summary>
+        /// <summary>Gets a Boolean value indicating whether or not this sort key uses an ascending sort order.</summary>
+        /// <returns>true if this sort key uses an ascending sort order; otherwise, false.</returns>
         public bool Ascending
         {
             get { return _asc; }
         }
 
-        /// <summary>
-        ///     Gets a string value that specifies the collation for this sort key.
-        /// </summary>
+        /// <summary>Gets a string value that specifies the collation for this sort key.</summary>
+        /// <returns>A string value that specifies the collation for this sort key.</returns>
         public string Collation
         {
             get { return _coll; }
         }
 
         /// <summary>
-        ///     Gets the <see cref="DbExpression" /> that provides the value for this sort key.
+        ///     Gets or sets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that provides the value for this sort key.
         /// </summary>
+        /// <returns>
+        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that provides the value for this sort key.
+        /// </returns>
         public DbExpression Expression
         {
             get { return _expr; }

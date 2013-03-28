@@ -11,8 +11,9 @@ namespace System.Data.Entity.Core.Mapping
     public sealed class EntityViewGenerationAttribute : Attribute
     {
         /// <summary>
-        ///     Constructor for EntityViewGenerationAttribute
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Mapping.EntityViewGenerationAttribute" /> class.
         /// </summary>
+        /// <param name="viewGenerationType">The view type.</param>
         public EntityViewGenerationAttribute(Type viewGenerationType)
         {
             Check.NotNull(viewGenerationType, "viewGenerationType");
@@ -21,6 +22,8 @@ namespace System.Data.Entity.Core.Mapping
 
         private readonly Type m_viewGenType;
 
+        /// <summary>Gets the T:System.Type of the view.</summary>
+        /// <returns>The T:System.Type of the view.</returns>
         public Type ViewGenerationType
         {
             get { return m_viewGenType; }

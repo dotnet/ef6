@@ -16,14 +16,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         {
         }
 
-        /// <summary>
-        ///     Returns the name of the type that this type maps to in the CSpace
-        /// </summary>
+        /// <summary>The name of the type in the conceptual schema that maps to the class to which this attribute is applied.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.String" /> that is the name.
+        /// </returns>
         public string Name { get; set; }
 
-        /// <summary>
-        ///     Returns the namespace of the type that this type maps to in the CSpace
-        /// </summary>
+        /// <summary>The namespace name of the entity object type or complex type in the conceptual schema that maps to this type.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.String" /> that is the namespace name.
+        /// </returns>
         public string NamespaceName { get; set; }
     }
 }

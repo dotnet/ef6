@@ -55,13 +55,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private bool _symbolAsInlineFunctionNameState;
 
         /// Defines the set of characters to be interpreted as mandatory line breaks
-        /// according to UNICODE 5.0, section 5.8 Newline Guidelines.These are 'mandatory' 
-        /// line breaks. We do not handle other 'line breaking opportunities'as defined by 
-        /// UNICODE 5.0 since they are intended for presentation. The mandatory line break 
+        /// according to UNICODE 5.0, section 5.8 Newline Guidelines.These are 'mandatory'
+        /// line breaks. We do not handle other 'line breaking opportunities'as defined by
+        /// UNICODE 5.0 since they are intended for presentation. The mandatory line break
         /// defines breaking opportunities that must not be ignored. For all practical purposes
         /// the interpretation of mandatory breaks determines the end of one line and consequently
-        /// the start of the next line of query text. 
-        /// NOTE that CR and CRLF is treated as a composite 'character' and was obviously and intentionaly 
+        /// the start of the next line of query text.
+        /// NOTE that CR and CRLF is treated as a composite 'character' and was obviously and intentionaly
         /// omitted in the character set bellow.
         private static readonly Char[] _newLineCharacters =
             {

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 {
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
     using System.Runtime.CompilerServices;
 
     /// <summary>
-    ///     Provides an API to construct <see cref="DbExpression" />s and allows that API to be accessed as extension methods on the expression type itself.
+    ///     Provides an API to construct <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s and allows that API to be accessed as extension methods on the expression type itself.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
@@ -89,11 +89,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
         #region Helpers (not strictly Command Tree API)
 
+        /// <summary>Returns the specified arguments as a key/value pair object.</summary>
+        /// <returns>A key/value pair object.</returns>
+        /// <param name="value">The value in the key/value pair.</param>
+        /// <param name="alias">The key in the key/value pair.</param>
         public static KeyValuePair<string, DbExpression> As(this DbExpression value, string alias)
         {
             return new KeyValuePair<string, DbExpression>(alias, value);
         }
 
+        /// <summary>Returns the specified arguments as a key/value pair object.</summary>
+        /// <returns>A key/value pair object.</returns>
+        /// <param name="value">The value in the key/value pair.</param>
+        /// <param name="alias">The key in the key/value pair.</param>
         public static KeyValuePair<string, DbAggregate> As(this DbAggregate value, string alias)
         {
             return new KeyValuePair<string, DbAggregate>(alias, value);
@@ -104,18 +112,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Bindings - Expression and Group
 
         /// <summary>
-        ///     Creates a new <see cref="DbExpressionBinding" /> that uses a generated variable name to bind the given expression
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that uses a generated variable name to bind the given expression.
         /// </summary>
-        /// <param name="input"> The expression to bind </param>
-        /// <returns> A new expression binding with the specified expression and a generated variable name </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="input" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="input" />
-        ///     does not have a collection result type
-        /// </exception>
+        /// <returns>A new expression binding with the specified expression and a generated variable name.</returns>
+        /// <param name="input">The expression to bind.</param>
+        /// <exception cref="T:System.ArgumentNullException">input is null.</exception>
+        /// <exception cref="T:System.ArgumentException">input does not have a collection result.</exception>
         public static DbExpressionBinding Bind(this DbExpression input)
         {
             Check.NotNull(input, "input");
@@ -124,21 +126,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbExpressionBinding" /> that uses the specified variable name to bind the given expression
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that uses the specified variable name to bind the given expression
         /// </summary>
-        /// <param name="input"> The expression to bind </param>
-        /// <param name="varName"> The variable name that should be used for the binding </param>
-        /// <returns> A new expression binding with the specified expression and variable name </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="input" />
-        ///     or
-        ///     <paramref name="varName" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="input" />
-        ///     does not have a collection result type
-        /// </exception>
+        /// <returns>A new expression binding with the specified expression and variable name.</returns>
+        /// <param name="input">The expression to bind.</param>
+        /// <param name="varName">The variable name that should be used for the binding.</param>
+        /// <exception cref="T:System.ArgumentNullException">input or varName is null.</exception>
+        /// <exception cref="T:System.ArgumentException">input does not have a collection result.</exception>
         public static DbExpressionBinding BindAs(this DbExpression input, string varName)
         {
             Check.NotNull(input, "input");
@@ -158,19 +152,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             return new DbExpressionBinding(input, inputRef);
         }
 
-        /// <summary>
-        ///     Creates a new group expression binding that uses generated variable and group variable names to bind the given expression
-        /// </summary>
-        /// <param name="input"> The expression to bind </param>
-        /// <returns> A new group expression binding with the specified expression and a generated variable name and group variable name </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="input" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="input" />
-        ///     does not have a collection result type
-        /// </exception>
+        /// <summary>Creates a new group expression binding that uses generated variable and group variable names to bind the given expression.</summary>
+        /// <returns>A new group expression binding with the specified expression and a generated variable name and group variable name.</returns>
+        /// <param name="input">The expression to bind.</param>
+        /// <exception cref="T:System.ArgumentNullException">input is null.</exception>
+        /// <exception cref="T:System.ArgumentException">input does not have a collection result type.</exception>
         public static DbGroupExpressionBinding GroupBind(this DbExpression input)
         {
             Check.NotNull(input, "input");
@@ -180,24 +166,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbGroupExpressionBinding" /> that uses the specified variable name and group variable names to bind the given expression
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupExpressionBinding" /> that uses the specified variable name and group variable names to bind the given expression.
         /// </summary>
-        /// <param name="input"> The expression to bind </param>
-        /// <param name="varName"> The variable name that should be used for the binding </param>
-        /// <param name="groupVarName"> The variable name that should be used to refer to the group when the new group expression binding is used in a group-by expression </param>
-        /// <returns> A new group expression binding with the specified expression, variable name and group variable name </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="input" />
-        ///     ,
-        ///     <paramref name="varName" />
-        ///     or
-        ///     <paramref name="groupVarName" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="input" />
-        ///     does not have a collection result type
-        /// </exception>
+        /// <returns>A new group expression binding with the specified expression, variable name and group variable name.</returns>
+        /// <param name="input">The expression to bind.</param>
+        /// <param name="varName">The variable name that should be used for the binding.</param>
+        /// <param name="groupVarName">The variable name that should be used to refer to the group when the new group expression binding is used in a group-by expression.</param>
+        /// <exception cref="T:System.ArgumentNullException">input, varName or groupVarName is null.</exception>
+        /// <exception cref="T:System.ArgumentException">input does not have a collection result type.</exception>
         public static DbGroupExpressionBinding GroupBindAs(this DbExpression input, string varName, string groupVarName)
         {
             Check.NotNull(input, "input");
@@ -225,26 +201,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Aggregates and SortClauses are required only for Binding-based method support - replaced by OrderBy[Descending]/ThenBy[Descending] and Aggregate[Distinct] methods in new API
 
         /// <summary>
-        ///     Creates a new <see cref="DbFunctionAggregate" />.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionAggregate" />.
         /// </summary>
-        /// <param name="function"> The function that defines the aggregate operation. </param>
-        /// <param name="argument"> The argument over which the aggregate function should be calculated. </param>
-        /// <returns> A new function aggregate with a reference to the given function and argument. The function aggregate's Distinct property will have the value false </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="function" />
-        ///     or
-        ///     <paramref name="argument" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="function" />
-        ///     is not an aggregate function or has more than one argument, or
-        ///     the result type of
-        ///     <paramref name="argument" />
-        ///     is not equal or promotable to
-        ///     the parameter type of
-        ///     <paramref name="function" />
-        /// </exception>
+        /// <returns>A new function aggregate with a reference to the given function and argument. The function aggregate's Distinct property will have the value false.</returns>
+        /// <param name="function">The function that defines the aggregate operation.</param>
+        /// <param name="argument">The argument over which the aggregate function should be calculated.</param>
+        /// <exception cref="T:System.ArgumentNullException">function or argument null.</exception>
+        /// <exception cref="T:System.ArgumentException">function is not an aggregate function or has more than one argument, or the result type of argument is not equal or promotable to the parameter type of function.</exception>
         public static DbFunctionAggregate Aggregate(this EdmFunction function, DbExpression argument)
         {
             Check.NotNull(function, "function");
@@ -254,26 +217,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbFunctionAggregate" /> that is applied in a distinct fashion.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionAggregate" /> that is applied in a distinct fashion.
         /// </summary>
-        /// <param name="function"> The function that defines the aggregate operation. </param>
-        /// <param name="argument"> The argument over which the aggregate function should be calculated. </param>
-        /// <returns> A new function aggregate with a reference to the given function and argument. The function aggregate's Distinct property will have the value true </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="function" />
-        ///     or
-        ///     <paramref name="argument" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="function" />
-        ///     is not an aggregate function or has more than one argument, or
-        ///     the result type of
-        ///     <paramref name="argument" />
-        ///     is not equal or promotable to
-        ///     the parameter type of
-        ///     <paramref name="function" />
-        /// </exception>
+        /// <returns>A new function aggregate with a reference to the given function and argument. The function aggregate's Distinct property will have the value true.</returns>
+        /// <param name="function">The function that defines the aggregate operation.</param>
+        /// <param name="argument">The argument over which the aggregate function should be calculated.</param>
+        /// <exception cref="T:System.ArgumentNullException">function or argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">function is not an aggregate function or has more than one argument, or the result type of argument is not equal or promotable to the parameter type of function.</exception>
         public static DbFunctionAggregate AggregateDistinct(this EdmFunction function, DbExpression argument)
         {
             Check.NotNull(function, "function");
@@ -309,27 +259,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="DbLambda" /> with the specified inline Lambda function implementation and formal parameters.
+        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with the specified inline Lambda function implementation and formal parameters.
         /// </summary>
-        /// <param name="body"> An expression that defines the logic of the Lambda function </param>
+        /// <returns>A new expression that describes an inline Lambda function with the specified body and formal parameters.</returns>
+        /// <param name="body">An expression that defines the logic of the Lambda function.</param>
         /// <param name="variables">
-        ///     A <see cref="DbVariableReferenceExpression" /> collection that represents the formal parameters to the Lambda function. These variables are valid for use in the
-        ///     <paramref
-        ///         name="body" />
-        ///     expression.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> collection that represents the formal parameters to the Lambda function. These variables are valid for use in the body expression.
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="variables" />
-        ///     is null or contains null, or
-        ///     <paramref name="body" />
-        ///     is null
-        /// </exception>
-        /// .
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="variables" />
-        ///     contains more than one element with the same variable name.
-        /// </exception>
+        /// <exception cref="T:System.ArgumentNullException">variables is null or contains null, or body is null.</exception>
+        /// <exception cref="T:System.ArgumentException">variables contains more than one element with the same variable name.</exception>
         public static DbLambda Lambda(DbExpression body, IEnumerable<DbVariableReferenceExpression> variables)
         {
             Check.NotNull(body, "body");
@@ -339,27 +277,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="DbLambda" /> with the specified inline Lambda function implementation and formal parameters.
+        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with the specified inline Lambda function implementation and formal parameters.
         /// </summary>
-        /// <param name="body"> An expression that defines the logic of the Lambda function </param>
+        /// <returns>A new expression that describes an inline Lambda function with the specified body and formal parameters.</returns>
+        /// <param name="body">An expression that defines the logic of the Lambda function.</param>
         /// <param name="variables">
-        ///     A <see cref="DbVariableReferenceExpression" /> collection that represents the formal parameters to the Lambda function. These variables are valid for use in the
-        ///     <paramref
-        ///         name="body" />
-        ///     expression.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> collection that represents the formal parameters to the Lambda function. These variables are valid for use in the body expression.
         /// </param>
-        /// <returns> A new DbLambda that describes an inline Lambda function with the specified body and formal parameters </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="variables" />
-        ///     is null or contains null, or
-        ///     <paramref name="body" />
-        ///     is null
-        /// </exception>
-        /// .
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="variables" />
-        ///     contains more than one element with the same variable name.
-        /// </exception>
+        /// <exception cref="T:System.ArgumentNullException">variables is null or contains null, or body is null.</exception>
+        /// <exception cref="T:System.ArgumentException">variables contains more than one element with the same variable name.</exception>
         public static DbLambda Lambda(DbExpression body, params DbVariableReferenceExpression[] variables)
         {
             Check.NotNull(body, "body");
@@ -375,18 +301,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSortClause" /> with an ascending sort order and default collation
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> with an ascending sort order and default collation.
         /// </summary>
-        /// <param name="key"> The expression that defines the sort key </param>
-        /// <returns> A new sort clause with the given sort key and ascending sort order </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="key" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="key" />
-        ///     does not have an order-comparable result type
-        /// </exception>
+        /// <returns>A new sort clause with the given sort key and ascending sort order.</returns>
+        /// <param name="key">The expression that defines the sort key.</param>
+        /// <exception cref="T:System.ArgumentNullException">key is null.</exception>
+        /// <exception cref="T:System.ArgumentException">key does not have an order-comparable result type.</exception>
         public static DbSortClause ToSortClause(this DbExpression key)
         {
             Check.NotNull(key, "key");
@@ -396,18 +316,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSortClause" /> with a descending sort order and default collation
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> with a descending sort order and default collation.
         /// </summary>
-        /// <param name="key"> The expression that defines the sort key </param>
-        /// <returns> A new sort clause with the given sort key and descending sort order </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="key" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="key" />
-        ///     does not have an order-comparable result type
-        /// </exception>
+        /// <returns>A new sort clause with the given sort key and descending sort order.</returns>
+        /// <param name="key">The expression that defines the sort key.</param>
+        /// <exception cref="T:System.ArgumentNullException">key is null.</exception>
+        /// <exception cref="T:System.ArgumentException">key does not have an order-comparable result type.</exception>
         public static DbSortClause ToSortClauseDescending(this DbExpression key)
         {
             Check.NotNull(key, "key");
@@ -417,23 +331,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSortClause" /> with an ascending sort order and the specified collation
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> with an ascending sort order and the specified collation.
         /// </summary>
-        /// <param name="key"> The expression that defines the sort key </param>
-        /// <param name="collation"> The collation to sort under </param>
-        /// <returns> A new sort clause with the given sort key and collation, and ascending sort order </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="key" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     <paramref name="collation" />
-        ///     is empty or contains only space characters
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="key" />
-        ///     does not have an order-comparable result type
-        /// </exception>
+        /// <returns>A new sort clause with the given sort key and collation, and ascending sort order.</returns>
+        /// <param name="key">The expression that defines the sort key.</param>
+        /// <param name="collation">The collation to sort under.</param>
+        /// <exception cref="T:System.ArgumentNullException">key is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">collation is empty or contains only space characters.</exception>
+        /// <exception cref="T:System.ArgumentException">key does not have an order-comparable result type.</exception>
         public static DbSortClause ToSortClause(this DbExpression key, string collation)
         {
             Check.NotNull(key, "key");
@@ -444,23 +349,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSortClause" /> with a descending sort order and the specified collation
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> with a descending sort order and the specified collation.
         /// </summary>
-        /// <param name="key"> The expression that defines the sort key </param>
-        /// <param name="collation"> The collation to sort under </param>
-        /// <returns> A new sort clause with the given sort key and collation, and descending sort order </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="key" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     <paramref name="collation" />
-        ///     is empty or contains only space characters
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="key" />
-        ///     does not have an order-comparable result type
-        /// </exception>
+        /// <returns>A new sort clause with the given sort key and collation, and descending sort order.</returns>
+        /// <param name="key">The expression that defines the sort key.</param>
+        /// <param name="collation">The collation to sort under.</param>
+        /// <exception cref="T:System.ArgumentNullException">key is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">collation is empty or contains only space characters.</exception>
+        /// <exception cref="T:System.ArgumentException">key does not have an order-comparable result type.</exception>
         public static DbSortClause ToSortClauseDescending(this DbExpression key, string collation)
         {
             Check.NotNull(key, "key");
@@ -475,21 +371,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Binding-based methods: All, Any, Cross|OuterApply, Cross|FullOuter|Inner|LeftOuterJoin, Filter, GroupBy, Project, Skip, Sort
 
         /// <summary>
-        ///     Creates a new <see cref="DbQuantifierExpression" /> that determines whether the given predicate holds for all elements of the input set.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" /> that determines whether the given predicate holds for all elements of the input set.
         /// </summary>
-        /// <param name="input"> An expression binding that specifies the input set. </param>
-        /// <param name="predicate"> An expression representing a predicate to evaluate for each member of the input set. </param>
-        /// <returns> A new DbQuantifierExpression that represents the All operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="input" />
-        ///     or
-        ///     <paramref name="predicate" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="predicate" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <returns>A new DbQuantifierExpression that represents the All operation.</returns>
+        /// <param name="input">An expression binding that specifies the input set.</param>
+        /// <param name="predicate">An expression representing a predicate to evaluate for each member of the input set.</param>
+        /// <exception cref="T:System.ArgumentNullException">input or predicate is null.</exception>
+        /// <exception cref="T:System.ArgumentException">predicate  does not have a Boolean result type.</exception>
         public static DbQuantifierExpression All(this DbExpressionBinding input, DbExpression predicate)
         {
             Check.NotNull(predicate, "predicate");
@@ -500,21 +388,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbQuantifierExpression" /> that determines whether the given predicate holds for any element of the input set.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" /> that determines whether the given predicate holds for any element of the input set.
         /// </summary>
-        /// <param name="input"> An expression binding that specifies the input set. </param>
-        /// <param name="predicate"> An expression representing a predicate to evaluate for each member of the input set. </param>
-        /// <returns> A new DbQuantifierExpression that represents the Any operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="input" />
-        ///     or
-        ///     <paramref name="predicate" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="predicate" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <returns>A new DbQuantifierExpression that represents the Any operation.</returns>
+        /// <param name="input">An expression binding that specifies the input set.</param>
+        /// <param name="predicate">An expression representing a predicate to evaluate for each member of the input set.</param>
+        /// <exception cref="T:System.ArgumentNullException">input or predicate is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by predicate does not have a Boolean result type.</exception>
         public static DbQuantifierExpression Any(this DbExpressionBinding input, DbExpression predicate)
         {
             Check.NotNull(predicate, "predicate");
@@ -525,24 +405,21 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbApplyExpression" /> that evaluates the given <paramref name="apply" /> expression once for each element of a given input set,
-        ///     producing a collection of rows with corresponding input and apply columns. Rows for which <paramref name="apply" /> evaluates to an empty set are not included.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set are not included.
         /// </summary>
+        /// <returns>
+        ///     An new DbApplyExpression with the specified input and apply bindings and an
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        ///     of CrossApply.
+        /// </returns>
         /// <param name="input">
-        ///     An <see cref="DbExpressionBinding" /> that specifies the input set.
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the input set.
         /// </param>
         /// <param name="apply">
-        ///     An <see cref="DbExpressionBinding" /> that specifies logic to evaluate once for each member of the input set.
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies logic to evaluate once for each member of the input set.
         /// </param>
-        /// <returns>
-        ///     An new DbApplyExpression with the specified input and apply bindings and an <see cref="DbExpressionKind" /> of CrossApply.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="input" />
-        ///     or
-        ///     <paramref name="apply" />
-        ///     is null
-        /// </exception>
+        /// <exception cref="T:System.ArgumentNullException">input or apply is null.</exception>
         public static DbApplyExpression CrossApply(this DbExpressionBinding input, DbExpressionBinding apply)
         {
             Check.NotNull(input, "input");
@@ -554,24 +431,21 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbApplyExpression" /> that evaluates the given <paramref name="apply" /> expression once for each element of a given input set,
-        ///     producing a collection of rows with corresponding input and apply columns. Rows for which <paramref name="apply" /> evaluates to an empty set have an apply column value of <code>null</code>.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set have an apply column value of null.
         /// </summary>
+        /// <returns>
+        ///     An new DbApplyExpression with the specified input and apply bindings and an
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        ///     of OuterApply.
+        /// </returns>
         /// <param name="input">
-        ///     An <see cref="DbExpressionBinding" /> that specifies the input set.
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the input set.
         /// </param>
         /// <param name="apply">
-        ///     An <see cref="DbExpressionBinding" /> that specifies logic to evaluate once for each member of the input set.
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies logic to evaluate once for each member of the input set.
         /// </param>
-        /// <returns>
-        ///     An new DbApplyExpression with the specified input and apply bindings and an <see cref="DbExpressionKind" /> of OuterApply.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="input" />
-        ///     or
-        ///     <paramref name="apply" />
-        ///     is null
-        /// </exception>
+        /// <exception cref="T:System.ArgumentNullException">input or apply is null.</exception>
         public static DbApplyExpression OuterApply(this DbExpressionBinding input, DbExpressionBinding apply)
         {
             Check.NotNull(input, "input");
@@ -601,20 +475,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbCrossJoinExpression" /> that unconditionally joins the sets specified by the list of input expression bindings.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCrossJoinExpression" /> that unconditionally joins the sets specified by the list of input expression bindings.
         /// </summary>
-        /// <param name="inputs"> A list of expression bindings that specifies the input sets. </param>
         /// <returns>
-        ///     A new DbCrossJoinExpression, with an <see cref="DbExpressionKind" /> of CrossJoin, that represents the unconditional join of the input sets.
+        ///     A new DbCrossJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of CrossJoin, that represents the unconditional join of the input sets.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="inputs" />
-        ///     is null or contains null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="inputs" />
-        ///     contains fewer than 2 expression bindings.
-        /// </exception>
+        /// <param name="inputs">A list of expression bindings that specifies the input sets.</param>
+        /// <exception cref="T:System.ArgumentNullException">inputs is null or contains null element.</exception>
+        /// <exception cref="T:System.ArgumentException">inputs contains fewer than 2 expression bindings.</exception>
         public static DbCrossJoinExpression CrossJoin(IEnumerable<DbExpressionBinding> inputs)
         {
             Check.NotNull(inputs, "inputs");
@@ -625,31 +493,23 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbJoinExpression" /> that joins the sets specified by the left and right
-        ///     expression bindings, on the specified join condition, using InnerJoin as the <see cref="DbExpressionKind" />.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expression bindings, on the specified join condition, using InnerJoin as the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of InnerJoin, that represents the inner join operation applied to the left and right     input sets under the given join condition.
+        /// </returns>
         /// <param name="left">
-        ///     An <see cref="DbExpressionBinding" /> that specifies the left set argument.
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the left set argument.
         /// </param>
         /// <param name="right">
-        ///     An <see cref="DbExpressionBinding" /> that specifies the right set argument.
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the right set argument.
         /// </param>
-        /// <param name="joinCondition"> An expression that specifies the condition on which to join. </param>
-        /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="DbExpressionKind" /> of InnerJoin, that represents the inner join operation applied to the left and right input sets under the given join condition.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     ,
-        ///     <paramref name="right" />
-        ///     or
-        ///     <paramref name="joinCondition" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="joinCondition" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <param name="joinCondition">An expression that specifies the condition on which to join.</param>
+        /// <exception cref="T:System.ArgumentNullException">left, right or joinCondition is null.</exception>
+        /// <exception cref="T:System.ArgumentException">joinCondition does not have a Boolean result type.</exception>
         public static DbJoinExpression InnerJoin(this DbExpressionBinding left, DbExpressionBinding right, DbExpression joinCondition)
         {
             Check.NotNull(left, "left");
@@ -661,31 +521,23 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbJoinExpression" /> that joins the sets specified by the left and right
-        ///     expression bindings, on the specified join condition, using LeftOuterJoin as the <see cref="DbExpressionKind" />.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expression bindings, on the specified join condition, using LeftOuterJoin as the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of LeftOuterJoin, that represents the left outer join operation applied to the left and right     input sets under the given join condition.
+        /// </returns>
         /// <param name="left">
-        ///     An <see cref="DbExpressionBinding" /> that specifies the left set argument.
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the left set argument.
         /// </param>
         /// <param name="right">
-        ///     An <see cref="DbExpressionBinding" /> that specifies the right set argument.
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the right set argument.
         /// </param>
-        /// <param name="joinCondition"> An expression that specifies the condition on which to join. </param>
-        /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="DbExpressionKind" /> of LeftOuterJoin, that represents the left outer join operation applied to the left and right input sets under the given join condition.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     ,
-        ///     <paramref name="right" />
-        ///     or
-        ///     <paramref name="joinCondition" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="joinCondition" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <param name="joinCondition">An expression that specifies the condition on which to join.</param>
+        /// <exception cref="T:System.ArgumentNullException">left, right or joinCondition is null.</exception>
+        /// <exception cref="T:System.ArgumentException">joinCondition does not have a Boolean result type.</exception>
         public static DbJoinExpression LeftOuterJoin(this DbExpressionBinding left, DbExpressionBinding right, DbExpression joinCondition)
         {
             Check.NotNull(left, "left");
@@ -697,31 +549,23 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbJoinExpression" /> that joins the sets specified by the left and right
-        ///     expression bindings, on the specified join condition, using FullOuterJoin as the <see cref="DbExpressionKind" />.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expression bindings, on the specified join condition, using FullOuterJoin as the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of FullOuterJoin, that represents the full outer join operation applied to the left and right     input sets under the given join condition.
+        /// </returns>
         /// <param name="left">
-        ///     An <see cref="DbExpressionBinding" /> that specifies the left set argument.
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the left set argument.
         /// </param>
         /// <param name="right">
-        ///     An <see cref="DbExpressionBinding" /> that specifies the right set argument.
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the right set argument.
         /// </param>
-        /// <param name="joinCondition"> An expression that specifies the condition on which to join. </param>
-        /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="DbExpressionKind" /> of FullOuterJoin, that represents the full outer join operation applied to the left and right input sets under the given join condition.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     ,
-        ///     <paramref name="right" />
-        ///     or
-        ///     <paramref name="joinCondition" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="joinCondition" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <param name="joinCondition">An expression that specifies the condition on which to join.</param>
+        /// <exception cref="T:System.ArgumentNullException">left, right or joinCondition is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by joinCondition does not have a Boolean result type.</exception>
         public static DbJoinExpression FullOuterJoin(this DbExpressionBinding left, DbExpressionBinding right, DbExpression joinCondition)
         {
             Check.NotNull(left, "left");
@@ -733,21 +577,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbFilterExpression" /> that filters the elements in the given input set using the specified predicate.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFilterExpression" /> that filters the elements in the given input set using the specified predicate.
         /// </summary>
-        /// <param name="input"> An expression binding that specifies the input set. </param>
-        /// <param name="predicate"> An expression representing a predicate to evaluate for each member of the input set. </param>
-        /// <returns> A new DbFilterExpression that produces the filtered set. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="input" />
-        ///     or
-        ///     <paramref name="predicate" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="predicate" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <returns>A new DbFilterExpression that produces the filtered set.</returns>
+        /// <param name="input">An expression binding that specifies the input set.</param>
+        /// <param name="predicate">An expression representing a predicate to evaluate for each member of the input set.</param>
+        /// <exception cref="T:System.ArgumentNullException">input or predicate is null.</exception>
+        /// <exception cref="T:System.ArgumentException">predicate does not have a Boolean result type.</exception>
         public static DbFilterExpression Filter(this DbExpressionBinding input, DbExpression predicate)
         {
             Check.NotNull(input, "input");
@@ -758,37 +594,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbGroupByExpression" /> that groups the elements of the input set according to the specified group keys and applies the given aggregates.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupByExpression" /> that groups the elements of the input set according to the specified group keys and applies the given aggregates.
         /// </summary>
+        /// <returns>A new DbGroupByExpression with the specified input set, grouping keys and aggregates.</returns>
         /// <param name="input">
-        ///     A <see cref="DbGroupExpressionBinding" /> that specifies the input set.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupExpressionBinding" /> that specifies the input set.
         /// </param>
-        /// <param name="keys"> A list of string-expression pairs that define the grouping columns. </param>
-        /// <param name="aggregates"> A list of expressions that specify aggregates to apply. </param>
-        /// <returns> A new DbGroupByExpression with the specified input set, grouping keys and aggregates. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="input" />
-        ///     ,
-        ///     <paramref name="keys" />
-        ///     or
-        ///     <paramref name="aggregates" />
-        ///     is null,
-        ///     <paramref name="keys" />
-        ///     contains a null key column name or expression, or
-        ///     <paramref name="aggregates" />
-        ///     contains a null aggregate column name or aggregate.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Both
-        ///     <paramref name="keys" />
-        ///     and
-        ///     <paramref name="aggregates" />
-        ///     are empty,
-        ///     or an invalid or duplicate column name was specified.
-        /// </exception>
-        /// <remarks>
-        ///     DbGroupByExpression allows either the list of keys or the list of aggregates to be empty, but not both.
-        /// </remarks>
+        /// <param name="keys">A list of string-expression pairs that define the grouping columns.</param>
+        /// <param name="aggregates">A list of expressions that specify aggregates to apply.</param>
+        /// <exception cref="T:System.ArgumentNullException">input, keys or aggregates is null, keys contains a null column key or expression, or aggregates contains a null aggregate column name or aggregate.</exception>
+        /// <exception cref="T:System.ArgumentException">Both keys and aggregates are empty, or an invalid or duplicate column name was specified.</exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static DbGroupByExpression GroupBy(
             this DbGroupExpressionBinding input, IEnumerable<KeyValuePair<string, DbExpression>> keys,
@@ -805,17 +620,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbProjectExpression" /> that projects the specified expression over the given input set.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" /> that projects the specified expression over the given input set.
         /// </summary>
-        /// <param name="input"> An expression binding that specifies the input set. </param>
-        /// <param name="projection"> An expression to project over the set. </param>
-        /// <returns> A new DbProjectExpression that represents the projection operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="input" />
-        ///     or
-        ///     <paramref name="projection" />
-        ///     is null
-        /// </exception>
+        /// <returns>A new DbProjectExpression that represents the projection operation.</returns>
+        /// <param name="input">An expression binding that specifies the input set.</param>
+        /// <param name="projection">An expression to project over the set.</param>
+        /// <exception cref="T:System.ArgumentNullException">input or projection is null.</exception>
         public static DbProjectExpression Project(this DbExpressionBinding input, DbExpression projection)
         {
             Check.NotNull(projection, "projection");
@@ -826,34 +636,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSkipExpression" /> that sorts the given input set by the given sort specifications before skipping the specified number of elements.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSkipExpression" /> that sorts the given input set by the given sort specifications before skipping the specified number of elements.
         /// </summary>
-        /// <param name="input"> An expression binding that specifies the input set. </param>
-        /// <param name="sortOrder"> A list of sort specifications that determine how the elements of the input set should be sorted. </param>
-        /// <param name="count"> An expression the specifies how many elements of the ordered set to skip. </param>
-        /// <returns> A new DbSkipExpression that represents the skip operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="input" />
-        ///     ,
-        ///     <paramref name="sortOrder" />
-        ///     or
-        ///     <paramref name="count" />
-        ///     is null,
-        ///     or
-        ///     <paramref name="sortOrder" />
-        ///     contains null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="sortOrder" />
-        ///     is empty,
-        ///     or
-        ///     <paramref name="count" />
-        ///     is not
-        ///     <see cref="DbConstantExpression" />
-        ///     or
-        ///     <see cref="DbParameterReferenceExpression" />
-        ///     or has a
-        ///     result type that is not equal or promotable to a 64-bit integer type.
+        /// <returns>A new DbSkipExpression that represents the skip operation.</returns>
+        /// <param name="input">An expression binding that specifies the input set.</param>
+        /// <param name="sortOrder">A list of sort specifications that determine how the elements of the input set should be sorted.</param>
+        /// <param name="count">An expression the specifies how many elements of the ordered set to skip.</param>
+        /// <exception cref="T:System.ArgumentNullException">input, sortOrder or count is null, or sortOrder contains null.</exception>
+        /// <exception cref="T:System.ArgumentException">
+        ///     sortOrder is empty, or count is not <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> or
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" />
+        ///     or has a result type that is not equal or promotable to a 64-bit integer type.
         /// </exception>
         public static DbSkipExpression Skip(this DbExpressionBinding input, IEnumerable<DbSortClause> sortOrder, DbExpression count)
         {
@@ -887,24 +681,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSortExpression" /> that sorts the given input set by the specified sort specifications.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort specifications.
         /// </summary>
-        /// <param name="input"> An expression binding that specifies the input set. </param>
-        /// <param name="sortOrder"> A list of sort specifications that determine how the elements of the input set should be sorted. </param>
-        /// <returns> A new DbSortExpression that represents the sort operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="input" />
-        ///     or
-        ///     <paramref name="sortOrder" />
-        ///     is null,
-        ///     or
-        ///     <paramref name="sortOrder" />
-        ///     contains null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="sortOrder" />
-        ///     is empty.
-        /// </exception>
+        /// <returns>A new DbSortExpression that represents the sort operation.</returns>
+        /// <param name="input">An expression binding that specifies the input set.</param>
+        /// <param name="sortOrder">A list of sort specifications that determine how the elements of the input set should be sorted.</param>
+        /// <exception cref="T:System.ArgumentNullException">input or sortOrder is null, or sortOrder contains null.</exception>
+        /// <exception cref="T:System.ArgumentException">sortOrder is empty.</exception>
         public static DbSortExpression Sort(this DbExpressionBinding input, IEnumerable<DbSortClause> sortOrder)
         {
             Check.NotNull(input, "input");
@@ -951,14 +734,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 #endif
 
         /// <summary>
-        ///     Creates a new <see cref="DbNullExpression" />, which represents a typed null value.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNullExpression" />, which represents a typed null value.
         /// </summary>
-        /// <param name="nullType"> The type of the null value. </param>
-        /// <returns> An instance of DbNullExpression </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="nullType" />
-        ///     is null
-        /// </exception>
+        /// <returns>An instance of DbNullExpression.</returns>
+        /// <param name="nullType">The type of the null value.</param>
+        /// <exception cref="T:System.ArgumentNullException">nullType is null.</exception>
         public static DbNullExpression Null(this TypeUsage nullType)
         {
             Check.NotNull(nullType, "nullType");
@@ -969,36 +749,34 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="DbConstantExpression" /> with the Boolean value <code>true</code>.
+        ///     Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the Boolean value true.
         /// </summary>
-        /// <returns> A DbConstantExpression with the Boolean value true. </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the Boolean value true.
+        /// </returns>
         public static DbConstantExpression True
         {
             get { return _boolTrue; }
         }
 
         /// <summary>
-        ///     Creates a <see cref="DbConstantExpression" /> with the Boolean value <code>false</code>.
+        ///     Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the Boolean value false.
         /// </summary>
-        /// <returns> A DbConstantExpression with the Boolean value false. </returns>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the Boolean value false.
+        /// </returns>
         public static DbConstantExpression False
         {
             get { return _boolFalse; }
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbConstantExpression" /> with the given constant value.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the given constant value.
         /// </summary>
-        /// <param name="value"> The constant value to represent. </param>
-        /// <returns> A new DbConstantExpression with the given value. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="value" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="value" />
-        ///     is not an instance of a valid constant type
-        /// </exception>
+        /// <returns>A new DbConstantExpression with the given value.</returns>
+        /// <param name="value">The constant value to represent.</param>
+        /// <exception cref="T:System.ArgumentNullException">value is null.</exception>
+        /// <exception cref="T:System.ArgumentException">value is not an instance of a valid constant type.</exception>
         public static DbConstantExpression Constant(object value)
         {
             Check.NotNull(value, "value");
@@ -1008,28 +786,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbConstantExpression" /> of the specified primitive type with the given constant value.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> of the specified primitive type with the given constant value.
         /// </summary>
-        /// <param name="constantType"> The type of the constant value. </param>
-        /// <param name="value"> The constant value to represent. </param>
-        /// <returns>
-        ///     A new DbConstantExpression with the given value and a result type of <paramref name="constantType" /> .
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="value" />
-        ///     or
-        ///     <paramref name="constantType" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="value" />
-        ///     is not an instance of a valid constant type,
-        ///     <paramref name="constantType" />
-        ///     does not represent a primitive type, or
-        ///     <paramref name="value" />
-        ///     is of a different primitive type than that represented by
-        ///     <paramref name="constantType" />
-        /// </exception>
+        /// <returns>A new DbConstantExpression with the given value and a result type of constantType.</returns>
+        /// <param name="constantType">The type of the constant value.</param>
+        /// <param name="value">The constant value to represent.</param>
+        /// <exception cref="T:System.ArgumentNullException">value or constantType is null.</exception>
+        /// <exception cref="T:System.ArgumentException">value is not an instance of a valid constant type, constantType does not represent a primitive type, or value is of a different primitive type than that represented by constantType.</exception>
         public static DbConstantExpression Constant(this TypeUsage constantType, object value)
         {
             Check.NotNull(constantType, "constantType");
@@ -1040,16 +803,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbParameterReferenceExpression" /> that references a parameter with the specified name and type.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" /> that references a parameter with the specified name and type.
         /// </summary>
-        /// <param name="type"> The type of the referenced parameter </param>
-        /// <param name="name"> The name of the referenced parameter </param>
-        /// <returns>
-        ///     A DbParameterReferenceExpression that represents a reference to a parameter with the specified name and type; the result type of the expression will be the same as
-        ///     <paramref
-        ///         name="type" />
-        ///     .
-        /// </returns>
+        /// <returns>A DbParameterReferenceExpression that represents a reference to a parameter with the specified name and type. The result type of the expression will be the same as type.</returns>
+        /// <param name="type">The type of the referenced parameter.</param>
+        /// <param name="name">The name of the referenced parameter.</param>
         public static DbParameterReferenceExpression Parameter(this TypeUsage type, string name)
         {
             Check.NotNull(type, "type");
@@ -1065,16 +823,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbVariableReferenceExpression" /> that references a variable with the specified name and type.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> that references a variable with the specified name and type.
         /// </summary>
-        /// <param name="type"> The type of the referenced variable </param>
-        /// <param name="name"> The name of the referenced variable </param>
-        /// <returns>
-        ///     A DbVariableReferenceExpression that represents a reference to a variable with the specified name and type; the result type of the expression will be the same as
-        ///     <paramref
-        ///         name="type" />
-        ///     .
-        /// </returns>
+        /// <returns>A DbVariableReferenceExpression that represents a reference to a variable with the specified name and type. The result type of the expression will be the same as type. </returns>
+        /// <param name="type">The type of the referenced variable.</param>
+        /// <param name="name">The name of the referenced variable.</param>
         public static DbVariableReferenceExpression Variable(this TypeUsage type, string name)
         {
             Check.NotNull(type, "type");
@@ -1087,14 +840,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbScanExpression" /> that references the specified entity or relationship set.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbScanExpression" /> that references the specified entity or relationship set.
         /// </summary>
-        /// <param name="targetSet"> Metadata for the entity or relationship set to reference. </param>
-        /// <returns> A new DbScanExpression based on the specified entity or relationship set. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="targetSet" />
-        ///     is null
-        /// </exception>
+        /// <returns>A new DbScanExpression based on the specified entity or relationship set.</returns>
+        /// <param name="targetSet">Metadata for the entity or relationship set to reference.</param>
+        /// <exception cref="T:System.ArgumentNullException">targetSet is null.</exception>
         public static DbScanExpression Scan(this EntitySetBase targetSet)
         {
             Check.NotNull(targetSet, "targetSet");
@@ -1109,23 +859,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Boolean Operators - And, Or, Not
 
         /// <summary>
-        ///     Creates an <see cref="DbAndExpression" /> that performs the logical And of the left and right arguments.
+        ///     Creates an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAndExpression" /> that performs the logical And of the left and right arguments.
         /// </summary>
-        /// <param name="left"> A Boolean expression that specifies the left argument. </param>
-        /// <param name="right"> A Boolean expression that specifies the right argument. </param>
-        /// <returns> A new DbAndExpression with the specified arguments. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <returns>A new DbAndExpression with the specified arguments.</returns>
+        /// <param name="left">A Boolean expression that specifies the left argument.</param>
+        /// <param name="right">A Boolean expression that specifies the right argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">left and right  does not have a Boolean result type.</exception>
         public static DbAndExpression And(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -1142,23 +882,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates an <see cref="DbOrExpression" /> that performs the logical Or of the left and right arguments.
+        ///     Creates an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbOrExpression" /> that performs the logical Or of the left and right arguments.
         /// </summary>
-        /// <param name="left"> A Boolean expression that specifies the left argument. </param>
-        /// <param name="right"> A Boolean expression that specifies the right argument. </param>
-        /// <returns> A new DbOrExpression with the specified arguments. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <returns>A new DbOrExpression with the specified arguments.</returns>
+        /// <param name="left">A Boolean expression that specifies the left argument.</param>
+        /// <param name="right">A Boolean expression that specifies the right argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">left or right does not have a Boolean result type.</exception>
         public static DbOrExpression Or(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -1228,18 +958,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="DbNotExpression" /> that performs the logical negation of the given argument.
+        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNotExpression" /> that performs the logical negation of the given argument.
         /// </summary>
-        /// <param name="argument"> A Boolean expression that specifies the argument. </param>
-        /// <returns> A new DbNotExpression with the specified argument. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <returns>A new DbNotExpression with the specified argument.</returns>
+        /// <param name="argument">A Boolean expression that specifies the argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument does not have a Boolean result type.</exception>
         public static DbNotExpression Not(this DbExpression argument)
         {
             Check.NotNull(argument, "argument");
@@ -1271,24 +995,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbArithmeticExpression" /> that divides the left argument by the right argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that divides the left argument by the right argument.
         /// </summary>
-        /// <param name="left"> An expression that specifies the left argument. </param>
-        /// <param name="right"> An expression that specifies the right argument. </param>
-        /// <returns> A new DbArithmeticExpression representing the division operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common numeric result type exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbArithmeticExpression representing the division operation.</returns>
+        /// <param name="left">An expression that specifies the left argument.</param>
+        /// <param name="right">An expression that specifies the right argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common numeric result type exists between left or right.</exception>
         public static DbArithmeticExpression Divide(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -1298,24 +1011,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbArithmeticExpression" /> that subtracts the right argument from the left argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that subtracts the right argument from the left argument.
         /// </summary>
-        /// <param name="left"> An expression that specifies the left argument. </param>
-        /// <param name="right"> An expression that specifies the right argument. </param>
-        /// <returns> A new DbArithmeticExpression representing the subtraction operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common numeric result type exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbArithmeticExpression representing the subtraction operation.</returns>
+        /// <param name="left">An expression that specifies the left argument.</param>
+        /// <param name="right">An expression that specifies the right argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common numeric result type exists between left and right.</exception>
         public static DbArithmeticExpression Minus(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -1325,24 +1027,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbArithmeticExpression" /> that computes the remainder of the left argument divided by the right argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that computes the remainder of the left argument divided by the right argument.
         /// </summary>
-        /// <param name="left"> An expression that specifies the left argument. </param>
-        /// <param name="right"> An expression that specifies the right argument. </param>
-        /// <returns> A new DbArithmeticExpression representing the modulo operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common numeric result type exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbArithmeticExpression representing the modulo operation.</returns>
+        /// <param name="left">An expression that specifies the left argument.</param>
+        /// <param name="right">An expression that specifies the right argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common numeric result type exists between left and right.</exception>
         public static DbArithmeticExpression Modulo(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -1352,24 +1043,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbArithmeticExpression" /> that multiplies the left argument by the right argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that multiplies the left argument by the right argument.
         /// </summary>
-        /// <param name="left"> An expression that specifies the left argument. </param>
-        /// <param name="right"> An expression that specifies the right argument. </param>
-        /// <returns> A new DbArithmeticExpression representing the multiplication operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common numeric result type exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbArithmeticExpression representing the multiplication operation.</returns>
+        /// <param name="left">An expression that specifies the left argument.</param>
+        /// <param name="right">An expression that specifies the right argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common numeric result type exists between left and right.</exception>
         public static DbArithmeticExpression Multiply(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -1379,24 +1059,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbArithmeticExpression" /> that adds the left argument to the right argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that adds the left argument to the right argument.
         /// </summary>
-        /// <param name="left"> An expression that specifies the left argument. </param>
-        /// <param name="right"> An expression that specifies the right argument. </param>
-        /// <returns> A new DbArithmeticExpression representing the addition operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common numeric result type exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbArithmeticExpression representing the addition operation.</returns>
+        /// <param name="left">An expression that specifies the left argument.</param>
+        /// <param name="right">An expression that specifies the right argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common numeric result type exists between left and right.</exception>
         public static DbArithmeticExpression Plus(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -1406,19 +1075,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbArithmeticExpression" /> that negates the value of the argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that negates the value of the argument.
         /// </summary>
-        /// <param name="argument"> An expression that specifies the argument. </param>
-        /// <returns> A new DbArithmeticExpression representing the negation operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No numeric result type exists for
-        ///     <paramref name="argument" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbArithmeticExpression representing the negation operation.</returns>
+        /// <param name="argument">An expression that specifies the argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No numeric result type exists for argument.</exception>
         public static DbArithmeticExpression UnaryMinus(this DbExpression argument)
         {
             Check.NotNull(argument, "argument");
@@ -1444,19 +1106,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbArithmeticExpression" /> that negates the value of the argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that negates the value of the argument.
         /// </summary>
-        /// <param name="argument"> An expression that specifies the argument. </param>
-        /// <returns> A new DbArithmeticExpression representing the negation operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No numeric result type exists for
-        ///     <paramref name="argument" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbArithmeticExpression representing the negation operation.</returns>
+        /// <param name="argument">An expression that specifies the argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No numeric result type exists for argument.</exception>
         public static DbArithmeticExpression Negate(this DbExpression argument)
         {
             return argument.UnaryMinus();
@@ -1497,24 +1152,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbComparisonExpression" /> that compares the left and right arguments for equality.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that compares the left and right arguments for equality.
         /// </summary>
-        /// <param name="left"> An expression that specifies the left argument. </param>
-        /// <param name="right"> An expression that specifies the right argument. </param>
-        /// <returns> A new DbComparisonExpression representing the equality comparison. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common equality-comparable result type exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbComparisonExpression representing the equality comparison.</returns>
+        /// <param name="left">An expression that specifies the left argument.</param>
+        /// <param name="right">An expression that specifies the right argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common equality-comparable result type exists between left and right.</exception>
         public static DbComparisonExpression Equal(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -1524,24 +1168,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbComparisonExpression" /> that compares the left and right arguments for inequality.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that compares the left and right arguments for inequality.
         /// </summary>
-        /// <param name="left"> An expression that specifies the left argument. </param>
-        /// <param name="right"> An expression that specifies the right argument. </param>
-        /// <returns> A new DbComparisonExpression representing the inequality comparison. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common equality-comparable result type exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbComparisonExpression representing the inequality comparison.</returns>
+        /// <param name="left">An expression that specifies the left argument.</param>
+        /// <param name="right">An expression that specifies the right argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common equality-comparable result type exists between left and right.</exception>
         public static DbComparisonExpression NotEqual(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -1551,24 +1184,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbComparisonExpression" /> that determines whether the left argument is greater than the right argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that determines whether the left argument is greater than the right argument.
         /// </summary>
-        /// <param name="left"> An expression that specifies the left argument. </param>
-        /// <param name="right"> An expression that specifies the right argument. </param>
-        /// <returns> A new DbComparisonExpression representing the greater-than comparison. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common order-comparable result type exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbComparisonExpression representing the greater-than comparison.</returns>
+        /// <param name="left">An expression that specifies the left argument.</param>
+        /// <param name="right">An expression that specifies the right argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common order-comparable result type exists between left and right.</exception>
         public static DbComparisonExpression GreaterThan(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -1578,24 +1200,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbComparisonExpression" /> that determines whether the left argument is less than the right argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that determines whether the left argument is less than the right argument.
         /// </summary>
-        /// <param name="left"> An expression that specifies the left argument. </param>
-        /// <param name="right"> An expression that specifies the right argument. </param>
-        /// <returns> A new DbComparisonExpression representing the less-than comparison. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common order-comparable result type exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbComparisonExpression representing the less-than comparison.</returns>
+        /// <param name="left">An expression that specifies the left argument.</param>
+        /// <param name="right">An expression that specifies the right argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common order-comparable result type exists between left and right.</exception>
         public static DbComparisonExpression LessThan(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -1605,24 +1216,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbComparisonExpression" /> that determines whether the left argument is greater than or equal to the right argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that determines whether the left argument is greater than or equal to the right argument.
         /// </summary>
-        /// <param name="left"> An expression that specifies the left argument. </param>
-        /// <param name="right"> An expression that specifies the right argument. </param>
-        /// <returns> A new DbComparisonExpression representing the greater-than-or-equal-to comparison. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common result type that is both equality- and order-comparable exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbComparisonExpression representing the greater-than-or-equal-to comparison.</returns>
+        /// <param name="left">An expression that specifies the left argument.</param>
+        /// <param name="right">An expression that specifies the right argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common order-comparable result type exists between left and right.</exception>
         public static DbComparisonExpression GreaterThanOrEqual(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -1632,24 +1232,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbComparisonExpression" /> that determines whether the left argument is less than or equal to the right argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that determines whether the left argument is less than or equal to the right argument.
         /// </summary>
-        /// <param name="left"> An expression that specifies the left argument. </param>
-        /// <param name="right"> An expression that specifies the right argument. </param>
-        /// <returns> A new DbComparisonExpression representing the less-than-or-equal-to comparison. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common result type that is both equality- and order-comparable exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbComparisonExpression representing the less-than-or-equal-to comparison.</returns>
+        /// <param name="left">An expression that specifies the left argument.</param>
+        /// <param name="right">An expression that specifies the right argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common result type that is both equality- and order-comparable exists between left and right.</exception>
         public static DbComparisonExpression LessThanOrEqual(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -1659,18 +1248,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbIsNullExpression" /> that determines whether the specified argument is null.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsNullExpression" /> that determines whether the specified argument is null.
         /// </summary>
-        /// <param name="argument"> An expression that specifies the argument. </param>
-        /// <returns> A new DbIsNullExpression with the specified argument. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     has a collection result type.
-        /// </exception>
+        /// <returns>A new DbIsNullExpression with the specified argument.</returns>
+        /// <param name="argument">An expression that specifies the argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument has a collection result type.</exception>
         public static DbIsNullExpression IsNull(this DbExpression argument)
         {
             Check.NotNull(argument, "argument");
@@ -1701,23 +1284,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLikeExpression" /> that compares the specified input string to the given pattern.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" /> that compares the specified input string to the given pattern.
         /// </summary>
-        /// <param name="argument"> An expression that specifies the input string. </param>
-        /// <param name="pattern"> An expression that specifies the pattern string. </param>
-        /// <returns> A new DbLikeExpression with the specified input, pattern and a null escape. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     or
-        ///     <paramref name="pattern" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     or
-        ///     <paramref name="pattern" />
-        ///     does not have a string result type.
-        /// </exception>
+        /// <returns>A new DbLikeExpression with the specified input, pattern and a null escape.</returns>
+        /// <param name="argument">An expression that specifies the input string.</param>
+        /// <param name="pattern">An expression that specifies the pattern string.</param>
+        /// <exception cref="T:System.ArgumentNullException">Argument or pattern is null.</exception>
+        /// <exception cref="T:System.ArgumentException">Argument or pattern does not have a string result type.</exception>
         public static DbLikeExpression Like(this DbExpression argument, DbExpression pattern)
         {
             Check.NotNull(argument, "argument");
@@ -1729,28 +1302,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLikeExpression" /> that compares the specified input string to the given pattern using the optional escape.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" /> that compares the specified input string to the given pattern using the optional escape.
         /// </summary>
-        /// <param name="argument"> An expression that specifies the input string. </param>
-        /// <param name="pattern"> An expression that specifies the pattern string. </param>
-        /// <param name="escape"> An optional expression that specifies the escape string. </param>
-        /// <returns> A new DbLikeExpression with the specified input, pattern and escape. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     ,
-        ///     <paramref name="pattern" />
-        ///     or
-        ///     <paramref name="escape" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     ,
-        ///     <paramref name="pattern" />
-        ///     or
-        ///     <paramref name="escape" />
-        ///     does not have a string result type.
-        /// </exception>
+        /// <returns>A new DbLikeExpression with the specified input, pattern and escape.</returns>
+        /// <param name="argument">An expression that specifies the input string.</param>
+        /// <param name="pattern">An expression that specifies the pattern string.</param>
+        /// <param name="escape">An optional expression that specifies the escape string.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument,  pattern or escape is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument,  pattern or escape does not have a string result type.</exception>
         public static DbLikeExpression Like(this DbExpression argument, DbExpression pattern, DbExpression escape)
         {
             Check.NotNull(argument, "argument");
@@ -1779,18 +1338,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Type Operators - Cast, Treat, OfType, OfTypeOnly, IsOf, IsOfOnly
 
         /// <summary>
-        ///     Creates a new <see cref="DbCastExpression" /> that applies a cast operation to a polymorphic argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCastExpression" /> that applies a cast operation to a polymorphic argument.
         /// </summary>
-        /// <param name="argument"> The argument to which the cast should be applied. </param>
-        /// <param name="toType"> Type metadata that specifies the type to cast to. </param>
-        /// <returns> A new DbCastExpression with the specified argument and target type. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     or
-        ///     <paramref name="toType" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">The specified cast is not valid.</exception>
+        /// <returns>A new DbCastExpression with the specified argument and target type.</returns>
+        /// <param name="argument">The argument to which the cast should be applied.</param>
+        /// <param name="toType">Type metadata that specifies the type to cast to.</param>
+        /// <exception cref="T:System.ArgumentNullException">Argument or toType is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The specified cast is not valid.</exception>
         public static DbCastExpression CastTo(this DbExpression argument, TypeUsage toType)
         {
             Check.NotNull(argument, "argument");
@@ -1806,27 +1360,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbTreatExpression" />.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbTreatExpression" />.
         /// </summary>
-        /// <param name="argument"> An expression that specifies the instance. </param>
-        /// <param name="treatType"> Type metadata for the treat-as type. </param>
-        /// <returns> A new DbTreatExpression with the specified argument and type. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     or
-        ///     <paramref name="treatType" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="treatType" />
-        ///     is not in the same type hierarchy as the result type of
-        ///     <paramref name="argument" />
-        ///     .
-        /// </exception>
-        /// <remarks>
-        ///     DbTreatExpression requires that <paramref name="argument" /> has a polymorphic result type,
-        ///     and that <paramref name="treatType" /> is a type from the same type hierarchy as that result type.
-        /// </remarks>
+        /// <returns>A new DbTreatExpression with the specified argument and type.</returns>
+        /// <param name="argument">An expression that specifies the instance.</param>
+        /// <param name="treatType">Type metadata for the treat-as type.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument or treatType is null.</exception>
+        /// <exception cref="T:System.ArgumentException">treatType is not in the same type hierarchy as the result type of argument.</exception>
         public static DbTreatExpression TreatAs(this DbExpression argument, TypeUsage treatType)
         {
             Check.NotNull(argument, "argument");
@@ -1843,37 +1383,20 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbOfTypeExpression" /> that produces a set consisting of the elements of the given input set that are of the specified type.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbOfTypeExpression" /> that produces a set consisting of the elements of the given input set that are of the specified type.
         /// </summary>
-        /// <param name="argument">
-        ///     A <see cref="DbExpression" /> that specifies the input set.
-        /// </param>
-        /// <param name="type"> Type metadata for the type that elements of the input set must have to be included in the resulting set. </param>
         /// <returns>
         ///     A new DbOfTypeExpression with the specified set argument and type, and an ExpressionKind of
         ///     <see
-        ///         cref="DbExpressionKind.OfType" />
+        ///         cref="F:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind.OfType" />
         ///     .
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     or
-        ///     <paramref name="type" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     does not have a collection result type, or
-        ///     <paramref name="type" />
-        ///     is not a type in the same type hierarchy as the element type of the
-        ///     collection result type of
-        ///     <paramref name="argument" />
-        ///     .
-        /// </exception>
-        /// <remarks>
-        ///     DbOfTypeExpression requires that <paramref name="argument" /> has a collection result type with
-        ///     a polymorphic element type, and that <paramref name="type" /> is a type from the same type hierarchy as that element type.
-        /// </remarks>
+        /// <param name="argument">
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
+        /// </param>
+        /// <param name="type">Type metadata for the type that elements of the input set must have to be included in the resulting set.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument or type is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument does not have a collection result type, or type is not a type in the same type hierarchy as the element type of the collection result type of argument.</exception>
         public static DbOfTypeExpression OfType(this DbExpression argument, TypeUsage type)
         {
             Check.NotNull(argument, "argument");
@@ -1885,37 +1408,20 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbOfTypeExpression" /> that produces a set consisting of the elements of the given input set that are of exactly the specified type.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbOfTypeExpression" /> that produces a set consisting of the elements of the given input set that are of exactly the specified type.
         /// </summary>
-        /// <param name="argument">
-        ///     An <see cref="DbExpression" /> that specifies the input set.
-        /// </param>
-        /// <param name="type"> Type metadata for the type that elements of the input set must match exactly to be included in the resulting set. </param>
         /// <returns>
         ///     A new DbOfTypeExpression with the specified set argument and type, and an ExpressionKind of
         ///     <see
-        ///         cref="DbExpressionKind.OfTypeOnly" />
+        ///         cref="F:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind.OfTypeOnly" />
         ///     .
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     or
-        ///     <paramref name="type" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     does not have a collection result type, or
-        ///     <paramref name="type" />
-        ///     is not a type in the same type hierarchy as the element type of the
-        ///     collection result type of
-        ///     <paramref name="argument" />
-        ///     .
-        /// </exception>
-        /// <remarks>
-        ///     DbOfTypeExpression requires that <paramref name="argument" /> has a collection result type with
-        ///     a polymorphic element type, and that <paramref name="type" /> is a type from the same type hierarchy as that element type.
-        /// </remarks>
+        /// <param name="argument">
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
+        /// </param>
+        /// <param name="type">Type metadata for the type that elements of the input set must match exactly to be included in the resulting set.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument or type is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument does not have a collection result type, or type is not a type in the same type hierarchy as the element type of the collection result type of argument.</exception>
         public static DbOfTypeExpression OfTypeOnly(this DbExpression argument, TypeUsage type)
         {
             Check.NotNull(argument, "argument");
@@ -1927,27 +1433,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbIsOfExpression" /> that determines whether the given argument is of the specified type or a subtype.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsOfExpression" /> that determines whether the given argument is of the specified type or a subtype.
         /// </summary>
-        /// <param name="argument"> An expression that specifies the instance. </param>
-        /// <param name="type"> Type metadata that specifies the type that the instance's result type should be compared to. </param>
-        /// <returns> A new DbIsOfExpression with the specified instance and type and DbExpressionKind IsOf. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     or
-        ///     <paramref name="type" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="type" />
-        ///     is not in the same type hierarchy as the result type of
-        ///     <paramref name="argument" />
-        ///     .
-        /// </exception>
-        /// <remarks>
-        ///     DbIsOfExpression requires that <paramref name="argument" /> has a polymorphic result type,
-        ///     and that <paramref name="type" /> is a type from the same type hierarchy as that result type.
-        /// </remarks>
+        /// <returns>A new DbIsOfExpression with the specified instance and type and DbExpressionKind IsOf.</returns>
+        /// <param name="argument">An expression that specifies the instance.</param>
+        /// <param name="type">Type metadata that specifies the type that the instance's result type should be compared to.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument or type is null.</exception>
+        /// <exception cref="T:System.ArgumentException">type is not in the same type hierarchy as the result type of argument.</exception>
         public static DbIsOfExpression IsOf(this DbExpression argument, TypeUsage type)
         {
             Check.NotNull(argument, "argument");
@@ -1958,27 +1450,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbIsOfExpression" /> expression that determines whether the given argument is of the specified type, and only that type (not a subtype).
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsOfExpression" /> expression that determines whether the given argument is of the specified type, and only that type (not a subtype).
         /// </summary>
-        /// <param name="argument"> An expression that specifies the instance. </param>
-        /// <param name="type"> Type metadata that specifies the type that the instance's result type should be compared to. </param>
-        /// <returns> A new DbIsOfExpression with the specified instance and type and DbExpressionKind IsOfOnly. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     or
-        ///     <paramref name="type" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="type" />
-        ///     is not in the same type hierarchy as the result type of
-        ///     <paramref name="argument" />
-        ///     .
-        /// </exception>
-        /// <remarks>
-        ///     DbIsOfExpression requires that <paramref name="argument" /> has a polymorphic result type,
-        ///     and that <paramref name="type" /> is a type from the same type hierarchy as that result type.
-        /// </remarks>
+        /// <returns>A new DbIsOfExpression with the specified instance and type and DbExpressionKind IsOfOnly.</returns>
+        /// <param name="argument">An expression that specifies the instance.</param>
+        /// <param name="type">Type metadata that specifies the type that the instance's result type should be compared to.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument or type is null.</exception>
+        /// <exception cref="T:System.ArgumentException">type is not in the same type hierarchy as the result type of argument.</exception>
         public static DbIsOfExpression IsOfOnly(this DbExpression argument, TypeUsage type)
         {
             Check.NotNull(argument, "argument");
@@ -2028,20 +1506,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Ref Operators - Deref, EntityRef, Ref, RefKey, RelationshipNavigation
 
         /// <summary>
-        ///     Creates a new <see cref="DbDerefExpression" /> that retrieves a specific Entity given a reference expression
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbDerefExpression" /> that retrieves a specific Entity given a reference expression.
         /// </summary>
+        /// <returns>A new DbDerefExpression that retrieves the specified Entity.</returns>
         /// <param name="argument">
-        ///     An <see cref="DbExpression" /> that provides the reference. This expression must have a reference Type
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that provides the reference. This expression must have a reference Type.
         /// </param>
-        /// <returns> A new DbDerefExpression that retrieves the specified Entity </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     does not have a reference result type.
-        /// </exception>
+        /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument does not have a reference result type.</exception>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Deref")]
         public static DbDerefExpression Deref(this DbExpression argument)
         {
@@ -2059,18 +1531,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbEntityRefExpression" /> that retrieves the ref of the specifed entity in structural form.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbEntityRefExpression" /> that retrieves the ref of the specifed entity in structural form.
         /// </summary>
-        /// <param name="argument"> The expression that provides the entity. This expression must have an entity result type. </param>
-        /// <returns> A new DbEntityRefExpression that retrieves a reference to the specified entity. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     does not have an entity result type.
-        /// </exception>
+        /// <returns>A new DbEntityRefExpression that retrieves a reference to the specified entity.</returns>
+        /// <param name="argument">The expression that provides the entity. This expression must have an entity result type.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument does not have an entity result type.</exception>
         public static DbEntityRefExpression GetEntityRef(this DbExpression argument)
         {
             Check.NotNull(argument, "argument");
@@ -2086,29 +1552,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbRefExpression" /> that encodes a reference to a specific entity based on key values.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific entity based on key values.
         /// </summary>
-        /// <param name="entitySet"> The entity set in which the referenced element resides. </param>
+        /// <returns>A new DbRefExpression that references the element with the specified key values in the given entity set.</returns>
+        /// <param name="entitySet">The entity set in which the referenced element resides.</param>
         /// <param name="keyValues">
-        ///     A collection of <see cref="DbExpression" /> s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
+        ///     A collection of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
         /// </param>
-        /// <returns> A new DbRefExpression that references the element with the specified key values in the given entity set. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="entitySet" />
-        ///     is null, or
-        ///     <paramref name="keyValues" />
-        ///     is null or contains null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The count of
-        ///     <paramref name="keyValues" />
-        ///     does not match the count of key members declared by the
-        ///     <paramref name="entitySet" />
-        ///     's element type,
-        ///     or
-        ///     <paramref name="keyValues" />
-        ///     contains an expression with a result type that is not compatible with the type of the corresponding key member.
-        /// </exception>
+        /// <exception cref="T:System.ArgumentNullException">entitySet is null, or keyValues is null or contains null.</exception>
+        /// <exception cref="T:System.ArgumentException">The count of keyValues does not match the count of key members declared by the entitySet’s element type, or keyValues contains an expression with a result type that is not compatible with the type of the corresponding key member.</exception>
         public static DbRefExpression CreateRef(this EntitySet entitySet, IEnumerable<DbExpression> keyValues)
         {
             Check.NotNull(entitySet, "entitySet");
@@ -2118,29 +1570,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbRefExpression" /> that encodes a reference to a specific entity based on key values.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific entity based on key values.
         /// </summary>
-        /// <param name="entitySet"> The entity set in which the referenced element resides. </param>
+        /// <returns>A new DbRefExpression that references the element with the specified key values in the given entity set.</returns>
+        /// <param name="entitySet">The entity set in which the referenced element resides.</param>
         /// <param name="keyValues">
-        ///     A collection of <see cref="DbExpression" /> s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
+        ///     A collection of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
         /// </param>
-        /// <returns> A new DbRefExpression that references the element with the specified key values in the given entity set. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="entitySet" />
-        ///     is null, or
-        ///     <paramref name="keyValues" />
-        ///     is null or contains null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The count of
-        ///     <paramref name="keyValues" />
-        ///     does not match the count of key members declared by the
-        ///     <paramref name="entitySet" />
-        ///     's element type,
-        ///     or
-        ///     <paramref name="keyValues" />
-        ///     contains an expression with a result type that is not compatible with the type of the corresponding key member.
-        /// </exception>
+        /// <exception cref="T:System.ArgumentNullException">entitySet is null, or keyValues is null or contains null.</exception>
+        /// <exception cref="T:System.ArgumentException">The count of keyValues does not match the count of key members declared by the entitySet’s element type, or keyValues contains an expression with a result type that is not compatible with the type of the corresponding key member.</exception>
         public static DbRefExpression CreateRef(this EntitySet entitySet, params DbExpression[] keyValues)
         {
             Check.NotNull(entitySet, "entitySet");
@@ -2150,38 +1588,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbRefExpression" /> that encodes a reference to a specific entity of a given type based on key values.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific entity of a given type based on key values.
         /// </summary>
-        /// <param name="entitySet"> The entity set in which the referenced element resides. </param>
-        /// <param name="entityType"> The specific type of the referenced entity. This must be an entity type from the same hierarchy as the entity set's element type. </param>
+        /// <returns>A new DbRefExpression that references the element with the specified key values in the given entity set.</returns>
+        /// <param name="entitySet">The entity set in which the referenced element resides.</param>
+        /// <param name="entityType">The specific type of the referenced entity. This must be an entity type from the same hierarchy as the entity set's element type.</param>
         /// <param name="keyValues">
-        ///     A collection of <see cref="DbExpression" /> s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
+        ///     A collection of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
         /// </param>
-        /// <returns> A new DbRefExpression that references the element with the specified key values in the given entity set. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="entitySet" />
-        ///     or
-        ///     <paramref name="entityType" />
-        ///     is null, or
-        ///     <paramref name="keyValues" />
-        ///     is null or contains null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="entityType" />
-        ///     is not from the same type hierarchy (a subtype, supertype, or the same type) as
-        ///     <paramref name="entitySet" />
-        ///     's element type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The count of
-        ///     <paramref name="keyValues" />
-        ///     does not match the count of key members declared by the
-        ///     <paramref name="entitySet" />
-        ///     's element type,
-        ///     or
-        ///     <paramref name="keyValues" />
-        ///     contains an expression with a result type that is not compatible with the type of the corresponding key member.
-        /// </exception>
+        /// <exception cref="T:System.ArgumentNullException">entitySet or entityType is null, or keyValues is null or contains null.</exception>
+        /// <exception cref="T:System.ArgumentException">entityType is not from the same type hierarchy (a subtype, supertype, or the same type) as entitySet's element type.</exception>
+        /// <exception cref="T:System.ArgumentException">The count of keyValues does not match the count of key members declared by the entitySet’s element type, or keyValues contains an expression with a result type that is not compatible with the type of the corresponding key member.</exception>
         public static DbRefExpression CreateRef(this EntitySet entitySet, EntityType entityType, IEnumerable<DbExpression> keyValues)
         {
             Check.NotNull(entitySet, "entitySet");
@@ -2192,38 +1609,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbRefExpression" /> that encodes a reference to a specific entity of a given type based on key values.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific entity of a given type based on key values.
         /// </summary>
-        /// <param name="entitySet"> The entity set in which the referenced element resides. </param>
-        /// <param name="entityType"> The specific type of the referenced entity. This must be an entity type from the same hierarchy as the entity set's element type. </param>
+        /// <returns>A new DbRefExpression that references the element with the specified key values in the given entity set.</returns>
+        /// <param name="entitySet">The entity set in which the referenced element resides.</param>
+        /// <param name="entityType">The specific type of the referenced entity. This must be an entity type from the same hierarchy as the entity set's element type.</param>
         /// <param name="keyValues">
-        ///     A collection of <see cref="DbExpression" /> s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
+        ///     A collection of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
         /// </param>
-        /// <returns> A new DbRefExpression that references the element with the specified key values in the given entity set. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="entitySet" />
-        ///     or
-        ///     <paramref name="entityType" />
-        ///     is null, or
-        ///     <paramref name="keyValues" />
-        ///     is null or contains null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="entityType" />
-        ///     is not from the same type hierarchy (a subtype, supertype, or the same type) as
-        ///     <paramref name="entitySet" />
-        ///     's element type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The count of
-        ///     <paramref name="keyValues" />
-        ///     does not match the count of key members declared by the
-        ///     <paramref name="entitySet" />
-        ///     's element type,
-        ///     or
-        ///     <paramref name="keyValues" />
-        ///     contains an expression with a result type that is not compatible with the type of the corresponding key member.
-        /// </exception>
+        /// <exception cref="T:System.ArgumentNullException">entitySet or entityType is null, or keyValues is null or contains null.</exception>
+        /// <exception cref="T:System.ArgumentException">entityType is not from the same type hierarchy (a subtype, supertype, or the same type) as entitySet's element type.</exception>
+        /// <exception cref="T:System.ArgumentException">The count of keyValues does not match the count of key members declared by the entitySet’s element type, or keyValues contains an expression with a result type that is not compatible with the type of the corresponding key member.</exception>
         public static DbRefExpression CreateRef(this EntitySet entitySet, EntityType entityType, params DbExpression[] keyValues)
         {
             Check.NotNull(entitySet, "entitySet");
@@ -2251,30 +1647,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbRefExpression" /> that encodes a reference to a specific Entity based on key values.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific Entity based on key values.
         /// </summary>
-        /// <param name="entitySet"> The Entity set in which the referenced element resides. </param>
+        /// <returns>A new DbRefExpression that references the element with the specified key values in the given Entity set.</returns>
+        /// <param name="entitySet">The Entity set in which the referenced element resides.</param>
         /// <param name="keyRow">
-        ///     A <see cref="DbExpression" /> that constructs a record with columns that match (in number, type, and order) the Key properties of the referenced Entity type.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that constructs a record with columns that match (in number, type, and order) the Key properties of the referenced Entity type.
         /// </param>
-        /// <returns> A new DbRefExpression that references the element with the specified key values in the given Entity set. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="entitySet" />
-        ///     or
-        ///     <paramref name="keyRow" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="keyRow" />
-        ///     does not have a record result type that matches the key properties of the referenced entity set's entity type.
-        /// </exception>
-        /// <remarks>
-        ///     <paramref name="keyRow" /> should be an expression that specifies the key values that identify the referenced entity within the given entity set.
-        ///     The result type of <paramref name="keyRow" /> should contain a corresponding column for each key property defined by
-        ///     <paramref
-        ///         name="entitySet" />
-        ///     's entity type.
-        /// </remarks>
+        /// <exception cref="T:System.ArgumentNullException">entitySet or keyRow is null.</exception>
+        /// <exception cref="T:System.ArgumentException">keyRow does not have a record result type that matches the key properties of the referenced entity set's entity type.</exception>
         public static DbRefExpression RefFromKey(this EntitySet entitySet, DbExpression keyRow)
         {
             Check.NotNull(entitySet, "entitySet");
@@ -2285,36 +1666,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbRefExpression" /> that encodes a reference to a specific Entity based on key values.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific Entity based on key values.
         /// </summary>
-        /// <param name="entitySet"> The Entity set in which the referenced element resides. </param>
+        /// <returns>A new DbRefExpression that references the element with the specified key values in the given Entity set.</returns>
+        /// <param name="entitySet">The Entity set in which the referenced element resides.</param>
         /// <param name="keyRow">
-        ///     A <see cref="DbExpression" /> that constructs a record with columns that match (in number, type, and order) the Key properties of the referenced Entity type.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that constructs a record with columns that match (in number, type, and order) the Key properties of the referenced Entity type.
         /// </param>
-        /// <param name="entityType"> The type of the Entity that the reference should refer to. </param>
-        /// <returns> A new DbRefExpression that references the element with the specified key values in the given Entity set. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="entitySet" />
-        ///     ,
-        ///     <paramref name="keyRow" />
-        ///     or
-        ///     <paramref name="entityType" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="entityType" />
-        ///     is not in the same type hierarchy as the entity set's entity type, or
-        ///     <paramref name="keyRow" />
-        ///     does not have a
-        ///     record result type that matches the key properties of the referenced entity set's entity type.
-        /// </exception>
-        /// <remarks>
-        ///     <paramref name="keyRow" /> should be an expression that specifies the key values that identify the referenced entity within the given entity set.
-        ///     The result type of <paramref name="keyRow" /> should contain a corresponding column for each key property defined by
-        ///     <paramref
-        ///         name="entitySet" />
-        ///     's entity type.
-        /// </remarks>
+        /// <param name="entityType">The type of the Entity that the reference should refer to.</param>
+        /// <exception cref="T:System.ArgumentNullException">entitySet, keyRow or entityType is null.</exception>
+        /// <exception cref="T:System.ArgumentException">entityType is not in the same type hierarchy as the entity set's entity type, or keyRow does not have a record result type that matches the key properties of the referenced entity set's entity type.</exception>
         public static DbRefExpression RefFromKey(this EntitySet entitySet, DbExpression keyRow, EntityType entityType)
         {
             Check.NotNull(entitySet, "entitySet");
@@ -2326,18 +1687,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbRefKeyExpression" /> that retrieves the key values of the specifed reference in structural form.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefKeyExpression" /> that retrieves the key values of the specifed reference in structural form.
         /// </summary>
-        /// <param name="argument"> The expression that provides the reference. This expression must have a reference Type with an Entity element type. </param>
-        /// <returns> A new DbRefKeyExpression that retrieves the key values of the specified reference. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     does not have a reference result type.
-        /// </exception>
+        /// <returns>A new DbRefKeyExpression that retrieves the key values of the specified reference.</returns>
+        /// <param name="argument">The expression that provides the reference. This expression must have a reference Type with an Entity element type.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument does not have a reference result type.</exception>
         public static DbRefKeyExpression GetRefKey(this DbExpression argument)
         {
             Check.NotNull(argument, "argument");
@@ -2356,36 +1711,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbRelationshipNavigationExpression" /> representing the navigation of a composition or association relationship.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRelationshipNavigationExpression" /> representing the navigation of a composition or association relationship.
         /// </summary>
-        /// <param name="navigateFrom"> An expression the specifies the instance from which navigation should occur </param>
-        /// <param name="fromEnd"> Metadata for the property that represents the end of the relationship from which navigation should occur </param>
-        /// <param name="toEnd"> Metadata for the property that represents the end of the relationship to which navigation should occur </param>
-        /// <returns> A new DbRelationshipNavigationExpression representing the navigation of the specified from and to relation ends of the specified relation type from the specified navigation source instance </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="fromEnd" />
-        ///     ,
-        ///     <paramref name="toEnd" />
-        ///     or
-        ///     <paramref name="navigateFrom" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="fromEnd" />
-        ///     and
-        ///     <paramref name="toEnd" />
-        ///     are not declared by the same relationship type, or
-        ///     <paramref name="navigateFrom" />
-        ///     has a result type that is not compatible with the property type of
-        ///     <paramref name="fromEnd" />
-        ///     .
-        /// </exception>
-        /// <remarks>
-        ///     <see cref="DbRelationshipNavigationExpression" /> requires that navigation always occur from a reference, and so
-        ///     <paramref
-        ///         name="navigateFrom" />
-        ///     must always have a reference result type.
-        /// </remarks>
+        /// <returns>A new DbRelationshipNavigationExpression representing the navigation of the specified from and to relation ends of the specified relation type from the specified navigation source instance.</returns>
+        /// <param name="navigateFrom">An expression that specifies the instance from which navigation should occur.</param>
+        /// <param name="fromEnd">Metadata for the property that represents the end of the relationship from which navigation should occur.</param>
+        /// <param name="toEnd">Metadata for the property that represents the end of the relationship to which navigation should occur.</param>
+        /// <exception cref="T:System.ArgumentNullException">fromEnd, toEnd or navigateFrom is null.</exception>
+        /// <exception cref="T:System.ArgumentException">fromEnd and toEnd are not declared by the same relationship type, or navigateFrom has a result type that is not compatible with the property type of fromEnd.</exception>
         public static DbRelationshipNavigationExpression Navigate(
             this DbExpression navigateFrom, RelationshipEndMember fromEnd, RelationshipEndMember toEnd)
         {
@@ -2400,47 +1733,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbRelationshipNavigationExpression" /> representing the navigation of a composition or association relationship.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRelationshipNavigationExpression" /> representing the navigation of a composition or association relationship.
         /// </summary>
-        /// <param name="type"> Metadata for the relation type that represents the relationship </param>
-        /// <param name="fromEndName"> The name of the property of the relation type that represents the end of the relationship from which navigation should occur </param>
-        /// <param name="toEndName"> The name of the property of the relation type that represents the end of the relationship to which navigation should occur </param>
-        /// <param name="navigateFrom"> An expression the specifies the instance from which naviagtion should occur </param>
-        /// <returns> A new DbRelationshipNavigationExpression representing the navigation of the specified from and to relation ends of the specified relation type from the specified navigation source instance </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="type" />
-        ///     ,
-        ///     <paramref name="fromEndName" />
-        ///     ,
-        ///     <paramref name="toEndName" />
-        ///     or
-        ///     <paramref name="navigateFrom" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="type" />
-        ///     is not associated with this command tree's metadata workspace or
-        ///     <paramref name="navigateFrom" />
-        ///     is associated with a different command tree,
-        ///     or
-        ///     <paramref name="type" />
-        ///     does not declare a relation end property with name
-        ///     <paramref name="toEndName" />
-        ///     or
-        ///     <paramref name="fromEndName" />
-        ///     ,
-        ///     or
-        ///     <paramref name="navigateFrom" />
-        ///     has a result type that is not compatible with the property type of the relation end property with name
-        ///     <paramref name="fromEndName" />
-        ///     .
-        /// </exception>
-        /// <remarks>
-        ///     <see cref="DbRelationshipNavigationExpression" /> requires that navigation always occur from a reference, and so
-        ///     <paramref
-        ///         name="navigateFrom" />
-        ///     must always have a reference result type.
-        /// </remarks>
+        /// <returns>A new DbRelationshipNavigationExpression representing the navigation of the specified from and to relation ends of the specified relation type from the specified navigation source instance.</returns>
+        /// <param name="type">Metadata for the relation type that represents the relationship.</param>
+        /// <param name="fromEndName">The name of the property of the relation type that represents the end of the relationship from which navigation should occur.</param>
+        /// <param name="toEndName">The name of the property of the relation type that represents the end of the relationship to which navigation should occur.</param>
+        /// <param name="navigateFrom">An expression the specifies the instance from which naviagtion should occur.</param>
+        /// <exception cref="T:System.ArgumentNullException">type, fromEndName, toEndName or navigateFrom is null.</exception>
+        /// <exception cref="T:System.ArgumentException">type is not associated with this command tree's metadata workspace or navigateFrom is associated with a different command tree, or type does not declare a relation end property with name toEndName or fromEndName, or navigateFrom has a result type that is not compatible with the property type of the relation end property with name fromEndName.</exception>
         public static DbRelationshipNavigationExpression Navigate(
             this RelationshipType type, string fromEndName, string toEndName, DbExpression navigateFrom)
         {
@@ -2460,18 +1761,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Unary and Binary Set Operators - Distinct, Element, IsEmpty, Except, Intersect, UnionAll, Limit
 
         /// <summary>
-        ///     Creates a new <see cref="DbDistinctExpression" /> that removes duplicates from the given set argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbDistinctExpression" /> that removes duplicates from the given set argument.
         /// </summary>
-        /// <param name="argument"> An expression that defines the set over which to perfom the distinct operation. </param>
-        /// <returns> A new DbDistinctExpression that represents the distinct operation applied to the specified set argument. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     does not have a collection result type.
-        /// </exception>
+        /// <returns>A new DbDistinctExpression that represents the distinct operation applied to the specified set argument.</returns>
+        /// <param name="argument">An expression that defines the set over which to perfom the distinct operation.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument does not have a collection result type.</exception>
         public static DbDistinctExpression Distinct(this DbExpression argument)
         {
             Check.NotNull(argument, "argument");
@@ -2487,18 +1782,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbElementExpression" /> that converts a set into a singleton.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbElementExpression" /> that converts a set into a singleton.
         /// </summary>
-        /// <param name="argument"> An expression that specifies the input set. </param>
-        /// <returns> A DbElementExpression that represents the conversion of the set argument to a singleton. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     does not have a collection result type.
-        /// </exception>
+        /// <returns>A DbElementExpression that represents the conversion of the set argument to a singleton.</returns>
+        /// <param name="argument">An expression that specifies the input set.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument does not have a collection result type.</exception>
         public static DbElementExpression Element(this DbExpression argument)
         {
             Check.NotNull(argument, "argument");
@@ -2508,18 +1797,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbIsEmptyExpression" /> that determines whether the specified set argument is an empty set.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsEmptyExpression" /> that determines whether the specified set argument is an empty set.
         /// </summary>
-        /// <param name="argument"> An expression that specifies the input set </param>
-        /// <returns> A new DbIsEmptyExpression with the specified argument. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     does not have a collection result type.
-        /// </exception>
+        /// <returns>A new DbIsEmptyExpression with the specified argument.</returns>
+        /// <param name="argument">An expression that specifies the input set.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument does not have a collection result type.</exception>
         public static DbIsEmptyExpression IsEmpty(this DbExpression argument)
         {
             Check.NotNull(argument, "argument");
@@ -2529,24 +1812,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbExceptExpression" /> that computes the subtraction of the right set argument from the left set argument.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExceptExpression" /> that computes the subtraction of the right set argument from the left set argument.
         /// </summary>
-        /// <param name="left"> An expression that defines the left set argument. </param>
-        /// <param name="right"> An expression that defines the right set argument. </param>
-        /// <returns> A new DbExceptExpression that represents the difference of the left argument from the right argument. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common collection result type exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbExceptExpression that represents the difference of the left argument from the right argument.</returns>
+        /// <param name="left">An expression that defines the left set argument.</param>
+        /// <param name="right">An expression that defines the right set argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common collection result type exists between left and right.</exception>
         public static DbExceptExpression Except(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -2558,24 +1830,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbIntersectExpression" /> that computes the intersection of the left and right set arguments.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIntersectExpression" /> that computes the intersection of the left and right set arguments.
         /// </summary>
-        /// <param name="left"> An expression that defines the left set argument. </param>
-        /// <param name="right"> An expression that defines the right set argument. </param>
-        /// <returns> A new DbIntersectExpression that represents the intersection of the left and right arguments. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common collection result type exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbIntersectExpression that represents the intersection of the left and right arguments.</returns>
+        /// <param name="left">An expression that defines the left set argument.</param>
+        /// <param name="right">An expression that defines the right set argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common collection result type exists between left or right.</exception>
         public static DbIntersectExpression Intersect(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -2586,24 +1847,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbUnionAllExpression" /> that computes the union of the left and right set arguments and does not remove duplicates.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbUnionAllExpression" /> that computes the union of the left and right set arguments and does not remove duplicates.
         /// </summary>
-        /// <param name="left"> An expression that defines the left set argument. </param>
-        /// <param name="right"> An expression that defines the right set argument. </param>
-        /// <returns> A new DbUnionAllExpression that union, including duplicates, of the the left and right arguments. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common collection result type exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbUnionAllExpression that union, including duplicates, of the the left and right arguments.</returns>
+        /// <param name="left">An expression that defines the left set argument.</param>
+        /// <param name="right">An expression that defines the right set argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common collection result type with an equality-comparable element type exists between left and right.</exception>
         public static DbUnionAllExpression UnionAll(this DbExpression left, DbExpression right)
         {
             Check.NotNull(left, "left");
@@ -2615,25 +1865,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLimitExpression" /> that restricts the number of elements in the Argument collection to the specified count Limit value.
-        ///     Tied results are not included in the output.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" /> that restricts the number of elements in the Argument collection to the specified count Limit value. Tied results are not included in the output.
         /// </summary>
-        /// <param name="argument"> An expression that specifies the input collection. </param>
-        /// <param name="count"> An expression that specifies the limit value. </param>
-        /// <returns> A new DbLimitExpression with the specified argument and count limit values that does not include tied results. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     or
-        ///     <paramref name="count" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     does not have a collection result type,
-        ///     or
-        ///     <paramref name="count" />
-        ///     does not have a result type that is equal or promotable to a 64-bit integer type.
-        /// </exception>
+        /// <returns>A new DbLimitExpression with the specified argument and count limit values that does not include tied results.</returns>
+        /// <param name="argument">An expression that specifies the input collection.</param>
+        /// <param name="count">An expression that specifies the limit value.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument or count is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument does not have a collection result type, or count does not have a result type that is equal or promotable to a 64-bit integer type.</exception>
         public static DbLimitExpression Limit(this DbExpression argument, DbExpression count)
         {
             Check.NotNull(argument, "argument");
@@ -2671,34 +1909,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region General Operators - Case, Function, NewInstance, Property
 
         /// <summary>
-        ///     Creates a new <see cref="DbCaseExpression" />.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
         /// </summary>
-        /// <param name="whenExpressions"> A list of expressions that provide the conditional for of each case. </param>
-        /// <param name="thenExpressions"> A list of expressions that provide the result of each case. </param>
-        /// <param name="elseExpression"> An expression that defines the result when no case is matched. </param>
-        /// <returns> A new DbCaseExpression with the specified cases and default result. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="whenExpressions" />
-        ///     or
-        ///     <paramref name="thenExpressions" />
-        ///     is null or contains null,
-        ///     or
-        ///     <paramref name="elseExpression" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="whenExpressions" />
-        ///     or
-        ///     <paramref name="thenExpressions" />
-        ///     is empty or
-        ///     <paramref name="whenExpressions" />
-        ///     contains an expression with a non-Boolean result type, or
-        ///     No common result type exists for all expressions in
-        ///     <paramref name="thenExpressions" />
-        ///     and
-        ///     <paramref name="elseExpression" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbCaseExpression with the specified cases and default result.</returns>
+        /// <param name="whenExpressions">A list of expressions that provide the conditional for of each case.</param>
+        /// <param name="thenExpressions">A list of expressions that provide the result of each case.</param>
+        /// <param name="elseExpression">An expression that defines the result when no case is matched.</param>
+        /// <exception cref="T:System.ArgumentNullException">whenExpressions or thenExpressions is null or contains null, or elseExpression is null.</exception>
+        /// <exception cref="T:System.ArgumentException">whenExpressions or thenExpressions is empty or whenExpressions contains an expression with a non-Boolean result type, or no common result type exists for all expressions in thenExpressions and elseExpression.</exception>
         public static DbCaseExpression Case(
             IEnumerable<DbExpression> whenExpressions, IEnumerable<DbExpression> thenExpressions, DbExpression elseExpression)
         {
@@ -2714,28 +1932,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbFunctionExpression" /> representing the invocation of the specified function with the given arguments.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> representing the invocation of the specified function with the given arguments.
         /// </summary>
-        /// <param name="function"> Metadata for the function to invoke. </param>
-        /// <param name="arguments"> A list of expressions that provide the arguments to the function. </param>
-        /// <returns> A new DbFunctionExpression representing the function invocation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="function" />
-        ///     is null, or
-        ///     <paramref name="arguments" />
-        ///     is null or contains null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The count of
-        ///     <paramref name="arguments" />
-        ///     does not equal the number of parameters declared by
-        ///     <paramref name="function" />
-        ///     ,
-        ///     or
-        ///     <paramref name="arguments" />
-        ///     contains an expression that has a result type that is not equal or promotable
-        ///     to the corresponding function parameter type.
-        /// </exception>
+        /// <returns>A new DbFunctionExpression representing the function invocation.</returns>
+        /// <param name="function">Metadata for the function to invoke.</param>
+        /// <param name="arguments">A list of expressions that provide the arguments to the function.</param>
+        /// <exception cref="T:System.ArgumentNullException">function is null, or arguments is null or contains null.</exception>
+        /// <exception cref="T:System.ArgumentException">The count of arguments does not equal the number of parameters declared by function, or arguments contains an expression that has a result type that is not equal or promotable to the corresponding function parameter type.</exception>
         public static DbFunctionExpression Invoke(this EdmFunction function, IEnumerable<DbExpression> arguments)
         {
             Check.NotNull(function, "function");
@@ -2744,28 +1947,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbFunctionExpression" /> representing the invocation of the specified function with the given arguments.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> representing the invocation of the specified function with the given arguments.
         /// </summary>
-        /// <param name="function"> Metadata for the function to invoke. </param>
-        /// <param name="arguments"> Expressions that provide the arguments to the function. </param>
-        /// <returns> A new DbFunctionExpression representing the function invocation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="function" />
-        ///     is null, or
-        ///     <paramref name="arguments" />
-        ///     is null or contains null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The count of
-        ///     <paramref name="arguments" />
-        ///     does not equal the number of parameters declared by
-        ///     <paramref name="function" />
-        ///     ,
-        ///     or
-        ///     <paramref name="arguments" />
-        ///     contains an expression that has a result type that is not equal or promotable
-        ///     to the corresponding function parameter type.
-        /// </exception>
+        /// <returns>A new DbFunctionExpression representing the function invocation.</returns>
+        /// <param name="function">Metadata for the function to invoke.</param>
+        /// <param name="arguments">Expressions that provide the arguments to the function.</param>
+        /// <exception cref="T:System.ArgumentNullException">function is null, or arguments is null or contains null.</exception>
+        /// <exception cref="T:System.ArgumentException">The count of arguments does not equal the number of parameters declared by function, or arguments contains an expression that has a result type that is not equal or promotable to the corresponding function parameter type.</exception>
         public static DbFunctionExpression Invoke(this EdmFunction function, params DbExpression[] arguments)
         {
             Check.NotNull(function, "function");
@@ -2781,30 +1969,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambdaExpression" /> representing the application of the specified Lambda function to the given arguments.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambdaExpression" /> representing the application of the specified Lambda function to the given arguments.
         /// </summary>
+        /// <returns>A new Expression representing the Lambda function application.</returns>
         /// <param name="lambda">
-        ///     A <see cref="DbLambda" /> instance representing the Lambda function to apply.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> instance representing the Lambda function to apply.
         /// </param>
-        /// <param name="arguments"> A list of expressions that provide the arguments. </param>
-        /// <returns> A new DbLambdaExpression representing the Lambda function application. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="lambda" />
-        ///     is null, or
-        ///     <paramref name="arguments" />
-        ///     is null or contains null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The count of
-        ///     <paramref name="arguments" />
-        ///     does not equal the number of variables declared by
-        ///     <paramref name="lambda" />
-        ///     ,
-        ///     or
-        ///     <paramref name="arguments" />
-        ///     contains an expression that has a result type that is not equal or promotable
-        ///     to the corresponding variable type.
-        /// </exception>
+        /// <param name="arguments">A list of expressions that provide the arguments.</param>
+        /// <exception cref="T:System.ArgumentNullException">lambda or arguments is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The count of arguments does not equal the number of variables declared by lambda, or arguments contains an expression that has a result type that is not equal or promotable to the corresponding variable type.</exception>
         public static DbLambdaExpression Invoke(this DbLambda lambda, IEnumerable<DbExpression> arguments)
         {
             Check.NotNull(lambda, "lambda");
@@ -2814,30 +1987,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLambdaExpression" /> representing the application of the specified Lambda function to the given arguments.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambdaExpression" /> representing the application of the specified Lambda function to the given arguments.
         /// </summary>
+        /// <returns>A new expression representing the Lambda function application.</returns>
         /// <param name="lambda">
-        ///     A <see cref="DbLambda" /> instance representing the Lambda function to apply.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> instance representing the Lambda function to apply.
         /// </param>
-        /// <param name="arguments"> Expressions that provide the arguments. </param>
-        /// <returns> A new DbLambdaExpression representing the Lambda function application. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="lambda" />
-        ///     is null, or
-        ///     <paramref name="arguments" />
-        ///     is null or contains null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The count of
-        ///     <paramref name="arguments" />
-        ///     does not equal the number of variables declared by
-        ///     <paramref name="lambda" />
-        ///     ,
-        ///     or
-        ///     <paramref name="arguments" />
-        ///     contains an expression that has a result type that is not equal or promotable
-        ///     to the corresponding variable type.
-        /// </exception>
+        /// <param name="arguments">Expressions that provide the arguments.</param>
+        /// <exception cref="T:System.ArgumentNullException">lambda or arguments is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The count of arguments does not equal the number of variables declared by lambda, or arguments contains an expression that has a result type that is not equal or promotable to the corresponding variable type.</exception>
         public static DbLambdaExpression Invoke(this DbLambda lambda, params DbExpression[] arguments)
         {
             Check.NotNull(lambda, "lambda");
@@ -2854,39 +2012,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbNewInstanceExpression" />. If the type argument is a collection type, the arguments specify the elements of the collection. Otherwise the arguments are used as property or column values in the new instance.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" />. If the type argument is a collection type, the arguments specify the elements of the collection. Otherwise the arguments are used as property or column values in the new instance.
         /// </summary>
-        /// <param name="instanceType"> The type of the new instance. </param>
-        /// <param name="arguments"> Expressions that specify values of the new instances, interpreted according to the instance's type. </param>
-        /// <returns> A new DbNewInstanceExpression with the specified type and arguments. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="instanceType" />
-        ///     or
-        ///     <paramref name="arguments" />
-        ///     is null, or
-        ///     <paramref name="arguments" />
-        ///     contains null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="arguments" />
-        ///     is empty or the result types of the contained expressions do not match the requirements of
-        ///     <paramref name="instanceType" />
-        ///     (as explained in the remarks section).
-        /// </exception>
-        /// <remarks>
-        ///     <para>
-        ///         if <paramref name="instanceType" /> is a a collection type then every expression in <paramref name="arguments" /> must have a result type that is promotable to the element type of the
-        ///         <paramref
-        ///             name="instanceType" />
-        ///         .
-        ///     </para>
-        ///     <para>
-        ///         if <paramref name="instanceType" /> is a row type, <paramref name="arguments" /> must contain as many expressions as there are columns in the row type, and the result type of each expression must be equal or promotable to the type of the corresponding column. A row type that does not declare any columns is invalid.
-        ///     </para>
-        ///     <para>
-        ///         if <paramref name="instanceType" /> is an entity type, <paramref name="arguments" /> must contain as many expressions as there are properties defined by the type, and the result type of each expression must be equal or promotable to the type of the corresponding property.
-        ///     </para>
-        /// </remarks>
+        /// <returns>A new DbNewInstanceExpression with the specified type and arguments.</returns>
+        /// <param name="instanceType">The type of the new instance.</param>
+        /// <param name="arguments">Expressions that specify values of the new instances, interpreted according to the instance's type.</param>
+        /// <exception cref="T:System.ArgumentNullException">instanceType or arguments is null, or arguments contains null.</exception>
+        /// <exception cref="T:System.ArgumentException">arguments is empty or the result types of the contained expressions do not match the requirements of instanceType  (as explained in the remarks section).</exception>
         public static DbNewInstanceExpression New(this TypeUsage instanceType, IEnumerable<DbExpression> arguments)
         {
             Check.NotNull(instanceType, "instanceType");
@@ -2895,39 +2027,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbNewInstanceExpression" />. If the type argument is a collection type, the arguments specify the elements of the collection. Otherwise the arguments are used as property or column values in the new instance.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" />. If the type argument is a collection type, the arguments specify the elements of the collection. Otherwise the arguments are used as property or column values in the new instance.
         /// </summary>
-        /// <param name="instanceType"> The type of the new instance. </param>
-        /// <param name="arguments"> Expressions that specify values of the new instances, interpreted according to the instance's type. </param>
-        /// <returns> A new DbNewInstanceExpression with the specified type and arguments. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="instanceType" />
-        ///     or
-        ///     <paramref name="arguments" />
-        ///     is null, or
-        ///     <paramref name="arguments" />
-        ///     contains null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="arguments" />
-        ///     is empty or the result types of the contained expressions do not match the requirements of
-        ///     <paramref name="instanceType" />
-        ///     (as explained in the remarks section).
-        /// </exception>
-        /// <remarks>
-        ///     <para>
-        ///         if <paramref name="instanceType" /> is a a collection type then every expression in <paramref name="arguments" /> must have a result type that is promotable to the element type of the
-        ///         <paramref
-        ///             name="instanceType" />
-        ///         .
-        ///     </para>
-        ///     <para>
-        ///         if <paramref name="instanceType" /> is a row type, <paramref name="arguments" /> must contain as many expressions as there are columns in the row type, and the result type of each expression must be equal or promotable to the type of the corresponding column. A row type that does not declare any columns is invalid.
-        ///     </para>
-        ///     <para>
-        ///         if <paramref name="instanceType" /> is an entity type, <paramref name="arguments" /> must contain as many expressions as there are properties defined by the type, and the result type of each expression must be equal or promotable to the type of the corresponding property.
-        ///     </para>
-        /// </remarks>
+        /// <returns>A new DbNewInstanceExpression with the specified type and arguments.</returns>
+        /// <param name="instanceType">The type of the new instance.</param>
+        /// <param name="arguments">Expressions that specify values of the new instances, interpreted according to the instance's type.</param>
+        /// <exception cref="T:System.ArgumentNullException">instanceType or arguments is null, or arguments contains null.</exception>
+        /// <exception cref="T:System.ArgumentException">arguments is empty or the result types of the contained expressions do not match the requirements of instanceType  (as explained in the remarks section).</exception>
         public static DbNewInstanceExpression New(this TypeUsage instanceType, params DbExpression[] arguments)
         {
             Check.NotNull(instanceType, "instanceType");
@@ -2943,36 +2049,24 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbNewInstanceExpression" /> that constructs a collection containing the specified elements. The type of the collection is based on the common type of the elements. If no common element type exists an exception is thrown.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" /> that constructs a collection containing the specified elements. The type of the collection is based on the common type of the elements. If no common element type exists an exception is thrown.
         /// </summary>
-        /// <param name="elements"> A list of expressions that provide the elements of the collection </param>
-        /// <returns> A new DbNewInstanceExpression with the specified collection type and arguments. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="elements" />
-        ///     is null, or contains null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="elements" />
-        ///     is empty or contains expressions for which no common result type exists.
-        /// </exception>
+        /// <returns>A new DbNewInstanceExpression with the specified collection type and arguments.</returns>
+        /// <param name="elements">A list of expressions that provide the elements of the collection.</param>
+        /// <exception cref="T:System.ArgumentNullException">elements is null, or contains null.</exception>
+        /// <exception cref="T:System.ArgumentException">elements is empty or contains expressions for which no common result type exists.</exception>
         public static DbNewInstanceExpression NewCollection(IEnumerable<DbExpression> elements)
         {
             return CreateNewCollection(elements);
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbNewInstanceExpression" /> that constructs a collection containing the specified elements. The type of the collection is based on the common type of the elements. If no common element type exists an exception is thrown.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" /> that constructs a collection containing the specified elements. The type of the collection is based on the common type of the elements. If no common element type exists an exception is thrown.
         /// </summary>
-        /// <param name="elements"> A list of expressions that provide the elements of the collection </param>
-        /// <returns> A new DbNewInstanceExpression with the specified collection type and arguments. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="elements" />
-        ///     is null, or contains null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="elements" />
-        ///     is empty or contains expressions for which no common result type exists.
-        /// </exception>
+        /// <returns>A new DbNewInstanceExpression with the specified collection type and arguments.</returns>
+        /// <param name="elements">A list of expressions that provide the elements of the collection.</param>
+        /// <exception cref="T:System.ArgumentNullException">elements is null, or contains null..</exception>
+        /// <exception cref="T:System.ArgumentException">elements is empty or contains expressions for which no common result type exists.</exception>
         public static DbNewInstanceExpression NewCollection(params DbExpression[] elements)
         {
             Check.NotNull(elements, "elements");
@@ -3013,20 +2107,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbNewInstanceExpression" /> that constructs an empty collection of the specified collection type.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" /> that constructs an empty collection of the specified collection type.
         /// </summary>
-        /// <param name="collectionType"> The type metadata for the collection to create </param>
-        /// <returns>
-        ///     A new DbNewInstanceExpression with the specified collection type and an empty <code>Arguments</code> list.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="collectionType" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="collectionType" />
-        ///     is not a collection type
-        /// </exception>
+        /// <returns>A new DbNewInstanceExpression with the specified collection type and an empty Arguments list.</returns>
+        /// <param name="collectionType">The type metadata for the collection to create</param>
+        /// <exception cref="T:System.ArgumentNullException">collectionType is null.</exception>
+        /// <exception cref="T:System.ArgumentException">collectionType is not a collection type.</exception>
         public static DbNewInstanceExpression NewEmptyCollection(this TypeUsage collectionType)
         {
             Check.NotNull(collectionType, "collectionType");
@@ -3037,18 +2123,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbNewInstanceExpression" /> that produces a row with the specified named columns and the given values, specified as expressions.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" /> that produces a row with the specified named columns and the given values, specified as expressions.
         /// </summary>
-        /// <param name="columnValues"> A list of string-DbExpression key-value pairs that defines the structure and values of the row. </param>
-        /// <returns> A new DbNewInstanceExpression that represents the construction of the row. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="columnValues" />
-        ///     is null or contains an element with a null column name or expression
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="columnValues" />
-        ///     is empty, or contains a duplicate or invalid column name
-        /// </exception>
+        /// <returns>A new DbNewInstanceExpression that represents the construction of the row.</returns>
+        /// <param name="columnValues">A list of string-DbExpression key-value pairs that defines the structure and values of the row.</param>
+        /// <exception cref="T:System.ArgumentNullException">columnValues is null or contains an element with a null column name or expression.</exception>
+        /// <exception cref="T:System.ArgumentException">columnValues is empty, or contains a duplicate or invalid column name.</exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static DbNewInstanceExpression NewRow(IEnumerable<KeyValuePair<string, DbExpression>> columnValues)
         {
@@ -3060,17 +2140,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbPropertyExpression" /> representing the retrieval of the specified property.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" /> representing the retrieval of the specified property.
         /// </summary>
-        /// <param name="instance"> The instance from which to retrieve the property. May be null if the property is static. </param>
-        /// <param name="propertyMetadata"> Metadata for the property to retrieve. </param>
-        /// <returns> A new DbPropertyExpression representing the property retrieval. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="propertyMetadata" />
-        ///     is null or
-        ///     <paramref name="instance" />
-        ///     is null and the property is not static.
-        /// </exception>
+        /// <returns>A new DbPropertyExpression representing the property retrieval.</returns>
+        /// <param name="instance">The instance from which to retrieve the property. May be null if the property is static.</param>
+        /// <param name="propertyMetadata">Metadata for the property to retrieve.</param>
+        /// <exception cref="T:System.ArgumentNullException">propertyMetadata is null or instance is null and the property is not static.</exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static DbPropertyExpression Property(this DbExpression instance, EdmProperty propertyMetadata)
         {
@@ -3081,17 +2156,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbPropertyExpression" /> representing the retrieval of the specified navigation property.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" /> representing the retrieval of the specified navigation property.
         /// </summary>
-        /// <param name="instance"> The instance from which to retrieve the navigation property. </param>
-        /// <param name="navigationProperty"> Metadata for the navigation property to retrieve. </param>
-        /// <returns> A new DbPropertyExpression representing the navigation property retrieval. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="navigationProperty" />
-        ///     is null or
-        ///     <paramref name="instance" />
-        ///     is null.
-        /// </exception>
+        /// <returns>A new DbPropertyExpression representing the navigation property retrieval.</returns>
+        /// <param name="instance">The instance from which to retrieve the navigation property.</param>
+        /// <param name="navigationProperty">Metadata for the navigation property to retrieve.</param>
+        /// <exception cref="T:System.ArgumentNullException">navigationProperty or instance is null.</exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static DbPropertyExpression Property(this DbExpression instance, NavigationProperty navigationProperty)
         {
@@ -3102,17 +2172,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbPropertyExpression" /> representing the retrieval of the specified relationship end member.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" /> representing the retrieval of the specified relationship end member.
         /// </summary>
-        /// <param name="instance"> The instance from which to retrieve the relationship end member. </param>
-        /// <param name="relationshipEnd"> Metadata for the relationship end member to retrieve. </param>
-        /// <returns> A new DbPropertyExpression representing the relationship end member retrieval. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="relationshipEnd" />
-        ///     is null or
-        ///     <paramref name="instance" />
-        ///     is null and the property is not static.
-        /// </exception>
+        /// <returns>A new DbPropertyExpression representing the relationship end member retrieval.</returns>
+        /// <param name="instance">The instance from which to retrieve the relationship end member.</param>
+        /// <param name="relationshipEnd">Metadata for the relationship end member to retrieve.</param>
+        /// <exception cref="T:System.ArgumentNullException">relationshipEnd is null or instance is null and the property is not static.</exception>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "required for this feature")]
         public static DbPropertyExpression Property(this DbExpression instance, RelationshipEndMember relationshipEnd)
         {
@@ -3123,22 +2188,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbPropertyExpression" /> representing the retrieval of the instance property with the specified name from the given instance.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" /> representing the retrieval of the instance property with the specified name from the given instance.
         /// </summary>
-        /// <param name="propertyName"> The name of the property to retrieve. </param>
-        /// <param name="instance"> The instance from which to retrieve the property. </param>
-        /// <returns> A new DbPropertyExpression that represents the property retrieval </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="propertyName" />
-        ///     is null or
-        ///     <paramref name="instance" />
-        ///     is null and the property is not static.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     No property with the specified name is declared by the type of
-        ///     <paramref name="instance" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbPropertyExpression that represents the property retrieval.</returns>
+        /// <param name="instance">The instance from which to retrieve the property.</param>
+        /// <param name="propertyName">The name of the property to retrieve.</param>
+        /// <exception cref="T:System.ArgumentNullException">propertyName is null or instance is null and the property is not static.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">No property with the specified name is declared by the type of instance.</exception>
         public static DbPropertyExpression Property(this DbExpression instance, string propertyName)
         {
             return PropertyByName(instance, propertyName, false);
@@ -3351,31 +2407,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbQuantifierExpression" /> that determines whether the given predicate holds for all elements of the input set.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" /> that determines whether the given predicate holds for all elements of the input set.
         /// </summary>
-        /// <param name="source"> An expression that specifies the input set. </param>
-        /// <param name="predicate"> A method representing a predicate to evaluate for each member of the input set. This method must produce an expression with a Boolean result type that provides the predicate logic. </param>
-        /// <returns> A new DbQuantifierExpression that represents the All operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     or
-        ///     <paramref name="predicate" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="predicate" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="predicate" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <returns>A new DbQuantifierExpression that represents the All operation.</returns>
+        /// <param name="source">An expression that specifies the input set.</param>
+        /// <param name="predicate">A method representing a predicate to evaluate for each member of the input set.    This method must produce an expression with a Boolean result type that provides the predicate logic.</param>
+        /// <exception cref="T:System.ArgumentNullException">source or predicate is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by predicate is null.</exception>
+        /// <exception cref="T:System.ArgumentException">source  does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by Predicate  does not have a Boolean result type.</exception>
         public static DbQuantifierExpression All(this DbExpression source, Func<DbExpression, DbExpression> predicate)
         {
             Check.NotNull(source, "source");
@@ -3387,71 +2427,49 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbExpression" /> that determines whether the specified set argument is non-empty.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that determines whether the specified set argument is non-empty.
         /// </summary>
-        /// <param name="source"> An expression that specifies the input set </param>
         /// <returns>
-        ///     A new <see cref="DbNotExpression" /> applied to a new <see cref="DbIsEmptyExpression" /> with the specified argument.
+        ///     A new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNotExpression" /> applied to a new
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsEmptyExpression" />
+        ///     with the specified argument.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
+        /// <param name="source">An expression that specifies the input set.</param>
+        /// <exception cref="T:System.ArgumentNullException">source is null.</exception>
+        /// <exception cref="T:System.ArgumentException">source does not have a collection result type.</exception>
         public static DbExpression Any(this DbExpression source)
         {
             return source.Exists();
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbExpression" /> that determines whether the specified set argument is non-empty.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that determines whether the specified set argument is non-empty.
         /// </summary>
-        /// <param name="argument"> An expression that specifies the input set </param>
         /// <returns>
-        ///     A new <see cref="DbNotExpression" /> applied to a new <see cref="DbIsEmptyExpression" /> with the specified argument.
+        ///     A new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNotExpression" /> applied to a new
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsEmptyExpression" />
+        ///     with the specified argument.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     does not have a collection result type.
-        /// </exception>
+        /// <param name="argument">An expression that specifies the input set.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument does not have a collection result type.</exception>
         public static DbExpression Exists(this DbExpression argument)
         {
             return argument.IsEmpty().Not();
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbQuantifierExpression" /> that determines whether the given predicate holds for any element of the input set.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" /> that determines whether the given predicate holds for any element of the input set.
         /// </summary>
-        /// <param name="source"> An expression that specifies the input set. </param>
-        /// <param name="predicate"> A method representing the predicate to evaluate for each member of the input set. This method must produce an expression with a Boolean result type that provides the predicate logic. </param>
-        /// <returns> A new DbQuantifierExpression that represents the Any operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     or
-        ///     <paramref name="predicate" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="predicate" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="predicate" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <returns>A new DbQuantifierExpression that represents the Any operation.</returns>
+        /// <param name="source">An expression that specifies the input set.</param>
+        /// <param name="predicate">A method representing the predicate to evaluate for each member of the input set. This method must produce an expression with a Boolean result type that provides the predicate logic.</param>
+        /// <exception cref="T:System.ArgumentNullException">source or predicate is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by predicate is null.</exception>
+        /// <exception cref="T:System.ArgumentException">source does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by predicate does not have a Boolean result type.</exception>
         public static DbQuantifierExpression Any(this DbExpression source, Func<DbExpression, DbExpression> predicate)
         {
             Check.NotNull(source, "source");
@@ -3463,36 +2481,22 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbApplyExpression" /> that evaluates the given <paramref name="apply" /> expression once for each element of a given input set,
-        ///     producing a collection of rows with corresponding input and apply columns. Rows for which <paramref name="apply" /> evaluates to an empty set are not included.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set are not included.
         /// </summary>
-        /// <param name="source">
-        ///     A <see cref="DbExpression" /> that specifies the input set.
-        /// </param>
-        /// <param name="apply"> A method that specifies the logic to evaluate once for each member of the input set. </param>
         /// <returns>
-        ///     An new DbApplyExpression with the specified input and apply bindings and an <see cref="DbExpressionKind" /> of CrossApply.
+        ///     An new DbApplyExpression with the specified input and apply bindings and an
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        ///     of CrossApply.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     or
-        ///     <paramref name="apply" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The result of
-        ///     <paramref name="apply" />
-        ///     contains a name or expression that is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The result of
-        ///     <paramref name="apply" />
-        ///     contains a name or expression that is not valid in an expression binding.
-        /// </exception>
+        /// <param name="source">
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
+        /// </param>
+        /// <param name="apply">A method that specifies the logic to evaluate once for each member of the input set. </param>
+        /// <exception cref="T:System.ArgumentNullException">source or apply is null.</exception>
+        /// <exception cref="T:System.ArgumentException">source does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The result of apply contains a name or expression that is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The result of apply contains a name or expression that is not valid in an expression binding.</exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static DbApplyExpression CrossApply(this DbExpression source, Func<DbExpression, KeyValuePair<string, DbExpression>> apply)
         {
@@ -3503,36 +2507,22 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbApplyExpression" /> that evaluates the given <paramref name="apply" /> expression once for each element of a given input set,
-        ///     producing a collection of rows with corresponding input and apply columns. Rows for which <paramref name="apply" /> evaluates to an empty set have an apply column value of <code>null</code>.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set have an apply column value of null.
         /// </summary>
-        /// <param name="source">
-        ///     A <see cref="DbExpression" /> that specifies the input set.
-        /// </param>
-        /// <param name="apply"> A method that specifies the logic to evaluate once for each member of the input set. </param>
         /// <returns>
-        ///     An new DbApplyExpression with the specified input and apply bindings and an <see cref="DbExpressionKind" /> of OuterApply.
+        ///     An new DbApplyExpression with the specified input and apply bindings and an
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        ///     of OuterApply.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     or
-        ///     <paramref name="apply" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The result of
-        ///     <paramref name="apply" />
-        ///     contains a name or expression that is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The result of
-        ///     <paramref name="apply" />
-        ///     contains a name or expression that is not valid in an expression binding.
-        /// </exception>
+        /// <param name="source">
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
+        /// </param>
+        /// <param name="apply">A method that specifies the logic to evaluate once for each member of the input set.</param>
+        /// <exception cref="T:System.ArgumentNullException">source or apply is null.</exception>
+        /// <exception cref="T:System.ArgumentException">Source does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The result of apply contains a name or expression that is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The result of apply contains a name or expression that is not valid in an expression binding.</exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static DbApplyExpression OuterApply(this DbExpression source, Func<DbExpression, KeyValuePair<string, DbExpression>> apply)
         {
@@ -3543,43 +2533,25 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbJoinExpression" /> that joins the sets specified by the left and right expressions,
-        ///     on the specified join condition, using FullOuterJoin as the <see cref="DbExpressionKind" />.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expressions, on the specified join condition, using FullOuterJoin as the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of FullOuterJoin, that represents the full outer join operation applied to the left and right input sets under the given join condition.
+        /// </returns>
         /// <param name="left">
-        ///     A <see cref="DbExpression" /> that specifies the left set argument.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the left set argument.
         /// </param>
         /// <param name="right">
-        ///     A <see cref="DbExpression" /> that specifies the right set argument.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the right set argument.
         /// </param>
-        /// <param name="joinCondition"> A method representing the condition on which to join. This method must produce an expression with a Boolean result type that provides the logic of the join condition. </param>
-        /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="DbExpressionKind" /> of FullOuterJoin, that represents the full outer join operation applied to the left and right input sets under the given join condition.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     ,
-        ///     <paramref name="right" />
-        ///     or
-        ///     <paramref name="joinCondition" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="joinCondition" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="joinCondition" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <param name="joinCondition"> A method representing the condition on which to join. This method must produce an expression with a Boolean result type that provides the logic of the join condition.</param>
+        /// <exception cref="T:System.ArgumentNullException">left, right or joinCondition is null.</exception>
+        /// <exception cref="T:System.ArgumentException">left or right does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by joinCondition is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by joinCondition does not have a Boolean result type.</exception>
         public static DbJoinExpression FullOuterJoin(
             this DbExpression left, DbExpression right, Func<DbExpression, DbExpression, DbExpression> joinCondition)
         {
@@ -3593,43 +2565,25 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbJoinExpression" /> that joins the sets specified by the left and right expressions,
-        ///     on the specified join condition, using InnerJoin as the <see cref="DbExpressionKind" />.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expressions, on the specified join condition, using InnerJoin as the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of InnerJoin, that represents the inner join operation applied to the left and right input sets under the given join condition.
+        /// </returns>
         /// <param name="left">
-        ///     A <see cref="DbExpression" /> that specifies the left set argument.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the left set argument.
         /// </param>
         /// <param name="right">
-        ///     A <see cref="DbExpression" /> that specifies the right set argument.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the right set argument.
         /// </param>
-        /// <param name="joinCondition"> A method representing the condition on which to join. This method must produce an expression with a Boolean result type that provides the logic of the join condition. </param>
-        /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="DbExpressionKind" /> of InnerJoin, that represents the inner join operation applied to the left and right input sets under the given join condition.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     ,
-        ///     <paramref name="right" />
-        ///     or
-        ///     <paramref name="joinCondition" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="joinCondition" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="joinCondition" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <param name="joinCondition">A method representing the condition on which to join. This method must produce an expression with a Boolean result type that provides the logic of the join condition.</param>
+        /// <exception cref="T:System.ArgumentNullException">left, right or joinCondition is null.</exception>
+        /// <exception cref="T:System.ArgumentException">left or right does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by joinCondition is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by joinCondition does not have a Boolean result type.</exception>
         public static DbJoinExpression InnerJoin(
             this DbExpression left, DbExpression right, Func<DbExpression, DbExpression, DbExpression> joinCondition)
         {
@@ -3643,43 +2597,25 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbJoinExpression" /> that joins the sets specified by the left and right expressions,
-        ///     on the specified join condition, using LeftOuterJoin as the <see cref="DbExpressionKind" />.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expressions, on the specified join condition, using LeftOuterJoin as the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of LeftOuterJoin, that represents the left outer join operation applied to the left and right input sets under the given join condition.
+        /// </returns>
         /// <param name="left">
-        ///     A <see cref="DbExpression" /> that specifies the left set argument.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the left set argument.
         /// </param>
         /// <param name="right">
-        ///     A <see cref="DbExpression" /> that specifies the right set argument.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the right set argument.
         /// </param>
-        /// <param name="joinCondition"> A method representing the condition on which to join. This method must produce an expression with a Boolean result type that provides the logic of the join condition. </param>
-        /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="DbExpressionKind" /> of LeftOuterJoin, that represents the left outer join operation applied to the left and right input sets under the given join condition.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     ,
-        ///     <paramref name="right" />
-        ///     or
-        ///     <paramref name="joinCondition" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="joinCondition" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="joinCondition" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <param name="joinCondition">A method representing the condition on which to join. This method must produce an expression with a Boolean result type that provides the logic of the join condition.</param>
+        /// <exception cref="T:System.ArgumentNullException">left, right or joinCondition is null.</exception>
+        /// <exception cref="T:System.ArgumentException">left or right does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by joinCondition is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by joinCondition does not have a Boolean result type.</exception>
         public static DbJoinExpression LeftOuterJoin(
             this DbExpression left, DbExpression right, Func<DbExpression, DbExpression, DbExpression> joinCondition)
         {
@@ -3693,53 +2629,26 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbJoinExpression" /> that joins the sets specified by the outer and inner expressions,
-        ///     on an equality condition between the specified outer and inner keys, using InnerJoin as the
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the outer and inner expressions, on an equality condition between the specified outer and inner keys, using InnerJoin as the
         ///     <see
-        ///         cref="DbExpressionKind" />
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
         ///     .
         /// </summary>
+        /// <returns>
+        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of InnerJoin, that represents the inner join operation applied to the left and right input sets under a join condition that compares the outer and inner key values for equality.
+        /// </returns>
         /// <param name="outer">
-        ///     A <see cref="DbExpression" /> that specifies the outer set argument.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the outer set argument.
         /// </param>
         /// <param name="inner">
-        ///     A <see cref="DbExpression" /> that specifies the inner set argument.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the inner set argument.
         /// </param>
-        /// <param name="outerKey"> A method that specifies how the outer key value should be derived from an element of the outer set. </param>
-        /// <param name="innerKey"> A method that specifies how the inner key value should be derived from an element of the inner set. </param>
-        /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="DbExpressionKind" /> of InnerJoin, that represents the inner join operation applied to the left and right input sets under a join condition that compares the outer and inner key values for equality.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="outer" />
-        ///     ,
-        ///     <paramref name="inner" />
-        ///     ,
-        ///     <paramref name="outerKey" />
-        ///     or
-        ///     <paramref name="innerKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="outer" />
-        ///     or
-        ///     <paramref name="inner" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="outerKey" />
-        ///     or
-        ///     <paramref name="innerKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expressions produced by
-        ///     <paramref name="outerKey" />
-        ///     and
-        ///     <paramref name="innerKey" />
-        ///     are not comparable for equality.
-        /// </exception>
+        /// <param name="outerKey">A method that specifies how the outer key value should be derived from an element of the outer set.</param>
+        /// <param name="innerKey">A method that specifies how the inner key value should be derived from an element of the inner set.</param>
+        /// <exception cref="T:System.ArgumentNullException">outer, inner, outerKey or innerKey is null.</exception>
+        /// <exception cref="T:System.ArgumentException">outer or inner does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by outerKey or innerKey is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The expressions produced by outerKey and innerKey are not comparable for equality.</exception>
         public static DbJoinExpression Join(
             this DbExpression outer, DbExpression inner, Func<DbExpression, DbExpression> outerKey,
             Func<DbExpression, DbExpression> innerKey)
@@ -3761,87 +2670,38 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbProjectExpression" /> that projects the specified selector over the sets specified by the outer and inner
-        ///     expressions, joined on an equality condition between the specified outer and inner keys, using InnerJoin as the
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" /> that projects the specified selector over the sets specified by the outer and inner expressions, joined on an equality condition between the specified outer and inner keys, using InnerJoin as the
         ///     <see
-        ///         cref="DbExpressionKind" />
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
         ///     .
         /// </summary>
-        /// <param name="outer">
-        ///     A <see cref="DbExpression" /> that specifies the outer set argument.
-        /// </param>
-        /// <param name="inner">
-        ///     A <see cref="DbExpression" /> that specifies the inner set argument.
-        /// </param>
-        /// <param name="outerKey"> A method that specifies how the outer key value should be derived from an element of the outer set. </param>
-        /// <param name="innerKey"> A method that specifies how the inner key value should be derived from an element of the inner set. </param>
-        /// <param name="selector">
-        ///     A method that specifies how an element of the result set should be derived from elements of the inner and outer sets. This method must produce an instance of a type that is compatible with Join and can be resolved into a
-        ///     <see
-        ///         cref="DbExpression" />
-        ///     . Compatibility requirements for <typeparamref name="TSelector" /> are described in remarks.
-        /// </param>
         /// <returns>
         ///     A new DbProjectExpression with the specified selector as its projection, and a new DbJoinExpression as its input. The input DbJoinExpression is created with an
         ///     <see
-        ///         cref="DbExpressionKind" />
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
         ///     of InnerJoin, that represents the inner join operation applied to the left and right input sets under a join condition that compares the outer and inner key values for equality.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="outer" />
-        ///     ,
-        ///     <paramref name="inner" />
-        ///     ,
-        ///     <paramref name="outerKey" />
-        ///     ,
-        ///     <paramref name="innerKey" />
-        ///     or
-        ///     <paramref name="selector" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="outer" />
-        ///     or
-        ///     <paramref name="inner" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="outerKey" />
-        ///     or
-        ///     <paramref name="innerKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The result of
-        ///     <paramref name="selector" />
-        ///     is null after conversion to DbExpression.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expressions produced by
-        ///     <paramref name="outerKey" />
-        ///     and
-        ///     <paramref name="innerKey" />
-        ///     are not comparable for equality.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The result of
-        ///     <paramref name="selector" />
-        ///     is not compatible with SelectMany.
-        /// </exception>
-        /// <remarks>
-        ///     To be compatible with Join, <typeparamref name="TSelector" /> must be derived from <see cref="DbExpression" />,
-        ///     or must be an anonymous type with DbExpression-derived properties.
-        ///     <para>
-        ///         The following are examples of supported types for <typeparamref name="TSelector" /> : <code>outer.Join(inner, o => o.Property("ID"), i => i.Property("ID"), (o, i) => o.Property("Name"))</code> (
-        ///         <typeparamref
-        ///             name="TSelector" />
-        ///         is <see cref="DbPropertyExpression" /> ). <code>outer.Join(inner, o => o.Property("ID"), i => i.Property("ID"), (o, i) => new { OName = o.Property("Name"), IName = i.Property("Name") })</code> (
-        ///         <typeparamref
-        ///             name="TSelector" />
-        ///         is an anonymous type with DbExpression-derived properties).
-        ///     </para>
-        /// </remarks>
+        /// <param name="outer">
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the outer set argument.
+        /// </param>
+        /// <param name="inner">
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the inner set argument.
+        /// </param>
+        /// <param name="outerKey">A method that specifies how the outer key value should be derived from an element of the outer set.</param>
+        /// <param name="innerKey">A method that specifies how the inner key value should be derived from an element of the inner set.</param>
+        /// <param name="selector">
+        ///     A method that specifies how an element of the result set should be derived from elements of the inner and outer sets. This method must produce an instance of a type that is compatible with Join and can be resolved into a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
+        ///     . Compatibility requirements for  TSelector  are described in remarks.
+        /// </param>
+        /// <typeparam name="TSelector">The type of the  selector .</typeparam>
+        /// <exception cref="T:System.ArgumentNullException">outer, inner, outerKey, innerKey or selector is null.</exception>
+        /// <exception cref="T:System.ArgumentException">outer or inner does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by outerKey or innerKey is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The result of selector is null after conversion to DbExpression.</exception>
+        /// <exception cref="T:System.ArgumentException">The expressions produced by outerKey and innerKey is not comparable for equality.</exception>
+        /// <exception cref="T:System.ArgumentException">The result of Selector is not compatible with SelectMany.</exception>
         public static DbProjectExpression Join<TSelector>(
             this DbExpression outer, DbExpression inner, Func<DbExpression, DbExpression> outerKey,
             Func<DbExpression, DbExpression> innerKey, Func<DbExpression, DbExpression, TSelector> selector)
@@ -3863,32 +2723,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSortExpression" /> that sorts the given input set by the specified sort key,
-        ///     with ascending sort order and default collation.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort key, with ascending sort order and default collation.
         /// </summary>
-        /// <param name="source"> An expression that specifies the input set. </param>
-        /// <param name="sortKey"> A method that specifies how to derive the sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition. </param>
-        /// <returns> A new DbSortExpression that represents the order-by operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     or
-        ///     <paramref name="sortKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     does not have an order-comparable result type.
-        /// </exception>
+        /// <returns>A new DbSortExpression that represents the order-by operation.</returns>
+        /// <param name="source">An expression that specifies the input set.</param>
+        /// <param name="sortKey">A method that specifies how to derive the sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition. </param>
+        /// <exception cref="T:System.ArgumentNullException">source or sortKey is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by sortKey is null.</exception>
+        /// <exception cref="T:System.ArgumentException">source does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by sortKey does not have an order-comparable result type.</exception>
         public static DbSortExpression OrderBy(this DbExpression source, Func<DbExpression, DbExpression> sortKey)
         {
             Check.NotNull(source, "source");
@@ -3901,39 +2744,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSortExpression" /> that sorts the given input set by the specified sort key,
-        ///     with ascending sort order and the specified collation.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort key, with ascending sort order and the specified collation.
         /// </summary>
-        /// <param name="source"> An expression that specifies the input set. </param>
-        /// <param name="sortKey"> A method that specifies how to derive the sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition. </param>
-        /// <param name="collation"> The collation to sort under </param>
-        /// <returns> A new DbSortExpression that represents the order-by operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     ,
-        ///     <paramref name="sortKey" />
-        ///     or
-        ///     <paramref name="collation" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     does not have an order-comparable string result type.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     <paramref name="collation" />
-        ///     is empty or contains only space characters
-        /// </exception>
+        /// <returns>A new DbSortExpression that represents the order-by operation.</returns>
+        /// <param name="source">An expression that specifies the input set.</param>
+        /// <param name="sortKey">A method that specifies how to derive the sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition. </param>
+        /// <param name="collation">The collation to sort under.</param>
+        /// <exception cref="T:System.ArgumentNullException">source, sortKey or collation is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by sortKey is null.</exception>
+        /// <exception cref="T:System.ArgumentException">source does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by sortKey  does not have an order-comparable string result type.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">collation is empty or contains only space characters.</exception>
         public static DbSortExpression OrderBy(this DbExpression source, Func<DbExpression, DbExpression> sortKey, string collation)
         {
             Check.NotNull(source, "source");
@@ -3946,32 +2767,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSortExpression" /> that sorts the given input set by the specified sort key,
-        ///     with descending sort order and default collation.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort key, with descending sort order and default collation.
         /// </summary>
-        /// <param name="source"> An expression that specifies the input set. </param>
-        /// <param name="sortKey"> A method that specifies how to derive the sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition. </param>
-        /// <returns> A new DbSortExpression that represents the order-by operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     or
-        ///     <paramref name="sortKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     does not have an order-comparable result type.
-        /// </exception>
+        /// <returns>A new DbSortExpression that represents the order-by operation.</returns>
+        /// <param name="source">An expression that specifies the input set.</param>
+        /// <param name="sortKey">A method that specifies how to derive the sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition. </param>
+        /// <exception cref="T:System.ArgumentNullException">source or sortKey is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by sortKey is null.</exception>
+        /// <exception cref="T:System.ArgumentException">source does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by sortKey does not have an order-comparable result type.</exception>
         public static DbSortExpression OrderByDescending(this DbExpression source, Func<DbExpression, DbExpression> sortKey)
         {
             Check.NotNull(source, "source");
@@ -3984,39 +2788,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSortExpression" /> that sorts the given input set by the specified sort key,
-        ///     with descending sort order and the specified collation.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort key, with descending sort order and the specified collation.
         /// </summary>
-        /// <param name="source"> An expression that specifies the input set. </param>
-        /// <param name="sortKey"> A method that specifies how to derive the sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition. </param>
-        /// <param name="collation"> The collation to sort under </param>
-        /// <returns> A new DbSortExpression that represents the order-by operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     ,
-        ///     <paramref name="sortKey" />
-        ///     or
-        ///     <paramref name="collation" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     does not have an order-comparable string result type.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     <paramref name="collation" />
-        ///     is empty or contains only space characters
-        /// </exception>
+        /// <returns>A new DbSortExpression that represents the order-by operation.</returns>
+        /// <param name="source">An expression that specifies the input set.</param>
+        /// <param name="sortKey">A method that specifies how to derive the sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition. </param>
+        /// <param name="collation">The collation to sort under.</param>
+        /// <exception cref="T:System.ArgumentNullException">source, sortKey or collation is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by sortKey is null.</exception>
+        /// <exception cref="T:System.ArgumentException">source does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by sortKey does not have an order-comparable string result type.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">collation is empty or contains only space characters.</exception>
         public static DbSortExpression OrderByDescending(
             this DbExpression source, Func<DbExpression, DbExpression> sortKey, string collation)
         {
@@ -4030,43 +2812,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbProjectExpression" /> that selects the specified expression over the given input set.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" /> that selects the specified expression over the given input set.
         /// </summary>
-        /// <param name="source"> An expression that specifies the input set. </param>
+        /// <returns>A new DbProjectExpression that represents the select operation.</returns>
+        /// <param name="source">An expression that specifies the input set.</param>
         /// <param name="projection">
         ///     A method that specifies how to derive the projected expression given a member of the input set. This method must produce an instance of a type that is compatible with Select and can be resolved into a
         ///     <see
-        ///         cref="DbExpression" />
-        ///     . Compatibility requirements for <typeparamref name="TProjection" /> are described in remarks.
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
+        ///     . Compatibility requirements for  TProjection  are described in remarks.
         /// </param>
-        /// <typeparam name="TProjection">
-        ///     The method result type of <paramref name="projection" /> .
-        /// </typeparam>
-        /// <returns> A new DbProjectExpression that represents the select operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     or
-        ///     <paramref name="projection" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The result of
-        ///     <paramref name="projection" />
-        ///     is null.
-        /// </exception>
-        /// <remarks>
-        ///     To be compatible with Select, <typeparamref name="TProjection" /> must be derived from <see cref="DbExpression" />,
-        ///     or must be an anonymous type with DbExpression-derived properties.
-        ///     <para>
-        ///         The following are examples of supported types for <typeparamref name="TProjection" /> : <code>source.Select(x => x.Property("Name"))</code> (
-        ///         <typeparamref
-        ///             name="TProjection" />
-        ///         is <see cref="DbPropertyExpression" /> ). <code>source.Select(x => new { Name = x.Property("Name") })</code> (
-        ///         <typeparamref
-        ///             name="TProjection" />
-        ///         is an anonymous type with a DbExpression-derived property).
-        ///     </para>
-        /// </remarks>
+        /// <typeparam name="TProjection">The method result type of projection.</typeparam>
+        /// <exception cref="T:System.ArgumentNullException">source or projection is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The result of projection is null.</exception>
         public static DbProjectExpression Select<TProjection>(this DbExpression source, Func<DbExpression, TProjection> projection)
         {
             Check.NotNull(source, "source");
@@ -4079,43 +2837,25 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbApplyExpression" /> that evaluates the given <paramref name="apply" /> expression once for each element of a given input set,
-        ///     producing a collection of rows with corresponding input and apply columns. Rows for which <paramref name="apply" /> evaluates to an empty set are not included.
-        ///     A <see cref="DbProjectExpression" /> is then created that selects the <paramref name="apply" /> column from each row, producing the overall collection of
-        ///     <paramref
-        ///         name="apply" />
-        ///     results.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set are not included. A
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" />
+        ///     is then created that selects the apply column from each row, producing the overall collection of apply results.
         /// </summary>
-        /// <param name="source">
-        ///     A <see cref="DbExpression" /> that specifies the input set.
-        /// </param>
-        /// <param name="apply"> A method that represents the logic to evaluate once for each member of the input set. </param>
         /// <returns>
         ///     An new DbProjectExpression that selects the apply column from a new DbApplyExpression with the specified input and apply bindings and an
         ///     <see
-        ///         cref="DbExpressionKind" />
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
         ///     of CrossApply.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     or
-        ///     <paramref name="apply" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="apply" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="apply" />
-        ///     does not have a collection type.
-        /// </exception>
+        /// <param name="source">
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
+        /// </param>
+        /// <param name="apply">A method that represents the logic to evaluate once for each member of the input set.</param>
+        /// <exception cref="T:System.ArgumentNullException">source or apply is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by apply is null.</exception>
+        /// <exception cref="T:System.ArgumentException">source  does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by apply does not have a collection type.</exception>
         public static DbProjectExpression SelectMany(this DbExpression source, Func<DbExpression, DbExpression> apply)
         {
             Check.NotNull(source, "source");
@@ -4132,69 +2872,33 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbApplyExpression" /> that evaluates the given <paramref name="apply" /> expression once for each element of a given input set,
-        ///     producing a collection of rows with corresponding input and apply columns. Rows for which <paramref name="apply" /> evaluates to an empty set are not included.
-        ///     A <see cref="DbProjectExpression" /> is then created that selects the specified <paramref name="selector" /> over each row, producing the overall collection of results.
-        /// </summary>
-        /// <typeparam name="TSelector">
-        ///     The method result type of <paramref name="selector" /> .
-        /// </typeparam>
-        /// <param name="source">
-        ///     A <see cref="DbExpression" /> that specifies the input set.
-        /// </param>
-        /// <param name="apply"> A method that represents the logic to evaluate once for each member of the input set. </param>
-        /// <param name="selector">
-        ///     A method that specifies how an element of the result set should be derived given an element of the input and apply sets. This method must produce an instance of a type that is compatible with SelectMany and can be resolved into a
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set are not included. A
         ///     <see
-        ///         cref="DbExpression" />
-        ///     . Compatibility requirements for <typeparamref name="TSelector" /> are described in remarks.
-        /// </param>
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" />
+        ///     is then created that selects the specified selector over each row, producing the overall collection of results.
+        /// </summary>
         /// <returns>
         ///     An new DbProjectExpression that selects the result of the given selector from a new DbApplyExpression with the specified input and apply bindings and an
         ///     <see
-        ///         cref="DbExpressionKind" />
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
         ///     of CrossApply.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     ,
-        ///     <paramref name="apply" />
-        ///     or
-        ///     <paramref name="selector" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="apply" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The result of
-        ///     <paramref name="selector" />
-        ///     is null on conversion to DbExpression
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="apply" />
-        ///     does not have a collection type.
-        /// </exception>
-        /// <remarks>
-        ///     To be compatible with SelectMany, <typeparamref name="TSelector" /> must be derived from <see cref="DbExpression" />,
-        ///     or must be an anonymous type with DbExpression-derived properties.
-        ///     <para>
-        ///         The following are examples of supported types for <typeparamref name="TSelector" /> : <code>source.SelectMany(x => x.Property("RelatedCollection"), (source, apply) => apply.Property("Name"))</code> (
-        ///         <typeparamref
-        ///             name="TSelector" />
-        ///         is <see cref="DbPropertyExpression" /> ). <code>source.SelectMany(x => x.Property("RelatedCollection"), (source, apply) => new { SourceName = source.Property("Name"), RelatedName = apply.Property("Name") })</code> (
-        ///         <typeparamref
-        ///             name="TSelector" />
-        ///         is an anonymous type with DbExpression-derived properties).
-        ///     </para>
-        /// </remarks>
+        /// <param name="source">
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
+        /// </param>
+        /// <param name="apply">A method that represents the logic to evaluate once for each member of the input set. </param>
+        /// <param name="selector">
+        ///     A method that specifies how an element of the result set should be derived given an element of the input and apply sets. This method must produce an instance of a type that is compatible with SelectMany and can be resolved into a
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
+        ///     . Compatibility requirements for  TSelector  are described in remarks.
+        /// </param>
+        /// <typeparam name="TSelector">The method result type of selector.</typeparam>
+        /// <exception cref="T:System.ArgumentNullException">source, apply or selector is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by apply is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The result of selector is null on conversion to DbExpression.</exception>
+        /// <exception cref="T:System.ArgumentException">source does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by apply does not have a collection type. does not have a collection type. </exception>
         public static DbProjectExpression SelectMany<TSelector>(
             this DbExpression source, Func<DbExpression, DbExpression> apply, Func<DbExpression, DbExpression, TSelector> selector)
         {
@@ -4217,27 +2921,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSkipExpression" /> that skips the specified number of elements from the given sorted input set.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSkipExpression" /> that skips the specified number of elements from the given sorted input set.
         /// </summary>
+        /// <returns>A new DbSkipExpression that represents the skip operation.</returns>
         /// <param name="argument">
-        ///     A <see cref="DbSortExpression" /> that specifies the sorted input set.
+        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that specifies the sorted input set.
         /// </param>
-        /// <param name="count"> An expression the specifies how many elements of the ordered set to skip. </param>
-        /// <returns> A new DbSkipExpression that represents the skip operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     or
-        ///     <paramref name="count" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="count" />
-        ///     is not
-        ///     <see cref="DbConstantExpression" />
-        ///     or
-        ///     <see cref="DbParameterReferenceExpression" />
-        ///     or has a
-        ///     result type that is not equal or promotable to a 64-bit integer type.
+        /// <param name="count">An expression the specifies how many elements of the ordered set to skip.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument or count is null.</exception>
+        /// <exception cref="T:System.ArgumentException">
+        ///     count is not <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> or
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" />
+        ///     or has a result type that is not equal or promotable to a 64-bit integer type.
         /// </exception>
         public static DbSkipExpression Skip(this DbSortExpression argument, DbExpression count)
         {
@@ -4247,25 +2943,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbLimitExpression" /> that restricts the number of elements in the Argument collection to the specified count Limit value.
-        ///     Tied results are not included in the output.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" /> that restricts the number of elements in the Argument collection to the specified count Limit value. Tied results are not included in the output.
         /// </summary>
-        /// <param name="argument"> An expression that specifies the input collection. </param>
-        /// <param name="count"> An expression that specifies the limit value. </param>
-        /// <returns> A new DbLimitExpression with the specified argument and count limit values that does not include tied results. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     or
-        ///     <paramref name="count" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     does not have a collection result type,
-        ///     or
-        ///     <paramref name="count" />
-        ///     does not have a result type that is equal or promotable to a 64-bit integer type.
-        /// </exception>
+        /// <returns>A new DbLimitExpression with the specified argument and count limit values that does not include tied results.</returns>
+        /// <param name="argument">An expression that specifies the input collection.</param>
+        /// <param name="count">An expression that specifies the limit value.</param>
+        /// <exception cref="T:System.ArgumentNullException">argument or count is null.</exception>
+        /// <exception cref="T:System.ArgumentException">argument does not have a collection result type, count does not have a result type that is equal or promotable to a 64-bit integer type.</exception>
         public static DbLimitExpression Take(this DbExpression argument, DbExpression count)
         {
             Check.NotNull(argument, "argument");
@@ -4296,33 +2980,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSortExpression" /> that with a sort order that includes the sort order
-        ///     of the given order input set together with the specified sort key in ascending sort order and
-        ///     with default collation.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that with a sort order that includes the sort order of the given order input set together with the specified sort key in ascending sort order and  with default collation.
         /// </summary>
-        /// <param name="source"> A DbSortExpression that specifies the ordered input set. </param>
-        /// <param name="sortKey"> A method that specifies how to derive the additional sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition. </param>
-        /// <returns> A new DbSortExpression that represents the new overall order-by operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     or
-        ///     <paramref name="sortKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     does not have an order-comparable result type.
-        /// </exception>
+        /// <returns>A new DbSortExpression that represents the new overall order-by operation.</returns>
+        /// <param name="source">A DbSortExpression that specifies the ordered input set.</param>
+        /// <param name="sortKey">A method that specifies how to derive the additional sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition.</param>
+        /// <exception cref="T:System.ArgumentNullException">source or sortKey is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by sortKey is null.</exception>
+        /// <exception cref="T:System.ArgumentException">source does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentException">sortKey does not have an order-comparable result type.</exception>
         public static DbSortExpression ThenBy(this DbSortExpression source, Func<DbExpression, DbExpression> sortKey)
         {
             Check.NotNull(source, "source");
@@ -4332,40 +2998,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSortExpression" /> that with a sort order that includes the sort order
-        ///     of the given order input set together with the specified sort key in ascending sort order and
-        ///     with the specified collation.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that with a sort order that includes the sort order of the given order input set together with the specified sort key in ascending sort order and  with the specified collation.
         /// </summary>
-        /// <param name="source"> A DbSortExpression that specifies the ordered input set. </param>
-        /// <param name="sortKey"> A method that specifies how to derive the additional sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition. </param>
-        /// <param name="collation"> The collation to sort under </param>
-        /// <returns> A new DbSortExpression that represents the new overall order-by operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     ,
-        ///     <paramref name="sortKey" />
-        ///     or
-        ///     <paramref name="collation" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     does not have an order-comparable string result type.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     <paramref name="collation" />
-        ///     is empty or contains only space characters
-        /// </exception>
+        /// <returns>A new DbSortExpression that represents the new overall order-by operation.</returns>
+        /// <param name="source">A DbSortExpression that specifies the ordered input set.</param>
+        /// <param name="sortKey">A method that specifies how to derive the additional sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition. </param>
+        /// <param name="collation">The collation to sort under.</param>
+        /// <exception cref="T:System.ArgumentNullException">source, sortKey or collation is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by sortKey is null.</exception>
+        /// <exception cref="T:System.ArgumentException">source does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by sortKey does not have an order-comparable string result type.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">collation is empty or contains only space characters.</exception>
         public static DbSortExpression ThenBy(this DbSortExpression source, Func<DbExpression, DbExpression> sortKey, string collation)
         {
             Check.NotNull(source, "source");
@@ -4375,33 +3018,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSortExpression" /> that with a sort order that includes the sort order
-        ///     of the given order input set together with the specified sort key in descending sort order and
-        ///     with default collation.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that with a sort order that includes the sort order of the given order input set together with the specified sort key in descending sort order and  with default collation.
         /// </summary>
-        /// <param name="source"> A DbSortExpression that specifies the ordered input set. </param>
-        /// <param name="sortKey"> A method that specifies how to derive the additional sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition. </param>
-        /// <returns> A new DbSortExpression that represents the new overall order-by operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     or
-        ///     <paramref name="sortKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     does not have an order-comparable result type.
-        /// </exception>
+        /// <returns>A new DbSortExpression that represents the new overall order-by operation.</returns>
+        /// <param name="source">A DbSortExpression that specifies the ordered input set.</param>
+        /// <param name="sortKey">A method that specifies how to derive the additional sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition.</param>
+        /// <exception cref="T:System.ArgumentNullException">source or sortKey is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by sortKey is null.</exception>
+        /// <exception cref="T:System.ArgumentException">source does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by sortKey does not have an order-comparable result type.</exception>
         public static DbSortExpression ThenByDescending(this DbSortExpression source, Func<DbExpression, DbExpression> sortKey)
         {
             Check.NotNull(source, "source");
@@ -4411,40 +3036,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbSortExpression" /> that with a sort order that includes the sort order
-        ///     of the given order input set together with the specified sort key in descending sort order and
-        ///     with the specified collation.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that with a sort order that includes the sort order of the given order input set together with the specified sort key in descending sort order and  with the specified collation.
         /// </summary>
-        /// <param name="source"> A DbSortExpression that specifies the ordered input set. </param>
-        /// <param name="sortKey"> A method that specifies how to derive the additional sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition. </param>
-        /// <param name="collation"> The collation to sort under </param>
-        /// <returns> A new DbSortExpression that represents the new overall order-by operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     ,
-        ///     <paramref name="sortKey" />
-        ///     or
-        ///     <paramref name="collation" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     <paramref name="source" />
-        ///     does not have a collection result type.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="sortKey" />
-        ///     does not have an order-comparable string result type.
-        /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     <paramref name="collation" />
-        ///     is empty or contains only space characters
-        /// </exception>
+        /// <returns>A new DbSortExpression that represents the new overall order-by operation.</returns>
+        /// <param name="source">A DbSortExpression that specifies the ordered input set.</param>
+        /// <param name="sortKey">A method that specifies how to derive the additional sort key expression given a member of the input set. This method must produce an expression with an order-comparable result type that provides the sort key definition.</param>
+        /// <param name="collation">The collation to sort under.</param>
+        /// <exception cref="T:System.ArgumentNullException">source, sortKey or collation is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by sortKey is null.</exception>
+        /// <exception cref="T:System.ArgumentException">source does not have a collection result type.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by sortKey does not have an order-comparable string result type.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">collation is empty or contains only space characters.</exception>
         public static DbSortExpression ThenByDescending(
             this DbSortExpression source, Func<DbExpression, DbExpression> sortKey, string collation)
         {
@@ -4455,27 +3057,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbFilterExpression" /> that filters the elements in the given input set using the specified predicate.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFilterExpression" /> that filters the elements in the given input set using the specified predicate.
         /// </summary>
-        /// <param name="source"> An expression that specifies the input set. </param>
-        /// <param name="predicate"> A method representing the predicate to evaluate for each member of the input set. This method must produce an expression with a Boolean result type that provides the predicate logic. </param>
-        /// <returns> A new DbQuantifierExpression that represents the Any operation. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="source" />
-        ///     or
-        ///     <paramref name="predicate" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     The expression produced by
-        ///     <paramref name="predicate" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     The expression produced by
-        ///     <paramref name="predicate" />
-        ///     does not have a Boolean result type.
-        /// </exception>
+        /// <returns>A new DbQuantifierExpression that represents the Any operation.</returns>
+        /// <param name="source">An expression that specifies the input set.</param>
+        /// <param name="predicate">A method representing the predicate to evaluate for each member of the input set.    This method must produce an expression with a Boolean result type that provides the predicate logic.</param>
+        /// <exception cref="T:System.ArgumentNullException">source or predicate is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException">The expression produced by predicate is null.</exception>
+        /// <exception cref="T:System.ArgumentException">The expression produced by predicate does not have a Boolean result type.</exception>
         public static DbFilterExpression Where(this DbExpression source, Func<DbExpression, DbExpression> predicate)
         {
             Check.NotNull(source, "source");
@@ -4487,24 +3076,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbExpression" /> that computes the union of the left and right set arguments with duplicates removed.
+        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that computes the union of the left and right set arguments with duplicates removed.
         /// </summary>
-        /// <param name="left"> An expression that defines the left set argument. </param>
-        /// <param name="right"> An expression that defines the right set argument. </param>
-        /// <returns> A new DbExpression that computes the union, without duplicates, of the the left and right arguments. </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="left" />
-        ///     or
-        ///     <paramref name="right" />
-        ///     is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     No common collection result type with an equality-comparable element type exists between
-        ///     <paramref name="left" />
-        ///     and
-        ///     <paramref name="right" />
-        ///     .
-        /// </exception>
+        /// <returns>A new DbExpression that computes the union, without duplicates, of the the left and right arguments.</returns>
+        /// <param name="left">An expression that defines the left set argument.</param>
+        /// <param name="right">An expression that defines the right set argument.</param>
+        /// <exception cref="T:System.ArgumentNullException">left or right is null.</exception>
+        /// <exception cref="T:System.ArgumentException">No common collection result type with an equality-comparable element type exists between left and right.</exception>
         public static DbExpression Union(this DbExpression left, DbExpression right)
         {
             return left.UnionAll(right).Distinct();

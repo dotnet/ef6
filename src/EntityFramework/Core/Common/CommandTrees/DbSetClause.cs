@@ -7,9 +7,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    ///     Specifies a clause in a modification operation setting the value of a property.
-    /// </summary>
+    /// <summary>Specifies the clause in a modification operation that sets the value of a property. This class cannot be inherited. </summary>
     public sealed class DbSetClause : DbModificationClause
     {
         private readonly DbExpression _prop;
@@ -25,22 +23,22 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets an <see cref="DbExpression" /> that specifies the property that should be updated.
+        ///     Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the property that should be updated.
         /// </summary>
-        /// <remarks>
-        ///     Constrained to be a <see cref="DbPropertyExpression" />.
-        /// </remarks>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the property that should be updated.
+        /// </returns>
         public DbExpression Property
         {
             get { return _prop; }
         }
 
         /// <summary>
-        ///     Gets an <see cref="DbExpression" /> that specifies the new value with which to update the property.
+        ///     Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the new value with which to update the property.
         /// </summary>
-        /// <remarks>
-        ///     Constrained to be a <see cref="DbConstantExpression" /> or <see cref="DbNullExpression" />
-        /// </remarks>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the new value with which to update the property.
+        /// </returns>
         public DbExpression Value
         {
             get { return _val; }

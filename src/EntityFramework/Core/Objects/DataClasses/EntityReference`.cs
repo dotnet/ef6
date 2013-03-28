@@ -47,10 +47,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ------------
 
         /// <summary>
+        ///     Creates a new instance of <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" />.
+        /// </summary>
+        /// <remarks>
         ///     The default constructor is required for some serialization scenarios. It should not be used to
         ///     create new EntityReferences. Use the GetRelatedReference or GetRelatedEnd methods on the RelationshipManager
         ///     class instead.
-        /// </summary>
+        /// </remarks>
         public EntityReference()
         {
             _wrappedCachedValue = NullEntityWrapper.NullWrapper;
@@ -67,8 +70,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ----------
 
         /// <summary>
-        ///     Stub only please replace with actual implementation
+        ///     Gets or sets the related object returned by this
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" />
+        ///     .
         /// </summary>
+        /// <returns>
+        ///     The object returned by this <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" />.
+        /// </returns>
         [SoapIgnore]
         [XmlIgnore]
         public TEntity Value
@@ -161,8 +170,19 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // -------
 
         /// <summary>
-        ///     Loads the related entity or entities into the local related end using the supplied MergeOption.
+        ///     Loads the related object for this <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" /> with the specified merge option.
         /// </summary>
+        /// <param name="mergeOption">
+        ///     Specifies how the object should be returned if it already exists in the
+        ///     <see
+        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        ///     .
+        /// </param>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     The source of the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" /> is null 
+        ///     or a query returned more than one related end 
+        ///     or a query returned zero related ends, and one related end was expected.
+        /// </exception>
         public override void Load(MergeOption mergeOption)
         {
             CheckOwnerNull();
@@ -296,20 +316,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return _wrappedCachedValue.Entity == null ? new IEntityWrapper[0] : new[] { _wrappedCachedValue };
         }
 
-        /// <summary>
-        ///     Attaches an entity to the EntityReference. The given
-        ///     entity is not assumed to be the complete set of related entities.
-        ///     Owner and all entities passed in must be in Unchanged or Modified state.
-        ///     Deleted elements are allowed only when the state manager is already tracking the relationship
-        ///     instance.
-        /// </summary>
-        /// <param name="entity"> The entity to attach to the EntityCollection </param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when
-        ///     <paramref name="entity" />
-        ///     is null.
-        /// </exception>
-        /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
+        /// <summary>Creates a many-to-one or one-to-one relationship between two objects in the object context.</summary>
+        /// <param name="entity">The object being attached.</param>
+        /// <exception cref="T:System.ArgumentNullException">When the  entity  is null.</exception>
+        /// <exception cref="T:System.InvalidOperationException">When the  entity  cannot be related to the current related end. This can occur when the association in the conceptual schema does not support a relationship between the two types.</exception>
         public void Attach(TEntity entity)
         {
             Check.NotNull(entity, "entity");
@@ -782,6 +792,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         // Identical code is in EntityCollection, but this can't be moved to the base class because it relies on the
         // knowledge of the generic type, and the base class isn't generic
+        /// <summary>Creates an equivalent object query that returns the related object.</summary>
+        /// <returns>
+        ///     An <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> that returns the related object.
+        /// </returns>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     When the object is in an <see cref="F:System.Data.Entity.EntityState.Added" /> state 
+        ///     or when the object is in a <see cref="F:System.Data.Entity.EntityState.Detached" />
+        ///     state with a <see cref="P:System.Data.Entity.Core.Objects.ObjectQuery.MergeOption" />
+        ///     other than <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
+        /// </exception>
         public ObjectQuery<TEntity> CreateSourceQuery()
         {
             CheckOwnerNull();
@@ -847,6 +867,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // In particular, it recreates a entity wrapper from the serialized cached value.
         // Note that this is only expected to work for non-POCO entities, since serialization of POCO
         // entities will not result in serialization of the RelationshipManager or its related objects.
+        /// <summary>This method is used internally to serialize related entity objects.</summary>
+        /// <param name="context">The serialized stream.</param>
         [OnDeserialized]
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -856,6 +878,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             _wrappedCachedValue = EntityWrapperFactory.WrapEntityUsingContext(_cachedValue, ObjectContext);
         }
 
+        /// <summary>This method is used internally to serialize related entity objects.</summary>
+        /// <param name="context">The serialized stream.</param>
         [OnSerializing]
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]

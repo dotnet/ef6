@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core
     public sealed class MappingException : EntityException
     {
         /// <summary>
-        ///     constructor with default message
+        ///     Initializes a new instance of <see cref="T:System.Data.Entity.Core.MappingException" />.
         /// </summary>
         public MappingException() // required ctor
             : base(Strings.Mapping_General_Error)
@@ -21,19 +21,19 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     default constructor
+        ///     Initializes a new instance of <see cref="T:System.Data.Entity.Core.MappingException" /> with a specialized error message.
         /// </summary>
-        /// <param name="message"> localized error message </param>
+        /// <param name="message">The message that describes the error.</param>
         public MappingException(string message) // required ctor
             : base(message)
         {
         }
 
         /// <summary>
-        ///     constructor
+        ///     Initializes a new instance of <see cref="T:System.Data.Entity.Core.MappingException" /> that uses a specified error message and a reference to the inner exception.
         /// </summary>
-        /// <param name="message"> localized error message </param>
-        /// <param name="innerException"> inner exception </param>
+        /// <param name="message">The message that describes the error.</param>
+        /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
         public MappingException(string message, Exception innerException) // required ctor
             : base(message, innerException)
         {
