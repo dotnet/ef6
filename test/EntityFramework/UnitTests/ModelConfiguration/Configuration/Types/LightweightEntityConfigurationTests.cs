@@ -445,6 +445,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         [Fact]
+        public void MapToTable_should_remove_functions_configuration()
+        {
+            var type = new MockType();
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightEntityConfiguration(type, () => innerConfig);
+
+            config.MapToStoredProcedures();
+
+            Assert.True(innerConfig.IsMappedToFunctions);
+
+            config.MapToTable();
+
+            Assert.False(innerConfig.IsMappedToFunctions);
+        }
+
+        [Fact]
         public void MapToStoredProcedures_with_action_should_invoke_and_add_configuration()
         {
             var type = new MockType();

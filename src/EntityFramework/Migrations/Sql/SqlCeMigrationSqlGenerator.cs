@@ -61,6 +61,16 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <inheritdoc />
+        protected override void Generate(CreateModificationFunctionsOperation createModificationFunctionsOperation)
+        {
+        }
+
+        /// <inheritdoc />
+        protected override void Generate(DropModificationFunctionsOperation dropModificationFunctionsOperation)
+        {
+        }
+
+        /// <inheritdoc />
         protected override void Generate(DropColumnOperation dropColumnOperation)
         {
             using (var writer = Writer())

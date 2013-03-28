@@ -116,6 +116,7 @@ namespace System.Data.Entity.Migrations
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+
         public string Foo { get; set; }
     }
 
@@ -145,6 +146,12 @@ namespace System.Data.Entity.Migrations
             modelBuilder.Entity<OrderLine>().Ignore(c => c.Total);
             modelBuilder.Entity<Order>().Property(o => o.Type).IsUnicode(false);
             modelBuilder.Entity<MigrationsProduct>();
+            
+            if (!(Database.Connection is SqlCeConnection))
+            {
+                // NotSupported in CE
+                modelBuilder.Entity<MigrationsCustomer>().MapToStoredProcedures();
+            }
         }
     }
 
@@ -269,8 +276,8 @@ namespace System.Data.Entity.Migrations
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<MigrationsEmployee>()
-                .HasOptional(e => e.Manager)
-                .WithMany(m => m.DirectReports);
+                        .HasOptional(e => e.Manager)
+                        .WithMany(m => m.DirectReports);
         }
     }
 

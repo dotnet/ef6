@@ -52,7 +52,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             Assert.Equal(
                 Strings.Update_SqlEntitySetWithoutDmlFunctions("Binky", functionName, "ModificationFunctionMapping"),
                 Assert.Throws<UpdateException>(
-                    () => new DmlSqlGenerator.ExpressionTranslator(new StringBuilder(), commandTree, true, SqlVersion.Sql10)
+                    () => new DmlSqlGenerator.ExpressionTranslator(new StringBuilder(), commandTree, true, new SqlGenerator(SqlVersion.Sql10))
                               .Visit(CreateMockScanExpression("I am defined.").Object)).Message);
         }
 
@@ -60,7 +60,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         public void Visit_DbScanExpression_appends_SQL_if_defining_query_is_not_set()
         {
             var builder = new StringBuilder();
-            new DmlSqlGenerator.ExpressionTranslator(builder, new Mock<DbInsertCommandTree>().Object, true, SqlVersion.Sql10)
+            new DmlSqlGenerator.ExpressionTranslator(builder, new Mock<DbInsertCommandTree>().Object, true, new SqlGenerator(SqlVersion.Sql10))
                 .Visit(CreateMockScanExpression(null).Object);
 
             Assert.Equal("[Kontainer].[Binky]", builder.ToString());

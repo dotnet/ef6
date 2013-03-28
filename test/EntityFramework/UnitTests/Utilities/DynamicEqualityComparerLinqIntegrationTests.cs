@@ -18,6 +18,14 @@ namespace System.Data.Entity.Utilities
         }
 
         [Fact]
+        public void Contains_uses_provided_equality_function()
+        {
+            var values = new[] { "a", "b", "A" };
+
+            Assert.True(values.Contains("B", (a, b) => a.Equals(b, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        [Fact]
         public void Intersect_returns_intersection_using_provided_equality_function()
         {
             var setA = new[] { "a", "b" };

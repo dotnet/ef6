@@ -218,6 +218,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _modificationFunctionsConfiguration = modificationFunctionsConfiguration;
         }
 
+        internal virtual void MapToTable()
+        {
+            _modificationFunctionsConfiguration = null;
+        }
+
         internal void ReplaceFrom(EntityTypeConfiguration existing)
         {
             if (EntitySetName == null)

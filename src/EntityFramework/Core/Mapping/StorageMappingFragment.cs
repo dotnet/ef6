@@ -166,7 +166,7 @@ namespace System.Data.Entity.Core.Mapping
             RemoveColumnMapping(this, columnMappingBuilder.PropertyPath);
         }
 
-        private void RemoveColumnMapping(StructuralTypeMapping structuralTypeMapping, IEnumerable<EdmProperty> propertyPath)
+        private static void RemoveColumnMapping(StructuralTypeMapping structuralTypeMapping, IEnumerable<EdmProperty> propertyPath)
         {
             DebugCheck.NotNull(structuralTypeMapping);
             DebugCheck.NotNull(propertyPath);
@@ -272,6 +272,51 @@ namespace System.Data.Entity.Core.Mapping
         public override ReadOnlyCollection<StoragePropertyMapping> Properties
         {
             get { return m_properties.AsReadOnly(); }
+        }
+
+        public IEnumerable<ColumnMappingBuilder> FlattenedProperties
+        {
+            get { return GetFlattenedProperties(m_properties, new List<EdmProperty>()); }
+        }
+
+        private static IEnumerable<ColumnMappingBuilder> GetFlattenedProperties(
+            IEnumerable<StoragePropertyMapping> propertyMappings, List<EdmProperty> propertyPath)
+        {
+            DebugCheck.NotNull(propertyMappings);
+            DebugCheck.NotNull(propertyPath);
+
+            foreach (var propertyMapping in propertyMappings)
+            {
+                propertyPath.Add(propertyMapping.EdmProperty);
+
+                var storageComplexPropertyMapping
+                    = propertyMapping as StorageComplexPropertyMapping;
+
+                if (storageComplexPropertyMapping != null)
+                {
+                    foreach (var columnMappingBuilder
+                        in GetFlattenedProperties(
+                            storageComplexPropertyMapping.TypeMappings.Single().Properties,
+                            propertyPath))
+                    {
+                        yield return columnMappingBuilder;
+                    }
+                }
+                else
+                {
+                    var storageScalarPropertyMapping
+                        = propertyMapping as StorageScalarPropertyMapping;
+
+                    if (storageScalarPropertyMapping != null)
+                    {
+                        yield return new ColumnMappingBuilder(
+                            storageScalarPropertyMapping.ColumnProperty,
+                            propertyPath.ToList());
+                    }
+                }
+
+                propertyPath.Remove(propertyMapping.EdmProperty);
+            }
         }
 
         public IEnumerable<StorageConditionPropertyMapping> ColumnConditions

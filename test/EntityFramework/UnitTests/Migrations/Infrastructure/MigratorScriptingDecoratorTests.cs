@@ -27,6 +27,18 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         [MigrationsTheory]
+        public void ScriptUpdate_should_prepend_batch_separator()
+        {
+            ResetDatabase();
+
+            var migrator = new MigratorScriptingDecorator(CreateMigrator<ShopContext_v1>());
+
+            var script = migrator.ScriptUpdate(null, null);
+
+            Assert.True(script.Contains("GO\r\nCREATE PROCEDURE"));
+        }
+
+        [MigrationsTheory]
         public void ScriptUpdate_should_not_create_database()
         {
             var migrator

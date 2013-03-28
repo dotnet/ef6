@@ -67,6 +67,13 @@ namespace System.Data.Entity.Migrations.Edm
 
             return (string)element.Attribute("Name");
         }
+        
+        public static string NamespaceAttribute(this XElement element)
+        {
+            DebugCheck.NotNull(element);
+
+            return (string)element.Attribute("Namespace");
+        }
 
         public static string EntityTypeAttribute(this XElement element)
         {

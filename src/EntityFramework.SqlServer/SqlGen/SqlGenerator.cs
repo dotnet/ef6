@@ -352,7 +352,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Basic constructor.
         /// </summary>
         /// <param name="sqlVersion"> server version </param>
-        private SqlGenerator(SqlVersion sqlVersion)
+        internal SqlGenerator(SqlVersion sqlVersion)
         {
             this.sqlVersion = sqlVersion;
         }
@@ -377,19 +377,21 @@ namespace System.Data.Entity.SqlServer.SqlGen
             parameters = null;
             paramsToForceNonUnicode = null;
 
+            var sqlGenerator = new SqlGenerator(sqlVersion);
+
             switch (tree.CommandTreeKind)
             {
                 case DbCommandTreeKind.Query:
-                    return new SqlGenerator(sqlVersion).GenerateSql((DbQueryCommandTree)tree, out paramsToForceNonUnicode);
+                    return sqlGenerator.GenerateSql((DbQueryCommandTree)tree, out paramsToForceNonUnicode);
 
                 case DbCommandTreeKind.Insert:
-                    return DmlSqlGenerator.GenerateInsertSql((DbInsertCommandTree)tree, sqlVersion, out parameters);
+                    return DmlSqlGenerator.GenerateInsertSql((DbInsertCommandTree)tree, sqlGenerator, out parameters);
 
                 case DbCommandTreeKind.Delete:
-                    return DmlSqlGenerator.GenerateDeleteSql((DbDeleteCommandTree)tree, sqlVersion, out parameters);
+                    return DmlSqlGenerator.GenerateDeleteSql((DbDeleteCommandTree)tree, sqlGenerator, out parameters);
 
                 case DbCommandTreeKind.Update:
-                    return DmlSqlGenerator.GenerateUpdateSql((DbUpdateCommandTree)tree, sqlVersion, out parameters);
+                    return DmlSqlGenerator.GenerateUpdateSql((DbUpdateCommandTree)tree, sqlGenerator, out parameters);
 
                 case DbCommandTreeKind.Function:
                     return GenerateFunctionSql((DbFunctionCommandTree)tree, out commandType);
@@ -522,7 +524,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="sqlStatement"> </param>
         /// <returns> A string representing the SQL to be executed. </returns>
-        private string WriteSql(ISqlFragment sqlStatement)
+        internal string WriteSql(ISqlFragment sqlStatement)
         {
             var builder = new StringBuilder(1024);
             using (var writer = new SqlWriter(builder))

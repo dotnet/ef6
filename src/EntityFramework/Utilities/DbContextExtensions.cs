@@ -10,6 +10,19 @@ namespace System.Data.Entity.Utilities
 
     internal static class DbContextExtensions
     {
+        public static DbModel GetDynamicUpdateModel(this DbContext context, DbProviderInfo providerInfo)
+        {
+            DebugCheck.NotNull(context);
+            DebugCheck.NotNull(providerInfo);
+
+            var modelBuilder
+                = context.InternalContext.CodeFirstModel.CachedModelBuilder.Clone();
+
+            modelBuilder.Entities().Configure(c => c.MapToTable());
+
+            return modelBuilder.Build(providerInfo);
+        }
+
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public static XDocument GetModel(this DbContext context)
         {
@@ -27,9 +40,9 @@ namespace System.Data.Entity.Utilities
             {
                 using (var xmlWriter = XmlWriter.Create(
                     memoryStream, new XmlWriterSettings
-                        {
-                            Indent = true
-                        }))
+                                      {
+                                          Indent = true
+                                      }))
                 {
                     writeXml(xmlWriter);
                 }

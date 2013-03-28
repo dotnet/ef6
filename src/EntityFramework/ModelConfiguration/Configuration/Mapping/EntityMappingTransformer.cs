@@ -333,7 +333,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             DebugCheck.NotNull(fromTable);
             DebugCheck.NotNull(toTable);
 
-            foreach (var column in fromTable.KeyProperties)
+            foreach (var column in   fromTable.KeyProperties)
             {
                 FindAllForeignKeyConstraintsForColumn(fromTable, toTable, column)
                     .ToArray()
@@ -594,8 +594,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                                         a.AssociationSet.ElementType.TargetEnd.GetEntityType() == entityType)).ToArray())
             {
                 AssociationEndMember _, dependentEnd;
-                if (
-                    !associationSetMapping.AssociationSet.ElementType.TryGuessPrincipalAndDependentEnds(
+                if (!associationSetMapping.AssociationSet.ElementType.TryGuessPrincipalAndDependentEnds(
                         out _, out dependentEnd))
                 {
                     dependentEnd = associationSetMapping.AssociationSet.ElementType.TargetEnd;
@@ -613,6 +612,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         dependentMapping,
                         databaseMapping.Database.GetEntitySet(toTable),
                         useExistingColumns);
+                
+                    var principalMapping
+                        = dependentMapping == associationSetMapping.TargetEndMapping
+                              ? associationSetMapping.SourceEndMapping
+                              : associationSetMapping.TargetEndMapping;
+
+                    principalMapping.PropertyMappings.Each(
+                        pm =>
+                            {
+                                if (pm.ColumnProperty.DeclaringType != toTable)
+                                {
+                                    pm.ColumnProperty
+                                        = toTable.Properties.Single(
+                                            p => string.Equals(
+                                                p.GetPreferredName(),
+                                                pm.ColumnProperty.GetPreferredName(),
+                                                StringComparison.Ordinal));
+                                }
+                            });
                 }
             }
         }

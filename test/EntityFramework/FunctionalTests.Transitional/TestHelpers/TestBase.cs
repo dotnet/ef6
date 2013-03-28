@@ -29,7 +29,7 @@ namespace System.Data.Entity
             DbConfiguration.SetConfiguration(new FunctionalTestsConfiguration());
 
             // Uncomment below to log all test generated SQL to the console.
-            // Interception.Register(new LoggingCommandInterceptor());
+            //Interception.AddInterceptor(new LoggingInterceptor());
         }
 
         public class LoggingInterceptor : IDbInterceptor
@@ -37,6 +37,14 @@ namespace System.Data.Entity
             public bool CommandExecuting(DbCommand command)
             {
                 Console.WriteLine(command.CommandText);
+
+                foreach (DbParameter parameter in command.Parameters)
+                {
+                    Console.WriteLine(
+                        "  " + parameter.ParameterName + ": "
+                        + (parameter.Value == DBNull.Value ? "NULL" : parameter.Value));
+                }
+
                 Console.WriteLine();
 
                 return true;

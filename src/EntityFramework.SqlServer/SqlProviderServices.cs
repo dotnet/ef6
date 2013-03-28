@@ -20,6 +20,7 @@ namespace System.Data.Entity.SqlServer
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
 
     /// <summary>
     ///     The DbProviderServices implementation for the SqlClient provider for SQL Server.
@@ -98,6 +99,25 @@ namespace System.Data.Entity.SqlServer
         public static SqlProviderServices Instance
         {
             get { return _providerInstance; }
+        }
+
+        // TODO: Remove when the migrations SQL generator lives in this assembly.
+        public override string GenerateFunctionSql(ICollection<DbModificationCommandTree> commandTrees, string rowsAffectedParameter)
+        {
+            var functionSqlGenerator
+                = new DmlFunctionSqlGenerator(GetDbProviderManifest("2008"));
+
+            switch (commandTrees.First().CommandTreeKind)
+            {
+                case DbCommandTreeKind.Insert:
+                    return functionSqlGenerator.GenerateInsert(commandTrees.Cast<DbInsertCommandTree>().ToList());
+                case DbCommandTreeKind.Update:
+                    return functionSqlGenerator.GenerateUpdate(commandTrees.Cast<DbUpdateCommandTree>().ToList(), rowsAffectedParameter);
+                case DbCommandTreeKind.Delete:
+                    return functionSqlGenerator.GenerateDelete(commandTrees.Cast<DbDeleteCommandTree>().ToList(), rowsAffectedParameter);
+            }
+
+            return null;
         }
 
         /// <summary>

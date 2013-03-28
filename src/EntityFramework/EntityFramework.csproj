@@ -212,6 +212,7 @@
     <Compile Include="Core\Common\CommandTrees\DbScanExpression.cs" />
     <Compile Include="Edm\Serialization\MetadataItemHelper.cs" />
     <Compile Include="Migrations\History\HistoryContextFactory.cs" />
+    <Compile Include="Migrations\Model\DropModificationFunctionsOperation.cs" />
     <Compile Include="TransactionalBehavior.cs" />
     <Compile Include="Internal\InterceptableDbCommand.cs">
       <SubType>Component</SubType>
@@ -354,6 +355,8 @@
     <Compile Include="Edm\Serialization\MslXmlSchemaWriter.cs" />
     <Compile Include="Infrastructure\DbProviderNameAttribute.cs" />
     <Compile Include="Infrastructure\Net40DefaultDbProviderFactoryService.cs" />
+    <Compile Include="Migrations\Infrastructure\DynamicToFunctionModificationCommandConverter.cs" />
+    <Compile Include="Migrations\Infrastructure\ModificationCommandTreeGenerator.cs" />
     <Compile Include="Migrations\Infrastructure\IDbMigration.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryService.cs" />
     <Compile Include="Infrastructure\DbConcurrencyException.cs" />
@@ -393,6 +396,7 @@
     <Compile Include="Internal\LazyAsyncEnumerator.cs" />
     <Compile Include="Internal\LazyEnumerator`.cs" />
     <Compile Include="Migrations\Infrastructure\MigrationsPendingException.cs" />
+    <Compile Include="Migrations\Model\CreateModificationFunctionsOperation.cs" />
     <Compile Include="Migrations\Utilities\MigrationsConfigurationFinder.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeActivator.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeFilter.cs" />

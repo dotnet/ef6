@@ -156,7 +156,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Tells whether this member's Store generated pattern is marked as Identity in the EDM definition
         /// </summary>
-        internal bool IsStoreGeneratedIdentity
+        public bool IsStoreGeneratedIdentity
         {
             get
             {

@@ -23,12 +23,16 @@ namespace System.Data.Entity.SqlServer.SqlGen
         private const int s_commandTextBuilderInitialCapacity = 256;
         private const string s_generatedValuesVariableName = "@generated_keys";
 
-        internal static string GenerateUpdateSql(DbUpdateCommandTree tree, SqlVersion sqlVersion, out List<SqlParameter> parameters)
+        internal static string GenerateUpdateSql(
+            DbUpdateCommandTree tree,
+            SqlGenerator sqlGenerator,
+            out List<SqlParameter> parameters,
+            bool generateReturningSql = true)
         {
             const string dummySetParameter = "@p";
 
             var commandText = new StringBuilder(s_commandTextBuilderInitialCapacity);
-            var translator = new ExpressionTranslator(commandText, tree, null != tree.Returning, sqlVersion);
+            var translator = new ExpressionTranslator(commandText, tree, null != tree.Returning, sqlGenerator);
 
             if (tree.SetClauses.Count == 0)
             {
@@ -79,17 +83,20 @@ namespace System.Data.Entity.SqlServer.SqlGen
             tree.Predicate.Accept(translator);
             commandText.AppendLine();
 
-            // generate returning sql
-            GenerateReturningSql(commandText, tree, null, translator, tree.Returning, false);
+            if (generateReturningSql)
+            {
+                GenerateReturningSql(commandText, tree, null, translator, tree.Returning, false);
+            }
 
             parameters = translator.Parameters;
+
             return commandText.ToString();
         }
 
-        internal static string GenerateDeleteSql(DbDeleteCommandTree tree, SqlVersion sqlVersion, out List<SqlParameter> parameters)
+        internal static string GenerateDeleteSql(DbDeleteCommandTree tree, SqlGenerator sqlGenerator, out List<SqlParameter> parameters)
         {
             var commandText = new StringBuilder(s_commandTextBuilderInitialCapacity);
-            var translator = new ExpressionTranslator(commandText, tree, false, sqlVersion);
+            var translator = new ExpressionTranslator(commandText, tree, false, sqlGenerator);
 
             // delete [schemaName].[tableName]
             commandText.Append("delete ");
@@ -104,14 +111,18 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return commandText.ToString();
         }
 
-        internal static string GenerateInsertSql(DbInsertCommandTree tree, SqlVersion sqlVersion, out List<SqlParameter> parameters)
+        internal static string GenerateInsertSql(
+            DbInsertCommandTree tree,
+            SqlGenerator sqlGenerator,
+            out List<SqlParameter> parameters,
+            bool generateReturningSql = true)
         {
             var commandText = new StringBuilder(s_commandTextBuilderInitialCapacity);
             var translator = new ExpressionTranslator(
                 commandText, tree,
-                null != tree.Returning, sqlVersion);
+                null != tree.Returning, sqlGenerator);
 
-            var useGeneratedValuesVariable = UseGeneratedValuesVariable(tree, sqlVersion);
+            var useGeneratedValuesVariable = UseGeneratedValuesVariable(tree, sqlGenerator.SqlVersion);
             var tableType = (EntityType)((DbScanExpression)tree.Target.Expression).Target.ElementType;
 
             if (useGeneratedValuesVariable)
@@ -132,18 +143,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     {
                         commandText.Append(", ");
                     }
-                    var columnType = SqlGenerator.GenerateSqlForStoreType(sqlVersion, column.TypeUsage);
-                    if (columnType == "rowversion"
-                        || columnType == "timestamp")
-                    {
-                        // rowversion and timestamp are intrinsically read-only. use binary to gather server generated
-                        // values for these types.
-                        columnType = "binary(8)";
-                    }
                     commandText
                         .Append(GenerateMemberTSql(column))
                         .Append(" ")
-                        .Append(columnType);
+                        .Append(GetVariableType(sqlGenerator, column));
                     Facet collationFacet;
                     if (column.TypeUsage.Facets.TryGetValue(DbProviderManifest.CollationFacetName, false, out collationFacet))
                     {
@@ -235,11 +238,34 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 // default values
                 commandText.AppendLine("default values");
             }
-            // generate returning sql
-            GenerateReturningSql(commandText, tree, tableType, translator, tree.Returning, useGeneratedValuesVariable);
+
+            if (generateReturningSql)
+            {
+                GenerateReturningSql(commandText, tree, tableType, translator, tree.Returning, useGeneratedValuesVariable);
+            }
 
             parameters = translator.Parameters;
+
             return commandText.ToString();
+        }
+
+        internal static string GetVariableType(SqlGenerator sqlGenerator, EdmMember column)
+        {
+            DebugCheck.NotNull(sqlGenerator);
+            DebugCheck.NotNull(column);
+
+            var columnType 
+                = SqlGenerator.GenerateSqlForStoreType(sqlGenerator.SqlVersion, column.TypeUsage);
+
+            if (columnType == "rowversion"
+                || columnType == "timestamp")
+            {
+                // rowversion and timestamp are intrinsically read-only. use binary to gather server generated
+                // values for these types.
+                columnType = "binary(8)";
+            }
+
+            return columnType;
         }
 
         /// <summary>
@@ -248,7 +274,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     but is not an integer type (and therefore can't be used with scope_identity()). It is also true
         ///     where there is a compound server generated key.
         /// </summary>
-        private static bool UseGeneratedValuesVariable(DbInsertCommandTree tree, SqlVersion sqlVersion)
+        internal static bool UseGeneratedValuesVariable(DbInsertCommandTree tree, SqlVersion sqlVersion)
         {
             var useGeneratedValuesVariable = false;
             if (sqlVersion > SqlVersion.Sql8
@@ -270,15 +296,14 @@ namespace System.Data.Entity.SqlServer.SqlGen
                             useGeneratedValuesVariable = true;
                             break;
                         }
-                        else
+
+                        firstKeyFound = true;
+
+                        if (!IsValidScopeIdentityColumnType(keyMember.TypeUsage))
                         {
-                            firstKeyFound = true;
-                            if (!IsValidScopeIdentityColumnType(keyMember.TypeUsage))
-                            {
-                                // unsupported type
-                                useGeneratedValuesVariable = true;
-                                break;
-                            }
+                            // unsupported type
+                            useGeneratedValuesVariable = true;
+                            break;
                         }
                     }
                 }
@@ -327,7 +352,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="tableType"> Type of table. </param>
         /// <param name="translator"> Translator used to produce DML SQL statement for the tree </param>
         /// <param name="returning"> Returning expression. If null, the method returns immediately without producing a SELECT statement. </param>
-        private static void GenerateReturningSql(
+        internal static void GenerateReturningSql(
             StringBuilder commandText, DbModificationCommandTree tree, EntityType tableType,
             ExpressionTranslator translator, DbExpression returning, bool useGeneratedValuesVariable)
         {
@@ -474,15 +499,22 @@ namespace System.Data.Entity.SqlServer.SqlGen
             /// <param name="commandTree"> Command tree generating SQL </param>
             /// <param name="preserveMemberValues"> Indicates whether the translator should preserve member values while compiling t-SQL (only needed for server generation) </param>
             internal ExpressionTranslator(
-                StringBuilder commandText, DbModificationCommandTree commandTree,
-                bool preserveMemberValues, SqlVersion version)
+                StringBuilder commandText,
+                DbModificationCommandTree commandTree,
+                bool preserveMemberValues,
+                SqlGenerator sqlGenerator,
+                ICollection<EdmProperty> localVariableBindings = null)
             {
                 DebugCheck.NotNull(commandText);
                 DebugCheck.NotNull(commandTree);
+
                 _commandText = commandText;
                 _commandTree = commandTree;
-                _version = version;
+                _sqlGenerator = sqlGenerator;
+                _localVariableBindings = localVariableBindings;
+
                 _parameters = new List<SqlParameter>();
+
                 _memberValues = preserveMemberValues
                                     ? new Dictionary<EdmMember, SqlParameter>()
                                     : null;
@@ -492,7 +524,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
             private readonly DbModificationCommandTree _commandTree;
             private readonly List<SqlParameter> _parameters;
             private readonly Dictionary<EdmMember, SqlParameter> _memberValues;
-            private readonly SqlVersion _version;
+            private readonly SqlGenerator _sqlGenerator;
+            private readonly ICollection<EdmProperty> _localVariableBindings;
 
             internal List<SqlParameter> Parameters
             {
@@ -507,13 +540,14 @@ namespace System.Data.Entity.SqlServer.SqlGen
             internal string PropertyAlias { get; set; }
 
             // generate parameter (name based on parameter ordinal)
-            internal SqlParameter CreateParameter(object value, TypeUsage type)
+            internal SqlParameter CreateParameter(object value, TypeUsage type, string name = null)
             {
                 // Suppress the MaxLength facet in the type usage because
                 // SqlClient will silently truncate data when SqlParameter.Size < |SqlParameter.Value|.
                 const bool preventTruncation = true;
+
                 var parameter = SqlProviderServices.CreateSqlParameter(
-                    GetParameterName(_parameters.Count), type, ParameterMode.In, value, preventTruncation, _version);
+                    name ?? GetParameterName(_parameters.Count), type, ParameterMode.In, value, preventTruncation, _sqlGenerator.SqlVersion);
 
                 _parameters.Add(parameter);
 
@@ -576,7 +610,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         != DbExpressionKind.Null)
                     {
                         Debug.Assert(
-                            value.ExpressionKind == DbExpressionKind.Constant,
+                            value.ExpressionKind == DbExpressionKind.Constant
+                            || value.ExpressionKind == DbExpressionKind.ParameterReference,
                             "value must either constant or null");
                         // retrieve the last parameter added (which describes the parameter)
                         _memberValues[property] = _parameters[_parameters.Count - 1];
@@ -605,7 +640,28 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 Check.NotNull(expression, "expression");
 
-                var parameter = CreateParameter(expression.Value, expression.ResultType);
+                if (!_commandTree.Parameters.Any())
+                {
+                    var parameter = CreateParameter(expression.Value, expression.ResultType);
+
+                    _commandText.Append(parameter.ParameterName);
+                }
+                else
+                {
+                    _commandText.Append(_sqlGenerator.WriteSql(expression.Accept(_sqlGenerator)));
+                }
+            }
+
+            public override void Visit(DbParameterReferenceExpression expression)
+            {
+                Check.NotNull(expression, "expression");
+
+                var parameter
+                    = CreateParameter(
+                        DBNull.Value,
+                        expression.ResultType,
+                        "@" + expression.ParameterName);
+
                 _commandText.Append(parameter.ParameterName);
             }
 
@@ -649,6 +705,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     _commandText.Append(PropertyAlias);
                     _commandText.Append(".");
                 }
+
                 _commandText.Append(GenerateMemberTSql(expression.Property));
             }
 
@@ -665,18 +722,35 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 // assumes all arguments are self-describing (no need to use aliases
                 // because no renames are ever used in the projection)
+
                 var first = true;
+
                 foreach (var argument in expression.Arguments)
                 {
-                    if (first)
+                    var property = ((DbPropertyExpression)argument).Property;
+
+                    var variableAssignment
+                        = (_localVariableBindings != null)
+                              ? (_localVariableBindings.Contains(property)
+                                     ? "@" + property.Name + " = "
+                                     : null)
+                              : string.Empty;
+
+                    if (variableAssignment != null)
                     {
-                        first = false;
+                        if (first)
+                        {
+                            first = false;
+                        }
+                        else
+                        {
+                            _commandText.Append(", ");
+                        }
+
+                        _commandText.Append(variableAssignment);
+
+                        argument.Accept(this);
                     }
-                    else
-                    {
-                        _commandText.Append(", ");
-                    }
-                    argument.Accept(this);
                 }
             }
 

@@ -6,6 +6,7 @@ namespace FunctionalTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Resources;
@@ -448,7 +449,7 @@ namespace FunctionalTests
                 public virtual ICollection<Item> ChildrenItems { get; set; }
             }
 
-            public class Configuration : TestBase
+            public class ConfigurationApis : TestBase
             {
                 [Fact]
                 public void Can_configure_function_names()
@@ -459,11 +460,11 @@ namespace FunctionalTests
                         .Entity<OrderLine>()
                         .MapToStoredProcedures(
                             map =>
-                            {
-                                map.Insert(f => f.HasName("insert_order_line"));
-                                map.Update(f => f.HasName("update_order_line", "foo"));
-                                map.Delete(f => f.HasName("delete_order_line", "bar"));
-                            });
+                                {
+                                    map.Insert(f => f.HasName("insert_order_line"));
+                                    map.Update(f => f.HasName("update_order_line", "foo"));
+                                    map.Delete(f => f.HasName("delete_order_line", "bar"));
+                                });
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -494,11 +495,11 @@ namespace FunctionalTests
                         .Entity<Building>()
                         .MapToStoredProcedures(
                             map =>
-                            {
-                                map.Insert(f => f.Parameter(b => b.Address.Line1, "ins_line1"));
-                                map.Update(f => f.Parameter(b => b.Id, "upd_id"));
-                                map.Delete(f => f.Parameter(b => b.Id, "del_id"));
-                            });
+                                {
+                                    map.Insert(f => f.Parameter(b => b.Address.Line1, "ins_line1"));
+                                    map.Update(f => f.Parameter(b => b.Id, "upd_id"));
+                                    map.Delete(f => f.Parameter(b => b.Id, "del_id"));
+                                });
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -528,10 +529,10 @@ namespace FunctionalTests
                         .MapToStoredProcedures(
                             map => map.Update(
                                 f =>
-                                {
-                                    f.Parameter(e => e.Name, "name_cur", "name_orig");
-                                    f.Parameter(e => e.StorageLocation.Latitude, "lat_cur", "lat_orig");
-                                }));
+                                    {
+                                        f.Parameter(e => e.Name, "name_cur", "name_orig");
+                                        f.Parameter(e => e.StorageLocation.Latitude, "lat_cur", "lat_orig");
+                                    }));
                     modelBuilder.Ignore<Team>();
 
                     var databaseMapping = BuildMapping(modelBuilder);
@@ -581,10 +582,10 @@ namespace FunctionalTests
                         .MapToStoredProcedures(
                             map => map.Delete(
                                 f =>
-                                {
-                                    f.HasName("del_ol");
-                                    f.Parameter(e => e.IsShipped, "boom");
-                                }));
+                                    {
+                                        f.HasName("del_ol");
+                                        f.Parameter(e => e.IsShipped, "boom");
+                                    }));
 
                     Assert.Equal(
                         Strings.ModificationFunctionParameterNotFound("IsShipped", "del_ol"),
@@ -601,10 +602,10 @@ namespace FunctionalTests
                         .Entity<Order>()
                         .MapToStoredProcedures(
                             map =>
-                            {
-                                map.Insert(f => f.Result(o => o.OrderId, "order_id"));
-                                map.Update(f => f.Result(o => o.Version, "timestamp"));
-                            });
+                                {
+                                    map.Insert(f => f.Result(o => o.OrderId, "order_id"));
+                                    map.Update(f => f.Result(o => o.Version, "timestamp"));
+                                });
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -662,10 +663,10 @@ namespace FunctionalTests
                         .Entity<Order>()
                         .MapToStoredProcedures(
                             map =>
-                            {
-                                map.Update(f => f.RowsAffectedParameter("rows_affected1"));
-                                map.Delete(f => f.RowsAffectedParameter("rows_affected2"));
-                            });
+                                {
+                                    map.Update(f => f.RowsAffectedParameter("rows_affected1"));
+                                    map.Delete(f => f.RowsAffectedParameter("rows_affected2"));
+                                });
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -710,22 +711,22 @@ namespace FunctionalTests
                         .WithMany(p => p.Tags)
                         .MapToStoredProcedures(
                             map =>
-                            {
-                                map.Insert(
-                                    f =>
-                                    {
-                                        f.HasName("ins_product_tag");
-                                        f.LeftKeyParameter(t => t.Id, "tag_id");
-                                        f.RightKeyParameter(p => p.Id, "product_id");
-                                    });
-                                map.Delete(
-                                    f =>
-                                    {
-                                        f.HasName("del_product_tag", "bar");
-                                        f.LeftKeyParameter(t => t.Id, "tag_id");
-                                        f.RightKeyParameter(p => p.Id, "product_id");
-                                    });
-                            });
+                                {
+                                    map.Insert(
+                                        f =>
+                                            {
+                                                f.HasName("ins_product_tag");
+                                                f.LeftKeyParameter(t => t.Id, "tag_id");
+                                                f.RightKeyParameter(p => p.Id, "product_id");
+                                            });
+                                    map.Delete(
+                                        f =>
+                                            {
+                                                f.HasName("del_product_tag", "bar");
+                                                f.LeftKeyParameter(t => t.Id, "tag_id");
+                                                f.RightKeyParameter(p => p.Id, "product_id");
+                                            });
+                                });
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -762,10 +763,10 @@ namespace FunctionalTests
                         .MapToStoredProcedures(
                             map => map.Insert(
                                 f =>
-                                {
-                                    f.HasName("ins_product_tag");
-                                    f.LeftKeyParameter(t => t.Id, "tag_id");
-                                }));
+                                    {
+                                        f.HasName("ins_product_tag");
+                                        f.LeftKeyParameter(t => t.Id, "tag_id");
+                                    }));
 
                     modelBuilder
                         .Entity<ProductA>()
@@ -774,11 +775,11 @@ namespace FunctionalTests
                         .MapToStoredProcedures(
                             map => map.Delete(
                                 f =>
-                                {
-                                    f.HasName("del_product_tag");
-                                    f.LeftKeyParameter(p => p.Id, "product_id");
-                                    f.RightKeyParameter(t => t.Id, "tag_id");
-                                }));
+                                    {
+                                        f.HasName("del_product_tag");
+                                        f.LeftKeyParameter(p => p.Id, "product_id");
+                                        f.RightKeyParameter(t => t.Id, "tag_id");
+                                    }));
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -841,23 +842,9 @@ namespace FunctionalTests
 
                     Assert.Equal(
                         Strings.ConflictingFunctionsMapping(
-                            "Tags", "FunctionalTests.FunctionsScenarioTests+ModificationFunctions+Configuration+ProductA"),
+                            "Tags", "FunctionalTests.FunctionsScenarioTests+ModificationFunctions+ProductA"),
                         Assert.Throws<InvalidOperationException>(
                             () => BuildMapping(modelBuilder)).Message);
-                }
-
-                public class ProductA
-                {
-                    public int Id { get; set; }
-                    public string Name { get; set; }
-                    public ICollection<Tag> Tags { get; set; }
-                }
-
-                public class Tag
-                {
-                    public int Id { get; set; }
-                    public string Name { get; set; }
-                    public ICollection<ProductA> Products { get; set; }
                 }
 
                 [Fact]
@@ -878,32 +865,32 @@ namespace FunctionalTests
                         .Entity<OrderLine>()
                         .MapToStoredProcedures(
                             map =>
-                            {
-                                map.Insert(
-                                    f => f.Association<Order>(
-                                        o => o.OrderLines,
-                                        a =>
-                                        {
-                                            a.Parameter(o => o.OrderId, "order_id1");
-                                            a.Parameter(o => o.Type, "the_type1");
-                                        }));
-                                map.Update(
-                                    f => f.Association<Order>(
-                                        o => o.OrderLines,
-                                        a =>
-                                        {
-                                            a.Parameter(o => o.OrderId, "order_id2");
-                                            a.Parameter(o => o.Type, "the_type2");
-                                        }));
-                                map.Delete(
-                                    f => f.Association<Order>(
-                                        o => o.OrderLines,
-                                        a =>
-                                        {
-                                            a.Parameter(o => o.OrderId, "order_id3");
-                                            a.Parameter(o => o.Type, "the_type3");
-                                        }));
-                            });
+                                {
+                                    map.Insert(
+                                        f => f.Association<Order>(
+                                            o => o.OrderLines,
+                                            a =>
+                                                {
+                                                    a.Parameter(o => o.OrderId, "order_id1");
+                                                    a.Parameter(o => o.Type, "the_type1");
+                                                }));
+                                    map.Update(
+                                        f => f.Association<Order>(
+                                            o => o.OrderLines,
+                                            a =>
+                                                {
+                                                    a.Parameter(o => o.OrderId, "order_id2");
+                                                    a.Parameter(o => o.Type, "the_type2");
+                                                }));
+                                    map.Delete(
+                                        f => f.Association<Order>(
+                                            o => o.OrderLines,
+                                            a =>
+                                                {
+                                                    a.Parameter(o => o.OrderId, "order_id3");
+                                                    a.Parameter(o => o.Type, "the_type3");
+                                                }));
+                                });
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -950,33 +937,33 @@ namespace FunctionalTests
                         .Entity<Driver>()
                         .MapToStoredProcedures(
                             map =>
-                            {
-                                map.Insert(
-                                    f =>
-                                    {
-                                        f.Association<Team>(
-                                            t => t.Drivers,
-                                            a =>
+                                {
+                                    map.Insert(
+                                        f =>
                                             {
-                                                a.Parameter(t => t.Id, "team_id0");
-                                                a.Parameter(t => t.Name, "team_name0");
+                                                f.Association<Team>(
+                                                    t => t.Drivers,
+                                                    a =>
+                                                        {
+                                                            a.Parameter(t => t.Id, "team_id0");
+                                                            a.Parameter(t => t.Name, "team_name0");
+                                                        });
+                                                f.Parameter(d => d.Team.Id, "team_id1");
+                                                f.Parameter(d => d.Team.Name, "team_name1");
                                             });
-                                        f.Parameter(d => d.Team.Id, "team_id1");
-                                        f.Parameter(d => d.Team.Name, "team_name1");
-                                    });
-                                map.Update(
-                                    f =>
-                                    {
-                                        f.Parameter(d => d.Team.Id, "team_id2");
-                                        f.Parameter(d => d.Team.Name, "team_name2");
-                                    });
-                                map.Delete(
-                                    f =>
-                                    {
-                                        f.Parameter(d => d.Team.Id, "team_id3");
-                                        f.Parameter(d => d.Team.Name, "team_name3");
-                                    });
-                            })
+                                    map.Update(
+                                        f =>
+                                            {
+                                                f.Parameter(d => d.Team.Id, "team_id2");
+                                                f.Parameter(d => d.Team.Name, "team_name2");
+                                            });
+                                    map.Delete(
+                                        f =>
+                                            {
+                                                f.Parameter(d => d.Team.Id, "team_id3");
+                                                f.Parameter(d => d.Team.Name, "team_name3");
+                                            });
+                                })
                         .Ignore(d => d.Name);
 
                     var databaseMapping = BuildMapping(modelBuilder);
@@ -1008,11 +995,11 @@ namespace FunctionalTests
                         .Entity<Item>()
                         .MapToStoredProcedures(
                             map =>
-                            {
-                                map.Insert(f => f.Parameter(i => i.ParentItem.Id, "item_id1"));
-                                map.Update(f => f.Parameter(i => i.ParentItem.Id, "item_id2"));
-                                map.Delete(f => f.Parameter(i => i.ParentItem.Id, "item_id3"));
-                            });
+                                {
+                                    map.Insert(f => f.Parameter(i => i.ParentItem.Id, "item_id1"));
+                                    map.Update(f => f.Parameter(i => i.ParentItem.Id, "item_id2"));
+                                    map.Delete(f => f.Parameter(i => i.ParentItem.Id, "item_id3"));
+                                });
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1040,21 +1027,21 @@ namespace FunctionalTests
                         .Entity<Item>()
                         .MapToStoredProcedures(
                             map =>
-                            {
-                                map.Insert(f => f.Association<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id1")));
-                                map.Update(
-                                    f =>
-                                    {
-                                        f.Parameter(i => i.Id, "id2");
-                                        f.Association<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id2"));
-                                    });
-                                map.Delete(
-                                    f =>
-                                    {
-                                        f.Association<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id3"));
-                                        f.Parameter(i => i.Id, "id3");
-                                    });
-                            });
+                                {
+                                    map.Insert(f => f.Association<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id1")));
+                                    map.Update(
+                                        f =>
+                                            {
+                                                f.Parameter(i => i.Id, "id2");
+                                                f.Association<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id2"));
+                                            });
+                                    map.Delete(
+                                        f =>
+                                            {
+                                                f.Association<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id3"));
+                                                f.Parameter(i => i.Id, "id3");
+                                            });
+                                });
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1163,10 +1150,10 @@ namespace FunctionalTests
                         .MapToStoredProcedures(
                             map => map.Insert(
                                 f =>
-                                {
-                                    f.Parameter(ol => ol.IsShipped, "Price");
-                                    f.Parameter(ol => ol.Price, "Price");
-                                }));
+                                    {
+                                        f.Parameter(ol => ol.IsShipped, "Price");
+                                        f.Parameter(ol => ol.Price, "Price");
+                                    }));
 
                     Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
                 }
@@ -1180,10 +1167,10 @@ namespace FunctionalTests
                         .Entity<OrderLine>()
                         .MapToStoredProcedures(
                             map =>
-                            {
-                                map.Insert(f => f.HasName("OrderLine_Update"));
-                                map.Update(f => f.HasName("OrderLine_Update"));
-                            });
+                                {
+                                    map.Insert(f => f.HasName("OrderLine_Update"));
+                                    map.Update(f => f.HasName("OrderLine_Update"));
+                                });
 
                     Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
                 }
@@ -1199,10 +1186,10 @@ namespace FunctionalTests
                         .WithMany(p => p.Tags)
                         .MapToStoredProcedures(
                             map =>
-                            {
-                                map.Insert(f => f.HasName("Tag_Products_Delete"));
-                                map.Delete(f => f.HasName("Tag_Products_Delete"));
-                            });
+                                {
+                                    map.Insert(f => f.HasName("Tag_Products_Delete"));
+                                    map.Delete(f => f.HasName("Tag_Products_Delete"));
+                                });
 
                     Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
                 }
@@ -1317,11 +1304,11 @@ namespace FunctionalTests
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
-                                {
-                                    map.Insert(f => f.HasName("insert_order_line"));
-                                    map.Update(f => f.HasName("update_order_line", "foo"));
-                                    map.Delete(f => f.HasName("delete_order_line", "bar"));
-                                }));
+                                    {
+                                        map.Insert(f => f.HasName("insert_order_line"));
+                                        map.Update(f => f.HasName("update_order_line", "foo"));
+                                        map.Delete(f => f.HasName("delete_order_line", "bar"));
+                                    }));
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1356,11 +1343,11 @@ namespace FunctionalTests
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
-                                {
-                                    map.Insert(f => f.HasName("insert_order_line"));
-                                    map.Update(f => f.HasName("update_order_line", "foo"));
-                                    map.Delete(f => f.HasName("delete_order_line", "bar"));
-                                }));
+                                    {
+                                        map.Insert(f => f.HasName("insert_order_line"));
+                                        map.Update(f => f.HasName("update_order_line", "foo"));
+                                        map.Delete(f => f.HasName("delete_order_line", "bar"));
+                                    }));
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1393,11 +1380,11 @@ namespace FunctionalTests
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
-                                {
-                                    map.Insert(f => f.Parameter("OrderId", "ins_order_id"));
-                                    map.Update(f => f.Parameter(typeof(OrderLine).GetProperty("Id"), "upd_id"));
-                                    map.Delete(f => f.Parameter("Id", "del_id"));
-                                }));
+                                    {
+                                        map.Insert(f => f.Parameter("OrderId", "ins_order_id"));
+                                        map.Update(f => f.Parameter(typeof(OrderLine).GetProperty("Id"), "upd_id"));
+                                        map.Delete(f => f.Parameter("Id", "del_id"));
+                                    }));
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1429,11 +1416,11 @@ namespace FunctionalTests
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
-                                {
-                                    map.Insert(f => f.Parameter(b => b.Address.Line1, "ins_line1"));
-                                    map.Update(f => f.Parameter(b => b.Id, "upd_id"));
-                                    map.Delete(f => f.Parameter(b => b.Id, "del_id"));
-                                }));
+                                    {
+                                        map.Insert(f => f.Parameter(b => b.Address.Line1, "ins_line1"));
+                                        map.Update(f => f.Parameter(b => b.Id, "upd_id"));
+                                        map.Delete(f => f.Parameter(b => b.Id, "del_id"));
+                                    }));
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1499,10 +1486,10 @@ namespace FunctionalTests
                             c => c.MapToStoredProcedures(
                                 map => map.Update(
                                     f =>
-                                    {
-                                        f.Parameter(e => e.Name, "name_cur", "name_orig");
-                                        f.Parameter(e => e.StorageLocation.Latitude, "lat_cur", "lat_orig");
-                                    })));
+                                        {
+                                            f.Parameter(e => e.Name, "name_cur", "name_orig");
+                                            f.Parameter(e => e.StorageLocation.Latitude, "lat_cur", "lat_orig");
+                                        })));
                     modelBuilder.Ignore<Team>();
 
                     var databaseMapping = BuildMapping(modelBuilder);
@@ -1580,10 +1567,10 @@ namespace FunctionalTests
                             c => c.MapToStoredProcedures(
                                 map => map.Delete(
                                     f =>
-                                    {
-                                        f.HasName("del_ol");
-                                        f.Parameter("IsShipped", "boom");
-                                    })));
+                                        {
+                                            f.HasName("del_ol");
+                                            f.Parameter("IsShipped", "boom");
+                                        })));
 
                     Assert.Equal(
                         Strings.ModificationFunctionParameterNotFound("IsShipped", "del_ol"),
@@ -1604,10 +1591,10 @@ namespace FunctionalTests
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
-                                {
-                                    map.Insert(f => f.Result("OrderId", "order_id"));
-                                    map.Update(f => f.Result("Version", "timestamp"));
-                                }));
+                                    {
+                                        map.Insert(f => f.Result("OrderId", "order_id"));
+                                        map.Update(f => f.Result("Version", "timestamp"));
+                                    }));
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1637,10 +1624,10 @@ namespace FunctionalTests
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
-                                {
-                                    map.Insert(f => f.Result(o => o.OrderId, "order_id"));
-                                    map.Update(f => f.Result(o => o.Version, "timestamp"));
-                                }));
+                                    {
+                                        map.Insert(f => f.Result(o => o.OrderId, "order_id"));
+                                        map.Update(f => f.Result(o => o.Version, "timestamp"));
+                                    }));
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1730,10 +1717,10 @@ namespace FunctionalTests
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
-                                {
-                                    map.Update(f => f.RowsAffectedParameter("rows_affected1"));
-                                    map.Delete(f => f.RowsAffectedParameter("rows_affected2"));
-                                }));
+                                    {
+                                        map.Update(f => f.RowsAffectedParameter("rows_affected1"));
+                                        map.Delete(f => f.RowsAffectedParameter("rows_affected2"));
+                                    }));
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1763,10 +1750,10 @@ namespace FunctionalTests
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
-                                {
-                                    map.Update(f => f.RowsAffectedParameter("rows_affected1"));
-                                    map.Delete(f => f.RowsAffectedParameter("rows_affected2"));
-                                }));
+                                    {
+                                        map.Update(f => f.RowsAffectedParameter("rows_affected1"));
+                                        map.Delete(f => f.RowsAffectedParameter("rows_affected2"));
+                                    }));
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1841,32 +1828,32 @@ namespace FunctionalTests
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
-                                {
-                                    map.Insert(
-                                        f => f.Association<Order>(
-                                            o => o.OrderLines,
-                                            a =>
-                                            {
-                                                a.Parameter(o => o.OrderId, "order_id1");
-                                                a.Parameter(o => o.Type, "the_type1");
-                                            }));
-                                    map.Update(
-                                        f => f.Association<Order>(
-                                            o => o.OrderLines,
-                                            a =>
-                                            {
-                                                a.Parameter(o => o.OrderId, "order_id2");
-                                                a.Parameter(o => o.Type, "the_type2");
-                                            }));
-                                    map.Delete(
-                                        f => f.Association<Order>(
-                                            o => o.OrderLines,
-                                            a =>
-                                            {
-                                                a.Parameter(o => o.OrderId, "order_id3");
-                                                a.Parameter(o => o.Type, "the_type3");
-                                            }));
-                                }));
+                                    {
+                                        map.Insert(
+                                            f => f.Association<Order>(
+                                                o => o.OrderLines,
+                                                a =>
+                                                    {
+                                                        a.Parameter(o => o.OrderId, "order_id1");
+                                                        a.Parameter(o => o.Type, "the_type1");
+                                                    }));
+                                        map.Update(
+                                            f => f.Association<Order>(
+                                                o => o.OrderLines,
+                                                a =>
+                                                    {
+                                                        a.Parameter(o => o.OrderId, "order_id2");
+                                                        a.Parameter(o => o.Type, "the_type2");
+                                                    }));
+                                        map.Delete(
+                                            f => f.Association<Order>(
+                                                o => o.OrderLines,
+                                                a =>
+                                                    {
+                                                        a.Parameter(o => o.OrderId, "order_id3");
+                                                        a.Parameter(o => o.Type, "the_type3");
+                                                    }));
+                                    }));
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1916,33 +1903,33 @@ namespace FunctionalTests
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
-                                {
-                                    map.Insert(
-                                        f =>
-                                        {
-                                            f.Association<Team>(
-                                                t => t.Drivers,
-                                                a =>
+                                    {
+                                        map.Insert(
+                                            f =>
                                                 {
-                                                    a.Parameter(t => t.Id, "team_id0");
-                                                    a.Parameter(t => t.Name, "team_name0");
+                                                    f.Association<Team>(
+                                                        t => t.Drivers,
+                                                        a =>
+                                                            {
+                                                                a.Parameter(t => t.Id, "team_id0");
+                                                                a.Parameter(t => t.Name, "team_name0");
+                                                            });
+                                                    f.Parameter(d => d.Team.Id, "team_id1");
+                                                    f.Parameter(d => d.Team.Name, "team_name1");
                                                 });
-                                            f.Parameter(d => d.Team.Id, "team_id1");
-                                            f.Parameter(d => d.Team.Name, "team_name1");
-                                        });
-                                    map.Update(
-                                        f =>
-                                        {
-                                            f.Parameter(d => d.Team.Id, "team_id2");
-                                            f.Parameter(d => d.Team.Name, "team_name2");
-                                        });
-                                    map.Delete(
-                                        f =>
-                                        {
-                                            f.Parameter(d => d.Team.Id, "team_id3");
-                                            f.Parameter(d => d.Team.Name, "team_name3");
-                                        });
-                                }));
+                                        map.Update(
+                                            f =>
+                                                {
+                                                    f.Parameter(d => d.Team.Id, "team_id2");
+                                                    f.Parameter(d => d.Team.Name, "team_name2");
+                                                });
+                                        map.Delete(
+                                            f =>
+                                                {
+                                                    f.Parameter(d => d.Team.Id, "team_id3");
+                                                    f.Parameter(d => d.Team.Name, "team_name3");
+                                                });
+                                    }));
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1976,11 +1963,11 @@ namespace FunctionalTests
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
-                                {
-                                    map.Insert(f => f.Parameter(i => i.ParentItem.Id, "item_id1"));
-                                    map.Update(f => f.Parameter(i => i.ParentItem.Id, "item_id2"));
-                                    map.Delete(f => f.Parameter(i => i.ParentItem.Id, "item_id3"));
-                                }));
+                                    {
+                                        map.Insert(f => f.Parameter(i => i.ParentItem.Id, "item_id1"));
+                                        map.Update(f => f.Parameter(i => i.ParentItem.Id, "item_id2"));
+                                        map.Delete(f => f.Parameter(i => i.ParentItem.Id, "item_id3"));
+                                    }));
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -2012,10 +1999,10 @@ namespace FunctionalTests
                             c => c.MapToStoredProcedures(
                                 map => map.Insert(
                                     f =>
-                                    {
-                                        f.Parameter("IsShipped", "Price");
-                                        f.Parameter("Price", "Price");
-                                    })));
+                                        {
+                                            f.Parameter("IsShipped", "Price");
+                                            f.Parameter("Price", "Price");
+                                        })));
 
                     Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
                 }
@@ -2033,10 +2020,10 @@ namespace FunctionalTests
                             c => c.MapToStoredProcedures(
                                 map => map.Insert(
                                     f =>
-                                    {
-                                        f.Parameter(ol => ol.IsShipped, "Price");
-                                        f.Parameter(ol => ol.Price, "Price");
-                                    })));
+                                        {
+                                            f.Parameter(ol => ol.IsShipped, "Price");
+                                            f.Parameter(ol => ol.Price, "Price");
+                                        })));
 
                     Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
                 }
@@ -2053,10 +2040,10 @@ namespace FunctionalTests
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
-                                {
-                                    map.Insert(f => f.HasName("OrderLine_Update"));
-                                    map.Update(f => f.HasName("OrderLine_Update"));
-                                }));
+                                    {
+                                        map.Insert(f => f.HasName("OrderLine_Update"));
+                                        map.Update(f => f.HasName("OrderLine_Update"));
+                                    }));
 
                     Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
                 }
@@ -2073,10 +2060,10 @@ namespace FunctionalTests
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
-                                {
-                                    map.Insert(f => f.HasName("OrderLine_Update"));
-                                    map.Update(f => f.HasName("OrderLine_Update"));
-                                }));
+                                    {
+                                        map.Insert(f => f.HasName("OrderLine_Update"));
+                                        map.Update(f => f.HasName("OrderLine_Update"));
+                                    }));
 
                     Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
                 }
@@ -2142,48 +2129,43 @@ namespace FunctionalTests
 
             public class EndToEnd : EndToEndFunctionsTest
             {
-                [Fact, AutoRollback]
+                [Fact]
+                [AutoRollback]
                 public void Can_insert_update_and_delete_when_generated_property()
                 {
-                    CreateInsertFor<OrderLine>();
-                    CreateUpdateFor<OrderLine>();
-                    CreateDeleteFor<OrderLine>();
-
                     using (var context = CreateContext())
                     {
-                        var orderLine = new OrderLine { Price = 1.00m };
+                        var order
+                            = new Order
+                                  {
+                                      Type = "Foo"
+                                  };
 
-                        Assert.Equal(0, context.Set<OrderLine>().Count());
+                        Assert.Equal(0, context.Set<Order>().Count());
 
                         // Insert
-                        context.Set<OrderLine>().Add(orderLine);
+                        context.Set<Order>().Add(order);
                         context.SaveChanges();
 
-                        Assert.Equal(1, context.Set<OrderLine>().Count());
-                        Assert.Equal(0.00m, context.Set<OrderLine>().Select(ol => ol.Total).First());
+                        Assert.Equal(1, context.Set<Order>().Count());
+                        Assert.NotNull(context.Set<Order>().Select(ol => ol.Version).First());
 
                         // Update
-                        orderLine.Quantity = 1;
+                        order.Type = "Bar";
                         context.SaveChanges();
 
-                        Assert.Equal(1.00m, orderLine.Total);
-                        Assert.Equal(1.00m, context.Set<OrderLine>().Select(ol => ol.Total).First());
-
                         // Delete
-                        context.Set<OrderLine>().Remove(orderLine);
+                        context.Set<Order>().Remove(order);
                         context.SaveChanges();
 
                         Assert.Equal(0, context.Set<OrderLine>().Count());
                     }
                 }
 
-                [Fact, AutoRollback]
+                [Fact]
+                [AutoRollback]
                 public void Can_insert_update_and_delete_when_tph_inheritance()
                 {
-                    CreateInsertFor<SpecialCustomer>();
-                    CreateUpdateFor<SpecialCustomer>();
-                    CreateDeleteFor<SpecialCustomer>();
-
                     using (var context = CreateContext())
                     {
                         var customer = new SpecialCustomer();
@@ -2210,11 +2192,10 @@ namespace FunctionalTests
                     }
                 }
 
-                [Fact, AutoRollback]
+                [Fact]
+                [AutoRollback]
                 public void Can_insert_and_delete_when_many_to_many()
                 {
-                    CreateInsertFor<ProductA>();
-                    CreateInsertFor<Tag>();
                     Execute(@"CREATE PROCEDURE [Tag_Products_Insert]
     @Tag_Id int,
     @ProductA_Id int
@@ -2235,9 +2216,12 @@ END");
                     using (var context = CreateContext())
                     {
                         var tag = new Tag
-                            {
-                                Products = new List<ProductA> { new ProductA() }
-                            };
+                                      {
+                                          Products = new List<ProductA>
+                                                         {
+                                                             new ProductA()
+                                                         }
+                                      };
 
                         Assert.Equal(0, context.Set<Tag>().SelectMany(t => t.Products).Count());
 
@@ -2259,178 +2243,22 @@ END");
                 {
                     base.OnModelCreating(modelBuilder);
 
-                    modelBuilder.Ignore<Order>();
-                    modelBuilder.Entity<OrderLine>()
-                        .Property(ol => ol.Total).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Computed);
+                    modelBuilder.Entity<Order>();
                     modelBuilder.Entity<MigrationsCustomer>();
-
                     modelBuilder.Entity<Tag>()
-                        .HasMany(t => t.Products)
-                        .WithMany(p => p.Tags)
-                        .Map(m => m.ToTable("TagProductAs"))
-                        .MapToStoredProcedures();
-                }
-
-                private void CreateInsertFor<TEntityType>()
-                {
-                    // TODO: Generate using product when supported
-                    if (typeof(TEntityType) == typeof(OrderLine))
-                    {
-                        Execute(@"CREATE PROCEDURE [OrderLine_Insert]
-    @OrderId int,
-    @Quantity smallint,
-    @Price decimal,
-    @IsShipped bit,
-    @ProductId int,
-    @Sku nvarchar
-AS
-BEGIN
-    insert [dbo].[OrderLines]([OrderId], [Quantity], [Price], [Total], [IsShipped], [ProductId], [Sku])
-    values (@OrderId, @Quantity, @Price, @Quantity * @Price, @IsShipped, @ProductId, @Sku)
-    select [Id], [Total]
-    from [dbo].[OrderLines]
-    where @@ROWCOUNT > 0 and [Id] = scope_identity()
-END");
-                    }
-                    else if (typeof(TEntityType) == typeof(SpecialCustomer))
-                    {
-                        Execute(@"CREATE PROCEDURE [SpecialCustomer_Insert]
-    @CustomerNumber bigint,
-    @Name nvarchar,
-    @FullName nvarchar,
-    @DateOfBirth datetime2,
-    @Age tinyint,
-    @HomeAddress_City nvarchar,
-    @WorkAddress_City nvarchar,
-    @Photo varbinary,
-    @Points int
-AS
-BEGIN
-    insert [dbo].[MigrationsCustomers]([CustomerNumber], [Name], [FullName], [DateOfBirth], [Age], [HomeAddress_City], [WorkAddress_City], [Photo], [Points], [Discriminator])
-    values (@CustomerNumber, @Name, @FullName, @DateOfBirth, @Age, @HomeAddress_City, @WorkAddress_City, @Photo, @Points, N'SpecialCustomer')
-    select [Id]
-    from [dbo].[MigrationsCustomers]
-    where @@ROWCOUNT > 0 and [Id] = scope_identity()
-END");
-                    }
-                    else if (typeof(TEntityType) == typeof(ProductA))
-                    {
-                        Execute(@"CREATE PROCEDURE [ProductA_Insert]
-    @Name nvarchar
-AS
-BEGIN
-    insert [dbo].[ProductAs]([Name])
-    values (@Name)
-    select [Id]
-    from [dbo].[ProductAs]
-    where @@ROWCOUNT > 0 and [Id] = scope_identity()
-END");
-                    }
-                    else if (typeof(TEntityType) == typeof(Tag))
-                    {
-                        Execute(@"CREATE PROCEDURE [Tag_Insert]
-    @Name nvarchar
-AS
-BEGIN
-    insert [dbo].[Tags]([Name])
-    values (@Name)
-    select [Id]
-    from [dbo].[Tags]
-    where @@ROWCOUNT > 0 and [Id] = scope_identity()
-END");
-                    }
-                    else
-                    {
-                        Debug.Fail("Unexpected entity type: " + typeof(TEntityType).Name);
-                    }
-                }
-
-                private void CreateUpdateFor<TEntityType>()
-                {
-                    if (typeof(TEntityType) == typeof(OrderLine))
-                    {
-                        Execute(@"CREATE PROCEDURE [OrderLine_Update]
-    @OrderId int,
-    @Quantity smallint,
-    @Price decimal,
-    @IsShipped bit,
-    @ProductId int,
-    @Sku nvarchar,
-    @Id int
-AS
-BEGIN
-    update [dbo].[OrderLines]
-    set [OrderId] = @OrderId, [Quantity] = @Quantity, [Price] = @Price, [Total] = @Quantity * @Price, [IsShipped] = @IsShipped, [ProductId] = @ProductId, [Sku] = @Sku
-    where ([Id] = @Id)
-    select [Total]
-    from [dbo].[OrderLines]
-    where @@ROWCOUNT > 0 and [Id] = @Id
-END");
-                    }
-                    else if (typeof(TEntityType) == typeof(SpecialCustomer))
-                    {
-                        Execute(@"CREATE PROCEDURE [SpecialCustomer_Update]
-    @CustomerNumber bigint,
-    @Name nvarchar,
-    @FullName nvarchar,
-    @DateOfBirth datetime2,
-    @Age tinyint,
-    @HomeAddress_City nvarchar,
-    @WorkAddress_City nvarchar,
-    @Photo varbinary,
-    @Points int,
-    @Id int
-AS
-BEGIN
-    update [dbo].[MigrationsCustomers]
-    set [CustomerNumber] = @CustomerNumber, [Name] = @Name, [FullName] = @FullName, [DateOfBirth] = @DateOfBirth, [Age] = @Age, [HomeAddress_City] = @HomeAddress_City, [WorkAddress_City] = @WorkAddress_City, [Photo] = @Photo, [Points] = @Points
-    where ([Id] = @Id)    
-END");
-                    }
-                    else
-                    {
-                        Debug.Fail("Unexpected entity type: " + typeof(TEntityType).Name);
-                    }
-                }
-
-                private void CreateDeleteFor<TEntityType>()
-                {
-                    if (typeof(TEntityType) == typeof(OrderLine))
-                    {
-                        Execute(@"CREATE PROCEDURE [OrderLine_Delete]
-    @Id int
-AS
-BEGIN
-    delete [dbo].[OrderLines]
-    where ([Id] = @Id)
-END");
-                    }
-                    else if (typeof(TEntityType) == typeof(SpecialCustomer))
-                    {
-                        Execute(@"CREATE PROCEDURE [SpecialCustomer_Delete]
-    @Id int
-AS
-BEGIN
-    delete [dbo].[MigrationsCustomers]
-    where ([Id] = @Id)
-END");
-                    }
-                    else
-                    {
-                        Debug.Fail("Unexpected entity type: " + typeof(TEntityType).Name);
-                    }
+                                .HasMany(t => t.Products)
+                                .WithMany(p => p.Tags)
+                                .Map(m => m.ToTable("TagProductAs"))
+                                .MapToStoredProcedures();
                 }
             }
 
             public class EndToEntWithTPT : EndToEndFunctionsTest
             {
-                [Fact, AutoRollback]
+                [Fact]
+                [AutoRollback]
                 public void Can_insert_update_and_delete_when_tpt_inheritance()
                 {
-                    CreateInsertFor<SpecialCustomer>();
-                    CreateUpdateFor<SpecialCustomer>();
-                    CreateDeleteFor<SpecialCustomer>();
-
                     using (var context = CreateContext())
                     {
                         var customer = new SpecialCustomer();
@@ -2463,113 +2291,18 @@ END");
 
                     modelBuilder.Ignore<Order>();
                     modelBuilder.Entity<MigrationsCustomer>()
-                        .Map(m => m.ToTable("MigrationsCustomers"))
-                        .Map<SpecialCustomer>(m => m.ToTable("SpecialCustomers"))
-                        .Map<GoldCustomer>(m => m.ToTable("GoldCustomers"));
-                }
-
-                private void CreateInsertFor<TEntityType>()
-                {
-                    if (typeof(TEntityType) == typeof(SpecialCustomer))
-                    {
-                        Execute(@"CREATE PROCEDURE [SpecialCustomer_Insert]
-    @CustomerNumber bigint,
-    @Name nvarchar,
-    @FullName nvarchar,
-    @DateOfBirth datetime2,
-    @Age tinyint,
-    @HomeAddress_City nvarchar,
-    @WorkAddress_City nvarchar,
-    @Photo varbinary,
-    @Points int
-AS
-BEGIN
-    insert [dbo].[MigrationsCustomers]([CustomerNumber], [Name], [FullName], [DateOfBirth], [Age], [HomeAddress_City], [WorkAddress_City], [Photo])
-    values (@CustomerNumber, @Name, @FullName, @DateOfBirth, @Age, @HomeAddress_City, @WorkAddress_City, @Photo)
-
-    IF @@ROWCOUNT > 0
-    BEGIN
-        DECLARE @Id int = scope_identity()
-
-        insert [dbo].[SpecialCustomers]([Id], [Points])
-        values (@Id, @Points)
-        select [Id]
-        from [dbo].[SpecialCustomers]
-        where @@ROWCOUNT > 0 and [Id] = @Id
-    END
-    ELSE
-        select [Id]
-        from [dbo].[MigrationsCustomers]
-        where 1 = 0
-END");
-                    }
-                    else
-                    {
-                        Debug.Fail("Unexpected entity type: " + typeof(TEntityType).Name);
-                    }
-                }
-
-                private void CreateUpdateFor<TEntityType>()
-                {
-                    if (typeof(TEntityType) == typeof(SpecialCustomer))
-                    {
-                        Execute(@"CREATE PROCEDURE [SpecialCustomer_Update]
-    @CustomerNumber bigint,
-    @Name nvarchar,
-    @FullName nvarchar,
-    @DateOfBirth datetime2,
-    @Age tinyint,
-    @HomeAddress_City nvarchar,
-    @WorkAddress_City nvarchar,
-    @Photo varbinary,
-    @Points int,
-    @Id int
-AS
-BEGIN
-    update [dbo].[MigrationsCustomers]
-    set [CustomerNumber] = @CustomerNumber, [Name] = @Name, [FullName] = @FullName, [DateOfBirth] = @DateOfBirth, [Age] = @Age, [HomeAddress_City] = @HomeAddress_City, [WorkAddress_City] = @WorkAddress_City, [Photo] = @Photo
-    where ([Id] = @Id)    
-    update [dbo].[SpecialCustomers]
-    set [Points] = @Points
-    where ([Id] = @Id)    
-END");
-                    }
-                    else
-                    {
-                        Debug.Fail("Unexpected entity type: " + typeof(TEntityType).Name);
-                    }
-                }
-
-                private void CreateDeleteFor<TEntityType>()
-                {
-                    if (typeof(TEntityType) == typeof(SpecialCustomer))
-                    {
-                        Execute(@"CREATE PROCEDURE [SpecialCustomer_Delete]
-    @Id int
-AS
-BEGIN
-    delete [dbo].[SpecialCustomers]
-    where ([Id] = @Id)
-    delete [dbo].[MigrationsCustomers]
-    where ([Id] = @Id)
-END");
-                    }
-                    else
-                    {
-                        Debug.Fail("Unexpected entity type: " + typeof(TEntityType).Name);
-                    }
+                                .Map(m => m.ToTable("MigrationsCustomers"))
+                                .Map<SpecialCustomer>(m => m.ToTable("SpecialCustomers"))
+                                .Map<GoldCustomer>(m => m.ToTable("GoldCustomers"));
                 }
             }
 
             public class EndToEntWithTPC : EndToEndFunctionsTest
             {
-                [Fact, AutoRollback]
+                [Fact]
+                [AutoRollback]
                 public void Can_insert_update_and_delete_when_tpt_inheritance()
                 {
-                    CreateInsertFor<SpecialCustomer>();
-                    CreateUpdateFor<SpecialCustomer>();
-                    CreateDeleteFor<SpecialCustomer>();
-
                     using (var context = CreateContext())
                     {
                         var customer = new SpecialCustomer();
@@ -2602,97 +2335,24 @@ END");
 
                     modelBuilder.Ignore<Order>();
                     modelBuilder.Entity<MigrationsCustomer>()
-                        .Map(
-                            m =>
-                            {
-                                m.MapInheritedProperties();
-                                m.ToTable("MigrationsCustomers");
-                            })
-                        .Map<SpecialCustomer>(
-                            m =>
-                            {
-                                m.MapInheritedProperties();
-                                m.ToTable("SpecialCustomers");
-                            })
-                        .Map<GoldCustomer>(
-                            m =>
-                            {
-                                m.MapInheritedProperties();
-                                m.ToTable("GoldCustomers");
-                            });
-                }
-
-                private void CreateInsertFor<TEntityType>()
-                {
-                    if (typeof(TEntityType) == typeof(SpecialCustomer))
-                    {
-                        Execute(@"CREATE PROCEDURE [SpecialCustomer_Insert]
-    @Id int,
-    @CustomerNumber bigint,
-    @Name nvarchar,
-    @FullName nvarchar,
-    @DateOfBirth datetime2,
-    @Age tinyint,
-    @HomeAddress_City nvarchar,
-    @WorkAddress_City nvarchar,
-    @Photo varbinary,
-    @Points int
-AS
-BEGIN
-    insert [dbo].[SpecialCustomers]([Id], [CustomerNumber], [Name], [FullName], [DateOfBirth], [Age], [HomeAddress_City], [WorkAddress_City], [Photo], [Points])
-    values (@Id, @CustomerNumber, @Name, @FullName, @DateOfBirth, @Age, @HomeAddress_City, @WorkAddress_City, @Photo, @Points)
-END");
-                    }
-                    else
-                    {
-                        Debug.Fail("Unexpected entity type: " + typeof(TEntityType).Name);
-                    }
-                }
-
-                private void CreateUpdateFor<TEntityType>()
-                {
-                    if (typeof(TEntityType) == typeof(SpecialCustomer))
-                    {
-                        Execute(@"CREATE PROCEDURE [SpecialCustomer_Update]
-    @CustomerNumber bigint,
-    @Name nvarchar,
-    @FullName nvarchar,
-    @DateOfBirth datetime2,
-    @Age tinyint,
-    @HomeAddress_City nvarchar,
-    @WorkAddress_City nvarchar,
-    @Photo varbinary,
-    @Points int,
-    @Id int
-AS
-BEGIN
-    update [dbo].[SpecialCustomers]
-    set [CustomerNumber] = @CustomerNumber, [Name] = @Name, [FullName] = @FullName, [DateOfBirth] = @DateOfBirth, [Age] = @Age, [HomeAddress_City] = @HomeAddress_City, [WorkAddress_City] = @WorkAddress_City, [Photo] = @Photo, [Points] = @Points
-    where ([Id] = @Id)
-END");
-                    }
-                    else
-                    {
-                        Debug.Fail("Unexpected entity type: " + typeof(TEntityType).Name);
-                    }
-                }
-
-                private void CreateDeleteFor<TEntityType>()
-                {
-                    if (typeof(TEntityType) == typeof(SpecialCustomer))
-                    {
-                        Execute(@"CREATE PROCEDURE [SpecialCustomer_Delete]
-    @Id int
-AS
-BEGIN
-    delete [dbo].[SpecialCustomers]
-    where ([Id] = @Id)
-END");
-                    }
-                    else
-                    {
-                        Debug.Fail("Unexpected entity type: " + typeof(TEntityType).Name);
-                    }
+                                .Map(
+                                    m =>
+                                        {
+                                            m.MapInheritedProperties();
+                                            m.ToTable("MigrationsCustomers");
+                                        })
+                                .Map<SpecialCustomer>(
+                                    m =>
+                                        {
+                                            m.MapInheritedProperties();
+                                            m.ToTable("SpecialCustomers");
+                                        })
+                                .Map<GoldCustomer>(
+                                    m =>
+                                        {
+                                            m.MapInheritedProperties();
+                                            m.ToTable("GoldCustomers");
+                                        });
                 }
             }
         }

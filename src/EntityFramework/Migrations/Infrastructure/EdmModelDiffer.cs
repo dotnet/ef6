@@ -6,6 +6,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Edm;
@@ -21,14 +23,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
     {
         private static readonly PrimitiveTypeKind[] _validIdentityTypes
             = new[]
-                {
-                    PrimitiveTypeKind.Byte,
-                    PrimitiveTypeKind.Decimal,
-                    PrimitiveTypeKind.Guid,
-                    PrimitiveTypeKind.Int16,
-                    PrimitiveTypeKind.Int32,
-                    PrimitiveTypeKind.Int64
-                };
+                  {
+                      PrimitiveTypeKind.Byte,
+                      PrimitiveTypeKind.Decimal,
+                      PrimitiveTypeKind.Guid,
+                      PrimitiveTypeKind.Int16,
+                      PrimitiveTypeKind.Int32,
+                      PrimitiveTypeKind.Int64
+                  };
 
         /// <summary>
         ///     Exposed internally for testing.
@@ -37,6 +39,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             public XDocument Model { get; set; }
             public StoreItemCollection StoreItemCollection { get; set; }
+            public StorageEntityContainerMapping StorageEntityContainerMapping { get; set; }
             public DbProviderManifest ProviderManifest { get; set; }
             public DbProviderInfo ProviderInfo { get; set; }
         }
@@ -46,48 +49,70 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private bool _consistentProviders;
 
-        public IEnumerable<MigrationOperation> Diff(XDocument sourceModel, XDocument targetModel, bool? includeSystemOperations = null)
+        public IEnumerable<MigrationOperation> Diff(
+            XDocument sourceModel,
+            XDocument targetModel,
+            bool? includeSystemOperations = null,
+            ModificationCommandTreeGenerator modificationCommandTreeGenerator = null)
         {
+            DebugCheck.NotNull(sourceModel);
+            DebugCheck.NotNull(targetModel);
+
             DbProviderInfo providerInfo;
+
+            var storageMappingItemCollection
+                = sourceModel.GetStorageMappingItemCollection(out providerInfo);
 
             var source
                 = new ModelMetadata
-                    {
-                        Model = sourceModel,
-                        StoreItemCollection = sourceModel.GetStoreItemCollection(out providerInfo),
-                        ProviderManifest = GetProviderManifest(providerInfo),
-                        ProviderInfo = providerInfo
-                    };
+                      {
+                          Model = sourceModel,
+                          StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
+                          StorageEntityContainerMapping
+                              = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().Single(),
+                          ProviderManifest = GetProviderManifest(providerInfo),
+                          ProviderInfo = providerInfo
+                      };
+
+            storageMappingItemCollection
+                = targetModel.GetStorageMappingItemCollection(out providerInfo);
 
             var target
                 = new ModelMetadata
-                    {
-                        Model = targetModel,
-                        StoreItemCollection = targetModel.GetStoreItemCollection(out providerInfo),
-                        ProviderManifest = GetProviderManifest(providerInfo),
-                        ProviderInfo = providerInfo
-                    };
+                      {
+                          Model = targetModel,
+                          StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
+                          StorageEntityContainerMapping
+                              = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().Single(),
+                          ProviderManifest = GetProviderManifest(providerInfo),
+                          ProviderInfo = providerInfo
+                      };
 
             if (includeSystemOperations == null)
             {
                 includeSystemOperations
-                    = sourceModel.HasSystemOperations() && targetModel.HasSystemOperations();
+                    = sourceModel.HasSystemOperations()
+                      && targetModel.HasSystemOperations();
             }
 
-            return Diff(source, target, (bool)includeSystemOperations);
+            return Diff(source, target, (bool)includeSystemOperations, modificationCommandTreeGenerator);
         }
 
         /// <summary>
         ///     For testing.
         /// </summary>
-        public IEnumerable<MigrationOperation> Diff(ModelMetadata source, ModelMetadata target, bool includeSystemOperations)
+        public IEnumerable<MigrationOperation> Diff(
+            ModelMetadata source, 
+            ModelMetadata target,
+            bool includeSystemOperations,
+            ModificationCommandTreeGenerator modificationCommandTreeGenerator)
         {
             DebugCheck.NotNull(source);
             DebugCheck.NotNull(target);
 
             _source = source;
             _target = target;
-
+            
             _consistentProviders
                 = _source.ProviderInfo.ProviderInvariantName.EqualsIgnoreCase(
                     _target.ProviderInfo.ProviderInvariantName)
@@ -109,6 +134,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var removedForeignKeys = FindRemovedForeignKeys(columnNormalizedSourceModel).ToList();
             var changedPrimaryKeys = FindChangedPrimaryKeys(columnNormalizedSourceModel).ToList();
 
+            var addedModificationFunctions = FindAddedModificationFunctions(modificationCommandTreeGenerator).ToList();
+            var removedModificationFunctions = FindRemovedModificationFunctions().ToList();
+
             return renamedTables
                 .Concat<MigrationOperation>(movedTables)
                 .Concat(removedForeignKeys)
@@ -122,6 +150,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Concat(addedForeignKeys)
                 .Concat(removedColumns)
                 .Concat(removedTables)
+                .Concat(addedModificationFunctions)
+                .Concat(removedModificationFunctions)
                 .Where(o => includeSystemOperations || !o.IsSystem)
                 .ToList();
         }
@@ -166,6 +196,79 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     });
 
             return columnNormalizedSourceModel;
+        }
+
+        private IEnumerable<CreateModificationFunctionsOperation> FindAddedModificationFunctions(
+            ModificationCommandTreeGenerator modificationCommandTreeGenerator)
+        {
+            return
+                from esm1 in _target.StorageEntityContainerMapping.EntitySetMappings
+                from mfm1 in esm1.ModificationFunctionMappings
+                where !(from esm2 in _source.StorageEntityContainerMapping.EntitySetMappings
+                        from mfm2 in esm2.ModificationFunctionMappings
+                        where mfm1.EntityType.Identity == mfm2.EntityType.Identity
+                        select mfm2
+                       ).Any()
+                select BuildCreateModificationFunctionsOperation(mfm1, modificationCommandTreeGenerator);
+        }
+
+        private CreateModificationFunctionsOperation BuildCreateModificationFunctionsOperation(
+            StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
+            ModificationCommandTreeGenerator modificationCommandTreeGenerator)
+        {
+            DebugCheck.NotNull(modificationFunctionMapping);
+
+            var convertedInsertTrees = new DbInsertCommandTree[0];
+            var convertedUpdateTrees = new DbUpdateCommandTree[0];
+            var convertedDeleteTrees = new DbDeleteCommandTree[0];
+
+            if (modificationCommandTreeGenerator != null)
+            {
+                var dynamicToFunctionModificationCommandConverter
+                    = new DynamicToFunctionModificationCommandConverter(
+                        modificationFunctionMapping,
+                        _target.StorageEntityContainerMapping);
+
+                convertedInsertTrees
+                    = dynamicToFunctionModificationCommandConverter
+                        .Convert(
+                            modificationCommandTreeGenerator
+                                .GenerateInsert(modificationFunctionMapping.EntityType.Identity))
+                        .ToArray();
+
+                convertedUpdateTrees
+                    = dynamicToFunctionModificationCommandConverter
+                        .Convert(
+                            modificationCommandTreeGenerator
+                                .GenerateUpdate(modificationFunctionMapping.EntityType.Identity))
+                        .ToArray();
+
+                convertedDeleteTrees
+                    = dynamicToFunctionModificationCommandConverter
+                        .Convert(
+                            modificationCommandTreeGenerator
+                                .GenerateDelete(modificationFunctionMapping.EntityType.Identity))
+                        .ToArray();
+            }
+
+            return new CreateModificationFunctionsOperation(
+                modificationFunctionMapping,
+                convertedInsertTrees,
+                convertedUpdateTrees,
+                convertedDeleteTrees);
+        }
+
+        private IEnumerable<DropModificationFunctionsOperation> FindRemovedModificationFunctions()
+        {
+            return
+                from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
+                from mfm1 in esm1.ModificationFunctionMappings
+                where !(from esm2 in _target.StorageEntityContainerMapping.EntitySetMappings
+                        from mfm2 in esm2.ModificationFunctionMappings
+                        where mfm1.EntityType.Identity == mfm2.EntityType.Identity
+                        select mfm2
+                       ).Any()
+                select new DropModificationFunctionsOperation(mfm1);
         }
 
         private IEnumerable<RenameTableOperation> FindRenamedTables()
@@ -235,9 +338,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                             es.SchemaAttribute(),
                                             es.IsSystem(),
                                             _source))
-                                  {
-                                      IsSystem = es.IsSystem()
-                                  });
+                                        {
+                                            IsSystem = es.IsSystem()
+                                        });
         }
 
         private IEnumerable<DropColumnOperation> FindRemovedColumns(IEnumerable<RenameColumnOperation> renamedColumns)
@@ -258,9 +361,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                            {
                                IsSystem = c.IsSystem()
                            })
-                       {
-                           IsSystem = c.IsSystem()
-                       };
+                              {
+                                  IsSystem = c.IsSystem()
+                              };
         }
 
         private IEnumerable<RenameColumnOperation> FindRenamedColumns()
@@ -300,9 +403,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     where p1.NameAttribute().EqualsIgnoreCase(p2.NameAttribute())
                     where !p1.ColumnNameAttribute().EqualsIgnoreCase(p2.ColumnNameAttribute())
                     select new RenameColumnOperation(table, p1.ColumnNameAttribute(), p2.ColumnNameAttribute())
-                        {
-                            IsSystem = p1.IsSystem()
-                        })
+                               {
+                                   IsSystem = p1.IsSystem()
+                               })
                 .Concat(
                     from p1 in parent1.Elements(EdmXNames.Msl.ComplexPropertyNames)
                     from p2 in parent2.Elements(EdmXNames.Msl.ComplexPropertyNames)
@@ -333,9 +436,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                    where p1.ValueAttribute().EqualsIgnoreCase(p2.ValueAttribute())
                    where !p1.ColumnNameAttribute().EqualsIgnoreCase(p2.ColumnNameAttribute())
                    select new RenameColumnOperation(table, p1.ColumnNameAttribute(), p2.ColumnNameAttribute())
-                       {
-                           IsSystem = p1.IsSystem()
-                       };
+                              {
+                                  IsSystem = p1.IsSystem()
+                              };
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
@@ -349,24 +452,24 @@ namespace System.Data.Entity.Migrations.Infrastructure
                    from n1 in d1.Descendants(EdmXNames.Ssdl.PropertyRefNames)
                                 .Select(x => x.NameAttribute()).Select(
                                     (name, index) => new
-                                        {
-                                            name,
-                                            index
-                                        })
+                                                         {
+                                                             name,
+                                                             index
+                                                         })
                    from n2 in d2.Descendants(EdmXNames.Ssdl.PropertyRefNames)
                                 .Select(x => x.NameAttribute()).Select(
                                     (name, index) => new
-                                        {
-                                            name,
-                                            index
-                                        })
+                                                         {
+                                                             name,
+                                                             index
+                                                         })
                    where (n1.index == n2.index)
                          && !n1.name.EqualsIgnoreCase(n2.name)
                    let t = GetQualifiedTableName(_target.Model, d2.RoleAttribute())
                    select new RenameColumnOperation(t, n1.name, n2.name)
-                       {
-                           IsSystem = d1.IsSystem()
-                       };
+                              {
+                                  IsSystem = d1.IsSystem()
+                              };
         }
 
         private IEnumerable<AddColumnOperation> FindAddedColumns(IEnumerable<RenameColumnOperation> renamedColumns)
@@ -382,9 +485,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                          && !renamedColumns
                                  .Any(cr => cr.Table.EqualsIgnoreCase(t) && cr.NewName.EqualsIgnoreCase(columnName))
                    select new AddColumnOperation(t, BuildColumnModel(p2, t2.NameAttribute(), _target))
-                       {
-                           IsSystem = p2.IsSystem()
-                       };
+                              {
+                                  IsSystem = p2.IsSystem()
+                              };
         }
 
         private IEnumerable<AlterColumnOperation> FindChangedColumns()
@@ -421,9 +524,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     table,
                     sourceModel,
                     isDestructiveChange: sourceModel.IsNarrowerThan(targetModel, _target.ProviderManifest)))
-                {
-                    IsSystem = isSystem
-                };
+                       {
+                           IsSystem = isSystem
+                       };
         }
 
         private bool DiffColumns(XElement column1, XElement column2)
@@ -544,10 +647,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation
-                    {
-                        Table = oldTable,
-                        IsSystem = oldKey.IsSystem()
-                    };
+                      {
+                          Table = oldTable,
+                          IsSystem = oldKey.IsSystem()
+                      };
 
             oldKey.Descendants(EdmXNames.Ssdl.PropertyRefNames).Each(
                 pr => dropPrimaryKeyOperation.Columns.Add(pr.NameAttribute()));
@@ -556,10 +659,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var addPrimaryKeyOperation
                 = new AddPrimaryKeyOperation
-                    {
-                        Table = newTable,
-                        IsSystem = newKey.IsSystem()
-                    };
+                      {
+                          Table = newTable,
+                          IsSystem = newKey.IsSystem()
+                      };
 
             newKey.Descendants(EdmXNames.Ssdl.PropertyRefNames).Each(
                 pr => addPrimaryKeyOperation.Columns.Add(pr.NameAttribute()));
@@ -652,31 +755,31 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var column
                 = new ColumnModel(((PrimitiveType)edmProperty.TypeUsage.EdmType).PrimitiveTypeKind, typeUsage)
-                    {
-                        Name = nameAttribute,
-                        IsNullable
-                            = !string.IsNullOrWhiteSpace(nullableAttribute)
-                              && !Convert.ToBoolean(nullableAttribute, CultureInfo.InvariantCulture)
-                                  ? false
-                                  : (bool?)null,
-                        MaxLength
-                            // Setting "Max" is equivalent to not setting anything
-                            = !string.IsNullOrWhiteSpace(maxLengthAttribute) && !maxLengthAttribute.EqualsIgnoreCase(XmlConstants.Max)
-                                  ? Convert.ToInt32(maxLengthAttribute, CultureInfo.InvariantCulture)
-                                  : (int?)null,
-                        Precision
-                            = !string.IsNullOrWhiteSpace(precisionAttribute)
-                                  ? Convert.ToByte(precisionAttribute, CultureInfo.InvariantCulture)
-                                  : (byte?)null,
-                        Scale
-                            = !string.IsNullOrWhiteSpace(scaleAttribute)
-                                  ? Convert.ToByte(scaleAttribute, CultureInfo.InvariantCulture)
-                                  : (byte?)null,
-                        StoreType
-                            = !storeType.EqualsIgnoreCase(defaultStoreTypeName)
-                                  ? storeType
-                                  : null
-                    };
+                      {
+                          Name = nameAttribute,
+                          IsNullable
+                              = !string.IsNullOrWhiteSpace(nullableAttribute)
+                                && !Convert.ToBoolean(nullableAttribute, CultureInfo.InvariantCulture)
+                                    ? false
+                                    : (bool?)null,
+                          MaxLength
+                              // Setting "Max" is equivalent to not setting anything
+                              = !string.IsNullOrWhiteSpace(maxLengthAttribute) && !maxLengthAttribute.EqualsIgnoreCase(XmlConstants.Max)
+                                    ? Convert.ToInt32(maxLengthAttribute, CultureInfo.InvariantCulture)
+                                    : (int?)null,
+                          Precision
+                              = !string.IsNullOrWhiteSpace(precisionAttribute)
+                                    ? Convert.ToByte(precisionAttribute, CultureInfo.InvariantCulture)
+                                    : (byte?)null,
+                          Scale
+                              = !string.IsNullOrWhiteSpace(scaleAttribute)
+                                    ? Convert.ToByte(scaleAttribute, CultureInfo.InvariantCulture)
+                                    : (byte?)null,
+                          StoreType
+                              = !storeType.EqualsIgnoreCase(defaultStoreTypeName)
+                                    ? storeType
+                                    : null
+                      };
 
             column.IsIdentity
                 = !string.IsNullOrWhiteSpace(storeGeneratedPatternAttribute)
@@ -806,10 +909,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 = (from es in model.Descendants(EdmXNames.Ssdl.EntitySetNames)
                    where es.NameAttribute().EqualsIgnoreCase(entitySetName)
                    select new
-                       {
-                           Schema = es.SchemaAttribute(),
-                           Table = es.TableAttribute()
-                       })
+                              {
+                                  Schema = es.SchemaAttribute(),
+                                  Table = es.TableAttribute()
+                              })
                     .Single();
 
             return GetQualifiedTableName(schemaAndTable.Table, schemaAndTable.Schema);
@@ -824,10 +927,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 = (from es in model.Descendants(EdmXNames.Ssdl.EntitySetNames)
                    where es.EntityTypeAttribute().EqualsIgnoreCase(entityTypeName)
                    select new
-                       {
-                           Schema = es.SchemaAttribute(),
-                           Table = es.TableAttribute()
-                       })
+                              {
+                                  Schema = es.SchemaAttribute(),
+                                  Table = es.TableAttribute()
+                              })
                     .Single();
 
             return GetQualifiedTableName(schemaAndTable.Table, schemaAndTable.Schema);

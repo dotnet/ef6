@@ -89,6 +89,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
             {
                 if (!string.IsNullOrWhiteSpace(migrationStatement.Sql))
                 {
+                    if (!string.IsNullOrWhiteSpace(migrationStatement.BatchTerminator))
+                    {
+                        _sqlBuilder.AppendLine(migrationStatement.BatchTerminator);
+                    }
+
                     _sqlBuilder.AppendLine(migrationStatement.Sql);
                 }
             }

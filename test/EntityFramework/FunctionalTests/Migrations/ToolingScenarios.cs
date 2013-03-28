@@ -181,11 +181,11 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var migrator = CreateMigrator<ShopContext_v1>();
+            var migrator = CreateMigrator<ShopContext_v2>();
 
             var initialCreate = new MigrationScaffolder(migrator.Configuration).Scaffold("InitialCreate");
 
-            migrator = CreateMigrator<ShopContext_v1>(scaffoldedMigrations: initialCreate, contextKey: "ContextLibrary1.Context");
+            migrator = CreateMigrator<ShopContext_v2>(scaffoldedMigrations: initialCreate, contextKey: "ContextLibrary1.Context");
 
             migrator.Update();
 

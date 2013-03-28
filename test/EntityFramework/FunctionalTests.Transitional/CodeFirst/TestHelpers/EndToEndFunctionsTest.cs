@@ -38,13 +38,14 @@ namespace FunctionalTests
         protected DbContext CreateContext()
         {
             var modelBuilder = new DbModelBuilder();
-            OnModelCreating(modelBuilder);
 
-            var model = modelBuilder.Build(_connection);
-            var compiledModel = model.Compile();
+            OnModelCreating(modelBuilder);
 
             // TODO: Remove when Work Item 947 is fixed
             Database.SetInitializer<DbContext>(null);
+
+            var model = modelBuilder.Build(_connection);
+            var compiledModel = model.Compile();
 
             return new DbContext(_connection, compiledModel, false);
         }

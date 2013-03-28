@@ -51,6 +51,16 @@ namespace System.Data.Entity.Utilities
             return first.Except(second, new DynamicEqualityComparer<T>(func));
         }
 
+        public static bool Contains<T>(this IEnumerable<T> source, T value, Func<T, T, bool> func)
+            where T : class
+        {
+            DebugCheck.NotNull(source);
+            DebugCheck.NotNull(value);
+            DebugCheck.NotNull(func);
+
+            return source.Contains(value, new DynamicEqualityComparer<T>(func));
+        }
+
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static bool SequenceEqual<TSource>(
             this IEnumerable<TSource> source, IEnumerable<TSource> other, Func<TSource, TSource, bool> func)

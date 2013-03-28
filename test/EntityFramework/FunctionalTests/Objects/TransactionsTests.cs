@@ -44,6 +44,11 @@ namespace System.Data.Entity.Objects
 
     public class TransactionDbContext : DbContext
     {
+        static TransactionDbContext()
+        {
+            Database.SetInitializer<TransactionDbContext>(null);
+        }
+
         public TransactionDbContext(string connectionString)
             : base(connectionString)
         {

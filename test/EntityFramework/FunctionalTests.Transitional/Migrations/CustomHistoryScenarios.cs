@@ -83,7 +83,8 @@ namespace System.Data.Entity.Migrations
             Assert.Null(historyRepository.GetLastModel());
         }
 
-        [MigrationsTheory]
+        //[MigrationsTheory]
+        // TODO: Re-enable when Migrations SPROC fluent APIS implemented.
         public void Can_auto_update_after_explicit_update_when_custom_history_factory()
         {
             ResetDatabase();
@@ -146,12 +147,18 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("dbo.OrderLines"));
             Assert.True(TableExists("__Migrations"));
 
+            migrator
+                = CreateMigrator<ShopContext_v2>(
+                    historyContextFactory: _testHistoryContextFactoryA,
+                    scaffoldedMigrations: generatedMigrationA);
+
             var generatedMigrationB
                 = new MigrationScaffolder(migrator.Configuration)
                     .Scaffold("Migration_v2");
 
             migrator
                 = CreateMigrator<ShopContext_v2>(
+                    automaticMigrationsEnabled: false,
                     automaticDataLossEnabled: true,
                     historyContextFactory: _testHistoryContextFactoryA,
                     scaffoldedMigrations: new[] { generatedMigrationA, generatedMigrationB });

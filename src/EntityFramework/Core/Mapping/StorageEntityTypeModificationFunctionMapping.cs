@@ -13,6 +13,11 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     public sealed class StorageEntityTypeModificationFunctionMapping
     {
+        internal StorageEntityTypeModificationFunctionMapping()
+        {
+            // Testing
+        }
+
         internal StorageEntityTypeModificationFunctionMapping(
             EntityType entityType,
             StorageModificationFunctionMapping deleteFunctionMapping,

@@ -2,13 +2,15 @@
 
 namespace System.Data.Entity.Migrations.Sql
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Internal;
+    using System.Data.Entity.Migrations.Infrastructure;
+    using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
-    using System.Data.Entity.SqlServer;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.Globalization;
@@ -16,6 +18,7 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Threading;
     using Moq;
     using Xunit;
+    using Console = System.Console;
 
     public class SqlServerMigrationSqlGeneratorTests
     {
@@ -204,6 +207,103 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         [Fact]
+        public void Generate_can_output_create_modification_functions_statements()
+        {
+            var modificationFunctionMapping
+                = TestContext.GetModificationFunctionMapping("Customer");
+
+            var modificationCommandTreeGenerator 
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel());
+
+            var dynamicToFunctionModificationCommandConverter 
+                = new DynamicToFunctionModificationCommandConverter(
+                    modificationFunctionMapping.Item1, 
+                    modificationFunctionMapping.Item2);
+
+            var insertTrees
+                = dynamicToFunctionModificationCommandConverter
+                    .Convert(modificationCommandTreeGenerator
+                        .GenerateInsert(modificationFunctionMapping.Item1.EntityType.FullName))
+                    .ToList();
+
+            var updateTrees
+                = dynamicToFunctionModificationCommandConverter
+                    .Convert(modificationCommandTreeGenerator
+                        .GenerateUpdate(modificationFunctionMapping.Item1.EntityType.FullName))
+                    .ToList();
+
+            var deleteTrees
+                = dynamicToFunctionModificationCommandConverter
+                    .Convert(modificationCommandTreeGenerator
+                        .GenerateDelete(modificationFunctionMapping.Item1.EntityType.FullName))
+                    .ToList();
+
+            var createModificationFunctionsOperation 
+                = new CreateModificationFunctionsOperation(
+                        modificationFunctionMapping.Item1,
+                        insertTrees,
+                        updateTrees,
+                        deleteTrees);
+            
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var sql = migrationSqlGenerator.Generate(new[] { createModificationFunctionsOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Contains(
+                @"CREATE PROCEDURE [Customer_Insert]
+    @Name nvarchar(max)
+AS
+BEGIN
+    INSERT [dbo].[Customers]([Name])
+    VALUES (@Name)
+    
+    DECLARE @CustomerId int
+    SELECT @CustomerId = [CustomerId]
+    FROM [dbo].[Customers]
+    WHERE @@ROWCOUNT > 0 and [CustomerId] = scope_identity()
+    
+    SELECT t0.[CustomerId]
+    FROM [dbo].[Customers] as t0
+    WHERE @@ROWCOUNT > 0 and t0.[CustomerId] = @CustomerId
+END
+CREATE PROCEDURE [Customer_Update]
+    @CustomerId int,
+    @Name nvarchar(max)
+AS
+BEGIN
+    UPDATE [dbo].[Customers]
+    SET [Name] = @Name
+    WHERE ([CustomerId] = @CustomerId)
+END
+CREATE PROCEDURE [Customer_Delete]
+    @CustomerId int
+AS
+BEGIN
+    DELETE [dbo].[Customers]
+    WHERE ([CustomerId] = @CustomerId)
+END", sql);
+        }
+
+        [Fact]
+        public void Generate_can_output_drop_modification_functions_statements()
+        {
+            var modificationFunctionMapping
+                = TestContext.GetModificationFunctionMapping("Customer");
+
+            var dropModificationFunctionsOperation
+                = new DropModificationFunctionsOperation(modificationFunctionMapping.Item1);
+
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var sql = migrationSqlGenerator.Generate(new[] { dropModificationFunctionsOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Contains(
+                @"DROP PROCEDURE [Customer_Insert]
+DROP PROCEDURE [Customer_Update]
+DROP PROCEDURE [Customer_Delete]", sql);
+        }
+
+        [Fact]
         public void Generate_can_output_create_table_statement()
         {
             var createTableOperation = new CreateTableOperation("foo.Customers");
@@ -230,7 +330,7 @@ namespace System.Data.Entity.Migrations.Sql
             var sql = migrationSqlGenerator.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.Contains(
-                    @"IF schema_id('foo') IS NULL
+                @"IF schema_id('foo') IS NULL
     EXECUTE('CREATE SCHEMA [foo]')
 CREATE TABLE [foo].[Customers] (
     [Id] [int] IDENTITY,
@@ -244,24 +344,24 @@ CREATE TABLE [foo].[Customers] (
         {
             var createTableOperation = new CreateTableOperation("foo.Customers");
             var idColumn = new ColumnModel(PrimitiveTypeKind.Int32)
-            {
-                Name = "Id",
-                IsNullable = true,
-                IsIdentity = true
-            };
+                               {
+                                   Name = "Id",
+                                   IsNullable = true,
+                                   IsIdentity = true
+                               };
             createTableOperation.Columns.Add(idColumn);
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.String)
-                {
-                    Name = "Name",
-                    IsNullable = false
-                });
+                    {
+                        Name = "Name",
+                        IsNullable = false
+                    });
 
             createTableOperation.PrimaryKey
                 = new AddPrimaryKeyOperation
-                {
-                    IsClustered = false
-                };
+                      {
+                          IsClustered = false
+                      };
 
             createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
 
@@ -270,7 +370,7 @@ CREATE TABLE [foo].[Customers] (
             var sql = migrationSqlGenerator.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.Contains(
-                    @"IF schema_id('foo') IS NULL
+                @"IF schema_id('foo') IS NULL
     EXECUTE('CREATE SCHEMA [foo]')
 CREATE TABLE [foo].[Customers] (
     [Id] [int] IDENTITY,
@@ -278,7 +378,6 @@ CREATE TABLE [foo].[Customers] (
     CONSTRAINT [PK_foo.Customers] PRIMARY KEY NONCLUSTERED ([Id])
 )", sql);
         }
-
 
         [Fact]
         public void Generate_can_output_create_table_as_system_object_statement()
@@ -306,7 +405,7 @@ CREATE TABLE [foo].[Customers] (
             var sql = migrationSqlGenerator.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.Contains(
-                    @"CREATE TABLE [Customers] (
+                @"CREATE TABLE [Customers] (
     [Id] [int] IDENTITY,
     [Name] [nvarchar](max) NOT NULL
 )
@@ -350,7 +449,7 @@ END CATCH", sql);
             var sql = migrationSqlGenerator.Generate(new[] { moveTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.Contains(
-                    @"IF schema_id('foo') IS NULL
+                @"IF schema_id('foo') IS NULL
     EXECUTE('CREATE SCHEMA [foo]')
 IF object_id('dbo.History') IS NULL BEGIN
     CREATE TABLE [dbo].[History] (
@@ -406,7 +505,7 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
                     "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.Contains(
-                    @"CREATE UNIQUE INDEX [IX_Id] ON [Customers]([Id])", sql);
+                @"CREATE UNIQUE INDEX [IX_Id] ON [Customers]([Id])", sql);
         }
 
         [Fact]
@@ -414,29 +513,29 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
         {
             var createTableOperation = new CreateTableOperation("Customers");
             var idColumn = new ColumnModel(PrimitiveTypeKind.Int32)
-            {
-                Name = "Id",
-                IsNullable = true,
-                IsIdentity = true
-            };
+                               {
+                                   Name = "Id",
+                                   IsNullable = true,
+                                   IsIdentity = true
+                               };
             createTableOperation.Columns.Add(idColumn);
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.String)
-                {
-                    Name = "Name",
-                    IsNullable = false
-                });
+                    {
+                        Name = "Name",
+                        IsNullable = false
+                    });
             createTableOperation.PrimaryKey = new AddPrimaryKeyOperation();
             createTableOperation.PrimaryKey.Columns.Add(idColumn.Name);
 
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var createIndexOperation = new CreateIndexOperation
-            {
-                Table = createTableOperation.Name,
-                IsUnique = true,
-                IsClustered = true
-            };
+                                           {
+                                               Table = createTableOperation.Name,
+                                               IsUnique = true,
+                                               IsClustered = true
+                                           };
 
             createIndexOperation.Columns.Add(idColumn.Name);
 
@@ -449,7 +548,7 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
                     "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.Contains(
-                    @"CREATE UNIQUE CLUSTERED INDEX [IX_Id] ON [Customers]([Id])", sql);
+                @"CREATE UNIQUE CLUSTERED INDEX [IX_Id] ON [Customers]([Id])", sql);
         }
 
         [Fact]
@@ -469,7 +568,8 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
             var sql = migrationSqlGenerator.Generate(new[] { addForeignKeyOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.Contains(
-                    @"ALTER TABLE [Orders] ADD CONSTRAINT [FK_Orders_Customers_CustomerId] FOREIGN KEY ([CustomerId]) REFERENCES [Customers] ([CustomerId]) ON DELETE CASCADE", sql);
+                @"ALTER TABLE [Orders] ADD CONSTRAINT [FK_Orders_Customers_CustomerId] FOREIGN KEY ([CustomerId]) REFERENCES [Customers] ([CustomerId]) ON DELETE CASCADE",
+                sql);
         }
 
         [Fact]
@@ -488,7 +588,7 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
         {
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
-            var sqlCommand = new SqlCommand("insert Foo (Bar) values (p1)");
+            var sqlCommand = new SqlCommand("insert Foo (Bar)\r\nvalues (p1)");
             sqlCommand.Parameters.Add(new SqlParameter("p1", "Baz"));
 
             var insertHistoryOperation
@@ -503,7 +603,7 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
                     new[] { insertHistoryOperation },
                     "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.Contains("INSERT Foo (Bar) VALUES ('Baz')", sql);
+            Assert.Contains("INSERT Foo (Bar)\r\nVALUES ('Baz')", sql);
         }
 
         [Fact]
@@ -511,7 +611,7 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
         {
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
-            var sqlCommand = new SqlCommand("delete Foo where Bar = p1");
+            var sqlCommand = new SqlCommand("delete Foo\r\nwhere Bar = p1");
             sqlCommand.Parameters.Add(new SqlParameter("p1", "Baz"));
 
             var insertHistoryOperation
@@ -526,7 +626,7 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
                     new[] { insertHistoryOperation },
                     "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.Contains("DELETE Foo WHERE Bar = 'Baz'", sql);
+            Assert.Contains("DELETE Foo\r\nWHERE Bar = 'Baz'", sql);
         }
 
         [Fact]
@@ -558,13 +658,14 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var column = new ColumnModel(PrimitiveTypeKind.Guid)
-            {
-                Name = "Bar",
-                IsIdentity = true
-            };
+                             {
+                                 Name = "Bar",
+                                 IsIdentity = true
+                             };
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
-            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, providerManifestToken).Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, providerManifestToken)
+                                           .Join(s => s.Sql, Environment.NewLine);
 
             Assert.Contains(string.Format("ALTER TABLE [Foo] ADD [Bar] [uniqueidentifier] DEFAULT {0}", expectedGuidDefault), sql);
         }
@@ -934,7 +1035,8 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
                 () => migrationSqlGenerator.Generate(new[] { unknownOperation }, "2008"));
 
             Assert.Equal(
-                Strings.SqlServerMigrationSqlGenerator_UnknownOperation(typeof(SqlServerMigrationSqlGenerator).Name, unknownOperation.GetType().FullName),
+                Strings.SqlServerMigrationSqlGenerator_UnknownOperation(
+                    typeof(SqlServerMigrationSqlGenerator).Name, unknownOperation.GetType().FullName),
                 ex.Message);
         }
 

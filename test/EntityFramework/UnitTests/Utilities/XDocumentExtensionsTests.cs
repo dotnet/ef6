@@ -11,12 +11,13 @@ namespace System.Data.Entity.Utilities
     public class XDocumentExtensionsTests
     {
         [Fact]
-        public void GetStoreItemCollection_should_return_collection()
+        public void GetStorageMappingItemCollection_should_return_collection()
         {
             DbProviderInfo providerInfo;
-            var storeItemCollection = new ShopContext_v1().GetModel().GetStoreItemCollection(out providerInfo);
+            var storageMappingItemCollection
+                = new ShopContext_v1().GetModel().GetStorageMappingItemCollection(out providerInfo);
 
-            Assert.NotNull(storeItemCollection);
+            Assert.NotNull(storageMappingItemCollection);
             Assert.NotNull(providerInfo);
             Assert.Equal("System.Data.SqlClient", providerInfo.ProviderInvariantName);
             Assert.True(providerInfo.ProviderManifestToken == "2008");

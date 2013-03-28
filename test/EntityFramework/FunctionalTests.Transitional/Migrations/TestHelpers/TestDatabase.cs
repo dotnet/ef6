@@ -97,7 +97,7 @@ namespace System.Data.Entity.Migrations
                   DECLARE history_cursor CURSOR FOR
                   SELECT 'DROP TABLE ' + SCHEMA_NAME(schema_id) + '.' + object_name(object_id) + ';'
                   FROM sys.objects
-                  WHERE name = '__MigrationHistory'
+                  WHERE name LIKE '__Migration%'
                   
                   OPEN history_cursor;
                   FETCH NEXT FROM history_cursor INTO @sql;
@@ -130,8 +130,23 @@ namespace System.Data.Entity.Migrations
                   CLOSE constraint_cursor;
                   DEALLOCATE constraint_cursor;
 
-                  EXEC sp_MSforeachtable 'DROP TABLE ?';"
-                );
+                  EXEC sp_MSforeachtable 'DROP TABLE ?';
+
+                  DECLARE @proc_name SYSNAME;
+                  
+                  DECLARE sproc_cursor CURSOR FOR
+                  SELECT name FROM sysobjects WHERE TYPE = 'P';
+                  
+                  OPEN sproc_cursor;
+                  FETCH NEXT FROM sproc_cursor INTO @proc_name;
+                  WHILE @@FETCH_STATUS = 0
+                  BEGIN
+                      EXEC('drop proc ' + @proc_name);
+                      FETCH NEXT FROM sproc_cursor INTO @proc_name;
+                  END
+                  
+                  CLOSE sproc_cursor;
+                  DEALLOCATE sproc_cursor;");
         }
 
         public override void DropDatabase()

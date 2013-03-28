@@ -18,5 +18,7 @@ namespace System.Data.Entity.Migrations.Sql
         ///     If set to true, this operation will not be rolled back if the migration process fails.
         /// </summary>
         public bool SuppressTransaction { get; set; }
+
+        public string BatchTerminator { get; set; }
     }
 }

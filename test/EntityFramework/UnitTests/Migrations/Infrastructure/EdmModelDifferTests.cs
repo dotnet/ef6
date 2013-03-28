@@ -6,9 +6,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Edm;
+    using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.UserRoles_v1;
     using System.Data.Entity.Migrations.UserRoles_v2;
@@ -16,6 +18,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Linq;
     using System.Xml.Linq;
     using Xunit;
+    using Order = System.Data.Entity.Migrations.Order;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
@@ -145,10 +148,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             modelBuilder.Entity<OrderLine>().HasKey(
                 ol => new
-                    {
-                        ol.Id,
-                        ol.OrderId
-                    });
+                          {
+                              ol.Id,
+                              ol.OrderId
+                          });
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -204,10 +207,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             modelBuilder.Entity<OrderLine>().HasKey(
                 ol => new
-                    {
-                        ol.Id,
-                        ol.OrderId
-                    });
+                          {
+                              ol.Id,
+                              ol.OrderId
+                          });
             modelBuilder.Entity<OrderLine>().Property(ol => ol.Id).HasColumnName("pk_ID");
 
             var model2 = modelBuilder.Build(ProviderInfo);
@@ -243,10 +246,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder.Entity<OrderLine>()
                         .HasKey(
                             ol => new
-                                {
-                                    ol.Id,
-                                    ol.OrderId
-                                })
+                                      {
+                                          ol.Id,
+                                          ol.OrderId
+                                      })
                         .ToTable("tbl_OrderLines");
 
             var model2 = modelBuilder.Build(ProviderInfo);
@@ -446,25 +449,31 @@ namespace System.Data.Entity.Migrations.Infrastructure
                           .Add(new XAttribute("MaxLength", "MAX"));
 
             DbProviderInfo providerInfo;
+            var storageMappingItemCollection = sourceModel.GetStorageMappingItemCollection(out providerInfo);
+
             var sourceMetadata = new EdmModelDiffer.ModelMetadata
-                {
-                    Model = sourceModel,
-                    StoreItemCollection = sourceModel.GetStoreItemCollection(out providerInfo),
-                    ProviderManifest = GetProviderManifest(providerInfo),
-                    ProviderInfo = providerInfo
-                };
+                                     {
+                                         Model = sourceModel,
+                                         StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
+                                         StorageEntityContainerMapping
+                                             = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().Single(),
+                                         ProviderManifest = GetProviderManifest(providerInfo),
+                                         ProviderInfo = providerInfo
+                                     };
 
             var targetMetadata = new EdmModelDiffer.ModelMetadata
-                {
-                    Model = targetModel,
-                    // Use the source model here since it doesn't effect the test and the SQL Server provider
-                    // won't load the target model
-                    StoreItemCollection = sourceModel.GetStoreItemCollection(out providerInfo),
-                    ProviderManifest = GetProviderManifest(providerInfo),
-                    ProviderInfo = providerInfo
-                };
+                                     {
+                                         Model = targetModel,
+                                         // Use the source model here since it doesn't effect the test and the SQL Server provider
+                                         // won't load the target model
+                                         StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
+                                         StorageEntityContainerMapping
+                                             = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().Single(),
+                                         ProviderManifest = GetProviderManifest(providerInfo),
+                                         ProviderInfo = providerInfo
+                                     };
 
-            var operations = new EdmModelDiffer().Diff(sourceMetadata, targetMetadata, includeSystemOperations: false);
+            var operations = new EdmModelDiffer().Diff(sourceMetadata, targetMetadata, false, null);
 
             Assert.Equal(2, operations.Count());
             operations.OfType<AlterColumnOperation>().Each(
@@ -529,6 +538,56 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(1, operations.Count());
             Assert.Equal(1, operations.OfType<CreateTableOperation>().Count());
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_added_modification_functions()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            var model2 = new TestContext();
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel());
+
+            var operations = new EdmModelDiffer().Diff(
+                model1.GetModel(), model2.GetModel(), false, commandTreeGenerator);
+
+            Assert.Equal(25, operations.Count());
+
+            var createModificationsFunctionOperation
+                = operations
+                    .OfType<CreateModificationFunctionsOperation>()
+                    .Single(c => c.ModificationFunctionMapping.EntityType.Name == "ExtraSpecialOrder");
+
+            Assert.NotNull(createModificationsFunctionOperation.ModificationFunctionMapping);
+            Assert.Equal(3, createModificationsFunctionOperation.InsertCommandTrees.Count);
+            Assert.Equal(3, createModificationsFunctionOperation.UpdateCommandTrees.Count);
+            Assert.Equal(3, createModificationsFunctionOperation.DeleteCommandTrees.Count);
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_removed_modification_functions()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder.Entity<OrderLine>().MapToStoredProcedures();
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(
+                model2.GetModel(), model1.GetModel());
+
+            Assert.Equal(2, operations.Count());
+
+            var dropModificationsFunctionOperation
+                = operations.OfType<DropModificationFunctionsOperation>().Single();
+
+            Assert.NotNull(dropModificationsFunctionOperation.ModificationFunctionMapping);
         }
 
         [MigrationsTheory]
@@ -601,16 +660,16 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.True(
                 operations.Select(
                     (o, i) => new
-                        {
-                            o,
-                            i
-                        }).Single(a => a.o is CreateIndexOperation).i <
+                                  {
+                                      o,
+                                      i
+                                  }).Single(a => a.o is CreateIndexOperation).i <
                 operations.Select(
                     (o, i) => new
-                        {
-                            o,
-                            i
-                        }).Single(a => a.o is AddForeignKeyOperation).i);
+                                  {
+                                      o,
+                                      i
+                                  }).Single(a => a.o is AddForeignKeyOperation).i);
 
             var addForeignKeyOperation = operations.OfType<AddForeignKeyOperation>().Single();
 
@@ -691,16 +750,16 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.True(
                 operations.Select(
                     (o, i) => new
-                        {
-                            o,
-                            i
-                        }).Single(a => a.o is DropForeignKeyOperation).i <
+                                  {
+                                      o,
+                                      i
+                                  }).Single(a => a.o is DropForeignKeyOperation).i <
                 operations.Select(
                     (o, i) => new
-                        {
-                            o,
-                            i
-                        }).Single(a => a.o is DropIndexOperation).i);
+                                  {
+                                      o,
+                                      i
+                                  }).Single(a => a.o is DropIndexOperation).i);
 
             var dropForeignKeyOperation = operations.OfType<DropForeignKeyOperation>().Single();
 
@@ -847,12 +906,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                 {
                                     mc.Properties(
                                         c => new
-                                            {
-                                                c.Id,
-                                                c.FullName,
-                                                c.HomeAddress,
-                                                c.WorkAddress
-                                            });
+                                                 {
+                                                     c.Id,
+                                                     c.FullName,
+                                                     c.HomeAddress,
+                                                     c.WorkAddress
+                                                 });
                                     mc.ToTable("MigrationsCustomers");
                                 })
                         .Map(
@@ -860,9 +919,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                 {
                                     mc.Properties(
                                         c => new
-                                            {
-                                                c.Name
-                                            });
+                                                 {
+                                                     c.Name
+                                                 });
                                     mc.ToTable("Customers_Split");
                                 });
 
@@ -924,10 +983,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder.Entity<MigrationsCustomer>();
             modelBuilder.Entity<MigrationsCustomer>().HasKey(
                 p => new
-                    {
-                        p.Id,
-                        p.Name
-                    });
+                         {
+                             p.Id,
+                             p.Name
+                         });
 
             var model1 = modelBuilder.Build(ProviderInfo);
 

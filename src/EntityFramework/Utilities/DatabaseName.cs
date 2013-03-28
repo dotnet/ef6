@@ -14,7 +14,7 @@ namespace System.Data.Entity.Utilities
         {
             DebugCheck.NotEmpty(name);
 
-            var parts = name.Trim().Split(new[] { '.' });
+            var parts = name.Trim().Split('.');
 
             Debug.Assert(parts.Length > 0);
 

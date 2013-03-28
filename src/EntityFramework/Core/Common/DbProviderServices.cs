@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Common
 {
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -15,6 +16,7 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using System.Reflection;
     using System.Transactions;
     using System.Xml;
@@ -66,6 +68,12 @@ namespace System.Data.Entity.Core.Common
 
             _resolver = new Lazy<IDbDependencyResolver>(resolver);
             _interception = interception;
+        }
+
+        // TODO: Remove this when the migrations SQL generator lives in the provider assembly
+        public virtual string GenerateFunctionSql(ICollection<DbModificationCommandTree> commandTrees, string rowsAffectedParameter)
+        {
+            return null;
         }
 
         /// <summary>

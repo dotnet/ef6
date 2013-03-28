@@ -49,6 +49,7 @@ namespace System.Data.Entity.Migrations
         private readonly MigrationAssembly _migrationAssembly;
         private readonly DbContextInfo _usersContextInfo;
         private readonly EdmModelDiffer _modelDiffer;
+        private readonly ModificationCommandTreeGenerator _modificationCommandTreeGenerator;
         private readonly bool _calledByCreateDatabase;
         private readonly string _providerManifestToken;
         private readonly string _targetDatabase;
@@ -109,10 +110,13 @@ namespace System.Data.Entity.Migrations
             _modelDiffer = _configuration.ModelDiffer;
 
             var context = usersContext ?? _usersContextInfo.CreateInstance();
+
             try
             {
                 _migrationAssembly
-                    = new MigrationAssembly(_configuration.MigrationsAssembly, _configuration.MigrationsNamespace);
+                    = new MigrationAssembly(
+                        _configuration.MigrationsAssembly,
+                        _configuration.MigrationsNamespace);
 
                 _currentModel = context.GetModel();
 
@@ -146,6 +150,14 @@ namespace System.Data.Entity.Migrations
                           : DbConfiguration
                                 .GetService<IManifestTokenService>()
                                 .GetProviderManifestToken(connection);
+
+                _modificationCommandTreeGenerator
+                    = new ModificationCommandTreeGenerator(
+                        context.GetDynamicUpdateModel(
+                            new DbProviderInfo(
+                                _usersContextInfo.ConnectionProviderName,
+                                _providerManifestToken)),
+                        CreateConnection());
 
                 _targetDatabase
                     = Strings.LoggingTargetDatabaseFormat(
@@ -316,7 +328,7 @@ namespace System.Data.Entity.Migrations
             }
 
             var migrationOperations
-                = _modelDiffer.Diff(_emptyModel.Value, databaseModel, false)
+                = _modelDiffer.Diff(_emptyModel.Value, databaseModel, false, _modificationCommandTreeGenerator)
                               .ToList();
 
             var generatedMigration
@@ -366,7 +378,7 @@ namespace System.Data.Entity.Migrations
             var migrationOperations
                 = ignoreChanges
                       ? Enumerable.Empty<MigrationOperation>()
-                      : _modelDiffer.Diff(sourceModel, _currentModel, false)
+                      : _modelDiffer.Diff(sourceModel, _currentModel, false, _modificationCommandTreeGenerator)
                                     .ToList();
 
             if (!rescaffolding)
@@ -457,7 +469,12 @@ namespace System.Data.Entity.Migrations
                     () => ExecuteOperations(
                         MigrationAssembly.CreateBootstrapMigrationId(),
                         _currentModel,
-                        _modelDiffer.Diff(_emptyModel.Value, _currentModel, true).Where(o => o.IsSystem),
+                        _modelDiffer.Diff(
+                            _emptyModel.Value,
+                            _currentModel,
+                            true,
+                            _modificationCommandTreeGenerator)
+                                    .Where(o => o.IsSystem),
                         false));
             }
 
@@ -677,7 +694,7 @@ namespace System.Data.Entity.Migrations
             }
 
             var systemOperations
-                = _modelDiffer.Diff(sourceModel, targetModel, includeSystemOps)
+                = _modelDiffer.Diff(sourceModel, targetModel, includeSystemOps, _modificationCommandTreeGenerator)
                               .Where(o => o.IsSystem);
 
             migration.Down();
@@ -758,7 +775,7 @@ namespace System.Data.Entity.Migrations
             }
 
             var operations
-                = _modelDiffer.Diff(sourceModel, targetModel, includeSystemOps)
+                = _modelDiffer.Diff(sourceModel, targetModel, includeSystemOps, _modificationCommandTreeGenerator)
                               .ToList();
 
             if (!_calledByCreateDatabase

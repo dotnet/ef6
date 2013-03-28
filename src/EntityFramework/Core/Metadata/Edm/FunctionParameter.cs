@@ -11,6 +11,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         internal static Func<FunctionParameter, SafeLink<EdmFunction>> DeclaringFunctionLinker = fp => fp._declaringFunction;
 
+        private readonly SafeLink<EdmFunction> _declaringFunction = new SafeLink<EdmFunction>();
+
+        private readonly TypeUsage _typeUsage;
+
+        private string _name;
+
         internal FunctionParameter()
         {
             // testing
@@ -28,14 +34,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Check.NotEmpty(name, "name");
             Check.NotNull(typeUsage, "typeUsage");
+
             _name = name;
             _typeUsage = typeUsage;
+
             SetParameterMode(parameterMode);
         }
-
-        private readonly TypeUsage _typeUsage;
-        private string _name;
-        private readonly SafeLink<EdmFunction> _declaringFunction = new SafeLink<EdmFunction>();
 
         /// <summary>
         ///     Returns the kind of the type
@@ -63,7 +67,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return _name; }
         }
-
+        
         /// <summary>
         ///     Returns the name of the member
         /// </summary>

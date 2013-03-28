@@ -18,6 +18,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     public sealed class EntityTypeConfigurationTests
     {
         [Fact]
+        public void MapToTable_should_remove_function_mapping_configuration()
+        {
+            var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
+
+            entityTypeConfiguration.MapToStoredProcedures();
+
+            Assert.True(entityTypeConfiguration.IsMappedToFunctions);
+
+            entityTypeConfiguration.MapToTable();
+
+            Assert.False(entityTypeConfiguration.IsMappedToFunctions);
+        }
+
+        [Fact]
         public void MapToStoredProcedures_should_create_empty_function_mapping_configuration()
         {
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));

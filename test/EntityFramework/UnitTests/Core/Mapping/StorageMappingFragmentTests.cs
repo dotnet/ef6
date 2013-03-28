@@ -11,6 +11,38 @@ namespace System.Data.Entity.Core.Mapping
     public class StorageMappingFragmentTests
     {
         [Fact]
+        public void Can_get_flattened_properties_for_nested_mapping()
+        {
+            var mappingFragment
+                = new StorageMappingFragment(
+                    new EntitySet(),
+                    new StorageEntityTypeMapping(
+                        new StorageEntitySetMapping(
+                            new EntitySet(),
+                            new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
+
+            Assert.Empty(mappingFragment.ColumnMappings);
+
+            var columnProperty = new EdmProperty("C");
+            var property1 = EdmProperty.Complex("P1", new ComplexType("CT"));
+            var property2 = new EdmProperty("P2");
+
+            var columnMappingBuilder1 = new ColumnMappingBuilder(columnProperty, new[] { property1, property2 });
+
+            mappingFragment.AddColumnMapping(columnMappingBuilder1);
+
+            var columnMappingBuilder2 = new ColumnMappingBuilder(columnProperty, new[] { property2 });
+
+            mappingFragment.AddColumnMapping(columnMappingBuilder2);
+
+            var columnMappingBuilders = mappingFragment.FlattenedProperties.ToList();
+
+            Assert.Equal(2, columnMappingBuilders.Count());
+            Assert.True(columnMappingBuilder1.PropertyPath.SequenceEqual(columnMappingBuilders.First().PropertyPath));
+            Assert.True(columnMappingBuilder2.PropertyPath.SequenceEqual(columnMappingBuilders.Last().PropertyPath));
+        }
+
+        [Fact]
         public void Can_not_create_mapping_fragment_with_null_entity_set()
         {
             var entityTypeMapping = 

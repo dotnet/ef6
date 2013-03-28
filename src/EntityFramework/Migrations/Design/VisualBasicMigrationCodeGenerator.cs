@@ -53,12 +53,12 @@ namespace System.Data.Entity.Migrations.Design
 
             var generatedMigration
                 = new ScaffoldedMigration
-                    {
-                        MigrationId = migrationId,
-                        Language = "vb",
-                        UserCode = Generate(operations, @namespace, className),
-                        DesignerCode = Generate(migrationId, sourceModel, targetModel, @namespace, className)
-                    };
+                      {
+                          MigrationId = migrationId,
+                          Language = "vb",
+                          UserCode = Generate(operations, @namespace, className),
+                          DesignerCode = Generate(migrationId, sourceModel, targetModel, @namespace, className)
+                      };
 
             if (!string.IsNullOrWhiteSpace(sourceModel))
             {
@@ -338,6 +338,20 @@ namespace System.Data.Entity.Migrations.Design
             writer.Write(", Function(c)");
             Generate(alterColumnOperation.Column, writer);
             writer.WriteLine(")");
+        }
+
+        protected virtual void Generate(
+            CreateModificationFunctionsOperation createModificationFunctionsOperation, IndentedTextWriter writer)
+        {
+            Check.NotNull(createModificationFunctionsOperation, "createModificationFunctionsOperation");
+            Check.NotNull(writer, "writer");
+        }
+
+        protected virtual void Generate(
+            DropModificationFunctionsOperation dropModificationFunctionsOperation, IndentedTextWriter writer)
+        {
+            Check.NotNull(dropModificationFunctionsOperation, "dropModificationFunctionsOperation");
+            Check.NotNull(writer, "writer");
         }
 
         /// <summary>

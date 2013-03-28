@@ -281,6 +281,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return this;
         }
 
+        internal LightweightEntityConfiguration MapToTable()
+        {
+            _configuration().MapToTable();
+
+            return this;
+        }
+
         public LightweightEntityConfiguration MapToStoredProcedures(
             Action<LightweightModificationFunctionsConfiguration> modificationFunctionsConfigurationAction)
         {

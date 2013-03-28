@@ -73,7 +73,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                         {
                             yield return
                                 new StorageModificationFunctionParameterBinding(
-                                    new FunctionParameter(columnProperty.Name + "_Original", property.TypeUsage, ParameterMode.In),
+                                    new FunctionParameter(columnProperty.Name + "_Original", columnProperty.TypeUsage, ParameterMode.In),
                                     new StorageModificationFunctionMemberPath(propertyPath, null),
                                     isCurrent: false);
                         }

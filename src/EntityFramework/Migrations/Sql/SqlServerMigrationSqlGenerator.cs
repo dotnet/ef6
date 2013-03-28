@@ -6,6 +6,7 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Model;
@@ -19,24 +20,32 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     ///     Provider to convert provider agnostic migration operations into SQL commands
     ///     that can be run against a Microsoft SQL Server database.
     /// </summary>
-    [DbProviderName("System.Data.SqlClient")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), DbProviderName("System.Data.SqlClient")]
     public class SqlServerMigrationSqlGenerator : MigrationSqlGenerator
     {
         internal const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffK";
         internal const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ss.fffzzz";
-
+        
         private const int DefaultMaxLength = 128;
         private const int DefaultNumericPrecision = 18;
         private const byte DefaultTimePrecision = 7;
         private const byte DefaultScale = 0;
 
+        private static readonly Regex _sqlKeywordUpcaser
+            = new Regex(
+                "^(insert|values|delete|where|update|declare|select|from|output|from|join|set)",
+                RegexOptions.Multiline | RegexOptions.Compiled);
+
+        private DbProviderServices _providerServices;
         private DbProviderManifest _providerManifest;
         private string _providerManifestToken;
+
         private List<MigrationStatement> _statements;
         private HashSet<string> _generatedSchemas;
 
@@ -61,9 +70,8 @@ namespace System.Data.Entity.Migrations.Sql
 
             using (var connection = CreateConnection())
             {
-                _providerManifest
-                    = DbProviderServices.GetProviderServices(connection)
-                                        .GetProviderManifest(providerManifestToken);
+                _providerServices = DbProviderServices.GetProviderServices(connection);
+                _providerManifest = _providerServices.GetProviderManifest(providerManifestToken);
             }
 
             migrationOperations.Each<dynamic>(o => Generate(o));
@@ -92,6 +100,108 @@ namespace System.Data.Entity.Migrations.Sql
         protected virtual DbConnection CreateConnection()
         {
             return DbConfiguration.GetService<DbProviderFactory>("System.Data.SqlClient").CreateConnection();
+        }
+
+        protected virtual void Generate(CreateModificationFunctionsOperation createModificationFunctionsOperation)
+        {
+            Check.NotNull(createModificationFunctionsOperation, "createModificationFunctionsOperation");
+
+            var modificationFunctionMapping
+                = createModificationFunctionsOperation.ModificationFunctionMapping;
+
+            WriteCreateProcedure(
+                modificationFunctionMapping.InsertFunctionMapping.Function,
+                createModificationFunctionsOperation.InsertCommandTrees);
+
+            WriteCreateProcedure(
+                modificationFunctionMapping.UpdateFunctionMapping.Function,
+                createModificationFunctionsOperation.UpdateCommandTrees,
+                modificationFunctionMapping.UpdateFunctionMapping.RowsAffectedParameter);
+
+            WriteCreateProcedure(
+                modificationFunctionMapping.DeleteFunctionMapping.Function,
+                createModificationFunctionsOperation.DeleteCommandTrees,
+                modificationFunctionMapping.DeleteFunctionMapping.RowsAffectedParameter);
+        }
+
+        private void WriteCreateProcedure<TModificationCommandTree>(
+            EdmFunction function,
+            ICollection<TModificationCommandTree> commandTrees,
+            FunctionParameter rowsAffectedParameter = null)
+            where TModificationCommandTree : DbModificationCommandTree
+        {
+            DebugCheck.NotNull(function);
+            DebugCheck.NotNull(commandTrees);
+
+            using (var writer = Writer())
+            {
+                writer.WriteLine("CREATE PROCEDURE " + Name(function.Name));
+                writer.Indent++;
+
+                for (var i = 0; i < function.Parameters.Count; i++)
+                {
+                    var parameter = function.Parameters[i];
+
+                    if (i > 0)
+                    {
+                        writer.WriteLine(",");
+                    }
+
+                    writer.Write("@");
+                    writer.Write(parameter.Name);
+                    writer.Write(" ");
+                    writer.Write(parameter.TypeName);
+
+                    if (parameter.Mode == ParameterMode.Out)
+                    {
+                        writer.Write(" OUT");
+                    }
+                }
+
+                writer.WriteLine();
+                writer.Indent--;
+                writer.WriteLine("AS");
+                writer.WriteLine("BEGIN");
+                writer.Indent++;
+
+                writer.WriteLine(
+                    UpperCaseKeywords(
+                        _providerServices
+                            .GenerateFunctionSql(
+                                commandTrees.Cast<DbModificationCommandTree>().ToList(),
+                                rowsAffectedParameter != null ? rowsAffectedParameter.Name : null))
+                        .Replace(Environment.NewLine, Environment.NewLine + "    "));
+
+                writer.Indent--;
+                writer.Write("END");
+
+                Statement(writer, batchTerminator: "GO");
+            }
+        }
+
+        protected virtual void Generate(DropModificationFunctionsOperation dropModificationFunctionsOperation)
+        {
+            Check.NotNull(dropModificationFunctionsOperation, "dropModificationFunctionsOperation");
+
+            var modificationFunctionMapping
+                = dropModificationFunctionsOperation.ModificationFunctionMapping;
+
+            WriteDropProcedure(modificationFunctionMapping.InsertFunctionMapping.Function);
+            WriteDropProcedure(modificationFunctionMapping.UpdateFunctionMapping.Function);
+            WriteDropProcedure(modificationFunctionMapping.DeleteFunctionMapping.Function);
+        }
+
+        private void WriteDropProcedure(EdmFunction function)
+        {
+            DebugCheck.NotNull(function);
+
+            using (var writer = Writer())
+            {
+                writer.Write("DROP PROCEDURE ");
+                writer.Write(Name(function.Name));
+               
+                Statement(writer);
+            }
         }
 
         /// <summary>
@@ -407,8 +517,7 @@ namespace System.Data.Entity.Migrations.Sql
                 {
                     writer.Write(" DEFAULT ");
 
-                    if (column.Type
-                        == PrimitiveTypeKind.DateTime)
+                    if (column.Type == PrimitiveTypeKind.DateTime)
                     {
                         writer.Write(Generate(DateTime.Parse("1900-01-01 00:00:00", CultureInfo.InvariantCulture)));
                     }
@@ -731,12 +840,7 @@ namespace System.Data.Entity.Migrations.Sql
                 historyOperation.Commands.Each(
                     c =>
                         {
-                            var sql
-                                = c.CommandText
-                                   .Replace("insert ", "INSERT ")
-                                   .Replace("values ", "VALUES ")
-                                   .Replace("delete ", "DELETE ")
-                                   .Replace("where ", "WHERE "); // prettify
+                            var sql = UpperCaseKeywords(c.CommandText);
 
                             // inline params
                             c.Parameters
@@ -748,6 +852,13 @@ namespace System.Data.Entity.Migrations.Sql
 
                 Statement(writer);
             }
+        }
+
+        private static string UpperCaseKeywords(string commandText)
+        {
+            DebugCheck.NotEmpty(commandText);
+
+            return _sqlKeywordUpcaser.Replace(commandText, m => m.Groups[1].Value.ToUpperInvariant());
         }
 
         /// <summary>
@@ -960,7 +1071,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="sql"> The statement to be executed. </param>
         /// <param name="suppressTransaction"> Gets or sets a value indicating whether this statement should be performed outside of the transaction scope that is used to make the migration process transactional. If set to true, this operation will not be rolled back if the migration process fails. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        protected void Statement(string sql, bool suppressTransaction = false)
+        protected void Statement(string sql, bool suppressTransaction = false, string batchTerminator = null)
         {
             Check.NotEmpty(sql, "sql");
 
@@ -968,7 +1079,8 @@ namespace System.Data.Entity.Migrations.Sql
                 new MigrationStatement
                     {
                         Sql = sql,
-                        SuppressTransaction = suppressTransaction
+                        SuppressTransaction = suppressTransaction,
+                        BatchTerminator = batchTerminator
                     });
         }
 
@@ -989,11 +1101,12 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Adds a new Statement to be executed against the database.
         /// </summary>
         /// <param name="writer"> The writer containing the SQL to be executed. </param>
-        protected void Statement(IndentedTextWriter writer)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        protected void Statement(IndentedTextWriter writer, string batchTerminator = null)
         {
             Check.NotNull(writer, "writer");
 
-            Statement(writer.InnerWriter.ToString());
+            Statement(writer.InnerWriter.ToString(), batchTerminator: batchTerminator);
         }
     }
 }

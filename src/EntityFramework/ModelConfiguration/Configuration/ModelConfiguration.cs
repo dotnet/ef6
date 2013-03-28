@@ -286,13 +286,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             foreach (var entityTypeConfiguration in ActiveEntityConfigurations)
             {
-                var entityType = model.GetEntityType(entityTypeConfiguration.ClrType);
+                ConfigureFunctionMappings(model, entityTypeConfiguration, model.GetEntityType(entityTypeConfiguration.ClrType));
+            }
 
-                Debug.Assert(entityType != null);
-
-                ConfigureFunctionMappings(model, entityTypeConfiguration, entityType);
-
-                entityTypeConfiguration.Configure(entityType, model);
+            foreach (var entityTypeConfiguration in ActiveEntityConfigurations)
+            {
+                entityTypeConfiguration.Configure(model.GetEntityType(entityTypeConfiguration.ClrType), model);
             }
         }
 
