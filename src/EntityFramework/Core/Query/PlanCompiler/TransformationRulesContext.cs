@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Text;
 
     internal class TransformationRulesContext : RuleProcessingContext
     {

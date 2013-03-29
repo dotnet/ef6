@@ -5,8 +5,10 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Collections;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     ///     Copied from System.Data.dll

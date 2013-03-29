@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
@@ -10,7 +11,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     ///     Generates a key for a command tree.

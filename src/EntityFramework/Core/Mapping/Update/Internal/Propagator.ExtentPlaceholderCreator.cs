@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
 
     internal partial class Propagator
     {
