@@ -12,9 +12,6 @@ namespace System.Data.Entity.ConnectionFactoryConfig
     /// </summary>
     internal class SqlServerDetector : IDisposable
     {
-        public const string BaseConnectionStringTemplate =
-            @"Data Source={0}; Integrated Security=True;";
-
         private readonly RegistryKeyProxy _localMachine;
         private readonly ServiceControllerProxy _controller;
 

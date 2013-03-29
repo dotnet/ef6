@@ -272,8 +272,9 @@ namespace System.Data.Entity.Infrastructure
 
         private void AssertConnectionStringHasDefaultParts(string connectionString)
         {
-            Assert.True(connectionString.Contains(@"Data Source=.\SQLEXPRESS"));
-            Assert.True(connectionString.Contains("Integrated Security=True"));
+            Assert.True(connectionString.Contains(@"Data Source=.\SQLEXPRESS"), connectionString);
+            Assert.True(connectionString.Contains("Integrated Security=True"), connectionString);
+            Assert.True(connectionString.Contains("MultipleActiveResultSets=True"), connectionString);
         }
 
         [Fact]
@@ -524,7 +525,7 @@ namespace System.Data.Entity.Infrastructure
                         using (var connection = new LocalDbConnectionFactory("v99").CreateConnection("MyDatabase"))
                         {
                             Assert.Equal(
-                                @"Data Source=(localdb)\v99;AttachDbFilename=|DataDirectory|MyDatabase.mdf;Initial Catalog=MyDatabase;Integrated Security=True",
+                                @"Data Source=(localdb)\v99;AttachDbFilename=|DataDirectory|MyDatabase.mdf;Initial Catalog=MyDatabase;Integrated Security=True;MultipleActiveResultSets=True",
                                 connection.ConnectionString);
                         }
                     });
@@ -540,7 +541,7 @@ namespace System.Data.Entity.Infrastructure
                         using (var connection = new LocalDbConnectionFactory("v99").CreateConnection("MyDatabase"))
                         {
                             Assert.Equal(
-                                @"Data Source=(localdb)\v99;Initial Catalog=MyDatabase;Integrated Security=True",
+                                @"Data Source=(localdb)\v99;Initial Catalog=MyDatabase;Integrated Security=True;MultipleActiveResultSets=True",
                                 connection.ConnectionString);
                         }
                     });

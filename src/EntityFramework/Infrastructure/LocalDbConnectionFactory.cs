@@ -35,7 +35,7 @@ namespace System.Data.Entity.Infrastructure
             Check.NotEmpty(localDbVersion, "localDbVersion");
 
             _localDbVersion = localDbVersion;
-            _baseConnectionString = @"Integrated Security=True;";
+            _baseConnectionString = @"Integrated Security=True; MultipleActiveResultSets=True;";
         }
 
         /// <summary>

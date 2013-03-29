@@ -38,7 +38,7 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         public SqlConnectionFactory()
         {
-            _baseConnectionString = @"Data Source=.\SQLEXPRESS; Integrated Security=True;";
+            _baseConnectionString = @"Data Source=.\SQLEXPRESS; Integrated Security=True; MultipleActiveResultSets=True;";
         }
 
         /// <summary>
