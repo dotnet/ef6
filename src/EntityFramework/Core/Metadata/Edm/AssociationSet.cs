@@ -180,8 +180,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Check.NotEmpty(name, "name");
             Check.NotNull(type, "type");
 
-            if (type.SourceEnd.GetEntityType() != sourceSet.ElementType
-                || type.TargetEnd.GetEntityType() != targetSet.ElementType)
+            if (!CheckEntitySetAgainstEndMember(sourceSet, type.SourceEnd) 
+                || !CheckEntitySetAgainstEndMember(targetSet, type.TargetEnd))
             {
                 throw new ArgumentException(Strings.AssociationSet_EndEntityTypeMismatch);
             }
@@ -206,6 +206,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             instance.SetReadOnly();
 
             return instance;
+        }
+
+        private static bool CheckEntitySetAgainstEndMember(EntitySet entitySet, AssociationEndMember endMember)
+        {
+            return (entitySet == null && endMember == null)
+                || (entitySet != null && endMember != null && entitySet.ElementType == endMember.GetEntityType());
         }
     }
 }

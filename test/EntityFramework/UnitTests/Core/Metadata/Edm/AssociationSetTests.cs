@@ -59,11 +59,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
-        public void Create_throws_argument_exception_when_called_with_invalid_arguments()
+        public void Create_throws_argument_exception_when_called_with_null_or_empty_arguments()
         {
             var source = new EntityType("Source", "Namespace", DataSpace.CSpace);
             var target = new EntityType("Target", "Namespace", DataSpace.CSpace);
-            var other = new EntityType("Other", "Namespace", DataSpace.CSpace);
             var sourceEnd = new AssociationEndMember("SourceEnd", source);
             var targetEnd = new AssociationEndMember("TargetEnd", target);
             var constraint =
@@ -84,13 +83,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     Enumerable.Empty<MetadataProperty>());
             var sourceSet = new EntitySet("SourceSet", "Schema", "Table", "Query", source);
             var targetSet = new EntitySet("TargetSet", "Schema", "Table", "Query", target);
-            var otherSet = new EntitySet("OtherSet", "Schema", "Table", "Query", other);
             var metadataProperty =
                 new MetadataProperty(
                     "MetadataProperty",
                     TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
                     "value");
 
+            // name is null
             Assert.Throws<ArgumentException>(
                 () => AssociationSet.Create(
                     null,
@@ -99,6 +98,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     targetSet,
                     new [] { metadataProperty }));
 
+            // name is empty
             Assert.Throws<ArgumentException>(
                 () => AssociationSet.Create(
                     String.Empty,
@@ -107,6 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     targetSet,
                     new[] { metadataProperty }));
 
+            // type is null
             Assert.Throws<ArgumentNullException>(
                 () => AssociationSet.Create(
                     "AssociationSet",
@@ -114,22 +115,117 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     sourceSet,
                     targetSet,
                     new[] { metadataProperty }));
+        }
 
-            Assert.Throws<ArgumentException>(
-                () => AssociationSet.Create(
-                    "AssociationSet",
-                    associationType,
-                    otherSet,
+        [Fact]
+        public void Create_checks_each_EntitySet_parameter_against_corresponding_AssociationEndMember()
+        {
+            var source = new EntityType("Source", "Namespace", DataSpace.CSpace);
+            var target = new EntityType("Target", "Namespace", DataSpace.CSpace);
+            var other = new EntityType("Other", "Namespace", DataSpace.CSpace);
+            var sourceSet = new EntitySet("SourceSet", "Schema", "Table", "Query", source);
+            var targetSet = new EntitySet("TargetSet", "Schema", "Table", "Query", target);
+            var otherSet = new EntitySet("OtherSet", "Schema", "Table", "Query", other);
+            var sourceEnd = new AssociationEndMember("SourceEnd", source);
+            var targetEnd = new AssociationEndMember("TargetEnd", target);
+
+            var associationTypeWithNonNullEndMembers = 
+                AssociationType.Create(
+                    "AssociationType", 
+                    "Namespace", 
+                    true, 
+                    DataSpace.CSpace, 
+                    sourceEnd, 
+                    targetEnd,
+                    null,
+                    null);
+
+            var associationTypeWithNullEndMembers = 
+                AssociationType.Create(
+                    "AssociationType", 
+                    "Namespace", 
+                    true, 
+                    DataSpace.CSpace, 
+                    null, // sourceEnd
+                    null, // targetEnd
+                    null, 
+                    null);
+
+            Assert.NotNull(
+                AssociationSet.Create(
+                    "AssociationSet", 
+                    associationTypeWithNonNullEndMembers, 
+                    sourceSet, 
                     targetSet,
-                    new[] { metadataProperty }));
+                    null));
 
-            Assert.Throws<ArgumentException>(
-                () => AssociationSet.Create(
-                    "AssociationSet",
-                    associationType,
-                    sourceSet,
-                    otherSet,
-                    new[] { metadataProperty }));
+            Assert.NotNull(
+                AssociationSet.Create(
+                    "AssociationSet", 
+                    associationTypeWithNullEndMembers, 
+                    null, // sourceSet
+                    null, // targetSet
+                    null));
+
+            Assert.Equal(
+                Resources.Strings.AssociationSet_EndEntityTypeMismatch,
+                Assert.Throws<ArgumentException>(
+                    () => AssociationSet.Create(
+                        "AssociationSet", 
+                        associationTypeWithNonNullEndMembers, 
+                        otherSet, 
+                        targetSet,
+                        null)).Message);
+
+            Assert.Equal(
+                Resources.Strings.AssociationSet_EndEntityTypeMismatch,
+                Assert.Throws<ArgumentException>(
+                    () => AssociationSet.Create(
+                        "AssociationSet", 
+                        associationTypeWithNonNullEndMembers, 
+                        sourceSet, 
+                        otherSet,
+                        null)).Message);
+
+            Assert.Equal(
+                Resources.Strings.AssociationSet_EndEntityTypeMismatch,
+                Assert.Throws<ArgumentException>(
+                    () => AssociationSet.Create(
+                        "AssociationSet",
+                        associationTypeWithNonNullEndMembers,
+                        null, // sourceSet
+                        targetSet,
+                        null)).Message);
+
+            Assert.Equal(
+                Resources.Strings.AssociationSet_EndEntityTypeMismatch,
+                Assert.Throws<ArgumentException>(
+                    () => AssociationSet.Create(
+                        "AssociationSet",
+                        associationTypeWithNonNullEndMembers,
+                        sourceSet,
+                        null, // targetSet
+                        null)).Message);
+
+            Assert.Equal(
+                Resources.Strings.AssociationSet_EndEntityTypeMismatch,
+                Assert.Throws<ArgumentException>(
+                    () => AssociationSet.Create(
+                        "AssociationSet",
+                        associationTypeWithNullEndMembers,
+                        null, // sourceSet
+                        targetSet,
+                        null)).Message);
+
+            Assert.Equal(
+                Resources.Strings.AssociationSet_EndEntityTypeMismatch,
+                Assert.Throws<ArgumentException>(
+                    () => AssociationSet.Create(
+                        "AssociationSet",
+                        associationTypeWithNullEndMembers,
+                        sourceSet,
+                        null, // targetSet
+                        null)).Message);
         }
 
         [Fact]
