@@ -35,6 +35,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="baseType"> The primitive type that this type is derived from </param>
         /// <param name="providerManifest"> The ProviderManifest of the provider of this type </param>
         /// <exception cref="System.ArgumentNullException">Thrown if name, namespaceName, version, baseType or providerManifest arguments are null</exception>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal PrimitiveType(
             string name,
             string namespaceName,

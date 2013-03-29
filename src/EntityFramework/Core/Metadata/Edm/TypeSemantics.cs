@@ -989,7 +989,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return true;
         }
 
-        private static bool TryGetCommonBaseType(EdmType type1, EdmType type2, out EdmType commonBaseType)
+        internal static bool TryGetCommonBaseType(EdmType type1, EdmType type2, out EdmType commonBaseType)
         {
             // put all the other base types in a dictionary
             var otherBaseTypes = new Dictionary<EdmType, byte>();

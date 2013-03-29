@@ -239,7 +239,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<EntityWithDescBase>();
             modelBuilder.Entity<EntityWithDescB>().Property(e => e.Description).HasColumnName("Description");
-            modelBuilder.Entity<EntityWithDescC>().Property(e => e.Description).HasColumnName("Description");
+            modelBuilder.Entity<EntityWithDescB>().Property(e => e.NotDescription).HasColumnName("Description");
 
             Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
         }
@@ -258,6 +258,7 @@ namespace FunctionalTests
         public class EntityWithDescB : EntityWithDescBase
         {
             public string Description { get; set; }
+            public string NotDescription { get; set; }
             public ComplexWithDesc Complex { get; set; }
         }
 

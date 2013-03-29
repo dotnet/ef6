@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// <summary>
     ///     Represent the edm property class
     /// </summary>
-    public sealed class EdmProperty : EdmMember
+    public class EdmProperty : EdmMember
     {
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static EdmProperty Primitive(string name, PrimitiveType primitiveType)

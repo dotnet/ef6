@@ -774,6 +774,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        ///     A string like "Both property '{0}' on type '{1}' and property '{2}' on type '{3}' map to column '{4}' on table '{5}' but the configuration of the column for property '{1}.{0}' is incompatible with the configuration of the column for property '{3}.{2}'. The column type and configuration must be the same for all properties that map to a given column in a TPH table. {6}"
+        /// </summary>
+        internal static string BadTphMappingToSharedColumn(object p0, object p1, object p2, object p3, object p4, object p5, object p6)
+        {
+            return EntityRes.GetString(EntityRes.BadTphMappingToSharedColumn, p0, p1, p2, p3, p4, p5, p6);
+        }
+
+        /// <summary>
         ///     A string like "The configured column orders for the table '{0}' contains duplicates. Ensure the specified column order values are distinct."
         /// </summary>
         internal static string DuplicateConfiguredColumnOrder(object p0)
@@ -15244,6 +15252,7 @@ namespace System.Data.Entity.Resources
         internal const string UnmappedAbstractType = "UnmappedAbstractType";
         internal const string UnsupportedHybridInheritanceMapping = "UnsupportedHybridInheritanceMapping";
         internal const string OrphanedConfiguredTableDetected = "OrphanedConfiguredTableDetected";
+        internal const string BadTphMappingToSharedColumn = "BadTphMappingToSharedColumn";
         internal const string DuplicateConfiguredColumnOrder = "DuplicateConfiguredColumnOrder";
         internal const string UnsupportedUseOfV3Type = "UnsupportedUseOfV3Type";
         internal const string MultiplePropertiesMatchedAsKeys = "MultiplePropertiesMatchedAsKeys";

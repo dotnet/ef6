@@ -375,6 +375,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             ConfigureDefaultSchema(databaseMapping);
             UniquifyFunctionNames(databaseMapping);
             ConfigureFunctionParameters(databaseMapping);
+            RemoveDuplicateTphColumns(databaseMapping);
         }
 
         private static void ConfigureFunctionParameters(DbDatabaseMapping databaseMapping)
@@ -665,6 +666,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     subTypeEntityConfiguration.AddMappingConfiguration(
                         subTypeAndMappingConfigurationPair.Value, cloneable: false);
                 }
+            }
+        }
+
+        private static void RemoveDuplicateTphColumns(DbDatabaseMapping databaseMapping)
+        {
+            foreach (var table in databaseMapping.Database.EntityTypes)
+            {
+                var currentTable = table; // Prevent access to foreach variable in closure
+                new TphColumnFixer(
+                    databaseMapping
+                        .GetEntitySetMappings()
+                        .SelectMany(e => e.EntityTypeMappings)
+                        .SelectMany(e => e.MappingFragments)
+                        .Where(f => f.Table == currentTable)
+                        .SelectMany(f => f.ColumnMappings)).RemoveDuplicateTphColumns();
             }
         }
 

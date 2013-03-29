@@ -473,6 +473,9 @@
     <value>The table '{0}' was configured but is not used in any mappings. Verify the mapping configuration for '{0}' is correct.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
+  <data name="BadTphMappingToSharedColumn" xml:space="preserve">
+    <value>Both property '{0}' on type '{1}' and property '{2}' on type '{3}' map to column '{4}' on table '{5}' but the configuration of the column for property '{1}.{0}' is incompatible with the configuration of the column for property '{3}.{2}'. The column type and configuration must be the same for all properties that map to a given column in a TPH table. {6}</value>
+  </data>
   <data name="DuplicateConfiguredColumnOrder" xml:space="preserve">
     <value>The configured column orders for the table '{0}' contains duplicates. Ensure the specified column order values are distinct.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>

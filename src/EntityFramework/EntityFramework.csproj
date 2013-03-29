@@ -418,6 +418,7 @@
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionsConfiguration`.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\MissingPropertyConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\LightweightPropertyConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\TphColumnFixer.cs" />
     <Compile Include="ModelConfiguration\Configuration\Types\LightweightEntityConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Types\LightweightEntityConfiguration`.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\EntityConvention.cs" />

@@ -147,7 +147,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called on instance that is in ReadOnly state</exception>
         /// <exception cref="System.ArgumentException">Thrown if the value passed in for setter will create a loop in the inheritance chain</exception>
         [MetadataProperty(BuiltInTypeKind.EdmType, false)]
-        public EdmType BaseType
+        public virtual EdmType BaseType
         {
             get { return _baseType; }
             internal set

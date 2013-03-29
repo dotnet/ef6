@@ -6,6 +6,7 @@ namespace FunctionalTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using System.Transactions;
@@ -21,10 +22,10 @@ namespace FunctionalTests
 
             modelBuilder.Entity<BaseDependent_165027>().HasKey(
                 e => new
-                         {
-                             e.Key1,
-                             e.Key2,
-                         });
+                    {
+                        e.Key1,
+                        e.Key2,
+                    });
             modelBuilder.Entity<Dependent_165027>()
                         .Map(
                             mapping =>
@@ -52,10 +53,10 @@ namespace FunctionalTests
 
             modelBuilder.Entity<BaseDependent_165027>().HasKey(
                 e => new
-                         {
-                             e.Key1,
-                             e.Key2,
-                         });
+                    {
+                        e.Key1,
+                        e.Key2,
+                    });
             modelBuilder.Entity<Dependent_165027>()
                         .Map(
                             mapping =>
@@ -326,7 +327,7 @@ namespace FunctionalTests
 
             modelBuilder.Entity<AbstractType1>().HasKey(a => a.Property1_ID);
             modelBuilder.Entity<AbstractType1_1>().ToTable("AbstractType1_1");
-            
+
             Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
@@ -341,14 +342,14 @@ namespace FunctionalTests
                                 {
                                     m.Properties(
                                         v1 => new
-                                                  {
-                                                      v1.VendorID,
-                                                      v1.Name,
-                                                      v1.PreferredVendorStatus,
-                                                      v1.AccountNumber,
-                                                      v1.ActiveFlag,
-                                                      v1.CreditRating
-                                                  });
+                                            {
+                                                v1.VendorID,
+                                                v1.Name,
+                                                v1.PreferredVendorStatus,
+                                                v1.AccountNumber,
+                                                v1.ActiveFlag,
+                                                v1.CreditRating
+                                            });
                                     m.ToTable("Vendor");
                                 })
                         .Map(
@@ -356,11 +357,11 @@ namespace FunctionalTests
                                 {
                                     m.Properties(
                                         v2 => new
-                                                  {
-                                                      v2.VendorID,
-                                                      v2.ModifiedDate,
-                                                      v2.PurchasingWebServiceURL
-                                                  });
+                                            {
+                                                v2.VendorID,
+                                                v2.ModifiedDate,
+                                                v2.PurchasingWebServiceURL
+                                            });
                                     m.ToTable("VendorDetails");
                                 });
 
@@ -380,14 +381,14 @@ namespace FunctionalTests
                                 {
                                     m.Properties(
                                         v1 => new
-                                                  {
-                                                      v1.VendorID,
-                                                      v1.Name,
-                                                      v1.PreferredVendorStatus,
-                                                      v1.AccountNumber,
-                                                      v1.ActiveFlag,
-                                                      v1.CreditRating
-                                                  });
+                                            {
+                                                v1.VendorID,
+                                                v1.Name,
+                                                v1.PreferredVendorStatus,
+                                                v1.AccountNumber,
+                                                v1.ActiveFlag,
+                                                v1.CreditRating
+                                            });
                                     m.ToTable("Vendor");
                                 })
                         .Map(
@@ -395,10 +396,10 @@ namespace FunctionalTests
                                 {
                                     m.Properties(
                                         v2 => new
-                                                  {
-                                                      v2.ModifiedDate,
-                                                      v2.PurchasingWebServiceURL
-                                                  });
+                                            {
+                                                v2.ModifiedDate,
+                                                v2.PurchasingWebServiceURL
+                                            });
                                     m.ToTable("VendorDetails");
                                 });
 
@@ -421,10 +422,10 @@ namespace FunctionalTests
                                 {
                                     m.Properties(
                                         pd1 => new
-                                                   {
-                                                       pd1.ProductDescriptionID,
-                                                       pd1.RowDetails.rowguid
-                                                   });
+                                            {
+                                                pd1.ProductDescriptionID,
+                                                pd1.RowDetails.rowguid
+                                            });
                                     m.ToTable("ProductDescription");
                                 })
                         .Map(
@@ -432,11 +433,11 @@ namespace FunctionalTests
                                 {
                                     m.Properties(
                                         pd2 => new
-                                                   {
-                                                       pd2.ProductDescriptionID,
-                                                       pd2.Description,
-                                                       pd2.RowDetails.ModifiedDate
-                                                   });
+                                            {
+                                                pd2.ProductDescriptionID,
+                                                pd2.Description,
+                                                pd2.RowDetails.ModifiedDate
+                                            });
                                     m.ToTable("ProductDescriptionExtended");
                                 });
 
@@ -639,7 +640,7 @@ namespace FunctionalTests
             Assert.Equal(
                 "ITOffice_ITOfficeId",
                 databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.ElementAt(0).SourceEndMapping
-                .PropertyMappings.ElementAt(0).ColumnProperty.Name);
+                               .PropertyMappings.ElementAt(0).ColumnProperty.Name);
         }
 
         [Fact]
@@ -974,6 +975,305 @@ namespace FunctionalTests
                 }
             }
         }
+
+        [Fact] // CodePlex 583
+        public void Subclasses_can_map_different_properties_to_same_column_using_TPH()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<Person>();
+            modelBuilder.Entity<Student>().Property(p => p.Career).HasColumnName("Data");
+            modelBuilder.Entity<Officer>().Property(p => p.Department).HasColumnName("Data");
+            modelBuilder.Entity<Teacher>();
+            modelBuilder.Entity<Lawyer>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<Person>("People").HasColumn("Data");
+            databaseMapping.Assert<Student>("People").HasColumn("Data");
+            databaseMapping.Assert<Officer>("People").HasColumn("Data");
+            databaseMapping.Assert<Teacher>("People").HasColumn("Data");
+            databaseMapping.Assert<Lawyer>("People").HasColumn("Data");
+
+            databaseMapping.AssertValid();
+        }
+
+        [Fact] // CodePlex 583
+        public void Subclasses_can_map_different_parts_of_complex_properties_to_same_column_using_TPH()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<Lab>();
+            modelBuilder.Entity<MobileLab>().Property(p => p.Vehicle.Registration).HasColumnName("LabId");
+            modelBuilder.Entity<StaticLab>().Property(p => p.LabNumber).HasColumnName("LabId");
+            modelBuilder.Entity<MobileLab>().Property(p => p.Vehicle.Info.Depth).HasColumnName("InfoDepth");
+            modelBuilder.Entity<StaticLab>().Property(p => p.LabInfo.Depth).HasColumnName("InfoDepth");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<Lab>("Labs").HasColumn("LabId");
+            databaseMapping.Assert<Lab>("Labs").HasColumn("InfoDepth");
+            databaseMapping.Assert<MobileLab>("Labs").HasColumn("LabId");
+            databaseMapping.Assert<MobileLab>("Labs").HasColumn("InfoDepth");
+            databaseMapping.Assert<StaticLab>("Labs").HasColumn("LabId");
+            databaseMapping.Assert<StaticLab>("Labs").HasColumn("InfoDepth");
+
+            databaseMapping.AssertValid();
+        }
+
+        [Fact] // CodePlex 583
+        public void Subclasses_with_different_properties_to_same_column_using_TPH_can_round_trip()
+        {
+            using (var context = new TphPersonContext())
+            {
+                Assert.Equal("N/A", context.People.OfType<Student>().Single(p => p.Name == "Jesse").Career);
+                Assert.Equal("Chemistry", context.People.OfType<Teacher>().Single(p => p.Name == "Walter").Department);
+                Assert.Equal("Laundering", context.People.OfType<Lawyer>().Single(p => p.Name == "Saul").Specialty);
+                Assert.Equal("DEA", context.People.OfType<Officer>().Single(p => p.Name == "Hank").Department);
+                Assert.Equal("Skyler", context.People.Single(p => p.Name == "Skyler").Name);
+
+                Assert.Equal(1, context.Labs.OfType<MobileLab>().Single().Vehicle.Registration);
+                Assert.Equal(2, context.Labs.OfType<MobileLab>().Single().Vehicle.Info.Depth);
+                Assert.Equal(3, context.Labs.OfType<MobileLab>().Single().Vehicle.Info.Size);
+                Assert.Equal(4, context.Labs.OfType<StaticLab>().Single().LabNumber);
+                Assert.Equal(5, context.Labs.OfType<StaticLab>().Single().LabInfo.Depth);
+                Assert.Equal(6, context.Labs.OfType<StaticLab>().Single().LabInfo.Size);
+
+                using (context.Database.BeginTransaction())
+                {
+                    context.People.Local.OfType<Teacher>().Single().Department = "Heisenberg";
+                    context.Labs.Local.OfType<MobileLab>().Single().Vehicle.Registration = 11;
+                    context.SaveChanges();
+
+                    Assert.Equal("Heisenberg", context.People.OfType<Teacher>().Select(p => p.Department).Single());
+                    Assert.Equal(11, context.Labs.OfType<MobileLab>().Select(p => p.Vehicle.Registration).Single());
+                }
+            }
+        }
+
+        [Fact] // CodePlex 583
+        public void Subclasses_that_map_properties_to_same_column_with_different_facets_using_TPH_will_throw()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<Person>();
+            modelBuilder.Entity<Student>().Property(p => p.Career).HasMaxLength(256).HasColumnName("Data");
+            modelBuilder.Entity<Officer>().Property(p => p.Department).HasMaxLength(512).HasColumnName("Data");
+
+            var details = Environment.NewLine + "\t" +
+                          string.Format(
+                              LookupString(
+                                  EntityFrameworkAssembly, "System.Data.Entity.Properties.Resources", "ConflictingConfigurationValue"),
+                              "MaxLength", 256, "MaxLength", 512);
+
+            Assert.Throws<MappingException>(() => BuildMapping(modelBuilder))
+                  .ValidateMessage("BadTphMappingToSharedColumn", "Career", "Student", "Department", "Officer", "Data", "Person", details);
+        }
+
+        [Fact] // CodePlex 583
+        public void Column_configuration_can_be_applied_to_only_one_property_when_properties_share_TPH_column()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<Person>();
+            modelBuilder.Entity<Student>().Property(p => p.Career).HasColumnName("Data");
+
+            modelBuilder.Entity<Officer>()
+                        .Property(p => p.Department)
+                        .HasColumnName("Data")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar");
+
+            modelBuilder.Entity<Teacher>().Property(p => p.Department).HasColumnName("Data");
+            modelBuilder.Entity<Lawyer>().Property(p => p.Specialty).HasColumnName("Data");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<Student>(t => t.Career)
+                           .DbEqual(256, f => f.MaxLength)
+                           .DbEqual("varchar", f => f.TypeName);
+            databaseMapping.Assert<Officer>(t => t.Department)
+                           .DbEqual(256, f => f.MaxLength)
+                           .DbEqual("varchar", f => f.TypeName);
+            databaseMapping.Assert<Teacher>(t => t.Department)
+                           .DbEqual(256, f => f.MaxLength)
+                           .DbEqual("varchar", f => f.TypeName);
+            databaseMapping.Assert<Lawyer>(t => t.Specialty)
+                           .DbEqual(256, f => f.MaxLength)
+                           .DbEqual("varchar", f => f.TypeName);
+
+            databaseMapping.AssertValid();
+        }
+
+        [Fact] // CodePlex 583
+        public void Non_conflicting_column_configuration_can_be_spread_across_properties_that_share_TPH_column()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<Person>();
+            modelBuilder.Entity<Student>().Property(p => p.Career).HasColumnName("Data").HasMaxLength(256);
+            modelBuilder.Entity<Officer>().Property(p => p.Department).HasColumnName("Data").HasColumnType("varchar");
+            modelBuilder.Entity<Teacher>().Property(p => p.Department).HasColumnName("Data").HasColumnType("varchar");
+            modelBuilder.Entity<Lawyer>().Property(p => p.Specialty).HasColumnName("Data").HasMaxLength(256);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.Assert<Student>(t => t.Career)
+                           .DbEqual(256, f => f.MaxLength)
+                           .DbEqual("varchar", f => f.TypeName);
+            databaseMapping.Assert<Officer>(t => t.Department)
+                           .DbEqual(256, f => f.MaxLength)
+                           .DbEqual("varchar", f => f.TypeName);
+            databaseMapping.Assert<Teacher>(t => t.Department)
+                           .DbEqual(256, f => f.MaxLength)
+                           .DbEqual("varchar", f => f.TypeName);
+            databaseMapping.Assert<Lawyer>(t => t.Specialty)
+                           .DbEqual(256, f => f.MaxLength)
+                           .DbEqual("varchar", f => f.TypeName);
+
+            databaseMapping.AssertValid();
+        }
+
+        public class TphPersonContext : DbContext
+        {
+            static TphPersonContext()
+            {
+                Database.SetInitializer(new TphPersonInitializer());
+            }
+
+            public DbSet<Person> People { get; set; }
+            public DbSet<Lab> Labs { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Student>().Property(p => p.Career).HasColumnName("Data").HasMaxLength(200);
+                modelBuilder.Entity<Officer>().Property(p => p.Department).HasColumnName("Data");
+
+                modelBuilder.Entity<MobileLab>().Property(p => p.Vehicle.Registration).HasColumnName("LabId");
+                modelBuilder.Entity<StaticLab>().Property(p => p.LabNumber).HasColumnName("LabId");
+
+                modelBuilder.Entity<MobileLab>().Property(p => p.Vehicle.Info.Depth).HasColumnName("InfoDepth");
+                modelBuilder.Entity<StaticLab>().Property(p => p.LabInfo.Depth).HasColumnName("InfoDepth");
+            }
+        }
+
+        public class TphPersonInitializer : DropCreateDatabaseIfModelChanges<TphPersonContext>
+        {
+            protected override void Seed(TphPersonContext context)
+            {
+                context.People.Add(
+                    new Student
+                        {
+                            Name = "Jesse",
+                            Career = "N/A"
+                        });
+
+                context.People.Add(
+                    new Teacher
+                        {
+                            Name = "Walter",
+                            Department = "Chemistry"
+                        });
+
+                context.People.Add(
+                    new Lawyer
+                        {
+                            Name = "Saul",
+                            Specialty = "Laundering"
+                        });
+
+                context.People.Add(
+                    new Officer
+                        {
+                            Name = "Hank",
+                            Department = "DEA"
+                        });
+
+                context.People.Add(
+                    new Person
+                        {
+                            Name = "Skyler"
+                        });
+
+                context.Labs.Add(
+                    new MobileLab
+                        {
+                            Vehicle = new Vehicle
+                                {
+                                    Registration = 1,
+                                    Info = new LabInfo
+                                        {
+                                            Depth = 2,
+                                            Size = 3
+                                        }
+                                }
+                        });
+
+                context.Labs.Add(
+                    new StaticLab
+                        {
+                            LabNumber = 4,
+                            LabInfo = new LabInfo
+                                {
+                                    Depth = 5,
+                                    Size = 6
+                                }
+                        });
+            }
+        }
+
+        public class Person
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class Student : Person
+        {
+            public string Career { get; set; }
+        }
+
+        public class Teacher : Person
+        {
+            [Column("Data")]
+            public string Department { get; set; }
+        }
+
+        public class Lawyer : Person
+        {
+            [Column("Data")]
+            public string Specialty { get; set; }
+        }
+
+        public class Officer : Person
+        {
+            public string Department { get; set; }
+        }
+
+        public class Lab
+        {
+            public int Id { get; set; }
+        }
+
+        public class MobileLab : Lab
+        {
+            public Vehicle Vehicle { get; set; }
+        }
+
+        public class StaticLab : Lab
+        {
+            public int LabNumber { get; set; }
+            public LabInfo LabInfo { get; set; }
+        }
+
+        [ComplexType]
+        public class Vehicle
+        {
+            public int Registration { get; set; }
+            public LabInfo Info { get; set; }
+        }
+
+        [ComplexType]
+        public class LabInfo
+        {
+            public int Size { get; set; }
+            public int Depth { get; set; }
+        }
     }
 
     #region Bug DevDiv#223284
@@ -1090,7 +1390,7 @@ namespace FunctionalTests
 
                 var derivedTypeMappings =
                     databaseMapping.EntityContainerMappings.Single().EntitySetMappings
-                                                              .First(es => es.EntitySet.Name.Contains("Dependent")).EntityTypeMappings;
+                                   .First(es => es.EntitySet.Name.Contains("Dependent")).EntityTypeMappings;
 
                 Assert.Equal(
                     "Principal",
@@ -1316,7 +1616,7 @@ namespace FunctionalTests
                     .ToTable("B", "dbo");
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                
+
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<B>("B")
@@ -1338,7 +1638,7 @@ namespace FunctionalTests
                     .ToTable("B", "dbo");
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                
+
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<B>("B")
@@ -1367,7 +1667,7 @@ namespace FunctionalTests
                     .ToTable("B", "dbo");
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                
+
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<A>("A")
@@ -1401,10 +1701,10 @@ namespace FunctionalTests
                                     {
                                         m.Properties(
                                             c => new
-                                                     {
-                                                         c.Id,
-                                                         c.X
-                                                     });
+                                                {
+                                                    c.Id,
+                                                    c.X
+                                                });
                                         m.ToTable("CX");
                                     })
                             .Map(
@@ -1412,15 +1712,15 @@ namespace FunctionalTests
                                     {
                                         m.Properties(
                                             c => new
-                                                     {
-                                                         c.Id,
-                                                         c.Y
-                                                     });
+                                                {
+                                                    c.Id,
+                                                    c.Y
+                                                });
                                         m.ToTable("CY");
                                     });
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                
+
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<C>("CX")
@@ -1476,7 +1776,7 @@ namespace FunctionalTests
                     .ToTable("B", "dbo");
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                
+
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<A>("A")
@@ -1502,7 +1802,7 @@ namespace FunctionalTests
                     .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                
+
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<A>("A")
@@ -1524,7 +1824,7 @@ namespace FunctionalTests
                     .ToTable("B", "dbo");
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                
+
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<A>("A")
@@ -1552,10 +1852,10 @@ namespace FunctionalTests
                                     {
                                         m.Properties(
                                             c => new
-                                                     {
-                                                         c.Id,
-                                                         c.X
-                                                     });
+                                                {
+                                                    c.Id,
+                                                    c.X
+                                                });
                                         m.ToTable("CX");
                                     })
                             .Map(
@@ -1563,15 +1863,15 @@ namespace FunctionalTests
                                     {
                                         m.Properties(
                                             c => new
-                                                     {
-                                                         c.Id,
-                                                         c.Y
-                                                     });
+                                                {
+                                                    c.Id,
+                                                    c.Y
+                                                });
                                         m.ToTable("CY");
                                     });
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                
+
                 databaseMapping.AssertValid();
 
                 databaseMapping.Assert<C>("CX")
@@ -1679,8 +1979,6 @@ namespace FunctionalTests
 
     namespace Bug335965
     {
-        using System.Data.Entity.Core;
-
         public class A
         {
             public int Id { get; set; }
@@ -1809,7 +2107,7 @@ namespace FunctionalTests
                 modelBuilder.Entity<C>().ToTable("C");
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                
+
                 databaseMapping.AssertValid();
             }
         }
