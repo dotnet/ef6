@@ -644,6 +644,17 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Executes_in_a_transaction_using_ExecutionStrategy()
             {
+                Executes_in_a_transaction_using_ExecutionStrategy(startTransaction: true);
+            }
+
+            [Fact]
+            public void Executes_without_a_transaction_using_ExecutionStrategy_when_calling_with_DoNotBeginTransaction()
+            {
+                Executes_in_a_transaction_using_ExecutionStrategy(startTransaction: false);
+            }
+
+            private void Executes_in_a_transaction_using_ExecutionStrategy(bool startTransaction)
+            {
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQuery()).Returns(1);
 
@@ -669,11 +680,14 @@ namespace System.Data.Entity.Core.Objects
                                          f =>
                                              {
                                                  objectContextMock.Verify(
-                                                     m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), true, true),
+                                                     m =>
+                                                     m.ExecuteInTransaction(
+                                                         It.IsAny<Func<int>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>()),
                                                      Times.Never());
                                                  var result = f();
                                                  objectContextMock.Verify(
-                                                     m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), true, true),
+                                                     m =>
+                                                     m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), startTransaction, true),
                                                      Times.Once());
                                                  return result;
                                              });
@@ -681,7 +695,10 @@ namespace System.Data.Entity.Core.Objects
                 MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
-                    objectContextMock.Object.ExecuteStoreCommand("foo");
+                    objectContextMock.Object.ExecuteStoreCommand(
+                        startTransaction
+                            ? TransactionBehavior.Default
+                            : TransactionBehavior.DoNotEnsureTransaction, "foo");
                 }
                 finally
                 {
@@ -2157,6 +2174,17 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Executes_in_a_transaction_using_ExecutionStrategy()
             {
+                Executes_in_a_transaction_using_ExecutionStrategy(startTransaction: true);
+            }
+
+            [Fact]
+            public void Executes_without_a_transaction_using_ExecutionStrategy_when_calling_with_DoNotBeginTransaction()
+            {
+                Executes_in_a_transaction_using_ExecutionStrategy(startTransaction: false);
+            }
+
+            private void Executes_in_a_transaction_using_ExecutionStrategy(bool startTransaction)
+            {
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(1));
 
@@ -2187,14 +2215,14 @@ namespace System.Data.Entity.Core.Objects
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransactionAsync(
-                                                         It.IsAny<Func<Task<int>>>(), It.IsAny<bool>(), true, true,
+                                                         It.IsAny<Func<Task<int>>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(),
                                                          It.IsAny<CancellationToken>()),
                                                      Times.Never());
                                                  var result = f().Result;
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransactionAsync(
-                                                         It.IsAny<Func<Task<int>>>(), It.IsAny<bool>(), true, true,
+                                                         It.IsAny<Func<Task<int>>>(), It.IsAny<bool>(), startTransaction, true,
                                                          It.IsAny<CancellationToken>()),
                                                      Times.Once());
                                                  return Task.FromResult(result);
@@ -2203,7 +2231,11 @@ namespace System.Data.Entity.Core.Objects
                 MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
-                    Assert.NotNull(objectContextMock.Object.ExecuteStoreCommandAsync("foo").Result);
+                    Assert.NotNull(
+                        objectContextMock.Object.ExecuteStoreCommandAsync(
+                            startTransaction
+                                ? TransactionBehavior.Default
+                                : TransactionBehavior.DoNotEnsureTransaction, "foo").Result);
                 }
                 finally
                 {

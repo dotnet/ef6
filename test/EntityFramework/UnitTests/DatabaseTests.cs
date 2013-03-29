@@ -128,9 +128,14 @@ namespace System.Data.Entity
             {
                 var internalContextMock = new Mock<InternalContextForMock>();
                 var database = new Database(internalContextMock.Object);
+                var parameters = new object[1];
 
-                Assert.NotNull(database.ExecuteSqlCommand("query"));
-                internalContextMock.Verify(m => m.ExecuteSqlCommand("query", new object[0]), Times.Once());
+                Assert.NotNull(database.ExecuteSqlCommand("query", parameters));
+                internalContextMock.Verify(m => m.ExecuteSqlCommand(TransactionBehavior.Default, "query", parameters), Times.Once());
+
+                Assert.NotNull(database.ExecuteSqlCommand(TransactionBehavior.DoNotEnsureTransaction, "query", parameters));
+                internalContextMock.Verify(
+                    m => m.ExecuteSqlCommand(TransactionBehavior.DoNotEnsureTransaction, "query", parameters), Times.Once());
             }
         }
 
@@ -183,13 +188,28 @@ namespace System.Data.Entity
             {
                 var internalContextMock = new Mock<InternalContextForMock>();
                 internalContextMock.Setup(
-                    m => m.ExecuteSqlCommandAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()))
+                    m =>
+                    m.ExecuteSqlCommandAsync(It.IsAny<TransactionBehavior>(), It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()))
                                    .Returns(Task.FromResult(1));
                 var database = new Database(internalContextMock.Object);
+                var cancellationToken = new CancellationTokenSource().Token;
+                var parameters = new object[1];
 
-                Assert.NotNull(database.ExecuteSqlCommandAsync("query").Result);
+                Assert.NotNull(database.ExecuteSqlCommandAsync("query", parameters).Result);
                 internalContextMock.Verify(
-                    m => m.ExecuteSqlCommandAsync("query", CancellationToken.None, It.IsAny<object[]>()), Times.Once());
+                    m => m.ExecuteSqlCommandAsync(TransactionBehavior.Default, "query", CancellationToken.None, parameters), Times.Once());
+
+                Assert.NotNull(database.ExecuteSqlCommandAsync("query", cancellationToken, parameters).Result);
+                internalContextMock.Verify(
+                    m => m.ExecuteSqlCommandAsync(TransactionBehavior.Default, "query", cancellationToken, parameters), Times.Once());
+
+                Assert.NotNull(database.ExecuteSqlCommandAsync(TransactionBehavior.DoNotEnsureTransaction, "query", parameters).Result);
+                internalContextMock.Verify(
+                    m => m.ExecuteSqlCommandAsync(TransactionBehavior.Default, "query", CancellationToken.None, parameters), Times.Once());
+
+                Assert.NotNull(database.ExecuteSqlCommandAsync(TransactionBehavior.DoNotEnsureTransaction, "query", cancellationToken, parameters).Result);
+                internalContextMock.Verify(
+                    m => m.ExecuteSqlCommandAsync(TransactionBehavior.Default, "query", cancellationToken, parameters), Times.Once());
             }
         }
 
@@ -373,7 +393,7 @@ namespace System.Data.Entity
 
                     context.Database.CommandTimeout = 77;
                     Assert.Equal(77, context.Database.CommandTimeout);
-                    
+
                     context.Database.CommandTimeout = null;
                     Assert.Null(context.Database.CommandTimeout);
                 }
@@ -387,7 +407,7 @@ namespace System.Data.Entity
                     Assert.Equal(
                         Strings.ObjectContext_InvalidCommandTimeout,
                         Assert.Throws<ArgumentException>(
-                        () => context.Database.CommandTimeout = -1).Message);
+                            () => context.Database.CommandTimeout = -1).Message);
                 }
             }
 
