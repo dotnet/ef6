@@ -156,11 +156,17 @@
   <data name="AssemblyNameArgument" xml:space="preserve">
     <value>assembly</value>
   </data>
+  <data name="ContextAssemblyNameArgument" xml:space="preserve">
+    <value>contextAssembly</value>
+  </data>
   <data name="ConfigurationTypeNameArgument" xml:space="preserve">
     <value>configurationType</value>
   </data>
   <data name="AssemblyNameDescription" xml:space="preserve">
     <value>Specifies the name of the assembly that contains the migrations configuration type.</value>
+  </data>
+  <data name="ContextAssemblyNameDescription" xml:space="preserve">
+    <value>Specifies the name of the assembly that contains the DbContext type if different from the assembly that contains the migrations configuration type.</value>
   </data>
   <data name="ConfigurationTypeNameDescription" xml:space="preserve">
     <value>Specifies the name of the migrations configuration type. If omitted, Code First Migrations will attempt to locate a single migrations configuration type in the specified assembly.</value>

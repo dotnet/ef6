@@ -27,7 +27,8 @@ namespace System.Data.Entity.Migrations.Design
     /// </summary>
     public class ToolingFacade : IDisposable
     {
-        private readonly string _assemblyName;
+        private readonly string _migrationsAssemblyName;
+        private readonly string _contextAssemblyName;
         private readonly string _configurationTypeName;
         private readonly string _configurationFile;
         private readonly DbConnectionInfo _connectionStringInfo;
@@ -52,7 +53,8 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         ///     Initializes a new instance of the ToolingFacade class.
         /// </summary>
-        /// <param name="assemblyName"> The name of the assembly that contains the migrations configuration to be used. </param>
+        /// <param name="migrationsAssemblyName"> The name of the assembly that contains the migrations configuration to be used. </param>
+        /// <param name="contextAssemblyName"> The name of the assembly that contains the DbContext to be used. </param>
         /// <param name="configurationTypeName"> The namespace qualified name of migrations configuration to be used. </param>
         /// <param name="workingDirectory"> The working directory containing the compiled assemblies. </param>
         /// <param name="configurationFilePath"> The path of the config file from the startup project. </param>
@@ -60,16 +62,18 @@ namespace System.Data.Entity.Migrations.Design
         /// <param name="connectionStringInfo"> The connection to the database to be migrated. If null is supplied, the default connection for the context will be used. </param>
         [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
         public ToolingFacade(
-            string assemblyName,
+            string migrationsAssemblyName,
+            string contextAssemblyName,
             string configurationTypeName,
             string workingDirectory,
             string configurationFilePath,
             string dataDirectory,
             DbConnectionInfo connectionStringInfo)
         {
-            Check.NotEmpty(assemblyName, "assemblyName");
+            Check.NotEmpty(migrationsAssemblyName, "migrationsAssemblyName");
 
-            _assemblyName = assemblyName;
+            _migrationsAssemblyName = migrationsAssemblyName;
+            _contextAssemblyName = contextAssemblyName;
             _configurationTypeName = configurationTypeName;
             _connectionStringInfo = connectionStringInfo;
 
@@ -289,7 +293,8 @@ namespace System.Data.Entity.Migrations.Design
 
         private void ConfigureRunner(BaseRunner runner)
         {
-            runner.AssemblyName = _assemblyName;
+            runner.MigrationsAssemblyName = _migrationsAssemblyName;
+            runner.ContextAssemblyName = _contextAssemblyName;
             runner.ConfigurationTypeName = _configurationTypeName;
             runner.ConnectionStringInfo = _connectionStringInfo;
             runner.Log = new ToolLogger(this);
@@ -337,7 +342,8 @@ namespace System.Data.Entity.Migrations.Design
         [Serializable]
         private abstract class BaseRunner
         {
-            public string AssemblyName { get; set; }
+            public string MigrationsAssemblyName { get; set; }
+            public string ContextAssemblyName { get; set; }
             public string ConfigurationTypeName { get; set; }
             public DbConnectionInfo ConnectionStringInfo { get; set; }
             public ToolLogger Log { get; set; }
@@ -372,7 +378,7 @@ namespace System.Data.Entity.Migrations.Design
 
             private DbMigrationsConfiguration FindConfiguration()
             {
-                return new MigrationsConfigurationFinder(new TypeFinder(LoadAssembly())).FindMigrationsConfiguration(
+                return new MigrationsConfigurationFinder(new TypeFinder(LoadMigrationsAssembly())).FindMigrationsConfiguration(
                     null,
                     ConfigurationTypeName,
                     Error.AssemblyMigrator_NoConfiguration,
@@ -381,11 +387,21 @@ namespace System.Data.Entity.Migrations.Design
                     Error.AssemblyMigrator_MultipleConfigurationsWithName);
             }
 
-            protected Assembly LoadAssembly()
+            protected Assembly LoadMigrationsAssembly()
+            {
+                return LoadAssembly(MigrationsAssemblyName);
+            }
+
+            protected Assembly LoadContextAssembly()
+            {
+                return LoadAssembly(ContextAssemblyName);
+            }
+
+            private static Assembly LoadAssembly(string name)
             {
                 try
                 {
-                    return Assembly.Load(AssemblyName);
+                    return Assembly.Load(name);
                 }
                 catch (FileNotFoundException ex)
                 {
@@ -549,7 +565,7 @@ namespace System.Data.Entity.Migrations.Design
             [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
             public override void Run()
             {
-                var assembly = LoadAssembly();
+                var assembly = LoadContextAssembly();
 
                 var contextTypes = assembly.GetAccessibleTypes()
                                            .Where(t => typeof(DbContext).IsAssignableFrom(t)).Select(t => t.FullName)
@@ -567,7 +583,7 @@ namespace System.Data.Entity.Migrations.Design
             [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCodeFxCopRule")]
             public override void Run()
             {
-                var contextType = new TypeFinder(LoadAssembly()).FindType(
+                var contextType = new TypeFinder(LoadContextAssembly()).FindType(
                     typeof(DbContext),
                     ContextTypeName,
                     types => types.Where(t => !typeof(HistoryContext).IsAssignableFrom(t)),

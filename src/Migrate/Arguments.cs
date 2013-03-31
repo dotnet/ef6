@@ -25,6 +25,13 @@ namespace System.Data.Entity.Migrations.Console
         public string ConfigurationTypeName { get; set; }
 
         [CommandLineParameter(
+            ParameterIndex = 3,
+            NameResourceId = EntityRes.ContextAssemblyNameArgument,
+            Required = false,
+            DescriptionResourceId = EntityRes.ContextAssemblyNameDescription)]
+        public string ContextAssemblyName { get; set; }
+
+        [CommandLineParameter(
             Command = "targetMigration",
             DescriptionResourceId = EntityRes.TargetMigrationDescription)]
         public string TargetMigration { get; set; }
@@ -92,11 +99,19 @@ namespace System.Data.Entity.Migrations.Console
 
         internal void Standardize()
         {
-            if (AssemblyName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)
-                || AssemblyName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+            AssemblyName = Standardize(AssemblyName);
+            ContextAssemblyName = Standardize(ContextAssemblyName);
+        }
+
+        private static string Standardize(string assemblyName)
+        {
+            if (assemblyName != null
+                && (assemblyName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase)
+                    || assemblyName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)))
             {
-                AssemblyName = AssemblyName.Substring(0, AssemblyName.Length - 4);
+                assemblyName = assemblyName.Substring(0, assemblyName.Length - 4);
             }
+            return assemblyName;
         }
     }
 }

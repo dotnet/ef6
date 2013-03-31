@@ -31,6 +31,11 @@ namespace System.Data.Entity.Migrations
             get { return (Project)_domain.GetData("startUpProject"); }
         }
 
+        public Project ContextProject
+        {
+            get { return (Project)_domain.GetData("contextProject"); }
+        }
+
         protected AppDomain Domain
         {
             get { return _domain; }
@@ -73,7 +78,7 @@ namespace System.Data.Entity.Migrations
             _dispatcher.WriteVerbose(message);
         }
 
-        public virtual ToolingFacade GetFacade(string configurationTypeName = null)
+        public virtual ToolingFacade GetFacade(string configurationTypeName = null, bool useContextWorkingDirectory = false)
         {
             if (configurationTypeName == null)
             {
@@ -96,7 +101,8 @@ namespace System.Data.Entity.Migrations
 
             var startUpProject = StartUpProject;
             var assemblyName = Project.GetTargetName();
-            var workingDirectory = startUpProject.GetTargetDir();
+            var contextAssemblyName = ContextProject.GetTargetName();
+            var workingDirectory = useContextWorkingDirectory ? ContextProject.GetTargetDir() : Project.GetTargetDir();
 
             string configurationFile;
             string dataDirectory = null;
@@ -115,6 +121,7 @@ namespace System.Data.Entity.Migrations
 
             return new ToolingFacade(
                 assemblyName,
+                contextAssemblyName,
                 configurationTypeName,
                 workingDirectory,
                 configurationFile,

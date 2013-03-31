@@ -129,6 +129,7 @@ namespace System.Data.Entity.Migrations.Console
             var facade
                 = new ToolingFacade(
                     _arguments.AssemblyName,
+                    string.IsNullOrWhiteSpace(_arguments.ContextAssemblyName) ? _arguments.AssemblyName : _arguments.ContextAssemblyName,
                     _arguments.ConfigurationTypeName,
                     _arguments.WorkingDirectory,
                     _arguments.ConfigurationFile,

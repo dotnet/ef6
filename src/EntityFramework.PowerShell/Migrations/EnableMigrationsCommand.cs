@@ -140,7 +140,7 @@ namespace System.Data.Entity.Migrations
             // We need to load the users assembly in another AppDomain because you can't reload an assembly
             // If the load fails, it will block any further loads of the users assembly in the AppDomain
             // If the load succeeds, the loaded assembly is cached and can't be refreshed if the user changes their code and recompiles
-            using (var facade = GetFacade())
+            using (var facade = GetFacade(null, useContextWorkingDirectory: true))
             {
                 return facade.GetContextType(contextTypeName);
             }

@@ -118,6 +118,14 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
+        ///     A string like "contextAssembly"
+        /// </summary>
+        internal static string ContextAssemblyNameArgument
+        {
+            get { return EntityRes.GetString(EntityRes.ContextAssemblyNameArgument); }
+        }
+
+        /// <summary>
         ///     A string like "configurationType"
         /// </summary>
         internal static string ConfigurationTypeNameArgument
@@ -131,6 +139,14 @@ namespace System.Data.Entity.Migrations.Console.Resources
         internal static string AssemblyNameDescription
         {
             get { return EntityRes.GetString(EntityRes.AssemblyNameDescription); }
+        }
+
+        /// <summary>
+        ///     A string like "Specifies the name of the assembly that contains the DbContext type if different from the assembly that contains the migrations configuration type."
+        /// </summary>
+        internal static string ContextAssemblyNameDescription
+        {
+            get { return EntityRes.GetString(EntityRes.ContextAssemblyNameDescription); }
         }
 
         /// <summary>
@@ -338,8 +354,10 @@ namespace System.Data.Entity.Migrations.Console.Resources
         internal const string UnsupportedPropertyType = "UnsupportedPropertyType";
         internal const string InvalidPropertyParameterIndexValue = "InvalidPropertyParameterIndexValue";
         internal const string AssemblyNameArgument = "AssemblyNameArgument";
+        internal const string ContextAssemblyNameArgument = "ContextAssemblyNameArgument";
         internal const string ConfigurationTypeNameArgument = "ConfigurationTypeNameArgument";
         internal const string AssemblyNameDescription = "AssemblyNameDescription";
+        internal const string ContextAssemblyNameDescription = "ContextAssemblyNameDescription";
         internal const string ConfigurationTypeNameDescription = "ConfigurationTypeNameDescription";
         internal const string TargetMigrationDescription = "TargetMigrationDescription";
         internal const string WorkingDirectoryDescription = "WorkingDirectoryDescription";

@@ -40,6 +40,10 @@ $knownExceptions = @(
     Specifies the configuration file to use for named connection strings. If
     omitted, the specified project's configuration file is used.
 
+.PARAMETER ContextProjectName
+    Specifies the project which contains the DbContext class to use. If omitted,
+	the context is assumed to be in the same project used for migrations.
+
 .PARAMETER ConnectionStringName
     Specifies the name of a connection string to use from the application's
     configuration file.
@@ -65,6 +69,7 @@ function Enable-Migrations
         [string] $MigrationsDirectory,
         [string] $ProjectName,
         [string] $StartUpProjectName,
+        [string] $ContextProjectName,
         [parameter(ParameterSetName = 'ConnectionStringName')]
         [string] $ConnectionStringName,
         [parameter(ParameterSetName = 'ConnectionStringAndProviderName',
@@ -76,7 +81,7 @@ function Enable-Migrations
         [switch] $Force
     )
 
-    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConnectionStringName $ConnectionString $ConnectionProviderName
+    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $ContextProjectName $null $ConnectionStringName $ConnectionString $ConnectionProviderName
 
     try
     {
@@ -172,7 +177,7 @@ function Add-Migration
         [string] $ConnectionProviderName,
         [switch] $IgnoreChanges)
 
-    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName
+    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName
 
     try
     {
@@ -268,7 +273,7 @@ function Update-Database
             Mandatory = $true)]
         [string] $ConnectionProviderName)
 
-    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName
+    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName
 
     try
     {
@@ -344,7 +349,7 @@ function Get-Migrations
             Mandatory = $true)]
         [string] $ConnectionProviderName)
 
-    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName
+    $runner = New-MigrationsRunner $ProjectName $StartUpProjectName $null $ConfigurationTypeName $ConnectionStringName $ConnectionString $ConnectionProviderName
 
     try
     {
@@ -371,13 +376,20 @@ function Get-Migrations
     }
 }
 
-function New-MigrationsRunner($ProjectName, $StartUpProjectName, $ConfigurationTypeName, $ConnectionStringName, $ConnectionString, $ConnectionProviderName)
+function New-MigrationsRunner($ProjectName, $StartUpProjectName, $ContextProjectName, $ConfigurationTypeName, $ConnectionStringName, $ConnectionString, $ConnectionProviderName)
 {
     $startUpProject = Get-MigrationsStartUpProject $StartUpProjectName $ProjectName
     Build-Project $startUpProject
 
     $project = Get-MigrationsProject $ProjectName
     Build-Project $project
+
+	$contextProject = $project
+	if ($ContextProjectName)
+	{
+        $contextProject = Get-SingleProject $ContextProjectName
+        Build-Project $contextProject
+	}
 
     $installPath = Get-EntityFrameworkInstallPath $project
     $toolsPath = Join-Path $installPath tools
@@ -402,6 +414,7 @@ function New-MigrationsRunner($ProjectName, $StartUpProjectName, $ConfigurationT
 
     $domain = [AppDomain]::CreateDomain('Migrations', $null, $info)
     $domain.SetData('project', $project)
+    $domain.SetData('contextProject', $contextProject)
     $domain.SetData('startUpProject', $startUpProject)
     $domain.SetData('configurationTypeName', $ConfigurationTypeName)
     $domain.SetData('connectionStringName', $ConnectionStringName)

@@ -134,7 +134,7 @@ namespace System.Data.Entity.Migrations
                 MockProject.Setup(p => p.Properties.Item("RootNamespace")).Returns(mockRootNamespaceProperty.Object);
             }
 
-            public override ToolingFacade GetFacade(string configurationTypeName = null)
+            public override ToolingFacade GetFacade(string configurationTypeName = null, bool useContextWorkingDirectory = false)
             {
                 return MockToolingFacade.Object;
             }
