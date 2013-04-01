@@ -316,7 +316,7 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
 
-            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migrator = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryA);
 
@@ -341,7 +341,7 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
 
-            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migrator = CreateMigrator<ShopContext_v1>(
                 historyContextFactory: _testHistoryContextFactoryA,
@@ -370,7 +370,7 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
 
-            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migrator = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryA);
 
@@ -395,7 +395,7 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
 
-            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migrator = CreateMigrator<ShopContext_v1>(
                 historyContextFactory: _testHistoryContextFactoryA,

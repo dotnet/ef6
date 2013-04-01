@@ -48,12 +48,12 @@ namespace System.Data.Entity.Migrations
             migrator.Update();
 
             Assert.True(TableExists("dbo.Blogs"));
-            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migrator.Update("0");
 
             Assert.False(TableExists("dbo.Blogs"));
-            Assert.False(TableExists("dbo." + HistoryContext.TableName));
+            Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
         }
 
         [MigrationsTheory]
@@ -95,7 +95,7 @@ namespace System.Data.Entity.Migrations
             migrator.Update("0");
 
             Assert.False(TableExists("dbo.Blogs"));
-            Assert.False(TableExists("dbo." + HistoryContext.TableName));
+            Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
         }
 
         [MigrationsTheory]
@@ -137,12 +137,12 @@ namespace System.Data.Entity.Migrations
             migrator.Update();
 
             Assert.True(TableExists("crm.tbl_customers"));
-            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migrator.Update("0");
 
             Assert.False(TableExists("crm.tbl_customers"));
-            Assert.False(TableExists("dbo." + HistoryContext.TableName));
+            Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
         }
 
         [MigrationsTheory]
@@ -169,17 +169,17 @@ namespace System.Data.Entity.Migrations
                 automaticMigrationsEnabled: false,
                 scaffoldedMigrations: new[] { generatedMigration });
 
-            Assert.False(ColumnExists(HistoryContext.TableName, "ProductVersion"));
-            Assert.False(ColumnExists(HistoryContext.TableName, "ContextKey"));
-            Assert.True(ColumnExists(HistoryContext.TableName, "Hash"));
-            Assert.True(ColumnExists(HistoryContext.TableName, "CreatedOn"));
+            Assert.False(ColumnExists(HistoryContext.DefaultTableName, "ProductVersion"));
+            Assert.False(ColumnExists(HistoryContext.DefaultTableName, "ContextKey"));
+            Assert.True(ColumnExists(HistoryContext.DefaultTableName, "Hash"));
+            Assert.True(ColumnExists(HistoryContext.DefaultTableName, "CreatedOn"));
 
             migrator.Update(generatedMigration.MigrationId);
 
-            Assert.True(ColumnExists(HistoryContext.TableName, "ProductVersion"));
-            Assert.True(ColumnExists(HistoryContext.TableName, "ContextKey"));
-            Assert.False(ColumnExists(HistoryContext.TableName, "Hash"));
-            Assert.False(ColumnExists(HistoryContext.TableName, "CreatedOn"));
+            Assert.True(ColumnExists(HistoryContext.DefaultTableName, "ProductVersion"));
+            Assert.True(ColumnExists(HistoryContext.DefaultTableName, "ContextKey"));
+            Assert.False(ColumnExists(HistoryContext.DefaultTableName, "Hash"));
+            Assert.False(ColumnExists(HistoryContext.DefaultTableName, "CreatedOn"));
         }
 
         [MigrationsTheory]
@@ -200,22 +200,22 @@ namespace System.Data.Entity.Migrations
 
             var migrator = CreateMigrator<ShopContext_v1>();
 
-            Assert.False(ColumnExists(HistoryContext.TableName, "ProductVersion"));
-            Assert.False(ColumnExists(HistoryContext.TableName, "ContextKey"));
-            Assert.True(ColumnExists(HistoryContext.TableName, "Hash"));
-            Assert.True(ColumnExists(HistoryContext.TableName, "CreatedOn"));
+            Assert.False(ColumnExists(HistoryContext.DefaultTableName, "ProductVersion"));
+            Assert.False(ColumnExists(HistoryContext.DefaultTableName, "ContextKey"));
+            Assert.True(ColumnExists(HistoryContext.DefaultTableName, "Hash"));
+            Assert.True(ColumnExists(HistoryContext.DefaultTableName, "CreatedOn"));
 
             migrator.Update();
 
-            Assert.True(ColumnExists(HistoryContext.TableName, "ProductVersion"));
-            Assert.True(ColumnExists(HistoryContext.TableName, "ContextKey"));
-            Assert.False(ColumnExists(HistoryContext.TableName, "Hash"));
-            Assert.False(ColumnExists(HistoryContext.TableName, "CreatedOn"));
+            Assert.True(ColumnExists(HistoryContext.DefaultTableName, "ProductVersion"));
+            Assert.True(ColumnExists(HistoryContext.DefaultTableName, "ContextKey"));
+            Assert.False(ColumnExists(HistoryContext.DefaultTableName, "Hash"));
+            Assert.False(ColumnExists(HistoryContext.DefaultTableName, "CreatedOn"));
         }
 
         private IEnumerable<MigrationOperation> GetLegacyHistoryCreateTableOperations()
         {
-            const string tableName = "dbo." + HistoryContext.TableName;
+            const string tableName = "dbo." + HistoryContext.DefaultTableName;
 
             var createTableOperation
                 = new CreateTableOperation(tableName);

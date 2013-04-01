@@ -57,7 +57,7 @@ namespace System.Data.Entity.Migrations
 
             Assert.True(TableExists("dbo.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));
-            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migrator = CreateMigrator<CustomSchemaContext_v1>();
 
@@ -72,12 +72,12 @@ namespace System.Data.Entity.Migrations
                 () =>
                     {
                         Assert.False(TableExists("dbo.OrderLines"));
-                        Assert.False(TableExists("dbo." + HistoryContext.TableName));
+                        Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
                     });
 
             Assert.True(TableExists("foo.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));
-            Assert.True(TableExists("foo." + HistoryContext.TableName));
+            Assert.True(TableExists("foo." + HistoryContext.DefaultTableName));
 
             migrator = CreateMigrator<CustomSchemaContext_v2>(scaffoldedMigrations: generatedMigration1);
 
@@ -93,18 +93,18 @@ namespace System.Data.Entity.Migrations
                 () =>
                     {
                         Assert.False(TableExists("foo.OrderLines"));
-                        Assert.False(TableExists("foo." + HistoryContext.TableName));
+                        Assert.False(TableExists("foo." + HistoryContext.DefaultTableName));
                     });
 
             Assert.True(TableExists("bar.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));
-            Assert.True(TableExists("bar." + HistoryContext.TableName));
+            Assert.True(TableExists("bar." + HistoryContext.DefaultTableName));
 
             migrator.Update("0");
 
             Assert.False(TableExists("foo.OrderLines"));
             Assert.False(TableExists("ordering.Orders"));
-            Assert.False(TableExists("foo." + HistoryContext.TableName));
+            Assert.False(TableExists("foo." + HistoryContext.DefaultTableName));
         }
 
         [MigrationsTheory]
@@ -122,7 +122,7 @@ namespace System.Data.Entity.Migrations
 
             Assert.True(TableExists("foo.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));
-            Assert.True(TableExists("foo." + HistoryContext.TableName));
+            Assert.True(TableExists("foo." + HistoryContext.DefaultTableName));
 
             migrator = CreateMigrator<CustomSchemaContext_v2>(scaffoldedMigrations: generatedMigration1);
 
@@ -140,18 +140,18 @@ namespace System.Data.Entity.Migrations
                 () =>
                     {
                         Assert.False(TableExists("foo.OrderLines"));
-                        Assert.False(TableExists("foo." + HistoryContext.TableName));
+                        Assert.False(TableExists("foo." + HistoryContext.DefaultTableName));
                     });
 
             Assert.True(TableExists("bar.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));
-            Assert.True(TableExists("bar." + HistoryContext.TableName));
+            Assert.True(TableExists("bar." + HistoryContext.DefaultTableName));
 
             migrator.Update("0");
 
             Assert.False(TableExists("foo.OrderLines"));
             Assert.False(TableExists("ordering.Orders"));
-            Assert.False(TableExists("foo." + HistoryContext.TableName));
+            Assert.False(TableExists("foo." + HistoryContext.DefaultTableName));
         }
 
         [MigrationsTheory]
@@ -169,7 +169,7 @@ namespace System.Data.Entity.Migrations
 
             Assert.True(TableExists("foo.OrderLines"));
             Assert.True(TableExists("ordering.Orders"));
-            Assert.True(TableExists("foo." + HistoryContext.TableName));
+            Assert.True(TableExists("foo." + HistoryContext.DefaultTableName));
 
             migrator = CreateMigrator<CustomSchemaContext_v1b>(scaffoldedMigrations: generatedMigration);
 
@@ -182,7 +182,7 @@ namespace System.Data.Entity.Migrations
             Assert.False(TableExists("crm.tbl_customers"));
             Assert.False(TableExists("foo.OrderLines"));
             Assert.False(TableExists("ordering.Orders"));
-            Assert.False(TableExists("foo." + HistoryContext.TableName));
+            Assert.False(TableExists("foo." + HistoryContext.DefaultTableName));
         }
 
         [MigrationsTheory]
@@ -194,7 +194,7 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
 
-            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migrator = CreateMigrator<CustomSchemaContext_v1>();
 
@@ -207,14 +207,14 @@ namespace System.Data.Entity.Migrations
             WhenNotSqlCe(
                 () =>
                     {
-                        Assert.True(TableExists("foo." + HistoryContext.TableName));
-                        Assert.False(TableExists("dbo." + HistoryContext.TableName));
+                        Assert.True(TableExists("foo." + HistoryContext.DefaultTableName));
+                        Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
                     });
 
             migrator.Update("0");
 
-            Assert.False(TableExists("foo." + HistoryContext.TableName));
-            Assert.False(TableExists("dbo." + HistoryContext.TableName));
+            Assert.False(TableExists("foo." + HistoryContext.DefaultTableName));
+            Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
         }
 
         [MigrationsTheory]
@@ -252,7 +252,7 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
 
-            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migrator = CreateMigrator<CustomSchemaContext_v1>();
 

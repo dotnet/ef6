@@ -6,9 +6,7 @@ namespace System.Data.Entity.Migrations.History
 
     /// <summary>
     ///     This class is used by Code First Migrations to read and write migration history
-    ///     from the database. It is not intended to be used by other code and is only public
-    ///     so that it can be accessed by EF when running under partial trust. It may be
-    ///     changed or removed in the future.
+    ///     from the database.
     /// </summary>
     public sealed class HistoryRow
     {

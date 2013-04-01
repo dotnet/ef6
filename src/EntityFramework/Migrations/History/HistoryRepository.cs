@@ -358,7 +358,7 @@ namespace System.Data.Entity.Migrations.History
 
             using (var connection = CreateConnection())
             {
-                const string tableName = "dbo." + HistoryContext.TableName;
+                const string tableName = "dbo." + HistoryContext.DefaultTableName;
 
                 using (var context = CreateContext(connection))
                 {

@@ -386,7 +386,7 @@ namespace ProductivityApiTests
         {
             using (var poker = new EdmMetadataPokerContext(connection))
             {
-                poker.Database.ExecuteSqlCommand("drop table " + HistoryContext.TableName);
+                poker.Database.ExecuteSqlCommand("drop table " + HistoryContext.DefaultTableName);
 
                 poker.Database.ExecuteSqlCommand(
                     ((IObjectContextAdapter)poker).ObjectContext.CreateDatabaseScript());
@@ -419,7 +419,7 @@ namespace ProductivityApiTests
 
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<HistoryRow>().ToTable(HistoryContext.TableName);
+                modelBuilder.Entity<HistoryRow>().ToTable(HistoryContext.DefaultTableName);
                 modelBuilder.Entity<HistoryRow>().HasKey(h => h.MigrationId);
             }
         }
@@ -863,7 +863,7 @@ namespace ProductivityApiTests
                 context.Database.Delete();
                 context.Database.Create();
 
-                context.Database.ExecuteSqlCommand("drop table " + HistoryContext.TableName);
+                context.Database.ExecuteSqlCommand("drop table " + HistoryContext.DefaultTableName);
 
                 VerifyMigrationsHistoryTable(context, historyShouldExist: false);
             }
@@ -937,7 +937,7 @@ namespace ProductivityApiTests
             var tables =
                 GetObjectContext(context).ExecuteStoreQuery<SchemaTable>("SELECT name FROM sys.Tables").ToList();
 
-            Assert.Equal(historyShouldExist, tables.Any(t => t.name == HistoryContext.TableName));
+            Assert.Equal(historyShouldExist, tables.Any(t => t.name == HistoryContext.DefaultTableName));
 
             // Sanity check that the other tables are still there and that we're querying for the correct database.
             Assert.True(tables.Any(t => t.name == "Products"));

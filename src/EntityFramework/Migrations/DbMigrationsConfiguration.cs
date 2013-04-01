@@ -58,6 +58,11 @@ namespace System.Data.Entity.Migrations
         /// </summary>
         public bool AutomaticMigrationsEnabled { get; set; }
 
+        /// <summary>
+        ///     Gets or sets the string used to distinguish migrations belonging to this configuration 
+        ///     from migrations belonging to other configurations using the same database.
+        ///     This property enables migrations from multiple different models to be applied to applied to a single database.
+        /// </remarks>
         public string ContextKey
         {
             get { return _contextKey; }
@@ -144,7 +149,7 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         ///     Gets or sets the sub-directory that code-based migrations are stored in.
         ///     Note that this property must be set to a relative path for a sub-directory under the
-        ///     Visual Studio project root; it cannot be set to an absoluete path.
+        ///     Visual Studio project root; it cannot be set to an absolute path.
         /// </summary>
         public string MigrationsDirectory
         {
@@ -176,6 +181,13 @@ namespace System.Data.Entity.Migrations
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the factory used to create <see cref="HistoryContext"/> instances for this configuration.
+        ///     <see cref="HistoryContext"/> is used to customize the migrations history table definition. 
+        ///     
+        ///     If <c>null</c> is provided, the history context registered with <see cref="System.Data.Entity.Config.DbConfiguration"/>
+        ///     will be used (by default this is <see cref="HistoryContext"/>).
+        /// </summary>
         public IHistoryContextFactory HistoryContextFactory
         {
             get

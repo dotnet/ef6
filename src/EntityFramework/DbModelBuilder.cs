@@ -156,8 +156,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Configures the default database schema name. The default database schema name is used
-        ///     when resolving database objects that do not have an explicitly configured schema name.
+        ///     Configures the default database schema name. This default database schema name is used
+        ///     for database objects that do not have an explicitly configured schema name.
         /// </summary>
         /// <param name="schema"> The name of the default database schema. </param>
         public virtual DbModelBuilder HasDefaultSchema(string schema)

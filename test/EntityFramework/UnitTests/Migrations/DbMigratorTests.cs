@@ -92,7 +92,7 @@ namespace System.Data.Entity.Migrations
         {
             using (var poker = new EdmMetadataContext(connection, contextOwnsConnection: false))
             {
-                poker.Database.ExecuteSqlCommand("drop table " + HistoryContext.TableName);
+                poker.Database.ExecuteSqlCommand("drop table " + HistoryContext.DefaultTableName);
 
                 poker.Database.ExecuteSqlCommand(
                     ((IObjectContextAdapter)poker).ObjectContext.CreateDatabaseScript());
@@ -140,7 +140,7 @@ namespace System.Data.Entity.Migrations
                 Database.SetInitializer(new CreateDatabaseIfNotExists<ShopContext_v1>());
             }
 
-            Assert.True(TableExists(HistoryContext.TableName));
+            Assert.True(TableExists(HistoryContext.DefaultTableName));
         }
 
         [MigrationsTheory]
@@ -176,7 +176,7 @@ namespace System.Data.Entity.Migrations
                 Database.SetInitializer(new CreateDatabaseIfNotExists<ShopContext_v1>());
             }
 
-            Assert.False(TableExists(HistoryContext.TableName));
+            Assert.False(TableExists(HistoryContext.DefaultTableName));
         }
 
         private class ShopContext_v1b : ShopContext_v1
@@ -220,7 +220,7 @@ namespace System.Data.Entity.Migrations
                 Database.SetInitializer(new CreateDatabaseIfNotExists<ShopContext_v1>());
             }
 
-            Assert.False(TableExists(HistoryContext.TableName));
+            Assert.False(TableExists(HistoryContext.DefaultTableName));
         }
 
         [MigrationsTheory]
@@ -256,7 +256,7 @@ namespace System.Data.Entity.Migrations
                 Database.SetInitializer(new CreateDatabaseIfNotExists<ShopContext_v1>());
             }
 
-            Assert.False(TableExists(HistoryContext.TableName));
+            Assert.False(TableExists(HistoryContext.DefaultTableName));
         }
 
         [MigrationsTheory]

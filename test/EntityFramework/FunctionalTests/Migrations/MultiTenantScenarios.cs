@@ -151,7 +151,7 @@ namespace System.Data.Entity.Migrations
             migratorA.Update();
 
             Assert.True(TableExists("dbo.TenantAs"));
-            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             var migratorB
                 = CreateMigrator<MultiTenantScenarios.ContextB>(contextKey: "KeyB");
@@ -168,7 +168,7 @@ namespace System.Data.Entity.Migrations
             migratorB.Update();
 
             Assert.True(TableExists("dbo.TenantBs"));
-            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migratorA
                 = CreateMigrator<MultiTenantScenarios.ContextA2>(
@@ -187,9 +187,9 @@ namespace System.Data.Entity.Migrations
             migratorA.Update();
 
             Assert.True(TableExists("foo.TenantAs"));
-            Assert.True(TableExists("foo." + HistoryContext.TableName));
+            Assert.True(TableExists("foo." + HistoryContext.DefaultTableName));
             Assert.False(TableExists("dbo.TenantAs"));
-            Assert.True(TableExists("dbo." + HistoryContext.TableName));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migratorB
                 = CreateMigrator<MultiTenantScenarios.ContextB2>(
@@ -208,19 +208,19 @@ namespace System.Data.Entity.Migrations
             migratorB.Update();
 
             Assert.True(TableExists("foo.TenantBs"));
-            Assert.True(TableExists("foo." + HistoryContext.TableName));
+            Assert.True(TableExists("foo." + HistoryContext.DefaultTableName));
             Assert.False(TableExists("dbo.TenantBs"));
-            Assert.False(TableExists("dbo." + HistoryContext.TableName));
+            Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migratorA.Update("0");
 
             Assert.False(TableExists("foo.TenantAs"));
-            Assert.True(TableExists("foo." + HistoryContext.TableName));
+            Assert.True(TableExists("foo." + HistoryContext.DefaultTableName));
 
             migratorB.Update("0");
 
             Assert.False(TableExists("foo.TenantBs"));
-            Assert.False(TableExists("foo." + HistoryContext.TableName));
+            Assert.False(TableExists("foo." + HistoryContext.DefaultTableName));
         }
     }
 }

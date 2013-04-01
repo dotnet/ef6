@@ -25,7 +25,7 @@ namespace System.Data.Entity.Migrations.History
         public IDbSet<LegacyHistoryRow> History { get; set; }
     }
 
-    [Table(HistoryContext.TableName)]
+    [Table(HistoryContext.DefaultTableName)]
     internal sealed class LegacyHistoryRow
     {
         public int Id { get; set; } // dummy
