@@ -137,6 +137,12 @@ namespace Microsoft.DbContextPackage.Utilities
                     {
                         content = File.ReadAllText(location);
 
+                        // Our implementation doesn't require respecting the CleanupBehavior custom directive, and since
+                        // implementing a fallback custom directive processor would essencially force us to have two
+                        // different versions of the EF Power Tools (one for VS 2010, another one for VS 2012) the simplest
+                        // solution is to remove the custom directive from the in-memory copy of the ttinclude
+                        content = content.Replace(@"<#@ CleanupBehavior Processor=""T4VSHost"" CleanupAfterProcessingTemplate=""true"" #>", "");
+
                         return true;
                     }
                 }
