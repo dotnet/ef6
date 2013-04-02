@@ -495,10 +495,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 var coordinator = collectionResult.ExpressionToGetCoordinator;
 
-                // CreateEntityCollection(shaper, owner, elements, relationshipName, targetRoleName)
+                // CreateEntityCollection(owner, elements, relationshipName, targetRoleName)
                 Expression result = Expression.Call(
                     createEntityCollectionMethod,
-                    shaper, owner, coordinator, Expression.Constant(_navigationProperty.RelationshipType.FullName),
+                    owner, coordinator, Expression.Constant(_navigationProperty.RelationshipType.FullName),
                     Expression.Constant(_navigationProperty.ToEndMember.Name));
 
                 return result;
