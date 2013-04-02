@@ -13,6 +13,9 @@ namespace System.Data.Entity.Query.StoredProcedures
     public class StoredProceduresTests : FunctionalTestBase, IUseFixture<StoredProceduresTestFixture>
     {
         private string entityConnectionString;
+        private const int GeographySrid = 4326;
+        private const int GeometrySrid = 32768;
+
 
         public StoredProceduresTests()
         {
@@ -119,77 +122,77 @@ namespace System.Data.Entity.Query.StoredProcedures
                 var aryaStark = new IceAndFireModel.Human
                 {
                     Name = "Arya",
-                    PlaceOfBirth = DbGeography.FromText("POINT (1 1)", 4326),
+                    PlaceOfBirth = DbGeography.FromText("POINT (1 1)", GeographySrid),
                     Size = IceAndFireModel.CreatureSize.Small,
                 };
 
                 var sansaStark = new IceAndFireModel.Human
                 {
                     Name = "Sansa",
-                    PlaceOfBirth = DbGeography.FromText("POINT (1 1)", 4326),
+                    PlaceOfBirth = DbGeography.FromText("POINT (1 1)", GeographySrid),
                     Size = IceAndFireModel.CreatureSize.Small,
                 };
 
                 var branStark = new IceAndFireModel.Human
                 {
                     Name = "Brandon",
-                    PlaceOfBirth = DbGeography.FromText("POINT (1 1)", 4326),
+                    PlaceOfBirth = DbGeography.FromText("POINT (1 1)", GeographySrid),
                     Size = IceAndFireModel.CreatureSize.Small,
                 };
 
                 var ricksonStark = new IceAndFireModel.Human
                 {
                     Name = "Rickson",
-                    PlaceOfBirth = DbGeography.FromText("POINT (1 1)", 4326),
+                    PlaceOfBirth = DbGeography.FromText("POINT (1 1)", GeographySrid),
                     Size = IceAndFireModel.CreatureSize.Small,
                 };
 
                 var stannisBaratheon = new IceAndFireModel.Human
                 {
                     Name = "Stannis",
-                    PlaceOfBirth = DbGeography.FromText("POINT (2 2)", 4326),
+                    PlaceOfBirth = DbGeography.FromText("POINT (2 2)", GeographySrid),
                     Size = IceAndFireModel.CreatureSize.Medium,
                 };
 
                 var tyrionLannister = new IceAndFireModel.Human
                 {
                     Name = "Tyrion",
-                    PlaceOfBirth = DbGeography.FromText("POINT (3 3)", 4326),
+                    PlaceOfBirth = DbGeography.FromText("POINT (3 3)", GeographySrid),
                     Size = IceAndFireModel.CreatureSize.Small,
                 };
 
                 var jamieLannister = new IceAndFireModel.Human
                 {
                     Name = "Jamie",
-                    PlaceOfBirth = DbGeography.FromText("POINT (3 3)", 4326),
+                    PlaceOfBirth = DbGeography.FromText("POINT (3 3)", GeographySrid),
                     Size = IceAndFireModel.CreatureSize.Medium,
                 };
 
                 var cerseiLannister = new IceAndFireModel.Human
                 {
                     Name = "Cersei",
-                    PlaceOfBirth = DbGeography.FromText("POINT (3 3)", 4326),
+                    PlaceOfBirth = DbGeography.FromText("POINT (3 3)", GeographySrid),
                     Size = IceAndFireModel.CreatureSize.Medium,
                 };
 
                 var jonSnow = new IceAndFireModel.Human
                 {
                     Name = "Jon",
-                    PlaceOfBirth = DbGeography.FromText("POINT (4 4)", 4326),
+                    PlaceOfBirth = DbGeography.FromText("POINT (4 4)", GeographySrid),
                     Size = IceAndFireModel.CreatureSize.Small,
                 };
 
                 var daenerysTargaryen = new IceAndFireModel.Human
                 {
                     Name = "Daenerys",
-                    PlaceOfBirth = DbGeography.FromText("POINT (5 5)", 4326),
+                    PlaceOfBirth = DbGeography.FromText("POINT (5 5)", GeographySrid),
                     Size = IceAndFireModel.CreatureSize.Medium,
                 };
 
                 var aegonTargaryen = new IceAndFireModel.Human
                 {
                     Name = "Aegon",
-                    PlaceOfBirth = DbGeography.FromText("POINT (5 5)", 4326),
+                    PlaceOfBirth = DbGeography.FromText("POINT (5 5)", GeographySrid),
                     Size = IceAndFireModel.CreatureSize.Medium,
                 };
 
@@ -220,7 +223,7 @@ namespace System.Data.Entity.Query.StoredProcedures
                 var houseStark = new IceAndFireModel.House
                 {
                     Name = "Stark",
-                    Sigil = DbGeometry.FromText("POINT (1 1)", 32768),
+                    Sigil = DbGeometry.FromText("POINT (1 1)", GeometrySrid),
                     Words = "Winter is coming",
                     ProminentMembers = new List<IceAndFireModel.Human> { aryaStark, sansaStark, branStark, ricksonStark },
                 };
@@ -228,7 +231,7 @@ namespace System.Data.Entity.Query.StoredProcedures
                 var houseBaratheon = new IceAndFireModel.House
                 {
                     Name = "Baratheon",
-                    Sigil = DbGeometry.FromText("POINT (2 2)", 32768),
+                    Sigil = DbGeometry.FromText("POINT (2 2)", GeometrySrid),
                     Words = "Ours is the fury",
                     ProminentMembers = new List<IceAndFireModel.Human> { stannisBaratheon, },
                 };
@@ -236,7 +239,7 @@ namespace System.Data.Entity.Query.StoredProcedures
                 var houseLannister = new IceAndFireModel.House
                 {
                     Name = "Lannister",
-                    Sigil = DbGeometry.FromText("POINT (3 3)", 32768),
+                    Sigil = DbGeometry.FromText("POINT (3 3)", GeometrySrid),
                     Words = "Hear me roar!",
                     ProminentMembers = new List<IceAndFireModel.Human> { tyrionLannister, jamieLannister, cerseiLannister, },
                 };
@@ -244,35 +247,35 @@ namespace System.Data.Entity.Query.StoredProcedures
                 var houseTargaryen = new IceAndFireModel.House
                 {
                     Name = "Targaryen",
-                    Sigil = DbGeometry.FromText("POINT (4 4)", 32768),
+                    Sigil = DbGeometry.FromText("POINT (4 4)", GeometrySrid),
                     Words = "Fire and blood",
                     ProminentMembers = new List<IceAndFireModel.Human> { jonSnow, daenerysTargaryen, aegonTargaryen, },
                 };
 
                 var north = new IceAndFireModel.Land
                 {
-                    LocationOnMap = DbGeography.FromText("POINT (1 1)", 4326),
+                    LocationOnMap = DbGeography.FromText("POINT (1 1)", GeographySrid),
                     Name = "North",
                     RulingHouse = houseStark,
                 };
 
                 var stormlands = new IceAndFireModel.Land
                 {
-                    LocationOnMap = DbGeography.FromText("POINT (2 2)", 4326),
+                    LocationOnMap = DbGeography.FromText("POINT (2 2)", GeographySrid),
                     Name = "Stormlands",
                     RulingHouse = houseBaratheon,
                 };
 
                 var westerlands = new IceAndFireModel.Land
                 {
-                    LocationOnMap = DbGeography.FromText("POINT (3 3)", 4326),
+                    LocationOnMap = DbGeography.FromText("POINT (3 3)", GeographySrid),
                     Name = "Westerlands",
                     RulingHouse = houseLannister,
                 };
 
                 var dragonstone = new IceAndFireModel.Land
                 {
-                    LocationOnMap = DbGeography.FromText("POINT (4 4)", 4326),
+                    LocationOnMap = DbGeography.FromText("POINT (4 4)", GeographySrid),
                     Name = "Dragonstone",
                     RulingHouse = houseTargaryen,
                 };
