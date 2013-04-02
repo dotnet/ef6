@@ -218,7 +218,7 @@ namespace System.Data.Entity.Config
                 .InternalConfiguration;
 
             configuration.SwitchInRootResolver(_configuration.Value.RootResolver);
-            configuration.AddAppConfigResolver(new AppConfigDependencyResolver(config));
+            configuration.AddAppConfigResolver(new AppConfigDependencyResolver(config, configuration));
 
             lock (_lock)
             {

@@ -93,7 +93,7 @@ namespace System.Data.Entity.Config
         ///     Resolvers are asked to resolve dependencies in reverse order from which they are added. This means
         ///     that a resolver can be added to override resolution of a dependency that would already have been
         ///     resolved in a different way.
-        ///     The only exception to this is that any dependency registered in the application's config file
+        ///     The exceptions to this is that any dependency registered in the application's config file
         ///     will always be used in preference to using a dependency resolver added here.
         /// </remarks>
         /// <param name="resolver"> The resolver to add. </param>
@@ -103,6 +103,27 @@ namespace System.Data.Entity.Config
 
             _internalConfiguration.CheckNotLocked("AddDependencyResolver");
             _internalConfiguration.AddDependencyResolver(resolver, overrideConfigFile: false);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to
+        ///     add a <see cref="IDbDependencyResolver" /> instance to the Chain of Responsibility of resolvers that
+        ///     are used to resolve dependencies needed by the Entity Framework. Unlike the AddDependencyResolver
+        ///     method, this method puts the resolver at the bottom of the Chain of Responsibility such that it will only
+        ///     be used to resolve a dependency that could not be resolved by any of the other resolvers.
+        /// </summary>
+        /// <remarks>
+        ///     A <see cref="DbProviderServices" /> implementation is automatically registered as a secondary resolver
+        ///     when it is added with a call to AddDbProviderServices. This allows EF providers to act as secondary
+        ///     resolvers for other services that may need to be overrriden by the provider.
+        /// </remarks>
+        /// <param name="resolver"> The resolver to add. </param>
+        protected internal void AddSecondaryResolver(IDbDependencyResolver resolver)
+        {
+            Check.NotNull(resolver, "resolver");
+
+            _internalConfiguration.CheckNotLocked("AddSecondaryResolver");
+            _internalConfiguration.AddSecondaryResolver(resolver);
         }
 
         /// <summary>
@@ -140,10 +161,14 @@ namespace System.Data.Entity.Config
         ///     an Entity Framework provider.
         /// </summary>
         /// <remarks>
+        ///     Note that the provider is both registered as a service itself and also registered as a secondary resolver with
+        ///     a call to AddSecondaryResolver.  This allows EF providers to act as secondary resolvers for other services that
+        ///     may need to be overrriden by the provider.
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
-        ///     <see cref="DbProviderServices" />. This means that, if desired, the same functionality can be achieved using
-        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
+        ///     <see cref="DbProviderServices" /> and also using AddSecondaryResolver to add the provider as a secondary
+        ///     resolver. This means that, if desired, the same functionality can be achieved using a custom resolver or a
+        ///     resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this provider will be used. </param>
         /// <param name="provider"> The provider instance. </param>
@@ -155,6 +180,8 @@ namespace System.Data.Entity.Config
 
             _internalConfiguration.CheckNotLocked("AddDbProviderServices");
             _internalConfiguration.RegisterSingleton(provider, providerInvariantName);
+
+            AddSecondaryResolver(provider);
         }
 
         /// <summary>
@@ -172,6 +199,8 @@ namespace System.Data.Entity.Config
         [CLSCompliant(false)]
         protected internal void AddDbProviderServices(DbProviderServices provider)
         {
+            Check.NotNull(provider, "provider");
+
             foreach (var providerInvariantNameAttribute in DbProviderNameAttribute.GetFromType(provider.GetType()))
             {
                 AddDbProviderServices(providerInvariantNameAttribute.Name, provider);
@@ -417,6 +446,8 @@ namespace System.Data.Entity.Config
         protected internal void AddMigrationSqlGenerator<T>(Func<T> sqlGenerator)
             where T : MigrationSqlGenerator
         {
+            Check.NotNull(sqlGenerator, "sqlGenerator");
+
             foreach (var providerInvariantNameAttribute in DbProviderNameAttribute.GetFromType(typeof(T)))
             {
                 AddMigrationSqlGenerator(providerInvariantNameAttribute.Name, sqlGenerator);

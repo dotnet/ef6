@@ -18,7 +18,7 @@ namespace System.Data.Entity.Config
                     throw new ArgumentException(Strings.DbDependencyResolver_NoProviderInvariantName(typeof(DbProviderServices).Name));
                 }
 
-                return new ProviderServicesFactory().GetInstanceByConvention(name);
+                throw new InvalidOperationException(Strings.EF6Providers_NoProviderFound(name));
             }
 
             return null;

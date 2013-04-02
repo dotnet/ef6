@@ -3,7 +3,10 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Spatial;
     using System.Linq;
     using Moq;
     using Moq.Protected;
@@ -94,7 +97,7 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        public class CreateDatabaseFromScript: TestBase
+        public class CreateDatabaseFromScript : TestBase
         {
             [Fact]
             public void CreateDatabaseFromScript_returns_expected_SQL_Version_from_master_connection()
@@ -128,6 +131,57 @@ namespace System.Data.Entity.SqlServer
             mockFactory.Setup(m => m.CreateConnection()).Returns(master);
 
             return mockConnection;
+        }
+
+        public class GetService
+        {
+            [Fact]
+            public void GetService_resolves_the_SQL_Server_Migrations_SQL_generator()
+            {
+                Assert.IsType<SqlServerMigrationSqlGenerator>(
+                    SqlProviderServices.Instance.GetService<MigrationSqlGenerator>("System.Data.SqlClient"));
+            }
+
+            [Fact]
+            public void GetService_returns_null_for_SQL_generators_for_other_invariant_names()
+            {
+                Assert.Null(SqlProviderServices.Instance.GetService<MigrationSqlGenerator>("System.Data.SqlServerCe.4.0"));
+            }
+
+            [Fact]
+            public void GetService_resolves_the_default_SQL_Express_connection_factory()
+            {
+                Assert.IsType<SqlConnectionFactory>(SqlProviderServices.Instance.GetService<IDbConnectionFactory>());
+            }
+
+            [Fact]
+            public void GetService_resolves_the_default_SQL_Server_execution_strategy_factory_for_any_server()
+            {
+                Assert.IsType<DefaultSqlExecutionStrategy>(
+                    SqlProviderServices.Instance.GetService<Func<IExecutionStrategy>>(
+                        new ExecutionStrategyKey("System.Data.SqlClient", "Elmo"))());
+            }
+
+            [Fact]
+            public void GetService_returns_null_for_execution_strategy_factory_for_other_invariant_names()
+            {
+                Assert.Null(
+                    SqlProviderServices.Instance.GetService<Func<IExecutionStrategy>>(
+                        new ExecutionStrategyKey("System.Data.SqlServerCe.4.0", "Elmo")));
+            }
+
+            [Fact]
+            public void GetService_resolves_the_SQL_Server_spatial_services()
+            {
+                Assert.Same(
+                    SqlSpatialServices.Instance, SqlProviderServices.Instance.GetService<DbSpatialServices>("System.Data.SqlClient"));
+            }
+
+            [Fact]
+            public void GetService_returns_null_for_spatail_services_for_other_invariant_names()
+            {
+                Assert.Null(SqlProviderServices.Instance.GetService<DbSpatialServices>("System.Data.SqlServerCe.4.0"));
+            }
         }
     }
 }

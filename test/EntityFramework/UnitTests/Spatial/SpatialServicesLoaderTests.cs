@@ -18,7 +18,7 @@ namespace System.Data.Entity.Spatial
             mockSpatialServices.Setup(m => m.NativeTypesAvailable).Returns(true);
 
             var mockResolver = new Mock<IDbDependencyResolver>();
-            var mockProvider = new Mock<DbProviderServices>(mockResolver.Object);
+            var mockProvider = new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object));
 
             mockResolver
                 .Setup(m => m.GetService(typeof(DbProviderServices), "System.Data.SqlClient"))

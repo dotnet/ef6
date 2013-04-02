@@ -54,12 +54,45 @@ namespace System.Data.Entity.Config
             [Fact]
             public void AddDependencyResolver_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var resolver = new Mock<IDbDependencyResolver>().Object;
 
                 new DbConfiguration(mockInternalConfiguration.Object).AddDependencyResolver(resolver);
 
                 mockInternalConfiguration.Verify(m => m.AddDependencyResolver(resolver, false));
+            }
+        }
+
+        public class AddSecondaryResolver
+        {
+            [Fact]
+            public void AddSecondaryResolver_throws_if_given_a_null_resolver()
+            {
+                Assert.Equal(
+                    "resolver",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddSecondaryResolver(null)).ParamName);
+            }
+
+            [Fact]
+            public void AddSecondaryResolver_throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("AddSecondaryResolver"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.AddSecondaryResolver(new Mock<IDbDependencyResolver>().Object)).Message);
+            }
+
+            [Fact]
+            public void AddSecondaryResolver_delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var resolver = new Mock<IDbDependencyResolver>().Object;
+
+                new DbConfiguration(mockInternalConfiguration.Object).AddSecondaryResolver(resolver);
+
+                mockInternalConfiguration.Verify(m => m.AddSecondaryResolver(resolver));
             }
         }
 
@@ -89,6 +122,10 @@ namespace System.Data.Entity.Config
                     Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddDbProviderServices("Karl", null)).ParamName);
 
                 Assert.Equal(
+                    "provider",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddDbProviderServices(null)).ParamName);
+
+                Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
                     Assert.Throws<ArgumentException>(
                         () => new DbConfiguration().AddDbProviderServices(null, new Mock<DbProviderServices>().Object)).Message);
@@ -105,12 +142,23 @@ namespace System.Data.Entity.Config
             [Fact]
             public void AddDbProviderServices_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var providerServices = new Mock<DbProviderServices>().Object;
 
                 new DbConfiguration(mockInternalConfiguration.Object).AddDbProviderServices("900.FTW", providerServices);
 
                 mockInternalConfiguration.Verify(m => m.RegisterSingleton(providerServices, "900.FTW"));
+            }
+
+            [Fact]
+            public void AddDbProviderServices_also_adds_the_provider_as_a_secondary_resolver()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var providerServices = new Mock<DbProviderServices>().Object;
+
+                new DbConfiguration(mockInternalConfiguration.Object).AddDbProviderServices("900.FTW", providerServices);
+
+                mockInternalConfiguration.Verify(m => m.AddSecondaryResolver(providerServices));
             }
 
             [Fact]
@@ -127,7 +175,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void AddDbProviderServices_throws_if_no_ProviderInvariantNameAttribute()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var providerServices = new Mock<DbProviderServices>().Object;
 
                 var configuration = new DbConfiguration(mockInternalConfiguration.Object);
@@ -165,7 +213,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void AddDbProviderFactory_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var providerFactory = new Mock<DbProviderFactory>().Object;
 
                 new DbConfiguration(mockInternalConfiguration.Object).AddDbProviderFactory("920.FTW", providerFactory);
@@ -271,7 +319,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void Delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var executionStrategy = new Func<IExecutionStrategy>(() => new Mock<IExecutionStrategy>().Object);
 
                 new DbConfiguration(mockInternalConfiguration.Object).AddExecutionStrategy("a", executionStrategy, "b");
@@ -283,7 +331,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void Throws_if_no_ProviderInvariantNameAttribute()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var executionStrategy = new Func<IExecutionStrategy>(() => new Mock<IExecutionStrategy>().Object);
 
                 var configuration = new DbConfiguration(mockInternalConfiguration.Object);
@@ -319,7 +367,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void SetDefaultConnectionFactory_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var connectionFactory = new Mock<IDbConnectionFactory>().Object;
 
                 new DbConfiguration(mockInternalConfiguration.Object).SetDefaultConnectionFactory(connectionFactory);
@@ -359,7 +407,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void SetPluralizationService_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var pluralizationService = new Mock<IPluralizationService>().Object;
 
                 new DbConfiguration(mockInternalConfiguration.Object).SetPluralizationService(pluralizationService);
@@ -393,7 +441,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void SetDatabaseInitializer_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var initializer = new Mock<IDatabaseInitializer<DbContext>>().Object;
 
                 new DbConfiguration(mockInternalConfiguration.Object).SetDatabaseInitializer(initializer);
@@ -404,7 +452,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void SetDatabaseInitializer_creates_null_initializer_when_given_null_argument()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
 
                 new DbConfiguration(mockInternalConfiguration.Object).SetDatabaseInitializer<DbContext>(null);
 
@@ -421,6 +469,10 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     "sqlGenerator",
                     Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddMigrationSqlGenerator("Karl", null)).ParamName);
+
+                Assert.Equal(
+                    "sqlGenerator",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddMigrationSqlGenerator<MigrationSqlGenerator>(null)).ParamName);
 
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
@@ -450,7 +502,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void AddMigrationSqlGenerator_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var generator = new Func<MigrationSqlGenerator>(() => new Mock<MigrationSqlGenerator>().Object);
 
                 new DbConfiguration(mockInternalConfiguration.Object).AddMigrationSqlGenerator("Karl", generator);
@@ -462,7 +514,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void AddMigrationSqlGenerator_throws_if_no_ProviderInvariantNameAttribute()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var generator = new Func<MigrationSqlGenerator>(() => new Mock<MigrationSqlGenerator>().Object);
 
                 var configuration = new DbConfiguration(mockInternalConfiguration.Object);
@@ -498,7 +550,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void SetManifestTokenService_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var service = new Mock<IManifestTokenService>().Object;
 
                 new DbConfiguration(mockInternalConfiguration.Object).SetManifestTokenService(service);
@@ -531,7 +583,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void SetProviderFactoryService_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var service = new Mock<IDbProviderFactoryService>().Object;
 
                 new DbConfiguration(mockInternalConfiguration.Object).SetProviderFactoryService(service);
@@ -564,7 +616,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void SetModelCacheKeyFactory_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var factory = new Mock<IDbModelCacheKeyFactory>().Object;
 
                 new DbConfiguration(mockInternalConfiguration.Object).SetModelCacheKeyFactory(factory);
@@ -599,7 +651,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void Delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var factory = new Mock<IHistoryContextFactory>().Object;
 
                 new DbConfiguration(mockInternalConfiguration.Object)
@@ -633,7 +685,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void SetSpatialProvider_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var provider = new Mock<DbSpatialServices>().Object;
 
                 new DbConfiguration(mockInternalConfiguration.Object).SetSpatialProvider(provider);
@@ -666,7 +718,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void SetViewAssemblyCache_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var factory = new Mock<IViewAssemblyCache>().Object;
 
                 new DbConfiguration(mockInternalConfiguration.Object).SetViewAssemblyCache(factory);

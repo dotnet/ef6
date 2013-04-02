@@ -21,24 +21,17 @@ namespace System.Data.Entity.Config
         // thread-unsafe use.
         private bool _isLocked;
 
-        /// <summary>
-        ///     Any class derived from <see cref="DbConfiguration" /> must have a public parameterless constructor
-        ///     and that constructor should call this constructor.
-        /// </summary>
-        public InternalConfiguration()
-            : this(new ResolverChain(), new ResolverChain(), new RootDependencyResolver())
+        public InternalConfiguration(
+            ResolverChain appConfigChain = null,
+            ResolverChain normalResolverChain = null,
+            RootDependencyResolver rootResolver = null,
+            AppConfigDependencyResolver appConfigResolver = null)
         {
-            _resolvers.First.Add(new AppConfigDependencyResolver(AppConfig.DefaultInstance));
-        }
 
-        public InternalConfiguration(ResolverChain appConfigChain, ResolverChain normalResolverChain, RootDependencyResolver rootResolver)
-        {
-            DebugCheck.NotNull(appConfigChain);
-            DebugCheck.NotNull(normalResolverChain);
-
-            _rootResolver = rootResolver;
-            _resolvers = new CompositeResolver<ResolverChain, ResolverChain>(appConfigChain, normalResolverChain);
+            _rootResolver = rootResolver ?? new RootDependencyResolver();
+            _resolvers = new CompositeResolver<ResolverChain, ResolverChain>(appConfigChain ?? new ResolverChain(), normalResolverChain ?? new ResolverChain());
             _resolvers.Second.Add(_rootResolver);
+            _resolvers.First.Add(appConfigResolver ?? new AppConfigDependencyResolver(AppConfig.DefaultInstance, this));
         }
 
         /// <summary>
@@ -79,6 +72,14 @@ namespace System.Data.Entity.Config
             // New resolvers always run after the config resolvers so that config always wins over code
             // unless the override flag is used, in which case we add the new resolver right at the top.
             (overrideConfigFile ? _resolvers.First : _resolvers.Second).Add(resolver);
+        }
+
+        public virtual void AddSecondaryResolver(IDbDependencyResolver resolver)
+        {
+            DebugCheck.NotNull(resolver);
+
+            // Secondary resolvers only kick in if nothing else before the root resolves the dependency.
+            _rootResolver.AddSecondaryResolver(resolver);
         }
 
         public virtual void RegisterSingleton<TService>(TService instance, object key)

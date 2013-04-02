@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Common
     ///     factory;
     /// </summary>
     [CLSCompliant(false)]
-    public abstract class DbProviderServices
+    public abstract class DbProviderServices : IDbDependencyResolver
     {
         private readonly Lazy<IDbDependencyResolver> _resolver;
         private readonly Interception _interception;
@@ -37,13 +37,15 @@ namespace System.Data.Entity.Core.Common
             _executionStrategyFactories =
                 new ConcurrentDictionary<ExecutionStrategyKey, Func<IExecutionStrategy>>();
 
+        private readonly ResolverChain _resolvers = new ResolverChain();
+
         /// <summary>
         ///     Constructs an EF provider that will use the <see cref="IDbDependencyResolver" /> obtained from
         ///     the app domain <see cref="DbConfiguration" /> Singleton for resolving EF dependencies such
         ///     as the <see cref="DbSpatialServices" /> instance to use.
         /// </summary>
         protected DbProviderServices()
-            : this(DbConfiguration.DependencyResolver)
+            : this(() => DbConfiguration.DependencyResolver)
         {
         }
 
@@ -52,17 +54,17 @@ namespace System.Data.Entity.Core.Common
         ///     resolving EF dependencies such as the <see cref="DbSpatialServices" /> instance to use.
         /// </summary>
         /// <param name="resolver"> The resolver to use. </param>
-        protected DbProviderServices(IDbDependencyResolver resolver)
+        protected DbProviderServices(Func<IDbDependencyResolver> resolver)
             : this(resolver, Interception.Instance)
         {
         }
 
-        internal DbProviderServices(IDbDependencyResolver resolver, Interception interception)
+        internal DbProviderServices(Func<IDbDependencyResolver> resolver, Interception interception)
         {
             Check.NotNull(resolver, "resolver");
             DebugCheck.NotNull(interception);
 
-            _resolver = new Lazy<IDbDependencyResolver>(() => resolver);
+            _resolver = new Lazy<IDbDependencyResolver>(resolver);
             _interception = interception;
         }
 
@@ -342,7 +344,7 @@ namespace System.Data.Entity.Core.Common
 
         internal DbSpatialServices GetSpatialServicesInternal(Lazy<IDbDependencyResolver> resolver, string manifestToken)
         {
-            // First check if spatial services can be resolved and only if this fails
+            // First check if a global spatial services can be resolved and only if this fails
             // go on to ask the provider for spatial services.
             var spatialProvider = resolver.Value.GetService<DbSpatialServices>();
             if (spatialProvider != null)
@@ -624,6 +626,41 @@ namespace System.Data.Entity.Core.Common
             }
 
             return path;
+        }
+
+        /// <summary>
+        ///     Adds an <see cref="IDbDependencyResolver" /> that will be used to resolve secondary provider
+        ///     services when a derived type is registered as an EF provider either using an entry in the application's
+        ///     config file or through code-based registeration in <see cref="DbConfiguration" />.
+        /// </summary>
+        /// <param name="resolver">The resolver to add.</param>
+        protected void AddDependencyResolver(IDbDependencyResolver resolver)
+        {
+            Check.NotNull(resolver, "resolver");
+
+            _resolvers.Add(resolver);
+        }
+
+        /// <summary>
+        ///     Called to resolve secondary provider services when a derived type is registered as an
+        ///     EF provider either using an entry in the application's config file or through code-based
+        ///     registeration in <see cref="DbConfiguration" />. The implementation of this method in this
+        ///     class uses the resolvers added with the AddDependencyResolver method to resolve
+        ///     dependencies.
+        /// </summary>
+        /// <remarks>
+        ///     Use this method to set, add, or change other provider-related services. Note that this method
+        ///     will only be called for such services if they are not already explicitly configured in some
+        ///     other way by the application. This allows providers to set default services while the
+        ///     application is still able to override and explicitly configure each service if required.
+        ///     See <see cref="IDbDependencyResolver" /> and <see cref="DbConfiguration" /> for more details.
+        /// </remarks>
+        /// <param name="type">The type of the service to be resolved.</param>
+        /// <param name="key">An optional key providing additional information for resolving the service.</param>
+        /// <returns>An instance of the given type, or null if the service could not be resolved.</returns>
+        public virtual object GetService(Type type, object key)
+        {
+            return _resolvers.GetService(type, key);
         }
     }
 }

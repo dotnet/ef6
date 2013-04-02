@@ -10,8 +10,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.History;
-    using System.Data.Entity.Migrations.Sql;
-    using System.Data.Entity.SqlServer;
+    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.SqlClient;
     using System.Linq;
     using Moq;
@@ -101,15 +100,6 @@ namespace System.Data.Entity.Config
         }
 
         [Fact]
-        public void The_root_resolver_returns_the_default_sql_generators()
-        {
-            Assert.IsType<SqlServerMigrationSqlGenerator>(
-                new RootDependencyResolver().GetService<MigrationSqlGenerator>("System.Data.SqlClient"));
-            Assert.IsType<SqlCeMigrationSqlGenerator>(
-                new RootDependencyResolver().GetService<MigrationSqlGenerator>("System.Data.SqlServerCe.4.0"));
-        }
-
-        [Fact]
         public void The_root_resolver_returns_default_provider_factory_service()
         {
             var expectedType =
@@ -143,6 +133,36 @@ namespace System.Data.Entity.Config
             Assert.IsType<ViewAssemblyCache>(new RootDependencyResolver().GetService<IViewAssemblyCache>());
         }
 
+        [Fact]
+        public void The_root_resolver_returns_default_attribute_provider()
+        {
+            Assert.IsType<AttributeProvider>(new RootDependencyResolver().GetService<AttributeProvider>());
+        }
+
+        [Fact]
+        public void The_root_resolver_resolves_from_secondary_resolvers_before_roots()
+        {
+            var attributeProvider1 = new Mock<AttributeProvider>().Object;
+            var attributeProvider2 = new Mock<AttributeProvider>().Object;
+
+            var mockSecondaryResolver1 = new Mock<IDbDependencyResolver>();
+            mockSecondaryResolver1.Setup(m => m.GetService(typeof(AttributeProvider), null)).Returns(attributeProvider1);
+            var mockSecondaryResolver2 = new Mock<IDbDependencyResolver>();
+            mockSecondaryResolver2.Setup(m => m.GetService(typeof(AttributeProvider), null)).Returns(attributeProvider2);
+
+            var rootResolver = new RootDependencyResolver();
+
+            Assert.IsType<AttributeProvider>(rootResolver.GetService<AttributeProvider>());
+
+            rootResolver.AddSecondaryResolver(mockSecondaryResolver1.Object);
+            Assert.Same(attributeProvider1, rootResolver.GetService<AttributeProvider>());
+
+            rootResolver.AddSecondaryResolver(mockSecondaryResolver2.Object);
+            Assert.Same(attributeProvider2, rootResolver.GetService<AttributeProvider>());
+
+            Assert.IsType<ViewAssemblyCache>(new RootDependencyResolver().GetService<IViewAssemblyCache>());
+        }
+
         /// <summary>
         ///     This test makes calls from multiple threads such that we have at least some chance of finding threading
         ///     issues. As with any test of this type just because the test passes does not mean that the code is
@@ -154,14 +174,14 @@ namespace System.Data.Entity.Config
         {
             for (var i = 0; i < 30; i++)
             {
-                var bag = new ConcurrentBag<DbProviderServices>();
+                var bag = new ConcurrentBag<AttributeProvider>();
 
                 var resolver = new RootDependencyResolver();
 
-                ExecuteInParallel(() => bag.Add(resolver.GetService<DbProviderServices>("System.Data.SqlClient")));
+                ExecuteInParallel(() => bag.Add(resolver.GetService<AttributeProvider>()));
 
                 Assert.Equal(20, bag.Count);
-                Assert.True(bag.All(c => SqlProviderServices.Instance == c));
+                Assert.True(bag.All(c => c.GetType() == typeof(AttributeProvider)));
             }
         }
 

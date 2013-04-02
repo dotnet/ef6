@@ -12902,6 +12902,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        ///     A string like "The provider invariant name '{0}' is specified as the default in the 'providers' element of the 'entityFramework' section in the application’s configuration file but no provider with that invariant name is registered in the list of providers that follows."
+        /// </summary>
+        internal static string EF6Providers_DefaultNotFound(object p0)
+        {
+            return EntityRes.GetString(EntityRes.EF6Providers_DefaultNotFound, p0);
+        }
+
+        /// <summary>
         ///     A string like "The provider for invariant name '{0}' is specified multiple times in the application configuration. The invariant name must be unique for each configured provider."
         /// </summary>
         internal static string ProviderInvariantRepeatedInConfig(object p0)
@@ -16768,6 +16776,7 @@ namespace System.Data.Entity.Resources
         internal const string EF6Providers_ProviderTypeMissing = "EF6Providers_ProviderTypeMissing";
         internal const string EF6Providers_InstanceMissing = "EF6Providers_InstanceMissing";
         internal const string EF6Providers_NotDbProviderServices = "EF6Providers_NotDbProviderServices";
+        internal const string EF6Providers_DefaultNotFound = "EF6Providers_DefaultNotFound";
         internal const string ProviderInvariantRepeatedInConfig = "ProviderInvariantRepeatedInConfig";
         internal const string DbDependencyResolver_NoProviderInvariantName = "DbDependencyResolver_NoProviderInvariantName";
         internal const string DbDependencyResolver_InvalidKey = "DbDependencyResolver_InvalidKey";

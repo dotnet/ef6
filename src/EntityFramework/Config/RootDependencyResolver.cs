@@ -19,6 +19,7 @@ namespace System.Data.Entity.Config
     /// </summary>
     internal class RootDependencyResolver : IDbDependencyResolver
     {
+        private readonly ResolverChain _secondaryResolvers = new ResolverChain();
         private readonly ResolverChain _resolvers = new ResolverChain();
         private readonly DatabaseInitializerResolver _databaseInitializerResolver;
 
@@ -39,15 +40,6 @@ namespace System.Data.Entity.Config
             _databaseInitializerResolver = databaseInitializerResolver;
 
             _resolvers.Add(_databaseInitializerResolver);
-
-            _resolvers.Add(
-                new TransientDependencyResolver<MigrationSqlGenerator>(
-                    () => new SqlServerMigrationSqlGenerator(), "System.Data.SqlClient"));
-
-            _resolvers.Add(
-                new TransientDependencyResolver<MigrationSqlGenerator>(
-                    () => new SqlCeMigrationSqlGenerator(), "System.Data.SqlServerCe.4.0"));
-
             _resolvers.Add(new DefaultExecutionStrategyResolver());
             _resolvers.Add(new CachingDependencyResolver(defaultProviderServicesResolver));
             _resolvers.Add(new CachingDependencyResolver(new DefaultProviderFactoryResolver()));
@@ -75,7 +67,14 @@ namespace System.Data.Entity.Config
         /// <inheritdoc />
         public virtual object GetService(Type type, object key)
         {
-            return _resolvers.GetService(type, key);
+            return _secondaryResolvers.GetService(type, key) ?? _resolvers.GetService(type, key);
+        }
+
+        public virtual void AddSecondaryResolver(IDbDependencyResolver resolver)
+        {
+            DebugCheck.NotNull(resolver);
+
+            _secondaryResolvers.Add(resolver);
         }
     }
 }

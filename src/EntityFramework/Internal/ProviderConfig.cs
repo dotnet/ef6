@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Internal
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Internal.ConfigFile;
@@ -27,15 +28,18 @@ namespace System.Data.Entity.Internal
             _entityFrameworkSettings = entityFrameworkSettings;
         }
 
-        public virtual DbProviderServices TryGetDbProviderServices(string providerInvariantName)
+        public virtual string DefaultInvariantName
         {
-            DebugCheck.NotEmpty(providerInvariantName);
+            get
+            {
+                var defaultInvariantName = _entityFrameworkSettings.Providers.DefaultInvariantName;
+                return string.IsNullOrWhiteSpace(defaultInvariantName) ? null : defaultInvariantName;
+            }
+        }
 
-            var providerElement = TryGetProviderElement(providerInvariantName);
-
-            return providerElement != null && providerElement.ProviderTypeName != null
-                       ? new ProviderServicesFactory().GetInstance(providerElement.ProviderTypeName, providerInvariantName)
-                       : null;
+        public virtual IEnumerable<ProviderElement> GetAllDbProviderServices()
+        {
+            return _entityFrameworkSettings.Providers.OfType<ProviderElement>();
         }
 
         public virtual Func<MigrationSqlGenerator> TryGetMigrationSqlGeneratorFactory(string providerInvariantName)

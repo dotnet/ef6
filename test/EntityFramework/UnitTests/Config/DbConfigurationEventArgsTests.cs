@@ -16,7 +16,7 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     "resolver",
                     Assert.Throws<ArgumentNullException>(
-                        () => (new DbConfigurationEventArgs(new Mock<InternalConfiguration>().Object))
+                        () => (new DbConfigurationEventArgs(new Mock<InternalConfiguration>(null, null, null, null).Object))
                                   .AddDependencyResolver(null, false)).ParamName);
             }
 
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void AddDependencyResolver_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var resolver = new Mock<IDbDependencyResolver>().Object;
 
                 new DbConfigurationEventArgs(mockInternalConfiguration.Object).AddDependencyResolver(resolver, true);
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Config
             [Fact]
             public void ResolverSnapshot_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>();
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
                 var resolver = new Mock<IDbDependencyResolver>().Object;
                 mockInternalConfiguration.Setup(m => m.ResolverSnapshot).Returns(resolver);
 
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     "serviceInterceptor",
                     Assert.Throws<ArgumentNullException>(
-                        () => (new DbConfigurationEventArgs(new Mock<InternalConfiguration>().Object))
+                        () => (new DbConfigurationEventArgs(new Mock<InternalConfiguration>(null, null, null, null).Object))
                                   .ReplaceService<IPilkington>(null)).ParamName);
             }
 

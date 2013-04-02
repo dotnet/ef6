@@ -5129,6 +5129,9 @@
   <data name="EF6Providers_NotDbProviderServices" xml:space="preserve">
     <value>The 'Instance' member of the Entity Framework provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Core.Common.DbProviderServices'. Entity Framework providers must extend from this class and the 'Instance' member must return the Singleton instance of the provider.</value>
   </data>
+  <data name="EF6Providers_DefaultNotFound" xml:space="preserve">
+    <value>The provider invariant name '{0}' is specified as the default in the 'providers' element of the 'entityFramework' section in the application’s configuration file but no provider with that invariant name is registered in the list of providers that follows.</value>
+  </data>
   <data name="ProviderInvariantRepeatedInConfig" xml:space="preserve">
     <value>The provider for invariant name '{0}' is specified multiple times in the application configuration. The invariant name must be unique for each configured provider.</value>
   </data>

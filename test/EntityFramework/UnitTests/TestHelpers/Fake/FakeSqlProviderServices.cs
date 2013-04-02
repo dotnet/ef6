@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 {
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient.Internal;
@@ -38,6 +39,11 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
         protected override DbProviderManifest GetDbProviderManifest(string manifestToken)
         {
             return new SqlProviderManifest(manifestToken);
+        }
+
+        public new void AddDependencyResolver(IDbDependencyResolver resolver)
+        {
+            base.AddDependencyResolver(resolver);
         }
     }
 }

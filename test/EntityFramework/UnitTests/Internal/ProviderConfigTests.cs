@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Config;
+    using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
@@ -81,26 +82,6 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        public class TryGetDbProviderServices : AppConfigTestBase
-        {
-            [Fact]
-            public void TryGetDbProviderServices_returns_null_if_invariant_name_is_not_in_config()
-            {
-                Assert.Null(CreateAppConfig().Providers.TryGetDbProviderServices("System.Data.SqlClient"));
-            }
-
-            [Fact]
-            public void TryGetDbProviderServices_returns_provider_if_invariant_name_is_in_config()
-            {
-                Assert.Same(
-                    ProviderServicesFactoryTests.FakeProviderWithPublicProperty.Instance,
-                    CreateAppConfig(
-                        "Learning.To.Fly", typeof(ProviderServicesFactoryTests.FakeProviderWithPublicProperty).AssemblyQualifiedName)
-                        .Providers
-                        .TryGetDbProviderServices("Learning.To.Fly"));
-            }
-        }
-
         public class TryGetSpatialProvider : AppConfigTestBase
         {
             [Fact]
@@ -147,6 +128,78 @@ namespace System.Data.Entity.Internal
                 Assert.Equal(
                     Strings.DbSpatialServices_NotDbSpatialServices(typeof(SqlProviderServices).AssemblyQualifiedName),
                     Assert.Throws<InvalidOperationException>(() => providerConfig.TryGetSpatialProvider()).Message);
+            }
+        }
+
+        public class GetAllDbProviderServices : AppConfigTestBase
+        {
+            [Fact]
+            public void GetAllDbProviderServices_returns_provider_entries()
+            {
+                var providerConfig =
+                    CreateAppConfig(
+                        new[] { Tuple.Create("Hy.Pro.Glo", "Hy.Pro.Glo.Type"), Tuple.Create("Potters.Field", "Potters.Field.Type") });
+
+                Assert.Equal(
+                    new[]
+                        {
+                            new ProviderElement
+                                {
+                                    ProviderTypeName = "Hy.Pro.Glo.Type",
+                                    InvariantName = "Hy.Pro.Glo"
+                                },
+                            new ProviderElement
+                                {
+                                    ProviderTypeName = "Potters.Field.Type",
+                                    InvariantName = "Potters.Field"
+                                }
+                        },
+                    providerConfig.Providers.GetAllDbProviderServices());
+            }
+        }
+
+        public class DefaultInvariantName : AppConfigTestBase
+        {
+            [Fact]
+            public void DefaultInvariantName_returns_the_default_invariant_name_if_set()
+            {
+                var providerConfig =
+                    CreateAppConfig(
+                        new[]
+                            {
+                                Tuple.Create("Hy.Pro.Glo", "Hy.Pro.Glo.Type"), 
+                                Tuple.Create("Potters.Field", "Potters.Field.Type")
+                            }, null, null, "Potters.Field");
+
+                Assert.Equal("Potters.Field", providerConfig.Providers.DefaultInvariantName);
+            }
+
+            [Fact]
+            public void DefaultInvariantName_returns_null_if_default_not_set()
+            {
+                var providerConfig =
+                    CreateAppConfig(
+                        new[]
+                            {
+                                Tuple.Create("Hy.Pro.Glo", "Hy.Pro.Glo.Type"), 
+                                Tuple.Create("Potters.Field", "Potters.Field.Type")
+                            });
+
+                Assert.Null(providerConfig.Providers.DefaultInvariantName);
+            }
+
+            [Fact]
+            public void DefaultInvariantName_returns_null_if_set_to_empty_string()
+            {
+                var providerConfig =
+                    CreateAppConfig(
+                        new[]
+                            {
+                                Tuple.Create("Hy.Pro.Glo", "Hy.Pro.Glo.Type"), 
+                                Tuple.Create("Potters.Field", "Potters.Field.Type")
+                            }, null, null, "");
+
+                Assert.Null(providerConfig.Providers.DefaultInvariantName);
             }
         }
     }

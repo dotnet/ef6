@@ -5,6 +5,8 @@ namespace System.Data.Entity.TestHelpers
     using System.Collections.Generic;
     using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.SqlServer;
+    using System.Data.Entity.SqlServerCompact;
     using System.Linq;
 
     public class FunctionalTestsConfiguration : DbConfiguration
@@ -60,6 +62,9 @@ namespace System.Data.Entity.TestHelpers
 
         public FunctionalTestsConfiguration()
         {
+            AddDbProviderServices(SqlCeProviderServices.Instance);
+            AddDbProviderServices(SqlProviderServices.Instance);
+
             SetDefaultConnectionFactory(new DefaultUnitTestsConnectionFactory());
             AddDependencyResolver(new SingletonDependencyResolver<IManifestTokenService>(new FunctionalTestsManifestTokenService()));
         }

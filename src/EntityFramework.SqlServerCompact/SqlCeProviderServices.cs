@@ -4,10 +4,12 @@ namespace System.Data.Entity.SqlServerCompact
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServerCompact.Resources;
     using System.Data.Entity.SqlServerCompact.SqlGen;
     using System.Data.Entity.SqlServerCompact.Utilities;
@@ -19,15 +21,39 @@ namespace System.Data.Entity.SqlServerCompact
     /// <summary>
     ///     The ProviderServices object for the Sql CE provider
     /// </summary>
-    [DbProviderName("System.Data.SqlServerCe.4.0")]
-    internal sealed class SqlCeProviderServices : DbProviderServices
+    /// <remarks>
+    ///     Note that instance of this type also resolves additional provider services for Microsoft SQL Server Compact Edition
+    ///     when this type is registered as an EF provider either using an entry in the application's config file or through
+    ///     code-based registeration in <see cref="DbConfiguration" />.
+    ///     The services resolved are:
+    ///     Requests for <see cref="IDbConnectionFactory" /> are resolved to a Singleton instance of
+    ///     <see cref="SqlCeConnectionFactory" /> to create connections to SQL Compact by default.
+    ///     Requests for <see cref="MigrationSqlGenerator" /> for the invariant name "System.Data.SqlServerCe.4.0" are
+    ///     resolved to <see cref="SqlCeMigrationSqlGenerator" /> instances to provide default Migrations SQL
+    ///     generation for SQL Compact.
+    /// </remarks>
+    [DbProviderName(ProviderInvariantName)]
+    [CLSCompliant(false)]
+    public sealed class SqlCeProviderServices : DbProviderServices
     {
+        private const string ProviderInvariantName = "System.Data.SqlServerCe.4.0";
+
         /// <summary>
         ///     Singleton object;
         /// </summary>
-        internal static readonly SqlCeProviderServices Instance = new SqlCeProviderServices();
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly SqlCeProviderServices Instance = new SqlCeProviderServices();
 
         internal bool _isLocalProvider = true;
+
+        private SqlCeProviderServices()
+        {
+            AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(new SqlCeConnectionFactory(ProviderInvariantName)));
+
+            AddDependencyResolver(
+                new TransientDependencyResolver<MigrationSqlGenerator>(
+                    () => new SqlCeMigrationSqlGenerator(), ProviderInvariantName));
+        }
 
         #region CodeOnly Methods
 

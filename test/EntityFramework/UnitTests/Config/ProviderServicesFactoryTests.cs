@@ -7,38 +7,25 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
-    using System.Data.Entity.SqlServerCompact;
-    using System.Data.Entity.Utilities;
-    using System.Data.SqlClient;
     using Xunit;
 
     public class ProviderServicesFactoryTests
     {
-        public class GetInstanceByConvention
+        public class TryGetInstance
         {
             [Fact]
-            public void GetInstanceByConvention_returns_SqlProviderServices_type_for_SqlClient_invariant_name()
+            public void TryGetInstance_can_return_SqlProviderServices()
             {
                 Assert.Same(
                     SqlProviderServices.Instance,
-                    new ProviderServicesFactory().GetInstanceByConvention("System.Data.SqlClient"));
+                    new ProviderServicesFactory().TryGetInstance(
+                        "System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer"));
             }
 
             [Fact]
-            public void GetInstanceByConvention_returns_SqlCeProviderServices_type_for_Sql_Compact_invariant_name()
+            public void TryGetInstance_returns_null_if_type_cannot_be_loaded()
             {
-                Assert.Equal(
-                    SqlCeProviderServices.Instance,
-                    new ProviderServicesFactory().GetInstanceByConvention("System.Data.SqlServerCe.4.0"));
-            }
-
-            [Fact]
-            public void GetInstanceByConvention_throws_for_unknown_invariant_name()
-            {
-                Assert.Equal(
-                    Strings.EF6Providers_NoProviderFound("Don't.Come.Around.Here.No.More"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => new ProviderServicesFactory().GetInstanceByConvention("Don't.Come.Around.Here.No.More")).Message);
+                Assert.Null(new ProviderServicesFactory().TryGetInstance("Wonderbolt.Acadamy"));
             }
         }
 

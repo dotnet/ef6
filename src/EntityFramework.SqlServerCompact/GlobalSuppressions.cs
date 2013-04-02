@@ -10,3 +10,6 @@ using System.Diagnostics.CodeAnalysis;
     SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "rowversion", Scope = "resource",
         Target = "System.Data.Entity.SqlServerCompact.Properties.Resources.SqlServerCompact.resources")]
 [assembly: SuppressMessage("Microsoft.Design", "CA2210:AssembliesShouldHaveValidStrongNames")]
+[assembly:
+    SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
+        Target = "System.Data.Entity.SqlServerCompact")]

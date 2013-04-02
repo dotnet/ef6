@@ -2,11 +2,21 @@
 
 namespace System.Data.Entity.Config
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
 
-    internal class ExecutionStrategyResolver<T> : IDbDependencyResolver
+    /// <summary>
+    ///     An <see cref="IDbDependencyResolver" /> implementation used for resolving <see cref="IExecutionStrategy" />
+    ///     factories.
+    /// </summary>
+    /// <remarks>
+    ///     This class can be used by <see cref="DbProviderServices" /> to aid in the resoloving
+    ///     of <see cref="IExecutionStrategy" /> factories as a secondary service.
+    /// </remarks>
+    /// <typeparam name="T">The type of execution strategy that is resolved.</typeparam>
+    public class ExecutionStrategyResolver<T> : IDbDependencyResolver
         where T : IExecutionStrategy
     {
         private readonly Func<T> _getExecutionStrategy;
@@ -31,6 +41,16 @@ namespace System.Data.Entity.Config
             _getExecutionStrategy = getExecutionStrategy;
         }
 
+        /// <summary>
+        ///     If the given type is <see cref="Func{IExecutionStrategy}" />, then this resolver will attempt
+        ///     to return the service to use, otherwise it will return null. When the given type is
+        ///     Func{IExecutionStrategy}, then the key is expected to be an <see cref="ExecutionStrategyKey" />.
+        /// </summary>
+        /// <param name="type">The service type to resolve.</param>
+        /// <param name="key">A key used to make a determination of the service to return.</param>
+        /// <returns>
+        ///     An <see cref="Func{IExecutionStrategy}" />, or null.
+        /// </returns>
         public object GetService(Type type, object key)
         {
             if (type == typeof(Func<IExecutionStrategy>))

@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Common
 
                 var providerServices
                     = new Mock<DbProviderServices>(
-                        new Mock<IDbDependencyResolver>().Object,
+                        (Func<IDbDependencyResolver>)(() => new Mock<IDbDependencyResolver>().Object),
                         mockInterception.Object)
                           {
                               CallBase = true
@@ -256,7 +256,7 @@ namespace System.Data.Entity.Core.Common
 
                 Assert.Same(
                     mockSpatialServices.Object,
-                    new Mock<DbProviderServices>(mockResolver.Object).Object.GetSpatialServices("X"));
+                    new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object)).Object.GetSpatialServices("X"));
             }
 
             [Fact]
@@ -265,7 +265,7 @@ namespace System.Data.Entity.Core.Common
                 var mockSpatialServices = new Mock<DbSpatialServices>();
                 var mockResolver = new Mock<IDbDependencyResolver>();
 
-                var testProvider = new Mock<DbProviderServices>(mockResolver.Object);
+                var testProvider = new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object));
                 testProvider.Protected()
                             .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
                             .Returns(mockSpatialServices.Object);
@@ -280,7 +280,7 @@ namespace System.Data.Entity.Core.Common
             {
                 var mockResolver = new Mock<IDbDependencyResolver>();
 
-                var testProvider = new Mock<DbProviderServices>(mockResolver.Object);
+                var testProvider = new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object));
                 testProvider.Protected()
                             .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
                             .Throws(new Exception("Fail"));
@@ -295,7 +295,7 @@ namespace System.Data.Entity.Core.Common
             {
                 var mockResolver = new Mock<IDbDependencyResolver>();
 
-                var testProvider = new Mock<DbProviderServices>(mockResolver.Object);
+                var testProvider = new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object));
                 testProvider.Protected()
                             .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
                             .Throws(new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices));
@@ -310,7 +310,7 @@ namespace System.Data.Entity.Core.Common
             {
                 var mockResolver = new Mock<IDbDependencyResolver>();
 
-                var testProvider = new Mock<DbProviderServices>(mockResolver.Object);
+                var testProvider = new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object));
                 testProvider.Protected()
                             .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
                             .Returns((DbSpatialServices)null);
@@ -352,6 +352,35 @@ namespace System.Data.Entity.Core.Common
                         Assert.NotNull(reader);
                     }
                 }
+            }
+        }
+
+        public class GetService
+        {
+            [Fact]
+            public void GetService_returns_null()
+            {
+                Assert.Null(new FakeSqlProviderServices().GetService(null, null));
+            }
+
+            [Fact]
+            public void GetService_returns_services_registered_with_AddDependencyResolver()
+            {
+                var services = new FakeSqlProviderServices();
+                services.AddDependencyResolver(new SingletonDependencyResolver<string>("Cheese", "Please"));
+                
+                Assert.Equal("Cheese", services.GetService<string>("Please"));
+            }
+        }
+
+        public class AddDependencyResolver
+        {
+            [Fact]
+            public void AddDependencyResolver_throws_if_passed_a_null_resolver()
+            {
+                Assert.Equal(
+                    "resolver",
+                    Assert.Throws<ArgumentNullException>(() => new FakeSqlProviderServices().AddDependencyResolver(null)).ParamName);
             }
         }
     }

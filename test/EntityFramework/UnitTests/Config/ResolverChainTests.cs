@@ -19,6 +19,14 @@ namespace System.Data.Entity.Config
         }
 
         [Fact]
+        public void Add_throws_if_given_a_null_resolver()
+        {
+            Assert.Equal(
+                "resolver",
+                Assert.Throws<ArgumentNullException>(() => new ResolverChain().Add(null)).ParamName);
+        }
+
+        [Fact]
         public void GetService_returns_null_for_empty_chain()
         {
             Assert.Null(new ResolverChain().GetService<IPilkington>());
@@ -100,11 +108,11 @@ namespace System.Data.Entity.Config
         public void Resolvers_property_returns_resolvers_in_same_order_that_they_were_added()
         {
             var resolvers = new[]
-                                {
-                                    new Mock<IDbDependencyResolver>().Object,
-                                    new Mock<IDbDependencyResolver>().Object,
-                                    new Mock<IDbDependencyResolver>().Object,
-                                };
+                {
+                    new Mock<IDbDependencyResolver>().Object,
+                    new Mock<IDbDependencyResolver>().Object,
+                    new Mock<IDbDependencyResolver>().Object,
+                };
 
             var chain = new ResolverChain();
             resolvers.Each(chain.Add);

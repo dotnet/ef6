@@ -10,6 +10,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.SqlGen;
@@ -23,16 +24,46 @@ namespace System.Data.Entity.SqlServer
     /// <summary>
     ///     The DbProviderServices implementation for the SqlClient provider for SQL Server.
     /// </summary>
+    /// <remarks>
+    ///     Note that instance of this type also resolve additional provider services for Microsoft SQL Server
+    ///     when this type is registered as an EF provider either using an entry in the application's config file
+    ///     or through code-based registeration in <see cref="DbConfiguration" />.
+    ///     The services resolved are:
+    ///     Requests for <see cref="IDbConnectionFactory" /> are resolved to a Singleton instance of
+    ///     <see cref="SqlConnectionFactory" /> to create connections to SQL Express by default.
+    ///     Requests for <see cref="Func{ISqlExecutionStrategy}" /> for the invariant name "System.Data.SqlClient"
+    ///     for any server name are resolved to a delegate that returns a <see cref="DefaultSqlExecutionStrategy" />
+    ///     to provide a non-retrying policy for SQL Server.
+    ///     Requests for <see cref="MigrationSqlGenerator" /> for the invariant name "System.Data.SqlClient" are
+    ///     resolved to <see cref="SqlServerMigrationSqlGenerator" /> instances to provide default Migrations SQL
+    ///     generation for SQL Server.
+    ///     Requests for <see cref="DbSpatialServices" /> for the invariant name "System.Data.SqlClient" are
+    ///     resolved to a Singleton instance of <see cref="SqlSpatialServices" /> to provide default spatial
+    ///     services for SQL Server.
+    /// </remarks>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     [CLSCompliant(false)]
-    [DbProviderName("System.Data.SqlClient")]
+    [DbProviderName(ProviderInvariantName)]
     public sealed class SqlProviderServices : DbProviderServices
     {
+        private const string ProviderInvariantName = "System.Data.SqlClient";
+
         /// <summary>
         ///     Private constructor to ensure only Singleton instance is created.
         /// </summary>
         private SqlProviderServices()
         {
+            AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(new SqlConnectionFactory()));
+
+            AddDependencyResolver(
+                new ExecutionStrategyResolver<DefaultSqlExecutionStrategy>(
+                    ProviderInvariantName, null, () => new DefaultSqlExecutionStrategy()));
+
+            AddDependencyResolver(
+                new TransientDependencyResolver<MigrationSqlGenerator>(
+                    () => new SqlServerMigrationSqlGenerator(), ProviderInvariantName));
+
+            AddDependencyResolver(new SingletonDependencyResolver<DbSpatialServices>(SqlSpatialServices.Instance, ProviderInvariantName));
         }
 
         /// <summary>
@@ -919,14 +950,14 @@ namespace System.Data.Entity.SqlServer
             SqlVersion sqlVersion = 0;
             UsingMasterConnection(
                 sqlConnection, conn =>
-                {
-                    // create database
-                    using (var command = CreateCommand(conn, createDatabaseScript, commandTimeout))
                     {
-                        command.ExecuteNonQuery();
-                    }
-                    sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                });
+                        // create database
+                        using (var command = CreateCommand(conn, createDatabaseScript, commandTimeout))
+                        {
+                            command.ExecuteNonQuery();
+                        }
+                        sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                    });
 
             Debug.Assert(sqlVersion != 0);
             return sqlVersion;
@@ -1145,7 +1176,7 @@ namespace System.Data.Entity.SqlServer
             if (openingConnection)
             {
                 DbConfiguration.GetService<Func<IExecutionStrategy>>(
-                    new ExecutionStrategyKey("System.Data.SqlClient", sqlConnection.DataSource))()
+                    new ExecutionStrategyKey(ProviderInvariantName, sqlConnection.DataSource))()
                     .Execute(
                         () =>
                             {

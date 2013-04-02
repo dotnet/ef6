@@ -3,12 +3,16 @@
 namespace System.Data.Entity.Config
 {
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
+    using System.Linq;
 
     /// <summary>
     ///     Resolves dependencies from a config file.
@@ -16,15 +20,35 @@ namespace System.Data.Entity.Config
     internal class AppConfigDependencyResolver : IDbDependencyResolver
     {
         private readonly AppConfig _appConfig;
+        private readonly InternalConfiguration _internalConfiguration;
 
         private readonly ConcurrentDictionary<Tuple<Type, object>, Func<object>> _serviceFactories
             = new ConcurrentDictionary<Tuple<Type, object>, Func<object>>();
 
-        public AppConfigDependencyResolver(AppConfig appConfig)
+        private readonly Dictionary<string, DbProviderServices> _providerFactories
+            = new Dictionary<string, DbProviderServices>();
+
+        private bool _providersLoaded;
+
+        private readonly ProviderServicesFactory _providerServicesFactory;
+
+        /// <summary>
+        ///     For testing.
+        /// </summary>
+        public AppConfigDependencyResolver()
+        {
+        }
+
+        public AppConfigDependencyResolver(
+            AppConfig appConfig, 
+            InternalConfiguration internalConfiguration, 
+            ProviderServicesFactory providerServicesFactory = null)
         {
             DebugCheck.NotNull(appConfig);
 
             _appConfig = appConfig;
+            _internalConfiguration = internalConfiguration;
+            _providerServicesFactory = providerServicesFactory ?? new ProviderServicesFactory();
         }
 
         public virtual object GetService(Type type, object key)
@@ -36,12 +60,25 @@ namespace System.Data.Entity.Config
 
         public virtual Func<object> GetServiceFactory(Type type, string name)
         {
+            if (!_providersLoaded)
+            {
+                lock (_providerFactories)
+                {
+                    if (!_providersLoaded)
+                    {
+                        LoadAllDbProviderServices();
+                        _providersLoaded = true;
+                    }
+                }
+            }
+
             if (!string.IsNullOrWhiteSpace(name))
             {
                 if (type == typeof(DbProviderServices))
                 {
-                    var providerServices = _appConfig.Providers.TryGetDbProviderServices(name);
-                    return () => providerServices;
+                    DbProviderServices providerFactory;
+                    _providerFactories.TryGetValue(name, out providerFactory);
+                    return () => providerFactory;
                 }
 
                 if (type == typeof(MigrationSqlGenerator))
@@ -91,6 +128,53 @@ namespace System.Data.Entity.Config
             }
 
             return () => null;
+        }
+
+        private void LoadAllDbProviderServices()
+        {
+            var providers = _appConfig.Providers.GetAllDbProviderServices().ToList();
+
+            if (providers.All(p => p.InvariantName != "System.Data.SqlClient"))
+            {
+                // If no SQL Server provider is registered, then make sure the SQL Server provider is available
+                // by convention (if it can be loaded) as it would have been in previous versions of EF.
+                RegisterSqlServerProvider();
+            }
+
+            var defaultName = _appConfig.Providers.DefaultInvariantName;
+            if (defaultName != null && providers.All(p => p.InvariantName != defaultName))
+            {
+                throw new InvalidOperationException(Strings.EF6Providers_DefaultNotFound(defaultName));
+            }
+
+            providers.Where(p => p.InvariantName != defaultName).Each(RegisterProvider);
+
+            // Make sure default is added last so it will resolve dependencies before others.
+            providers.Where(p => p.InvariantName == defaultName).Each(RegisterProvider);
+        }
+
+        private void RegisterProvider(ProviderElement providerElement)
+        {
+            DebugCheck.NotNull(providerElement);
+
+            var provider = _providerServicesFactory.GetInstance(providerElement.ProviderTypeName, providerElement.InvariantName);
+            _providerFactories[providerElement.InvariantName] = provider;
+            _internalConfiguration.AddSecondaryResolver(provider);
+        }
+
+        private void RegisterSqlServerProvider()
+        {
+            var provider = _providerServicesFactory
+                .TryGetInstance("System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer");
+
+            if (provider != null)
+            {
+                // This provider goes just above the root resolver so that any other provider registered in code
+                // still takes precedence.
+                _internalConfiguration.AddSecondaryResolver(
+                    new SingletonDependencyResolver<DbProviderServices>(provider, "System.Data.SqlClient"));
+                _internalConfiguration.AddSecondaryResolver(provider);
+            }
         }
     }
 }
