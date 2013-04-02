@@ -40,14 +40,14 @@ namespace System.Data.Entity.Core.Mapping
     ///     above example. Users can access the table mapping fragments under the
     ///     association type mapping through this class.
     /// </example>
-    internal class StorageAssociationTypeMapping : StorageTypeMapping
+    public class StorageAssociationTypeMapping : StorageTypeMapping
     {
         /// <summary>
         ///     Construct the new AssociationTypeMapping object.
         /// </summary>
         /// <param name="relation"> Represents the Association Type metadata object </param>
         /// <param name="setMapping"> Set Mapping that contains this Type mapping </param>
-        internal StorageAssociationTypeMapping(AssociationType relation, StorageSetMapping setMapping)
+        public StorageAssociationTypeMapping(AssociationType relation, StorageSetMapping setMapping)
             : base(setMapping)
         {
             m_relation = relation;

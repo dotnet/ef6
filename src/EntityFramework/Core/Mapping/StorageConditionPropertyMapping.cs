@@ -46,19 +46,19 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Construct a new condition Property mapping object
         /// </summary>
-        /// <param name="cdmMember"> </param>
+        /// <param name="edmProperty"> </param>
         /// <param name="columnMember"> </param>
         /// <param name="value"> </param>
         /// <param name="isNull"> </param>
-        internal StorageConditionPropertyMapping(
-            EdmProperty cdmMember, EdmProperty columnMember
+        public StorageConditionPropertyMapping(
+            EdmProperty edmProperty, EdmProperty columnMember
             , object value, bool? isNull)
-            : base(cdmMember)
+            : base(edmProperty)
         {
             Debug.Assert(
-                (cdmMember != null) || (columnMember != null), "Both CDM and Column Members can not be specified for Condition Mapping");
+                (edmProperty != null) || (columnMember != null), "Both CDM and Column Members can not be specified for Condition Mapping");
             Debug.Assert(
-                (cdmMember == null) || (columnMember == null), "Either CDM or Column Members has to be specified for Condition Mapping");
+                (edmProperty == null) || (columnMember == null), "Either CDM or Column Members has to be specified for Condition Mapping");
             Debug.Assert((isNull.HasValue) || (value != null), "Both Value and IsNull can not be specified on Condition Mapping");
             Debug.Assert(!(isNull.HasValue) || (value == null), "Either Value or IsNull has to be specified on Condition Mapping");
             m_columnMember = columnMember;

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         /// <param name="extent"> Represents the Association Set Metadata object. Will change this to Extent instead of MemberMetadata. </param>
         /// <param name="entityContainerMapping"> The entityContainerMapping mapping that contains this Set mapping </param>
-        internal StorageAssociationSetMapping(AssociationSet extent, StorageEntityContainerMapping entityContainerMapping)
+        public StorageAssociationSetMapping(AssociationSet extent, StorageEntityContainerMapping entityContainerMapping)
             : base(extent, entityContainerMapping)
         {
         }
@@ -135,7 +136,16 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        internal void AddColumnCondition(StorageConditionPropertyMapping storageConditionPropertyMapping)
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public void AddProperty(StorageEndPropertyMapping mapping)
+        {
+            if (SingleFragment != null)
+            {
+                SingleFragment.AddProperty(mapping);
+            }
+        }
+
+        public void AddColumnCondition(StorageConditionPropertyMapping storageConditionPropertyMapping)
         {
             if (SingleFragment != null)
             {
