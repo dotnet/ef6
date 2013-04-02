@@ -404,11 +404,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Util.ThrowIfReadOnly(this);
 
-                TypeUsage = TypeUsage.ShallowCopy(
-                    new FacetValues
-                        {
-                            MaxLength = value
-                        });
+                if (MaxLength != value)
+                {
+                    TypeUsage = TypeUsage.ShallowCopy(
+                        new FacetValues
+                            {
+                                MaxLength = value
+                            });
+                }
             }
         }
 
@@ -459,11 +462,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Util.ThrowIfReadOnly(this);
 
-                TypeUsage = TypeUsage.ShallowCopy(
-                    new FacetValues
-                        {
-                            FixedLength = value
-                        });
+                if (IsFixedLength != value)
+                {
+                    TypeUsage = TypeUsage.ShallowCopy(
+                        new FacetValues
+                            {
+                                FixedLength = value
+                            });
+                }
             }
         }
 
@@ -491,11 +497,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Util.ThrowIfReadOnly(this);
 
-                TypeUsage = TypeUsage.ShallowCopy(
-                    new FacetValues
-                        {
-                            Unicode = value
-                        });
+                if (IsUnicode != value)
+                {
+                    TypeUsage = TypeUsage.ShallowCopy(
+                        new FacetValues
+                            {
+                                Unicode = value
+                            });
+                }
             }
         }
 
@@ -523,11 +532,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Util.ThrowIfReadOnly(this);
 
-                TypeUsage = TypeUsage.ShallowCopy(
-                    new FacetValues
-                        {
-                            Precision = value
-                        });
+                if (Precision != value)
+                {
+                    TypeUsage = TypeUsage.ShallowCopy(
+                        new FacetValues
+                            {
+                                Precision = value
+                            });
+                }
             }
         }
 
@@ -555,11 +567,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Util.ThrowIfReadOnly(this);
 
-                TypeUsage = TypeUsage.ShallowCopy(
-                    new FacetValues
-                        {
-                            Scale = value
-                        });
+                if (Scale != value)
+                {
+                    TypeUsage = TypeUsage.ShallowCopy(
+                        new FacetValues
+                            {
+                                Scale = value
+                            });
+                }
             }
         }
 
