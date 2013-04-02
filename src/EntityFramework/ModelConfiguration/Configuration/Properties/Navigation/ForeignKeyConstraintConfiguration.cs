@@ -109,7 +109,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 if ((_dependentProperties.Count > 1)
                     && foreignKeys.Any(p => !p.ColumnOrder.HasValue))
                 {
-                    var dependentKeys = dependentEnd.GetEntityType().DeclaredKeyProperties;
+                    var dependentKeys = dependentEnd.GetEntityType().KeyProperties;
 
                     if ((dependentKeys.Count == _dependentProperties.Count)
                         && foreignKeys.All(fk => dependentKeys.Any(p => p.GetClrPropertyInfo().IsSameAs(fk.PropertyInfo))))
@@ -151,7 +151,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 = new ReferentialConstraint(
                     principalEnd,
                     dependentEnd,
-                    principalEnd.GetEntityType().DeclaredKeyProperties,
+                    principalEnd.GetEntityType().KeyProperties,
                     dependentProperties);
 
             if (principalEnd.IsRequired())

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Linq; 
 
     /// <summary>
     ///     Represents the Entity Type
@@ -50,6 +51,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
 
                 return _keyMembers;
+            }
+        }
+
+        public virtual ReadOnlyMetadataCollection<EdmProperty> KeyProperties
+        {
+            get
+            {
+                return new ReadOnlyMetadataCollection<EdmProperty>(KeyMembers.Cast<EdmProperty>().ToList());
             }
         }
 

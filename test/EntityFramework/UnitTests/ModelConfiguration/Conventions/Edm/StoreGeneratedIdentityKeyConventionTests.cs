@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             Assert.Equal(
                 StoreGeneratedPattern.Identity,
-                entityType.DeclaredKeyProperties.Single().GetStoreGeneratedPattern());
+                entityType.KeyProperties.Single().GetStoreGeneratedPattern());
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             Assert.Equal(
                 StoreGeneratedPattern.Identity,
-                entityType.DeclaredKeyProperties.Single().GetStoreGeneratedPattern());
+                entityType.KeyProperties.Single().GetStoreGeneratedPattern());
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             Assert.Equal(
                 StoreGeneratedPattern.Identity,
-                entityType.DeclaredKeyProperties.Single().GetStoreGeneratedPattern());
+                entityType.KeyProperties.Single().GetStoreGeneratedPattern());
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, model);
 
-            Assert.Null(entityType.DeclaredKeyProperties.Single().GetStoreGeneratedPattern());
+            Assert.Null(entityType.KeyProperties.Single().GetStoreGeneratedPattern());
         }
 
         // Dev11 345384
@@ -118,7 +118,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             Assert.Equal(
                 StoreGeneratedPattern.Identity,
-                entityType.DeclaredKeyProperties.Single().GetStoreGeneratedPattern());
+                entityType.KeyProperties.Single().GetStoreGeneratedPattern());
         }
 
         [Fact]
@@ -131,7 +131,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
-            Assert.Null(entityType.DeclaredKeyProperties.Single().GetStoreGeneratedPattern());
+            Assert.Null(entityType.KeyProperties.Single().GetStoreGeneratedPattern());
         }
 
         [Fact]
@@ -148,7 +148,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             Assert.Equal(
                 0,
-                entityType.DeclaredKeyProperties
+                entityType.KeyProperties
                     .Count(p => p.GetStoreGeneratedPattern() == StoreGeneratedPattern.Identity));
         }
     }

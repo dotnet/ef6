@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Check.NotNull(edmDataModelItem, "edmDataModelItem");
             Check.NotNull(model, "model");
 
-            if ((edmDataModelItem.DeclaredKeyProperties.Count > 0)
+            if ((edmDataModelItem.KeyProperties.Count > 0)
                 || (edmDataModelItem.BaseType != null))
             {
                 return;

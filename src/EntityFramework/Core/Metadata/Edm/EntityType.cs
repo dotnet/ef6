@@ -90,15 +90,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _foreignKeyBuilders.Add(foreignKeyBuilder);
         }
 
-        public ReadOnlyMetadataCollection<EdmProperty> DeclaredKeyProperties
-        {
-            get
-            {
-                return new ReadOnlyMetadataCollection<EdmProperty>(
-                    KeyMembers.Where(km => DeclaredMembers.Contains(km)).Cast<EdmProperty>().ToList());
-            }
-        }
-
         /// <summary>
         ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />.
         /// </summary>

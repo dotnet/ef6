@@ -46,7 +46,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var table = database.AddTable(name);
 
             // Add PK columns to the new table
-            foreach (var property in pkSource.DeclaredKeyProperties)
+            foreach (var property in pkSource.KeyProperties)
             {
                 table.AddKeyMember(property.Clone());
             }
