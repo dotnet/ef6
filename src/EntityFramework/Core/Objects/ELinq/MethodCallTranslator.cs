@@ -301,6 +301,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
                 var newExpression = (NewExpression)selectorLambda.Body;
 
+                if (newExpression.Arguments.Count != 2)
+                {
+                    return false;
+                }
+
                 if (newExpression.Arguments[0] != selectorLambda.Parameters[0]
                     ||
                     newExpression.Arguments[1] != selectorLambda.Parameters[1])
