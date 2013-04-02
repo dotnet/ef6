@@ -293,7 +293,7 @@ namespace System.Data.Entity.Edm
             {
                 if (item.DeclaredKeyProperties.Any())
                 {
-                    VisiDeclaredKeyProperties(item, item.DeclaredKeyProperties);
+                    VisitDeclaredKeyProperties(item, item.DeclaredKeyProperties);
                 }
 
                 if (item.DeclaredProperties.Any())
@@ -308,7 +308,7 @@ namespace System.Data.Entity.Edm
             }
         }
 
-        protected virtual void VisiDeclaredKeyProperties(EntityType entityType, IList<EdmProperty> properties)
+        protected virtual void VisitDeclaredKeyProperties(EntityType entityType, IList<EdmProperty> properties)
         {
             VisitCollection(properties, VisitEdmProperty);
         }

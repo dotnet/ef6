@@ -28,6 +28,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             _modelConfiguration = modelConfiguration;
             _conventionsConfiguration = conventionsConfiguration;
             _model = model;
+            _attributeProvider = new AttributeProvider();
             _modelBuilderVersion = modelBuilderVersion;
         }
 
