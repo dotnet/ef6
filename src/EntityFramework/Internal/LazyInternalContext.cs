@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Collections.Concurrent;
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
@@ -81,6 +82,8 @@ namespace System.Data.Entity.Internal
 
         private readonly IDbModelCacheKeyFactory _cacheKeyFactory;
 
+        private readonly AttributeProvider _attributeProvider;
+
         /// <summary>
         ///     Constructs a <see cref="LazyInternalContext" /> for the given <see cref="DbContext" /> owner that will be initialized
         ///     on first use.
@@ -95,6 +98,7 @@ namespace System.Data.Entity.Internal
             IInternalConnection internalConnection,
             DbCompiledModel model,
             IDbModelCacheKeyFactory cacheKeyFactory = null,
+            AttributeProvider attributeProvider = null,
             Interception interception = null)
             : base(owner, interception)
         {
@@ -103,6 +107,7 @@ namespace System.Data.Entity.Internal
             _internalConnection = internalConnection;
             _model = model;
             _cacheKeyFactory = cacheKeyFactory ?? new DefaultModelCacheKeyFactory();
+            _attributeProvider = attributeProvider ?? new AttributeProvider();
 
             _createdWithExistingModel = model != null;
         }
@@ -457,7 +462,7 @@ namespace System.Data.Entity.Internal
         /// <returns> The builder. </returns>
         public DbModelBuilder CreateModelBuilder()
         {
-            var versionAttribute = new AttributeProvider().GetAttributes(Owner.GetType())
+            var versionAttribute = _attributeProvider.GetAttributes(Owner.GetType())
                                                      .OfType<DbModelBuilderVersionAttribute>()
                                                      .FirstOrDefault();
             var version = versionAttribute != null ? versionAttribute.Version : DbModelBuilderVersion.Latest;

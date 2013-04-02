@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Mappers
 {
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -19,7 +20,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             ModelConfiguration modelConfiguration,
             ConventionsConfiguration conventionsConfiguration,
             EdmModel model,
-            DbModelBuilderVersion modelBuilderVersion = DbModelBuilderVersion.Latest)
+            DbModelBuilderVersion modelBuilderVersion = DbModelBuilderVersion.Latest,
+            AttributeProvider attributeProvider = null)
         {
             DebugCheck.NotNull(modelConfiguration);
             DebugCheck.NotNull(conventionsConfiguration);
@@ -28,8 +30,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             _modelConfiguration = modelConfiguration;
             _conventionsConfiguration = conventionsConfiguration;
             _model = model;
-            _attributeProvider = new AttributeProvider();
             _modelBuilderVersion = modelBuilderVersion;
+            _attributeProvider = attributeProvider ?? new AttributeProvider();
         }
 
         public ModelConfiguration ModelConfiguration

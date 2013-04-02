@@ -20,6 +20,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
+    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
@@ -111,7 +112,7 @@ namespace System.Data.Entity.Internal
             new Dictionary<Type, IInternalSetAdapter>();
 
         // Used to create validators to validate entities or properties and contexts for validating entities and properties.
-        private readonly ValidationProvider _validationProvider = new ValidationProvider();
+        private readonly ValidationProvider _validationProvider = new ValidationProvider(null, DbConfiguration.GetService<AttributeProvider>());
 
         private bool _oSpaceLoadingForced;
 

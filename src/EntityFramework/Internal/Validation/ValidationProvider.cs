@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal.Validation
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Data.Entity.Config;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
 
@@ -23,10 +24,10 @@ namespace System.Data.Entity.Internal.Validation
         /// <summary>
         ///     Initializes a new instance of <see cref="ValidationProvider" /> class.
         /// </summary>
-        public ValidationProvider(EntityValidatorBuilder builder = null)
+        public ValidationProvider(EntityValidatorBuilder builder = null, AttributeProvider attributeProvider = null)
         {
             _entityValidators = new Dictionary<Type, EntityValidator>();
-            _entityValidatorBuilder = builder ?? new EntityValidatorBuilder(new AttributeProvider());
+            _entityValidatorBuilder = builder ?? new EntityValidatorBuilder(attributeProvider ?? new AttributeProvider());
         }
 
         /// <summary>
