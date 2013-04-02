@@ -55,7 +55,7 @@ namespace ProductivityApiTests
 
         #region Scenarios for SQL Server LocalDb using LocalDbConnectionFactory
 
-        [Fact]
+        // [Fact] Disabled: see CodePlex 1013
         public void Scenario_Find()
         {
             using (var context = new SimpleLocalDbModelContext())
@@ -78,7 +78,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        // [Fact] Disabled: see CodePlex 1013
         public void Scenario_Insert()
         {
             EnsureDatabaseInitialized(() => new SimpleLocalDbModelContext());
@@ -103,7 +103,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        // [Fact] Disabled: see CodePlex 1013
         public void Scenario_Update()
         {
             EnsureDatabaseInitialized(() => new SimpleLocalDbModelContext());
@@ -125,7 +125,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        // [Fact] Disabled: see CodePlex 1013
         public void Scenario_Query()
         {
             using (var context = new SimpleLocalDbModelContext())
@@ -140,7 +140,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        // [Fact] Disabled: see CodePlex 1013
         public void Scenario_Relate_using_query()
         {
             EnsureDatabaseInitialized(() => new SimpleLocalDbModelContext());
@@ -174,7 +174,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        // [Fact] Disabled: see CodePlex 1013
         public void Scenario_Relate_using_FK()
         {
             EnsureDatabaseInitialized(() => new SimpleLocalDbModelContext());
@@ -201,7 +201,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        // [Fact] Disabled: see CodePlex 1013
         public void Scenario_CodeFirst_with_ModelBuilder()
         {
             Database.Delete("Scenario_CodeFirstWithModelBuilder");
@@ -261,7 +261,7 @@ namespace ProductivityApiTests
             Assert.Equal(@"(localdb)\v11.0", context.Database.Connection.DataSource);
         }
 
-        [Fact]
+        // [Fact] Disabled: see CodePlex 1013
         public void Scenario_Using_two_databases()
         {
             EnsureDatabaseInitialized(() => new LocalDbLoginsContext());
@@ -315,7 +315,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        // [Fact] Disabled: see CodePlex 1013
         public void Scenario_Use_AppConfig_connection_string()
         {
             Database.Delete("Scenario_Use_AppConfig_LocalDb_connection_string");
@@ -332,7 +332,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        // [Fact] Disabled: see CodePlex 1013
         public void Scenario_Include()
         {
             using (var context = new SimpleLocalDbModelContext())
@@ -350,7 +350,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        // [Fact] Disabled: see CodePlex 1013
         public void Scenario_IncludeWithLambda()
         {
             using (var context = new SimpleLocalDbModelContext())
