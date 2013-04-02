@@ -333,7 +333,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <summary>
         ///     Configures the property to have the specified maximum length.
         /// </summary>
-        /// <param name="value"> The maximum length for the property. Setting 'null' will remove any maximum length restriction from the property and a default length will be used for the database column. </param>
+        /// <param name="value"> The maximum length for the property. </param>
         /// <returns>
         ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
