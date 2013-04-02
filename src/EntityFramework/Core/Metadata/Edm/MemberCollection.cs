@@ -251,7 +251,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal ReadOnlyMetadataCollection<T> GetDeclaredOnlyMembers<T>() where T : EdmMember
         {
-            var newCollection = new MetadataCollection<T>();
+            var newCollection = new List<T>();
             for (var i = 0; i < base.Count; i++)
             {
                 var member = base[i] as T;
@@ -261,7 +261,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
             }
 
-            return newCollection.AsReadOnlyMetadataCollection();
+            return new ReadOnlyMetadataCollection<T>(newCollection);
         }
 
         /// <summary>
