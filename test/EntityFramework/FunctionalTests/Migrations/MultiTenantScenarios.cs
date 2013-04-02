@@ -125,25 +125,22 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("TenantAs"));
             Assert.True(TableExists("TenantBs"));
         }
-    }
 
-    [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
-    [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
-    public class MultitenantScenarios_NoSqlCe : DbTestCase
-    {
         [MigrationsTheory]
+        [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
+        [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
         public void Can_update_when_default_schema_introduced()
         {
             ResetDatabase();
 
             var migratorA
-                = CreateMigrator<MultiTenantScenarios.ContextA>(contextKey: "KeyA");
+                = CreateMigrator<ContextA>(contextKey: "KeyA");
 
             var generatedMigrationA1
                 = new MigrationScaffolder(migratorA.Configuration).Scaffold("MigrationA");
 
             migratorA
-                = CreateMigrator<MultiTenantScenarios.ContextA>(
+                = CreateMigrator<ContextA>(
                     contextKey: "KeyA",
                     automaticMigrationsEnabled: false,
                     scaffoldedMigrations: generatedMigrationA1);
@@ -154,13 +151,13 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             var migratorB
-                = CreateMigrator<MultiTenantScenarios.ContextB>(contextKey: "KeyB");
+                = CreateMigrator<ContextB>(contextKey: "KeyB");
 
             var generatedMigrationB1
                 = new MigrationScaffolder(migratorB.Configuration).Scaffold("MigrationB");
 
             migratorB
-                = CreateMigrator<MultiTenantScenarios.ContextB>(
+                = CreateMigrator<ContextB>(
                     contextKey: "KeyB",
                     automaticMigrationsEnabled: false,
                     scaffoldedMigrations: generatedMigrationB1);
@@ -171,7 +168,7 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migratorA
-                = CreateMigrator<MultiTenantScenarios.ContextA2>(
+                = CreateMigrator<ContextA2>(
                     contextKey: "KeyA",
                     scaffoldedMigrations: generatedMigrationA1);
 
@@ -179,7 +176,7 @@ namespace System.Data.Entity.Migrations
                 = new MigrationScaffolder(migratorA.Configuration).Scaffold("MigrationA2");
 
             migratorA
-                = CreateMigrator<MultiTenantScenarios.ContextA2>(
+                = CreateMigrator<ContextA2>(
                     contextKey: "KeyA",
                     automaticMigrationsEnabled: false,
                     scaffoldedMigrations: new[] { generatedMigrationA1, generatedMigrationA2 });
@@ -192,7 +189,7 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
 
             migratorB
-                = CreateMigrator<MultiTenantScenarios.ContextB2>(
+                = CreateMigrator<ContextB2>(
                     contextKey: "KeyB",
                     scaffoldedMigrations: generatedMigrationB1);
 
@@ -200,7 +197,7 @@ namespace System.Data.Entity.Migrations
                 = new MigrationScaffolder(migratorB.Configuration).Scaffold("MigrationB2");
 
             migratorB
-                = CreateMigrator<MultiTenantScenarios.ContextB2>(
+                = CreateMigrator<ContextB2>(
                     contextKey: "KeyB",
                     automaticMigrationsEnabled: false,
                     scaffoldedMigrations: new[] { generatedMigrationB1, generatedMigrationB2 });

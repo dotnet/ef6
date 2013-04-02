@@ -19,7 +19,7 @@ namespace System.Data.Entity.Migrations
         private string _projectDir;
         private string _contextDir;
 
-        [MigrationsTheory]
+        [MigrationsTheory(SlowGroup = TestGroup.MigrationsTests)]
         public void Can_update()
         {
             ResetDatabase();
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("Entities"));
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(SlowGroup = TestGroup.MigrationsTests)]
         public void Can_script_update()
         {
             ResetDatabase();
@@ -176,7 +176,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(SlowGroup = TestGroup.MigrationsTests)]
         public void Can_scaffold_initial_create()
         {
             ResetDatabase();
@@ -207,7 +207,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(SlowGroup = TestGroup.MigrationsTests)]
         public void Can_scaffold_empty()
         {
             using (var facade = new ToolingFacade(
@@ -251,7 +251,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(SlowGroup = TestGroup.MigrationsTests)]
         public void Can_scaffold_vb()
         {
             ResetDatabase();

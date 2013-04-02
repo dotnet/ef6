@@ -13,5 +13,6 @@ namespace System.Data.Entity.Migrations
 
         public DatabaseProvider DatabaseProvider { get; private set; }
         public ProgrammingLanguage ProgrammingLanguage { get; private set; }
+        public bool Slow { get; set; }
     }
 }

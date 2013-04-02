@@ -16,13 +16,13 @@ namespace System.Data.Entity
     /// <remarks>
     ///     The class containing the method must derive from <see cref="MarshalByRefObject" />.
     /// 
-    ///     If the test class is decorated using <see cref="IUseFixture<>" />, the fixture data is
+    ///     If the test class is decorated using <see cref="IUseFixture{T}" />, the fixture data is
     ///                                              instantiated in the main
     ///                                              <see cref="AppDomain" />
     ///                                              and then serialized to the partial trust
     ///                                              sandbox.
     /// </remarks>
-    public class PartialTrustFactAttribute : FactAttribute
+    public class PartialTrustFactAttribute : ExtendedFactAttribute
     {
         protected override IEnumerable<ITestCommand> EnumerateTestCommands(IMethodInfo method)
         {

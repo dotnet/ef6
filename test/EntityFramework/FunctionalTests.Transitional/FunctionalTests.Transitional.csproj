@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;$(BuildConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -32,7 +32,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;$(BuildConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -45,7 +45,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\DebugNet40\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NET40</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NET40;$(BuildConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -57,7 +57,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\ReleaseNet40\</OutputPath>
-    <DefineConstants>TRACE;NET40</DefineConstants>
+    <DefineConstants>TRACE;NET40;$(BuildConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -212,6 +212,8 @@
     <Compile Include="TestHelpers\GenericProviderFactory`.cs" />
     <Compile Include="TestHelpers\GenericProviderServices.cs" />
     <Compile Include="TestHelpers\MutableResolver.cs" />
+    <Compile Include="TestHelpers\ExtendedFactAttribute.cs" />
+    <Compile Include="TestHelpers\TestGroup.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaAllTypes.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaBaseline.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaBug.cs" />
@@ -596,7 +598,9 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
+  <Target Name="AfterBuild">
+    <Warning Condition="'$(BuildConstants)' != '' And '$(BuildConstants)' != 'MigrationsTests' And '$(BuildConstants)' != 'AllTests'"
+	Text="Unrecognized BuildConstants value, use 'SkipMigrationsTests' or 'SkipSlowTests'"/>
+  </Target>
 </Project>

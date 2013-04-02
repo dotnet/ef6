@@ -5,26 +5,20 @@ namespace System.Data.Entity.Migrations
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using Xunit.Extensions;
     using Xunit.Sdk;
 
-    public class MigrationsTheoryAttribute : TheoryAttribute
+    public class MigrationsTheoryAttribute : ExtendedFactAttribute
     {
         protected override IEnumerable<ITestCommand> EnumerateTestCommands(IMethodInfo method)
         {
-            var _providerLanguageCombinations = GetCombinations(method.MethodInfo);
-
-            var testCommands
-                = method.MethodInfo.GetParameters().Length == 0
-                      ? new[] { new FactCommand(method) }
-                      : base.EnumerateTestCommands(method);
-
-            return (from providerLanguageCombination in _providerLanguageCombinations
-                    from testCommand in testCommands
-                    select new MigrationsTheoryCommand(
-                        testCommand,
-                        providerLanguageCombination.DatabaseProvider,
-                        providerLanguageCombination.ProgrammingLanguage));
+            return ShouldRun(SlowGroup)
+                       ? from providerLanguageCombination in GetCombinations(method.MethodInfo)
+                         where ShouldRun(providerLanguageCombination.Slow ? TestGroup.MigrationsTests : TestGroup.Default)
+                         select new MigrationsTheoryCommand(
+                             method,
+                             providerLanguageCombination.DatabaseProvider,
+                             providerLanguageCombination.ProgrammingLanguage)
+                       : Enumerable.Empty<ITestCommand>();
         }
 
         private static IEnumerable<VariantAttribute> GetCombinations(MethodInfo method)
@@ -42,9 +36,9 @@ namespace System.Data.Entity.Migrations
 
             var typeVariants
                 = method.DeclaringType
-                    .GetCustomAttributes(typeof(VariantAttribute), true)
-                    .Cast<VariantAttribute>()
-                    .ToList();
+                        .GetCustomAttributes(typeof(VariantAttribute), true)
+                        .Cast<VariantAttribute>()
+                        .ToList();
 
             if (typeVariants.Any())
             {

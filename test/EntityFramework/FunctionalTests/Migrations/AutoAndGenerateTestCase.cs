@@ -9,8 +9,10 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Sql;
     using System.Linq;
     using Xunit;
-    using Xunit.Extensions;
 
+    [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
+    // Issue #1010
+    //[Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.VB)]
     public abstract class AutoAndGenerateTestCase<TContextV1, TContextV2> : DbTestCase
         where TContextV1 : DbContext
         where TContextV2 : DbContext
@@ -30,7 +32,7 @@ namespace System.Data.Entity.Migrations
             _downVerifier = new SqlInterceptor(VerifyDownOperations);
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(SlowGroup = TestGroup.MigrationsTests)]
         public void Automatic()
         {
             ResetDatabaseToV1();
@@ -91,12 +93,9 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        [MigrationsTheory]
-        [InlineData(ProgrammingLanguage.CSharp)]
-        [InlineData(ProgrammingLanguage.VB)]
-        public void Generated(ProgrammingLanguage programmingLanguage)
+        [MigrationsTheory(SlowGroup = TestGroup.MigrationsTests)]
+        public void Generated()
         {
-            ProgrammingLanguage = programmingLanguage;
             ResetDatabaseToV1();
 
             var migrator = CreateMigrator<TContextV2>(scaffoldedMigrations: _generatedMigration_v1);

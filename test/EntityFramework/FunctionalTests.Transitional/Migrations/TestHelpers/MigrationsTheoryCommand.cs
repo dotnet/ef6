@@ -2,23 +2,23 @@
 
 namespace System.Data.Entity.Migrations
 {
-    using System.Xml;
     using Xunit.Sdk;
 
-    internal class MigrationsTheoryCommand : ITestCommand
+    internal class MigrationsTheoryCommand : FactCommand
     {
-        private readonly ITestCommand _innerCommand;
         private readonly DatabaseProvider _provider;
         private readonly ProgrammingLanguage _language;
 
-        public MigrationsTheoryCommand(ITestCommand innerCommand, DatabaseProvider provider, ProgrammingLanguage language)
+        public MigrationsTheoryCommand(IMethodInfo method, DatabaseProvider provider, ProgrammingLanguage language)
+            :base(method)
         {
-            _innerCommand = innerCommand;
             _provider = provider;
             _language = language;
+            DisplayName = string.Format(
+                    "{0} - DatabaseProvider: {1}, ProgrammingLanguage: {2}", DisplayName, _provider, _language);
         }
 
-        public MethodResult Execute(object testClass)
+        public override MethodResult Execute(object testClass)
         {
             var dbTestClass = testClass as DbTestCase;
 
@@ -31,31 +31,7 @@ namespace System.Data.Entity.Migrations
 
             dbTestClass.Init(_provider, _language);
 
-            return _innerCommand.Execute(testClass);
-        }
-
-        public string DisplayName
-        {
-            get
-            {
-                return string.Format(
-                    "{0} - DatabaseProvider: {1}, ProgrammingLanguage: {2}", _innerCommand.DisplayName, _provider, _language);
-            }
-        }
-
-        public bool ShouldCreateInstance
-        {
-            get { return _innerCommand.ShouldCreateInstance; }
-        }
-
-        public int Timeout
-        {
-            get { return _innerCommand.Timeout; }
-        }
-
-        public XmlNode ToStartXml()
-        {
-            return _innerCommand.ToStartXml();
+            return base.Execute(testClass);
         }
     }
 }
