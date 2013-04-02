@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CodeFirstDatabase" CdmEntityContainer="IceAndFireContext">
+    <EntitySetMapping Name="Houses">
+      <EntityTypeMapping TypeName="IceAndFire.House">
+        <MappingFragment StoreEntitySet="House">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Words" ColumnName="Words" />
+          <ScalarProperty Name="Sigil" ColumnName="Sigil" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Lands">
+      <EntityTypeMapping TypeName="IceAndFire.Land">
+        <MappingFragment StoreEntitySet="Land">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="LocationOnMap" ColumnName="LocationOnMap" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Creatures">
+      <EntityTypeMapping TypeName="IceAndFire.Human">
+        <MappingFragment StoreEntitySet="Creature">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PlaceOfBirth" ColumnName="PlaceOfBirth" />
+          <Condition Value="Human" ColumnName="Discriminator" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(IceAndFire.Creature)">
+        <MappingFragment StoreEntitySet="Creature">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Size" ColumnName="Size" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IceAndFire.Animal">
+        <MappingFragment StoreEntitySet="Creature">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="IsCarnivore" ColumnName="IsCarnivore" />
+          <ScalarProperty Name="IsDangerous" ColumnName="IsDangerous" />
+          <Condition Value="Animal" ColumnName="Discriminator" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IceAndFire.Creature">
+        <MappingFragment StoreEntitySet="Creature">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <Condition Value="Creature" ColumnName="Discriminator" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="House_ProminentMembers" TypeName="IceAndFire.House_ProminentMembers" StoreEntitySet="Creature">
+      <EndProperty Name="House_ProminentMembers_Source">
+        <ScalarProperty Name="Id" ColumnName="House_Id" />
+      </EndProperty>
+      <EndProperty Name="House_ProminentMembers_Target">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition IsNull="false" ColumnName="House_Id" />
+    </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="GetAnimalsAndHouses" FunctionName="CodeFirstDatabaseSchema.GetAnimalsAndHouses">
+      <ResultMapping>
+        <EntityTypeMapping TypeName="IceAndFire.Animal">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="IsCarnivore" ColumnName="IsCarnivore" />
+          <ScalarProperty Name="IsDangerous" ColumnName="IsDangerous" />
+          <Condition Value="Animal" ColumnName="Discriminator" />
+        </EntityTypeMapping>
+      </ResultMapping>
+      <ResultMapping>
+        <EntityTypeMapping TypeName="IceAndFire.House">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Words" ColumnName="Words" />
+          <ScalarProperty Name="Sigil" ColumnName="Sigil" />
+        </EntityTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetHousesAndAnimals" FunctionName="CodeFirstDatabaseSchema.GetHousesAndAnimals">
+      <ResultMapping>
+        <EntityTypeMapping TypeName="IceAndFire.House">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Words" ColumnName="Words" />
+          <ScalarProperty Name="Sigil" ColumnName="Sigil" />
+        </EntityTypeMapping>
+      </ResultMapping>
+      <ResultMapping>
+        <EntityTypeMapping TypeName="IceAndFire.Animal">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="IsCarnivore" ColumnName="IsCarnivore" />
+          <ScalarProperty Name="IsDangerous" ColumnName="IsDangerous" />
+          <Condition Value="Animal" ColumnName="Discriminator" />
+        </EntityTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetHousesAndHouses" FunctionName="CodeFirstDatabaseSchema.GetHousesAndHouses">
+      <ResultMapping>
+        <EntityTypeMapping TypeName="IceAndFire.House">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Words" ColumnName="Words" />
+          <ScalarProperty Name="Sigil" ColumnName="Sigil" />
+        </EntityTypeMapping>
+      </ResultMapping>
+      <ResultMapping>
+        <EntityTypeMapping TypeName="IceAndFire.House">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Words" ColumnName="Words" />
+          <ScalarProperty Name="Sigil" ColumnName="Sigil" />
+        </EntityTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetHumansAndAnimals" FunctionName="CodeFirstDatabaseSchema.GetHumansAndAnimals">
+      <ResultMapping>
+        <EntityTypeMapping TypeName="IceAndFire.Human">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PlaceOfBirth" ColumnName="PlaceOfBirth" />
+          <Condition Value="Human" ColumnName="Discriminator" />
+        </EntityTypeMapping>
+      </ResultMapping>
+      <ResultMapping>
+        <EntityTypeMapping TypeName="IceAndFire.Animal">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="IsCarnivore" ColumnName="IsCarnivore" />
+          <ScalarProperty Name="IsDangerous" ColumnName="IsDangerous" />
+          <Condition Value="Animal" ColumnName="Discriminator" />
+        </EntityTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetLandsAndCreatures" FunctionName="CodeFirstDatabaseSchema.GetLandsAndCreatures">
+      <ResultMapping>
+        <EntityTypeMapping TypeName="IceAndFire.Land">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="LocationOnMap" ColumnName="LocationOnMap" />
+        </EntityTypeMapping>
+      </ResultMapping>
+      <ResultMapping>
+        <EntityTypeMapping TypeName="IceAndFire.Creature">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <Condition Value="Creature" ColumnName="Discriminator" />
+        </EntityTypeMapping>
+        <EntityTypeMapping TypeName="IceAndFire.Human">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PlaceOfBirth" ColumnName="PlaceOfBirth" />
+          <Condition Value="Human" ColumnName="Discriminator" />
+        </EntityTypeMapping>
+        <EntityTypeMapping TypeName="IceAndFire.Animal">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="IsCarnivore" ColumnName="IsCarnivore" />
+          <ScalarProperty Name="IsDangerous" ColumnName="IsDangerous" />
+          <Condition Value="Animal" ColumnName="Discriminator" />
+        </EntityTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="IceAndFire" Alias="Self" p4:UseStrongSpatialTypes="false" xmlns:p4="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="House">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Words" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Sigil" Type="Geometry" />
+    <NavigationProperty Name="LandOwned" Relationship="Self.House_LandOwned" FromRole="House_LandOwned_Source" ToRole="House_LandOwned_Target" />
+    <NavigationProperty Name="ProminentMembers" Relationship="Self.House_ProminentMembers" FromRole="House_ProminentMembers_Source" ToRole="House_ProminentMembers_Target" />
+  </EntityType>
+  <EntityType Name="Land">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p4:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="LocationOnMap" Type="Geography" />
+    <NavigationProperty Name="RulingHouse" Relationship="Self.House_LandOwned" FromRole="House_LandOwned_Target" ToRole="House_LandOwned_Source" />
+  </EntityType>
+  <EntityType Name="Human" BaseType="Self.Creature">
+    <Property Name="PlaceOfBirth" Type="Geography" />
+  </EntityType>
+  <EntityType Name="Creature">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p4:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Size" Type="Self.CreatureSize" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Animal" BaseType="Self.Creature">
+    <Property Name="IsCarnivore" Type="Boolean" Nullable="false" />
+    <Property Name="IsDangerous" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EnumType Name="CreatureSize" IsFlags="false" UnderlyingType="Int32">
+    <Member Name="Small" Value="0" />
+    <Member Name="Medium" Value="1" />
+    <Member Name="Large" Value="2" />
+    <Member Name="VeryLarge" Value="3" />
+  </EnumType>
+  <Association Name="House_LandOwned">
+    <End Role="House_LandOwned_Source" Type="Self.House" Multiplicity="0..1" />
+    <End Role="House_LandOwned_Target" Type="Self.Land" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="House_LandOwned_Target">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="House_LandOwned_Source">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="House_ProminentMembers">
+    <End Role="House_ProminentMembers_Source" Type="Self.House" Multiplicity="0..1" />
+    <End Role="House_ProminentMembers_Target" Type="Self.Human" Multiplicity="*" />
+  </Association>
+  <EntityContainer Name="IceAndFireContext">
+    <EntitySet Name="Houses" EntityType="Self.House" />
+    <EntitySet Name="Lands" EntityType="Self.Land" />
+    <EntitySet Name="Creatures" EntityType="Self.Creature" />
+    <AssociationSet Name="House_LandOwned" Association="Self.House_LandOwned">
+      <End Role="House_LandOwned_Source" EntitySet="Houses" />
+      <End Role="House_LandOwned_Target" EntitySet="Lands" />
+    </AssociationSet>
+    <AssociationSet Name="House_ProminentMembers" Association="Self.House_ProminentMembers">
+      <End Role="House_ProminentMembers_Source" EntitySet="Houses" />
+      <End Role="House_ProminentMembers_Target" EntitySet="Creatures" />
+    </AssociationSet>
+    <FunctionImport Name="GetAnimalsAndHouses">
+      <ReturnType EntitySet="Creatures" Type="Collection(Self.Animal)" />
+      <ReturnType EntitySet="Houses" Type="Collection(Self.House)" />
+    </FunctionImport>
+    <FunctionImport Name="GetHousesAndAnimals">
+      <ReturnType EntitySet="Houses" Type="Collection(Self.House)" />
+      <ReturnType EntitySet="Creatures" Type="Collection(Self.Animal)" />
+    </FunctionImport>
+    <FunctionImport Name="GetHousesAndHouses">
+      <ReturnType EntitySet="Houses" Type="Collection(Self.House)" />
+      <ReturnType EntitySet="Houses" Type="Collection(Self.House)" />
+    </FunctionImport>
+    <FunctionImport Name="GetHumansAndAnimals">
+      <ReturnType EntitySet="Creatures" Type="Collection(Self.Human)" />
+      <ReturnType EntitySet="Creatures" Type="Collection(Self.Animal)" />
+    </FunctionImport>
+    <FunctionImport Name="GetLandsAndCreatures">
+      <ReturnType EntitySet="Lands" Type="Collection(Self.Land)" />
+      <ReturnType EntitySet="Creatures" Type="Collection(Self.Creature)" />
+    </FunctionImport>
+  </EntityContainer>
+</Schema>

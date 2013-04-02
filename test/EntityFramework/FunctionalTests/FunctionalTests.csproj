@@ -126,6 +126,9 @@
     <EmbeddedResource Include="TestModels\SpatialTvfsModel\226644SpatialModel.ssdl">
       <LogicalName>FunctionalTests.ProductivityApi.SpatialTvfsModel.226644SpatialModel.ssdl</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Query\StoredProcedures\IceAndFireModel.csdl" />
+    <EmbeddedResource Include="Query\StoredProcedures\IceAndFireModel.msl" />
+    <EmbeddedResource Include="Query\StoredProcedures\IceAndFireModel.ssdl" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj">
@@ -155,6 +158,8 @@
     <Compile Include="ProductivityApi\NamespaceAndNestingTests.cs" />
     <Compile Include="ProductivityApi\TimeoutTests.cs" />
     <Compile Include="Query\ApplyOpRulesTests.cs" />
+    <Compile Include="Query\StoredProcedures\IceAndFireModel.cs" />
+    <Compile Include="Query\StoredProcedures\StoredProceduresTests.cs" />
     <Compile Include="TestHelpers\StringExtensions.cs" />
     <Compile Include="ViewGeneration\PregenContextEdmxViews.cs" />
     <Compile Include="ViewGeneration\PregenContextViews.cs" />
@@ -311,7 +316,6 @@
     <Compile Include="Migrations\TestHelpers\DbProviders.cs" />
     <Compile Include="TestHelpers\PartialTrustSandbox.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
