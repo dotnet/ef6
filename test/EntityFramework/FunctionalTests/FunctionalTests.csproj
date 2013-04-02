@@ -154,6 +154,7 @@
     <Compile Include="Migrations\InitializerScenarios.cs" />
     <Compile Include="Objects\TransactionsTests.cs" />
     <Compile Include="Migrations\SpatialScenarios.cs" />
+    <Compile Include="PlanCompiler\LinqGroupByTests.cs" />
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\GetHashCodeTests.cs" />
     <Compile Include="ProductivityApi\StreamingTests.cs" />
