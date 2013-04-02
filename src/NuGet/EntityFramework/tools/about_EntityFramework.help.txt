@@ -8,7 +8,8 @@ LONG DESCRIPTION
     This topic describes the Entity Framework commands. Entity Framework is
     Microsoft's recommended data access technology for new applications.
 
-    The following Entity Framework cmdlets are included.
+    The following Entity Framework cmdlets are used with Entity Framework
+    Migrations.
 
         Cmdlet              Description
         -----------------   ---------------------------------------------------
@@ -21,6 +22,24 @@ LONG DESCRIPTION
 
         Get-Migrations      Displays the migrations that have been applied to
                             the target database.
+
+    The following Entity Framework cmdlets are used by NuGet packages that
+    install Entity Framework providers. These commands are not usually used as
+    part of normal application development.
+
+        Cmdlet                          Description
+        ------------------------------  ---------------------------------------
+        Add-EFProvider                  Adds or updates an Entity Framework
+                                        provider entry in the project config
+                                        file.
+
+        Add-EFDefaultConnectionFactory  Adds or updates an Entity Framework
+                                        default connection factory in the
+                                        project config file.
+
+        Initialize-EFConfiguration      Initializes the Entity Framework
+                                        section in the project config file and
+                                        sets defaults.
 
 SEE ALSO
     Enable-Migrations

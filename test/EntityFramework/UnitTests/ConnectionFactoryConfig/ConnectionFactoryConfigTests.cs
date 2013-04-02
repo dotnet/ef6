@@ -91,11 +91,11 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         [Fact]
-        public void AddSqlCompactConnectionFactoryToConfig_does_nothing_if_correct_SQL_Compact_entry_already_exists()
+        public void AddOrUpdateConnectionFactoryInConfig_does_nothing_if_correct_SQL_Compact_entry_already_exists()
         {
             var config = CreateConnectionFactoryConfigDoc(
                 ConnectionFactorySpecification.SqlCeConnectionFactoryName,
-                ConnectionFactorySpecification.SqlCompactProviderName);
+                new[] { ConnectionFactorySpecification.SqlCompactProviderName });
 
             var factoryAdded = new ConfigFileManipulator()
                 .AddOrUpdateConnectionFactoryInConfig(
@@ -114,7 +114,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         [Fact]
-        public void AddSqlCompactConnectionFactoryToConfig_adds_factory_if_no_factory_name_already_exists()
+        public void AddOrUpdateConnectionFactoryInConfig_adds_factory_if_no_factory_name_already_exists()
         {
             var config = CreateConnectionFactoryConfigDoc(null);
 
@@ -135,7 +135,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         [Fact]
-        public void AddSqlCompactConnectionFactoryToConfig_adds_factory_if_entityFramework_element_is_missing()
+        public void AddOrUpdateConnectionFactoryInConfig_adds_factory_if_entityFramework_element_is_missing()
         {
             var config =
                 new XDocument(
@@ -158,7 +158,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         [Fact]
-        public void AddSqlCompactConnectionFactoryToConfig_adds_factory_if_configuration_element_is_missing()
+        public void AddOrUpdateConnectionFactoryInConfig_adds_factory_if_configuration_element_is_missing()
         {
             var config = new XDocument();
 
@@ -179,7 +179,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         [Fact]
-        public void AddSqlCompactConnectionFactoryToConfig_sets_factory_to_SQL_Compact_even_if_entry_already_exists()
+        public void AddOrUpdateConnectionFactoryInConfig_sets_factory_to_SQL_Compact_even_if_entry_already_exists()
         {
             var config = CreateConnectionFactoryConfigDoc("SomeConnectionFactory");
 
@@ -200,12 +200,12 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         [Fact]
-        public void AddSqlCompactConnectionFactoryToConfig_sets_factory_to_SQL_Compact_even_if_entry_with_param_already_exists()
+        public void AddOrUpdateConnectionFactoryInConfig_sets_factory_to_SQL_Compact_even_if_entry_with_param_already_exists()
         {
             var config =
                 CreateConnectionFactoryConfigDoc(
                     ConnectionFactorySpecification.SqlConnectionFactoryName,
-                    "Database=Bob");
+                    new[] { "Database=Bob" });
 
             var factoryAdded = new ConfigFileManipulator()
                 .AddOrUpdateConnectionFactoryInConfig(
@@ -221,6 +221,121 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             Assert.Equal(
                 ConnectionFactorySpecification.SqlCompactProviderName,
                 GetArgument(config));
+        }
+
+        [Fact]
+        public void AddOrUpdateConnectionFactoryInConfig_sets_updates_argument_even_if_everything_else_already_exists()
+        {
+            var config =
+                CreateConnectionFactoryConfigDoc(
+                    ConnectionFactorySpecification.SqlConnectionFactoryName,
+                    new[] { "Database=Bob" });
+
+            var factoryAdded = new ConfigFileManipulator()
+                .AddOrUpdateConnectionFactoryInConfig(
+                    config,
+                    new ConnectionFactorySpecification(
+                        ConnectionFactorySpecification.SqlConnectionFactoryName,
+                        "Database=Bobby"));
+
+            Assert.True(factoryAdded);
+            Assert.Equal(ConnectionFactorySpecification.SqlConnectionFactoryName, GetFactoryName(config));
+            Assert.Equal("Database=Bobby", GetArgument(config));
+        }
+
+        [Fact]
+        public void AddOrUpdateConnectionFactoryInConfig_sets_updates_some_arguments_even_if_everything_else_already_exists()
+        {
+            var config =
+                CreateConnectionFactoryConfigDoc(
+                    ConnectionFactorySpecification.SqlConnectionFactoryName,
+                    new[] { "Database=Bob", "Dave=Matthews", "Too=Much" });
+
+            var factoryAdded = new ConfigFileManipulator()
+                .AddOrUpdateConnectionFactoryInConfig(
+                    config,
+                    new ConnectionFactorySpecification(
+                        ConnectionFactorySpecification.SqlConnectionFactoryName,
+                        "Database=Bobby", "Dave=Matthews", "Tripping=Billies"));
+
+            Assert.True(factoryAdded);
+            Assert.Equal(ConnectionFactorySpecification.SqlConnectionFactoryName, GetFactoryName(config));
+            Assert.Equal("Database=Bobby", GetArgument(config, 0));
+            Assert.Equal("Dave=Matthews", GetArgument(config, 1));
+            Assert.Equal("Tripping=Billies", GetArgument(config, 2));
+        }
+
+        [Fact]
+        public void AddProviderToConfig_does_nothing_if_only_given_provider_already_exists()
+        {
+            var config = CreateProviderConfigDoc(Tuple.Create("Dave.Matthews.Band", "Crash"));
+
+            var factoryAdded = new ConfigFileManipulator()
+                .AddProviderToConfig(config, "Dave.Matthews.Band", "Crash");
+
+            Assert.False(factoryAdded);
+            Assert.Equal("Dave.Matthews.Band", GetProviders(config).Single().Item1);
+            Assert.Equal("Crash", GetProviders(config).Single().Item2);
+        }
+
+        [Fact]
+        public void AddProviderToConfig_does_nothing_if_given_provider_and_others_already_exists()
+        {
+            var config = CreateProviderConfigDoc(
+                Tuple.Create("Dave.Matthews.Band", "Crash"),
+                Tuple.Create("The.Clash", "London.Calling"));
+
+            var factoryAdded = new ConfigFileManipulator()
+                .AddProviderToConfig(config, "Dave.Matthews.Band", "Crash");
+
+            Assert.False(factoryAdded);
+            Assert.Equal("Dave.Matthews.Band", GetProviders(config).First().Item1);
+            Assert.Equal("Crash", GetProviders(config).First().Item2);
+            Assert.Equal("The.Clash", GetProviders(config).Skip(1).Single().Item1);
+            Assert.Equal("London.Calling", GetProviders(config).Skip(1).Single().Item2);
+        }
+
+        [Fact]
+        public void AddProviderToConfig_adds_provider_if_no_config_exists()
+        {
+            var config = new XDocument();
+
+            var factoryAdded = new ConfigFileManipulator()
+                .AddProviderToConfig(config, "Dave.Matthews.Band", "Crash");
+
+            Assert.True(factoryAdded);
+            Assert.Equal("Dave.Matthews.Band", GetProviders(config).Single().Item1);
+            Assert.Equal("Crash", GetProviders(config).Single().Item2);
+        }
+
+        [Fact]
+        public void AddProviderToConfig_adds_provider_if_config_exists_but_with_no_provider()
+        {
+            var config = CreateProviderConfigDoc();
+
+            var factoryAdded = new ConfigFileManipulator()
+                .AddProviderToConfig(config, "Dave.Matthews.Band", "Crash");
+
+            Assert.True(factoryAdded);
+            Assert.Equal("Dave.Matthews.Band", GetProviders(config).Single().Item1);
+            Assert.Equal("Crash", GetProviders(config).Single().Item2);
+        }
+
+        [Fact]
+        public void AddProviderToConfig_updates_provider_type_if_invariant_name_already_exists()
+        {
+            var config = CreateProviderConfigDoc(
+                Tuple.Create("Dave.Matthews.Band", "Crash"),
+                Tuple.Create("The.Clash", "London.Calling"));
+
+            var factoryAdded = new ConfigFileManipulator()
+                .AddProviderToConfig(config, "Dave.Matthews.Band", "Broken.Things");
+
+            Assert.True(factoryAdded);
+            Assert.Equal("Dave.Matthews.Band", GetProviders(config).First().Item1);
+            Assert.Equal("Broken.Things", GetProviders(config).First().Item2);
+            Assert.Equal("The.Clash", GetProviders(config).Skip(1).Single().Item1);
+            Assert.Equal("London.Calling", GetProviders(config).Skip(1).Single().Item2);
         }
 
         [Fact]
@@ -341,7 +456,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                             : null)));
         }
 
-        private XDocument CreateConnectionFactoryConfigDoc(string factoryName, string param)
+        private XDocument CreateConnectionFactoryConfigDoc(string factoryName, string[] args)
         {
             return new XDocument(
                 new XElement(
@@ -353,9 +468,35 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                             new XAttribute("type", factoryName),
                             new XElement(
                                 ConfigFileManipulator.ParametersElementName,
-                                new XElement(
-                                    ConfigFileManipulator.ParameterElementName,
-                                    new XAttribute("value", param)))))));
+                                args.Select(
+                                    a => new XElement(
+                                             ConfigFileManipulator.ParameterElementName,
+                                             new XAttribute("value", a))))))));
+        }
+
+        private XDocument CreateProviderConfigDoc(params Tuple<string, string>[] providers)
+        {
+            return new XDocument(
+                new XElement(
+                    ConfigFileManipulator.ConfigurationElementName,
+                    new XElement(
+                        ConfigFileManipulator.EntityFrameworkElementName,
+                        new XElement(
+                            ConfigFileManipulator.ProvidersElementName,
+                            providers.Select(
+                                p => new XElement(
+                                         ConfigFileManipulator.ProviderElementName,
+                                         new XAttribute("invariantName", p.Item1),
+                                         new XAttribute("type", p.Item2)))))));
+        }
+
+        private IEnumerable<Tuple<string, string>> GetProviders(XDocument config)
+        {
+            return config.Element(ConfigFileManipulator.ConfigurationElementName)
+                         .Element(ConfigFileManipulator.EntityFrameworkElementName)
+                         .Element(ConfigFileManipulator.ProvidersElementName)
+                         .Elements(ConfigFileManipulator.ProviderElementName)
+                         .Select(p => Tuple.Create(p.Attribute("invariantName").Value, p.Attribute("type").Value));
         }
 
         private string GetFactoryName(XDocument config)
@@ -367,9 +508,9 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                          .Value;
         }
 
-        private string GetArgument(XDocument config)
+        private string GetArgument(XDocument config, int index = 0)
         {
-            return GetArguments(config).Single();
+            return GetArguments(config).Skip(index).First();
         }
 
         private IEnumerable<string> GetArguments(XDocument config)
@@ -1016,15 +1157,6 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                     specification.ConnectionFactoryName);
                 Assert.Empty(specification.ConstructorArguments);
             }
-        }
-
-        [Fact]
-        public void ConnectionFactoryConfigurator_throws_when_passed_null_Project()
-        {
-            Assert.Equal(
-                "project",
-                Assert.Throws<ArgumentNullException>(
-                    () => new ConnectionFactoryConfigurator(null)).ParamName);
         }
 
         #endregion

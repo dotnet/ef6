@@ -22,6 +22,8 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         public const string ParameterElementName = "parameter";
         public const string ConfigSectionsElementName = "configSections";
         public const string SectionElementName = "section";
+        public const string ProvidersElementName = "providers";
+        public const string ProviderElementName = "provider";
 
         /// <summary>
         ///     Checks whether or not the given XML document representing a .config file contains
@@ -75,7 +77,8 @@ namespace System.Data.Entity.ConnectionFactoryConfig
 
             var currentFactoryAttribute = connectionFactoryElement.Attribute("type");
             if (currentFactoryAttribute != null
-                && specification.ConnectionFactoryName.Equals(currentFactoryAttribute.Value, StringComparison.OrdinalIgnoreCase))
+                && specification.ConnectionFactoryName.Equals(currentFactoryAttribute.Value, StringComparison.OrdinalIgnoreCase)
+                && FactoryArgumentsMatch(connectionFactoryElement, specification))
             {
                 return false;
             }
@@ -96,6 +99,44 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                 specification.ConstructorArguments.Each(
                     a => parametersElement.Add(new XElement(ParameterElementName, new XAttribute("value", a))));
             }
+        }
+
+        private bool FactoryArgumentsMatch(XElement factoryElement, ConnectionFactorySpecification specification)
+        {
+            var parametersElement = factoryElement.Element(ParametersElementName);
+            var currentParameters = parametersElement == null
+                                        ? new string[0]
+                                        : parametersElement.Elements(ParameterElementName)
+                                                           .Select(e => e.Attribute("value").Value);
+
+            return currentParameters.SequenceEqual(specification.ConstructorArguments);
+        }
+
+        public virtual bool AddProviderToConfig(XDocument config, string invariantName, string typeName)
+        {
+            DebugCheck.NotNull(config);
+
+            var providerElement = config
+                .GetOrCreateElement(ConfigurationElementName)
+                .GetOrCreateElement(EntityFrameworkElementName)
+                .GetOrCreateElement(ProvidersElementName)
+                .GetOrCreateElementWithSpecificAttribute(ProviderElementName, new XAttribute("invariantName", invariantName));
+
+            var currentTypeAttribute = providerElement.Attribute("type");
+            if (currentTypeAttribute != null)
+            {
+                if (typeName.Equals(currentTypeAttribute.Value, StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+                currentTypeAttribute.Value = typeName;
+            }
+            else
+            {
+                providerElement.Add(new XAttribute("type", typeName));
+            }
+
+            return true;
         }
 
         /// <summary>

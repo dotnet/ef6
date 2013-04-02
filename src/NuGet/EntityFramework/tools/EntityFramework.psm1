@@ -12,6 +12,215 @@ $knownExceptions = @(
 
 <#
 .SYNOPSIS
+    Adds or updates an Entity Framework provider entry in the project config
+    file.
+
+.DESCRIPTION
+    Adds an entry into the 'entityFramework' section of the project config
+    file for the specified provider invariant name and provider type. If an
+    entry for the given invariant name already exists, then that entry is
+    updated with the given type name, unless the given type name already
+    matches, in which case no action is taken. The 'entityFramework'
+    section is added if it does not exist. The config file is automatically
+    saved if and only if a change was made.
+    
+    This command is typically used only by Entity Framework provider NuGet
+    packages and is run from the 'install.ps1' script.
+
+.PARAMETER Project
+    The Visual Studio project to update. When running in the NuGet install.ps1
+    script the '$project' variable provided as part of that script should be
+    used.
+
+.PARAMETER InvariantName
+    The provider invariant name that uniquely identifies this provider. For
+    example, the Microsoft SQL Server provider is registered with the invariant
+    name 'System.Data.SqlClient'.
+
+.PARAMETER TypeName
+    The assembly-qualified type name of the provider-specific type that
+    inherits from 'System.Data.Entity.Core.Common.DbProviderServices'. For
+    example, for the Microsoft SQL Server provider, this type is 
+    'System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer'.
+#>
+function Add-EFProvider
+{
+    param (
+        [parameter(Position = 0,
+            Mandatory = $true)]
+        $Project,
+        [parameter(Position = 1,
+            Mandatory = $true)]
+        [string] $InvariantName,
+        [parameter(Position = 2,
+            Mandatory = $true)]
+        [string] $TypeName
+    )
+
+    Check-Project $project
+
+    $runner = New-EFConfigRunner $Project
+
+    try
+    {
+        Invoke-RunnerCommand $runner System.Data.Entity.ConnectionFactoryConfig.AddProviderCommand @( $InvariantName, $TypeName )
+        $error = Get-RunnerError $runner
+
+        if ($error)
+        {
+            if ($knownExceptions -notcontains $error.TypeName)
+            {
+                Write-Host $error.StackTrace
+            }
+            else
+            {
+                Write-Verbose $error.StackTrace
+            }
+
+            throw $error.Message
+        }
+    }
+    finally
+    {				
+        Remove-Runner $runner
+    }
+}
+
+<#
+.SYNOPSIS
+    Adds or updates an Entity Framework default connection factory in the
+    project config file.
+
+.DESCRIPTION
+    Adds an entry into the 'entityFramework' section of the project config
+    file for the connection factory that Entity Framework will use by default
+    when creating new connections by convention. Any existing entry will be
+    overridden if it does not match. The 'entityFramework' section is added if
+    it does not exist. The config file is automatically saved if and only if
+    a change was made.
+    
+    This command is typically used only by Entity Framework provider NuGet
+    packages and is run from the 'install.ps1' script.
+
+.PARAMETER Project
+    The Visual Studio project to update. When running in the NuGet install.ps1
+    script the '$project' variable provided as part of that script should be
+    used.
+
+.PARAMETER TypeName
+    The assembly-qualified type name of the connection factory type that
+    implements the 'System.Data.Entity.Infrastructure.IDbConnectionFactory'
+    interface.  For example, for the Microsoft SQL Server Express provider
+    connection factory, this type is
+    'System.Data.Entity.Infrastructure.SqlConnectionFactory, EntityFramework'.
+
+.PARAMETER ConstructorArguments
+    An optional array of strings that will be passed as arguments to the
+    connection factory type constructor.
+#>
+function Add-EFDefaultConnectionFactory
+{
+    param (
+        [parameter(Position = 0,
+            Mandatory = $true)]
+        $Project,
+        [parameter(Position = 1,
+            Mandatory = $true)]
+        [string] $TypeName,
+        [string[]] $ConstructorArguments
+    )
+
+    Check-Project $project
+
+    $runner = New-EFConfigRunner $Project
+
+    try
+    {
+        Invoke-RunnerCommand $runner System.Data.Entity.ConnectionFactoryConfig.AddDefaultConnectionFactoryCommand @( $TypeName, $ConstructorArguments )
+        $error = Get-RunnerError $runner
+
+        if ($error)
+        {
+            if ($knownExceptions -notcontains $error.TypeName)
+            {
+                Write-Host $error.StackTrace
+            }
+            else
+            {
+                Write-Verbose $error.StackTrace
+            }
+
+            throw $error.Message
+        }
+    }
+    finally
+    {				
+        Remove-Runner $runner
+    }
+}
+
+<#
+.SYNOPSIS
+    Initializes the Entity Framework section in the project config file
+    and sets defaults.
+
+.DESCRIPTION
+    Creates the 'entityFramework' section of the project config file and sets
+    the default connection factory to use SQL Express if it is running on the
+    machine, or LocalDb otherwise. Note that installing a different provider
+    may change the default connection factory.  The config file is
+    automatically saved if and only if a change was made.
+
+    In addition, any reference to 'System.Data.Entity.dll' in the project is
+    removed.
+    
+    This command is typically used only by Entity Framework provider NuGet
+    packages and is run from the 'install.ps1' script.
+
+.PARAMETER Project
+    The Visual Studio project to update. When running in the NuGet install.ps1
+    script the '$project' variable provided as part of that script should be
+    used.
+#>
+function Initialize-EFConfiguration
+{
+    param (
+        [parameter(Position = 0,
+            Mandatory = $true)]
+        $Project
+    )
+
+    Check-Project $project
+
+    $runner = New-EFConfigRunner $Project
+
+    try
+    {
+        Invoke-RunnerCommand $runner System.Data.Entity.ConnectionFactoryConfig.InitializeEntityFrameworkCommand
+        $error = Get-RunnerError $runner
+
+        if ($error)
+        {
+            if ($knownExceptions -notcontains $error.TypeName)
+            {
+                Write-Host $error.StackTrace
+            }
+            else
+            {
+                Write-Verbose $error.StackTrace
+            }
+
+            throw $error.Message
+        }
+    }
+    finally
+    {				
+        Remove-Runner $runner
+    }
+}
+
+<#
+.SYNOPSIS
     Enables Code First Migrations in a project.
 
 .DESCRIPTION
@@ -42,7 +251,7 @@ $knownExceptions = @(
 
 .PARAMETER ContextProjectName
     Specifies the project which contains the DbContext class to use. If omitted,
-	the context is assumed to be in the same project used for migrations.
+    the context is assumed to be in the same project used for migrations.
 
 .PARAMETER ConnectionStringName
     Specifies the name of a connection string to use from the application's
@@ -86,7 +295,7 @@ function Enable-Migrations
     try
     {
         Invoke-RunnerCommand $runner System.Data.Entity.Migrations.EnableMigrationsCommand @( $EnableAutomaticMigrations.IsPresent, $Force.IsPresent ) @{ 'ContextTypeName' = $ContextTypeName; 'MigrationsDirectory' = $MigrationsDirectory }        		
-		$error = Get-RunnerError $runner					
+        $error = Get-RunnerError $runner					
 
         if ($error)
         {
@@ -94,15 +303,15 @@ function Enable-Migrations
             {
                 Write-Host $error.StackTrace
             }
-			else
-			{
-			    Write-Verbose $error.StackTrace
-			}
+            else
+            {
+                Write-Verbose $error.StackTrace
+            }
 
             throw $error.Message
         }
 
-		$(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()	        
+        $(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()	        
     }
     finally
     {				
@@ -190,14 +399,14 @@ function Add-Migration
             {
                 Write-Host $error.StackTrace
             }
-			else
-			{
-			    Write-Verbose $error.StackTrace
-			}
+            else
+            {
+                Write-Verbose $error.StackTrace
+            }
 
             throw $error.Message
         }		
-		$(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()	        
+        $(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()	        
     }
     finally
     {			
@@ -286,18 +495,18 @@ function Update-Database
             {
                 Write-Host $error.StackTrace
             }
-			else
-			{
-			    Write-Verbose $error.StackTrace
-			}
+            else
+            {
+                Write-Verbose $error.StackTrace
+            }
 
             throw $error.Message
         }		
-		$(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()	        
+        $(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow]).Show()	        
     }
     finally
     {		     
-	    Remove-Runner $runner
+        Remove-Runner $runner
     }
 }
 
@@ -362,10 +571,10 @@ function Get-Migrations
             {
                 Write-Host $error.StackTrace
             }
-			else
-			{
-			    Write-Verbose $error.StackTrace
-			}
+            else
+            {
+                Write-Verbose $error.StackTrace
+            }
 
             throw $error.Message
         }
@@ -384,33 +593,17 @@ function New-MigrationsRunner($ProjectName, $StartUpProjectName, $ContextProject
     $project = Get-MigrationsProject $ProjectName
     Build-Project $project
 
-	$contextProject = $project
-	if ($ContextProjectName)
-	{
+    $contextProject = $project
+    if ($ContextProjectName)
+    {
         $contextProject = Get-SingleProject $ContextProjectName
         Build-Project $contextProject
-	}
+    }
 
     $installPath = Get-EntityFrameworkInstallPath $project
     $toolsPath = Join-Path $installPath tools
 
-    $info = New-Object System.AppDomainSetup -Property @{
-            ShadowCopyFiles = 'true';
-            ApplicationBase = $installPath;
-            PrivateBinPath = 'tools';
-            ConfigurationFile = ([AppDomain]::CurrentDomain.SetupInformation.ConfigurationFile)
-        }
-    
-    $targetFrameworkVersion = (New-Object System.Runtime.Versioning.FrameworkName ($project.Properties.Item('TargetFrameworkMoniker').Value)).Version
-
-    if ($targetFrameworkVersion -lt (New-Object Version @( 4, 5 )))
-    {
-        $info.PrivateBinPath += ';lib\net40'
-    }
-    else
-    {
-        $info.PrivateBinPath += ';lib\net45'
-    }
+    $info = New-AppDomainSetup $project $installPath
 
     $domain = [AppDomain]::CreateDomain('Migrations', $null, $info)
     $domain.SetData('project', $project)
@@ -421,8 +614,60 @@ function New-MigrationsRunner($ProjectName, $StartUpProjectName, $ContextProject
     $domain.SetData('connectionString', $ConnectionString)
     $domain.SetData('connectionProviderName', $ConnectionProviderName)
     
+    $dispatcher = New-DomainDispatcher $toolsPath
+    $domain.SetData('efDispatcher', $dispatcher)
+
+    return @{
+        Domain = $domain;
+        ToolsPath = $toolsPath
+    }
+}
+
+function New-EFConfigRunner($Project)
+{
+    $installPath = Get-EntityFrameworkInstallPath $Project
+    $toolsPath = Join-Path $installPath tools
+    $info = New-AppDomainSetup $Project $installPath
+
+    $domain = [AppDomain]::CreateDomain('EFConfig', $null, $info)
+    $domain.SetData('project', $Project)
+    
+    $dispatcher = New-DomainDispatcher $toolsPath
+    $domain.SetData('efDispatcher', $dispatcher)
+
+    return @{
+        Domain = $domain;
+        ToolsPath = $toolsPath
+    }
+}
+
+function New-AppDomainSetup($Project, $InstallPath)
+{
+    $info = New-Object System.AppDomainSetup -Property @{
+            ShadowCopyFiles = 'true';
+            ApplicationBase = $InstallPath;
+            PrivateBinPath = 'tools';
+            ConfigurationFile = ([AppDomain]::CurrentDomain.SetupInformation.ConfigurationFile)
+        }
+    
+    $targetFrameworkVersion = (New-Object System.Runtime.Versioning.FrameworkName ($Project.Properties.Item('TargetFrameworkMoniker').Value)).Version
+
+    if ($targetFrameworkVersion -lt (New-Object Version @( 4, 5 )))
+    {
+        $info.PrivateBinPath += ';lib\net40'
+    }
+    else
+    {
+        $info.PrivateBinPath += ';lib\net45'
+    }
+
+    return $info
+}
+
+function New-DomainDispatcher($ToolsPath)
+{
     [AppDomain]::CurrentDomain.SetShadowCopyFiles()
-    $utilityAssembly = [System.Reflection.Assembly]::LoadFrom((Join-Path $toolsPath EntityFramework.PowerShell.Utility.dll))
+    $utilityAssembly = [System.Reflection.Assembly]::LoadFrom((Join-Path $ToolsPath EntityFramework.PowerShell.Utility.dll))
     $dispatcher = $utilityAssembly.CreateInstance(
         'System.Data.Entity.Migrations.Utilities.DomainDispatcher',
         $false,
@@ -430,13 +675,9 @@ function New-MigrationsRunner($ProjectName, $StartUpProjectName, $ContextProject
         $null,
         $PSCmdlet,
         $null,
-        $null)        
-    $domain.SetData('efDispatcher', $dispatcher)
+        $null)
 
-    return @{
-        Domain = $domain;
-        ToolsPath = $toolsPath
-    }
+    return $dispatcher
 }
 
 function Remove-Runner($runner)
@@ -448,12 +689,12 @@ function Invoke-RunnerCommand($runner, $command, $parameters, $anonymousArgument
 {
     $domain = $runner.Domain
 
-	if ($anonymousArguments)
-	{
-		$anonymousArguments.GetEnumerator() | %{
-			$domain.SetData($_.Name, $_.Value)
-		}
-	}
+    if ($anonymousArguments)
+    {
+        $anonymousArguments.GetEnumerator() | %{
+            $domain.SetData($_.Name, $_.Value)
+        }
+    }
 
     $domain.CreateInstanceFrom(
         (Join-Path $runner.ToolsPath EntityFramework.PowerShell.dll),
@@ -525,14 +766,14 @@ function Get-MigrationsStartUpProject($name, $fallbackName)
                 }
 
                 $startupProject = Get-SolutionProjects | ?{
-					try
-					{
-						$fullName = $_.FullName
-					}
-					catch [NotImplementedException]
-					{
-						return $false
-					}
+                    try
+                    {
+                        $fullName = $_.FullName
+                    }
+                    catch [NotImplementedException]
+                    {
+                        return $false
+                    }
 
                     if ($fullName -and $fullName.EndsWith('\'))
                     {
@@ -648,7 +889,7 @@ function Get-EntityFrameworkInstallPath($project)
 }
     
 function Get-PackageInstallPath($package)
-    {
+{
     $componentModel = Get-VsComponentModel
     $packageInstallerServices = $componentModel.GetService([NuGet.VisualStudio.IVsPackageInstallerServices])
 
@@ -657,4 +898,12 @@ function Get-PackageInstallPath($package)
     return $vsPackage.InstallPath
 }
 
-Export-ModuleMember @( 'Enable-Migrations', 'Add-Migration', 'Update-Database', 'Get-Migrations' ) -Variable InitialDatabase
+function Check-Project($project)
+{
+    if (!$project.FullName)
+    {
+        throw "The Project argument must refer to a Visual Studio project. Use the '`$project' variable provided by NuGet when running in install.ps1."
+    }
+}
+
+Export-ModuleMember @( 'Enable-Migrations', 'Add-Migration', 'Update-Database', 'Get-Migrations', 'Add-EFProvider', 'Add-EFDefaultConnectionFactory', 'Initialize-EFConfiguration') -Variable InitialDatabase

@@ -118,14 +118,15 @@
     </Compile>
     <Compile Include="ConnectionFactoryConfig\ConnectionFactorySpecification.cs" />
     <Compile Include="ConnectionFactoryConfig\ReferenceRemover.cs" />
+    <Compile Include="ConnectionFactoryConfig\AddDefaultConnectionFactoryCommand.cs" />
+    <Compile Include="ConnectionFactoryConfig\AddProviderCommand.cs" />
+    <Compile Include="ConnectionFactoryConfig\InitializeEntityFrameworkCommand.cs" />
     <Compile Include="Migrations\AddMigrationCommand.cs" />
     <Compile Include="ConnectionFactoryConfig\ConfigFileFinder.cs" />
     <Compile Include="ConnectionFactoryConfig\ConfigFileManipulator.cs" />
     <Compile Include="ConnectionFactoryConfig\ConfigFileProcessor.cs" />
-    <Compile Include="ConnectionFactoryConfig\ConnectionFactoryConfigurator.cs" />
     <Compile Include="ConnectionFactoryConfig\RegistryKeyProxy.cs" />
     <Compile Include="ConnectionFactoryConfig\ServiceControllerProxy.cs" />
-    <Compile Include="ConnectionFactoryConfig\SqlCompactConnectionFactoryConfigurator.cs" />
     <Compile Include="ConnectionFactoryConfig\SqlServerDetector.cs" />
     <Compile Include="Migrations\EnableMigrationsCommand.cs" />
     <Compile Include="Migrations\Extensions\IEnumerableExtensions.cs" />
