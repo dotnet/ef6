@@ -5,7 +5,7 @@ namespace System.Data.Entity
     public enum TransactionBehavior
     {
         Default,
-        EnsureTransaction,
+        EnsureTransaction = Default,
         DoNotEnsureTransaction
     }
 }
