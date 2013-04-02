@@ -346,8 +346,8 @@ namespace System.Data.Entity.ModelConfiguration
             var entityType = CreateEntityTypeWithProperties(props);
             configuration.Configure(entityType, new EdmModel(DataSpace.CSpace));
 
-            Assert.Equal(1, entityType.KeyProperties.Count);
-            Assert.Equal(expectedKeyName, entityType.KeyProperties.Single().Name);
+            Assert.Equal(1, entityType.DeclaredKeyProperties.Count);
+            Assert.Equal(expectedKeyName, entityType.DeclaredKeyProperties.Single().Name);
         }
 
         private EntityType CreateEntityTypeWithProperties(params PropertyInfo[] props)

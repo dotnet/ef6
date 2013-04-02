@@ -190,9 +190,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var entitySetMapping = databaseMapping.GetEntitySetMapping(entitySet);
             var entityTypeMapping = entitySetMapping.EntityTypeMappings.Single();
 
-            Assert.Equal(1, entityTypeMapping.MappingFragments.Single().Table.KeyProperties.Count());
-            Assert.Equal("Id", entityTypeMapping.MappingFragments.Single().Table.KeyProperties.Single().Name);
-            Assert.True(entityTypeMapping.MappingFragments.Single().Table.KeyProperties.Single().IsPrimaryKeyColumn);
+            Assert.Equal(1, entityTypeMapping.MappingFragments.Single().Table.DeclaredKeyProperties.Count());
+            Assert.Equal("Id", entityTypeMapping.MappingFragments.Single().Table.DeclaredKeyProperties.Single().Name);
+            Assert.True(entityTypeMapping.MappingFragments.Single().Table.DeclaredKeyProperties.Single().IsPrimaryKeyColumn);
         }
 
         [Fact]
@@ -275,7 +275,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 = new ReferentialConstraint(
                     associationType.SourceEnd,
                     associationType.TargetEnd,
-                    principalEntityType.KeyProperties,
+                    principalEntityType.DeclaredKeyProperties,
                     new[] { dependentProperty1, dependentProperty2 });
 
             associationType.SourceEnd.DeleteBehavior = OperationAction.Cascade;

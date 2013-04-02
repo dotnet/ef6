@@ -238,8 +238,6 @@
     <Compile Include="Migrations\TestModel\TestMigration.cs" />
     <Compile Include="Objects\LazyLoadingTests.cs" />
     <Compile Include="Objects\SerializationScenarios.cs" />
-    <Compile Include="PlanCompiler\AnonymousTypeTests.cs" />
-    <Compile Include="PlanCompiler\LinqGroupByTests.cs" />
     <Compile Include="ProductivityApi\DbConfigurationTests.cs" />
     <Compile Include="ProductivityApi\ScaffoldingScenarioTests.cs" />
     <Compile Include="ProductivityApi\SimpleScenariosForLocalDb.cs" />

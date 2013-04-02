@@ -153,8 +153,8 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             var entity = databaseMapping.Model.EntityTypes.Single();
-            Assert.Equal(1, entity.KeyProperties.Count());
-            Assert.Equal("IntProperty", entity.KeyProperties.Single().Name);
+            Assert.Equal(1, entity.DeclaredKeyProperties.Count());
+            Assert.Equal("IntProperty", entity.DeclaredKeyProperties.Single().Name);
         }
 
         [Fact]
@@ -169,8 +169,8 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             var entity = databaseMapping.Model.EntityTypes.Single();
-            Assert.Equal(1, entity.KeyProperties.Count());
-            Assert.Equal("IntProperty", entity.KeyProperties.Single().Name);
+            Assert.Equal(1, entity.DeclaredKeyProperties.Count());
+            Assert.Equal("IntProperty", entity.DeclaredKeyProperties.Single().Name);
         }
 
         [Fact]
@@ -186,8 +186,8 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             var entity = databaseMapping.Model.EntityTypes.Single();
-            Assert.Equal(1, entity.KeyProperties.Count());
-            Assert.Equal("IntProperty", entity.KeyProperties.Single().Name);
+            Assert.Equal(1, entity.DeclaredKeyProperties.Count());
+            Assert.Equal("IntProperty", entity.DeclaredKeyProperties.Single().Name);
         }
 
         [Fact]
@@ -207,7 +207,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             var entity = databaseMapping.Model.EntityTypes.Single();
-            var keys = entity.KeyProperties;
+            var keys = entity.DeclaredKeyProperties;
             Assert.Equal(2, keys.Count());
             Assert.Equal("IntProperty", keys.ElementAt(0).Name);
             Assert.Equal("IntProperty1", keys.ElementAt(1).Name);
@@ -226,7 +226,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             var entity = databaseMapping.Model.EntityTypes.Single();
-            var keys = entity.KeyProperties;
+            var keys = entity.DeclaredKeyProperties;
             Assert.Equal(1, keys.Count());
             Assert.Equal("IntProperty", keys.ElementAt(0).Name);
         }
@@ -243,7 +243,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             var entity = databaseMapping.Model.EntityTypes.Single();
-            var keys = entity.KeyProperties;
+            var keys = entity.DeclaredKeyProperties;
             Assert.Equal(2, keys.Count());
             Assert.Equal("IntProperty", keys.First().Name);
             Assert.Equal("IntProperty1", keys.Last().Name);
@@ -261,7 +261,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             var entity = databaseMapping.Model.EntityTypes.Single();
-            var keys = entity.KeyProperties;
+            var keys = entity.DeclaredKeyProperties;
             Assert.Equal(1, keys.Count());
             Assert.Equal("IntProperty", keys.First().Name);
         }

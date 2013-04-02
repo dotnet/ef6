@@ -8,7 +8,6 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
@@ -50,7 +49,6 @@ namespace System.Data.Entity.Config
             _resolvers.Add(new SingletonDependencyResolver<HistoryContextFactory>((e, d) => new HistoryContext(e, d)));
             _resolvers.Add(new SingletonDependencyResolver<IPluralizationService>(new EnglishPluralizationService()));
             _resolvers.Add(new SingletonDependencyResolver<IViewAssemblyCache>(new ViewAssemblyCache()));
-            _resolvers.Add(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
 
 #if NET40
             _resolvers.Add(new SingletonDependencyResolver<IDbProviderFactoryService>(new Net40DefaultDbProviderFactoryService()));

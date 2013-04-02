@@ -368,6 +368,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return null;
         }
 
+        /// <summary>   
+        ///     In order to support NewRecordOp we may need to adjust the record type.   
+        /// </summary>   
+        /// <param name="op"> </param>   
+        /// <param name="n"> </param>   
+        /// <returns> </returns>   
+        public override Node Visit(NewRecordOp op, Node n)
+        {
+            return null;
+
+        }
+
         #endregion
 
         #endregion

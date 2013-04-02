@@ -23,15 +23,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Check.NotNull(edmDataModelItem, "edmDataModelItem");
             Check.NotNull(model, "model");
 
-            Debug.Assert(edmDataModelItem.KeyProperties != null);
+            Debug.Assert(edmDataModelItem.DeclaredKeyProperties != null);
 
-            if ((edmDataModelItem.BaseType == null && edmDataModelItem.KeyProperties.Count == 1)
+            if ((edmDataModelItem.BaseType == null && edmDataModelItem.DeclaredKeyProperties.Count == 1)
                 && !(from p in edmDataModelItem.DeclaredProperties
                      let sgp = p.GetStoreGeneratedPattern()
                      where sgp != null && sgp == StoreGeneratedPattern.Identity
                      select sgp).Any()) // Entity already has an Identity property.
             {
-                var property = edmDataModelItem.KeyProperties.Single();
+                var property = edmDataModelItem.DeclaredKeyProperties.Single();
 
                 Debug.Assert(property.TypeUsage != null);
 

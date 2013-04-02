@@ -23,10 +23,10 @@ namespace System.Data.Entity.Internal.Validation
         /// <summary>
         ///     Initializes a new instance of <see cref="ValidationProvider" /> class.
         /// </summary>
-        public ValidationProvider(EntityValidatorBuilder builder = null, AttributeProvider attributeProvider = null)
+        public ValidationProvider(EntityValidatorBuilder builder = null)
         {
             _entityValidators = new Dictionary<Type, EntityValidator>();
-            _entityValidatorBuilder = builder ?? new EntityValidatorBuilder(attributeProvider ?? new AttributeProvider());
+            _entityValidatorBuilder = builder ?? new EntityValidatorBuilder(new AttributeProvider());
         }
 
         /// <summary>

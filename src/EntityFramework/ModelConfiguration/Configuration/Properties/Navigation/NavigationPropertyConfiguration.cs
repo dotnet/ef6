@@ -431,7 +431,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
                 if ((associationConstraint != null)
                     && associationConstraint.ToProperties
-                                            .SequenceEqual(associationConstraint.ToRole.GetEntityType().KeyProperties))
+                                            .SequenceEqual(associationConstraint.ToRole.GetEntityType().DeclaredKeyProperties))
                 {
                     // The dependent FK is also the PK. We need to adjust the multiplicity
                     // when it has not been explicity configured because the default is *:0..1

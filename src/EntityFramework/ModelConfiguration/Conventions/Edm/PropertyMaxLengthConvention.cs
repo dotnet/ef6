@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Check.NotNull(edmDataModelItem, "edmDataModelItem");
             Check.NotNull(model, "model");
 
-            SetLength(edmDataModelItem.DeclaredProperties, edmDataModelItem.KeyProperties);
+            SetLength(edmDataModelItem.DeclaredProperties, edmDataModelItem.DeclaredKeyProperties);
         }
 
         public void Apply(ComplexType edmDataModelItem, EdmModel model)

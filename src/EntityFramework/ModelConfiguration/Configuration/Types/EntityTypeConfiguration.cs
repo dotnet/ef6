@@ -705,7 +705,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                                     return;
                                 }
 
-                                var principalColumn = foreignKeyConstraint.PrincipalTable.KeyProperties.ElementAt(i);
+                                var principalColumn = foreignKeyConstraint.PrincipalTable.DeclaredKeyProperties.ElementAt(i);
 
                                 c.PrimitiveType = providerManifest.GetStoreTypeFromName(principalColumn.TypeName);
 

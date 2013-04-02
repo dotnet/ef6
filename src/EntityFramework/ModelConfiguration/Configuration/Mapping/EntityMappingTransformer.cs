@@ -333,7 +333,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             DebugCheck.NotNull(fromTable);
             DebugCheck.NotNull(toTable);
 
-            foreach (var column in   fromTable.KeyProperties)
+            foreach (var column in fromTable.DeclaredKeyProperties)
             {
                 FindAllForeignKeyConstraintsForColumn(fromTable, toTable, column)
                     .ToArray()
@@ -357,7 +357,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             DebugCheck.NotNull(fromTable);
             DebugCheck.NotNull(toTable);
 
-            foreach (var column in fromTable.KeyProperties)
+            foreach (var column in fromTable.DeclaredKeyProperties)
             {
                 FindAllForeignKeyConstraintsForColumn(fromTable, toTable, column)
                     .ToArray()

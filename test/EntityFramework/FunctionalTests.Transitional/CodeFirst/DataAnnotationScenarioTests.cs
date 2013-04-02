@@ -7,20 +7,14 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Linq;
     using System.Linq.Expressions;
     using FunctionalTests.Model;
     using Xunit;
 
-    public class DataAnnotationScenarioTests : TestBase, IDisposable
+    public class DataAnnotationScenarioTests : TestBase
     {
-        public void Dispose()
-        {
-            DbConfiguration.GetService<AttributeProvider>().ClearCache();
-        }
 
         [Fact]
         public void Duplicate_column_order_should_not_throw_when_v1_convention_set()
@@ -567,7 +561,7 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();
 
-            databaseMapping.Assert<KeyOnNavProp>().DbEqual("Id", t => t.KeyProperties.Single().Name);
+            databaseMapping.Assert<KeyOnNavProp>().DbEqual("Id", t => t.DeclaredKeyProperties.Single().Name);
         }
 
         public class DASimple

@@ -4,8 +4,6 @@ namespace System.Data.Entity
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Data.Entity.Config;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
@@ -119,7 +117,6 @@ namespace System.Data.Entity
 
         public void Dispose()
         {
-            DbConfiguration.GetService<AttributeProvider>().ClearCache();
             TypeDescriptor.RemoveProvider(_dynamicTypeDescriptionProvider, typeof(T));
         }
 

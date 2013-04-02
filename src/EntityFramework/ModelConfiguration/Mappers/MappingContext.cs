@@ -19,8 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             ModelConfiguration modelConfiguration,
             ConventionsConfiguration conventionsConfiguration,
             EdmModel model,
-            DbModelBuilderVersion modelBuilderVersion = DbModelBuilderVersion.Latest,
-            AttributeProvider attributeProvider = null)
+            DbModelBuilderVersion modelBuilderVersion = DbModelBuilderVersion.Latest)
         {
             DebugCheck.NotNull(modelConfiguration);
             DebugCheck.NotNull(conventionsConfiguration);
@@ -30,7 +29,6 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             _conventionsConfiguration = conventionsConfiguration;
             _model = model;
             _modelBuilderVersion = modelBuilderVersion;
-            _attributeProvider = attributeProvider ?? new AttributeProvider();
         }
 
         public ModelConfiguration ModelConfiguration

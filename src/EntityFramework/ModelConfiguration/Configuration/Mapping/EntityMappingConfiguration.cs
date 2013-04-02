@@ -769,7 +769,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
                 // Remove FKs where Principal Table == Dependent Table and the PK == FK (redundant)
                 table.ForeignKeyBuilders
-                     .Where(fk => fk.PrincipalTable == table && fk.DependentColumns.SequenceEqual(table.KeyProperties))
+                     .Where(fk => fk.PrincipalTable == table && fk.DependentColumns.SequenceEqual(table.DeclaredKeyProperties))
                      .ToArray()
                      .Each(table.RemoveForeignKey);
             }

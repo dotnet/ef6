@@ -16,7 +16,6 @@ namespace System.Data.Entity
     using System.Data.Entity.ModelConfiguration.Conventions.Sets;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Mappers;
-    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -402,13 +401,7 @@ namespace System.Data.Entity
         {
             DebugCheck.NotNull(model);
 
-            var typeMapper = new TypeMapper(
-                new MappingContext(
-                    _modelConfiguration,
-                    _conventionsConfiguration,
-                    model,
-                    _modelBuilderVersion,
-                    DbConfiguration.GetService<AttributeProvider>()));
+            var typeMapper = new TypeMapper(new MappingContext(_modelConfiguration, _conventionsConfiguration, model, _modelBuilderVersion));
 
             _modelConfiguration.Entities
                                .Where(type => typeMapper.MapEntityType(type) == null)

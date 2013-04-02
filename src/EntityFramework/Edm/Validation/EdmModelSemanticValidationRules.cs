@@ -353,7 +353,8 @@ namespace System.Data.Entity.Edm.Validation
                     {
                         if (edmEntityType.BaseType != null
                             &&
-                            edmEntityType.KeyProperties.Where(key => edmEntityType.DeclaredMembers.Contains(key)).Any())
+                            edmEntityType.DeclaredKeyProperties != null
+                            && edmEntityType.DeclaredKeyProperties.Any())
                         {
                             context.AddError(
                                 edmEntityType.BaseType,
@@ -368,7 +369,7 @@ namespace System.Data.Entity.Edm.Validation
                 (context, edmEntityType) =>
                     {
                         if (edmEntityType.BaseType == null
-                            && edmEntityType.KeyProperties.Count == 0)
+                            && !edmEntityType.DeclaredKeyProperties.Any())
                         {
                             context.AddError(
                                 edmEntityType,

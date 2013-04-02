@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.ModelConfiguration.Utilities
 {
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
@@ -12,9 +11,6 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
 
     internal class AttributeProvider
     {
-        private readonly ConcurrentDictionary<PropertyInfo, IEnumerable<Attribute>> _discoveredAttributes =
-            new ConcurrentDictionary<PropertyInfo, IEnumerable<Attribute>>();
-
         public virtual IEnumerable<Attribute> GetAttributes(MemberInfo memberInfo)
         {
             DebugCheck.NotNull(memberInfo);
@@ -53,23 +49,20 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
         {
             DebugCheck.NotNull(propertyInfo);
 
-            return _discoveredAttributes.GetOrAdd(
-                propertyInfo, (pi) =>
-                    {
-                        var typeDescriptor = GetTypeDescriptor(propertyInfo.DeclaringType);
-                        var propertyCollection = typeDescriptor.GetProperties();
-                        var propertyDescriptor = propertyCollection[propertyInfo.Name];
+            var typeDescriptor = GetTypeDescriptor(propertyInfo.DeclaringType);
+            var propertyCollection = typeDescriptor.GetProperties();
+            var propertyDescriptor = propertyCollection[propertyInfo.Name];
 
-                        var propertyAttributes
-                            = (propertyDescriptor != null)
-                                  ? propertyDescriptor.Attributes.Cast<Attribute>()
-                                  // Fallback to standard reflection (non-public properties)
-                                  : propertyInfo.GetCustomAttributes(true).Cast<Attribute>();
+            var propertyAttributes
+                = (propertyDescriptor != null)
+                        ? propertyDescriptor.Attributes.Cast<Attribute>()
+                        // Fallback to standard reflection (non-public properties)
+                        : propertyInfo.GetCustomAttributes(true).Cast<Attribute>();
 
-                        // Get the attributes for the property's type and exclude them
-                        var propertyTypeAttributes = GetAttributes(propertyInfo.PropertyType);
-                        return propertyAttributes.Except(propertyTypeAttributes);
-                    });
+            // Get the attributes for the property's type and exclude them
+            var propertyTypeAttributes = GetAttributes(propertyInfo.PropertyType);
+
+            return propertyAttributes.Except(propertyTypeAttributes);
         }
 
         private static ICustomTypeDescriptor GetTypeDescriptor(Type type)
@@ -77,11 +70,6 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             DebugCheck.NotNull(type);
 
             return new AssociatedMetadataTypeTypeDescriptionProvider(type).GetTypeDescriptor(type);
-        }
-
-        public virtual void ClearCache()
-        {
-            _discoveredAttributes.Clear();
         }
     }
 }

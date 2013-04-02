@@ -34,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             var candidates
                 = from entityType in model.EntityTypes
-                  where entityType.KeyProperties.Count == 0 // (1)
+                  where entityType.DeclaredKeyProperties.Count == 0 // (1)
                         && entityType.BaseType == null
                   // (1)
                   let entityTypeConfiguration = entityType.GetConfiguration() as EntityTypeConfiguration

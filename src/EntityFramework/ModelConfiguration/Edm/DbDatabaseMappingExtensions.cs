@@ -98,20 +98,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(entityType);
 
-            // please don't convert this section of code to a Linq expression since
-            // it is performance sensitive, especially for larger models.
-            var mappings = new List<StorageEntityTypeMapping>();
-            foreach (var esm in databaseMapping.EntityContainerMappings.Single().EntitySetMappings)
-            {
-                foreach (var etm in esm.EntityTypeMappings)
-                {
-                    if (etm.EntityType == entityType)
-                    {
-                        mappings.Add(etm);
-                    }
-                }
-            }
-            return mappings;
+            return (from esm in databaseMapping.EntityContainerMappings.Single().EntitySetMappings
+                    from etm in esm.EntityTypeMappings
+                    where etm.EntityType == entityType
+                    select etm);
         }
 
         public static StorageEntityTypeMapping GetEntityTypeMapping(
@@ -120,23 +110,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(entityType);
 
-            // please don't convert this section of code to a Linq expression since
-            // it is performance sensitive, especially for larger models.
-            var mappings = new List<StorageEntityTypeMapping>();
-            foreach (var esm in databaseMapping.EntityContainerMappings.Single().EntitySetMappings)
-            {
-                foreach (var etm in esm.EntityTypeMappings)
-                {
-                    if (etm.GetClrType() == entityType)
-                    {
-                        mappings.Add(etm);
-                    }
-                }
-            }
+            var mappings = (from esm in databaseMapping.EntityContainerMappings.Single().EntitySetMappings
+                            from etm in esm.EntityTypeMappings
+                            where etm.GetClrType() == entityType
+                            select etm);
 
-            if (mappings.Count <= 1)
+            if (mappings.Count() <= 1)
             {
-                return mappings.FirstOrDefault();
+                return mappings.SingleOrDefault();
             }
 
             // Return the property mapping

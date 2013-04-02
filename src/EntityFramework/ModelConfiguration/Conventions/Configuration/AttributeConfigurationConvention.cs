@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Config;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
@@ -26,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         private readonly AttributeProvider _attributeProvider;
 
         protected AttributeConfigurationConvention()
-            : this(DbConfiguration.GetService<AttributeProvider>())
+            : this(new AttributeProvider())
         {
         }
 

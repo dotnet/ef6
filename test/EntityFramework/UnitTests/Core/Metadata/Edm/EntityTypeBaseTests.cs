@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using Xunit;
-    using System.Linq;
 
     public class EntityTypeBaseTests
     {
@@ -25,32 +24,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Empty(entityType.KeyMembers);
             Assert.Empty(entityType.Members);
-        }
-
-        [Fact]
-        public void Can_get_list_of_key_properties()
-        {
-            var entityType = new EntityType("E", "N", DataSpace.CSpace);
-
-            Assert.Empty(entityType.KeyProperties);
-
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
-
-            entityType.AddKeyMember(property);
-
-            Assert.Equal(1, entityType.KeyProperties.Count);
-            Assert.Equal(1, entityType.KeyProperties.Where(key => entityType.DeclaredMembers.Contains(key)).Count());
-
-            entityType.RemoveMember(property);
-
-            var baseType = new EntityType("E", "N", DataSpace.CSpace);
-            baseType.AddKeyMember(property);
-
-            entityType.BaseType = baseType;
-
-            Assert.Equal(1, entityType.KeyProperties.Count);
-            Assert.Empty(entityType.KeyProperties.Where(key => entityType.DeclaredMembers.Contains(key)));
-            Assert.Equal(1, entityType.KeyMembers.Count);
         }
     }
 }

@@ -291,10 +291,9 @@ namespace System.Data.Entity.Edm
             VisitMetadataItem(item);
             if (item != null)
             {
-                if (item.BaseType == null
-                    && item.KeyProperties.Any())
+                if (item.DeclaredKeyProperties.Any())
                 {
-                    VisitKeyProperties(item, item.KeyProperties);
+                    VisiDeclaredKeyProperties(item, item.DeclaredKeyProperties);
                 }
 
                 if (item.DeclaredProperties.Any())
@@ -309,7 +308,7 @@ namespace System.Data.Entity.Edm
             }
         }
 
-        protected virtual void VisitKeyProperties(EntityType entityType, IList<EdmProperty> properties)
+        protected virtual void VisiDeclaredKeyProperties(EntityType entityType, IList<EdmProperty> properties)
         {
             VisitCollection(properties, VisitEdmProperty);
         }

@@ -18,18 +18,18 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Check.NotNull(edmDataModelItem, "edmDataModelItem");
             Check.NotNull(model, "model");
 
-            if (edmDataModelItem.BaseType == null)
-            {
-                // Performance: avoid converting to .Each<>() Linq expressions in order to avoid closure allocations
-                foreach (var p in edmDataModelItem.KeyProperties)
-                {
-                    edmDataModelItem.RemoveMember(p);
-                    edmDataModelItem.AddKeyMember(p);
-                }
+            edmDataModelItem.DeclaredKeyProperties
+                            .Each(
+                                p =>
+                                {
+                                    edmDataModelItem.RemoveMember(p);
+                                    edmDataModelItem.AddKeyMember(p);
+                                });
 
-                foreach (var p in 
-                    new PropertyFilter()
-                        .GetProperties(edmDataModelItem.GetClrType(), declaredOnly: false, includePrivate: true))
+            new PropertyFilter()
+            .GetProperties(edmDataModelItem.GetClrType(), declaredOnly: false, includePrivate: true)
+            .Each(
+                p =>
                 {
                     var property
                         = edmDataModelItem
@@ -37,13 +37,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                             .SingleOrDefault(ep => ep.Name == p.Name);
 
                     if ((property != null)
-                        && !edmDataModelItem.KeyProperties.Contains(property))
+                                && !edmDataModelItem.DeclaredKeyProperties.Contains(property))
                     {
                         edmDataModelItem.RemoveMember(property);
                         edmDataModelItem.AddMember(property);
                     }
-                }
-            }
+                });
         }
     }
 }

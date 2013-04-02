@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     = new ReferentialConstraint(
                         _associationType.SourceEnd,
                         _associationType.TargetEnd,
-                        PrincipalTable.KeyProperties,
+                        PrincipalTable.DeclaredKeyProperties,
                         value);
 
                 SetMultiplicities();
@@ -137,9 +137,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             var dependentTable = _associationType.TargetEnd.GetEntityType();
 
-            var dependentKeyProperties = dependentTable.KeyProperties.Where(key => dependentTable.DeclaredMembers.Contains(key)).ToList();
-            if (dependentKeyProperties.Count == DependentColumns.Count()
-                && dependentKeyProperties.All(DependentColumns.Contains))
+            if (dependentTable.DeclaredKeyProperties.Count() == DependentColumns.Count()
+                && dependentTable.DeclaredKeyProperties.All(DependentColumns.Contains))
             {
                 _associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
                 _associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
