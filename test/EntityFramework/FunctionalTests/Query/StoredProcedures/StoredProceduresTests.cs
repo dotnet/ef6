@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Query.StoredProcedures
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Spatial;
     using System.Data.SqlClient;
@@ -12,24 +11,24 @@ namespace System.Data.Entity.Query.StoredProcedures
 
     public class StoredProceduresTests : FunctionalTestBase, IUseFixture<StoredProceduresTestFixture>
     {
-        private string entityConnectionString;
+        private readonly string _entityConnectionString;
         private const int GeographySrid = 4326;
         private const int GeometrySrid = 32768;
-
 
         public StoredProceduresTests()
         {
             var esb = new EntityConnectionStringBuilder
                 {
-                    Metadata = @"res://EntityFramework.FunctionalTests/System.Data.Entity.Query.StoredProcedures.IceAndFireModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Query.StoredProcedures.IceAndFireModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Query.StoredProcedures.IceAndFireModel.msl",
+                    Metadata =
+                        @"res://EntityFramework.FunctionalTests/System.Data.Entity.Query.StoredProcedures.IceAndFireModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Query.StoredProcedures.IceAndFireModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Query.StoredProcedures.IceAndFireModel.msl",
                     Provider = @"System.Data.SqlClient",
                     ProviderConnectionString = ModelHelpers.SimpleConnectionString("IceAndFireContext2"),
                 };
 
-            entityConnectionString = esb.ToString();
+            _entityConnectionString = esb.ToString();
             Seed();
         }
- 
+
         public void SetFixture(StoredProceduresTestFixture data)
         {
         }
@@ -37,23 +36,21 @@ namespace System.Data.Entity.Query.StoredProcedures
         [Fact]
         public void Stored_procedure_with_first_result_set_without_spatial_and_second_with_spatial()
         {
-            using (var context = new IceAndFireModel.IceAndFireContext(entityConnectionString))
+            using (var context = new IceAndFireModel.IceAndFireContext(_entityConnectionString))
             {
                 var animals = context.GetAnimalsAndHouses();
                 Assert.Equal(3, animals.Count());
 
                 var houses = animals.GetNextResult<IceAndFireModel.House>();
-                
-                // issue #1006
-                Assert.Throws<ProviderIncompatibleException>(() => 
-                    Assert.Equal(4, houses.Count()));
+
+                Assert.Equal(4, houses.Count());
             }
         }
 
         [Fact]
         public void Stored_procedure_with_first_result_set_with_spatial_and_second_without_spatial()
         {
-            using (var context = new IceAndFireModel.IceAndFireContext(entityConnectionString))
+            using (var context = new IceAndFireModel.IceAndFireContext(_entityConnectionString))
             {
                 var houses = context.GetHousesAndAnimals();
                 Assert.Equal(4, houses.Count());
@@ -66,7 +63,7 @@ namespace System.Data.Entity.Query.StoredProcedures
         [Fact]
         public void Stored_procedure_with_two_results_being_same_entity_with_spatial()
         {
-            using (var context = new IceAndFireModel.IceAndFireContext(entityConnectionString))
+            using (var context = new IceAndFireModel.IceAndFireContext(_entityConnectionString))
             {
                 var houses = context.GetHousesAndHouses();
                 Assert.Equal(4, houses.Count());
@@ -79,7 +76,7 @@ namespace System.Data.Entity.Query.StoredProcedures
         [Fact]
         public void Stored_procedure_with_two_results_being_two_child_entities_of_the_same_hierarchy()
         {
-            using (var context = new IceAndFireModel.IceAndFireContext(entityConnectionString))
+            using (var context = new IceAndFireModel.IceAndFireContext(_entityConnectionString))
             {
                 var humans = context.GetHumansAndAnimals();
                 Assert.Equal(11, humans.Count());
@@ -92,27 +89,21 @@ namespace System.Data.Entity.Query.StoredProcedures
         [Fact]
         public void Stored_procedure_with_two_results_second_being_hierarchy()
         {
-            using (var context = new IceAndFireModel.IceAndFireContext(entityConnectionString))
+            using (var context = new IceAndFireModel.IceAndFireContext(_entityConnectionString))
             {
                 var lands = context.GetLandsAndCreatures();
                 Assert.Equal(4, lands.Count());
 
-                // issue #1006
-                Assert.Throws<ProviderIncompatibleException>(
-                    () =>
-                        {
-                            var creatures = lands.GetNextResult<IceAndFireModel.Creature>();
-                            var creaturesList = creatures.ToList();
-                            Assert.Equal(3, creaturesList.OfType<IceAndFireModel.Animal>().Count());
-                            Assert.Equal(11, creaturesList.OfType<IceAndFireModel.Human>().Count());
-                        });
+                var creatures = lands.GetNextResult<IceAndFireModel.Creature>();
+                var creaturesList = creatures.ToList();
+                Assert.Equal(3, creaturesList.OfType<IceAndFireModel.Animal>().Count());
+                Assert.Equal(11, creaturesList.OfType<IceAndFireModel.Human>().Count());
             }
         }
 
-
         private void Seed()
         {
-            using (var context = new IceAndFireModel.IceAndFireContext(entityConnectionString))
+            using (var context = new IceAndFireModel.IceAndFireContext(_entityConnectionString))
             {
                 if (context.Creatures.Count() > 0)
                 {
@@ -120,165 +111,184 @@ namespace System.Data.Entity.Query.StoredProcedures
                 }
 
                 var aryaStark = new IceAndFireModel.Human
-                {
-                    Name = "Arya",
-                    PlaceOfBirth = DbGeography.FromText("POINT (1 1)", GeographySrid),
-                    Size = IceAndFireModel.CreatureSize.Small,
-                };
+                    {
+                        Name = "Arya",
+                        PlaceOfBirth = DbGeography.FromText("POINT (1 1)", GeographySrid),
+                        Size = IceAndFireModel.CreatureSize.Small,
+                    };
 
                 var sansaStark = new IceAndFireModel.Human
-                {
-                    Name = "Sansa",
-                    PlaceOfBirth = DbGeography.FromText("POINT (1 1)", GeographySrid),
-                    Size = IceAndFireModel.CreatureSize.Small,
-                };
+                    {
+                        Name = "Sansa",
+                        PlaceOfBirth = DbGeography.FromText("POINT (1 1)", GeographySrid),
+                        Size = IceAndFireModel.CreatureSize.Small,
+                    };
 
                 var branStark = new IceAndFireModel.Human
-                {
-                    Name = "Brandon",
-                    PlaceOfBirth = DbGeography.FromText("POINT (1 1)", GeographySrid),
-                    Size = IceAndFireModel.CreatureSize.Small,
-                };
+                    {
+                        Name = "Brandon",
+                        PlaceOfBirth = DbGeography.FromText("POINT (1 1)", GeographySrid),
+                        Size = IceAndFireModel.CreatureSize.Small,
+                    };
 
                 var ricksonStark = new IceAndFireModel.Human
-                {
-                    Name = "Rickson",
-                    PlaceOfBirth = DbGeography.FromText("POINT (1 1)", GeographySrid),
-                    Size = IceAndFireModel.CreatureSize.Small,
-                };
+                    {
+                        Name = "Rickson",
+                        PlaceOfBirth = DbGeography.FromText("POINT (1 1)", GeographySrid),
+                        Size = IceAndFireModel.CreatureSize.Small,
+                    };
 
                 var stannisBaratheon = new IceAndFireModel.Human
-                {
-                    Name = "Stannis",
-                    PlaceOfBirth = DbGeography.FromText("POINT (2 2)", GeographySrid),
-                    Size = IceAndFireModel.CreatureSize.Medium,
-                };
+                    {
+                        Name = "Stannis",
+                        PlaceOfBirth = DbGeography.FromText("POINT (2 2)", GeographySrid),
+                        Size = IceAndFireModel.CreatureSize.Medium,
+                    };
 
                 var tyrionLannister = new IceAndFireModel.Human
-                {
-                    Name = "Tyrion",
-                    PlaceOfBirth = DbGeography.FromText("POINT (3 3)", GeographySrid),
-                    Size = IceAndFireModel.CreatureSize.Small,
-                };
+                    {
+                        Name = "Tyrion",
+                        PlaceOfBirth = DbGeography.FromText("POINT (3 3)", GeographySrid),
+                        Size = IceAndFireModel.CreatureSize.Small,
+                    };
 
                 var jamieLannister = new IceAndFireModel.Human
-                {
-                    Name = "Jamie",
-                    PlaceOfBirth = DbGeography.FromText("POINT (3 3)", GeographySrid),
-                    Size = IceAndFireModel.CreatureSize.Medium,
-                };
+                    {
+                        Name = "Jamie",
+                        PlaceOfBirth = DbGeography.FromText("POINT (3 3)", GeographySrid),
+                        Size = IceAndFireModel.CreatureSize.Medium,
+                    };
 
                 var cerseiLannister = new IceAndFireModel.Human
-                {
-                    Name = "Cersei",
-                    PlaceOfBirth = DbGeography.FromText("POINT (3 3)", GeographySrid),
-                    Size = IceAndFireModel.CreatureSize.Medium,
-                };
+                    {
+                        Name = "Cersei",
+                        PlaceOfBirth = DbGeography.FromText("POINT (3 3)", GeographySrid),
+                        Size = IceAndFireModel.CreatureSize.Medium,
+                    };
 
                 var jonSnow = new IceAndFireModel.Human
-                {
-                    Name = "Jon",
-                    PlaceOfBirth = DbGeography.FromText("POINT (4 4)", GeographySrid),
-                    Size = IceAndFireModel.CreatureSize.Small,
-                };
+                    {
+                        Name = "Jon",
+                        PlaceOfBirth = DbGeography.FromText("POINT (4 4)", GeographySrid),
+                        Size = IceAndFireModel.CreatureSize.Small,
+                    };
 
                 var daenerysTargaryen = new IceAndFireModel.Human
-                {
-                    Name = "Daenerys",
-                    PlaceOfBirth = DbGeography.FromText("POINT (5 5)", GeographySrid),
-                    Size = IceAndFireModel.CreatureSize.Medium,
-                };
+                    {
+                        Name = "Daenerys",
+                        PlaceOfBirth = DbGeography.FromText("POINT (5 5)", GeographySrid),
+                        Size = IceAndFireModel.CreatureSize.Medium,
+                    };
 
                 var aegonTargaryen = new IceAndFireModel.Human
-                {
-                    Name = "Aegon",
-                    PlaceOfBirth = DbGeography.FromText("POINT (5 5)", GeographySrid),
-                    Size = IceAndFireModel.CreatureSize.Medium,
-                };
+                    {
+                        Name = "Aegon",
+                        PlaceOfBirth = DbGeography.FromText("POINT (5 5)", GeographySrid),
+                        Size = IceAndFireModel.CreatureSize.Medium,
+                    };
 
                 var aurochs = new IceAndFireModel.Animal
-                {
-                    IsCarnivore = false,
-                    IsDangerous = false,
-                    Name = "Aurochs",
-                    Size = IceAndFireModel.CreatureSize.Large,
-                };
+                    {
+                        IsCarnivore = false,
+                        IsDangerous = false,
+                        Name = "Aurochs",
+                        Size = IceAndFireModel.CreatureSize.Large,
+                    };
 
                 var direwolf = new IceAndFireModel.Animal
-                {
-                    IsCarnivore = true,
-                    IsDangerous = true,
-                    Name = "Direwolf",
-                    Size = IceAndFireModel.CreatureSize.Large,
-                };
+                    {
+                        IsCarnivore = true,
+                        IsDangerous = true,
+                        Name = "Direwolf",
+                        Size = IceAndFireModel.CreatureSize.Large,
+                    };
 
                 var kraken = new IceAndFireModel.Animal
-                {
-                    IsCarnivore = true,
-                    IsDangerous = true,
-                    Name = "Kraken",
-                    Size = IceAndFireModel.CreatureSize.VeryLarge,
-                };
+                    {
+                        IsCarnivore = true,
+                        IsDangerous = true,
+                        Name = "Kraken",
+                        Size = IceAndFireModel.CreatureSize.VeryLarge,
+                    };
 
                 var houseStark = new IceAndFireModel.House
-                {
-                    Name = "Stark",
-                    Sigil = DbGeometry.FromText("POINT (1 1)", GeometrySrid),
-                    Words = "Winter is coming",
-                    ProminentMembers = new List<IceAndFireModel.Human> { aryaStark, sansaStark, branStark, ricksonStark },
-                };
+                    {
+                        Name = "Stark",
+                        Sigil = DbGeometry.FromText("POINT (1 1)", GeometrySrid),
+                        Words = "Winter is coming",
+                        ProminentMembers = new List<IceAndFireModel.Human>
+                            {
+                                aryaStark,
+                                sansaStark,
+                                branStark,
+                                ricksonStark
+                            },
+                    };
 
                 var houseBaratheon = new IceAndFireModel.House
-                {
-                    Name = "Baratheon",
-                    Sigil = DbGeometry.FromText("POINT (2 2)", GeometrySrid),
-                    Words = "Ours is the fury",
-                    ProminentMembers = new List<IceAndFireModel.Human> { stannisBaratheon, },
-                };
+                    {
+                        Name = "Baratheon",
+                        Sigil = DbGeometry.FromText("POINT (2 2)", GeometrySrid),
+                        Words = "Ours is the fury",
+                        ProminentMembers = new List<IceAndFireModel.Human>
+                            {
+                                stannisBaratheon,
+                            },
+                    };
 
                 var houseLannister = new IceAndFireModel.House
-                {
-                    Name = "Lannister",
-                    Sigil = DbGeometry.FromText("POINT (3 3)", GeometrySrid),
-                    Words = "Hear me roar!",
-                    ProminentMembers = new List<IceAndFireModel.Human> { tyrionLannister, jamieLannister, cerseiLannister, },
-                };
+                    {
+                        Name = "Lannister",
+                        Sigil = DbGeometry.FromText("POINT (3 3)", GeometrySrid),
+                        Words = "Hear me roar!",
+                        ProminentMembers = new List<IceAndFireModel.Human>
+                            {
+                                tyrionLannister,
+                                jamieLannister,
+                                cerseiLannister,
+                            },
+                    };
 
                 var houseTargaryen = new IceAndFireModel.House
-                {
-                    Name = "Targaryen",
-                    Sigil = DbGeometry.FromText("POINT (4 4)", GeometrySrid),
-                    Words = "Fire and blood",
-                    ProminentMembers = new List<IceAndFireModel.Human> { jonSnow, daenerysTargaryen, aegonTargaryen, },
-                };
+                    {
+                        Name = "Targaryen",
+                        Sigil = DbGeometry.FromText("POINT (4 4)", GeometrySrid),
+                        Words = "Fire and blood",
+                        ProminentMembers = new List<IceAndFireModel.Human>
+                            {
+                                jonSnow,
+                                daenerysTargaryen,
+                                aegonTargaryen,
+                            },
+                    };
 
                 var north = new IceAndFireModel.Land
-                {
-                    LocationOnMap = DbGeography.FromText("POINT (1 1)", GeographySrid),
-                    Name = "North",
-                    RulingHouse = houseStark,
-                };
+                    {
+                        LocationOnMap = DbGeography.FromText("POINT (1 1)", GeographySrid),
+                        Name = "North",
+                        RulingHouse = houseStark,
+                    };
 
                 var stormlands = new IceAndFireModel.Land
-                {
-                    LocationOnMap = DbGeography.FromText("POINT (2 2)", GeographySrid),
-                    Name = "Stormlands",
-                    RulingHouse = houseBaratheon,
-                };
+                    {
+                        LocationOnMap = DbGeography.FromText("POINT (2 2)", GeographySrid),
+                        Name = "Stormlands",
+                        RulingHouse = houseBaratheon,
+                    };
 
                 var westerlands = new IceAndFireModel.Land
-                {
-                    LocationOnMap = DbGeography.FromText("POINT (3 3)", GeographySrid),
-                    Name = "Westerlands",
-                    RulingHouse = houseLannister,
-                };
+                    {
+                        LocationOnMap = DbGeography.FromText("POINT (3 3)", GeographySrid),
+                        Name = "Westerlands",
+                        RulingHouse = houseLannister,
+                    };
 
                 var dragonstone = new IceAndFireModel.Land
-                {
-                    LocationOnMap = DbGeography.FromText("POINT (4 4)", GeographySrid),
-                    Name = "Dragonstone",
-                    RulingHouse = houseTargaryen,
-                };
+                    {
+                        LocationOnMap = DbGeography.FromText("POINT (4 4)", GeographySrid),
+                        Name = "Dragonstone",
+                        RulingHouse = houseTargaryen,
+                    };
 
                 context.Lands.Add(north);
                 context.Lands.Add(stormlands);
@@ -379,6 +389,6 @@ SELECT * FROM dbo.Creatures AS c2 WHERE c2.Discriminator = 'Animal'", connection
 SELECT * FROM dbo.Lands  
 SELECT * FROM dbo.Creatures", connection).ExecuteNonQuery();
             }
-         }
+        }
     }
 }

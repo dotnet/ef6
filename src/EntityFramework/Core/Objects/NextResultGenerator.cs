@@ -16,17 +16,19 @@ namespace System.Data.Entity.Core.Objects
         private readonly ObjectContext _context;
         private readonly EdmType[] _edmTypes;
         private readonly int _resultSetIndex;
+        private readonly bool _useSpatialReader;
         private readonly MergeOption _mergeOption;
 
         internal NextResultGenerator(
             ObjectContext context, EntityCommand entityCommand, EdmType[] edmTypes, ReadOnlyMetadataCollection<EntitySet> entitySets,
-            MergeOption mergeOption, int resultSetIndex)
+            MergeOption mergeOption, bool useSpatialReader, int resultSetIndex)
         {
             _context = context;
             _entityCommand = entityCommand;
             _entitySets = entitySets;
             _edmTypes = edmTypes;
             _resultSetIndex = resultSetIndex;
+            _useSpatialReader = useSpatialReader;
             _mergeOption = mergeOption;
         }
 
@@ -51,7 +53,7 @@ namespace System.Data.Entity.Core.Objects
                 var edmType = _edmTypes[_resultSetIndex];
                 MetadataHelper.CheckFunctionImportReturnType<TElement>(edmType, _context.MetadataWorkspace);
                 return _context.MaterializedDataRecord<TElement>(
-                    _entityCommand, storeReader, _resultSetIndex, _entitySets, _edmTypes, _mergeOption, /*useSpatialReader:*/ true,
+                    _entityCommand, storeReader, _resultSetIndex, _entitySets, _edmTypes, _mergeOption, _useSpatialReader,
                     shouldReleaseConnection);
             }
             else

@@ -3477,7 +3477,7 @@ namespace System.Data.Entity.Core.Objects
                 else
                 {
                     nextResultGenerator = new NextResultGenerator(
-                        this, entityCommand, edmTypes, entitySets, mergeOption, resultSetIndex + 1);
+                        this, entityCommand, edmTypes, entitySets, mergeOption, useSpatialReader, resultSetIndex + 1);
                 }
 
                 // We want the ObjectResult to close the reader in its Dispose method, even if it is not the last result set.
