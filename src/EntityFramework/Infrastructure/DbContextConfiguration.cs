@@ -91,20 +91,26 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether C# behavior should be exhibited when comparing null values.
-        ///     If this flag is set, then any equality comparison between two operands, both of which are potentially
-        ///     nullable, will be rewritten to show C# null comparison semantics. The default value is true.
-        ///     Example:
-        ///     (operand1 = operand2) will be rewritten as
+        ///     Gets or sets a value indicating whether database null semantics are exhibited when comparing
+        ///     two operands, both of which are potentially nullable. The default value is true.
+        ///     
+        ///     For example (operand1 == operand2) will be translated as:
+        ///     
+        ///     (operand1 = operand2)
+        ///     
+        ///     if UseDatabaseNullSemantics is true, respectively
+        ///     
         ///     (((operand1 = operand2) AND NOT (operand1 IS NULL OR operand2 IS NULL)) || (operand1 IS NULL && operand2 IS NULL))
+        ///     
+        ///     if UseDatabaseNullSemantics is false.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if C# null comparison behavior is enabled; otherwise, <c>false</c> .
+        ///     <c>true</c> if database null comparison behavior is enabled, otherwise <c>false</c> .
         /// </value>
-        public bool UseCSharpNullComparisonBehavior
+        public bool UseDatabaseNullSemantics
         {
-            get { return _internalContext.UseCSharpNullComparisonBehavior; }
-            set { _internalContext.UseCSharpNullComparisonBehavior = value; }
+            get { return _internalContext.UseDatabaseNullSemantics; }
+            set { _internalContext.UseDatabaseNullSemantics = value; }
         }
 
         /// <summary>

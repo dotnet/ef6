@@ -57,7 +57,7 @@ WHERE [Extent3].[PersonId] IN (1,2)";
 
             using (var context = new Codeplex655Context())
             {
-                context.Configuration.UseCSharpNullComparisonBehavior = false;
+                context.Configuration.UseDatabaseNullSemantics = true;
 
                 var query = context.DocumentDetails.Where(x => x.Document.Customer.PersonId == 1 || x.Document.Customer.PersonId == 2);
 
@@ -107,7 +107,7 @@ WHERE 1 = [Extent1].[Id]";
 
             using (var context = new Codeplex960Context())
             {
-                context.Configuration.UseCSharpNullComparisonBehavior = false;
+                context.Configuration.UseDatabaseNullSemantics = true;
 
                 var query = from p in context.Posts where p.Id == 1 select new { p.Id, p.Text, p.ParentPost.Blog.Name };
 

@@ -228,10 +228,10 @@ namespace System.Data.Entity.Internal
         ///     Gets or sets a value indicating whether C# null comparison behavior is enabled.  This is just a wrapper
         ///     over the same flag in the underlying ObjectContext.
         /// </summary>
-        public override bool UseCSharpNullComparisonBehavior
+        public override bool UseDatabaseNullSemantics
         {
-            get { return ObjectContextInUse.ContextOptions.UseCSharpNullComparisonBehavior; }
-            set { ObjectContextInUse.ContextOptions.UseCSharpNullComparisonBehavior = value; }
+            get { return !ObjectContextInUse.ContextOptions.UseCSharpNullComparisonBehavior; }
+            set { ObjectContextInUse.ContextOptions.UseCSharpNullComparisonBehavior = !value; }
         }
 
         public override int? CommandTimeout

@@ -310,7 +310,7 @@ FROM [dbo].[Books] AS [Extent1]";
 
             using (var context = new UnicodeContext())
             {
-                context.Configuration.UseCSharpNullComparisonBehavior = false;
+                context.Configuration.UseDatabaseNullSemantics = true;
 
                 var query = context.Books.Select(q => context.Books.Select(b => b.Genre).Contains(Genre.Action));
 

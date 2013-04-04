@@ -751,17 +751,17 @@ END";
             {
                 var objectContext = ((IObjectContextAdapter)dbContext).ObjectContext;
 
-                Assert.False(dbContext.Configuration.UseCSharpNullComparisonBehavior);
+                Assert.True(dbContext.Configuration.UseDatabaseNullSemantics);
                 Assert.False(objectContext.ContextOptions.UseCSharpNullComparisonBehavior);
 
-                dbContext.Configuration.UseCSharpNullComparisonBehavior = true;
+                dbContext.Configuration.UseDatabaseNullSemantics = false;
 
-                Assert.True(dbContext.Configuration.UseCSharpNullComparisonBehavior);
+                Assert.False(dbContext.Configuration.UseDatabaseNullSemantics);
                 Assert.True(objectContext.ContextOptions.UseCSharpNullComparisonBehavior);
 
-                dbContext.Configuration.UseCSharpNullComparisonBehavior = false;
+                dbContext.Configuration.UseDatabaseNullSemantics = true;
 
-                Assert.False(dbContext.Configuration.UseCSharpNullComparisonBehavior);
+                Assert.True(dbContext.Configuration.UseDatabaseNullSemantics);
                 Assert.False(objectContext.ContextOptions.UseCSharpNullComparisonBehavior);
             }
         }

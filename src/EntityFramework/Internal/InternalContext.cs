@@ -583,9 +583,9 @@ namespace System.Data.Entity.Internal
         public abstract bool ProxyCreationEnabled { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether C# null comparison behavior is enabled.
+        ///     Gets or sets a value indicating whether database null comparison behavior is enabled.
         /// </summary>
-        public abstract bool UseCSharpNullComparisonBehavior { get; set; }
+        public abstract bool UseDatabaseNullSemantics { get; set; }
 
         public abstract int? CommandTimeout { get; set; }
 
