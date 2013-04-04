@@ -15,6 +15,8 @@ namespace System.Data.Entity.Query.LinqToEntities
         {
             using (var context = new ArubaContext())
             {
+                context.Configuration.UseCSharpNullComparisonBehavior = false;
+
                 var expectedSql =
                     @"SELECT 
 [Extent1].[c33_enum] AS [c33_enum]
@@ -37,6 +39,8 @@ WHERE 1 =  CAST( [Extent1].[c33_enum] AS int)";
         {
             using (var context = new ArubaContext())
             {
+                context.Configuration.UseCSharpNullComparisonBehavior = false;
+
                 var expectedSql =
                     @"SELECT 
 [Extent1].[c34_byteenum] AS [c34_byteenum]
@@ -59,6 +63,8 @@ WHERE 2 =  CAST( [Extent1].[c34_byteenum] AS int)";
         {
             using (var context = new ArubaContext())
             {
+                context.Configuration.UseCSharpNullComparisonBehavior = false;
+
                 var expectedSql =
                     @"SELECT 
 [Extent1].[c33_enum] AS [c33_enum]
@@ -81,6 +87,8 @@ WHERE 1 =  CAST( [Extent1].[c33_enum] AS int)";
         {
             using (var context = new ArubaContext())
             {
+                context.Configuration.UseCSharpNullComparisonBehavior = false;
+
                 var expectedSql =
                     @"SELECT 
 [Extent1].[c34_byteenum] AS [c34_byteenum]
@@ -138,6 +146,8 @@ WHERE 2 =  CAST( [Extent1].[c34_byteenum] AS int)";
         {
             using (var context = new ArubaContext())
             {
+                context.Configuration.UseCSharpNullComparisonBehavior = false;
+
                 var expectedSql =
                     @"SELECT 
 [Extent1].[c33_enum] AS [c33_enum]
@@ -357,6 +367,8 @@ INNER JOIN [dbo].[ArubaAllTypes] AS [Extent2] ON [Limit1].[c33_enum] = [Extent2]
         {
             using (var context = new ArubaContext())
             {
+                context.Configuration.UseCSharpNullComparisonBehavior = false;
+
                 var expectedSql =
                     @"SELECT 
 [Extent1].[c1_int] AS [c1_int]
@@ -382,6 +394,8 @@ WHERE ( CAST( [Extent1].[c34_byteenum] AS int) <>  CAST(  CAST(  CAST( [Extent1]
         {
             using (var context = new ArubaContext())
             {
+                context.Configuration.UseCSharpNullComparisonBehavior = false;
+
                 var expectedSql =
                     @"SELECT 
 [Extent1].[c33_enum] AS [c33_enum], 
@@ -416,6 +430,8 @@ WHERE ( CAST(  CAST( ( CAST( [Extent1].[c34_byteenum] AS int)) & (1) AS tinyint)
         {
             using (var context = new ArubaContext())
             {
+                context.Configuration.UseCSharpNullComparisonBehavior = false;
+
                 var expectedSql =
                     @"SELECT 
 CASE WHEN (CASE WHEN (0 = ([Extent1].[c1_int] % 2)) THEN [Extent1].[c33_enum] END IS NULL) THEN 1 WHEN (0 = ([Extent1].[c1_int] % 2)) THEN [Extent1].[c33_enum] END AS [C1]
