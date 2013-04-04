@@ -15,9 +15,9 @@ namespace System.Data.Entity.Internal
             public void On_a_detached_entry_throws()
             {
                 var mockInternalEntityEntry = new Mock<InternalEntityEntryForMock<object>>
-                                                  {
-                                                      CallBase = true
-                                                  };
+                    {
+                        CallBase = true
+                    };
                 mockInternalEntityEntry.Setup(e => e.OriginalValues).Returns(() => new TestInternalPropertyValues<object>());
                 mockInternalEntityEntry.Setup(e => e.IsDetached).Returns(true);
 
@@ -32,9 +32,9 @@ namespace System.Data.Entity.Internal
             public void On_an_added_entry_throws()
             {
                 var mockInternalEntityEntry = new Mock<InternalEntityEntryForMock<object>>
-                                                  {
-                                                      CallBase = true
-                                                  };
+                    {
+                        CallBase = true
+                    };
                 mockInternalEntityEntry.Setup(e => e.OriginalValues).Returns(() => new TestInternalPropertyValues<object>());
                 mockInternalEntityEntry.Setup(e => e.State).Returns(EntityState.Added);
 
@@ -54,9 +54,9 @@ namespace System.Data.Entity.Internal
             public void On_a_detached_entry_throws()
             {
                 var mockInternalEntityEntry = new Mock<InternalEntityEntryForMock<object>>
-                                                  {
-                                                      CallBase = true
-                                                  };
+                    {
+                        CallBase = true
+                    };
                 mockInternalEntityEntry.Setup(e => e.OriginalValues).Returns(() => new TestInternalPropertyValues<object>());
                 mockInternalEntityEntry.Setup(e => e.IsDetached).Returns(true);
 
@@ -73,9 +73,9 @@ namespace System.Data.Entity.Internal
             public void On_an_added_entry_throws()
             {
                 var mockInternalEntityEntry = new Mock<InternalEntityEntryForMock<object>>
-                                                  {
-                                                      CallBase = true
-                                                  };
+                    {
+                        CallBase = true
+                    };
                 mockInternalEntityEntry.Setup(e => e.OriginalValues).Returns(() => new TestInternalPropertyValues<object>());
                 mockInternalEntityEntry.Setup(e => e.State).Returns(EntityState.Added);
 
@@ -86,6 +86,64 @@ namespace System.Data.Entity.Internal
                         ExceptionHelpers.UnwrapAggregateExceptions(
                             () =>
                             mockInternalEntityEntry.Object.GetDatabaseValuesAsync(CancellationToken.None).Result)).Message);
+            }
+        }
+
+        public new class GetHashCode
+        {
+            [Fact]
+            public void Doesnt_call_GetHashCode_on_entity_object()
+            {
+                var mockInternalEntityEntry1 = new InternalEntityEntry(
+                    new Mock<InternalContextForMock>
+                        {
+                            CallBase = true
+                        }.Object, MockHelper.CreateMockStateEntry<GetHashCodeEntity>().Object);
+
+                var mockInternalEntityEntry2 = new InternalEntityEntry(
+                    new Mock<InternalContextForMock>
+                        {
+                            CallBase = true
+                        }.Object, MockHelper.CreateMockStateEntry<GetHashCodeEntity>().Object);
+
+                Assert.NotEqual(0, mockInternalEntityEntry1.GetHashCode());
+                Assert.NotEqual(0, mockInternalEntityEntry2.GetHashCode());
+
+                Assert.NotEqual(mockInternalEntityEntry1.GetHashCode(), mockInternalEntityEntry2.GetHashCode());
+            }
+        }
+
+        public new class Equals
+        {
+            [Fact]
+            public void Doesnt_call_Equals_on_entity_object()
+            {
+                var mockInternalEntityEntry1 = new InternalEntityEntry(
+                    new Mock<InternalContextForMock>
+                    {
+                        CallBase = true
+                    }.Object, MockHelper.CreateMockStateEntry<GetHashCodeEntity>().Object);
+
+                var mockInternalEntityEntry2 = new InternalEntityEntry(
+                    new Mock<InternalContextForMock>
+                    {
+                        CallBase = true
+                    }.Object, MockHelper.CreateMockStateEntry<GetHashCodeEntity>().Object);
+
+                Assert.False(mockInternalEntityEntry1.Equals(mockInternalEntityEntry2));
+            }
+        }
+
+        public class GetHashCodeEntity
+        {
+            public override bool Equals(object obj)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override int GetHashCode()
+            {
+                throw new NotImplementedException();
             }
         }
 

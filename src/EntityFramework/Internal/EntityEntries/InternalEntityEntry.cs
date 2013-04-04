@@ -13,6 +13,7 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -815,7 +816,7 @@ namespace System.Data.Entity.Internal
         /// <returns> A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. </returns>
         public override int GetHashCode()
         {
-            return _entity.GetHashCode();
+            return RuntimeHelpers.GetHashCode(_entity);
         }
 
         #endregion

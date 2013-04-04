@@ -825,7 +825,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             var value = WrappedOwner.GetNavigationPropertyValue(this);
 
-            return Equals(value, wrapper.Entity);
+            return ReferenceEquals(value, wrapper.Entity);
         }
 
         internal override void VerifyNavigationPropertyForAdd(IEntityWrapper wrapper)
@@ -834,7 +834,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 var value = WrappedOwner.GetNavigationPropertyValue(this);
                 if (!ReferenceEquals(null, value)
-                    && !Equals(value, wrapper.Entity))
+                    && !ReferenceEquals(value, wrapper.Entity))
                 {
                     throw new InvalidOperationException(
                         Strings.EntityReference_CannotAddMoreThanOneEntityToEntityReference(

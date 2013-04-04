@@ -1000,5 +1000,155 @@ namespace ProductivityApiTests
         }
 
         #endregion
+
+        #region Tests for changing tracked entities for entity classes that override GetHashCode (Issue 1005)
+
+        [Fact]
+        public void Changing_the_value_of_a_property_on_an_entity_that_overrides_GetHashCode_shouldnt_throw()
+        {
+            using (var context = new GetHashCodeContext())
+            {
+                var product = context.Products.Single(p => p.Id == "ALFKI");
+                product.SupplierId = 23;
+
+                ((IObjectContextAdapter)context).ObjectContext.DetectChanges();
+
+                Assert.Equal(EntityState.Modified, context.Entry(product).State);
+            }
+        }
+
+        [Fact]
+        public void Changing_the_value_of_a_complex_property_on_an_entity_that_overrides_GetHashCode_shouldnt_throw()
+        {
+            using (var context = new GetHashCodeContext())
+            {
+                var product = context.Products.Single(p => p.Id == "ALFKI");
+                product.Details.Name = "New Name";
+
+                ((IObjectContextAdapter)context).ObjectContext.DetectChanges();
+
+                Assert.Equal(EntityState.Modified, context.Entry(product).State);
+            }
+        }
+
+        [Fact]
+        public void Loading_related_entity_that_overrides_GetHashCode_shouldnt_throw()
+        {
+            using (var context = new GetHashCodeContext())
+            {
+                Assert.NotNull(context.Products.First().SKUs.First());
+            }
+        }
+
+        public class GetHashCodeContext : DbContext
+        {
+            public GetHashCodeContext()
+            {
+                Database.SetInitializer(new GetHashCodeInitializer());
+            }
+
+            public DbSet<GetHashCodeProduct> Products { get; set; }
+            public DbSet<GetHashCodeSKU> SKUs { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<GetHashCodeSKU>().HasRequired(o => o.Product).WithMany(o => o.SKUs)
+                .HasForeignKey(o => o.ProductId);
+            }
+        }
+
+        public class GetHashCodeInitializer : DropCreateDatabaseIfModelChanges<GetHashCodeContext>
+        {
+            protected override void Seed(GetHashCodeContext context)
+            {
+                var product = context.Products.Add(
+                    new GetHashCodeProduct
+                        {
+                            Id = "ALFKI",
+                            SupplierId = 14,
+                            Details = new GetHashCodeProductDetails
+                                {
+                                    Name = "Squiggle",
+                                    Price = 124
+                                },
+
+                        });
+
+                context.SKUs.Add(
+                    new GetHashCodeSKU
+                    {
+                        Name = "Standard Edition",
+                        Product = product,
+                        ProductId = product.Id
+                    });
+
+                context.SKUs.Add(
+                    new GetHashCodeSKU
+                        {
+                            Name = "Ultimate Edition",
+                            Product = product,
+                            ProductId = product.Id
+                        });
+            }
+        }
+
+        public class GetHashCodeProduct
+        {
+            public GetHashCodeProduct()
+            {
+                SKUs = new List<GetHashCodeSKU>();
+            }
+
+            public string Id { get; set; }
+            public int SupplierId { get; set; }
+            public GetHashCodeProductDetails Details { get; set; }
+            public virtual ICollection<GetHashCodeSKU> SKUs { get; set; }
+
+            public override int GetHashCode()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override bool Equals(object obj)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public class GetHashCodeProductDetails
+        {
+            public string Name { get; set; }
+            public int Price { get; set; }
+
+            public override int GetHashCode()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override bool Equals(object obj)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public class GetHashCodeSKU
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public virtual string ProductId { get; set; }
+            public virtual GetHashCodeProduct Product { get; set; }
+
+            public override int GetHashCode()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override bool Equals(object obj)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
     }
 }

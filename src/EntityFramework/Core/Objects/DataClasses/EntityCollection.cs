@@ -88,7 +88,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 if (null == _wrappedRelatedEntities)
                 {
-                    _wrappedRelatedEntities = new Dictionary<TEntity, IEntityWrapper>();
+                    _wrappedRelatedEntities = new Dictionary<TEntity, IEntityWrapper>(new ObjectReferenceEqualityComparer());
                 }
                 return _wrappedRelatedEntities;
             }
@@ -824,7 +824,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
                 foreach (var o in enumerable)
                 {
-                    if (Equals(o, wrapper.Entity))
+                    if (ReferenceEquals(o, wrapper.Entity))
                     {
                         return true;
                     }
@@ -872,7 +872,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // We need to call this here so that the hash set will be fully constructed
                 // ready for access.  Normally, this would happen later in the process.
                 _relatedEntities.OnDeserialization(null);
-                _wrappedRelatedEntities = new Dictionary<TEntity, IEntityWrapper>();
+                _wrappedRelatedEntities = new Dictionary<TEntity, IEntityWrapper>(new ObjectReferenceEqualityComparer());
                 foreach (var entity in _relatedEntities)
                 {
                     _wrappedRelatedEntities.Add(entity, EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext));

@@ -1819,7 +1819,7 @@ namespace System.Data.Entity.Core.Objects
 
             if (_originalComplexObjects == null)
             {
-                _originalComplexObjects = new Dictionary<object, Dictionary<int, object>>();
+                _originalComplexObjects = new Dictionary<object, Dictionary<int, object>>(new ObjectReferenceEqualityComparer());
             }
             Dictionary<int, object> ordinal2complexObject;
             if (!_originalComplexObjects.TryGetValue(userObject, out ordinal2complexObject))
@@ -2279,10 +2279,8 @@ namespace System.Data.Entity.Core.Objects
                         throw Error.RelatedEnd_UnableToAddRelationshipWithDeletedEntity();
                     }
                     if (ObjectStateManager.TransactionManager.IsAttachTracking
-                        &&
-                        (State & (EntityState.Modified | EntityState.Unchanged)) != 0
-                        &&
-                        (relatedWrapper.ObjectStateEntry.State & (EntityState.Modified | EntityState.Unchanged)) != 0)
+                        && (State & (EntityState.Modified | EntityState.Unchanged)) != 0
+                        && (relatedWrapper.ObjectStateEntry.State & (EntityState.Modified | EntityState.Unchanged)) != 0)
                     {
                         EntityEntry principalEntry = null;
                         EntityEntry dependentEntry = null;
@@ -2351,7 +2349,7 @@ namespace System.Data.Entity.Core.Objects
 
                 var val = WrappedEntity.GetNavigationPropertyValue(relatedEnd);
 
-                var current = new HashSet<object>();
+                var current = new HashSet<object>(new ObjectReferenceEqualityComparer());
                 if (val != null)
                 {
                     if (n.ToEndMember.RelationshipMultiplicity
@@ -2416,10 +2414,8 @@ namespace System.Data.Entity.Core.Objects
             var relatedEndTo = relatedEndFrom.GetOtherEndOfRelationship(relatedWrapper);
 
             if (verifyForAdd
-                &&
-                relatedEndTo is EntityReference
-                &&
-                ObjectStateManager.FindEntityEntry(relatedObject) == null)
+                && relatedEndTo is EntityReference
+                && ObjectStateManager.FindEntityEntry(relatedObject) == null)
             {
                 // If the relatedObject is not tracked by the context, let's detect it before OSM.PerformAdd to avoid
                 // making RelatedEnd.Add() more complicated (it would have to know when the values in relatedEndTo can be overriden, and when not
@@ -3039,7 +3035,7 @@ namespace System.Data.Entity.Core.Objects
         {
             if (_originalValues == null)
             {
-                _originalValues = new Dictionary<object, Dictionary<int, object>>();
+                _originalValues = new Dictionary<object, Dictionary<int, object>>(new ObjectReferenceEqualityComparer());
             }
 
             Dictionary<int, object> originalPropertyValues;
