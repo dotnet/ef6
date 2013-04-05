@@ -104,17 +104,17 @@ namespace System.Data.Entity
         protected static void RunTestWithTempMetadata(string csdl, string ssdl, string msl, Action<IEnumerable<string>> test)
         {
             var paths = new[]
-                            {
-                                Path.GetTempFileName() + ".ssdl",
-                                Path.GetTempFileName() + ".csdl",
-                                Path.GetTempFileName() + ".msl"
-                            };
+                {
+                    Path.GetTempFileName() + ".ssdl",
+                    Path.GetTempFileName() + ".csdl",
+                    Path.GetTempFileName() + ".msl"
+                };
             var metadata = new[]
-                               {
-                                   ssdl,
-                                   csdl,
-                                   msl
-                               };
+                {
+                    ssdl,
+                    csdl,
+                    msl
+                };
             try
             {
                 for (var i = 0; i < metadata.Length; i++)
@@ -419,13 +419,62 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns a simple SQL Server connection string to the local machine using attached database for the given context type.
+        ///     Returns a simple SQL Server connection string to the local machine for the given context type
+        ///     with the specified credentials.
+        /// </summary>
+        /// <param name="userId"> User ID to be use when connecting to SQL Server. </param>
+        /// <param name="password"> Password for the SQL Server account. </param>
+        /// <param name="persistSecurityInfo">
+        ///     Indicates if security-sensitive information is not returned as part of the 
+        ///     connection if the connection has ever been opened.
+        /// </param>
+        /// <returns> The connection string. </returns>
+        public static string SimpleConnectionStringWithCredentials<TContext>(
+            string userId,
+            string password,
+            bool persistSecurityInfo = false)
+            where TContext : DbContext
+        {
+            return ModelHelpers.SimpleConnectionStringWithCredentials<TContext>(
+                userId,
+                password,
+                persistSecurityInfo);
+        }
+
+        /// <summary>
+        ///     Returns a simple SQL Server connection string to the local machine using attached database
+        ///     for the given context type.
         /// </summary>
         /// <typeparam name="TContext"> The type of the context to create a connection string for. </typeparam>
+        /// <param name="useInitialCatalog">
+        ///     Specifies whether the InitialCatalog should be created from the context name.
+        /// </param>
         /// <returns> The connection string. </returns>
-        protected static string SimpleAttachConnectionString<TContext>() where TContext : DbContext
+        protected static string SimpleAttachConnectionString<TContext>(bool useInitialCatalog = true) where TContext : DbContext
         {
-            return ModelHelpers.SimpleAttachConnectionString<TContext>();
+            return ModelHelpers.SimpleAttachConnectionString<TContext>(useInitialCatalog);
+        }
+
+        /// <summary>
+        ///     Returns a simple SQL Server connection string to the local machine using an attachable database
+        ///     for the given context type with the specified credentials.
+        /// </summary>
+        /// <param name="userId"> User ID to be use when connecting to SQL Server. </param>
+        /// <param name="password"> Password for the SQL Server account. </param>
+        /// <param name="persistSecurityInfo">
+        ///     Indicates if security-sensitive information is not returned as part of the 
+        ///     connection if the connection has ever been opened.
+        /// </param>
+        /// <returns> The connection string. </returns>
+        public static string SimpleAttachConnectionStringWithCredentials<TContext>(
+            string userId,
+            string password,
+            bool persistSecurityInfo = false) where TContext : DbContext
+        {
+            return ModelHelpers.SimpleAttachConnectionStringWithCredentials<TContext>(
+                userId,
+                password,
+                persistSecurityInfo);
         }
 
         /// <summary>

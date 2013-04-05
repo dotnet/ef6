@@ -5,6 +5,9 @@ namespace ProductivityApiTests
     using System;
     using System.Data;
     using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.SqlClient;
+    using System.IO;
     using SimpleModel;
     using Xunit;
 
@@ -21,6 +24,31 @@ namespace ProductivityApiTests
             {
                 context.Database.Initialize(force: false);
             }
+
+            using (var context = new SimpleModelContextWithNoData())
+            {
+                context.Database.Initialize(force: false);
+            }
+
+            using (var connection = new SqlConnection(SimpleConnectionString("master")))
+            {
+                connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText
+                        = string.Format(
+                            @"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = N'EFTestSimpleModelUser')
+BEGIN
+  CREATE LOGIN [EFTestSimpleModelUser] WITH PASSWORD=N'Password1', DEFAULT_DATABASE=[{0}],  CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+  DENY VIEW ANY DATABASE TO [EFTestSimpleModelUser]
+  CREATE USER [EFTestSimpleModelUser] FOR LOGIN [EFTestSimpleModelUser]
+  DENY SELECT TO [EFTestSimpleModelUser]
+  GRANT CREATE DATABASE TO [EFTestSimpleModelUser]
+END", DefaultDbName<SimpleModelContext>());
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         #endregion
@@ -35,9 +63,9 @@ namespace ProductivityApiTests
             }
         }
 
-        private void AttachableDatabaseTest(Action<AttachedContext> testMethod)
+        private void AttachableDatabaseTest(Action<AttachedContext> testMethod, bool useInitialCatalog = true)
         {
-            using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>()))
+            using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>(useInitialCatalog)))
             {
                 try
                 {
@@ -67,16 +95,27 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void DatabaseExists_returns_true_for_existing_attached_database_when_using_Database_obtained_from_context()
+        public void DatabaseExists_returns_true_for_existing_attached_database_with_InitialCatalog_when_using_Database_obtained_from_context()
+        {
+            DatabaseExists_returns_true_for_existing_attached_database_when_using_Database_obtained_from_context(true);
+        }
+
+        [Fact]
+        public void DatabaseExists_returns_true_for_existing_attached_database_without_InitialCatalog_when_using_Database_obtained_from_context()
+        {
+            DatabaseExists_returns_true_for_existing_attached_database_when_using_Database_obtained_from_context(false);
+        }
+
+        private void DatabaseExists_returns_true_for_existing_attached_database_when_using_Database_obtained_from_context(bool useInitialCatalog)
         {
             AttachableDatabaseTest(
                 (context) =>
-                {
-                    // Ensure database is initialized
-                    context.Database.Initialize(force: true);
+                    {
+                        // Ensure database is initialized
+                        context.Database.Initialize(force: true);
 
-                    Assert.True(context.Database.Exists());
-                });
+                        Assert.True(context.Database.Exists());
+                    }, useInitialCatalog);
         }
 
         [Fact]
@@ -201,6 +240,186 @@ namespace ProductivityApiTests
             Assert.False(databaseExists());
         }
 
+        [Fact]
+        public void DatabaseExists_returns_true_for_existing_database_when_no_master_permissions()
+        {
+            using (var connection = new SqlConnection(SimpleConnectionString<SimpleModelContext>()))
+            {
+                connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText
+                        = string.Format(
+                            @"IF NOT EXISTS (SELECT * FROM sys.sysusers WHERE name= N'EFTestSimpleModelUser')
+BEGIN
+  CREATE USER [EFTestSimpleModelUser] FOR LOGIN [EFTestSimpleModelUser]
+END");
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            var connectionString
+                = SimpleConnectionStringWithCredentials<SimpleModelContext>(
+                    "EFTestSimpleModelUser",
+                    "Password1");
+
+            using (var context = new SimpleModelContext(connectionString))
+            {
+                // Note: Database gets created as part of TestInit
+                Assert.True(context.Database.Exists());
+            }
+        }
+
+        [Fact]
+        public void DatabaseExists_returns_false_for_existing_database_when_no_master_nor_database_permissions()
+        {
+            using (var connection = new SqlConnection(SimpleConnectionString<SimpleModelContext>()))
+            {
+                connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText
+                        = string.Format(
+                            @"IF EXISTS (SELECT * FROM sys.sysusers WHERE name= N'EFTestSimpleModelUser')
+BEGIN
+  DROP USER [EFTestSimpleModelUser]
+END");
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            var connectionString
+                = SimpleConnectionStringWithCredentials<SimpleModelContext>(
+                    "EFTestSimpleModelUser",
+                    "Password1");
+            
+            using (var context = new SimpleModelContext(connectionString))
+            {
+                Assert.False(context.Database.Exists());
+            }
+        }
+
+        [Fact]
+        public void DatabaseExists_returns_false_for_non_existing_database_when_no_master_permissions()
+        {
+            var connectionString
+                = SimpleConnectionStringWithCredentials<EmptyContext>(
+                    "EFTestSimpleModelUser",
+                    "Password1");
+
+            DatabaseExists_returns_false_for_non_existing_database(
+                () => Database.Exists(connectionString));
+        }
+
+        [Fact]
+        public void DatabaseExists_returns_true_for_existing_attached_database_when_no_master_permissions()
+        {
+            var connectionString = SimpleAttachConnectionString<AttachedContext>();
+            using (var context = new AttachedContext(connectionString))
+            {
+                // Ensure database is initialized
+                context.Database.Initialize(force: true);
+            }
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText =
+                        @"IF NOT EXISTS (SELECT * FROM sys.sysusers WHERE name= N'EFTestSimpleModelUser')
+BEGIN
+  CREATE USER [EFTestSimpleModelUser] FOR LOGIN [EFTestSimpleModelUser]
+END";
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            try
+            {
+                using (var context = new AttachedContext(
+                    SimpleAttachConnectionStringWithCredentials<AttachedContext>(
+                        "EFTestSimpleModelUser",
+                        "Password1")))
+                {
+                    Assert.True(context.Database.Exists());
+                }
+            }
+            finally
+            {
+                using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>()))
+                {
+                    context.Database.Delete();
+                }
+            }
+        }
+
+        [Fact]
+        public void DatabaseExists_returns_false_for_existing_attached_database_with_InitialCatalog_when_no_master_nor_database_permission()
+        {
+            DatabaseExists_returns_false_for_existing_attached_database_when_no_master_nor_database_permission(true);
+        }
+
+        [Fact]
+        public void DatabaseExists_returns_false_for_existing_attached_database_without_InitialCatalog_when_no_master_nor_database_permission()
+        {
+            DatabaseExists_returns_false_for_existing_attached_database_when_no_master_nor_database_permission(false);
+        }
+
+        private void DatabaseExists_returns_false_for_existing_attached_database_when_no_master_nor_database_permission(bool useInitialcatalog)
+        {
+            using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>()))
+            {
+                // Ensure database is initialized
+                context.Database.Initialize(force: true);
+            }
+
+            try
+            {
+                using (var context = new AttachedContext(
+                    SimpleAttachConnectionStringWithCredentials<AttachedContext>(
+                        "EFTestSimpleModelUser",
+                        "Password1",
+                        useInitialcatalog)))
+                {
+                    Assert.False(context.Database.Exists());
+                }
+            }
+            finally
+            {
+                using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>()))
+                {
+                    context.Database.Delete();
+                }
+            }
+        }
+
+        [Fact]
+        public void DatabaseExists_returns_false_for_non_existing_attached_database_with_InitialCatalog_when_no_master_permission()
+        {
+            DatabaseExists_returns_false_for_non_existing_attached_database_when_no_master_permission(true);
+        }
+
+        [Fact]
+        public void DatabaseExists_returns_false_for_non_existing_attached_database_without_InitialCatalog_when_no_master_permission()
+        {
+            DatabaseExists_returns_false_for_non_existing_attached_database_when_no_master_permission(false);
+        }
+
+        private void DatabaseExists_returns_false_for_non_existing_attached_database_when_no_master_permission(bool useInitialCatalog)
+        {
+            using (var context = new AttachedContext(
+                SimpleAttachConnectionStringWithCredentials<AttachedContext>(
+                    "EFTestSimpleModelUser",
+                    "Password1", useInitialCatalog)))
+            {
+                Assert.False(context.Database.Exists());
+            }
+        }
+
         #endregion
 
         #region Positive Delete tests
@@ -296,17 +515,29 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Can_delete_attached_database_if_exists_using_Database_obtained_from_context()
+        public void Can_delete_attached_database_with_InitialCatalog_if_exists_using_Database_obtained_from_context()
+        {
+            Can_delete_attached_database_if_exists_using_Database_obtained_from_context(true);
+        }
+
+        [Fact]
+        public void Can_delete_attached_database_without_InitialCatalog_if_exists_using_Database_obtained_from_context()
+        {
+            Can_delete_attached_database_if_exists_using_Database_obtained_from_context(false);
+        }
+
+        private void Can_delete_attached_database_if_exists_using_Database_obtained_from_context(bool useInitialCatalog)
         {
             AttachableDatabaseTest(
                 (context) =>
-                {
-                    // Ensure database is initialized
-                    context.Database.Initialize(force: true);
+                    {
+                        // Ensure database is initialized
+                        context.Database.Initialize(force: true);
 
-                    Assert.True(context.Database.Delete());
-                    Assert.False(context.Database.Exists());
-                });
+                        Assert.True(context.Database.Delete());
+                        Assert.False(context.Database.Exists());
+                        Assert.False(File.Exists(GetAttachDbFilename(context)));
+                    }, useInitialCatalog);
         }
 
         [Fact]
@@ -326,6 +557,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void Can_delete_database_if_exists_using_static_method_taking_named_connection_string_where_last_token_exists_in_config_file(
+            
             )
         {
             Can_delete_database_if_exists_using_static_method_taking_named_connection_string(
@@ -397,10 +629,21 @@ namespace ProductivityApiTests
         {
             AttachableDatabaseTest(
                 (context) =>
+                    {
+                        // NOTE: Database has not been initialized/created
+                        Assert.False(context.Database.Delete());
+                    });
+        }
+
+        [Fact]
+        public void DeleteDatabaseIfExists_does_nothing_if_attached_database_without_InitialCatalog_does_not_exist_using_Database_obtained_from_context()
+        {
+            AttachableDatabaseTest(
+                (context) =>
                 {
                     // NOTE: Database has not been initialized/created
                     Assert.False(context.Database.Delete());
-                });
+                }, useInitialCatalog: false);
         }
 
         [Fact]
@@ -498,16 +741,27 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Can_create_attached_database_using_Database_obtained_from_context()
+        public void Can_create_attached_database_with_InitialCatalog_using_Database_obtained_from_context()
+        {
+            Can_create_attached_database_using_Database_obtained_from_context(true);
+        }
+
+        [Fact]
+        public void Can_create_attached_database_without_InitialCatalog_using_Database_obtained_from_context()
+        {
+            Can_create_attached_database_using_Database_obtained_from_context(true);
+        }
+
+        private void Can_create_attached_database_using_Database_obtained_from_context(bool useInitialCatalog)
         {
             AttachableDatabaseTest(
                 (context) =>
-                {
-                    // Ensure database is initialized
-                    context.Database.Initialize(force: true);
+                    {
+                        // Ensure database is initialized
+                        context.Database.Initialize(force: true);
 
-                    Can_create_database(context.Database);
-                });
+                        Can_create_database(context.Database);
+                    }, useInitialCatalog);
         }
 
         private void Can_create_database(Database database)
@@ -880,5 +1134,11 @@ namespace ProductivityApiTests
         }
 
         #endregion
+
+        private string GetAttachDbFilename(DbContext context)
+        {
+            var connectionStringBuilder = new SqlConnectionStringBuilder(context.Database.Connection.ConnectionString);
+            return connectionStringBuilder.AttachDBFilename;
+        }
     }
 }

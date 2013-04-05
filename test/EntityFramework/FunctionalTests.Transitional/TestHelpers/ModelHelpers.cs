@@ -91,8 +91,8 @@ namespace System.Data.Entity
 
         #region Connection helpers
 
-        private static string _baseConnectionString = ConfigurationManager.AppSettings["BaseConnectionString"]
-            ?? @"Data Source=.\SQLEXPRESS; Integrated Security=True;";
+        private static readonly string _baseConnectionString = ConfigurationManager.AppSettings["BaseConnectionString"]
+                                                               ?? @"Data Source=.\SQLEXPRESS; Integrated Security=True;";
 
         public static string BaseConnectionString
         {
@@ -107,27 +107,64 @@ namespace System.Data.Entity
         public static string SimpleConnectionString(string databaseName)
         {
             return new SqlConnectionStringBuilder(_baseConnectionString)
-                    {
-                        InitialCatalog = databaseName
-                    }
+                {
+                    InitialCatalog = databaseName
+                }
                 .ConnectionString;
         }
 
         /// <summary>
-        ///     Returns a simple SQL Server connection string to the local machine using an attachable database with the given database name.
+        ///     Returns a simple SQL Server connection string to the local machine using an attachable database
+        ///     with the given database name.
         /// </summary>
         /// <param name="databaseName"> The database name. </param>
+        /// <param name="useInitialCatalog">
+        ///     Specifies whether the InitialCatalog should be created from the context name.
+        /// </param>
         /// <returns> The connection string. </returns>
-        public static string SimpleAttachConnectionString(string databaseName)
+        public static string SimpleAttachConnectionString(string databaseName, bool useInitialCatalog = true)
         {
             var databasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseName + ".mdf");
 
             return new SqlConnectionStringBuilder(_baseConnectionString)
-                    {
-                        InitialCatalog = databaseName,
-                        AttachDBFilename = databasePath
-                    }
-                .ConnectionString;
+                {
+                    InitialCatalog = useInitialCatalog ? databaseName : string.Empty,
+                    AttachDBFilename = databasePath,
+                    UserInstance = !useInitialCatalog
+                }.ConnectionString;
+        }
+
+        /// <summary>
+        ///     Returns a simple SQL Server connection string to the local machine using an attachable database
+        ///     with the given database name and the specified credentials.
+        /// </summary>
+        /// <param name="databaseName"> The database name. </param>
+        /// <param name="userId"> User ID to be use when connecting to SQL Server. </param>
+        /// <param name="password"> Password for the SQL Server account. </param>
+        /// <param name="persistSecurityInfo">
+        ///     Indicates if security-sensitive information is not returned as part of the 
+        ///     connection if the connection has ever been opened.
+        /// </param>
+        /// <returns> The connection string. </returns>
+        public static string SimpleAttachConnectionStringWithCredentials(
+            string databaseName,
+            string userId,
+            string password,
+            bool persistSecurityInfo = false)
+        {
+            var databasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, databaseName + ".mdf");
+
+            var builder = new SqlConnectionStringBuilder(_baseConnectionString)
+                {
+                    InitialCatalog = databaseName,
+                    AttachDBFilename = databasePath,
+                    UserID = userId,
+                    Password = password,
+                    PersistSecurityInfo = persistSecurityInfo
+                };
+            builder.Remove("Integrated Security");
+
+            return builder.ConnectionString;
         }
 
         /// <summary>
@@ -161,8 +198,9 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Returns a simple SQL CE connection string to the local machine with the given database name.
-        ///     <param name="databaseName"> Name of the database. </param>
-        ///     <returns> The connection string. </returns>
+        /// </summary>
+        /// <param name="databaseName"> Name of the database. </param>
+        /// <returns> The connection string. </returns>
         public static string SimpleCeConnectionString(string databaseName)
         {
             return String.Format(
@@ -191,13 +229,64 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns a simple SQL Server connection string to the local machine using an attachable database for the given context type.
+        ///     Returns a simple SQL Server connection string to the local machine for the given context type
+        ///     with the specified credentials.
+        /// </summary>
+        /// <param name="userId"> User ID to be use when connecting to SQL Server. </param>
+        /// <param name="password"> Password for the SQL Server account. </param>
+        /// <param name="persistSecurityInfo">
+        ///     Indicates if security-sensitive information is not returned as part of the 
+        ///     connection if the connection has ever been opened.
+        /// </param>
+        /// <returns> The connection string. </returns>
+        public static string SimpleConnectionStringWithCredentials<TContext>(
+            string userId,
+            string password,
+            bool persistSecurityInfo = false)
+            where TContext : DbContext
+        {
+            return SimpleConnectionStringWithCredentials(
+                DefaultDbName<TContext>(),
+                userId,
+                password,
+                persistSecurityInfo);
+        }
+
+        /// <summary>
+        ///     Returns a simple SQL Server connection string to the local machine using an attachable database
+        ///     for the given context type.
         /// </summary>
         /// <typeparam name="TContext"> The type of the context to create a connection string for. </typeparam>
+        /// <param name="useInitialCatalog">
+        ///     Specifies whether the InitialCatalog should be created from the context name.
+        /// </param>
         /// <returns> The connection string. </returns>
-        public static string SimpleAttachConnectionString<TContext>() where TContext : DbContext
+        public static string SimpleAttachConnectionString<TContext>(bool useInitialCatalog = true) where TContext : DbContext
         {
-            return SimpleAttachConnectionString(DefaultDbName<TContext>());
+            return SimpleAttachConnectionString(DefaultDbName<TContext>(), useInitialCatalog);
+        }
+
+        /// <summary>
+        ///     Returns a simple SQL Server connection string to the local machine using an attachable database
+        ///     for the given context type with the specified credentials.
+        /// </summary>
+        /// <param name="userId"> User ID to be use when connecting to SQL Server. </param>
+        /// <param name="password"> Password for the SQL Server account. </param>
+        /// <param name="persistSecurityInfo">
+        ///     Indicates if security-sensitive information is not returned as part of the 
+        ///     connection if the connection has ever been opened.
+        /// </param>
+        /// <returns> The connection string. </returns>
+        public static string SimpleAttachConnectionStringWithCredentials<TContext>(
+            string userId,
+            string password,
+            bool persistSecurityInfo = false) where TContext : DbContext
+        {
+            return SimpleAttachConnectionStringWithCredentials(
+                DefaultDbName<TContext>(),
+                userId,
+                password,
+                persistSecurityInfo);
         }
 
         /// <summary>

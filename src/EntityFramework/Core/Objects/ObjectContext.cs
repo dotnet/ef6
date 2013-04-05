@@ -4508,11 +4508,45 @@ namespace System.Data.Entity.Core.Objects
         ///     Checks if the database that is specified as the database in the current store connection exists on the store. Most of the actual work
         ///     is done by the DbProviderServices implementation for the current store connection.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public virtual bool DatabaseExists()
         {
             var storeConnection = ((EntityConnection)Connection).StoreConnection;
             var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
-            return services.DatabaseExists(storeConnection, CommandTimeout, GetStoreItemCollection());
+            try
+            {
+                return services.DatabaseExists(storeConnection, CommandTimeout, GetStoreItemCollection());
+            }
+            catch (Exception)
+            {
+                // In situations where the user does not have access to the master database
+                // the above DatabaseExists call fails and throws an exception.  Rather than
+                // just let that exception escape to the caller we instead try a different
+                // approach to see if the database really does exist or not.  The approach
+                // is to try to open a connection to the database.  If this succeeds then
+                // we know that the database exists.  If it fails then the database may
+                // not exist or there may be some other issue connecting to it.  In either
+                // case for the purpose of this call we assume that it does not exist and
+                // return false since this functionally gives the best experience in most
+                // scenarios.
+                if (Connection.State == ConnectionState.Open)
+                {
+                    return true;
+                }
+                try
+                {
+                    Connection.Open();
+                    return true;
+                }
+                catch (EntityException)
+                {
+                    return false;
+                }
+                finally
+                {
+                    Connection.Close();
+                }
+            }
         }
 
         private StoreItemCollection GetStoreItemCollection()

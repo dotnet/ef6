@@ -69,7 +69,7 @@ namespace ProductivityApiUnitTests
     /// </summary>
     public class DbContextTests : TestBase
     {
-        static DbContextTests()
+        public DbContextTests()
         {
             // Ensure the basic-auth test user exists
 
@@ -431,8 +431,7 @@ END";
         public void Can_initialize_database_when_using_secure_connection_string_with_sql_server_authentication_and_lazy_connection()
         {
             var connectionString
-                = SimpleConnectionStringWithCredentials(
-                    "PersistSecurityInfoContext",
+                = SimpleConnectionStringWithCredentials<PersistSecurityInfoContext>(
                     "EFTestUser",
                     "Password1");
 
@@ -456,8 +455,7 @@ END";
         public void Can_initialize_database_when_using_secure_connection_string_with_sql_server_authentication_and_eager_connection()
         {
             var connectionString
-                = SimpleConnectionStringWithCredentials(
-                    "PersistSecurityInfoContext",
+                = SimpleConnectionStringWithCredentials<PersistSecurityInfoContext>(
                     "EFTestUser",
                     "Password1");
 
@@ -483,8 +481,7 @@ END";
         public void Can_use_ddl_ops_when_using_secure_connection_string_with_sql_server_authentication_and_eager_context()
         {
             var connectionString
-                = SimpleConnectionStringWithCredentials(
-                    "PersistSecurityInfoContext",
+                = SimpleConnectionStringWithCredentials<PersistSecurityInfoContext>(
                     "EFTestUser",
                     "Password1");
 

@@ -1087,7 +1087,7 @@ namespace System.Data.Entity.SqlServer
                 DropDatabase(sqlConnection, commandTimeout, initialCatalog);
             }
 
-                // initial catalog not specified
+            // initial catalog not specified
             else if (!string.IsNullOrEmpty(attachDBFile))
             {
                 var fullFileName = GetMdfFileName(attachDBFile);
@@ -1134,14 +1134,31 @@ namespace System.Data.Entity.SqlServer
             SqlConnection.ClearAllPools();
 
             var dropDatabaseScript = SqlDdlBuilder.DropDatabaseScript(databaseName);
-            UsingMasterConnection(
-                sqlConnection, conn =>
+
+            try
+            {
+                UsingMasterConnection(
+                    sqlConnection, conn =>
                     {
                         using (var command = CreateCommand(conn, dropDatabaseScript, commandTimeout))
                         {
                             command.ExecuteNonQuery();
                         }
                     });
+            }
+            catch (SqlException sqlException)
+            { 
+                foreach (SqlError err in sqlException.Errors)
+                {
+                    // Unable to open the physical file %0.
+                    // Operating system error 2: "2(The system cannot find the file specified.)".
+                    if (err.Number == 5120)
+                    {
+                        return;
+                    }
+                }
+                throw;
+            }
         }
 
         private static string CreateObjectsScript(SqlVersion version, StoreItemCollection storeItemCollection)
