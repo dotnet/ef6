@@ -4,7 +4,6 @@ namespace System.Data.Entity.Query
 {
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Resources;
     using Xunit;
 
     public class ModelDefinedFunctionTests : FunctionalTestBase
@@ -16,19 +15,14 @@ namespace System.Data.Entity.Query
         public void Exception_thrown_for_function_with_no_body()
         {
             var query = "ProductModel.F_NoBody()";
-            var expectedExceptionMessage = Strings.Cqt_UDF_FunctionHasNoDefinition("ProductModel.F_NoBody()");
-
-            QueryTestHelpers.VerifyThrows<InvalidOperationException>(query, workspace, expectedExceptionMessage);
+            QueryTestHelpers.VerifyThrows<InvalidOperationException>(query, workspace, "Cqt_UDF_FunctionHasNoDefinition", "ProductModel.F_NoBody()");
         }
 
         [Fact]
         public void Exception_thrown_if_invalid_parameter_passed_to_function()
         {
             var query = "ProductModel.F_I(10)";
-            var expectedExceptionMessage = Strings.Cqt_UDF_FunctionDefinitionResultTypeMismatch(
-                "Edm.Int32", "ProductModel.F_I", "Edm.Int16");
-
-            QueryTestHelpers.VerifyThrows<InvalidOperationException>(query, workspace, expectedExceptionMessage);
+            QueryTestHelpers.VerifyThrows<InvalidOperationException>(query, workspace, "Cqt_UDF_FunctionDefinitionResultTypeMismatch", "Edm.Int32", "ProductModel.F_I", "Edm.Int16");
         }
 
         [Fact]
@@ -59,23 +53,17 @@ FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]";
         public void Exception_thrown_for_function_with_direct_reference_to_itself_in_definition()
         {
             var query = "ProductModel.F_D()";
-            var expectedExceptionMessage = Strings.Cqt_UDF_FunctionDefinitionWithCircularReference("ProductModel.F_D");
-
-            QueryTestHelpers.VerifyThrows<EntityCommandCompilationException>(query, workspace, expectedExceptionMessage);
+            QueryTestHelpers.VerifyThrows<EntityCommandCompilationException>(query, workspace, "Cqt_UDF_FunctionDefinitionWithCircularReference", "ProductModel.F_D");
         }
 
         [Fact]
         public void Exception_thrown_for_function_with_indirect_reference_to_itself_in_definition()
         {
             var query1 = "ProductModel.F_E()";
-            var expectedExceptionMessage1 = Strings.Cqt_UDF_FunctionDefinitionWithCircularReference("ProductModel.F_E");
-
-            QueryTestHelpers.VerifyThrows<EntityCommandCompilationException>(query1, workspace, expectedExceptionMessage1);
+            QueryTestHelpers.VerifyThrows<EntityCommandCompilationException>(query1, workspace, "Cqt_UDF_FunctionDefinitionWithCircularReference", "ProductModel.F_E");
 
             var query2 = "ProductModel.F_F()";
-            var expectedExceptionMessage2 = Strings.Cqt_UDF_FunctionDefinitionWithCircularReference("ProductModel.F_F");
-
-            QueryTestHelpers.VerifyThrows<EntityCommandCompilationException>(query2, workspace, expectedExceptionMessage2);
+            QueryTestHelpers.VerifyThrows<EntityCommandCompilationException>(query2, workspace, "Cqt_UDF_FunctionDefinitionWithCircularReference", "ProductModel.F_F");
         }
 
         [Fact]
@@ -85,9 +73,13 @@ FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]";
                 @"using ProductModel;
 function F_H() as (1)
 F_G()";
-            var expectedExceptionMessage = Strings.CannotResolveNameToTypeOrFunction("F_H") + " Near simple identifier, line 3, column 7.";
 
-            QueryTestHelpers.VerifyThrows<EntitySqlException>(query, workspace, expectedExceptionMessage);
+            QueryTestHelpers.VerifyThrows<EntitySqlException>(
+                query, 
+                workspace, 
+                "CannotResolveNameToTypeOrFunction", 
+                s => s.Replace(" Near simple identifier, line 3, column 7.", ""), 
+                "F_H");
         }
 
         [Fact]
@@ -487,25 +479,35 @@ ORDER BY [Project3].[C2] ASC";
         public void Overload_resolution_for_function_taking_two_integers_as_arguments_negative()
         {
             var query1 = "ProductModel.F_In_ST_1(CAST(1 as Int16), CAST(1 AS Int32))";
-            var expectedExceptionMessage1 = Strings.AmbiguousFunctionArguments
-                                            + " Near function 'ProductModel.F_In_ST_1()', line 1, column 14.";
-            QueryTestHelpers.VerifyThrows<EntitySqlException>(query1, workspace, expectedExceptionMessage1);
+            QueryTestHelpers.VerifyThrows<EntitySqlException>(
+                query1, 
+                workspace, 
+                "AmbiguousFunctionArguments", 
+                s => s.Replace(" Near function 'ProductModel.F_In_ST_1()', line 1, column 14.", ""));
 
             var query2 = "ProductModel.F_In_ST_1(CAST(1 as Int16), CAST(1 AS Int16))";
-            var expectedExceptionMessage2 = Strings.AmbiguousFunctionArguments
-                                            + " Near function 'ProductModel.F_In_ST_1()', line 1, column 14.";
-            QueryTestHelpers.VerifyThrows<EntitySqlException>(query2, workspace, expectedExceptionMessage2);
+            QueryTestHelpers.VerifyThrows<EntitySqlException>(
+                query2, 
+                workspace, 
+                "AmbiguousFunctionArguments",
+                s => s.Replace(" Near function 'ProductModel.F_In_ST_1()', line 1, column 14.", ""));
 
             var query3 = "ProductModel.F_In_ST_1(CAST(1 as Int64), CAST(1 AS Int16))";
-            var expectedExceptionMessage3 = Strings.AmbiguousFunctionArguments
-                                            + " Near function 'ProductModel.F_In_ST_1()', line 1, column 14.";
-            QueryTestHelpers.VerifyThrows<EntitySqlException>(query3, workspace, expectedExceptionMessage3);
+            QueryTestHelpers.VerifyThrows<EntitySqlException>(
+                query3, 
+                workspace, 
+                "AmbiguousFunctionArguments",
+                s => s.Replace(" Near function 'ProductModel.F_In_ST_1()', line 1, column 14.", ""));
 
             var query4 = "ProductModel.F_In_ST_1(CAST(1 as Double), CAST(1 AS Double))";
-            var expectedExceptionMessage4 = Strings.NoFunctionOverloadMatch(
-                "ProductModel", "F_In_ST_1", "F_In_ST_1(Edm.Double, Edm.Double)") + " Near function 'F_In_ST_1()', line 1, column 14.";
-
-            QueryTestHelpers.VerifyThrows<EntitySqlException>(query4, workspace, expectedExceptionMessage4);
+            QueryTestHelpers.VerifyThrows<EntitySqlException>(
+                query4,
+                workspace,
+                "NoFunctionOverloadMatch",
+                s => s.Replace(" Near function 'F_In_ST_1()', line 1, column 14.", ""),
+                "ProductModel", 
+                "F_In_ST_1", 
+                "F_In_ST_1(Edm.Double, Edm.Double)");
         }
 
         [Fact]
@@ -556,17 +558,22 @@ ORDER BY [Project3].[C2] ASC";
         [Fact]
         public void Overload_resolution_for_function_taking_entity_and_integer_as_arguments_negative()
         {
-            var query1 =
-                "ProductModel.F_In_ProdNumber2(anyelement(select value treat(p as ProductModel.DiscontinuedProduct) from ProductContainer.Products as p), CAST(1 as Int32))";
-            var expectedExceptionMessage1 = Strings.AmbiguousFunctionArguments
-                                            + " Near function 'ProductModel.F_In_ProdNumber2()', line 1, column 14.";
-            QueryTestHelpers.VerifyThrows<EntitySqlException>(query1, workspace, expectedExceptionMessage1);
+            var query1 = "ProductModel.F_In_ProdNumber2(anyelement(select value treat(p as ProductModel.DiscontinuedProduct) from ProductContainer.Products as p), CAST(1 as Int32))";
+            QueryTestHelpers.VerifyThrows<EntitySqlException>(
+                query1, 
+                workspace, 
+                "AmbiguousFunctionArguments",
+                s => s.Replace(" Near function 'ProductModel.F_In_ProdNumber2()', line 1, column 14.", ""));
 
             var query2 = "ProductModel.F_In_ProdNumber2(anyelement(ProductContainer.Products), CAST(1 as Decimal))";
-            var expectedExceptionMessage2 = Strings.NoFunctionOverloadMatch(
-                "ProductModel", "F_In_ProdNumber2", "F_In_ProdNumber2(ProductModel.Product, Edm.Decimal)")
-                                            + " Near function 'F_In_ProdNumber2()', line 1, column 14.";
-            QueryTestHelpers.VerifyThrows<EntitySqlException>(query2, workspace, expectedExceptionMessage2);
+            QueryTestHelpers.VerifyThrows<EntitySqlException>(
+                query2, 
+                workspace, 
+                "NoFunctionOverloadMatch",
+                s => s.Replace(" Near function 'F_In_ProdNumber2()', line 1, column 14.", ""),
+                "ProductModel", 
+                "F_In_ProdNumber2", 
+                "F_In_ProdNumber2(ProductModel.Product, Edm.Decimal)");
         }
 
         [Fact]
@@ -605,16 +612,22 @@ ORDER BY [Project3].[C2] ASC";
         {
             var query1 =
                 "ProductModel.F_In_Row(Row(anyelement(select value treat(p as ProductModel.DiscontinuedProduct) from ProductContainer.Products as p) as x, CAST(1 as Int32) as y))";
-            var expectedExceptionMessage1 = Strings.AmbiguousFunctionArguments
-                                            + " Near function 'ProductModel.F_In_Row()', line 1, column 14.";
-            QueryTestHelpers.VerifyThrows<EntitySqlException>(query1, workspace, expectedExceptionMessage1);
+            QueryTestHelpers.VerifyThrows<EntitySqlException>(
+                query1,
+                workspace,
+                "AmbiguousFunctionArguments",
+                s => s.Replace(" Near function 'ProductModel.F_In_Row()', line 1, column 14.", ""));
 
             var query2 = "ProductModel.F_In_Row(Row(anyelement(ProductContainer.Products) as x, CAST(1 as Decimal) as y))";
-            var expectedExceptionMessage2 = Strings.NoFunctionOverloadMatch(
-                "ProductModel", "F_In_Row",
-                "F_In_Row(Transient.rowtype[(x,ProductModel.Product(Nullable=True,DefaultValue=)),(y,Edm.Decimal(Nullable=True,DefaultValue=,Precision=,Scale=))])")
-                                            + " Near function 'F_In_Row()', line 1, column 14.";
-            QueryTestHelpers.VerifyThrows<EntitySqlException>(query2, workspace, expectedExceptionMessage2);
+            QueryTestHelpers.VerifyThrows<EntitySqlException>(
+                query2,
+                workspace,
+                "NoFunctionOverloadMatch",
+                s => s.Replace(
+                    " Near function 'F_In_Row()', line 1, column 14.", ""),
+                    "ProductModel",
+                    "F_In_Row",
+                    "F_In_Row(Transient.rowtype[(x,ProductModel.Product(Nullable=True,DefaultValue=)),(y,Edm.Decimal(Nullable=True,DefaultValue=,Precision=,Scale=))])");
         }
 
         [Fact]
@@ -635,16 +648,21 @@ ORDER BY [Project3].[C2] ASC";
         {
             var query1 =
                 "ProductModel.F_In_ColRow({Row(anyelement(select value treat(p as ProductModel.DiscontinuedProduct) from ProductContainer.Products as p) as x, CAST(1 as Int32) as y)})";
-            var expectedExceptionMessage1 = Strings.AmbiguousFunctionArguments
-                                            + " Near function 'ProductModel.F_In_ColRow()', line 1, column 14.";
-            QueryTestHelpers.VerifyThrows<EntitySqlException>(query1, workspace, expectedExceptionMessage1);
+            QueryTestHelpers.VerifyThrows<EntitySqlException>(
+                query1,
+                workspace,
+                "AmbiguousFunctionArguments",
+                s => s.Replace(" Near function 'ProductModel.F_In_ColRow()', line 1, column 14.", ""));
 
             var query2 = "ProductModel.F_In_ColRow({Row(anyelement(ProductContainer.Products) as x, CAST(1 as Decimal) as y)})";
-            var expectedExceptionMessage2 = Strings.NoFunctionOverloadMatch(
-                "ProductModel", "F_In_ColRow",
-                "F_In_ColRow(Transient.collection[Transient.rowtype[(x,ProductModel.Product(Nullable=True,DefaultValue=)),(y,Edm.Decimal(Nullable=True,DefaultValue=,Precision=,Scale=))](Nullable=True,DefaultValue=)])")
-                                            + " Near function 'F_In_ColRow()', line 1, column 14.";
-            QueryTestHelpers.VerifyThrows<EntitySqlException>(query2, workspace, expectedExceptionMessage2);
+            QueryTestHelpers.VerifyThrows<EntitySqlException>(
+                query2,
+                workspace,
+                "NoFunctionOverloadMatch",
+                s => s.Replace(" Near function 'F_In_ColRow()', line 1, column 14.", ""),
+                "ProductModel",
+                "F_In_ColRow",
+                "F_In_ColRow(Transient.collection[Transient.rowtype[(x,ProductModel.Product(Nullable=True,DefaultValue=)),(y,Edm.Decimal(Nullable=True,DefaultValue=,Precision=,Scale=))](Nullable=True,DefaultValue=)])");
         }
 
         [Fact]
@@ -668,15 +686,21 @@ ORDER BY [Project3].[C2] ASC";
         public void Overload_resolution_for_functions_with_nulls_as_arguments_negative()
         {
             var query1 = "ProductModel.F_In_Number(null)";
-            var expectedExceptionMessage1 = Strings.AmbiguousFunctionArguments
-                                            + " Near function 'ProductModel.F_In_Number()', line 1, column 14.";
-            QueryTestHelpers.VerifyThrows<EntitySqlException>(query1, workspace, expectedExceptionMessage1);
+            QueryTestHelpers.VerifyThrows<EntitySqlException>(
+                query1,
+                workspace,
+                "AmbiguousFunctionArguments",
+                s => s.Replace(" Near function 'ProductModel.F_In_Number()', line 1, column 14.", ""));
 
             var query2 = "ProductModel.F_In_ColRow2(CAST(1 as Int16), null, CAST(1 as Int64))";
-            var expectedExceptionMessage2 = Strings.NoFunctionOverloadMatch(
-                "ProductModel", "F_In_ColRow2", "F_In_ColRow2(Edm.Int16, NULL, Edm.Int64)")
-                                            + " Near function 'F_In_ColRow2()', line 1, column 14.";
-            QueryTestHelpers.VerifyThrows<EntitySqlException>(query2, workspace, expectedExceptionMessage2);
+            QueryTestHelpers.VerifyThrows<EntitySqlException>(
+                query2, 
+                workspace, 
+                "NoFunctionOverloadMatch",
+                s => s.Replace(" Near function 'F_In_ColRow2()', line 1, column 14.", ""),
+                "ProductModel", 
+                "F_In_ColRow2", 
+                "F_In_ColRow2(Edm.Int16, NULL, Edm.Int64)");
         }
     }
 }

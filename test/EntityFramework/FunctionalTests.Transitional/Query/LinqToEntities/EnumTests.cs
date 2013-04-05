@@ -111,16 +111,14 @@ WHERE 2 =  CAST( [Extent1].[c34_byteenum] AS int)";
         {
             using (var context = new ArubaContext())
             {
-                var message = Assert.Throws<NotSupportedException>(
-                    () =>
-                    context.AllTypes.Select(a => (ArubaEnum?)a.c33_enum is ArubaEnum).ToList()).Message;
-
-                Assert.True(
-                    message.Contains(
-                        Strings.ELinq_UnsupportedIsOrAs(
-                            "TypeIs",
-                            "System.Nullable`1[[System.Data.Entity.TestModels.ArubaModel.ArubaEnum, EntityFramework.FunctionalTests.Transitional, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]]",
-                            "System.Data.Entity.TestModels.ArubaModel.ArubaEnum")));
+                Assert.Throws<NotSupportedException>(
+                    () => context.AllTypes.Select(a => (ArubaEnum?)a.c33_enum is ArubaEnum).ToList()).ValidateMessage(
+                    typeof(DbContext).Assembly,
+                    "ELinq_UnsupportedIsOrAs",
+                    null, 
+                    "TypeIs",
+                    "System.Nullable`1[[System.Data.Entity.TestModels.ArubaModel.ArubaEnum, EntityFramework.FunctionalTests.Transitional, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]]",
+                    "System.Data.Entity.TestModels.ArubaModel.ArubaEnum");
             }
         }
 
@@ -129,15 +127,14 @@ WHERE 2 =  CAST( [Extent1].[c34_byteenum] AS int)";
         {
             using (var context = new ArubaContext())
             {
-                var message = Assert.Throws<NotSupportedException>(
-                    () =>
-                    context.AllTypes.Select(a => a.c33_enum as ArubaEnum?).ToList()).Message;
-
-                Assert.True(
-                    message.Contains(
-                        Strings.ELinq_UnsupportedIsOrAs(
-                            "TypeAs", "System.Data.Entity.TestModels.ArubaModel.ArubaEnum",
-                            "System.Nullable`1[[System.Data.Entity.TestModels.ArubaModel.ArubaEnum, EntityFramework.FunctionalTests.Transitional, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]]")));
+                Assert.Throws<NotSupportedException>(
+                    () => context.AllTypes.Select(a => a.c33_enum as ArubaEnum?).ToList()).ValidateMessage(
+                    typeof(DbContext).Assembly,
+                    "ELinq_UnsupportedIsOrAs",
+                    null, 
+                    "TypeAs", 
+                    "System.Data.Entity.TestModels.ArubaModel.ArubaEnum",
+                    "System.Nullable`1[[System.Data.Entity.TestModels.ArubaModel.ArubaEnum, EntityFramework.FunctionalTests.Transitional, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]]");
             }
         }
 

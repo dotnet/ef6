@@ -24,7 +24,18 @@ namespace System.Data.Entity
             this Exception exception,
             Assembly resourceAssembly,
             string expectedResourceKey,
-            string resourceTable = null,
+            string resourceTable,
+            params object[] parameters)
+        {
+            ValidateMessage(exception, resourceAssembly, expectedResourceKey, null, s => s, parameters);
+        }
+
+        public static void ValidateMessage(
+            this Exception exception,
+            Assembly resourceAssembly,
+            string expectedResourceKey,
+            string resourceTable,
+            Func<string, string> messageModificationFunction,
             params object[] parameters)
         {
             Debug.Assert(exception != null);
@@ -37,7 +48,7 @@ namespace System.Data.Entity
                 resourceTable = "System.Data.Entity.Properties.Resources";
             }
 
-            var actualMessage = exception.Message;
+            var actualMessage = messageModificationFunction(exception.Message);
             var argException = exception as ArgumentException;
             if (argException != null)
             {

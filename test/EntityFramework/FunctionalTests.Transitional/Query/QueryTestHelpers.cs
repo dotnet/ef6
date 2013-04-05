@@ -121,7 +121,13 @@ namespace System.Data.Entity.Query
             }
         }
 
-        public static void VerifyThrows<TException>(string query, MetadataWorkspace workspace, string expectedExeptionMessage)
+
+        public static void VerifyThrows<TException>(string query, MetadataWorkspace workspace, string resourceKey, params string[] exceptionMessageParameters)
+        {
+            VerifyThrows<TException>(query, workspace, resourceKey, s => s, exceptionMessageParameters);
+        }
+        
+        public static void VerifyThrows<TException>(string query, MetadataWorkspace workspace, string resourceKey, Func<string, string> messageModificationFunction, params string[] exceptionMessageParameters)
         {
             var exceptionThrown = false;
             try
@@ -139,7 +145,7 @@ namespace System.Data.Entity.Query
                 exceptionThrown = true;
                 var innermostException = GetInnerMostException(e);
                 Assert.IsType<TException>(innermostException);
-                Assert.Equal(expectedExeptionMessage, innermostException.Message);
+                innermostException.ValidateMessage(typeof(DbContext).Assembly, resourceKey, null, messageModificationFunction, exceptionMessageParameters);
             }
 
             Assert.True(exceptionThrown, "No excepion has been thrown.");
