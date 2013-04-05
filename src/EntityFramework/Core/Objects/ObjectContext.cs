@@ -3726,23 +3726,27 @@ namespace System.Data.Entity.Core.Objects
         ///     Execute a command against the database server that does not return a sequence of objects.
         ///     The command is specified using the server's native query language, such as SQL.
         /// </summary>
+        /// <remarks>
+        ///     If there isn't an existing local or ambient transaction a new transaction will be used
+        ///     to execute the command.
+        /// </remarks>
         /// <param name="commandText"> The command specified in the server's native query language. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns> A single integer return value </returns>
         public virtual int ExecuteStoreCommand(string commandText, params object[] parameters)
         {
-            return ExecuteStoreCommand(TransactionBehavior.Default, commandText, parameters);
+            return ExecuteStoreCommand(TransactionalBehavior.EnsureTransaction, commandText, parameters);
         }
 
         /// <summary>
         ///     Execute a command against the database server that does not return a sequence of objects.
         ///     The command is specified using the server's native query language, such as SQL.
         /// </summary>
-        /// <param name="transactionBehavior"> Controls the creation of a transaction for this command. </param>
+        /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
         /// <param name="commandText"> The command specified in the server's native query language. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns> A single integer return value </returns>
-        public virtual int ExecuteStoreCommand(TransactionBehavior transactionBehavior, string commandText, params object[] parameters)
+        public virtual int ExecuteStoreCommand(TransactionalBehavior transactionalBehavior, string commandText, params object[] parameters)
         {
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             AsyncMonitor.EnsureNotEntered();
@@ -3751,7 +3755,7 @@ namespace System.Data.Entity.Core.Objects
                 () => ExecuteInTransaction(
                     () => CreateStoreCommand(commandText, parameters).ExecuteNonQuery(),
                     throwOnExistingTransaction: executionStrategy.RetriesOnFailure,
-                    startLocalTransaction: transactionBehavior != TransactionBehavior.DoNotEnsureTransaction,
+                    startLocalTransaction: transactionalBehavior != TransactionalBehavior.DoNotEnsureTransaction,
                     releaseConnectionOnSuccess: true));
         }
 
@@ -3764,6 +3768,9 @@ namespace System.Data.Entity.Core.Objects
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
+        /// 
+        ///     If there isn't an existing local transaction a new transaction will be used
+        ///     to execute the command.
         /// </remarks>
         /// <param name="commandText"> The command specified in the server's native query language. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
@@ -3773,7 +3780,7 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         public Task<int> ExecuteStoreCommandAsync(string commandText, params object[] parameters)
         {
-            return ExecuteStoreCommandAsync(TransactionBehavior.Default, commandText, CancellationToken.None, parameters);
+            return ExecuteStoreCommandAsync(TransactionalBehavior.EnsureTransaction, commandText, CancellationToken.None, parameters);
         }
 
         /// <summary>
@@ -3784,16 +3791,16 @@ namespace System.Data.Entity.Core.Objects
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="transactionBehavior"> Controls the creation of a transaction for this command. </param>
+        /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
         /// <param name="commandText"> The command specified in the server's native query language. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
         ///     The task result contains a single integer return value.
         /// </returns>
-        public Task<int> ExecuteStoreCommandAsync(TransactionBehavior transactionBehavior, string commandText, params object[] parameters)
+        public Task<int> ExecuteStoreCommandAsync(TransactionalBehavior transactionalBehavior, string commandText, params object[] parameters)
         {
-            return ExecuteStoreCommandAsync(transactionBehavior, commandText, CancellationToken.None, parameters);
+            return ExecuteStoreCommandAsync(transactionalBehavior, commandText, CancellationToken.None, parameters);
         }
 
         /// <summary>
@@ -3803,6 +3810,9 @@ namespace System.Data.Entity.Core.Objects
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
+        /// 
+        ///     If there isn't an existing local transaction a new transaction will be used
+        ///     to execute the command.
         /// </remarks>
         /// <param name="commandText"> The command specified in the server's native query language. </param>
         /// <param name="cancellationToken">
@@ -3816,7 +3826,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual Task<int> ExecuteStoreCommandAsync(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
-            return ExecuteStoreCommandAsync(TransactionBehavior.Default, commandText, cancellationToken, parameters);
+            return ExecuteStoreCommandAsync(TransactionalBehavior.EnsureTransaction, commandText, cancellationToken, parameters);
         }
 
         /// <summary>
@@ -3827,7 +3837,7 @@ namespace System.Data.Entity.Core.Objects
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="transactionBehavior"> Controls the creation of a transaction for this command. </param>
+        /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
         /// <param name="commandText"> The command specified in the server's native query language. </param>
         /// <param name="cancellationToken">
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
@@ -3838,14 +3848,14 @@ namespace System.Data.Entity.Core.Objects
         ///     The task result contains a single integer return value.
         /// </returns>
         public virtual Task<int> ExecuteStoreCommandAsync(
-            TransactionBehavior transactionBehavior, string commandText, CancellationToken cancellationToken, params object[] parameters)
+            TransactionalBehavior transactionalBehavior, string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
             AsyncMonitor.EnsureNotEntered();
-            return ExecuteStoreCommandInternalAsync(transactionBehavior, commandText, cancellationToken, parameters);
+            return ExecuteStoreCommandInternalAsync(transactionalBehavior, commandText, cancellationToken, parameters);
         }
 
         private async Task<int> ExecuteStoreCommandInternalAsync(
-            TransactionBehavior transactionBehavior, string commandText, CancellationToken cancellationToken, params object[] parameters)
+            TransactionalBehavior transactionalBehavior, string commandText, CancellationToken cancellationToken, params object[] parameters)
         {
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             AsyncMonitor.Enter();
@@ -3856,7 +3866,7 @@ namespace System.Data.Entity.Core.Objects
                     () => ExecuteInTransactionAsync(
                         () => CreateStoreCommand(commandText, parameters).ExecuteNonQueryAsync(cancellationToken),
                               /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
-                              /*startLocalTransaction:*/ transactionBehavior != TransactionBehavior.DoNotEnsureTransaction,
+                              /*startLocalTransaction:*/ transactionalBehavior != TransactionalBehavior.DoNotEnsureTransaction,
                               /*releaseConnectionOnSuccess:*/ true, cancellationToken),
                     cancellationToken);
             }

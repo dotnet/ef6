@@ -2,10 +2,12 @@
 
 namespace System.Data.Entity
 {
-    public enum TransactionBehavior
+    /// <summary>
+    ///     Controls the transaction creation behavior
+    /// </summary>
+    public enum TransactionalBehavior
     {
-        Default,
-        EnsureTransaction = Default,
+        EnsureTransaction,
         DoNotEnsureTransaction
     }
 }

@@ -478,27 +478,31 @@ namespace System.Data.Entity
         /// <summary>
         ///     Executes the given DDL/DML command against the database.
         /// </summary>
+        /// <remarks>
+        ///     If there isn't an existing local or ambient transaction a new transaction will be used
+        ///     to execute the command.
+        /// </remarks>
         /// <param name="sql"> The command string. </param>
         /// <param name="parameters"> The parameters to apply to the command string. </param>
         /// <returns> The result returned by the database after executing the command. </returns>
         public int ExecuteSqlCommand(string sql, params object[] parameters)
         {
-            return ExecuteSqlCommand(TransactionBehavior.Default, sql, parameters);
+            return ExecuteSqlCommand(TransactionalBehavior.EnsureTransaction, sql, parameters);
         }
 
         /// <summary>
         ///     Executes the given DDL/DML command against the database.
         /// </summary>
-        /// <param name="transactionBehavior"> Controls the creation of a transaction for this command. </param>
+        /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
         /// <param name="sql"> The command string. </param>
         /// <param name="parameters"> The parameters to apply to the command string. </param>
         /// <returns> The result returned by the database after executing the command. </returns>
-        public int ExecuteSqlCommand(TransactionBehavior transactionBehavior, string sql, params object[] parameters)
+        public int ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, string sql, params object[] parameters)
         {
             Check.NotEmpty(sql, "sql");
             Check.NotNull(parameters, "parameters");
 
-            return _internalContext.ExecuteSqlCommand(transactionBehavior, sql, parameters);
+            return _internalContext.ExecuteSqlCommand(transactionalBehavior, sql, parameters);
         }
 
 #if !NET40
@@ -509,6 +513,9 @@ namespace System.Data.Entity
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
+        /// 
+        ///     If there isn't an existing local transaction a new transaction will be used
+        ///     to execute the command.
         /// </remarks>
         /// <param name="sql"> The command string. </param>
         /// <param name="parameters"> The parameters to apply to the command string. </param>
@@ -518,7 +525,7 @@ namespace System.Data.Entity
         /// </returns>
         public Task<int> ExecuteSqlCommandAsync(string sql, params object[] parameters)
         {
-            return ExecuteSqlCommandAsync(TransactionBehavior.Default, sql, CancellationToken.None, parameters);
+            return ExecuteSqlCommandAsync(TransactionalBehavior.EnsureTransaction, sql, CancellationToken.None, parameters);
         }
 
         /// <summary>
@@ -528,16 +535,16 @@ namespace System.Data.Entity
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="transactionBehavior"> Controls the creation of a transaction for this command. </param>
+        /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
         /// <param name="sql"> The command string. </param>
         /// <param name="parameters"> The parameters to apply to the command string. </param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
         ///     The task result contains the result returned by the database after executing the command.
         /// </returns>
-        public Task<int> ExecuteSqlCommandAsync(TransactionBehavior transactionBehavior, string sql, params object[] parameters)
+        public Task<int> ExecuteSqlCommandAsync(TransactionalBehavior transactionalBehavior, string sql, params object[] parameters)
         {
-            return ExecuteSqlCommandAsync(transactionBehavior, sql, CancellationToken.None, parameters);
+            return ExecuteSqlCommandAsync(transactionalBehavior, sql, CancellationToken.None, parameters);
         }
 
         /// <summary>
@@ -546,6 +553,9 @@ namespace System.Data.Entity
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
+        /// 
+        ///     If there isn't an existing local transaction a new transaction will be used
+        ///     to execute the command.
         /// </remarks>
         /// <param name="sql"> The command string. </param>
         /// <param name="cancellationToken">
@@ -558,7 +568,7 @@ namespace System.Data.Entity
         /// </returns>
         public Task<int> ExecuteSqlCommandAsync(string sql, CancellationToken cancellationToken, params object[] parameters)
         {
-            return ExecuteSqlCommandAsync(TransactionBehavior.Default, sql, cancellationToken, parameters);
+            return ExecuteSqlCommandAsync(TransactionalBehavior.EnsureTransaction, sql, cancellationToken, parameters);
         }
 
         /// <summary>
@@ -568,7 +578,7 @@ namespace System.Data.Entity
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="transactionBehavior"> Controls the creation of a transaction for this command. </param>
+        /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
         /// <param name="sql"> The command string. </param>
         /// <param name="cancellationToken">
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
@@ -579,12 +589,12 @@ namespace System.Data.Entity
         ///     The task result contains the result returned by the database after executing the command.
         /// </returns>
         public Task<int> ExecuteSqlCommandAsync(
-            TransactionBehavior transactionBehavior, string sql, CancellationToken cancellationToken, params object[] parameters)
+            TransactionalBehavior transactionalBehavior, string sql, CancellationToken cancellationToken, params object[] parameters)
         {
             Check.NotEmpty(sql, "sql");
             Check.NotNull(parameters, "parameters");
 
-            return _internalContext.ExecuteSqlCommandAsync(transactionBehavior, sql, cancellationToken, parameters);
+            return _internalContext.ExecuteSqlCommandAsync(transactionalBehavior, sql, cancellationToken, parameters);
         }
 
 #endif

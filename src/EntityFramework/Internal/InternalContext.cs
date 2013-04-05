@@ -974,18 +974,18 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     Executes the given SQL command against the database backing this context.
         /// </summary>
-        /// <param name="transactionBehavior"> Controls the creation of a transaction for this command. </param>
+        /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
         /// <param name="sql"> The SQL. </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> The return value from the database. </returns>
-        public virtual int ExecuteSqlCommand(TransactionBehavior transactionBehavior, string sql, object[] parameters)
+        public virtual int ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, string sql, object[] parameters)
         {
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);
 
             Initialize();
 
-            return ObjectContext.ExecuteStoreCommand(transactionBehavior, sql, parameters);
+            return ObjectContext.ExecuteStoreCommand(transactionalBehavior, sql, parameters);
         }
 
 #if !NET40
@@ -994,20 +994,20 @@ namespace System.Data.Entity.Internal
         ///     An asynchronous version of ExecuteSqlCommand, which
         ///     executes the given SQL command against the database backing this context.
         /// </summary>
-        /// <param name="transactionBehavior"> Controls the creation of a transaction for this command. </param>
+        /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
         /// <param name="sql"> The SQL. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> A Task containing the return value from the database. </returns>
         public virtual Task<int> ExecuteSqlCommandAsync(
-            TransactionBehavior transactionBehavior, string sql, CancellationToken cancellationToken, object[] parameters)
+            TransactionalBehavior transactionalBehavior, string sql, CancellationToken cancellationToken, object[] parameters)
         {
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);
 
             Initialize();
 
-            return ObjectContext.ExecuteStoreCommandAsync(transactionBehavior, sql, cancellationToken, parameters);
+            return ObjectContext.ExecuteStoreCommandAsync(transactionalBehavior, sql, cancellationToken, parameters);
         }
 
 #endif

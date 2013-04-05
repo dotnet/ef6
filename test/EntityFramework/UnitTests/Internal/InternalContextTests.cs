@@ -242,14 +242,14 @@ namespace System.Data.Entity.Internal
                 }.Object;
             var objectContextMock = Mock.Get((ObjectContextForMock)internalContext.ObjectContext);
             objectContextMock.Setup(
-                m => m.ExecuteStoreCommand(It.IsAny<TransactionBehavior>(), It.IsAny<string>(), It.IsAny<object[]>()));
+                m => m.ExecuteStoreCommand(It.IsAny<TransactionalBehavior>(), It.IsAny<string>(), It.IsAny<object[]>()));
 
             var parameters = new object[] { "param" };
 
-            internalContext.ExecuteSqlCommand(TransactionBehavior.DoNotEnsureTransaction, "sql", parameters);
+            internalContext.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "sql", parameters);
 
             objectContextMock.Verify(
-                m => m.ExecuteStoreCommand(TransactionBehavior.DoNotEnsureTransaction, "sql", parameters),
+                m => m.ExecuteStoreCommand(TransactionalBehavior.DoNotEnsureTransaction, "sql", parameters),
                 Times.Once());
         }
 
@@ -264,15 +264,15 @@ namespace System.Data.Entity.Internal
                 }.Object;
             var objectContextMock = Mock.Get((ObjectContextForMock)internalContext.ObjectContext);
             objectContextMock.Setup(
-                m => m.ExecuteStoreCommandAsync(It.IsAny<TransactionBehavior>(),
+                m => m.ExecuteStoreCommandAsync(It.IsAny<TransactionalBehavior>(),
                     It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>())).Returns(Task.FromResult(0));
             var parameters = new object[] { "param" };
             var cancellationToken = new CancellationTokenSource().Token;
 
-            internalContext.ExecuteSqlCommandAsync(TransactionBehavior.DoNotEnsureTransaction, "sql", cancellationToken, parameters);
+            internalContext.ExecuteSqlCommandAsync(TransactionalBehavior.DoNotEnsureTransaction, "sql", cancellationToken, parameters);
 
             objectContextMock.Verify(
-                m => m.ExecuteStoreCommandAsync(TransactionBehavior.DoNotEnsureTransaction, "sql", cancellationToken, parameters),
+                m => m.ExecuteStoreCommandAsync(TransactionalBehavior.DoNotEnsureTransaction, "sql", cancellationToken, parameters),
                 Times.Once());
         }
 #endif

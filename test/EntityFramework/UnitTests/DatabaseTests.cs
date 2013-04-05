@@ -131,11 +131,11 @@ namespace System.Data.Entity
                 var parameters = new object[1];
 
                 Assert.NotNull(database.ExecuteSqlCommand("query", parameters));
-                internalContextMock.Verify(m => m.ExecuteSqlCommand(TransactionBehavior.Default, "query", parameters), Times.Once());
+                internalContextMock.Verify(m => m.ExecuteSqlCommand(TransactionalBehavior.EnsureTransaction, "query", parameters), Times.Once());
 
-                Assert.NotNull(database.ExecuteSqlCommand(TransactionBehavior.DoNotEnsureTransaction, "query", parameters));
+                Assert.NotNull(database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "query", parameters));
                 internalContextMock.Verify(
-                    m => m.ExecuteSqlCommand(TransactionBehavior.DoNotEnsureTransaction, "query", parameters), Times.Once());
+                    m => m.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "query", parameters), Times.Once());
             }
         }
 
@@ -189,7 +189,7 @@ namespace System.Data.Entity
                 var internalContextMock = new Mock<InternalContextForMock>();
                 internalContextMock.Setup(
                     m =>
-                    m.ExecuteSqlCommandAsync(It.IsAny<TransactionBehavior>(), It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()))
+                    m.ExecuteSqlCommandAsync(It.IsAny<TransactionalBehavior>(), It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()))
                                    .Returns(Task.FromResult(1));
                 var database = new Database(internalContextMock.Object);
                 var cancellationToken = new CancellationTokenSource().Token;
@@ -197,19 +197,19 @@ namespace System.Data.Entity
 
                 Assert.NotNull(database.ExecuteSqlCommandAsync("query", parameters).Result);
                 internalContextMock.Verify(
-                    m => m.ExecuteSqlCommandAsync(TransactionBehavior.Default, "query", CancellationToken.None, parameters), Times.Once());
+                    m => m.ExecuteSqlCommandAsync(TransactionalBehavior.EnsureTransaction, "query", CancellationToken.None, parameters), Times.Once());
 
                 Assert.NotNull(database.ExecuteSqlCommandAsync("query", cancellationToken, parameters).Result);
                 internalContextMock.Verify(
-                    m => m.ExecuteSqlCommandAsync(TransactionBehavior.Default, "query", cancellationToken, parameters), Times.Once());
+                    m => m.ExecuteSqlCommandAsync(TransactionalBehavior.EnsureTransaction, "query", cancellationToken, parameters), Times.Once());
 
-                Assert.NotNull(database.ExecuteSqlCommandAsync(TransactionBehavior.DoNotEnsureTransaction, "query", parameters).Result);
+                Assert.NotNull(database.ExecuteSqlCommandAsync(TransactionalBehavior.DoNotEnsureTransaction, "query", parameters).Result);
                 internalContextMock.Verify(
-                    m => m.ExecuteSqlCommandAsync(TransactionBehavior.Default, "query", CancellationToken.None, parameters), Times.Once());
+                    m => m.ExecuteSqlCommandAsync(TransactionalBehavior.EnsureTransaction, "query", CancellationToken.None, parameters), Times.Once());
 
-                Assert.NotNull(database.ExecuteSqlCommandAsync(TransactionBehavior.DoNotEnsureTransaction, "query", cancellationToken, parameters).Result);
+                Assert.NotNull(database.ExecuteSqlCommandAsync(TransactionalBehavior.DoNotEnsureTransaction, "query", cancellationToken, parameters).Result);
                 internalContextMock.Verify(
-                    m => m.ExecuteSqlCommandAsync(TransactionBehavior.Default, "query", cancellationToken, parameters), Times.Once());
+                    m => m.ExecuteSqlCommandAsync(TransactionalBehavior.EnsureTransaction, "query", cancellationToken, parameters), Times.Once());
             }
         }
 

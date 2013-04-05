@@ -697,8 +697,8 @@ namespace System.Data.Entity.Core.Objects
                 {
                     objectContextMock.Object.ExecuteStoreCommand(
                         startTransaction
-                            ? TransactionBehavior.Default
-                            : TransactionBehavior.DoNotEnsureTransaction, "foo");
+                            ? TransactionalBehavior.EnsureTransaction
+                            : TransactionalBehavior.DoNotEnsureTransaction, "foo");
                 }
                 finally
                 {
@@ -2234,8 +2234,8 @@ namespace System.Data.Entity.Core.Objects
                     Assert.NotNull(
                         objectContextMock.Object.ExecuteStoreCommandAsync(
                             startTransaction
-                                ? TransactionBehavior.Default
-                                : TransactionBehavior.DoNotEnsureTransaction, "foo").Result);
+                                ? TransactionalBehavior.EnsureTransaction
+                                : TransactionalBehavior.DoNotEnsureTransaction, "foo").Result);
                 }
                 finally
                 {
