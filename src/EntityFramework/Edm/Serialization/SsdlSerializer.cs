@@ -3,12 +3,17 @@
 namespace System.Data.Entity.Edm.Serialization
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Edm.Validation;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Xml;
 
     public class SsdlSerializer
     {
+        public event EventHandler<DataModelErrorEventArgs> OnError;
+
         /// <summary>
         ///     Serialize the <see cref="EdmModel" /> to the <see cref="XmlWriter" />
         /// </summary>
@@ -16,7 +21,7 @@ namespace System.Data.Entity.Edm.Serialization
         /// <param name="provider"> Provider information on the Schema element </param>
         /// <param name="providerManifestToken"> ProviderManifestToken information on the Schema element </param>
         /// <param name="xmlWriter"> The XmlWriter to serialize to </param>
-        /// <returns> </returns>
+        /// <returns> true if model can be serialized, otherwise false </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Nullability")]
         public virtual bool Serialize(
@@ -27,10 +32,14 @@ namespace System.Data.Entity.Edm.Serialization
             Check.NotEmpty(providerManifestToken, "providerManifestToken");
             Check.NotNull(xmlWriter, "xmlWriter");
 
-            CreateVisitor(xmlWriter, dbDatabase, serializeDefaultNullability)
-                .Visit(dbDatabase, provider, providerManifestToken);
+            if (ValidateModel(dbDatabase))
+            {
+                CreateVisitor(xmlWriter, dbDatabase, serializeDefaultNullability)
+                    .Visit(dbDatabase, provider, providerManifestToken);
+                return true;
+            }
 
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -41,7 +50,7 @@ namespace System.Data.Entity.Edm.Serialization
         /// <param name="provider"> Provider information on the Schema element </param>
         /// <param name="providerManifestToken"> ProviderManifestToken information on the Schema element </param>
         /// <param name="xmlWriter"> The XmlWriter to serialize to </param>
-        /// <returns> </returns>
+        /// <returns> true if model can be serialized, otherwise false </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Nullability")]
         public virtual bool Serialize(
@@ -54,10 +63,45 @@ namespace System.Data.Entity.Edm.Serialization
             Check.NotEmpty(providerManifestToken, "providerManifestToken");
             Check.NotNull(xmlWriter, "xmlWriter");
 
-            CreateVisitor(xmlWriter, dbDatabase, serializeDefaultNullability)
-                .Visit(dbDatabase, namespaceName, provider, providerManifestToken);
+            if (ValidateModel(dbDatabase))
+            {
+                CreateVisitor(xmlWriter, dbDatabase, serializeDefaultNullability)
+                    .Visit(dbDatabase, namespaceName, provider, providerManifestToken);
+                return true;
+            }
 
-            return true;
+            return false;
+        }
+
+        private bool ValidateModel(EdmModel model)
+        {
+            bool modelIsValid = true;
+
+            Action<DataModelErrorEventArgs> onErrorAction =
+                e => 
+                    {
+                        modelIsValid = false;
+                        if (OnError != null)
+                        {
+                            OnError(this, e);
+                        }
+                    };
+
+            if (model.NamespaceNames.Count() > 1
+                || model.Containers.Count() != 1)
+            {
+                onErrorAction(
+                    new DataModelErrorEventArgs
+                    {
+                        ErrorMessage = Strings.Serializer_OneNamespaceAndOneContainer,
+                    });
+            }
+
+            var validator = new DataModelValidator();
+            validator.OnError += (_, e) => onErrorAction(e);
+            validator.Validate(model, true);
+
+            return modelIsValid;
         }
 
         private static EdmSerializationVisitor CreateVisitor(XmlWriter xmlWriter, EdmModel dbDatabase, bool serializeDefaultNullability)

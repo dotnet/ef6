@@ -2,7 +2,10 @@
 
 namespace System.Data.Entity.Edm.Serialization
 {
+    using Moq;
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
     using System.Linq;
     using System.Text;
@@ -67,6 +70,148 @@ namespace System.Data.Entity.Edm.Serialization
                 (string)GetProperty(ssdl, "NonNullableProperty").Attribute("Nullable"));
         }
 
+        [Fact]
+        public void Serialize_without_schemaNamespace_returns_false_if_multiple_NamespaceNames()
+        {
+            var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
+            mockModel.Setup(m => m.NamespaceNames).Returns(new string[2]);
+            var mockWriter = new Mock<XmlWriter>();
+
+            var validationErrors = new List<Validation.DataModelErrorEventArgs>();
+            var serializer = new SsdlSerializer();
+            serializer.OnError += (_, e) => validationErrors.Add(e);
+            Assert.False(serializer.Serialize(
+                mockModel.Object,
+                ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName,
+                ProviderRegistry.Sql2008_ProviderInfo.ProviderManifestToken,
+                mockWriter.Object,
+                false));
+            Assert.Equal(1, validationErrors.Count());
+            Assert.Equal(Strings.Serializer_OneNamespaceAndOneContainer, validationErrors[0].ErrorMessage);
+            mockWriter.Verify(m => m.WriteStartDocument(), Times.Never());
+        }
+
+        [Fact]
+        public void Serialize_with_schemaNamespace_returns_false_if_multiple_NamespaceNames()
+        {
+            var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
+            mockModel.Setup(m => m.NamespaceNames).Returns(new string[2]);
+            var mockWriter = new Mock<XmlWriter>();
+
+            var validationErrors = new List<Validation.DataModelErrorEventArgs>(); 
+            var serializer = new SsdlSerializer();
+            serializer.OnError += (_, e) => validationErrors.Add(e);
+            Assert.False(serializer.Serialize(
+                mockModel.Object,
+                "MyNamespace",
+                ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName,
+                ProviderRegistry.Sql2008_ProviderInfo.ProviderManifestToken,
+                mockWriter.Object,
+                false));
+            Assert.Equal(1, validationErrors.Count());
+            Assert.Equal(Strings.Serializer_OneNamespaceAndOneContainer, validationErrors[0].ErrorMessage);
+            mockWriter.Verify(m => m.WriteStartDocument(), Times.Never());
+        }
+
+        [Fact]
+        public void Serialize_without_schemaNamespace_returns_false_if_multiple_Containers()
+        {
+            var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
+            mockModel.Setup(m => m.Containers).Returns(
+                new EntityContainer[] {
+                    new EntityContainer("Container1", DataSpace.SSpace), 
+                    new EntityContainer("Container2", DataSpace.SSpace) });
+            var mockWriter = new Mock<XmlWriter>();
+
+            var validationErrors = new List<Validation.DataModelErrorEventArgs>();
+            var serializer = new SsdlSerializer();
+            serializer.OnError += (_, e) => validationErrors.Add(e);
+            Assert.False(serializer.Serialize(
+                mockModel.Object,
+                ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName,
+                ProviderRegistry.Sql2008_ProviderInfo.ProviderManifestToken,
+                mockWriter.Object,
+                false));
+            Assert.Equal(1, validationErrors.Count());
+            Assert.Equal(Strings.Serializer_OneNamespaceAndOneContainer, validationErrors[0].ErrorMessage);
+            mockWriter.Verify(m => m.WriteStartDocument(), Times.Never());
+        }
+
+        [Fact]
+        public void Serialize_with_schemaNamespace_returns_false_if_multiple_Containers()
+        {
+            var mockModel = new Mock<EdmModel>(DataSpace.SSpace, XmlConstants.SchemaVersionLatest);
+            mockModel.Setup(m => m.Containers).Returns(new EntityContainer[] { new EntityContainer("Container1", DataSpace.SSpace), new EntityContainer("Container2", DataSpace.SSpace) });
+            var mockWriter = new Mock<XmlWriter>();
+
+            var validationErrors = new List<Validation.DataModelErrorEventArgs>();
+            var serializer = new SsdlSerializer();
+            serializer.OnError += (_, e) => validationErrors.Add(e);
+            Assert.False(serializer.Serialize(
+                mockModel.Object,
+                "MyNamespace",
+                ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName,
+                ProviderRegistry.Sql2008_ProviderInfo.ProviderManifestToken,
+                mockWriter.Object,
+                false));
+            Assert.Equal(1, validationErrors.Count());
+            Assert.Equal(Strings.Serializer_OneNamespaceAndOneContainer, validationErrors[0].ErrorMessage);
+            mockWriter.Verify(m => m.WriteStartDocument(), Times.Never());
+        }
+
+        [Fact]
+        public void Serialize_without_schemaNamespace_returns_false_if_error_in_model()
+        {
+            var model = new EdmModel(DataSpace.SSpace);
+            var mockWriter = new Mock<XmlWriter>();
+
+            // add EntityType with no properties which will cause error
+            var et = new EntityType("TestEntity", "TestNamespace", DataSpace.SSpace);
+            model.AddItem(et);
+
+            var validationErrors = new List<Validation.DataModelErrorEventArgs>();
+            var serializer = new SsdlSerializer();
+            serializer.OnError += (_, e) => validationErrors.Add(e);
+            Assert.False(serializer.Serialize(
+                model,
+                ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName,
+                ProviderRegistry.Sql2008_ProviderInfo.ProviderManifestToken,
+                mockWriter.Object,
+                false));
+            Assert.Equal(1, validationErrors.Count());
+            Assert.Equal(
+                Strings.EdmModel_Validator_Semantic_KeyMissingOnEntityType("TestEntity"),
+                validationErrors[0].ErrorMessage);
+            mockWriter.Verify(m => m.WriteStartDocument(), Times.Never());
+        }
+
+        [Fact]
+        public void Serialize_with_schemaNamespace_returns_false_if_error_in_model()
+        {
+            var model = new EdmModel(DataSpace.SSpace);
+            var mockWriter = new Mock<XmlWriter>();
+
+            // add EntityType with no properties which will cause error
+            var et = new EntityType("TestEntity", "TestNamespace", DataSpace.SSpace);
+            model.AddItem(et);
+
+            var validationErrors = new List<Validation.DataModelErrorEventArgs>();
+            var serializer = new SsdlSerializer();
+            serializer.OnError += (_, e) => validationErrors.Add(e);
+            Assert.False(serializer.Serialize(
+                model,
+                "MyNamespace",
+                ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName,
+                ProviderRegistry.Sql2008_ProviderInfo.ProviderManifestToken,
+                mockWriter.Object,
+                false));
+            Assert.Equal(1, validationErrors.Count());
+            Assert.Equal(
+                Strings.EdmModel_Validator_Semantic_KeyMissingOnEntityType("TestEntity"),
+                validationErrors[0].ErrorMessage);
+            mockWriter.Verify(m => m.WriteStartDocument(), Times.Never());
+        }
+
         private EdmModel CreateTestModel()
         {
             var model = new EdmModel(DataSpace.SSpace);
@@ -91,12 +236,12 @@ namespace System.Data.Entity.Edm.Serialization
             {
                 new SsdlSerializer()
                     .Serialize(
-                    model, 
-                    schemaNamespace, 
-                    ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName, 
-                    ProviderRegistry.Sql2008_ProviderInfo.ProviderManifestToken, 
-                    writer, 
-                    serializeDefaultNullability);
+                        model,
+                        schemaNamespace,
+                        ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName,
+                        ProviderRegistry.Sql2008_ProviderInfo.ProviderManifestToken,
+                        writer,
+                        serializeDefaultNullability);
             }
 
             return XDocument.Parse(sb.ToString());

@@ -16,8 +16,6 @@ namespace System.Data.Entity.Edm.Serialization
     /// </summary>
     public class CsdlSerializer
     {
-        private bool _isModelValid = true;
-
         public event EventHandler<DataModelErrorEventArgs> OnError;
 
         /// <summary>
@@ -32,38 +30,40 @@ namespace System.Data.Entity.Edm.Serialization
             Check.NotNull(model, "model");
             Check.NotNull(xmlWriter, "xmlWriter");
 
+            bool modelIsValid = true;
+           
+            Action<DataModelErrorEventArgs> onErrorAction =
+                e =>
+                {
+                    modelIsValid = false;
+                    if (OnError != null)
+                    {
+                        OnError(this, e);
+                    }
+                };
+
             if (model.NamespaceNames.Count() > 1
                 || model.Containers.Count() != 1)
             {
-                Validator_OnError(
-                    this,
+                onErrorAction(
                     new DataModelErrorEventArgs
-                        {
-                            ErrorMessage = Strings.Serializer_OneNamespaceAndOneContainer,
-                        });
+                    {
+                        ErrorMessage = Strings.Serializer_OneNamespaceAndOneContainer,
+                    });
             }
 
             // validate the model first
             var validator = new DataModelValidator();
-            validator.OnError += Validator_OnError;
+            validator.OnError += (_, e) => onErrorAction(e);
             validator.Validate(model, true);
 
-            if (_isModelValid)
+            if (modelIsValid)
             {
                 new EdmSerializationVisitor(xmlWriter, model.SchemaVersion).Visit(model);
+                return true;
             }
 
-            return _isModelValid;
-        }
-
-        private void Validator_OnError(object sender, DataModelErrorEventArgs e)
-        {
-            _isModelValid = false;
-
-            if (OnError != null)
-            {
-                OnError(sender, e);
-            }
+            return false;
         }
     }
 }
