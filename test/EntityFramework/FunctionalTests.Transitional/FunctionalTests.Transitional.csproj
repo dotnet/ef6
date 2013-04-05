@@ -191,9 +191,6 @@
     <Compile Include="Migrations\TestModel\TestModels.cs" />
     <Compile Include="ProductivityApi\PluralizationServiceTests.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
-    <Compile Include="Query\LinqToEntities\EnumTests.cs" />
-    <Compile Include="Query\ModelDefinedFunctionTests.cs" />
-    <Compile Include="Query\ProductModel.cs" />
     <Compile Include="Query\QueryTestHelpers.cs" />
     <Compile Include="TestHelpers\CsdlToClrAssemblyConverter.cs" />
     <Compile Include="TestHelpers\DefaultFunctionalTestsConnectionFactory.cs" />
@@ -600,7 +597,6 @@
   </Target>
   -->
   <Target Name="AfterBuild">
-    <Warning Condition="'$(BuildConstants)' != '' And '$(BuildConstants)' != 'MigrationsTests' And '$(BuildConstants)' != 'AllTests'"
-	Text="Unrecognized BuildConstants value, use 'SkipMigrationsTests' or 'SkipSlowTests'"/>
+    <Warning Condition="'$(BuildConstants)' != '' And '$(BuildConstants)' != 'MigrationsTests' And '$(BuildConstants)' != 'AllTests'" Text="Unrecognized BuildConstants value, use 'SkipMigrationsTests' or 'SkipSlowTests'" />
   </Target>
 </Project>
