@@ -191,7 +191,7 @@ namespace System.Data.Entity.Edm.Serialization
         [Fact]
         public static void VisitEdmEntityType_writes_comment_including_errors_followed_by_valid_entity_type()
         {
-            EdmSerializationVisitor_writes_expected_xml(
+            EdmSerializationVisitor_writes_expected_xml<EntityType>(
                 constructor: () => new EntityType("AName", "ANamespace", DataSpace.CSpace),
                 invalid: false,
                 visitAction: (visitor, item) => visitor.VisitEdmEntityType(item),
@@ -201,7 +201,7 @@ namespace System.Data.Entity.Edm.Serialization
         [Fact]
         public static void VisitEdmAssociationType_writes_comment_including_errors_followed_by_valid_association_type()
         {
-            EdmSerializationVisitor_writes_expected_xml(
+            EdmSerializationVisitor_writes_expected_xml<AssociationType>(
                 constructor: () => new AssociationType("AName", "ANamespace", false, DataSpace.CSpace),
                 invalid: false,
                 visitAction: (visitor, item) => visitor.VisitEdmAssociationType(item),
@@ -211,7 +211,7 @@ namespace System.Data.Entity.Edm.Serialization
         [Fact]
         public static void VisitEdmEntityType_writes_comment_including_errors_and_invalid_entity_type()
         {
-            EdmSerializationVisitor_writes_expected_xml(
+            EdmSerializationVisitor_writes_expected_xml<EntityType>(
                 constructor: () => new EntityType("AName", "ANamespace", DataSpace.CSpace),
                 invalid: true,
                 visitAction: (visitor, item) => visitor.VisitEdmEntityType(item),
@@ -221,7 +221,7 @@ namespace System.Data.Entity.Edm.Serialization
         [Fact]
         public static void VisitEdmAssociationType_writes_comment_including_errors_and_invalid_association_type()
         {
-            EdmSerializationVisitor_writes_expected_xml(
+            EdmSerializationVisitor_writes_expected_xml<AssociationType>(
                 constructor: () => new AssociationType("AName", "ANamespace", false, DataSpace.CSpace),
                 invalid: true,
                 visitAction: (visitor, item) => visitor.VisitEdmAssociationType(item),
