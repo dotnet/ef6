@@ -29,7 +29,7 @@ namespace System.Data.Entity.Migrations.History
         private readonly string _contextKey;
         private readonly int? _commandTimeout;
         private readonly IEnumerable<string> _schemas;
-        private readonly IHistoryContextFactory _historyContextFactory;
+        private readonly HistoryContextFactory _historyContextFactory;
 
         private string _currentSchema;
         private bool? _exists;
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Migrations.History
             string contextKey,
             int? commandTimeout,
             IEnumerable<string> schemas = null,
-            IHistoryContextFactory historyContextFactory = null)
+            HistoryContextFactory historyContextFactory = null)
             : base(connectionString, providerFactory)
         {
             DebugCheck.NotEmpty(contextKey);
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Migrations.History
 
             _historyContextFactory
                 = historyContextFactory
-                  ?? DbConfiguration.GetService<IHistoryContextFactory>();
+                  ?? DbConfiguration.GetService<HistoryContextFactory>();
         }
 
         public string CurrentSchema
@@ -530,7 +530,7 @@ namespace System.Data.Entity.Migrations.History
 
         public HistoryContext CreateContext(DbConnection connection = null, string schema = null)
         {
-            var context = _historyContextFactory.Create(connection ?? CreateConnection(), connection == null, schema ?? CurrentSchema);
+            var context = _historyContextFactory(connection ?? CreateConnection(), connection == null, schema ?? CurrentSchema);
             context.Database.CommandTimeout = _commandTimeout;
             return context;
         }

@@ -12,57 +12,46 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class CustomHistoryScenarios : DbTestCase
     {
-        private class TestHistoryContextFactoryA : IHistoryContextFactory
+        private class TestHistoryContextA : HistoryContext
         {
-            public HistoryContext Create(DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema)
+            public TestHistoryContextA(DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema)
+                : base(existingConnection, contextOwnsConnection, defaultSchema)
             {
-                return new TestHistoryContext(existingConnection, contextOwnsConnection, defaultSchema);
             }
 
-            private class TestHistoryContext : HistoryContext
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                public TestHistoryContext(DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema)
-                    : base(existingConnection, contextOwnsConnection, defaultSchema)
-                {
-                }
+                base.OnModelCreating(modelBuilder);
 
-                protected override void OnModelCreating(DbModelBuilder modelBuilder)
-                {
-                    base.OnModelCreating(modelBuilder);
-
-                    modelBuilder.Entity<HistoryRow>().ToTable("__Migrations");
-                    modelBuilder.Entity<HistoryRow>().Property(h => h.MigrationId).HasColumnName("_id");
-                    modelBuilder.Entity<HistoryRow>().Property(h => h.ContextKey).HasColumnName("_context_key");
-                    modelBuilder.Entity<HistoryRow>().Property(h => h.Model).HasColumnName("_model");
-                }
+                modelBuilder.Entity<HistoryRow>().ToTable("__Migrations");
+                modelBuilder.Entity<HistoryRow>().Property(h => h.MigrationId).HasColumnName("_id");
+                modelBuilder.Entity<HistoryRow>().Property(h => h.ContextKey).HasColumnName("_context_key");
+                modelBuilder.Entity<HistoryRow>().Property(h => h.Model).HasColumnName("_model");
             }
         }
 
-        private class TestHistoryContextFactoryB : IHistoryContextFactory
+        private class TestHistoryContextB : HistoryContext
         {
-            public HistoryContext Create(DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema)
+            public TestHistoryContextB(DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema)
+                : base(existingConnection, contextOwnsConnection, defaultSchema)
             {
-                return new TestHistoryContext(existingConnection, contextOwnsConnection, defaultSchema);
             }
 
-            private class TestHistoryContext : HistoryContext
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                public TestHistoryContext(DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema)
-                    : base(existingConnection, contextOwnsConnection, defaultSchema)
-                {
-                }
+                base.OnModelCreating(modelBuilder);
 
-                protected override void OnModelCreating(DbModelBuilder modelBuilder)
-                {
-                    base.OnModelCreating(modelBuilder);
-
-                    modelBuilder.Entity<HistoryRow>().Property(h => h.Model).HasColumnName("metadata");
-                }
+                modelBuilder.Entity<HistoryRow>().Property(h => h.Model).HasColumnName("metadata");
             }
         }
 
-        private readonly TestHistoryContextFactoryA _testHistoryContextFactoryA = new TestHistoryContextFactoryA();
-        private readonly TestHistoryContextFactoryB _testHistoryContextFactoryB = new TestHistoryContextFactoryB();
+        private readonly HistoryContextFactory _testHistoryContextFactoryA =
+            (existingConnection, contextOwnsConnection, defaultSchema) =>
+            new TestHistoryContextA(existingConnection, contextOwnsConnection, defaultSchema);
+
+        private readonly HistoryContextFactory _testHistoryContextFactoryB =
+            (existingConnection, contextOwnsConnection, defaultSchema) =>
+            new TestHistoryContextB(existingConnection, contextOwnsConnection, defaultSchema);
 
         [MigrationsTheory]
         public void Can_explicit_update_when_custom_history_factory()
@@ -189,7 +178,7 @@ namespace System.Data.Entity.Migrations
                 = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryA);
 
             Assert.Throws<MigrationsException>(() => migrator.Update())
-                .ValidateMessage("HistoryMigrationNotSupported");
+                  .ValidateMessage("HistoryMigrationNotSupported");
         }
 
         [MigrationsTheory]
@@ -201,7 +190,7 @@ namespace System.Data.Entity.Migrations
                 = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryB);
 
             Assert.Throws<MigrationsException>(() => migrator.Update())
-                .ValidateMessage("HistoryMigrationNotSupported");
+                  .ValidateMessage("HistoryMigrationNotSupported");
         }
 
         [MigrationsTheory]
@@ -217,7 +206,7 @@ namespace System.Data.Entity.Migrations
                 = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryA);
 
             Assert.Throws<MigrationsException>(() => migrator.Update())
-                .ValidateMessage("HistoryMigrationNotSupported");
+                  .ValidateMessage("HistoryMigrationNotSupported");
         }
 
         [MigrationsTheory]
@@ -234,7 +223,7 @@ namespace System.Data.Entity.Migrations
                 = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryB);
 
             Assert.Throws<MigrationsException>(() => migrator.Update())
-                .ValidateMessage("HistoryMigrationNotSupported");
+                  .ValidateMessage("HistoryMigrationNotSupported");
         }
 
         [MigrationsTheory]
@@ -264,7 +253,7 @@ namespace System.Data.Entity.Migrations
                     historyContextFactory: _testHistoryContextFactoryA);
 
             Assert.Throws<MigrationsException>(() => migrator.Update())
-                .ValidateMessage("HistoryMigrationNotSupported");
+                  .ValidateMessage("HistoryMigrationNotSupported");
         }
 
         [MigrationsTheory]
@@ -294,7 +283,7 @@ namespace System.Data.Entity.Migrations
                     historyContextFactory: _testHistoryContextFactoryB);
 
             Assert.Throws<MigrationsException>(() => migrator.Update())
-                .ValidateMessage("HistoryMigrationNotSupported");
+                  .ValidateMessage("HistoryMigrationNotSupported");
         }
 
         [MigrationsTheory]
@@ -348,7 +337,7 @@ namespace System.Data.Entity.Migrations
                 scaffoldedMigrations: generatedMigration);
 
             Assert.Throws<MigrationsException>(() => migrator.GetDatabaseMigrations())
-                .ValidateMessage("HistoryMigrationNotSupported");
+                  .ValidateMessage("HistoryMigrationNotSupported");
         }
 
         [MigrationsTheory]
@@ -402,7 +391,7 @@ namespace System.Data.Entity.Migrations
                 scaffoldedMigrations: generatedMigration);
 
             Assert.Throws<MigrationsException>(() => migrator.GetPendingMigrations())
-                .ValidateMessage("HistoryMigrationNotSupported");
+                  .ValidateMessage("HistoryMigrationNotSupported");
         }
     }
 }

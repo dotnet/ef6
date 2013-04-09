@@ -644,15 +644,14 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     Strings.ConfigurationLocked("SetHistoryContextFactory"),
                     Assert.Throws<InvalidOperationException>(
-                        () => configuration.SetHistoryContextFactory<DbMigrationsConfiguration>(
-                            new Mock<IHistoryContextFactory>().Object)).Message);
+                        () => configuration.SetHistoryContextFactory<DbMigrationsConfiguration>((e, c, d) => null)).Message);
             }
 
             [Fact]
             public void Delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
-                var factory = new Mock<IHistoryContextFactory>().Object;
+                HistoryContextFactory factory = (e, c, d) => null;
 
                 new DbConfiguration(mockInternalConfiguration.Object)
                     .SetHistoryContextFactory<DbMigrationsConfiguration>(factory);

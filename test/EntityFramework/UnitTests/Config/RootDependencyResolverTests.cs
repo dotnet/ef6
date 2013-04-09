@@ -38,12 +38,39 @@ namespace System.Data.Entity.Config
         }
 
         [Fact]
-        public void The_root_resolver_can_return_a_default_history_context_factory()
+        public void The_root_resolver_can_return_a_default_history_context_factory_that_creates_HistoryContext_instances()
         {
-            Assert.IsType<DefaultHistoryContextFactory>(
+            var factory =
+                new RootDependencyResolver(new DefaultProviderServicesResolver(), new DatabaseInitializerResolver())
+                    .GetService<HistoryContextFactory>();
+            
+            Assert.IsType<HistoryContextFactory>(factory);
+
+            using (var context = factory(new SqlConnection(), true, null))
+            {
+                Assert.IsType<HistoryContext>(context);
+            }
+        }
+
+        public delegate HistoryContext NotHistoryContextFactory(
+            DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema);
+
+        [Fact]
+        public void The_root_resolver_does_not_return_a_history_context_factory_for_other_matching_delegate_types()
+        {
+            Assert.Null(
                 new RootDependencyResolver(
                     new DefaultProviderServicesResolver(),
-                    new DatabaseInitializerResolver()).GetService<IHistoryContextFactory>());
+                    new DatabaseInitializerResolver()).GetService<NotHistoryContextFactory>());
+        }
+
+        [Fact]
+        public void The_root_resolver_does_not_return_a_history_context_factory_for_matching_generic_Func()
+        {
+            Assert.Null(
+                new RootDependencyResolver(
+                    new DefaultProviderServicesResolver(),
+                    new DatabaseInitializerResolver()).GetService<Func<DbConnection, bool, string, HistoryContext>>());
         }
 
         [Fact]

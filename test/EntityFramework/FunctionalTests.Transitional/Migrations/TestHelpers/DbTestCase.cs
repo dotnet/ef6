@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Edm;
@@ -130,7 +131,7 @@ namespace System.Data.Entity.Migrations
             bool automaticDataLossEnabled = false,
             string targetDatabase = null,
             string contextKey = null,
-            IHistoryContextFactory historyContextFactory = null,
+            HistoryContextFactory historyContextFactory = null,
             params ScaffoldedMigration[] scaffoldedMigrations)
             where TContext : DbContext
         {
@@ -149,7 +150,7 @@ namespace System.Data.Entity.Migrations
             bool automaticDataLossEnabled = false,
             string targetDatabase = null,
             string contextKey = null,
-            IHistoryContextFactory historyContextFactory = null,
+            HistoryContextFactory historyContextFactory = null,
             params ScaffoldedMigration[] scaffoldedMigrations)
             where TContext : DbContext
         {

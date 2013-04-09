@@ -183,7 +183,7 @@ namespace System.Data.Entity.Migrations
 
         private XDocument GetCurrentHistoryModel(string defaultSchema)
         {
-            using (var historyContext = _configuration.HistoryContextFactory.Create(CreateConnection(), true, defaultSchema))
+            using (var historyContext = _configuration.HistoryContextFactory(CreateConnection(), true, defaultSchema))
             {
                 var currentHistoryModel = historyContext.GetModel();
 

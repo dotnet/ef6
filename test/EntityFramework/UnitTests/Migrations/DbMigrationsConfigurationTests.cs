@@ -159,12 +159,13 @@ namespace System.Data.Entity.Migrations
         {
             var config = new TestMigrationsConfiguration();
 
-            var factory = new Mock<IHistoryContextFactory>().Object;
+            HistoryContextFactory factory = (e, d, c) => { throw new NotImplementedException(); };
             config.HistoryContextFactory = factory;
             Assert.Same(factory, config.HistoryContextFactory);
 
             config.HistoryContextFactory = null;
-            Assert.IsType<DefaultHistoryContextFactory>(config.HistoryContextFactory);
+            Assert.IsType<HistoryContextFactory>(config.HistoryContextFactory);
+            Assert.NotSame(factory, config.HistoryContextFactory);
         }
 
         [Fact]

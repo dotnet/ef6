@@ -34,7 +34,7 @@ namespace System.Data.Entity.Migrations
         private DbConnectionInfo _connectionInfo;
         private string _migrationsDirectory = DefaultMigrationsDirectory;
         private readonly Lazy<IDbDependencyResolver> _resolver;
-        private IHistoryContextFactory _historyContextFactory;
+        private HistoryContextFactory _historyContextFactory;
         private string _contextKey;
         private int? _commandTimeout;
 
@@ -188,13 +188,13 @@ namespace System.Data.Entity.Migrations
         ///     If <c>null</c> is provided, the history context registered with <see cref="System.Data.Entity.Config.DbConfiguration"/>
         ///     will be used (by default this is <see cref="HistoryContext"/>).
         /// </summary>
-        public IHistoryContextFactory HistoryContextFactory
+        public HistoryContextFactory HistoryContextFactory
         {
             get
             {
                 return _historyContextFactory
-                       ?? _resolver.Value.GetService<IHistoryContextFactory>(GetType())
-                       ?? _resolver.Value.GetService<IHistoryContextFactory>();
+                       ?? _resolver.Value.GetService<HistoryContextFactory>(GetType())
+                       ?? _resolver.Value.GetService<HistoryContextFactory>();
             }
             set { _historyContextFactory = value; } // Allowed to be null
         }

@@ -517,13 +517,13 @@ namespace System.Data.Entity.Config
 
         /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
-        ///     an implementation of <see cref="IHistoryContextFactory" /> which allows for configuration of the
-        ///     internal Migrations <see cref="HistoryContext" /> for a given <see cref="DbMigrationsConfiguration" />.
+        ///     a <see cref="HistoryContextFactory" /> delegate which allows for creation of a customized <see cref="HistoryContext" />
+        ///     for a given <see cref="DbMigrationsConfiguration" />.
         /// </summary>
         /// <remarks>
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
-        ///     <see cref="IHistoryContextFactory" />. This means that, if desired, the same functionality can be achieved using
+        ///     <see cref="HistoryContextFactory" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="historyContextFactory">
@@ -533,7 +533,7 @@ namespace System.Data.Entity.Config
         ///     The <see cref="DbMigrationsConfiguration" /> that this factory will apply to.
         /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
-        protected internal void SetHistoryContextFactory<TMigrationsConfiguration>(IHistoryContextFactory historyContextFactory)
+        protected internal void SetHistoryContextFactory<TMigrationsConfiguration>(HistoryContextFactory historyContextFactory)
             where TMigrationsConfiguration : DbMigrationsConfiguration
         {
             Check.NotNull(historyContextFactory, "historyContextFactory");

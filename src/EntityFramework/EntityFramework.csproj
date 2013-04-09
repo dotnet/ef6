@@ -210,6 +210,7 @@
     <Compile Include="Core\Common\CommandTrees\DbUnionAllExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbScanExpression.cs" />
     <Compile Include="Edm\Serialization\MetadataItemHelper.cs" />
+    <Compile Include="Migrations\History\HistoryContextFactory.cs" />
     <Compile Include="TransactionalBehavior.cs" />
     <Compile Include="Internal\InterceptableDbCommand.cs">
       <SubType>Component</SubType>
@@ -390,8 +391,6 @@
     <Compile Include="Internal\InitializerConfig.cs" />
     <Compile Include="Internal\LazyAsyncEnumerator.cs" />
     <Compile Include="Internal\LazyEnumerator`.cs" />
-    <Compile Include="Migrations\History\DefaultHistoryContextFactory.cs" />
-    <Compile Include="Migrations\History\IHistoryContextFactory.cs" />
     <Compile Include="Migrations\Infrastructure\MigrationsPendingException.cs" />
     <Compile Include="Migrations\Utilities\MigrationsConfigurationFinder.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeActivator.cs" />
