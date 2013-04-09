@@ -13,6 +13,20 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
     public sealed class EdmxSerializerTests
     {
         [Fact]
+        public void Serialize_should_return_valid_edmx_xml_v1()
+        {
+            var databaseMapping = CreateSimpleModel(XmlConstants.StoreVersionForV1);
+            var edmx = new XDocument();
+
+            using (var xmlWriter = edmx.CreateWriter())
+            {
+                new EdmxSerializer().Serialize(databaseMapping, ProviderRegistry.Sql2008_ProviderInfo, xmlWriter);
+            }
+
+            edmx.Validate(LoadEdmxSchemaSet(1), (_, e) => { throw e.Exception; });
+        }
+
+        [Fact]
         public void Serialize_should_return_valid_edmx_xml_v2()
         {
             var databaseMapping = CreateSimpleModel(XmlConstants.StoreVersionForV2);

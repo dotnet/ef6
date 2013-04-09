@@ -114,6 +114,10 @@
     <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.csdl" />
     <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.msl" />
     <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.ssdl" />
+    <EmbeddedResource Include="ModelConfiguration\Edm\Serialization\Xsd\Microsoft.Data.Entity.Design.Edmx_1.xsd" />
+    <EmbeddedResource Include="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSDLSchema_1.xsd" />
+    <EmbeddedResource Include="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSMSL_1.xsd" />
+    <EmbeddedResource Include="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.SSDLSchema_1.xsd" />
     <None Include="packages.config" />
     <Compile Include="AssemblyTests.cs" />
     <Compile Include="CommandLine\CommandLineExceptionTests.cs" />
