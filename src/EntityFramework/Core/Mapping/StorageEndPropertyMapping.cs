@@ -51,8 +51,8 @@ namespace System.Data.Entity.Core.Mapping
         ///     Construct a new End Property mapping object
         /// </summary>
         /// <param name="member"> </param>
-        public StorageEndPropertyMapping(EdmProperty member)
-            : base(member)
+        public StorageEndPropertyMapping()
+            : base(null)
         {
         }
 

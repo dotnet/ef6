@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Edm.Serialization
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
@@ -273,12 +272,12 @@ namespace System.Data.Entity.Edm.Serialization
                     entitySet)
                       {
                           SourceEndMapping
-                              = new StorageEndPropertyMapping(new EdmProperty("S"))
+                              = new StorageEndPropertyMapping
                                     {
                                         EndMember = associationEndMember1
                                     },
                           TargetEndMapping
-                              = new StorageEndPropertyMapping(new EdmProperty("T"))
+                              = new StorageEndPropertyMapping
                                     {
                                         EndMember = associationEndMember2
                                     },
@@ -367,7 +366,7 @@ namespace System.Data.Entity.Edm.Serialization
                                         new FunctionParameter(
                                             "Return",
                                             TypeUsage.CreateDefaultTypeUsage(rowType),
-                                            ParameterMode.ReturnValue),
+                                            ParameterMode.ReturnValue)
                                     },
                             Parameters =
                                 new[]

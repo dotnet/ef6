@@ -12,8 +12,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(associationSetMapping);
 
-            associationSetMapping.SourceEndMapping = new StorageEndPropertyMapping(null);
-            associationSetMapping.TargetEndMapping = new StorageEndPropertyMapping(null);
+            associationSetMapping.SourceEndMapping = new StorageEndPropertyMapping();
+            associationSetMapping.TargetEndMapping = new StorageEndPropertyMapping();
 
             return associationSetMapping;
         }

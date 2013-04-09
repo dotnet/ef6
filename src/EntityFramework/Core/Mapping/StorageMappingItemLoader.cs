@@ -3363,8 +3363,11 @@ namespace System.Data.Entity.Core.Mapping
         {
             //FutureEnhancement : Change End Property Mapping to not derive from
             //                    StoragePropertyMapping
-            var endMapping = new StorageEndPropertyMapping(null);
-            endMapping.EndMember = end;
+            var endMapping =
+                new StorageEndPropertyMapping()
+                    {
+                        EndMember = end
+                    };
 
             nav.MoveToChild(XPathNodeType.Element);
             do

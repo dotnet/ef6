@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Mapping
     {
         public abstract ReadOnlyCollection<StoragePropertyMapping> Properties { get; }
 
-        internal abstract void AddProperty(StoragePropertyMapping propertyMapping);
+        public abstract void AddProperty(StoragePropertyMapping propertyMapping);
         internal abstract void RemoveProperty(StoragePropertyMapping propertyMapping);
     }
 }

@@ -224,12 +224,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     entitySet)
                       {
                           SourceEndMapping
-                              = new StorageEndPropertyMapping(new EdmProperty("S"))
+                              = new StorageEndPropertyMapping()
                                     {
                                         EndMember = associationEndMember1
                                     },
                           TargetEndMapping
-                              = new StorageEndPropertyMapping(new EdmProperty("T"))
+                              = new StorageEndPropertyMapping()
                                     {
                                         EndMember = associationEndMember2
                                     }

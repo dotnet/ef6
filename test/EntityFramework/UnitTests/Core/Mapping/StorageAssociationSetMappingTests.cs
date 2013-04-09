@@ -83,13 +83,13 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Null(associationSetMapping.SourceEndMapping);
             Assert.Null(associationSetMapping.TargetEndMapping);
 
-            var sourceEndMapping = new StorageEndPropertyMapping(new EdmProperty("P"));
+            var sourceEndMapping = new StorageEndPropertyMapping();
 
             associationSetMapping.SourceEndMapping = sourceEndMapping;
 
             Assert.Same(sourceEndMapping, associationSetMapping.SourceEndMapping);
 
-            var targetEndMapping = new StorageEndPropertyMapping(new EdmProperty("P"));
+            var targetEndMapping = new StorageEndPropertyMapping();
 
             associationSetMapping.TargetEndMapping = targetEndMapping;
 

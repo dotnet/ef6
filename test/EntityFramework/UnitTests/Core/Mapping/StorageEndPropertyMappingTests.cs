@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Mapping
         [Fact]
         public void Can_get_property_mappings()
         {
-            var endPropertyMapping = new StorageEndPropertyMapping(new EdmProperty("P"));
+            var endPropertyMapping = new StorageEndPropertyMapping();
 
             Assert.Empty(endPropertyMapping.PropertyMappings);
 
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Mapping
         [Fact]
         public void Can_get_properties()
         {
-            var endPropertyMapping = new StorageEndPropertyMapping(new EdmProperty("P"));
+            var endPropertyMapping = new StorageEndPropertyMapping();
 
             Assert.Empty(endPropertyMapping.Properties);
 
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Mapping
         [Fact]
         public void Can_set_and_get_end_member()
         {
-            var endPropertyMapping = new StorageEndPropertyMapping(new EdmProperty("P"));
+            var endPropertyMapping = new StorageEndPropertyMapping();
 
             Assert.Null(endPropertyMapping.EndMember);
 
