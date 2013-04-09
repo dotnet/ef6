@@ -13468,6 +13468,14 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed); }
         }
+
+        /// <summary>
+        ///     A string like "Errors Found During Generation:"
+        /// </summary>
+        internal static string MetadataItemErrorsFoundDuringGeneration
+        {
+            get { return EntityRes.GetString(EntityRes.MetadataItemErrorsFoundDuringGeneration); }
+        }
     }
 
     /// <summary>
@@ -16847,6 +16855,7 @@ namespace System.Data.Entity.Resources
         internal const string VisitDbInExpressionNotImplemented = "VisitDbInExpressionNotImplemented";
         internal const string InvalidColumnBuilderArgument = "InvalidColumnBuilderArgument";
         internal const string StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed = "StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed";
+        internal const string MetadataItemErrorsFoundDuringGeneration = "MetadataItemErrorsFoundDuringGeneration";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

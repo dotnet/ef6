@@ -209,6 +209,7 @@
     <Compile Include="Core\Common\CommandTrees\DbRefKeyExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbUnionAllExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbScanExpression.cs" />
+    <Compile Include="Edm\Serialization\MetadataItemHelper.cs" />
     <Compile Include="TransactionalBehavior.cs" />
     <Compile Include="Internal\InterceptableDbCommand.cs">
       <SubType>Component</SubType>

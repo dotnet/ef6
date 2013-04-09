@@ -11,6 +11,14 @@ namespace System.Data.Entity.Edm.Serialization
         protected XmlWriter _xmlWriter;
         protected double _version;
 
+        internal void WriteComment(string comment)
+        {
+            if (!String.IsNullOrEmpty(comment))
+            {
+                _xmlWriter.WriteComment(comment);
+            }
+        }
+
         internal virtual void WriteEndElement()
         {
             _xmlWriter.WriteEndElement();

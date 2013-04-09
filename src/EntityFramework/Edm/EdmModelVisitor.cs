@@ -265,7 +265,7 @@ namespace System.Data.Entity.Edm
             VisitCollection(members, VisitEdmEnumTypeMember);
         }
 
-        protected virtual void VisitEdmEntityType(EntityType item)
+        protected internal virtual void VisitEdmEntityType(EntityType item)
         {
             VisitMetadataItem(item);
             if (item != null)
@@ -309,7 +309,7 @@ namespace System.Data.Entity.Edm
             VisitCollection(associationTypes, VisitEdmAssociationType);
         }
 
-        protected virtual void VisitEdmAssociationType(AssociationType item)
+        protected internal virtual void VisitEdmAssociationType(AssociationType item)
         {
             VisitMetadataItem(item);
 

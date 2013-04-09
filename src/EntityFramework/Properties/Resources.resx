@@ -5370,4 +5370,7 @@
   <data name="StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed" xml:space="preserve">
     <value>Invalid scalar property mapping. Both entity model property and store column must be scalar properties.</value>
   </data>
+  <data name="MetadataItemErrorsFoundDuringGeneration" xml:space="preserve">
+    <value>Errors Found During Generation:</value>
+  </data>
 </root>

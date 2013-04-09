@@ -3,10 +3,13 @@
 namespace System.Data.Entity.Edm.Serialization
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Xml;
     using System.Xml.Linq;
     using Moq;
@@ -183,6 +186,97 @@ namespace System.Data.Entity.Edm.Serialization
 
             schemaWriterMock.Verify(sw => sw.WriteRowTypeElementHeader(), Times.Once());
             schemaWriterMock.Verify(sw => sw.WriteEndElement(), Times.Once());
+        }
+
+        [Fact]
+        public static void VisitEdmEntityType_writes_comment_including_errors_followed_by_valid_entity_type()
+        {
+            EdmSerializationVisitor_writes_expected_xml(
+                constructor: () => new EntityType("AName", "ANamespace", DataSpace.CSpace),
+                invalid: false,
+                visitAction: (visitor, item) => visitor.VisitEdmEntityType(item),
+                expectedFormat: @"<!--{0}--><EntityType Name=""AName"" />");
+        }
+
+        [Fact]
+        public static void VisitEdmAssociationType_writes_comment_including_errors_followed_by_valid_association_type()
+        {
+            EdmSerializationVisitor_writes_expected_xml(
+                constructor: () => new AssociationType("AName", "ANamespace", false, DataSpace.CSpace),
+                invalid: false,
+                visitAction: (visitor, item) => visitor.VisitEdmAssociationType(item),
+                expectedFormat: @"<!--{0}--><Association Name=""AName"" />");
+        }
+
+        [Fact]
+        public static void VisitEdmEntityType_writes_comment_including_errors_and_invalid_entity_type()
+        {
+            EdmSerializationVisitor_writes_expected_xml(
+                constructor: () => new EntityType("AName", "ANamespace", DataSpace.CSpace),
+                invalid: true,
+                visitAction: (visitor, item) => visitor.VisitEdmEntityType(item),
+                expectedFormat: @"<!--{0}<EntityType Name=""AName"" />-->");
+        }
+
+        [Fact]
+        public static void VisitEdmAssociationType_writes_comment_including_errors_and_invalid_association_type()
+        {
+            EdmSerializationVisitor_writes_expected_xml(
+                constructor: () => new AssociationType("AName", "ANamespace", false, DataSpace.CSpace),
+                invalid: true,
+                visitAction: (visitor, item) => visitor.VisitEdmAssociationType(item),
+                expectedFormat: @"<!--{0}<Association Name=""AName"" />-->");
+        }
+
+        private static void EdmSerializationVisitor_writes_expected_xml<T>(
+            Func<T> constructor,
+            bool invalid,
+            Action<EdmSerializationVisitor, T> visitAction,
+            string expectedFormat)
+            where T : MetadataItem
+        {
+            var errors = new List<EdmSchemaError>() {
+                new EdmSchemaError("Message1.", 1, EdmSchemaErrorSeverity.Error),
+                new EdmSchemaError("Message2.", 2, EdmSchemaErrorSeverity.Warning)
+            };
+
+            var typeUsage1 = TypeUsage.CreateDefaultTypeUsage(
+                PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Boolean));
+            var property1 = MetadataProperty.Create(
+                MetadataItemHelper.SchemaInvalidMetadataPropertyName, typeUsage1, invalid);
+
+            var typeUsage2 = TypeUsage.CreateDefaultTypeUsage(
+                PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String).GetCollectionType());
+            var property2 = MetadataProperty.Create(
+                MetadataItemHelper.SchemaErrorsMetadataPropertyName, typeUsage2, errors);
+
+            var item = constructor();
+            item.AddMetadataProperties(new List<MetadataProperty>() { property1, property2 });
+
+            var builder = new StringBuilder();
+            var settings = new XmlWriterSettings { ConformanceLevel = ConformanceLevel.Fragment };
+
+            using (var writer = XmlWriter.Create(builder, settings))
+            {
+                visitAction(new EdmSerializationVisitor(writer, 3.0), item);
+            }
+
+            var errorsString = String.Concat(
+                Strings.MetadataItemErrorsFoundDuringGeneration,
+                errors[0].ToString(),
+                errors[1].ToString());
+
+            var expectedXml = String.Format(
+                CultureInfo.InvariantCulture,
+                expectedFormat,
+                errorsString);
+
+            AssertEqual(expectedXml, builder.ToString());
+        }
+
+        private static void AssertEqual(string expected, string actual)
+        {
+            Assert.Equal(Regex.Replace(expected, @"\s", ""), Regex.Replace(actual, @"\s", ""));
         }
     }
 }

@@ -792,6 +792,11 @@ namespace System.Data.Entity.Edm.Serialization
             }
         }
 
+        internal EdmXmlSchemaWriter Replicate(XmlWriter xmlWriter)
+        {
+            return new EdmXmlSchemaWriter(xmlWriter, _version, _serializeDefaultNullability);
+        }
+
         private void WriteExtendedProperties(MetadataItem item)
         {
             DebugCheck.NotNull(item);
