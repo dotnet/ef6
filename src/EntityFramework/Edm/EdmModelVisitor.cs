@@ -4,6 +4,7 @@ namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
     using System.Linq;
 
     internal abstract class EdmModelVisitor
@@ -83,10 +84,17 @@ namespace System.Data.Entity.Edm
         {
             VisitMetadataItem(function);
 
-            if ((function != null)
-                && (function.Parameters != null))
+            if (function != null)
             {
-                VisitFunctionParameters(function.Parameters);
+                if (function.Parameters != null)
+                {
+                    VisitFunctionParameters(function.Parameters);
+                }
+
+                if (function.ReturnParameters != null)
+                {
+                    VisitFunctionReturnParameters(function.ReturnParameters);
+                }
             }
         }
 
@@ -208,6 +216,28 @@ namespace System.Data.Entity.Edm
             VisitMetadataItem(functionParameter);
         }
 
+        protected internal virtual void VisitFunctionReturnParameters(IEnumerable<FunctionParameter> returnParameters)
+        {
+            VisitCollection(returnParameters, VisitFunctionReturnParameter);
+        }
+
+        protected internal virtual void VisitFunctionReturnParameter(FunctionParameter returnParameter)
+        {
+            VisitMetadataItem(returnParameter);
+
+            var returnParameterType = returnParameter.TypeUsage.EdmType;
+
+            Debug.Assert(
+                returnParameterType.BuiltInTypeKind == BuiltInTypeKind.RowType ||
+                returnParameterType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType,
+                "Unsupported return parameter type");
+
+            if (returnParameterType.BuiltInTypeKind == BuiltInTypeKind.RowType)
+            {
+                VisitRowType((RowType)returnParameterType);
+            }
+        }
+
         protected virtual void VisitEdmEnumType(EnumType item)
         {
             VisitMetadataItem(item);
@@ -217,6 +247,16 @@ namespace System.Data.Entity.Edm
                 {
                     VisitEnumMembers(item, item.Members);
                 }
+            }
+        }
+
+        protected internal virtual void VisitRowType(RowType rowType)
+        {
+            VisitMetadataItem(rowType);
+
+            if (rowType.DeclaredProperties.Any())
+            {
+                VisitCollection(rowType.DeclaredProperties, VisitEdmProperty);
             }
         }
 
@@ -290,7 +330,7 @@ namespace System.Data.Entity.Edm
             }
         }
 
-        protected virtual void VisitEdmProperty(EdmProperty item)
+        protected internal virtual void VisitEdmProperty(EdmProperty item)
         {
             VisitMetadataItem(item);
         }

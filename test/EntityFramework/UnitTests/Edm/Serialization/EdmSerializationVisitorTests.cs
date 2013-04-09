@@ -141,5 +141,48 @@ namespace System.Data.Entity.Edm.Serialization
             schemaWriterMock.Verify(sw => sw.WriteFunctionImportParameterElementHeader(functionImport), Times.Once());
             schemaWriterMock.Verify(sw => sw.WriteEndElement(), Times.Once());
         }
+
+        [Fact]
+        public void VisitFunctionReturnParameter_writes_return_and_collection_header_for_rowtype()
+        {
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
+            var returnParameter =
+                new FunctionParameter("r", TypeUsage.CreateDefaultTypeUsage(new RowType()), ParameterMode.ReturnValue);
+
+            new EdmSerializationVisitor(schemaWriterMock.Object).VisitFunctionReturnParameter(returnParameter);
+
+            schemaWriterMock.Verify(sw => sw.WriteFunctionReturnTypeElementHeader(), Times.Once());
+            schemaWriterMock.Verify(sw => sw.WriteCollectionTypeElementHeader(), Times.Once());
+            schemaWriterMock.Verify(sw => sw.WriteRowTypeElementHeader(), Times.Once());
+            schemaWriterMock.Verify(sw => sw.WriteEndElement(), Times.Exactly(3));
+        }
+
+        [Fact]
+        public void VisitFunctionReturnParameter_writes_return_and_collection_header_for_primitive_return_type()
+        {
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
+            var returnParameter =
+                new FunctionParameter(
+                    "r", 
+                    TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)), 
+                    ParameterMode.ReturnValue);
+
+            new EdmSerializationVisitor(schemaWriterMock.Object).VisitFunctionReturnParameter(returnParameter);
+
+            schemaWriterMock.Verify(sw => sw.WriteFunctionReturnTypeElementHeader(), Times.Never());
+            schemaWriterMock.Verify(sw => sw.WriteCollectionTypeElementHeader(), Times.Never());
+            schemaWriterMock.Verify(sw => sw.WriteRowTypeElementHeader(), Times.Never());
+            schemaWriterMock.Verify(sw => sw.WriteEndElement(), Times.Never());
+        }
+
+        [Fact]
+        public void VisitRowType_writes_rowtype()
+        {
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
+            new EdmSerializationVisitor(schemaWriterMock.Object).VisitRowType(new RowType());
+
+            schemaWriterMock.Verify(sw => sw.WriteRowTypeElementHeader(), Times.Once());
+            schemaWriterMock.Verify(sw => sw.WriteEndElement(), Times.Once());
+        }
     }
 }

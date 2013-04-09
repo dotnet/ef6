@@ -31,6 +31,67 @@ namespace System.Data.Entity.Edm.Serialization
         }
 
         [Fact]
+        public void WriteFunctionElementHeader_should_write_return_type_attribute_for_primitive_return_type()
+        {
+            var fixture = new Fixture();
+
+            var function = new EdmFunction(
+                "Foo",
+                "Bar",
+                DataSpace.SSpace,
+                new EdmFunctionPayload
+                    {
+                        Schema = "dbo",
+                        ReturnParameters =
+                            new[]
+                                {
+                                    new FunctionParameter(
+                                        "r",
+                                        TypeUsage.CreateDefaultTypeUsage(
+                                            PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                                        ParameterMode.ReturnValue)
+                                }
+                    });
+
+            fixture.Writer.WriteFunctionElementHeader(function);
+
+            Assert.Equal(
+                "<Function Name=\"Foo\" Aggregate=\"false\" BuiltIn=\"false\" NiladicFunction=\"false\" IsComposable=\"true\" ParameterTypeSemantics=\"AllowImplicitConversion\" Schema=\"dbo\" ReturnType=\"Int32\"",
+                fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteFunctionElementHeader_should_not_write_return_type_attribute_for_non_primitive_return_type()
+        {
+            var fixture = new Fixture();
+
+            var returnParameterType = TypeUsage.CreateDefaultTypeUsage(new RowType());
+
+            var function = new EdmFunction(
+                "Foo",
+                "Bar",
+                DataSpace.SSpace,
+                new EdmFunctionPayload
+                {
+                    Schema = "dbo",
+                    ReturnParameters =
+                        new[]
+                                {
+                                    new FunctionParameter(
+                                        "r",
+                                        returnParameterType,
+                                        ParameterMode.ReturnValue)
+                                }
+                });
+
+            fixture.Writer.WriteFunctionElementHeader(function);
+
+            Assert.Equal(
+                "<Function Name=\"Foo\" Aggregate=\"false\" BuiltIn=\"false\" NiladicFunction=\"false\" IsComposable=\"true\" ParameterTypeSemantics=\"AllowImplicitConversion\" Schema=\"dbo\"",
+                fixture.ToString());
+        }
+
+        [Fact]
         public void WriteFunctionParameterHeader_should_write_element_and_attributes()
         {
             var fixture = new Fixture();
@@ -122,6 +183,36 @@ namespace System.Data.Entity.Edm.Serialization
             Assert.Equal(
                 "<Parameter Name=\"miles\" Mode=\"InOut\" Type=\"Int32\"",
                 fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteFunctionReturnTypeElementHeader_writes_header()
+        {
+            var fixture = new Fixture();
+
+            fixture.Writer.WriteFunctionReturnTypeElementHeader();
+
+            Assert.Equal("<ReturnType", fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteCollectionTypeElementHeader_writes_header()
+        {
+            var fixture = new Fixture();
+
+            fixture.Writer.WriteCollectionTypeElementHeader();
+
+            Assert.Equal("<CollectionType", fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteRowTypeElementHeader_writes_header()
+        {
+            var fixture = new Fixture();
+
+            fixture.Writer.WriteRowTypeElementHeader();
+
+            Assert.Equal("<RowType", fixture.ToString());
         }
 
         private class Fixture

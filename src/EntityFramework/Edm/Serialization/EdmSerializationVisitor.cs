@@ -5,6 +5,7 @@ namespace System.Data.Entity.Edm.Serialization
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
     using System.Xml;
 
@@ -85,6 +86,26 @@ namespace System.Data.Entity.Edm.Serialization
             _schemaWriter.WriteEndElement();
         }
 
+        protected internal override void VisitFunctionReturnParameter(FunctionParameter returnParameter)
+        {
+            if (returnParameter.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.RowType)
+            {
+                _schemaWriter.WriteFunctionReturnTypeElementHeader();
+                _schemaWriter.WriteCollectionTypeElementHeader();
+                base.VisitFunctionReturnParameter(returnParameter);
+                _schemaWriter.WriteEndElement();
+                _schemaWriter.WriteEndElement();
+            }
+            else
+            {
+                Debug.Assert(
+                    returnParameter.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType,
+                    "Unsupported return parameter type");
+
+                base.VisitFunctionReturnParameter(returnParameter);
+            }
+        }
+
         protected override void VisitEdmAssociationSet(AssociationSet item)
         {
             _schemaWriter.WriteAssociationSetElementHeader(item);
@@ -128,6 +149,13 @@ namespace System.Data.Entity.Edm.Serialization
             // for function with single return value the return type is being written inline
         }
 
+        protected internal override void VisitRowType(RowType rowType)
+        {
+            _schemaWriter.WriteRowTypeElementHeader();
+            base.VisitRowType(rowType);
+            _schemaWriter.WriteEndElement();
+        }
+
         protected override void VisitEdmEntityType(EntityType item)
         {
             _schemaWriter.WriteEntityTypeElementHeader(item);
@@ -164,7 +192,7 @@ namespace System.Data.Entity.Edm.Serialization
             }
         }
 
-        protected override void VisitEdmProperty(EdmProperty item)
+        protected internal override void VisitEdmProperty(EdmProperty item)
         {
             _schemaWriter.WritePropertyElementHeader(item);
             base.VisitEdmProperty(item);

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Linq;
     using Moq;
     using Xunit;
 
@@ -114,6 +115,67 @@ namespace System.Data.Entity.Edm
 
             visitorMock.Verify(v => v.VisitFunctionImportParameter(inputParam), Times.Once());
             visitorMock.Verify(v => v.VisitFunctionImportReturnParameter(returnParam), Times.Once());
+        }
+
+        [Fact]
+        public void VisitFunction_visits_return_parameters()
+        {
+            var visitorMock =
+                new Mock<EdmModelVisitor>
+                    {
+                        CallBase = true
+                    };
+
+            var returnParameter =
+                new FunctionParameter(
+                    "r",
+                    TypeUsage.CreateDefaultTypeUsage(
+                        PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                    ParameterMode.ReturnValue);
+
+            var functionPayload =
+                new EdmFunctionPayload
+                {
+                    ReturnParameters = new[] { returnParameter }
+                };
+
+            visitorMock.Object.VisitEdmFunction(new EdmFunction("f", "N", DataSpace.SSpace, functionPayload));
+            visitorMock.Verify(v => v.VisitFunctionReturnParameters(It.IsAny<IEnumerable<FunctionParameter>>()), Times.Once());
+            visitorMock.Verify(v => v.VisitFunctionReturnParameter(returnParameter), Times.Once());
+        }
+
+        [Fact]
+        public void VisitFunctionReturnParameter_visits_rowtype_if_parameter_type_is_rowtype()
+        {
+            var visitorMock =
+                new Mock<EdmModelVisitor>
+                {
+                    CallBase = true
+                };
+
+            var returnParameter =
+                new FunctionParameter(
+                    "r",
+                    TypeUsage.CreateDefaultTypeUsage(new RowType()),
+                    ParameterMode.ReturnValue);
+
+            visitorMock.Object.VisitFunctionReturnParameter(returnParameter);
+            visitorMock.Verify(v => v.VisitRowType((RowType)returnParameter.TypeUsage.EdmType), Times.Once());
+        }
+
+        [Fact]
+        public void VisitRowType_visits_child_properties()
+        {
+            var visitorMock =
+                new Mock<EdmModelVisitor>
+                {
+                    CallBase = true
+                };
+
+            var rowType = new RowType(new[] { new EdmProperty("test"), });
+
+            visitorMock.Object.VisitRowType(rowType);
+            visitorMock.Verify(v => v.VisitEdmProperty(rowType.DeclaredProperties.Single()), Times.Once());            
         }
     }
 }

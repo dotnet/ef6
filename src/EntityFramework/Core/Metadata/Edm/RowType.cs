@@ -101,6 +101,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        public ReadOnlyMetadataCollection<EdmProperty> DeclaredProperties
+        {
+            get { return GetDeclaredOnlyMembers<EdmProperty>(); }
+        }
+
         /// <summary>
         ///     Adds a property
         /// </summary>

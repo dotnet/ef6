@@ -264,6 +264,17 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteAttributeString(XmlConstants.IsComposable, GetLowerCaseStringFromBoolValue(function.IsComposableAttribute));
             _xmlWriter.WriteAttributeString(XmlConstants.ParameterTypeSemantics, function.ParameterTypeSemanticsAttribute.ToString());
             _xmlWriter.WriteAttributeString(XmlConstants.Schema, function.Schema);
+
+            if (function.ReturnParameters != null && function.ReturnParameters.Any())
+            {
+                Debug.Assert(function.ReturnParameters.Count < 2, "functions with multiple return types currently not supported");
+
+                var returnParameterType = function.ReturnParameters.First().TypeUsage.EdmType;
+                if (returnParameterType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType)
+                {
+                    _xmlWriter.WriteAttributeString(XmlConstants.ReturnType, GetTypeName(returnParameterType));
+                }
+            }
         }
 
         public virtual void WriteFunctionParameterHeader(FunctionParameter functionParameter)
@@ -274,6 +285,11 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteAttributeString(XmlConstants.Name, functionParameter.Name);
             _xmlWriter.WriteAttributeString(XmlConstants.TypeAttribute, functionParameter.TypeName);
             _xmlWriter.WriteAttributeString(XmlConstants.Mode, functionParameter.Mode.ToString());
+        }
+
+        internal virtual void WriteFunctionReturnTypeElementHeader()
+        {
+            _xmlWriter.WriteStartElement(XmlConstants.ReturnTypeElement);
         }
 
         internal void WriteEntityTypeElementHeader(EntityType entityType)
@@ -382,6 +398,16 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteStartElement(XmlConstants.ComplexType);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, complexType.Name);
             WritePolymorphicTypeAttributes(complexType);
+        }
+
+        internal virtual void WriteCollectionTypeElementHeader()
+        {
+            _xmlWriter.WriteStartElement(XmlConstants.CollectionType);
+        }
+
+        internal virtual void WriteRowTypeElementHeader()
+        {
+            _xmlWriter.WriteStartElement(XmlConstants.RowType);
         }
 
         internal void WriteAssociationTypeElementHeader(AssociationType associationType)

@@ -33,5 +33,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.True(rowType.IsReadOnly);
         }
+
+        [Fact]
+        public void Can_get_list_of_declared_properties()
+        {
+            var rowType = new RowType();
+
+            Assert.Empty(rowType.DeclaredProperties);
+
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+
+            rowType.AddMember(property);
+
+            Assert.Equal(1, rowType.DeclaredProperties.Count);
+
+            rowType.RemoveMember(property);
+        }
     }
 }

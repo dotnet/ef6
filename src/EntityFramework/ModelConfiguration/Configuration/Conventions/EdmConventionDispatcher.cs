@@ -101,7 +101,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 base.VisitEdmAssociationEnd(item);
             }
 
-            protected override void VisitEdmProperty(EdmProperty item)
+            protected internal override void VisitEdmProperty(EdmProperty item)
             {
                 Dispatch(item);
 
