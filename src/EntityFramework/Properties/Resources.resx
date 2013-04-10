@@ -373,7 +373,7 @@
     <value>One or more validation errors were detected during model generation:</value>
   </data>
   <data name="ValidationItemFormat" xml:space="preserve">
-    <value>\t{0}: {1}: {2}</value>
+    <value>{0}: {1}: {2}</value>
   </data>
   <data name="KeyRegisteredOnDerivedType" xml:space="preserve">
     <value>A key is registered for the derived type '{0}'. Keys can only be registered for the root type '{1}'.</value>

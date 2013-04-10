@@ -566,7 +566,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "\t{0}: {1}: {2}"
+        ///     A string like "{0}: {1}: {2}"
         /// </summary>
         internal static string ValidationItemFormat(object p0, object p1, object p2)
         {
