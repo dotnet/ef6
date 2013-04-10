@@ -116,27 +116,50 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         {
             DebugCheck.NotNull(config);
 
-            var providerElement = config
+            var providersElement = config
                 .GetOrCreateElement(ConfigurationElementName)
                 .GetOrCreateElement(EntityFrameworkElementName)
-                .GetOrCreateElement(ProvidersElementName)
-                .GetOrCreateElementWithSpecificAttribute(ProviderElementName, new XAttribute("invariantName", invariantName));
+                .GetOrCreateElement(ProvidersElementName);
+
+            var invariantAttribute = new XAttribute("invariantName", invariantName);
+            var modificationMade = false;
+
+            // Check if element exists at end
+            var providerElement = providersElement.Elements(ProviderElementName).LastOrDefault();
+            if (providerElement == null
+                || providerElement.Attributes(invariantAttribute.Name).All(a => a.Value != invariantAttribute.Value))
+            {
+                // Check if element exists and if so move it to end
+                providerElement = providersElement
+                    .Elements(ProviderElementName)
+                    .FirstOrDefault(e => e.Attributes(invariantAttribute.Name).Any(a => a.Value == invariantAttribute.Value));
+
+                if (providerElement != null)
+                {
+                    providerElement.Remove();
+                }
+                else
+                {
+                    providerElement = new XElement(ProviderElementName, invariantAttribute);
+                }
+
+                providersElement.Add(providerElement);
+                modificationMade = true;
+            }
 
             var currentTypeAttribute = providerElement.Attribute("type");
-            if (currentTypeAttribute != null)
-            {
-                if (typeName.Equals(currentTypeAttribute.Value, StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
-                currentTypeAttribute.Value = typeName;
-            }
-            else
+            if (currentTypeAttribute == null)
             {
                 providerElement.Add(new XAttribute("type", typeName));
+                modificationMade = true;
+            }
+            else if (!typeName.Equals(currentTypeAttribute.Value, StringComparison.OrdinalIgnoreCase))
+            {
+                currentTypeAttribute.Value = typeName;
+                modificationMade = true;
             }
 
-            return true;
+            return modificationMade;
         }
 
         /// <summary>

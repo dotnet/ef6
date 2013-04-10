@@ -10,6 +10,7 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Data.SqlClient;
     using System.Linq;
     using System.Text;
     using System.Xml;
@@ -772,7 +773,7 @@ namespace System.Data.Entity.Migrations.History
                 var clonedConnection = DbProviderServices.GetProviderFactory(context.Database.Connection).CreateConnection();
                 clonedConnection.ConnectionString = context.Database.Connection.ConnectionString;
 
-                using (var historyContext = new HistoryContext(clonedConnection, false, null))
+                using (var historyContext = new HistoryContext(clonedConnection, defaultSchema: null))
                 {
                     context.InternalContext.MarkDatabaseInitialized();
 
@@ -809,9 +810,12 @@ namespace System.Data.Entity.Migrations.History
         {
             var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", 77);
 
-            using (var context = historyRepository.CreateContext())
+            using (var connection = new SqlConnection())
             {
-                Assert.Equal(77, context.Database.CommandTimeout);
+                using (var context = historyRepository.CreateContext(connection))
+                {
+                    Assert.Equal(77, context.Database.CommandTimeout);
+                }
             }
         }
     }

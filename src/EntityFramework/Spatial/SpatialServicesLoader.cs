@@ -3,9 +3,7 @@
 namespace System.Data.Entity.Spatial
 {
     using System.Data.Entity.Config;
-    using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Common;
-    using System.Diagnostics;
+    using System.Data.Entity.Infrastructure;
 
     internal class SpatialServicesLoader
     {
@@ -28,20 +26,11 @@ namespace System.Data.Entity.Spatial
                 return spatialProvider;
             }
 
-            var efProvider = _resolver.GetService<DbProviderServices>("System.Data.SqlClient");
-            Debug.Assert(efProvider != null);
-
-            try
+            // Note: Manifest token is currently ignored for SQL Server spatial provider
+            spatialProvider = _resolver.GetService<DbSpatialServices>(new DbProviderInfo("System.Data.SqlClient", "2012"));
+            if (spatialProvider != null && spatialProvider.NativeTypesAvailable)
             {
-                spatialProvider = efProvider.GetSpatialServicesInternal(new Lazy<IDbDependencyResolver>(() => _resolver), "2008");
-                if (spatialProvider.NativeTypesAvailable)
-                {
-                    return spatialProvider;
-                }
-            }
-            catch (ProviderIncompatibleException)
-            {
-                // Thrown if the provider doesn't support spatial, in which case we fall back to the default.
+                return spatialProvider;
             }
 
             return DefaultSpatialServices.Instance;

@@ -47,7 +47,7 @@ namespace System.Data.Entity.Config
             _resolvers.Add(new SingletonDependencyResolver<IDbConnectionFactory>(new SqlConnectionFactory()));
             _resolvers.Add(new SingletonDependencyResolver<IDbModelCacheKeyFactory>(new DefaultModelCacheKeyFactory()));
             _resolvers.Add(new SingletonDependencyResolver<IManifestTokenService>(new DefaultManifestTokenService()));
-            _resolvers.Add(new SingletonDependencyResolver<HistoryContextFactory>((e, c, d) => new HistoryContext(e, c, d)));
+            _resolvers.Add(new SingletonDependencyResolver<HistoryContextFactory>((e, d) => new HistoryContext(e, d)));
             _resolvers.Add(new SingletonDependencyResolver<IPluralizationService>(new EnglishPluralizationService()));
             _resolvers.Add(new SingletonDependencyResolver<IViewAssemblyCache>(new ViewAssemblyCache()));
             _resolvers.Add(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));

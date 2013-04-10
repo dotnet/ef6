@@ -6,6 +6,7 @@ namespace System.Data.Entity.WrappingProvider
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Migrations.Sql;
     using System.Reflection;
 
     public class WrappingEfProvider<TAdoNetBase, TEfBase> : DbProviderServices
@@ -65,6 +66,14 @@ namespace System.Data.Entity.WrappingProvider
                 new LogItem("DbDeleteDatabase", connection, new object[] { commandTimeout, storeItemCollection }));
 
             _baseServices.DeleteDatabase(((WrappingConnection<TAdoNetBase>)connection).BaseConnection, commandTimeout, storeItemCollection);
+        }
+
+        public override object GetService(Type type, object key)
+        {
+            var service = _baseServices.GetService(type, key);
+
+            var asSqlGenerator = service as MigrationSqlGenerator;
+            return asSqlGenerator != null ? new WrappingSqlGenerator<TAdoNetBase>(asSqlGenerator) : service;
         }
     }
 }

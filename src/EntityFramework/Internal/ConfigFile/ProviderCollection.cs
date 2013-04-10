@@ -9,7 +9,6 @@ namespace System.Data.Entity.Internal.ConfigFile
     internal class ProviderCollection : ConfigurationElementCollection
     {
         private const string ProviderKey = "provider";
-        private const string DefaultInvariantNameKey = "defaultInvariantName";
 
         protected override ConfigurationElement CreateNewElement()
         {
@@ -29,13 +28,6 @@ namespace System.Data.Entity.Internal.ConfigFile
         protected override string ElementName
         {
             get { return ProviderKey; }
-        }
-
-        [ConfigurationProperty(DefaultInvariantNameKey)]
-        public string DefaultInvariantName
-        {
-            get { return (string)this[DefaultInvariantNameKey]; }
-            set { this[DefaultInvariantNameKey] = value; }
         }
 
         protected override void BaseAdd(ConfigurationElement element)

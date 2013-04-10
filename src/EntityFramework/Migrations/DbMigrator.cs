@@ -183,15 +183,18 @@ namespace System.Data.Entity.Migrations
 
         private XDocument GetCurrentHistoryModel(string defaultSchema)
         {
-            using (var historyContext = _configuration.HistoryContextFactory(CreateConnection(), true, defaultSchema))
+            using (var connection = CreateConnection())
             {
-                var currentHistoryModel = historyContext.GetModel();
+                using (var historyContext = _configuration.HistoryContextFactory(connection, defaultSchema))
+                {
+                    var currentHistoryModel = historyContext.GetModel();
 
-                currentHistoryModel
-                    .Descendants()
-                    .Each(a => a.SetAttributeValue(EdmXNames.IsSystemName, true));
+                    currentHistoryModel
+                        .Descendants()
+                        .Each(a => a.SetAttributeValue(EdmXNames.IsSystemName, true));
 
-                return currentHistoryModel;
+                    return currentHistoryModel;
+                }
             }
         }
 
@@ -205,13 +208,16 @@ namespace System.Data.Entity.Migrations
 
             if (initialHistoryModel == null)
             {
-                using (var historyContext = new HistoryContext(CreateConnection(), true, null))
+                using (var connection = CreateConnection())
                 {
-                    initialHistoryModel = historyContext.GetModel();
+                    using (var historyContext = new HistoryContext(connection, null))
+                    {
+                        initialHistoryModel = historyContext.GetModel();
 
-                    initialHistoryModel
-                        .Descendants()
-                        .Each(a => a.SetAttributeValue(EdmXNames.IsSystemName, true));
+                        initialHistoryModel
+                            .Descendants()
+                            .Each(a => a.SetAttributeValue(EdmXNames.IsSystemName, true));
+                    }
                 }
             }
 

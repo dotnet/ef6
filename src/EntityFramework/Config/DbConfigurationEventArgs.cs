@@ -51,6 +51,21 @@ namespace System.Data.Entity.Config
         }
 
         /// <summary>
+        ///     Call this method to add a <see cref="IDbDependencyResolver" /> instance to the Chain of Responsibility
+        ///     of resolvers that are used to resolve dependencies needed by the Entity Framework. Unlike the AddDependencyResolver
+        ///     method, this method puts the resolver at the bottom of the Chain of Responsibility such that it will only
+        ///     be used to resolve a dependency that could not be resolved by any of the other resolvers.
+        /// </summary>
+        /// <param name="resolver"> The resolver to add. </param>
+        protected internal void AddSecondaryResolver(IDbDependencyResolver resolver)
+        {
+            Check.NotNull(resolver, "resolver");
+
+            _internalConfiguration.CheckNotLocked("AddSecondaryResolver");
+            _internalConfiguration.AddSecondaryResolver(resolver);
+        }
+
+        /// <summary>
         ///     Adds a wrapping resolver to the configuration that is about to be locked. A wrapping
         ///     resolver is a resolver that incepts a service would have been returned by the resolver
         ///     chain and wraps or replaces it with another service of the same type.

@@ -385,8 +385,8 @@ namespace System.Data.Entity.Migrations
 
     public class CustomHistoryContext : HistoryContext
     {
-        public CustomHistoryContext(DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema)
-            : base(existingConnection, contextOwnsConnection, defaultSchema)
+        public CustomHistoryContext(DbConnection existingConnection, string defaultSchema)
+            : base(existingConnection, defaultSchema)
         {
         }
     }

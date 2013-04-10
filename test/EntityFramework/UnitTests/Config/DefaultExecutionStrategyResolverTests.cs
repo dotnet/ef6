@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Config
 {
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using Moq;
     using Xunit;
@@ -17,38 +17,27 @@ namespace System.Data.Entity.Config
         }
 
         [Fact]
-        public void GetService_returns_execution_strategy_from_provider()
+        public void GetService_returns_execution_strategy()
         {
-            var mockExecutionStrategy = new Mock<IExecutionStrategy>().Object;
-            var providerServicesMock = new Mock<DbProviderServices>();
-            providerServicesMock.Setup(m => m.GetExecutionStrategyFactory()).Returns(() => mockExecutionStrategy);
-            var mockProviderServices = providerServicesMock.Object;
-            var resolver = new DefaultExecutionStrategyResolver();
-
-            MutableResolver.AddResolver<DbProviderServices>(
-                key =>
-                {
-                    var invariantName = key as string;
-                    return "FooClient" == invariantName ? mockProviderServices : null;
-                });
-
-            IExecutionStrategy resolvedExecutionStrategy;
-            try
-            {
-                resolvedExecutionStrategy = resolver.GetService<Func<IExecutionStrategy>>(new ExecutionStrategyKey("FooClient", "foo"))();
-            }
-            finally
-            {
-                MutableResolver.ClearResolvers();
-            }
-
-            Assert.Same(mockExecutionStrategy, resolvedExecutionStrategy);
+            Assert.IsType<NonRetryingExecutionStrategy>(
+                new DefaultExecutionStrategyResolver().GetService<Func<IExecutionStrategy>>(new ExecutionStrategyKey("FooClient", "foo"))());
         }
 
         [Fact]
         public void GetService_throws_for_null_key()
         {
-            Assert.Throws<ArgumentNullException>(() => new DefaultExecutionStrategyResolver().GetService<Func<IExecutionStrategy>>(null));
+            Assert.Equal(
+                "key",
+                Assert.Throws<ArgumentNullException>(() => new DefaultExecutionStrategyResolver().GetService<Func<IExecutionStrategy>>(null)).ParamName);
+        }
+
+        [Fact]
+        public void GetService_throws_for_wrong_key_type()
+        {
+            Assert.Equal(
+                Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, "Func<IExecutionStrategy>"),
+                Assert.Throws<ArgumentException>(
+                    () => new DefaultExecutionStrategyResolver().GetService<Func<IExecutionStrategy>>("a")).Message);
         }
     }
 }

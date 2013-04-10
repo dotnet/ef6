@@ -12902,14 +12902,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The provider invariant name '{0}' is specified as the default in the 'providers' element of the 'entityFramework' section in the application’s configuration file but no provider with that invariant name is registered in the list of providers that follows."
-        /// </summary>
-        internal static string EF6Providers_DefaultNotFound(object p0)
-        {
-            return EntityRes.GetString(EntityRes.EF6Providers_DefaultNotFound, p0);
-        }
-
-        /// <summary>
         ///     A string like "The provider for invariant name '{0}' is specified multiple times in the application configuration. The invariant name must be unique for each configured provider."
         /// </summary>
         internal static string ProviderInvariantRepeatedInConfig(object p0)
@@ -13046,14 +13038,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The Migrations SQL generator type '{0}' for the '{1}' ADO.NET provider could not be loaded. Make sure the assembly is available to the running application."
-        /// </summary>
-        internal static string SqlGeneratorTypeMissing(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.SqlGeneratorTypeMissing, p0, p1);
-        }
-
-        /// <summary>
         ///     A string like "The call to DbConfiguration.{0} failed because the configuration is locked. The protected methods and properties of DbConfiguration are intended to be called only from the constructor of a class derived from DbConfiguration and cannot be called after the DbConfiguration object is in use."
         /// </summary>
         internal static string ConfigurationLocked(object p0)
@@ -13163,30 +13147,6 @@ namespace System.Data.Entity.Resources
         internal static string HistoryMigrationNotSupported
         {
             get { return EntityRes.GetString(EntityRes.HistoryMigrationNotSupported); }
-        }
-
-        /// <summary>
-        ///     A string like "The DbSpatialServices type '{0}' specified in the application config file could not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application."
-        /// </summary>
-        internal static string DbSpatialServicesTypeNotFound(object p0)
-        {
-            return EntityRes.GetString(EntityRes.DbSpatialServicesTypeNotFound, p0);
-        }
-
-        /// <summary>
-        ///     A string like "The Entity Framework spatial provider type '{0}' did not have a static property or field named 'Instance'. Entity Framework spatial providers must declare a static property or field named 'Instance' that returns the Singleton instance of the provider."
-        /// </summary>
-        internal static string DbSpatialServices_InstanceMissing(object p0)
-        {
-            return EntityRes.GetString(EntityRes.DbSpatialServices_InstanceMissing, p0);
-        }
-
-        /// <summary>
-        ///     A string like "The 'Instance' member of the Entity Framework spatial provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Spatial.DbSpatialServices'. Entity Framework spatial providers must extend from this class and the 'Instance' member must return the Singleton instance of the spatial provider."
-        /// </summary>
-        internal static string DbSpatialServices_NotDbSpatialServices(object p0)
-        {
-            return EntityRes.GetString(EntityRes.DbSpatialServices_NotDbSpatialServices, p0);
         }
 
         /// <summary>
@@ -16784,7 +16744,6 @@ namespace System.Data.Entity.Resources
         internal const string EF6Providers_ProviderTypeMissing = "EF6Providers_ProviderTypeMissing";
         internal const string EF6Providers_InstanceMissing = "EF6Providers_InstanceMissing";
         internal const string EF6Providers_NotDbProviderServices = "EF6Providers_NotDbProviderServices";
-        internal const string EF6Providers_DefaultNotFound = "EF6Providers_DefaultNotFound";
         internal const string ProviderInvariantRepeatedInConfig = "ProviderInvariantRepeatedInConfig";
         internal const string DbDependencyResolver_NoProviderInvariantName = "DbDependencyResolver_NoProviderInvariantName";
         internal const string DbDependencyResolver_InvalidKey = "DbDependencyResolver_InvalidKey";
@@ -16802,7 +16761,6 @@ namespace System.Data.Entity.Resources
         internal const string CreateInstance_NoParameterlessConstructor = "CreateInstance_NoParameterlessConstructor";
         internal const string CreateInstance_AbstractType = "CreateInstance_AbstractType";
         internal const string CreateInstance_GenericType = "CreateInstance_GenericType";
-        internal const string SqlGeneratorTypeMissing = "SqlGeneratorTypeMissing";
         internal const string ConfigurationLocked = "ConfigurationLocked";
         internal const string EnableMigrationsForContext = "EnableMigrationsForContext";
         internal const string EnableMigrations_MultipleContexts = "EnableMigrations_MultipleContexts";
@@ -16817,9 +16775,6 @@ namespace System.Data.Entity.Resources
         internal const string NoMatch = "NoMatch";
         internal const string MoreThanOneMatch = "MoreThanOneMatch";
         internal const string HistoryMigrationNotSupported = "HistoryMigrationNotSupported";
-        internal const string DbSpatialServicesTypeNotFound = "DbSpatialServicesTypeNotFound";
-        internal const string DbSpatialServices_InstanceMissing = "DbSpatialServices_InstanceMissing";
-        internal const string DbSpatialServices_NotDbSpatialServices = "DbSpatialServices_NotDbSpatialServices";
         internal const string CreateConfigurationType_NoParameterlessConstructor = "CreateConfigurationType_NoParameterlessConstructor";
         internal const string CollectionEmpty = "CollectionEmpty";
         internal const string DbMigrationsConfiguration_ContextType = "DbMigrationsConfiguration_ContextType";

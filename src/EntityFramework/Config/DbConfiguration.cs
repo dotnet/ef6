@@ -189,7 +189,7 @@ namespace System.Data.Entity.Config
         ///     an Entity Framework provider.
         /// </summary>
         /// <remarks>
-        ///     The giver provider type should have a <see cref="DbProviderNameAttribute" /> applied to it.
+        ///     The given provider type should have a <see cref="DbProviderNameAttribute" /> applied to it.
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
         ///     <see cref="DbProviderServices" />. This means that, if desired, the same functionality can be achieved using
@@ -359,7 +359,7 @@ namespace System.Data.Entity.Config
             Check.NotNull(connectionFactory, "connectionFactory");
 
             _internalConfiguration.CheckNotLocked("SetDefaultConnectionFactory");
-            _internalConfiguration.RegisterSingleton(connectionFactory, null);
+            _internalConfiguration.RegisterSingleton(connectionFactory);
         }
 
         /// <summary>
@@ -374,7 +374,7 @@ namespace System.Data.Entity.Config
             Check.NotNull(pluralizationService, "pluralizationService");
 
             _internalConfiguration.CheckNotLocked("SetPluralizationService");
-            _internalConfiguration.RegisterSingleton(pluralizationService, null);
+            _internalConfiguration.RegisterSingleton(pluralizationService);
         }
 
         /// <summary>
@@ -395,7 +395,7 @@ namespace System.Data.Entity.Config
         protected internal void SetDatabaseInitializer<TContext>(IDatabaseInitializer<TContext> initializer) where TContext : DbContext
         {
             _internalConfiguration.CheckNotLocked("SetDatabaseInitializer");
-            _internalConfiguration.RegisterSingleton(initializer ?? new NullDatabaseInitializer<TContext>(), null);
+            _internalConfiguration.RegisterSingleton(initializer ?? new NullDatabaseInitializer<TContext>());
         }
 
         /// <summary>
@@ -471,7 +471,7 @@ namespace System.Data.Entity.Config
             Check.NotNull(service, "service");
 
             _internalConfiguration.CheckNotLocked("SetManifestTokenService");
-            _internalConfiguration.RegisterSingleton(service, null);
+            _internalConfiguration.RegisterSingleton(service);
         }
 
         /// <summary>
@@ -492,7 +492,7 @@ namespace System.Data.Entity.Config
             Check.NotNull(providerFactoryService, "providerFactoryService");
 
             _internalConfiguration.CheckNotLocked("SetProviderFactoryService");
-            _internalConfiguration.RegisterSingleton(providerFactoryService, null);
+            _internalConfiguration.RegisterSingleton(providerFactoryService);
         }
 
         /// <summary>
@@ -512,13 +512,13 @@ namespace System.Data.Entity.Config
             Check.NotNull(keyFactory, "keyFactory");
 
             _internalConfiguration.CheckNotLocked("SetModelCacheKeyFactory");
-            _internalConfiguration.RegisterSingleton(keyFactory, null);
+            _internalConfiguration.RegisterSingleton(keyFactory);
         }
 
         /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
-        ///     a <see cref="HistoryContextFactory" /> delegate which allows for creation of a customized <see cref="HistoryContext" />
-        ///     for a given <see cref="DbMigrationsConfiguration" />.
+        ///     a <see cref="HistoryContextFactory" /> delegate which allows for creation of a customized
+        ///     <see cref="HistoryContext" /> for a given <see cref="DbMigrationsConfiguration" />.
         /// </summary>
         /// <remarks>
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
@@ -544,26 +544,107 @@ namespace System.Data.Entity.Config
 
         /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
-        ///     an implementation of <see cref="DbSpatialServices" /> which will be used whenever a spatial provider is
-        ///     required. Normally the spatial provider is obtained from the EF provider's <see cref="DbProviderServices" />
-        ///     implementation, but this can be overridden using this method. This also allows stand-alone instances of
-        ///     <see cref="DbGeometry" /> and <see cref="DbGeography" /> to be created using the correct provider.
-        ///     Note that only one spatial provider can be set in this way; it is not possible to set different spatial providers
-        ///     for different EF/ADO.NET providers.
+        ///     the global instance of <see cref="DbSpatialServices" /> which will be used whenever a spatial provider is
+        ///     required and a provider-specific spatial provider cannot be found. Normally, a provider-specific spatial provider
+        ///     is obtained from the a <see cref="DbProviderServices" /> implementation which is in turn returned by resolving
+        ///     a service for <see cref="DbSpatialServices" /> passing the provider invariant name as a key. However, this
+        ///     cannot work for stand-alone instances of <see cref="DbGeometry" /> and <see cref="DbGeography" /> since
+        ///     it is impossible to know the spatial provider to use. Therefore, when creating stand-alone insatnces
+        ///     of <see cref="DbGeometry" /> and <see cref="DbGeography" /> the global spatial provider is always used.
         /// </summary>
         /// <remarks>
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
-        ///     <see cref="IDbModelCacheKeyFactory" />. This means that, if desired, the same functionality can be achieved using
+        ///     <see cref="DbSpatialServices" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="spatialProvider"> The spatial provider. </param>
-        protected internal void SetSpatialProvider(DbSpatialServices spatialProvider)
+        protected internal void SetDefaultDbSpatialServices(DbSpatialServices spatialProvider)
         {
             Check.NotNull(spatialProvider, "spatialProvider");
 
-            _internalConfiguration.CheckNotLocked("SetSpatialProvider");
-            _internalConfiguration.RegisterSingleton(spatialProvider, null);
+            _internalConfiguration.CheckNotLocked("AddDbSpatialServices");
+            _internalConfiguration.RegisterSingleton(spatialProvider);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add
+        ///     an implementation of <see cref="DbSpatialServices" /> to use for a specific provider and provider
+        ///     manifest token.
+        /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="DbSpatialServices" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this spatial provider will be used. </param>
+        /// <param name="spatialProvider"> The spatial provider. </param>
+        protected internal void AddDbSpatialServices(DbProviderInfo key, DbSpatialServices spatialProvider)
+        {
+            Check.NotNull(key, "key");
+            Check.NotNull(spatialProvider, "spatialProvider");
+
+            _internalConfiguration.CheckNotLocked("AddDbSpatialServices");
+            _internalConfiguration.RegisterSingleton(spatialProvider, key);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add
+        ///     an implementation of <see cref="DbSpatialServices" /> to use for a specific provider.
+        /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="DbSpatialServices" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this spatial provider will be used. </param>
+        /// <param name="spatialProvider"> The spatial provider. </param>
+        protected internal void AddDbSpatialServices(string providerInvariantName, DbSpatialServices spatialProvider)
+        {
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
+            Check.NotNull(spatialProvider, "spatialProvider");
+
+            _internalConfiguration.CheckNotLocked("AddDbSpatialServices");
+            RegisterDbSpatialServices(providerInvariantName, spatialProvider);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add
+        ///     an implementation of <see cref="DbSpatialServices" /> to use for a specific provider.
+        /// </summary>
+        /// <remarks>
+        ///     The given spatial provider type should have a <see cref="DbProviderNameAttribute" /> applied to it.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="DbSpatialServices" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="spatialProvider"> The spatial provider. </param>
+        protected internal void AddDbSpatialServices(DbSpatialServices spatialProvider)
+        {
+            Check.NotNull(spatialProvider, "spatialProvider");
+
+            _internalConfiguration.CheckNotLocked("AddDbSpatialServices");
+            foreach (var providerInvariantNameAttribute in DbProviderNameAttribute.GetFromType(spatialProvider.GetType()))
+            {
+                RegisterDbSpatialServices(providerInvariantNameAttribute.Name, spatialProvider);
+            }
+        }
+
+        private void RegisterDbSpatialServices(string providerInvariantName, DbSpatialServices spatialProvider)
+        {
+            DebugCheck.NotEmpty(providerInvariantName);
+            DebugCheck.NotNull(spatialProvider);
+
+            _internalConfiguration.RegisterSingleton(
+                spatialProvider,
+                k =>
+                {
+                    var asSpatialKey = k as DbProviderInfo;
+                    return asSpatialKey != null && asSpatialKey.ProviderInvariantName == providerInvariantName;
+                });
         }
 
         /// <summary>
@@ -583,7 +664,7 @@ namespace System.Data.Entity.Config
             Check.NotNull(cache, "cache");
 
             _internalConfiguration.CheckNotLocked("SetViewAssemblyCache");
-            _internalConfiguration.RegisterSingleton(cache, null);
+            _internalConfiguration.RegisterSingleton(cache);
         }
 
         internal virtual InternalConfiguration InternalConfiguration

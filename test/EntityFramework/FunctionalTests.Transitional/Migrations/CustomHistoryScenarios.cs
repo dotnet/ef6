@@ -14,8 +14,8 @@ namespace System.Data.Entity.Migrations
     {
         private class TestHistoryContextA : HistoryContext
         {
-            public TestHistoryContextA(DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema)
-                : base(existingConnection, contextOwnsConnection, defaultSchema)
+            public TestHistoryContextA(DbConnection existingConnection, string defaultSchema)
+                : base(existingConnection, defaultSchema)
             {
             }
 
@@ -32,8 +32,8 @@ namespace System.Data.Entity.Migrations
 
         private class TestHistoryContextB : HistoryContext
         {
-            public TestHistoryContextB(DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema)
-                : base(existingConnection, contextOwnsConnection, defaultSchema)
+            public TestHistoryContextB(DbConnection existingConnection, string defaultSchema)
+                : base(existingConnection, defaultSchema)
             {
             }
 
@@ -46,12 +46,10 @@ namespace System.Data.Entity.Migrations
         }
 
         private readonly HistoryContextFactory _testHistoryContextFactoryA =
-            (existingConnection, contextOwnsConnection, defaultSchema) =>
-            new TestHistoryContextA(existingConnection, contextOwnsConnection, defaultSchema);
+            (existingConnection, defaultSchema) => new TestHistoryContextA(existingConnection, defaultSchema);
 
         private readonly HistoryContextFactory _testHistoryContextFactoryB =
-            (existingConnection, contextOwnsConnection, defaultSchema) =>
-            new TestHistoryContextB(existingConnection, contextOwnsConnection, defaultSchema);
+            (existingConnection, defaultSchema) => new TestHistoryContextB(existingConnection, defaultSchema);
 
         [MigrationsTheory]
         public void Can_explicit_update_when_custom_history_factory()

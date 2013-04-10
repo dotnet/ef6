@@ -159,7 +159,7 @@ namespace System.Data.Entity.Migrations
         {
             var config = new TestMigrationsConfiguration();
 
-            HistoryContextFactory factory = (e, d, c) => { throw new NotImplementedException(); };
+            HistoryContextFactory factory = (e, c) => { throw new NotImplementedException(); };
             config.HistoryContextFactory = factory;
             Assert.Same(factory, config.HistoryContextFactory);
 

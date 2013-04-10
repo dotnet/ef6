@@ -30,8 +30,8 @@ namespace System.Data.Entity.Core.Common
         private readonly Lazy<IDbDependencyResolver> _resolver;
         private readonly Interception _interception;
 
-        private readonly ConcurrentDictionary<string, DbSpatialServices> _spatialServices =
-            new ConcurrentDictionary<string, DbSpatialServices>();
+        private static readonly ConcurrentDictionary<DbProviderInfo, DbSpatialServices> _spatialServices =
+            new ConcurrentDictionary<DbProviderInfo, DbSpatialServices>();
 
         private static readonly ConcurrentDictionary<ExecutionStrategyKey, Func<IExecutionStrategy>>
             _executionStrategyFactories =
@@ -249,17 +249,6 @@ namespace System.Data.Entity.Core.Common
         protected abstract DbProviderManifest GetDbProviderManifest(string manifestToken);
 
         /// <summary>
-        ///     Returns the provider-specific execution strategy. This method will only be invoked if there's no
-        ///     <see cref="IDbDependencyResolver" /> registered for <see cref="Func{IExecutionStrategy}" /> that handles this provider.
-        /// </summary>
-        /// <returns> The execution strategy factory for this provider. </returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public virtual Func<IExecutionStrategy> GetExecutionStrategyFactory()
-        {
-            return () => new NonRetryingExecutionStrategy();
-        }
-
-        /// <summary>
         ///     Gets the <see cref="IExecutionStrategy" /> that will be used to execute methods that use the specified connection.
         /// </summary>
         /// <param name="connection">The database connection</param>
@@ -337,40 +326,82 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
+        [Obsolete("Use GetSpatialServices(DbProviderInfo) or DbConfiguration to ensure the configured spatial services are used. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.")]
         public DbSpatialServices GetSpatialServices(string manifestToken)
         {
-            return _spatialServices.GetOrAdd(manifestToken, mt => GetSpatialServicesInternal(_resolver, mt));
+            return GetSpatialServicesInternal(manifestToken, throwIfNotImplemented: true);
         }
 
-        internal DbSpatialServices GetSpatialServicesInternal(Lazy<IDbDependencyResolver> resolver, string manifestToken)
+        private DbSpatialServices GetSpatialServicesInternal(string manifestToken, bool throwIfNotImplemented)
         {
-            // First check if a global spatial services can be resolved and only if this fails
-            // go on to ask the provider for spatial services.
-            var spatialProvider = resolver.Value.GetService<DbSpatialServices>();
-            if (spatialProvider != null)
-            {
-                return spatialProvider;
-            }
-
+            DbSpatialServices spatialProvider;
             try
             {
+#pragma warning disable 612,618
                 spatialProvider = DbGetSpatialServices(manifestToken);
+#pragma warning restore 612,618
             }
             catch (ProviderIncompatibleException)
             {
-                throw;
+                if (throwIfNotImplemented)
+                {
+                    throw;
+                }
+                return null;
             }
             catch (Exception e)
             {
                 throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices, e);
             }
 
-            if (spatialProvider == null)
+            if (throwIfNotImplemented && spatialProvider == null)
             {
                 throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices);
             }
 
             return spatialProvider;
+        }
+
+        internal static DbSpatialServices GetSpatialServices(IDbDependencyResolver resolver, EntityConnection connection)
+        {
+            DebugCheck.NotNull(resolver);
+            DebugCheck.NotNull(connection);
+
+            var storeItemCollection = (StoreItemCollection)connection.GetMetadataWorkspace().GetItemCollection(DataSpace.SSpace);
+            var key = new DbProviderInfo(
+                storeItemCollection.StoreProviderInvariantName, storeItemCollection.StoreProviderManifestToken);
+
+            return GetSpatialServices(resolver, key, () => GetProviderServices(connection.StoreConnection));
+        }
+
+        public DbSpatialServices GetSpatialServices(DbProviderInfo key)
+        {
+            DebugCheck.NotNull(key);
+
+            return GetSpatialServices(_resolver.Value, key, () => this);
+        }
+
+        private static DbSpatialServices GetSpatialServices(
+            IDbDependencyResolver resolver,
+            DbProviderInfo key, 
+            Func<DbProviderServices> providerServices) // Delegate use to avoid lookup when not needed
+        {
+            DebugCheck.NotNull(resolver);
+            DebugCheck.NotNull(key);
+            DebugCheck.NotNull(providerServices);
+
+            var services = _spatialServices.GetOrAdd(
+                key,
+                k =>
+                resolver.GetService<DbSpatialServices>(k)
+                ?? providerServices().GetSpatialServicesInternal(k.ProviderManifestToken, throwIfNotImplemented: false)
+                ?? resolver.GetService<DbSpatialServices>());
+
+            if (services == null)
+            {
+                throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices);
+            }
+            return services;
         }
 
         protected virtual DbSpatialDataReader GetDbSpatialDataReader(DbDataReader fromReader, string manifestToken)
@@ -381,6 +412,7 @@ namespace System.Data.Entity.Core.Common
             throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices);
         }
 
+        [Obsolete("Return DbSpatialServices from the GetService method. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.")]
         protected virtual DbSpatialServices DbGetSpatialServices(string manifestToken)
         {
             // Must be a virtual method; abstract would break previous implementors of DbProviderServices

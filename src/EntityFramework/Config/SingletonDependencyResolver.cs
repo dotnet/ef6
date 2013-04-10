@@ -16,7 +16,7 @@ namespace System.Data.Entity.Config
         where T : class
     {
         private readonly T _singletonInstance;
-        private readonly object _key;
+        private readonly Func<object, bool> _keyPredicate;
 
         /// <summary>
         ///     Constructs a new resolver that will return the given instance for the contract type
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Config
         /// </summary>
         /// <param name="singletonInstance"> The instance to return. </param>
         public SingletonDependencyResolver(T singletonInstance)
-            : this(singletonInstance, null)
+            : this(singletonInstance, (object)null)
         {
         }
 
@@ -39,14 +39,28 @@ namespace System.Data.Entity.Config
             Check.NotNull(singletonInstance, "singletonInstance");
 
             _singletonInstance = singletonInstance;
-            _key = key;
+            _keyPredicate = k => key == null || Equals(key, k);
+        }
+
+        /// <summary>
+        ///     Constructs a new resolver that will return the given instance for the contract type
+        ///     if the given key matches the key passed to the Get method based on the given predicate.
+        /// </summary>
+        /// <param name="singletonInstance"> The instance to return. </param>
+        /// <param name="keyPredicate"> A predicate that takes the key object and returns true if and only if it matches. </param>
+        public SingletonDependencyResolver(T singletonInstance, Func<object, bool> keyPredicate)
+        {
+            Check.NotNull(singletonInstance, "singletonInstance");
+            Check.NotNull(keyPredicate, "keyPredicate");
+
+            _singletonInstance = singletonInstance;
+            _keyPredicate = keyPredicate;
         }
 
         /// <inheritdoc />
         public object GetService(Type type, object key)
         {
-            return ((type == typeof(T))
-                    && (_key == null || Equals(key, _key)))
+            return type == typeof(T) && _keyPredicate(key)
                        ? _singletonInstance
                        : null;
         }

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
@@ -149,18 +150,15 @@ namespace System.Data.Entity.Core.Common.Utils
         private static object GetSpatialValueFromProviderValue(
             object spatialValue, PrimitiveType parameterType, EntityConnection connection)
         {
-            var providerServices = DbProviderServices.GetProviderServices(connection.StoreConnection);
-            var storeItemCollection = (StoreItemCollection)connection.GetMetadataWorkspace().GetItemCollection(DataSpace.SSpace);
-            var spatialServices = providerServices.GetSpatialServices(storeItemCollection.StoreProviderManifestToken);
+            var spatialServices = DbProviderServices.GetSpatialServices(DbConfiguration.DependencyResolver, connection);
+
             if (Helper.IsGeographicType(parameterType))
             {
                 return spatialServices.GeographyFromProviderValue(spatialValue);
             }
-            else
-            {
-                Debug.Assert(Helper.IsGeometricType(parameterType));
-                return spatialServices.GeometryFromProviderValue(spatialValue);
-            }
+
+            Debug.Assert(Helper.IsGeometricType(parameterType));
+            return spatialServices.GeometryFromProviderValue(spatialValue);
         }
 
         internal static EdmFunction FindFunctionImport(MetadataWorkspace workspace, string containerName, string functionImportName)

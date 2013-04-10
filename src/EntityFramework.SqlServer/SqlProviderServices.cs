@@ -46,7 +46,7 @@ namespace System.Data.Entity.SqlServer
     [DbProviderName(ProviderInvariantName)]
     public sealed class SqlProviderServices : DbProviderServices
     {
-        private const string ProviderInvariantName = "System.Data.SqlClient";
+        internal const string ProviderInvariantName = "System.Data.SqlClient";
 
         /// <summary>
         ///     Private constructor to ensure only Singleton instance is created.
@@ -63,7 +63,28 @@ namespace System.Data.Entity.SqlServer
                 new TransientDependencyResolver<MigrationSqlGenerator>(
                     () => new SqlServerMigrationSqlGenerator(), ProviderInvariantName));
 
-            AddDependencyResolver(new SingletonDependencyResolver<DbSpatialServices>(SqlSpatialServices.Instance, ProviderInvariantName));
+            // Spatial provider will be returned if the key is null (meaning that a default provider was requested)
+            // or if a key was provided and the invariant name matches.
+            AddDependencyResolver(
+                new SingletonDependencyResolver<DbSpatialServices>(
+                    SqlSpatialServices.Instance,
+                    k =>
+                        {
+                            if (k == null)
+                            {
+                                return true;
+                            }
+
+                            var asSpatialKey = k as DbProviderInfo;
+                            if (asSpatialKey != null
+                                && asSpatialKey.ProviderInvariantName == ProviderInvariantName)
+                            {
+                                ValidateVersionHint(asSpatialKey.ProviderManifestToken);
+                                return true;
+                            }
+
+                            return false;
+                        }));
         }
 
         /// <summary>
@@ -301,9 +322,12 @@ namespace System.Data.Entity.SqlServer
             {
                 throw new ProviderIncompatibleException(Strings.SqlProvider_NeedSqlDataReader(fromReader.GetType()));
             }
-            return new SqlSpatialDataReader(GetSpatialServices(versionHint), new SqlDataReaderWrapper(underlyingReader));
+
+            return new SqlSpatialDataReader(
+                GetSpatialServices(new DbProviderInfo(ProviderInvariantName, versionHint)), new SqlDataReaderWrapper(underlyingReader));
         }
 
+        [Obsolete("Return DbSpatialServices from the GetService method. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.")]
         protected override DbSpatialServices DbGetSpatialServices(string versionHint)
         {
             ValidateVersionHint(versionHint);
@@ -766,12 +790,6 @@ namespace System.Data.Entity.SqlServer
             // Specific type depends on whether the binary value is fixed length. By default, assume variable length.
 
             return type.IsFixedLength() ? SqlDbType.Binary : SqlDbType.VarBinary;
-        }
-
-        /// <inheritdoc />
-        public override Func<IExecutionStrategy> GetExecutionStrategyFactory()
-        {
-            return () => new DefaultSqlExecutionStrategy();
         }
 
         protected override string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)

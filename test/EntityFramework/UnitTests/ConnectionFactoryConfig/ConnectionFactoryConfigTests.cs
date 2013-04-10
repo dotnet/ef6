@@ -279,7 +279,24 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         [Fact]
-        public void AddProviderToConfig_does_nothing_if_given_provider_and_others_already_exists()
+        public void AddProviderToConfig_does_nothing_if_given_provider_exists_and_is_at_end()
+        {
+            var config = CreateProviderConfigDoc(
+                Tuple.Create("The.Clash", "London.Calling"),
+                Tuple.Create("Dave.Matthews.Band", "Crash"));
+
+            var factoryAdded = new ConfigFileManipulator()
+                .AddProviderToConfig(config, "Dave.Matthews.Band", "Crash");
+
+            Assert.False(factoryAdded);
+            Assert.Equal("The.Clash", GetProviders(config).First().Item1);
+            Assert.Equal("London.Calling", GetProviders(config).First().Item2);
+            Assert.Equal("Dave.Matthews.Band", GetProviders(config).Skip(1).Single().Item1);
+            Assert.Equal("Crash", GetProviders(config).Skip(1).Single().Item2);
+        }
+
+        [Fact]
+        public void AddProviderToConfig_moves_entry_to_end_if_exists()
         {
             var config = CreateProviderConfigDoc(
                 Tuple.Create("Dave.Matthews.Band", "Crash"),
@@ -288,11 +305,11 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             var factoryAdded = new ConfigFileManipulator()
                 .AddProviderToConfig(config, "Dave.Matthews.Band", "Crash");
 
-            Assert.False(factoryAdded);
-            Assert.Equal("Dave.Matthews.Band", GetProviders(config).First().Item1);
-            Assert.Equal("Crash", GetProviders(config).First().Item2);
-            Assert.Equal("The.Clash", GetProviders(config).Skip(1).Single().Item1);
-            Assert.Equal("London.Calling", GetProviders(config).Skip(1).Single().Item2);
+            Assert.True(factoryAdded);
+            Assert.Equal("The.Clash", GetProviders(config).First().Item1);
+            Assert.Equal("London.Calling", GetProviders(config).First().Item2);
+            Assert.Equal("Dave.Matthews.Band", GetProviders(config).Skip(1).Single().Item1);
+            Assert.Equal("Crash", GetProviders(config).Skip(1).Single().Item2);
         }
 
         [Fact]
@@ -325,6 +342,23 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         public void AddProviderToConfig_updates_provider_type_if_invariant_name_already_exists()
         {
             var config = CreateProviderConfigDoc(
+                Tuple.Create("The.Clash", "London.Calling"),
+                Tuple.Create("Dave.Matthews.Band", "Crash"));
+
+            var factoryAdded = new ConfigFileManipulator()
+                .AddProviderToConfig(config, "Dave.Matthews.Band", "Broken.Things");
+
+            Assert.True(factoryAdded);
+            Assert.Equal("The.Clash", GetProviders(config).First().Item1);
+            Assert.Equal("London.Calling", GetProviders(config).First().Item2);
+            Assert.Equal("Dave.Matthews.Band", GetProviders(config).Skip(1).Single().Item1);
+            Assert.Equal("Broken.Things", GetProviders(config).Skip(1).Single().Item2);
+        }
+
+        [Fact]
+        public void AddProviderToConfig_moves_entry_to_end_and_updates_provider_type_if_invariant_name_already_exists()
+        {
+            var config = CreateProviderConfigDoc(
                 Tuple.Create("Dave.Matthews.Band", "Crash"),
                 Tuple.Create("The.Clash", "London.Calling"));
 
@@ -332,10 +366,10 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                 .AddProviderToConfig(config, "Dave.Matthews.Band", "Broken.Things");
 
             Assert.True(factoryAdded);
-            Assert.Equal("Dave.Matthews.Band", GetProviders(config).First().Item1);
-            Assert.Equal("Broken.Things", GetProviders(config).First().Item2);
-            Assert.Equal("The.Clash", GetProviders(config).Skip(1).Single().Item1);
-            Assert.Equal("London.Calling", GetProviders(config).Skip(1).Single().Item2);
+            Assert.Equal("The.Clash", GetProviders(config).First().Item1);
+            Assert.Equal("London.Calling", GetProviders(config).First().Item2);
+            Assert.Equal("Dave.Matthews.Band", GetProviders(config).Skip(1).Single().Item1);
+            Assert.Equal("Broken.Things", GetProviders(config).Skip(1).Single().Item2);
         }
 
         [Fact]

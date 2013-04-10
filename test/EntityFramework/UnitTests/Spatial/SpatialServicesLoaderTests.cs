@@ -3,10 +3,9 @@
 namespace System.Data.Entity.Spatial
 {
     using System.Data.Entity.Config;
-    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.SqlServer;
     using Moq;
-    using Moq.Protected;
     using Xunit;
 
     public class SpatialServicesLoaderTests
@@ -18,15 +17,7 @@ namespace System.Data.Entity.Spatial
             mockSpatialServices.Setup(m => m.NativeTypesAvailable).Returns(true);
 
             var mockResolver = new Mock<IDbDependencyResolver>();
-            var mockProvider = new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object));
-
-            mockResolver
-                .Setup(m => m.GetService(typeof(DbProviderServices), "System.Data.SqlClient"))
-                .Returns(mockProvider.Object);
-
-            mockResolver
-                .Setup(m => m.GetService(typeof(DbSpatialServices), It.IsAny<string>()))
-                .Returns(mockSpatialServices.Object);
+            mockResolver.Setup(m => m.GetService(typeof(DbSpatialServices), null)).Returns(mockSpatialServices.Object);
 
             Assert.Same(mockSpatialServices.Object, new SpatialServicesLoader(mockResolver.Object).LoadDefaultServices());
         }
@@ -40,31 +31,21 @@ namespace System.Data.Entity.Spatial
         }
 
         [Fact]
+        public void SpatialServicesLoader_uses_default_spatial_services_if_SQL_types_are_not_available()
+        {
+            Assert.Same(
+                DefaultSpatialServices.Instance, new SpatialServicesLoader(new Mock<IDbDependencyResolver>().Object).LoadDefaultServices());
+        }
+
+        [Fact]
         public void SpatialServicesLoader_uses_default_spatial_services_if_SQL_spatial_types_are_not_available()
         {
             var mockSpatialServices = new Mock<DbSpatialServices>();
             mockSpatialServices.Setup(m => m.NativeTypesAvailable).Returns(false);
 
-            var mockProvider = new Mock<DbProviderServices>();
-            mockProvider.Protected()
-                .Setup<DbSpatialServices>("DbGetSpatialServices", ItExpr.IsAny<string>())
-                .Returns(mockSpatialServices.Object);
-
             var mockResolver = new Mock<IDbDependencyResolver>();
-            mockResolver
-                .Setup(m => m.GetService(typeof(DbProviderServices), "System.Data.SqlClient"))
-                .Returns(mockProvider.Object);
-
-            Assert.Same(DefaultSpatialServices.Instance, new SpatialServicesLoader(mockResolver.Object).LoadDefaultServices());
-        }
-
-        [Fact]
-        public void SpatialServicesLoader_uses_default_spatial_services_if_SQL_provider_does_not_support_spatial_types()
-        {
-            var mockResolver = new Mock<IDbDependencyResolver>();
-            mockResolver
-                .Setup(m => m.GetService(typeof(DbProviderServices), "System.Data.SqlClient"))
-                .Returns(new Mock<DbProviderServices>().Object);
+            mockResolver.Setup(m => m.GetService(typeof(DbSpatialServices), new DbProviderInfo("System.Data.SqlClient", "2012")))
+                        .Returns(mockSpatialServices.Object);
 
             Assert.Same(DefaultSpatialServices.Instance, new SpatialServicesLoader(mockResolver.Object).LoadDefaultServices());
         }

@@ -11,11 +11,9 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.ConfigFile;
-    using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
-    using System.Data.Entity.Resources;
-    using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer;
+    using System.Data.Entity.SqlServerCompact;
     using System.Data.Entity.Utilities;
     using System.Linq;
     using Moq;
@@ -130,20 +128,42 @@ namespace System.Data.Entity.Config
         }
 
         [Fact]
-        public void GetService_registers_all_providers_as_secondary_resolvers_the_first_time_it_is_called_for_any_service()
+        public void GetService_registers_all_providers_as_secondary_resolvers_in_order_the_first_time_any_service_is_requested()
         {
             var mockConfig = CreateMockConfigWithProviders();
             var mockFactory = CreateMockFactory(mockConfig.Object);
             var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
 
+            var resolvers = new List<IDbDependencyResolver>();
+
+            mockConfiguration.Setup(
+                m => m.AddSecondaryResolver(It.IsAny<IDbDependencyResolver>())).Callback<IDbDependencyResolver>(resolvers.Add);
+
             new AppConfigDependencyResolver(mockConfig.Object, mockConfiguration.Object, mockFactory.Object).GetService<IPilkington>();
 
-            mockConfiguration.Verify(
-                m => m.AddSecondaryResolver(It.Is<DbProviderServices>(s => s.GetService<string>() == "Around.The.World")), Times.Once());
-            mockConfiguration.Verify(
-                m => m.AddSecondaryResolver(It.Is<DbProviderServices>(s => s.GetService<string>() == "One.More.Time")), Times.Once());
-            mockConfiguration.Verify(
-                m => m.AddSecondaryResolver(It.Is<DbProviderServices>(s => s.GetService<string>() == "Robot.Rock")), Times.Once());
+            Assert.Equal(3, resolvers.Count);
+
+            Assert.Equal("Around.The.World", resolvers[0].GetService<string>());
+            Assert.Equal("One.More.Time", resolvers[1].GetService<string>());
+            Assert.Equal("Robot.Rock", resolvers[2].GetService<string>());
+        }
+
+        [Fact]
+        public void GetService_registers_all_providers_from_real_app_config_as_secondary_resolvers_in_correct_order()
+        {
+            var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+            var resolvers = new List<IDbDependencyResolver>();
+
+            mockConfiguration.Setup(
+                m => m.AddSecondaryResolver(It.IsAny<IDbDependencyResolver>())).Callback<IDbDependencyResolver>(resolvers.Add);
+
+            new AppConfigDependencyResolver(AppConfig.DefaultInstance, mockConfiguration.Object).GetService<IPilkington>();
+
+            Assert.Equal(3, resolvers.Count);
+
+            Assert.IsType<FakeSqlProviderServices>(resolvers[0]);
+            Assert.IsType<SqlCeProviderServices>(resolvers[1]);
+            Assert.IsType<SqlProviderServices>(resolvers[2]);
         }
 
         [Fact]
@@ -154,51 +174,21 @@ namespace System.Data.Entity.Config
             var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
 
             var resolver = new AppConfigDependencyResolver(mockConfig.Object, mockConfiguration.Object, mockFactory.Object);
-            
-            resolver.GetService<IPilkington>();
-
-            mockConfiguration.Verify(m => m.AddSecondaryResolver(It.IsAny<DbProviderServices>()), Times.Exactly(3));
 
             resolver.GetService<IPilkington>();
 
             mockConfiguration.Verify(m => m.AddSecondaryResolver(It.IsAny<DbProviderServices>()), Times.Exactly(3));
-        }
 
-        [Fact]
-        public void GetService_registers_the_default_provider_as_the_last_secondary_provider_so_it_resolves_first()
-        {
-            var mockConfig = CreateMockConfigWithProviders("One.More.Time");
-            var mockFactory = CreateMockFactory(mockConfig.Object);
+            resolver.GetService<IPilkington>();
 
-            var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
-            var resolvers = new ResolverChain();
-            mockConfiguration.Setup(m => m.AddSecondaryResolver(It.IsAny<IDbDependencyResolver>()))
-                             .Callback<IDbDependencyResolver>(resolvers.Add);
-
-            new AppConfigDependencyResolver(mockConfig.Object, mockConfiguration.Object, mockFactory.Object).GetService<IPilkington>();
-
-            Assert.Equal("One.More.Time", resolvers.GetService<string>());
-        }
-
-        [Fact]
-        public void GetService_throws_if_the_specified_default_provider_is_not_found()
-        {
-            var mockConfig = CreateMockConfigWithProviders("Technologic");
-            var mockFactory = CreateMockFactory(mockConfig.Object);
-            var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
-
-            var resolver = new AppConfigDependencyResolver(mockConfig.Object, mockConfiguration.Object, mockFactory.Object);
-            
-            Assert.Equal(
-                Strings.EF6Providers_DefaultNotFound("Technologic"),
-                Assert.Throws<InvalidOperationException>(() => resolver.GetService<IPilkington>()).Message);
+            mockConfiguration.Verify(m => m.AddSecondaryResolver(It.IsAny<DbProviderServices>()), Times.Exactly(3));
         }
 
         [Fact]
         public void GetService_registers_SQL_Server_as_a_fallback_if_it_is_not_already_registered()
         {
-            var mockConfig = CreateMockConfigWithProviders("One.More.Time");
-            
+            var mockConfig = CreateMockConfigWithProviders();
+
             var mockSqlProvider = new Mock<DbProviderServices>();
             mockSqlProvider.Setup(m => m.GetService(typeof(string), null)).Returns("System.Data.SqlClient");
             var someRandomThing = new Random();
@@ -207,7 +197,7 @@ namespace System.Data.Entity.Config
             var mockFactory = CreateMockFactory(mockConfig.Object);
             mockFactory.Setup(m => m.TryGetInstance("System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer"))
                        .Returns(mockSqlProvider.Object);
-            
+
             var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
             var resolvers = new ResolverChain();
             mockConfiguration.Setup(m => m.AddSecondaryResolver(It.IsAny<IDbDependencyResolver>()))
@@ -218,94 +208,9 @@ namespace System.Data.Entity.Config
             mockConfiguration.Verify(m => m.AddSecondaryResolver(It.IsAny<DbProviderServices>()), Times.Exactly(4));
             mockConfiguration.Verify(m => m.AddSecondaryResolver(It.IsAny<SingletonDependencyResolver<DbProviderServices>>()), Times.Once());
 
-            Assert.Equal("One.More.Time", resolvers.GetService<string>());
+            Assert.Equal("Robot.Rock", resolvers.GetService<string>());
             Assert.Same(someRandomThing, resolvers.GetService<Random>());
             Assert.Same(mockSqlProvider.Object, resolvers.GetService<DbProviderServices>("System.Data.SqlClient"));
-        }
-
-        [Fact]
-        public void GetService_returns_registered_Migrations_SQL_generator()
-        {
-            Assert.IsType<ProviderConfigTests.TryGetMigrationSqlGeneratorFactory.MySqlGenerator>(
-                new AppConfigDependencyResolver(
-                    CreateAppConfigWithProvider(
-                        typeof(ProviderConfigTests.TryGetMigrationSqlGeneratorFactory.MySqlGenerator).AssemblyQualifiedName),
-                    new Mock<InternalConfiguration>(null, null, null, null).Object)
-                    .GetService<MigrationSqlGenerator>("Is.Ee.Avin.A.Larf"));
-        }
-
-        [Fact]
-        public void GetService_returns_null_SQL_generator_for_unregistered_provider()
-        {
-            Assert.Null(
-                new AppConfigDependencyResolver(
-                    CreateAppConfigWithProvider(), new Mock<InternalConfiguration>(null, null, null, null).Object)
-                    .GetService<MigrationSqlGenerator>("Are.You.Avin.A.Larf"));
-        }
-
-        [Fact]
-        public void GetService_returns_null_for_registered_provider_with_no_registered_Migrations_SQL_generator()
-        {
-            Assert.Null(
-                new AppConfigDependencyResolver(
-                    CreateAppConfigWithProvider(), new Mock<InternalConfiguration>(null, null, null, null).Object)
-                    .GetService<MigrationSqlGenerator>("Is.Ee.Avin.A.Larf"));
-        }
-
-        [Fact]
-        public void GetService_returns_null_when_asked_for_SQL_generator_for_null_empty_or_whitespace_provider_name()
-        {
-            Assert.Null(
-                new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null).Object)
-                    .GetService<MigrationSqlGenerator>(null));
-            Assert.Null(
-                new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null).Object)
-                    .GetService<MigrationSqlGenerator>(""));
-            Assert.Null(
-                new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null).Object)
-                    .GetService<MigrationSqlGenerator>(" "));
-        }
-
-        [Fact]
-        public void GetService_caches_Migrations_SQL_generator_and_uses_it_to_return_a_new_instance_every_call()
-        {
-            var mockProviders = new Mock<ProviderConfig>();
-            mockProviders.Setup(m => m.TryGetMigrationSqlGeneratorFactory("Ask.Rhod.Gilbert"))
-                         .Returns(() => new Mock<MigrationSqlGenerator>().Object);
-
-            var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
-            mockConfig.Setup(m => m.Providers).Returns(mockProviders.Object);
-
-            var resolver = new AppConfigDependencyResolver(
-                mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
-
-            var migrationSqlGenerator1 = resolver.GetService<MigrationSqlGenerator>("Ask.Rhod.Gilbert");
-            Assert.NotNull(migrationSqlGenerator1);
-            mockProviders.Verify(m => m.TryGetMigrationSqlGeneratorFactory("Ask.Rhod.Gilbert"), Times.Once());
-
-            var migrationSqlGenerator2 = resolver.GetService<MigrationSqlGenerator>("Ask.Rhod.Gilbert");
-            Assert.NotNull(migrationSqlGenerator2);
-            Assert.NotSame(migrationSqlGenerator1, migrationSqlGenerator2);
-            mockProviders.Verify(m => m.TryGetMigrationSqlGeneratorFactory("Ask.Rhod.Gilbert"), Times.Once());
-        }
-
-        [Fact]
-        public void GetService_caches_the_fact_that_no_Migrations_SQL_generator_is_registered()
-        {
-            var mockProviders = new Mock<ProviderConfig>();
-            mockProviders.Setup(m => m.TryGetMigrationSqlGeneratorFactory("Ask.Rhod.Gilbert"))
-                         .Returns((Func<MigrationSqlGenerator>)(() => null));
-
-            var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
-            mockConfig.Setup(m => m.Providers).Returns(mockProviders.Object);
-
-            var resolver = new AppConfigDependencyResolver(
-                mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
-
-            Assert.Null(resolver.GetService<MigrationSqlGenerator>("Ask.Rhod.Gilbert"));
-            mockProviders.Verify(m => m.TryGetMigrationSqlGeneratorFactory("Ask.Rhod.Gilbert"), Times.Once());
-            Assert.Null(resolver.GetService<MigrationSqlGenerator>("Ask.Rhod.Gilbert"));
-            mockProviders.Verify(m => m.TryGetMigrationSqlGeneratorFactory("Ask.Rhod.Gilbert"), Times.Once());
         }
 
         [Fact]
@@ -466,61 +371,6 @@ namespace System.Data.Entity.Config
             mockConfig.Verify(m => m.Initializers, Times.Once());
         }
 
-        [Fact]
-        public void GetService_returns_registered_spatial_provider()
-        {
-            Assert.IsType<SqlSpatialServices>(
-                new AppConfigDependencyResolver(
-                    CreateAppConfigWithSpatial(typeof(SqlSpatialServices).AssemblyQualifiedName),
-                    new Mock<InternalConfiguration>(null, null, null, null).Object).GetService
-                    <DbSpatialServices>());
-        }
-
-        [Fact]
-        public void GetService_returns_null_when_no_provider_registered()
-        {
-            Assert.Null(
-                new AppConfigDependencyResolver(
-                    CreateAppConfigWithSpatial(), new Mock<InternalConfiguration>(null, null, null, null).Object)
-                    .GetService<DbSpatialServices>());
-        }
-
-        [Fact]
-        public void GetService_caches_spatial_provider()
-        {
-            var mockProviders = new Mock<ProviderConfig>();
-            mockProviders.Setup(m => m.TryGetSpatialProvider()).Returns(new Mock<DbSpatialServices>().Object);
-            var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
-            mockConfig.Setup(m => m.Providers).Returns(mockProviders.Object);
-
-            var resolver = new AppConfigDependencyResolver(
-                mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
-
-            var factoryInstance = resolver.GetService<DbSpatialServices>();
-
-            Assert.NotNull(factoryInstance);
-            mockProviders.Verify(m => m.TryGetSpatialProvider(), Times.Once());
-            Assert.Same(factoryInstance, resolver.GetService<DbSpatialServices>());
-            mockProviders.Verify(m => m.TryGetSpatialProvider(), Times.Once());
-        }
-
-        [Fact]
-        public void GetService_caches_the_fact_that_no_spatial_provider_is_registered()
-        {
-            var mockProviders = new Mock<ProviderConfig>();
-            mockProviders.Setup(m => m.TryGetSpatialProvider()).Returns((DbSpatialServices)null);
-            var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
-            mockConfig.Setup(m => m.Providers).Returns(mockProviders.Object);
-
-            var resolver = new AppConfigDependencyResolver(
-                mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
-
-            Assert.Null(resolver.GetService<DbSpatialServices>());
-            mockProviders.Verify(m => m.TryGetSpatialProvider(), Times.Once());
-            Assert.Null(resolver.GetService<DbSpatialServices>());
-            mockProviders.Verify(m => m.TryGetSpatialProvider(), Times.Once());
-        }
-
         private static EntityFrameworkSection CreateEfSection(bool initializerDisabled)
         {
             var mockDatabaseInitializerElement = new Mock<DatabaseInitializerElement>();
@@ -568,31 +418,14 @@ namespace System.Data.Entity.Config
                     .GetService<DbProviderServices>("System.Data.FakeSqlClient"));
         }
 
-        [Fact]
-        public void SQL_generator_can_be_loaded_from_real_app_config()
-        {
-            Assert.IsType<FakeSqlGenerator>(
-                new AppConfigDependencyResolver(AppConfig.DefaultInstance, new Mock<InternalConfiguration>(null, null, null, null).Object)
-                    .GetService<MigrationSqlGenerator>("System.Data.FakeSqlClient"));
-        }
-
-        [Fact]
-        public void Spatial_provider_can_be_loaded_from_real_app_config()
-        {
-            Assert.IsType<SqlSpatialServices>(
-                new AppConfigDependencyResolver(AppConfig.DefaultInstance, new Mock<InternalConfiguration>(null, null, null, null).Object)
-                    .GetService<DbSpatialServices>());
-        }
-
         private static AppConfig CreateAppConfigWithProvider(string sqlGeneratorName = null)
         {
             return CreateAppConfig(
                 "Is.Ee.Avin.A.Larf",
-                typeof(ProviderServicesFactoryTests.FakeProviderWithPublicProperty).AssemblyQualifiedName,
-                sqlGeneratorName);
+                typeof(ProviderServicesFactoryTests.FakeProviderWithPublicProperty).AssemblyQualifiedName);
         }
 
-        private static Mock<AppConfig> CreateMockConfigWithProviders(string defaultName = null)
+        private static Mock<AppConfig> CreateMockConfigWithProviders()
         {
             var providerElements = new[]
                 {
@@ -615,7 +448,6 @@ namespace System.Data.Entity.Config
 
             var mockProviders = new Mock<ProviderConfig>();
             mockProviders.Setup(m => m.GetAllDbProviderServices()).Returns(providerElements);
-            mockProviders.Setup(m => m.DefaultInvariantName).Returns(defaultName);
 
             var mockConfig = new Mock<AppConfig>(new ConnectionStringSettingsCollection());
             mockConfig.Setup(m => m.Providers).Returns(mockProviders.Object);

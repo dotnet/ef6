@@ -38,15 +38,12 @@ namespace System.Data.Entity.Migrations.History
         /// <param name="existingConnection"> 
         ///     An existing connection to use for the new context. 
         /// </param>
-        /// <param name="contextOwnsConnection">
-        ///     If set to <c>true</c> the connection is disposed when the context is disposed, otherwise the caller must dispose the connection.
-        /// </param>
         /// <param name="defaultSchema">
         ///     The default schema of the model being migrated.
         ///     This schema will be used for the migrations history table unless a different schema is configured in OnModelCreating.
         /// </param>
-        public HistoryContext(DbConnection existingConnection, bool contextOwnsConnection, string defaultSchema)
-            : base(existingConnection, contextOwnsConnection)
+        public HistoryContext(DbConnection existingConnection, string defaultSchema)
+            : base(existingConnection, contextOwnsConnection: false)
         {
             _defaultSchema = defaultSchema;
 

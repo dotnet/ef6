@@ -46,9 +46,12 @@ namespace System.Data.Entity.Config
             
             Assert.IsType<HistoryContextFactory>(factory);
 
-            using (var context = factory(new SqlConnection(), true, null))
+            using (var connection = new SqlConnection())
             {
-                Assert.IsType<HistoryContext>(context);
+                using (var context = factory(connection, null))
+                {
+                    Assert.IsType<HistoryContext>(context);
+                }
             }
         }
 

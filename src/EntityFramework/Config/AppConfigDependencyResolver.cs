@@ -8,9 +8,6 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.ConfigFile;
-    using System.Data.Entity.Migrations.Sql;
-    using System.Data.Entity.Resources;
-    using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Linq;
 
@@ -40,8 +37,8 @@ namespace System.Data.Entity.Config
         }
 
         public AppConfigDependencyResolver(
-            AppConfig appConfig, 
-            InternalConfiguration internalConfiguration, 
+            AppConfig appConfig,
+            InternalConfiguration internalConfiguration,
             ProviderServicesFactory providerServicesFactory = null)
         {
             DebugCheck.NotNull(appConfig);
@@ -80,11 +77,6 @@ namespace System.Data.Entity.Config
                     _providerFactories.TryGetValue(name, out providerFactory);
                     return () => providerFactory;
                 }
-
-                if (type == typeof(MigrationSqlGenerator))
-                {
-                    return _appConfig.Providers.TryGetMigrationSqlGeneratorFactory(name);
-                }
             }
 
             if (type == typeof(IDbConnectionFactory))
@@ -121,12 +113,6 @@ namespace System.Data.Entity.Config
                 return () => initializer;
             }
 
-            if (type == typeof(DbSpatialServices))
-            {
-                var connectionFactory = _appConfig.Providers.TryGetSpatialProvider();
-                return () => connectionFactory;
-            }
-
             return () => null;
         }
 
@@ -141,16 +127,7 @@ namespace System.Data.Entity.Config
                 RegisterSqlServerProvider();
             }
 
-            var defaultName = _appConfig.Providers.DefaultInvariantName;
-            if (defaultName != null && providers.All(p => p.InvariantName != defaultName))
-            {
-                throw new InvalidOperationException(Strings.EF6Providers_DefaultNotFound(defaultName));
-            }
-
-            providers.Where(p => p.InvariantName != defaultName).Each(RegisterProvider);
-
-            // Make sure default is added last so it will resolve dependencies before others.
-            providers.Where(p => p.InvariantName == defaultName).Each(RegisterProvider);
+            providers.Each(RegisterProvider);
         }
 
         private void RegisterProvider(ProviderElement providerElement)

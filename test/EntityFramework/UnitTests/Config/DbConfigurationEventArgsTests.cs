@@ -46,6 +46,44 @@ namespace System.Data.Entity.Config
             }
         }
 
+        public class AddSecondaryResolver
+        {
+            [Fact]
+            public void AddSecondaryResolver_throws_if_given_a_null_resolver()
+            {
+                Assert.Equal(
+                    "resolver",
+                    Assert.Throws<ArgumentNullException>(
+                        () => (new DbConfigurationEventArgs(new Mock<InternalConfiguration>(null, null, null, null).Object))
+                                  .AddSecondaryResolver(null)).ParamName);
+            }
+
+            [Fact]
+            public void AddSecondaryResolver_throws_if_the_configuation_is_locked()
+            {
+                var internalConfiguration = new InternalConfiguration();
+                internalConfiguration.Lock();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("AddSecondaryResolver"),
+                    Assert.Throws<InvalidOperationException>(
+                        () =>
+                        new DbConfigurationEventArgs(internalConfiguration)
+                            .AddSecondaryResolver(new Mock<IDbDependencyResolver>().Object)).Message);
+            }
+
+            [Fact]
+            public void AddSecondaryResolver_delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var resolver = new Mock<IDbDependencyResolver>().Object;
+
+                new DbConfigurationEventArgs(mockInternalConfiguration.Object).AddSecondaryResolver(resolver);
+
+                mockInternalConfiguration.Verify(m => m.AddSecondaryResolver(resolver));
+            }
+        }
+
         public class ResolverSnapshot
         {
             [Fact]

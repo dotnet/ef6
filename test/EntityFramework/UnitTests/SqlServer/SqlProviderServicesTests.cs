@@ -4,9 +4,11 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Data.Common;
     using System.Data.Entity.Config;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer.Resources;
     using System.Linq;
     using Moq;
     using Moq.Protected;
@@ -14,15 +16,6 @@ namespace System.Data.Entity.SqlServer
 
     public class SqlProviderServicesTests
     {
-        public class GetExecutionStrategyFactory : TestBase
-        {
-            [Fact]
-            public void GetExecutionStrategyFactory_returns_DefaultSqlExecutionStrategy()
-            {
-                Assert.IsType<DefaultSqlExecutionStrategy>(SqlProviderServices.Instance.GetExecutionStrategyFactory()());
-            }
-        }
-
         public class ProviderInvariantNameAttribute : TestBase
         {
             [Fact]
@@ -171,16 +164,49 @@ namespace System.Data.Entity.SqlServer
             }
 
             [Fact]
-            public void GetService_resolves_the_SQL_Server_spatial_services()
+            public void GetService_resolves_the_SQL_Server_spatial_services_for_manifest_tokens_that_support_spatial()
             {
                 Assert.Same(
-                    SqlSpatialServices.Instance, SqlProviderServices.Instance.GetService<DbSpatialServices>("System.Data.SqlClient"));
+                    SqlSpatialServices.Instance,
+                    SqlProviderServices.Instance.GetService<DbSpatialServices>(new DbProviderInfo("System.Data.SqlClient", "2008")));
+                
+                Assert.Same(
+                    SqlSpatialServices.Instance,
+                    SqlProviderServices.Instance.GetService<DbSpatialServices>(new DbProviderInfo("System.Data.SqlClient", "2012")));
+                
+                Assert.Same(
+                    SqlSpatialServices.Instance,
+                    SqlProviderServices.Instance.GetService<DbSpatialServices>(new DbProviderInfo("System.Data.SqlClient", "2012.Azure")));
             }
 
             [Fact]
-            public void GetService_returns_null_for_spatail_services_for_other_invariant_names()
+            public void GetService_throws_for_manifest_tokens_that_dont_support_spatial()
             {
-                Assert.Null(SqlProviderServices.Instance.GetService<DbSpatialServices>("System.Data.SqlServerCe.4.0"));
+                var key = new DbProviderInfo("System.Data.SqlClient", "2005");
+                Assert.Equal(
+                    Strings.SqlProvider_Sql2008RequiredForSpatial,
+                    Assert.Throws<ProviderIncompatibleException>(() => SqlProviderServices.Instance.GetService<DbSpatialServices>(key)).Message);
+            }
+
+            [Fact]
+            public void GetService_throws_for_unrecognized_manifest_tokens()
+            {
+                var key = new DbProviderInfo("System.Data.SqlClient", "Dingo");
+                Assert.Equal(
+                    Strings.UnableToDetermineStoreVersion,
+                    Assert.Throws<ArgumentException>(() => SqlProviderServices.Instance.GetService<DbSpatialServices>(key)).Message);
+            }
+
+            [Fact]
+            public void GetService_resolves_the_SQL_Server_spatial_services_as_the_default_resolver()
+            {
+                Assert.Same(SqlSpatialServices.Instance, SqlProviderServices.Instance.GetService<DbSpatialServices>());
+            }
+
+            [Fact]
+            public void GetService_returns_null_for_spatail_services_for_other_providers()
+            {
+                Assert.Null(SqlProviderServices.Instance.GetService<DbSpatialServices>(new DbProviderInfo("System.Data.SqlServerCe.4.0", "")));
             }
         }
     }

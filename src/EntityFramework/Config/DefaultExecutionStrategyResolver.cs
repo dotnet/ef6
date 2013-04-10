@@ -2,11 +2,9 @@
 
 namespace System.Data.Entity.Config
 {
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
 
     internal class DefaultExecutionStrategyResolver : IDbDependencyResolver
     {
@@ -20,15 +18,10 @@ namespace System.Data.Entity.Config
                 if (executionStrategyKey == null)
                 {
                     throw new ArgumentException(
-                        Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, typeof(IExecutionStrategy)));
+                        Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, "Func<IExecutionStrategy>"));
                 }
 
-                var providerServices = DbConfiguration.GetService<DbProviderServices>(
-                    executionStrategyKey.ProviderInvariantName);
-
-                Debug.Assert(providerServices != null);
-
-                return providerServices.GetExecutionStrategyFactory();
+                return (Func<IExecutionStrategy>)(() => new NonRetryingExecutionStrategy());
             }
 
             return null;

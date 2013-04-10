@@ -82,6 +82,15 @@ namespace System.Data.Entity.Config
             _rootResolver.AddSecondaryResolver(resolver);
         }
 
+        public virtual void RegisterSingleton<TService>(TService instance)
+            where TService : class
+        {
+            DebugCheck.NotNull(instance);
+            Debug.Assert(!_isLocked);
+
+            AddDependencyResolver(new SingletonDependencyResolver<TService>(instance, (object)null));
+        }
+
         public virtual void RegisterSingleton<TService>(TService instance, object key)
             where TService : class
         {
@@ -89,6 +98,15 @@ namespace System.Data.Entity.Config
             Debug.Assert(!_isLocked);
 
             AddDependencyResolver(new SingletonDependencyResolver<TService>(instance, key));
+        }
+
+        public virtual void RegisterSingleton<TService>(TService instance, Func<object, bool> keyPredicate)
+            where TService : class
+        {
+            DebugCheck.NotNull(instance);
+            Debug.Assert(!_isLocked);
+
+            AddDependencyResolver(new SingletonDependencyResolver<TService>(instance, keyPredicate));
         }
 
         public virtual TService GetService<TService>(object key)

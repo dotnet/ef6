@@ -85,29 +85,32 @@ namespace System.Data.Entity.Migrations.History
                 return null;
             }
 
-            using (var context = CreateContext())
+            using (var connection = CreateConnection())
             {
-                using (new TransactionScope(TransactionScopeOption.Suppress))
+                using (var context = CreateContext(connection))
                 {
-                    var lastModel
-                        = CreateHistoryQuery(context, contextKey)
-                            .OrderByDescending(h => h.MigrationId)
-                            .Select(
-                                s => new
-                                    {
-                                        s.MigrationId,
-                                        s.Model
-                                    })
-                            .FirstOrDefault();
-
-                    if (lastModel == null)
+                    using (new TransactionScope(TransactionScopeOption.Suppress))
                     {
-                        return null;
+                        var lastModel
+                            = CreateHistoryQuery(context, contextKey)
+                                .OrderByDescending(h => h.MigrationId)
+                                .Select(
+                                    s => new
+                                        {
+                                            s.MigrationId,
+                                            s.Model
+                                        })
+                                .FirstOrDefault();
+
+                        if (lastModel == null)
+                        {
+                            return null;
+                        }
+
+                        migrationId = lastModel.MigrationId;
+
+                        return new ModelCompressor().Decompress(lastModel.Model);
                     }
-
-                    migrationId = lastModel.MigrationId;
-
-                    return new ModelCompressor().Decompress(lastModel.Model);
                 }
             }
         }
@@ -121,14 +124,17 @@ namespace System.Data.Entity.Migrations.History
                 return null;
             }
 
-            using (var context = CreateContext())
+            using (var connection = CreateConnection())
             {
-                var model = CreateHistoryQuery(context)
-                    .Where(h => h.MigrationId == migrationId)
-                    .Select(h => h.Model)
-                    .Single();
+                using (var context = CreateContext(connection))
+                {
+                    var model = CreateHistoryQuery(context)
+                        .Where(h => h.MigrationId == migrationId)
+                        .Select(h => h.Model)
+                        .Single();
 
-                return (model == null) ? null : new ModelCompressor().Decompress(model);
+                    return (model == null) ? null : new ModelCompressor().Decompress(model);
+                }
             }
         }
 
@@ -141,35 +147,38 @@ namespace System.Data.Entity.Migrations.History
                 return localMigrations;
             }
 
-            using (var context = CreateContext())
+            using (var connection = CreateConnection())
             {
-                List<string> databaseMigrations;
-                using (new TransactionScope(TransactionScopeOption.Suppress))
+                using (var context = CreateContext(connection))
                 {
-                    databaseMigrations = CreateHistoryQuery(context)
-                        .Select(h => h.MigrationId)
-                        .ToList();
+                    List<string> databaseMigrations;
+                    using (new TransactionScope(TransactionScopeOption.Suppress))
+                    {
+                        databaseMigrations = CreateHistoryQuery(context)
+                            .Select(h => h.MigrationId)
+                            .ToList();
+                    }
+
+                    var pendingMigrations = localMigrations.Except(databaseMigrations);
+                    var firstDatabaseMigration = databaseMigrations.FirstOrDefault();
+                    var firstLocalMigration = localMigrations.FirstOrDefault();
+
+                    // If the first database migration and the first local migration don't match,
+                    // but both are named InitialCreate then treat it as already applied. This can
+                    // happen when trying to migrate a database that was created using initializers
+                    if (firstDatabaseMigration != firstLocalMigration
+                        && firstDatabaseMigration != null
+                        && firstDatabaseMigration.MigrationName() == Strings.InitialCreate
+                        && firstLocalMigration != null
+                        && firstLocalMigration.MigrationName() == Strings.InitialCreate)
+                    {
+                        Debug.Assert(pendingMigrations.First() == firstLocalMigration);
+
+                        pendingMigrations = pendingMigrations.Skip(1);
+                    }
+
+                    return pendingMigrations.ToList();
                 }
-
-                var pendingMigrations = localMigrations.Except(databaseMigrations);
-                var firstDatabaseMigration = databaseMigrations.FirstOrDefault();
-                var firstLocalMigration = localMigrations.FirstOrDefault();
-
-                // If the first database migration and the first local migration don't match,
-                // but both are named InitialCreate then treat it as already applied. This can
-                // happen when trying to migrate a database that was created using initializers
-                if (firstDatabaseMigration != firstLocalMigration
-                    && firstDatabaseMigration != null
-                    && firstDatabaseMigration.MigrationName() == Strings.InitialCreate
-                    && firstLocalMigration != null
-                    && firstLocalMigration.MigrationName() == Strings.InitialCreate)
-                {
-                    Debug.Assert(pendingMigrations.First() == firstLocalMigration);
-
-                    pendingMigrations = pendingMigrations.Skip(1);
-                }
-
-                return pendingMigrations.ToList();
             }
         }
 
@@ -179,29 +188,32 @@ namespace System.Data.Entity.Migrations.History
 
             var exists = Exists();
 
-            using (var context = CreateContext())
+            using (var connection = CreateConnection())
             {
-                var query = CreateHistoryQuery(context);
-
-                if (migrationId != DbMigrator.InitialDatabase)
+                using (var context = CreateContext(connection))
                 {
-                    if (!exists
-                        || !query.Any(h => h.MigrationId == migrationId))
+                    var query = CreateHistoryQuery(context);
+
+                    if (migrationId != DbMigrator.InitialDatabase)
                     {
-                        throw Error.MigrationNotFound(migrationId);
+                        if (!exists
+                            || !query.Any(h => h.MigrationId == migrationId))
+                        {
+                            throw Error.MigrationNotFound(migrationId);
+                        }
+
+                        query = query.Where(h => string.Compare(h.MigrationId, migrationId, StringComparison.Ordinal) > 0);
+                    }
+                    else if (!exists)
+                    {
+                        return Enumerable.Empty<string>();
                     }
 
-                    query = query.Where(h => string.Compare(h.MigrationId, migrationId, StringComparison.Ordinal) > 0);
+                    return query
+                        .OrderByDescending(h => h.MigrationId)
+                        .Select(h => h.MigrationId)
+                        .ToList();
                 }
-                else if (!exists)
-                {
-                    return Enumerable.Empty<string>();
-                }
-
-                return query
-                    .OrderByDescending(h => h.MigrationId)
-                    .Select(h => h.MigrationId)
-                    .ToList();
             }
         }
 
@@ -214,25 +226,28 @@ namespace System.Data.Entity.Migrations.History
                 return null;
             }
 
-            using (var context = CreateContext())
+            using (var connection = CreateConnection())
             {
-                var migrationIds
-                    = CreateHistoryQuery(context)
-                        .Select(h => h.MigrationId)
-                        .Where(m => m.Substring(16) == migrationName)
-                        .ToList();
-
-                if (!migrationIds.Any())
+                using (var context = CreateContext(connection))
                 {
-                    return null;
-                }
+                    var migrationIds
+                        = CreateHistoryQuery(context)
+                            .Select(h => h.MigrationId)
+                            .Where(m => m.Substring(16) == migrationName)
+                            .ToList();
 
-                if (migrationIds.Count() == 1)
-                {
-                    return migrationIds.Single();
-                }
+                    if (!migrationIds.Any())
+                    {
+                        return null;
+                    }
 
-                throw Error.AmbiguousMigrationName(migrationName);
+                    if (migrationIds.Count() == 1)
+                    {
+                        return migrationIds.Single();
+                    }
+
+                    throw Error.AmbiguousMigrationName(migrationName);
+                }
             }
         }
 
@@ -258,9 +273,12 @@ namespace System.Data.Entity.Migrations.History
                 return false;
             }
 
-            using (var context = CreateContext())
+            using (var connection = CreateConnection())
             {
-                return context.History.Any(hr => hr.ContextKey != _contextKey);
+                using (var context = CreateContext(connection))
+                {
+                    return context.History.Any(hr => hr.ContextKey != _contextKey);
+                }
             }
         }
 
@@ -276,9 +294,12 @@ namespace System.Data.Entity.Migrations.History
                 return true;
             }
 
-            using (var context = CreateContext())
+            using (var connection = CreateConnection())
             {
-                return context.History.Any(hr => hr.ContextKey == _contextKey);
+                using (var context = CreateContext(connection))
+                {
+                    return context.History.Any(hr => hr.ContextKey == _contextKey);
+                }
             }
         }
 
@@ -461,22 +482,25 @@ namespace System.Data.Entity.Migrations.History
             DebugCheck.NotEmpty(migrationId);
             DebugCheck.NotNull(model);
 
-            using (var context = CreateContext())
+            using (var connection = CreateConnection())
             {
-                context.History.Add(
-                    new HistoryRow
-                        {
-                            MigrationId = migrationId,
-                            ContextKey = _contextKey,
-                            Model = new ModelCompressor().Compress(model),
-                            ProductVersion = _productVersion
-                        });
-
-                using (var commandTracer = new CommandTracer(context))
+                using (var context = CreateContext(connection))
                 {
-                    context.SaveChanges();
+                    context.History.Add(
+                        new HistoryRow
+                            {
+                                MigrationId = migrationId,
+                                ContextKey = _contextKey,
+                                Model = new ModelCompressor().Compress(model),
+                                ProductVersion = _productVersion
+                            });
 
-                    return new HistoryOperation(commandTracer.DbCommands);
+                    using (var commandTracer = new CommandTracer(context))
+                    {
+                        context.SaveChanges();
+
+                        return new HistoryOperation(commandTracer.DbCommands);
+                    }
                 }
             }
         }
@@ -485,23 +509,26 @@ namespace System.Data.Entity.Migrations.History
         {
             DebugCheck.NotEmpty(migrationId);
 
-            using (var context = CreateContext())
+            using (var connection = CreateConnection())
             {
-                var historyRow
-                    = new HistoryRow
-                        {
-                            MigrationId = migrationId,
-                            ContextKey = _contextKey
-                        };
-
-                context.History.Attach(historyRow);
-                context.History.Remove(historyRow);
-
-                using (var commandTracer = new CommandTracer(context))
+                using (var context = CreateContext(connection))
                 {
-                    context.SaveChanges();
+                    var historyRow
+                        = new HistoryRow
+                            {
+                                MigrationId = migrationId,
+                                ContextKey = _contextKey
+                            };
 
-                    return new HistoryOperation(commandTracer.DbCommands);
+                    context.History.Attach(historyRow);
+                    context.History.Remove(historyRow);
+
+                    using (var commandTracer = new CommandTracer(context))
+                    {
+                        context.SaveChanges();
+
+                        return new HistoryOperation(commandTracer.DbCommands);
+                    }
                 }
             }
         }
@@ -510,27 +537,32 @@ namespace System.Data.Entity.Migrations.History
         {
             DebugCheck.NotNull(model);
 
-            using (var context = CreateContext())
+            using (var connection = CreateConnection())
             {
-                context.Database.ExecuteSqlCommand(
-                    ((IObjectContextAdapter)context).ObjectContext.CreateDatabaseScript());
+                using (var context = CreateContext(connection))
+                {
+                    context.Database.ExecuteSqlCommand(
+                        ((IObjectContextAdapter)context).ObjectContext.CreateDatabaseScript());
 
-                context.History.Add(
-                    new HistoryRow
-                        {
-                            MigrationId = MigrationAssembly.CreateMigrationId(Strings.InitialCreate),
-                            ContextKey = _contextKey,
-                            Model = new ModelCompressor().Compress(model),
-                            ProductVersion = Assembly.GetExecutingAssembly().GetInformationalVersion()
-                        });
+                    context.History.Add(
+                        new HistoryRow
+                            {
+                                MigrationId = MigrationAssembly.CreateMigrationId(Strings.InitialCreate),
+                                ContextKey = _contextKey,
+                                Model = new ModelCompressor().Compress(model),
+                                ProductVersion = Assembly.GetExecutingAssembly().GetInformationalVersion()
+                            });
 
-                context.SaveChanges();
+                    context.SaveChanges();
+                }
             }
         }
 
-        public HistoryContext CreateContext(DbConnection connection = null, string schema = null)
+        public HistoryContext CreateContext(DbConnection connection, string schema = null)
         {
-            var context = _historyContextFactory(connection ?? CreateConnection(), connection == null, schema ?? CurrentSchema);
+            DebugCheck.NotNull(connection);
+
+            var context = _historyContextFactory(connection, schema ?? CurrentSchema);
             context.Database.CommandTimeout = _commandTimeout;
             return context;
         }

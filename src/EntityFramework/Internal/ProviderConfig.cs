@@ -3,15 +3,9 @@
 namespace System.Data.Entity.Internal
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Config;
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Internal.ConfigFile;
-    using System.Data.Entity.Migrations.Sql;
-    using System.Data.Entity.Resources;
-    using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Linq;
-    using System.Reflection;
 
     internal class ProviderConfig
     {
@@ -28,82 +22,9 @@ namespace System.Data.Entity.Internal
             _entityFrameworkSettings = entityFrameworkSettings;
         }
 
-        public virtual string DefaultInvariantName
-        {
-            get
-            {
-                var defaultInvariantName = _entityFrameworkSettings.Providers.DefaultInvariantName;
-                return string.IsNullOrWhiteSpace(defaultInvariantName) ? null : defaultInvariantName;
-            }
-        }
-
         public virtual IEnumerable<ProviderElement> GetAllDbProviderServices()
         {
             return _entityFrameworkSettings.Providers.OfType<ProviderElement>();
-        }
-
-        public virtual Func<MigrationSqlGenerator> TryGetMigrationSqlGeneratorFactory(string providerInvariantName)
-        {
-            DebugCheck.NotEmpty(providerInvariantName);
-
-            var providerElement = TryGetProviderElement(providerInvariantName);
-
-            if (providerElement != null
-                && providerElement.SqlGeneratorElement != null
-                && !string.IsNullOrWhiteSpace(providerElement.SqlGeneratorElement.SqlGeneratorTypeName))
-            {
-                var typeName = providerElement.SqlGeneratorElement.SqlGeneratorTypeName;
-                var providerType = Type.GetType(typeName, throwOnError: false);
-
-                if (providerType == null)
-                {
-                    throw new InvalidOperationException(Strings.SqlGeneratorTypeMissing(typeName, providerInvariantName));
-                }
-                return () => providerType.CreateInstance<MigrationSqlGenerator>(Strings.CreateInstance_BadSqlGeneratorType);
-            }
-
-            return () => null;
-        }
-
-        public virtual DbSpatialServices TryGetSpatialProvider()
-        {
-            var providerTypeName = _entityFrameworkSettings.SpatialProviderTypeName;
-
-            if (string.IsNullOrWhiteSpace(providerTypeName))
-            {
-                return null;
-            }
-
-            var providerType = Type.GetType(providerTypeName, throwOnError: false);
-
-            if (providerType == null)
-            {
-                throw new InvalidOperationException(Strings.DbSpatialServicesTypeNotFound(providerTypeName));
-            }
-
-            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-            var instanceMember = providerType.GetProperty("Instance", bindingFlags)
-                                 ?? (MemberInfo)providerType.GetField("Instance", bindingFlags);
-            if (instanceMember == null)
-            {
-                throw new InvalidOperationException(Strings.DbSpatialServices_InstanceMissing(providerTypeName));
-            }
-
-            var providerInstance = instanceMember.GetValue() as DbSpatialServices;
-            if (providerInstance == null)
-            {
-                throw new InvalidOperationException(Strings.DbSpatialServices_NotDbSpatialServices(providerTypeName));
-            }
-
-            return providerInstance;
-        }
-
-        private ProviderElement TryGetProviderElement(string providerInvariantName)
-        {
-            return _entityFrameworkSettings.Providers
-                                           .OfType<ProviderElement>()
-                                           .FirstOrDefault(
-                                               e => providerInvariantName.Equals(e.InvariantName, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

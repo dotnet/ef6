@@ -27,17 +27,5 @@ namespace System.Data.Entity.Internal.ConfigFile
 
             Assert.Equal("All.Right.Now", providerElement.ProviderTypeName);
         }
-
-        [Fact]
-        public void SqlGeneratorElement_can_be_accessed()
-        {
-            var element = new MigrationSqlGeneratorElement();
-            var providerElement = new ProviderElement
-                                      {
-                                          SqlGeneratorElement = element
-                                      };
-
-            Assert.Same(element, providerElement.SqlGeneratorElement);
-        }
     }
 }

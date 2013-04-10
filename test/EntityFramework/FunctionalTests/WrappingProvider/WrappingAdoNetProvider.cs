@@ -6,6 +6,7 @@ namespace System.Data.Entity.WrappingProvider
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
     using System.Reflection;
@@ -31,6 +32,7 @@ namespace System.Data.Entity.WrappingProvider
         public static void WrapProviders()
         {
             MutableResolver.AddResolver<DbProviderServices>(k => WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
+            MutableResolver.AddResolver<MigrationSqlGenerator>(WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
             MutableResolver.AddResolver<DbProviderFactory>(k => WrappingAdoNetProvider<SqlClientFactory>.Instance);
             MutableResolver.AddResolver<IDbProviderFactoryService>(k => new WrappingProviderFactoryService<SqlClientFactory>());
             MutableResolver.AddResolver<IProviderInvariantName>(

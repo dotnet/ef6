@@ -273,12 +273,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _providerManifest; }
         }
 
-        public string StoreProviderManifestToken
+        public virtual string StoreProviderManifestToken
         {
             get { return _providerManifestToken; }
         }
 
-        public string StoreProviderInvariantName
+        public virtual string StoreProviderInvariantName
         {
             get { return _providerInvariantName; }
         }

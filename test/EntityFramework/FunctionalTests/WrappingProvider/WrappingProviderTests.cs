@@ -7,6 +7,7 @@ namespace System.Data.Entity.WrappingProvider
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
     using System.Linq;
@@ -112,6 +113,7 @@ namespace System.Data.Entity.WrappingProvider
         {
             RegisterAdoNetProvider(typeof(WrappingAdoNetProvider<SqlClientFactory>));
             MutableResolver.AddResolver<DbProviderServices>(k => WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
+            MutableResolver.AddResolver<MigrationSqlGenerator>(WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
 
             var log = WrappingAdoNetProvider<SqlClientFactory>.Instance.Log;
             log.Clear();
@@ -143,6 +145,7 @@ namespace System.Data.Entity.WrappingProvider
             Assert.Contains("Open", methods);
             Assert.Contains("Close", methods);
             Assert.Contains("Commit", methods);
+            Assert.Contains("Generate", methods);
         }
 
         [Fact]
@@ -181,6 +184,7 @@ namespace System.Data.Entity.WrappingProvider
             Assert.Contains("Open", methods);
             Assert.Contains("Close", methods);
             Assert.Contains("Commit", methods);
+            Assert.Contains("Generate", methods);
         }
 
         public class Blog

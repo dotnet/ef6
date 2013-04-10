@@ -3,6 +3,7 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.Utilities;
@@ -11,6 +12,7 @@ namespace System.Data.Entity.SqlServer
     using System.Reflection;
 
     [Serializable]
+    [DbProviderName(SqlProviderServices.ProviderInvariantName)]
     internal class SqlSpatialServices : DbSpatialServices
     {
         internal static readonly SqlSpatialServices Instance = new SqlSpatialServices();

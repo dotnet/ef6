@@ -5129,9 +5129,6 @@
   <data name="EF6Providers_NotDbProviderServices" xml:space="preserve">
     <value>The 'Instance' member of the Entity Framework provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Core.Common.DbProviderServices'. Entity Framework providers must extend from this class and the 'Instance' member must return the Singleton instance of the provider.</value>
   </data>
-  <data name="EF6Providers_DefaultNotFound" xml:space="preserve">
-    <value>The provider invariant name '{0}' is specified as the default in the 'providers' element of the 'entityFramework' section in the application’s configuration file but no provider with that invariant name is registered in the list of providers that follows.</value>
-  </data>
   <data name="ProviderInvariantRepeatedInConfig" xml:space="preserve">
     <value>The provider for invariant name '{0}' is specified multiple times in the application configuration. The invariant name must be unique for each configured provider.</value>
   </data>
@@ -5182,9 +5179,6 @@
   </data>
   <data name="CreateInstance_GenericType" xml:space="preserve">
     <value>Failed to create instance of type '{0}'. The type must not be generic.</value>
-  </data>
-  <data name="SqlGeneratorTypeMissing" xml:space="preserve">
-    <value>The Migrations SQL generator type '{0}' for the '{1}' ADO.NET provider could not be loaded. Make sure the assembly is available to the running application.</value>
   </data>
   <data name="ConfigurationLocked" xml:space="preserve">
     <value>The call to DbConfiguration.{0} failed because the configuration is locked. The protected methods and properties of DbConfiguration are intended to be called only from the constructor of a class derived from DbConfiguration and cannot be called after the DbConfiguration object is in use.</value>
@@ -5238,15 +5232,6 @@
   <data name="HistoryMigrationNotSupported" xml:space="preserve">
     <value>Migrating the history system table is only supported for move table operations. Ensure all other history table configuration happens as part of an initial explicit migration. </value>
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
-  </data>
-  <data name="DbSpatialServicesTypeNotFound" xml:space="preserve">
-    <value>The DbSpatialServices type '{0}' specified in the application config file could not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application.</value>
-  </data>
-  <data name="DbSpatialServices_InstanceMissing" xml:space="preserve">
-    <value>The Entity Framework spatial provider type '{0}' did not have a static property or field named 'Instance'. Entity Framework spatial providers must declare a static property or field named 'Instance' that returns the Singleton instance of the provider.</value>
-  </data>
-  <data name="DbSpatialServices_NotDbSpatialServices" xml:space="preserve">
-    <value>The 'Instance' member of the Entity Framework spatial provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Spatial.DbSpatialServices'. Entity Framework spatial providers must extend from this class and the 'Instance' member must return the Singleton instance of the spatial provider.</value>
   </data>
   <data name="CreateConfigurationType_NoParameterlessConstructor" xml:space="preserve">
     <value>An instance of '{0}' could not be created because it does not define a parameterless constructor. Every type derived from EntityTypeConfiguration in an assembly must have a parameterless constructor when using AddFromAssembly to add Code First configurations from that assembly.</value>

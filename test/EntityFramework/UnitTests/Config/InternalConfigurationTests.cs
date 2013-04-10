@@ -34,9 +34,38 @@ namespace System.Data.Entity.Config
                 new InternalConfiguration(
                     new Mock<ResolverChain>().Object, mockNormalChain.Object,
                     new RootDependencyResolver(),
-                    new Mock<AppConfigDependencyResolver>().Object).RegisterSingleton(new object(), null);
+                    new Mock<AppConfigDependencyResolver>().Object).RegisterSingleton(new object());
 
                 mockNormalChain.Verify(m => m.Add(It.IsAny<SingletonDependencyResolver<object>>()));
+            }
+
+            [Fact]
+            public void Adds_a_singleton_resolver_with_a_key()
+            {
+                var normalChain = new ResolverChain();
+
+                new InternalConfiguration(
+                    new Mock<ResolverChain>().Object, normalChain,
+                    new RootDependencyResolver(),
+                    new Mock<AppConfigDependencyResolver>().Object).RegisterSingleton("Bilbo", "Baggins");
+
+                Assert.Equal("Bilbo", normalChain.GetService<string>("Baggins"));
+                Assert.Null(normalChain.GetService<string>("Biggins"));
+            }
+
+            [Fact]
+            public void Adds_a_singleton_resolver_with_a_key_predicate()
+            {
+                var normalChain = new ResolverChain();
+
+                new InternalConfiguration(
+                    new Mock<ResolverChain>().Object, normalChain,
+                    new RootDependencyResolver(),
+                    new Mock<AppConfigDependencyResolver>().Object).RegisterSingleton("Bilbo", k => ((string)k).StartsWith("B"));
+
+                Assert.Equal("Bilbo", normalChain.GetService<string>("Baggins"));
+                Assert.Equal("Bilbo", normalChain.GetService<string>("Biggins"));
+                Assert.Null(normalChain.GetService<string>("More than half a Brandybuck"));
             }
         }
 

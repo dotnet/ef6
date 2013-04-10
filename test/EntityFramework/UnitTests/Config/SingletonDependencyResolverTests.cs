@@ -30,20 +30,33 @@ namespace System.Data.Entity.Config
         }
 
         [Fact]
-        public void GetService_returns_unnamed_instance_of_contract_interface()
+        public void GetService_returns_unkeyed_instance_of_contract_interface()
         {
             var instance = new Mock<IPilkington>().Object;
 
             Assert.Same(instance, new SingletonDependencyResolver<IPilkington>(instance).GetService<IPilkington>());
-            Assert.Same(instance, new SingletonDependencyResolver<IPilkington>(instance, null).GetService<IPilkington>());
+            Assert.Same(instance, new SingletonDependencyResolver<IPilkington>(instance, (object)null).GetService<IPilkington>());
         }
 
         [Fact]
-        public void GetService_returns_named_instance_of_contract_interface()
+        public void GetService_returns_keyed_instance_of_contract_interface()
         {
             var instance = new Mock<IPilkington>().Object;
 
             Assert.Same(instance, new SingletonDependencyResolver<IPilkington>(instance, "Karl").GetService<IPilkington>("Karl"));
+        }
+
+
+        [Fact]
+        public void GetService_returns_instance_of_contract_interface_only_when_key_predicate_matches()
+        {
+            var instance = new Mock<IPilkington>().Object;
+            var resolver = new SingletonDependencyResolver<IPilkington>(instance, k => k != null && ((string)k).StartsWith("K"));
+
+            Assert.Same(instance, resolver.GetService<IPilkington>("Karl"));
+            Assert.Null(resolver.GetService<IPilkington>("Ricky"));
+            Assert.Null(resolver.GetService<IPilkington>());
+            Assert.Null(resolver.GetService<IGervais>("Ricky"));
         }
 
         [Fact]
@@ -52,12 +65,12 @@ namespace System.Data.Entity.Config
             var instance = new Mock<IPilkington>().Object;
 
             Assert.Null(new SingletonDependencyResolver<IPilkington>(instance).GetService<IGervais>());
-            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance, null).GetService<IGervais>());
+            Assert.Null(new SingletonDependencyResolver<IPilkington>(instance, (object)null).GetService<IGervais>());
             Assert.Null(new SingletonDependencyResolver<IPilkington>(instance, "Karl").GetService<IGervais>("Karl"));
         }
 
         [Fact]
-        public void GetService_returns_null_when_name_does_not_match()
+        public void GetService_returns_null_when_key_does_not_match()
         {
             var instance = new Mock<IPilkington>().Object;
 
