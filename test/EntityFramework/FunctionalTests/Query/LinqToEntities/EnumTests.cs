@@ -116,7 +116,7 @@ WHERE 2 =  CAST( [Extent1].[c34_byteenum] AS int)";
                     "ELinq_UnsupportedIsOrAs",
                     null, 
                     "TypeIs",
-                    "System.Nullable`1[[System.Data.Entity.TestModels.ArubaModel.ArubaEnum, EntityFramework.FunctionalTests.Transitional, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]]",
+                    "System.Nullable`1[[System.Data.Entity.TestModels.ArubaModel.ArubaEnum, EntityFramework.FunctionalTests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]]",
                     "System.Data.Entity.TestModels.ArubaModel.ArubaEnum");
             }
         }
@@ -133,7 +133,7 @@ WHERE 2 =  CAST( [Extent1].[c34_byteenum] AS int)";
                     null, 
                     "TypeAs", 
                     "System.Data.Entity.TestModels.ArubaModel.ArubaEnum",
-                    "System.Nullable`1[[System.Data.Entity.TestModels.ArubaModel.ArubaEnum, EntityFramework.FunctionalTests.Transitional, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]]");
+                    "System.Nullable`1[[System.Data.Entity.TestModels.ArubaModel.ArubaEnum, EntityFramework.FunctionalTests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a]]");
             }
         }
 

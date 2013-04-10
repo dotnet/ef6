@@ -2,9 +2,6 @@
 
 namespace System.Data.Entity.Query
 {
-    using System.Data.Entity.TestModels.ArubaModel;
-    using System.Data.SqlClient;
-    using Moq;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -12,10 +9,12 @@ namespace System.Data.Entity.Query
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.SqlClient;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Xml;
+    using Moq;
     using Xunit;
 
     public static class QueryTestHelpers
@@ -80,7 +79,7 @@ namespace System.Data.Entity.Query
             Assert.True(StripFormatting(command).Contains(StripFormatting(expectedSql)));
         }
 
-        public static EntityDataReader EntityCommandSetup(ArubaContext db, string query, string expectedSql = null, params EntityParameter[] entityParameters)
+        public static EntityDataReader EntityCommandSetup(DbContext db, string query, string expectedSql = null, params EntityParameter[] entityParameters)
         {
             var command = new EntityCommand();
             var objectContext = ((IObjectContextAdapter)db).ObjectContext;

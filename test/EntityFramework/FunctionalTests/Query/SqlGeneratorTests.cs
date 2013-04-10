@@ -6,7 +6,6 @@ namespace System.Data.Entity.Query
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.TestModels.ArubaModel;
     using System.Linq;
     using Xunit;
@@ -27,9 +26,11 @@ FROM [dbo].[ArubaOwners] AS [c]";
 
                 // verifying that only two results are returned and an Int is projected as a result
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifyTypeAndCount(reader, 2, "Int32");
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifyTypeAndCount(reader, 2, "Int32");
+                    }
                 }
             }
 
@@ -47,9 +48,11 @@ ORDER BY [Extent1].[Id] DESC";
 
                 // verifying that there are three integer results returned and that they are sorted in descending order
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifySortDescAndCountInt(reader, 3);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifySortDescAndCountInt(reader, 3);
+                    }
                 }
             }
 
@@ -76,9 +79,11 @@ ORDER BY [Limit1].[Id] DESC";
                 // verifying that there are 3 integer results returned and they are sorted in descending order
                 // using nesting TOP statements and ORDER BY statements
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifySortDescAndCountInt(reader, 3);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifySortDescAndCountInt(reader, 3);
+                    }
                 }
             }
 
@@ -105,9 +110,11 @@ ORDER BY [Limit1].[Id] DESC";
                 // verifying that there are 4 results returned and they are sorted in descending order 
                 // with nested TOP statements
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifySortDescAndCountInt(reader, 4);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifySortDescAndCountInt(reader, 4);
+                    }
                 }
             }
 
@@ -133,9 +140,11 @@ ORDER BY [Distinct1].[FirstName] DESC";
                 // verifying that there are 2 results returned, that they are sorted in descending order
                 // and they are distinct
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
-                {                 
-                    VerifySortDescAndCountString(reader, 2, distinct:true);
+                {
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifySortDescAndCountString(reader, 2, distinct: true);
+                    }
                 }
             }
 
@@ -145,7 +154,7 @@ ORDER BY [Distinct1].[FirstName] DESC";
                 var query = @"
 SELECT  TOP(3) C.m.id, C.m.address 
 FROM ( SELECT TOP(5) m
-	FROM OFTYPE (ArubaContext.Configs, ArubaModel.ArubaMachineConfig) AS m
+	FROM OFTYPE (ArubaContext.Configs, CodeFirstNamespace.ArubaMachineConfig) AS m
 ) AS C
 ORDER BY C.m.Id DESC";
 
@@ -162,9 +171,11 @@ FROM ( SELECT TOP (5) [Extent1].[Id] AS [Id], [Extent1].[Address] AS [Address]
                 // verifying that there are 3 results returned and they are sorted in descending order
                 // using nested TOP statements
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifySortDescAndCountInt(reader, 3);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifySortDescAndCountInt(reader, 3);
+                    }
                 }
             }
 
@@ -173,7 +184,7 @@ FROM ( SELECT TOP (5) [Extent1].[Id] AS [Id], [Extent1].[Address] AS [Address]
             {
                 var query = @"
 SELECT  TOP (3) C.Id, C.Address
-FROM OFTYPE (ArubaContext.Configs, ArubaModel.ArubaMachineConfig) AS C 
+FROM OFTYPE (ArubaContext.Configs, CodeFirstNamespace.ArubaMachineConfig) AS C 
 ORDER BY C.Id DESC";
 
                 var expectedSql = @"
@@ -186,9 +197,11 @@ ORDER BY [Extent1].[Id] DESC";
 
                 // verifying that there are 3 results returned and they are sorted in descending order
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifySortDescAndCountInt(reader, 3);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifySortDescAndCountInt(reader, 3);
+                    }
                 }
             }
 
@@ -197,7 +210,7 @@ ORDER BY [Extent1].[Id] DESC";
             {
                 var query = @"
 SELECT  TOP (3) C.Id, C.Address
-FROM OFTYPE (ArubaContext.Configs, ArubaModel.ArubaMachineConfig) AS C 
+FROM OFTYPE (ArubaContext.Configs, CodeFirstNamespace.ArubaMachineConfig) AS C 
 ORDER BY C.Id DESC";
 
                 var expectedSql = @"
@@ -211,9 +224,11 @@ ORDER BY [Extent1].[Id] DESC";
                 // verifying that there are 3 results returned and they are sorted in descending order
                 // using a model with inheritance
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifySortDescAndCountInt(reader, 3);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifySortDescAndCountInt(reader, 3);
+                    }
                 }
             }
 
@@ -244,9 +259,11 @@ ORDER BY [Limit1].[Id] DESC";
 
                 // verifying that there are 3 results returned and they are sorted in descending order
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql, prm1, prm2))
                 {
-                    VerifySortDescAndCountInt(reader, 3);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql, prm1, prm2))
+                    {
+                        VerifySortDescAndCountInt(reader, 3);
+                    }
                 }
             }
 
@@ -268,9 +285,11 @@ ORDER BY C.OwnerId DESC";
 
                 // verifying that there are 2 results returned and they are sorted in descending order
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, null, prm1, prm2))
                 {
-                    VerifySortDescAndCountInt(reader, 2);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, null, prm1, prm2))
+                    {
+                        VerifySortDescAndCountInt(reader, 2);
+                    }
                 }
             }
 
@@ -288,13 +307,17 @@ order by o.Id desc skip @pInt16 LIMIT @pInt64";
 
                 // verifying that there are 2 results returned and they are sorted in descending order
                 using (var db = new ArubaContext())
-                using (var db2 = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, null, prm1, prm2))
                 {
-                    var expectedResults = db.Owners.ToList().OrderByDescending(o => o.Id).Skip(5).Take(2).Select(o => o.Id).ToList();
+                    using (var db2 = new ArubaContext())
+                    {
+                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, null, prm1, prm2))
+                        {
+                            var expectedResults = db.Owners.ToList().OrderByDescending(o => o.Id).Skip(5).Take(2).Select(o => o.Id).ToList();
 
-                    Assert.Equal(expectedResults.Count, 2);
-                    VerifyAgainstBaselineResults(reader, expectedResults);
+                            Assert.Equal(expectedResults.Count, 2);
+                            VerifyAgainstBaselineResults(reader, expectedResults);
+                        }
+                    }
                 }
             }
 
@@ -319,9 +342,11 @@ ORDER BY [Extent1].[Id] DESC";
 
                 // verifying that there are 5 results returned and they are sorted in descending order
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql, prm1))
                 {
-                    VerifySortDescAndCountInt(reader, 5);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql, prm1))
+                    {
+                        VerifySortDescAndCountInt(reader, 5);
+                    }
                 }
             }
         }
@@ -351,9 +376,11 @@ ORDER BY [Limit1].[Id] DESC";
 
                 // verifying that there are 3 results returned and they are sorted in descending order
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifySortDescAndCountInt(reader, 3);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifySortDescAndCountInt(reader, 3);
+                    }
                 }
             }
 
@@ -362,7 +389,7 @@ ORDER BY [Limit1].[Id] DESC";
             {
                 var query = @"
 SELECT C.Id, C.Address 
-FROM OFTYPE (ArubaContext.Configs, ArubaModel.ArubaMachineConfig) AS C 
+FROM OFTYPE (ArubaContext.Configs, CodeFirstNamespace.ArubaMachineConfig) AS C 
 ORDER BY C.Id DESC SKIP 3 LIMIT 2";
 
                 var expectedSql = @"
@@ -378,13 +405,18 @@ ORDER BY [Filter1].[Id] DESC";
 
                 // verifying that there are 2 results returned and they are sorted in descending order
                 using (var db = new ArubaContext())
-                using (var db2 = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
                 {
-                    var expectedResults = db.Configs.ToList().OfType<ArubaMachineConfig>().OrderByDescending(o => o.Id).Skip(3).Take(2)
-                        .Select(o => o.Id).ToList();
-                    Assert.Equal(expectedResults.Count(), 2);
-                    VerifyAgainstBaselineResults(reader, expectedResults);
+                    using (var db2 = new ArubaContext())
+                    {
+                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
+                        {
+                            var expectedResults =
+                                db.Configs.ToList().OfType<ArubaMachineConfig>().OrderByDescending(o => o.Id).Skip(3).Take(2)
+                                  .Select(o => o.Id).ToList();
+                            Assert.Equal(expectedResults.Count(), 2);
+                            VerifyAgainstBaselineResults(reader, expectedResults);
+                        }
+                    }
                 }
             }
 
@@ -416,9 +448,11 @@ ORDER BY [Project2].[FirstName] DESC";
 
                 // verifying that there are 2 results returned and they are sorted in Descending order
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifySortDescAndCountString(reader, 2);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifySortDescAndCountString(reader, 2);
+                    }
                 }
             }
 
@@ -427,7 +461,7 @@ ORDER BY [Project2].[FirstName] DESC";
             {
                 var query = @"
 SELECT Config.Id, Config.Address
-FROM OFTYPE (ArubaContext.Configs, ArubaModel.ArubaMachineConfig) AS Config 
+FROM OFTYPE (ArubaContext.Configs, CodeFirstNamespace.ArubaMachineConfig) AS Config 
 ORDER BY Config.Id DESC SKIP 1";
 
                 var expectedSql = @"
@@ -443,12 +477,16 @@ ORDER BY [Filter1].[Id] DESC";
 
                 // verify that the first 1 is skipped and that the results are sorted in descending order
                 using (var db = new ArubaContext())
-                using (var db2 = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
                 {
-                    var expectedResults = db.Configs.OfType<ArubaMachineConfig>().ToList().OrderByDescending(c => c.Id).Skip(1)
-                                            .Select(c => c.Id);
-                    VerifyAgainstBaselineResults(reader, expectedResults);
+                    using (var db2 = new ArubaContext())
+                    {
+                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
+                        {
+                            var expectedResults = db.Configs.OfType<ArubaMachineConfig>().ToList().OrderByDescending(c => c.Id).Skip(1)
+                                                    .Select(c => c.Id);
+                            VerifyAgainstBaselineResults(reader, expectedResults);
+                        }
+                    }
                 }
             }
 
@@ -459,9 +497,7 @@ ORDER BY [Filter1].[Id] DESC";
 SELECT DISTINCT o.FirstName as a
 FROM ArubaContext.Owners as o
 ORDER BY a SKIP 1 LIMIT 1";
-
-
-
+                
                 var expectedSql = @"
 SELECT TOP (1) 
 [Distinct1].[C1] AS [C1], 
@@ -478,9 +514,11 @@ ORDER BY [Distinct1].[FirstName] ASC";
 
                 // verifying that there is 1 result returned
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifySortDescAndCountString(reader, 1);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifySortDescAndCountString(reader, 1);
+                    }
                 }
             }
 
@@ -505,13 +543,16 @@ ORDER BY [Extent1].[FirstName] ASC, [Extent1].[LastName] DESC";
 
                 // verifying that there are 2 results returned
                 using (var db = new ArubaContext())
-                using (var db2 = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
                 {
-                    var expectedResults = db.Owners.ToList().OrderBy(o => o.FirstName).ThenByDescending(o => o.LastName)
-                                            .Skip(3).Take(4).Select(o => o.Id);                                     
-                    VerifyAgainstBaselineResults(reader, expectedResults);
-
+                    using (var db2 = new ArubaContext())
+                    {
+                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
+                        {
+                            var expectedResults = db.Owners.ToList().OrderBy(o => o.FirstName).ThenByDescending(o => o.LastName)
+                                                    .Skip(3).Take(4).Select(o => o.Id);
+                            VerifyAgainstBaselineResults(reader, expectedResults);
+                        }
+                    }
                 }
             }
 
@@ -551,18 +592,21 @@ ORDER BY [Limit1].[Id] ASC, [Project1].[C1] ASC";
 
                 // verifying that there are 3 results returned
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    var count = 0;
-                    while (reader.Read())
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                     {
-                        var nestedReader = (DbDataReader)reader.GetValue(0);
-                        while (nestedReader.Read())
+                        var count = 0;
+                        while (reader.Read())
                         {
-                            count++;
+                            var nestedReader = (DbDataReader)reader.GetValue(0);
+                            while (nestedReader.Read())
+                            {
+                                count++;
+                            }
                         }
+                 
+                        Assert.Equal(3 * 2, count);
                     }
-                    Assert.Equal(3 * 2, count);
                 }
             }
 
@@ -595,9 +639,11 @@ ORDER BY [Limit1].[Id] ASC";
 
                 // verifying that there are 2 integer results returned
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifyTypeAndCount(reader, 2, "Int32");
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifyTypeAndCount(reader, 2, "Int32");
+                    }
                 }
             }
 
@@ -647,16 +693,20 @@ INTERSECT
 
                 // verifying that the results returned match the results of the Linq baseline
                 using (var db = new ArubaContext())
-                using (var db2 = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
                 {
-                    //building expected results
-                    var query1 = db.Owners.ToList().OrderByDescending(o => o.Id).ThenByDescending(o => o.Alias).Skip(3).Take(7)
-                                   .Select(o => o.Id);
-                    var query2 = db.Owners.ToList().OrderBy(o => o.Id).ThenBy(o => o.Alias).Skip(4).Take(6).Select(o => o.Id);
-                    var intersect = query1.Intersect(query2);
+                    using (var db2 = new ArubaContext())
+                    {
+                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
+                        {
+                            //building expected results
+                            var query1 = db.Owners.ToList().OrderByDescending(o => o.Id).ThenByDescending(o => o.Alias).Skip(3).Take(7)
+                                           .Select(o => o.Id);
+                            var query2 = db.Owners.ToList().OrderBy(o => o.Id).ThenBy(o => o.Alias).Skip(4).Take(6).Select(o => o.Id);
+                            var intersect = query1.Intersect(query2);
 
-                    VerifyAgainstBaselineResults(reader, intersect);                    
+                            VerifyAgainstBaselineResults(reader, intersect);
+                        }
+                    }
                 }
             }
 
@@ -674,9 +724,11 @@ order by o.Id desc skip @pInt16 Limit @pInt64";
 
                 // verifying that there are 2 results returned and they are sorted in descending order
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, null, prm1, prm2))
                 {
-                    VerifySortDescAndCountInt(reader, 2);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, null, prm1, prm2))
+                    {
+                        VerifySortDescAndCountInt(reader, 2);
+                    }
                 }
             }
 
@@ -694,9 +746,11 @@ order by o.Id desc skip @pInt16 LIMIT @pInt64";
 
                 // verifying that there are 2 results returned and they are sorted in descending order
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, null, prm1, prm2))
                 {
-                    VerifySortDescAndCountInt(reader, 2);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, null, prm1, prm2))
+                    {
+                        VerifySortDescAndCountInt(reader, 2);
+                    }
                 }
             }
 
@@ -712,9 +766,11 @@ order by o.Id desc skip @pInt16 LIMIT 5";
 
                 // verifying that there are 5 results returned and they are sorted in descending order
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, null, prm1))
                 {
-                    VerifySortDescAndCountInt(reader, 5);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, null, prm1))
+                    {
+                        VerifySortDescAndCountInt(reader, 5);
+                    }
                 }
             }
 
@@ -758,20 +814,23 @@ ORDER BY [Project2].[Id] ASC, [Project2].[C1] ASC";
 
                 // verifying that there are 4 results returned and they are integers
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    var count = 0;
-
-                    while (reader.Read())
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                     {
-                        var nestedReader = (DbDataReader)reader.GetValue(0);
-                        while (nestedReader.Read())
-                        {                            
-                            Assert.Equal("Int32", ((CollectionType)reader.DataRecordInfo.RecordType.EdmType).TypeUsage.EdmType.Name);
-                            count++;
+                        var count = 0;
+
+                        while (reader.Read())
+                        {
+                            var nestedReader = (DbDataReader)reader.GetValue(0);
+                            while (nestedReader.Read())
+                            {
+                                Assert.Equal("Int32", ((CollectionType)reader.DataRecordInfo.RecordType.EdmType).TypeUsage.EdmType.Name);
+                                count++;
+                            }
                         }
+                 
+                        Assert.Equal(4, count);
                     }
-                    Assert.Equal(4, count);
                 }
             }
 
@@ -801,9 +860,11 @@ LEFT OUTER JOIN  (SELECT TOP (1) [element].[Id] AS [Id]
 
                 // verifying that there is 1 result returned and that it is an integer
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifyTypeAndCount(reader, 1, "Int32");
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifyTypeAndCount(reader, 1, "Int32");
+                    }
                 }
             }
 
@@ -833,9 +894,11 @@ ORDER BY [Project1].[C1] ASC";
 
                 // verifying that there are 3 results returned and they are sorted in descending order
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifySortDescAndCountInt(reader, 3);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifySortDescAndCountInt(reader, 3);
+                    }
                 }
             }
 
@@ -857,11 +920,15 @@ WHERE [Extent1].[row_number] > 2
 ORDER BY [Extent1].[Id] DESC";
 
                 using (var db = new ArubaContext())
-                using (var db2 = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
                 {
-                    var expectedResults = db.Owners.ToList().OrderByDescending(o => o.Id).Skip(2).Select(o => o.Id);
-                    VerifyAgainstBaselineResults(reader, expectedResults);
+                    using (var db2 = new ArubaContext())
+                    {
+                        using (var reader = QueryTestHelpers.EntityCommandSetup(db2, query, expectedSql))
+                        {
+                            var expectedResults = db.Owners.ToList().OrderByDescending(o => o.Id).Skip(2).Select(o => o.Id);
+                            VerifyAgainstBaselineResults(reader, expectedResults);
+                        }
+                    }
                 }
             }
 
@@ -884,9 +951,11 @@ ORDER BY [Extent1].[Id] ASC";
 
                 // verifying that there are 3 results returned and they are sorted in ascending order
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifySortAscAndCountInt(reader, 3);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifySortAscAndCountInt(reader, 3);
+                    }
                 }
             }
 
@@ -947,9 +1016,11 @@ ORDER BY [Intersect1].[Id] ASC";
 
                 // verifying that there is 1 result returned and it is an integer
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifyTypeAndCount(reader, 1, "Int32");
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifyTypeAndCount(reader, 1, "Int32");
+                    }
                 }
             }
 
@@ -996,10 +1067,12 @@ ORDER BY [UnionAll4].[C1] ASC";
 
                 // verifying that there are 3 results returned and that they match the expected output
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    var values = new List<int> { 1, 2, 2 };
-                    VerifyAgainstBaselineResults(reader, values);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        var values = new List<int> { 1, 2, 2 };
+                        VerifyAgainstBaselineResults(reader, values);
+                    }
                 }
             }
 
@@ -1039,9 +1112,11 @@ ORDER BY [Project5].[C1] ASC";
 
                 // verifying that there is 1 result returned and it is an int
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
                 {
-                    VerifyTypeAndCount(reader, 1, "Int32");
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query, expectedSql))
+                    {
+                        VerifyTypeAndCount(reader, 1, "Int32");
+                    }
                 }
             }
         }
@@ -1056,9 +1131,11 @@ ORDER BY [Project5].[C1] ASC";
 
                 // verifying that there is { 0 } is returned
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query))
                 {
-                    VerifyAgainstBaselineResults(reader, new List<int>{0});
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query))
+                    {
+                        VerifyAgainstBaselineResults(reader, new List<int> { 0 });
+                    }
                 }
             }
 
@@ -1070,9 +1147,11 @@ ORDER BY [Project5].[C1] ASC";
 
                 // verifying that { DbNull, 5 } is returned
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query))
                 {
-                    VerifyAgainstBaselineResults(reader, new List<object>{DBNull.Value, 5});
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query))
+                    {
+                        VerifyAgainstBaselineResults(reader, new List<object> { DBNull.Value, 5 });
+                    }
                 }
             }
 
@@ -1084,9 +1163,11 @@ ORDER BY [Project5].[C1] ASC";
 
                 // verifying that { 1 } is returned
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query))
                 {
-                    VerifyAgainstBaselineResults(reader, new List<int> {1});
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query))
+                    {
+                        VerifyAgainstBaselineResults(reader, new List<int> { 1 });
+                    }
                 }
             }
 
@@ -1100,9 +1181,11 @@ ArubaContext.Owners";
 
                 // verifying that there are no results returned
                 using (var db = new ArubaContext())
-                using (var reader = QueryTestHelpers.EntityCommandSetup(db, query))
                 {
-                    VerifySortAscAndCountInt(reader, 0);
+                    using (var reader = QueryTestHelpers.EntityCommandSetup(db, query))
+                    {
+                        VerifySortAscAndCountInt(reader, 0);
+                    }
                 }
             }
         }
