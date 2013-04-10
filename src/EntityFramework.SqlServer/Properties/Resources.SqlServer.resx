@@ -249,4 +249,7 @@
   <data name="TransientExceptionDetected" xml:space="preserve">
     <value>An exception has been raised that is likely due to a transient failure. If you are connecting to a SQL Azure database consider using SqlAzureExecutionStrategy.</value>
   </data>
+  <data name="ELinq_DbFunctionDirectCall" xml:space="preserve">
+    <value>This function can only be invoked from LINQ to Entities.</value>
+  </data>
 </root>

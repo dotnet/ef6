@@ -1,9 +1,10 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Core.Objects.SqlClient
+namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.SqlServer.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;

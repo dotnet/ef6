@@ -364,6 +364,14 @@ namespace System.Data.Entity.SqlServer.Resources
         {
             get { return EntityRes.GetString(EntityRes.TransientExceptionDetected); }
         }
+
+        /// <summary>
+        ///     A string like "This function can only be invoked from LINQ to Entities."
+        /// </summary>
+        internal static string ELinq_DbFunctionDirectCall
+        {
+            get { return EntityRes.GetString(EntityRes.ELinq_DbFunctionDirectCall); }
+        }
     }
 
     /// <summary>
@@ -449,6 +457,7 @@ namespace System.Data.Entity.SqlServer.Resources
         internal const string SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid = "SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid";
         internal const string SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt = "SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt";
         internal const string TransientExceptionDetected = "TransientExceptionDetected";
+        internal const string ELinq_DbFunctionDirectCall = "ELinq_DbFunctionDirectCall";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Query.LinqToEntities
 {
-    using System.Data.Entity.Core.Objects.SqlClient;
+    using System.Data.Entity.SqlServer;
     using System.Data.Entity.TestModels.ArubaModel;
     using System.Linq;
     using Xunit;

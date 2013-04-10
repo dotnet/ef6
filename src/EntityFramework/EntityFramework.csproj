@@ -1066,8 +1066,6 @@
     <Compile Include="Core\Objects\SaveOptions.cs" />
     <Compile Include="Core\Objects\Span.cs" />
     <Compile Include="Core\Objects\SpanIndex.cs" />
-    <Compile Include="Core\Objects\SqlClient\SqlFunctions.cs" />
-    <Compile Include="Core\Objects\SqlClient\SqlSpatialFunctions.cs" />
     <Compile Include="Core\Objects\StateManagerMemberMetadata.cs" />
     <Compile Include="Core\OptimisticConcurrencyException.cs" />
     <Compile Include="Core\PropertyConstraintException.cs" />

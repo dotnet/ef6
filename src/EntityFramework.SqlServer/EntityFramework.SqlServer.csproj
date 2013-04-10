@@ -104,8 +104,10 @@
     <Compile Include="SqlAzureExecutionStrategy.cs" />
     <Compile Include="SqlAzureRetriableExceptionDetector.cs" />
     <Compile Include="SqlDdlBuilder.cs" />
+    <Compile Include="SqlFunctions.cs" />
     <Compile Include="SqlGen\BoolWrapper.cs" />
     <Compile Include="SqlGen\DmlSqlGenerator.cs" />
+    <Compile Include="SqlSpatialFunctions.cs" />
     <Compile Include="SqlTypesAssemblyLoader.cs" />
     <Compile Include="SqlVersionUtils.cs" />
     <Compile Include="Utilities\Check.cs" />
