@@ -468,7 +468,6 @@
     <Compile Include="Core\Common\internal\materialization\translator.cs" />
     <Compile Include="Core\Common\internal\materialization\TranslatorArg.cs" />
     <Compile Include="Core\Common\internal\materialization\TranslatorResult.cs" />
-    <Compile Include="Core\Common\internal\materialization\util.cs" />
     <Compile Include="Core\Common\internal\MultipartIdentifier.cs" />
     <Compile Include="Core\Common\QueryCache\CompiledQueryCacheEntry.cs" />
     <Compile Include="Core\Common\QueryCache\CompiledQueryCacheKey.cs" />

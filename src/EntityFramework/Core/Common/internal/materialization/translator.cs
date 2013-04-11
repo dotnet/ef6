@@ -206,7 +206,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     var complexType = (ComplexType)columnMap.Type.EdmType;
                     var clrType = DetermineClrType(complexType);
-                    var constructor = GetConstructor(clrType);
+                    var constructor = DelegateFactory.GetConstructorForType(clrType);
 
                     // Build expressions to read the property values from the source data 
                     // reader and bind them to their target properties
@@ -371,7 +371,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 }
                 else
                 {
-                    var constructor = GetConstructor(clrType);
+                    var constructor = DelegateFactory.GetConstructorForType(clrType);
                     constructEntity = Expression.MemberInit(Expression.New(constructor), propertyBindings);
                     actualType = clrType;
                 }
@@ -947,7 +947,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         if (typeToInstantiate != listOfElementType)
                         {
                             coordinatorScratchpad.InitializeCollection = CodeGenEmitter.Emit_EnsureType(
-                                Expression.New(GetConstructor(typeToInstantiate)),
+                                DelegateFactory.GetNewExpressionForCollectionType(typeToInstantiate),
                                 typeof(ICollection<>).MakeGenericType(innerElementType));
                         }
                         result = CodeGenEmitter.Emit_EnsureType(result, arg.RequestedType);

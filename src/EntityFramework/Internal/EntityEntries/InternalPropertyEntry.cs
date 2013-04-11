@@ -280,7 +280,7 @@ namespace System.Data.Entity.Internal
             }
 
             if (Getter == null
-                || !DbHelpers.KeyValuesEqual(value, Getter(InternalEntityEntry.Entity)))
+                || !DbHelpers.PropertyValuesEqual(value, Getter(InternalEntityEntry.Entity)))
             {
                 Setter(InternalEntityEntry.Entity, value);
                 if (EntryMetadata.IsMapped

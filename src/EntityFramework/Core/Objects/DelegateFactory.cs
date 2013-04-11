@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
@@ -159,6 +160,27 @@ namespace System.Data.Entity.Core.Objects
                 throw new InvalidOperationException(Strings.CodeGen_ConstructorNoParameterless(type.FullName));
             }
             return ci;
+        }
+
+        /// <summary>
+        ///     Gets a new expression that uses the parameterless constructor for the specified collection type.
+        ///     For HashSet{T} will use ObjectReferenceEqualityComparer.
+        /// </summary>
+        /// <param name="type"> Type to get constructor for. </param>
+        /// <returns> Parameterless constructor for the specified type. </returns>
+        internal static NewExpression GetNewExpressionForCollectionType(Type type)
+        {
+            if (type.GetGenericTypeDefinition() == typeof(HashSet<>))
+            {
+                var constructor = type.GetConstructor(
+                    BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null,
+                    new[] { typeof(IEqualityComparer<>).MakeGenericType(type.GetGenericArguments()) }, null);
+                return Expression.New(constructor, Expression.New(typeof(ObjectReferenceEqualityComparer)));
+            }
+            else
+            {
+                return Expression.New(GetConstructorForType(type));
+            }
         }
 
         /// <summary>

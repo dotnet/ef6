@@ -117,14 +117,9 @@ namespace System.Data.Entity.Core
         /// <remarks>
         ///     The rules are:
         ///     If the collection is defined as a concrete type with a publicly accessible parameterless constructor, then create an instance of that type
-        ///     Else, if HashSet
-        ///     <T>
-        ///         can be assigned to the type, then use HashSet
-        ///         <T>
-        ///             Else, if List
-        ///             <T>
-        ///                 can be assigned to the type, then use List
-        ///                 <T>Else, throw a nice exception.
+        ///     Else, if HashSet{T} can be assigned to the type, then use HashSet{T}
+        ///     Else, if List{T} can be assigned to the type, then use List{T}
+        ///     Else, throw a nice exception.
         /// </remarks>
         /// <param name="requestedType"> The type of collection that was requested </param>
         /// <returns> The type to instantiate, or null if we cannot find a supported type to instantiate </returns>
@@ -142,8 +137,7 @@ namespace System.Data.Entity.Core
             }
 
             if (!requestedType.IsAbstract
-                &&
-                requestedType.GetConstructor(constructorBinding, null, Type.EmptyTypes, null) != null)
+                && requestedType.GetConstructor(constructorBinding, null, Type.EmptyTypes, null) != null)
             {
                 return requestedType;
             }

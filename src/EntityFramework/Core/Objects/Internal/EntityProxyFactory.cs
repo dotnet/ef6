@@ -293,12 +293,12 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             DebugCheck.NotNull(propertyInfo);
 
-            var Object_Parameter = Expression.Parameter(typeof(object), "instance");
+            var objectParameter = Expression.Parameter(typeof(object), "instance");
             var nonProxyGetter = Expression.Lambda<Func<object, object>>(
                 Expression.PropertyOrField(
-                    Expression.Convert(Object_Parameter, declaringType),
+                    Expression.Convert(objectParameter, declaringType),
                     propertyInfo.Name),
-                Object_Parameter).Compile();
+                objectParameter).Compile();
 
             var propertyName = propertyInfo.Name;
             return (entity) =>
@@ -745,7 +745,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 if (CanProxySetter(baseProperty))
                 {
                     var baseSetter = baseProperty.GetSetMethod(true);
-                    ;
+
                     const MethodAttributes methodAttributes =
                         MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
                     var methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;

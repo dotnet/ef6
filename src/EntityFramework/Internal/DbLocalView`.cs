@@ -6,6 +6,7 @@ namespace System.Data.Entity.Internal
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -186,6 +187,19 @@ namespace System.Data.Entity.Internal
             {
                 base.InsertItem(index, item);
             }
+        }
+
+        public new bool Contains(TEntity item)
+        {
+            IEqualityComparer<TEntity> comparer = new ObjectReferenceEqualityComparer();
+            foreach (var entity in Items)
+            {
+                if (comparer.Equals(entity, item))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         #endregion

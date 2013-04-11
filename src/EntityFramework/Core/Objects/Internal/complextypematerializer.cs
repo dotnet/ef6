@@ -8,7 +8,6 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using Util = System.Data.Entity.Core.Common.Internal.Materialization.Util;
 
     /// <summary>
     ///     Supports materialization of complex type instances from records. Used

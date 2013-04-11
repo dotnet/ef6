@@ -282,7 +282,7 @@ namespace System.Data.Entity.Internal
             // Using KeyValuesEqual here to control setting the property to modified since the deep
             // comparison of binary values is more appropriate for all properties when used in an
             // N-Tier or concurrency situation.
-            if (!DbHelpers.KeyValuesEqual(item.Value, newValue))
+            if (!DbHelpers.PropertyValuesEqual(item.Value, newValue))
             {
                 if (item.Value == null
                     && item.IsComplex)
