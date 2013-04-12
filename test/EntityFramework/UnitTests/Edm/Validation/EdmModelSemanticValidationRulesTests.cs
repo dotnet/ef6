@@ -4,6 +4,7 @@ namespace System.Data.Entity.Edm.Validation
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
@@ -181,6 +182,66 @@ namespace System.Data.Entity.Edm.Validation
             EdmModelSemanticValidationRules
                 .EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2
                 .Evaluate(validationContext, functionImport);
+
+            return errorEventArgs;
+        }
+
+        [Fact]
+        public void EdmAssociationType_ValidateReferentialConstraint_invalid_for_non_fkey_references_in_CSpace()
+        {
+            var errorEventArgs = ValidateAssociationTypeWithNonFkeyReference(DataSpace.CSpace);
+            Assert.NotNull(errorEventArgs);
+            Assert.Equal(
+                Strings.EdmModel_Validator_Semantic_InvalidToPropertyInRelationshipConstraint("C", "ns.P", "ns.AT"), 
+                errorEventArgs.ErrorMessage);
+        }
+
+        [Fact]
+        public void EdmAssociationType_ValidateReferentialConstraint_valid_for_non_fkey_references_in_SSpace()
+        {
+            Assert.Null(ValidateAssociationTypeWithNonFkeyReference(DataSpace.SSpace));
+        }
+
+        private DataModelErrorEventArgs ValidateAssociationTypeWithNonFkeyReference(DataSpace dataSpace)
+        {
+            var model = new EdmModel(dataSpace, 1.0);
+
+            var intType =
+                dataSpace == DataSpace.CSpace
+                    ? PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)
+                    : FakeSqlProviderServices.Instance.GetProviderManifest("2008").GetStoreTypes().Single(t => t.Name == "int");
+
+            var principal = 
+                new EntityType("P", "ns", dataSpace, new [] {"Id"}, new[] { EdmProperty.Primitive("Id", intType) });
+            var dependent = 
+                new EntityType("P", "ns", dataSpace, new [] {"Id"},
+                    new[] { EdmProperty.Primitive("Id", intType), EdmProperty.Primitive("NonKeyProperty", intType) });
+
+            foreach (var property in principal.Properties.Concat(dependent.Properties))
+            {
+                property.Nullable = false;
+            }
+
+            var associationType =
+                new AssociationType("AT", "ns", false, dataSpace)
+                    {
+                        Constraint = new ReferentialConstraint(
+                                new AssociationEndMember("P", principal.GetReferenceType(), RelationshipMultiplicity.One),
+                                new AssociationEndMember("C", dependent.GetReferenceType(), RelationshipMultiplicity.Many),
+                                principal.KeyProperties,
+                                dependent.Properties.Where(p => p.Name == "NonKeyProperty"))
+                    };
+
+            model.AddAssociationType(associationType);
+
+            var validationContext = new EdmModelValidationContext(model, true);
+
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            EdmModelSemanticValidationRules
+                .EdmAssociationType_ValidateReferentialConstraint
+                .Evaluate(validationContext, model.AssociationTypes.Single());
 
             return errorEventArgs;
         }

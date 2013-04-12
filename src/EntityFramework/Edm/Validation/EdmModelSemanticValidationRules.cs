@@ -741,8 +741,8 @@ namespace System.Data.Entity.Edm.Validation
 
                             // Need to constrain the dependent role in CSDL to Key properties if this is not a IsForeignKey
                             // relationship.
-                            if ((!isDependentRolePropertiesSubsetofKeyProperties)
-                                && !edmAssociationType.IsForeignKey(context.Model.SchemaVersion))
+                            if (!isDependentRolePropertiesSubsetofKeyProperties
+                                && !edmAssociationType.IsForeignKey(context.Model.SchemaVersion) && context.IsCSpace)
                             {
                                 context.AddError(
                                     dependentRoleEnd,
