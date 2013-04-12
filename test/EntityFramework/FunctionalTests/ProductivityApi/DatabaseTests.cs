@@ -243,6 +243,12 @@ END", DefaultDbName<SimpleModelContext>());
         [Fact]
         public void DatabaseExists_returns_true_for_existing_database_when_no_master_permissions()
         {
+            using (var context = new SimpleModelContext(SimpleConnectionString<SimpleModelContext>()))
+            {
+                context.Database.Delete();
+                context.Database.Initialize(force: false);
+            }
+
             using (var connection = new SqlConnection(SimpleConnectionString<SimpleModelContext>()))
             {
                 connection.Open();
@@ -274,12 +280,19 @@ END");
         [Fact]
         public void DatabaseExists_returns_false_for_existing_database_when_no_master_nor_database_permissions()
         {
+            using (var context = new SimpleModelContext(SimpleConnectionString<SimpleModelContext>()))
+            {
+                context.Database.Delete();
+                context.Database.Initialize(force: false);
+            }
+
             using (var connection = new SqlConnection(SimpleConnectionString<SimpleModelContext>()))
             {
                 connection.Open();
 
                 using (var command = connection.CreateCommand())
                 {
+                    // Double-check there's no user for this login
                     command.CommandText
                         = string.Format(
                             @"IF EXISTS (SELECT * FROM sys.sysusers WHERE name= N'EFTestSimpleModelUser')
@@ -319,6 +332,7 @@ END");
             var connectionString = SimpleAttachConnectionString<AttachedContext>();
             using (var context = new AttachedContext(connectionString))
             {
+                context.Database.Delete();
                 // Ensure database is initialized
                 context.Database.Initialize(force: true);
             }

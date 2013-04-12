@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Objects
 {
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data;
     using System.Data.Common;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.EntityClient;
@@ -15,6 +14,7 @@ namespace System.Data.Entity.Objects
     using System.Reflection;
     using System.Transactions;
     using Xunit;
+    using IsolationLevel = System.Data.IsolationLevel;
 
     public class TransactionLogEntry
     {
@@ -86,7 +86,8 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_connection_is_closed()
+        public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_connection_is_closed(
+            )
         {
             try
             {
@@ -107,24 +108,28 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_EntityConnection_is_opened_and_context_owns_connection()
+        public void
+            Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_EntityConnection_is_opened_and_context_owns_connection
+            ()
         {
             try
             {
-                var entityConnection = new EntityConnection(_entityConnectionString);
-                entityConnection.Open();
-
-                using (var ctx = CreateTransactionDbContext(entityConnection, contextOwnsConnection: true))
+                using (var entityConnection = new EntityConnection(_entityConnectionString))
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    entityConnection.Open();
 
-                    // Implicit transaction committed. 1 entity expected.
-                    Assert.Equal(1, LogEntriesCount());
-                    Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                    using (var ctx = CreateTransactionDbContext(entityConnection, contextOwnsConnection: true))
+                    {
+                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                        Assert.Equal(1, transactionLogEntry.TransactionCount);
+
+                        // Implicit transaction committed. 1 entity expected.
+                        Assert.Equal(1, LogEntriesCount());
+                        Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                    }
+
+                    Assert.Equal(ConnectionState.Closed, entityConnection.State);
                 }
-
-                Assert.Equal(ConnectionState.Closed, entityConnection.State);
             }
             finally
             {
@@ -133,23 +138,27 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_EntityConnection_is_opened_and_context_does_not_own_connection()
+        public void
+            Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_EntityConnection_is_opened_and_context_does_not_own_connection
+            ()
         {
             try
             {
-                var entityConnection = new EntityConnection(_entityConnectionString);
-                entityConnection.Open();
-                using (var ctx = CreateTransactionDbContext(entityConnection, contextOwnsConnection: false))
+                using (var entityConnection = new EntityConnection(_entityConnectionString))
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    entityConnection.Open();
+                    using (var ctx = CreateTransactionDbContext(entityConnection, contextOwnsConnection: false))
+                    {
+                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                        Assert.Equal(1, transactionLogEntry.TransactionCount);
 
-                    // Implicit transaction committed. 1 entity expected.
-                    Assert.Equal(1, LogEntriesCount());
+                        // Implicit transaction committed. 1 entity expected.
+                        Assert.Equal(1, LogEntriesCount());
+                    }
+
+                    Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
+                    Assert.Equal(ConnectionState.Open, entityConnection.State);
                 }
-
-                Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
-                Assert.Equal(ConnectionState.Open, entityConnection.State);
             }
             finally
             {
@@ -158,24 +167,28 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_SqlConnection_is_opened_and_context_owns_connection()
+        public void
+            Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_SqlConnection_is_opened_and_context_owns_connection
+            ()
         {
             try
             {
-                var sqlConnection = new SqlConnection(_connectionString);
-                sqlConnection.Open();
-
-                using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: true))
+                using (var sqlConnection = new SqlConnection(_connectionString))
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    sqlConnection.Open();
 
-                    // Implicit transaction committed. 1 entity expected.
-                    Assert.Equal(1, LogEntriesCount());
-                    Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                    using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: true))
+                    {
+                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                        Assert.Equal(1, transactionLogEntry.TransactionCount);
+
+                        // Implicit transaction committed. 1 entity expected.
+                        Assert.Equal(1, LogEntriesCount());
+                        Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                    }
+
+                    Assert.Equal(ConnectionState.Closed, sqlConnection.State);
                 }
-
-                Assert.Equal(ConnectionState.Closed, sqlConnection.State);
             }
             finally
             {
@@ -184,23 +197,27 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_SqlConnection_is_opened_and_context_does_not_own_connection()
+        public void
+            Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_SqlConnection_is_opened_and_context_does_not_own_connection
+            ()
         {
             try
             {
-                var sqlConnection = new SqlConnection(_connectionString);
-                sqlConnection.Open();
-
-                using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
+                using (var sqlConnection = new SqlConnection(_connectionString))
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    sqlConnection.Open();
 
-                    // Implicit transaction committed. 1 entity expected.
-                    Assert.Equal(1, LogEntriesCount());
+                    using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
+                    {
+                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                        Assert.Equal(1, transactionLogEntry.TransactionCount);
+
+                        // Implicit transaction committed. 1 entity expected.
+                        Assert.Equal(1, LogEntriesCount());
+                    }
+
+                    Assert.Equal(ConnectionState.Open, sqlConnection.State);
                 }
-
-                Assert.Equal(ConnectionState.Open, sqlConnection.State);
             }
             finally
             {
@@ -304,10 +321,10 @@ namespace System.Data.Entity.Objects
             {
                 var entityConnection = (EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection;
                 Assert.Null(GetCurrentEntityTransaction(entityConnection));
-                using (var transaction = ctx.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+                using (var transaction = ctx.Database.BeginTransaction(IsolationLevel.Serializable))
                 {
                     Assert.Equal(transaction.StoreTransaction, GetCurrentStoreTransaction(entityConnection));
-                    Assert.Equal(System.Data.IsolationLevel.Serializable, GetCurrentStoreTransaction(entityConnection).IsolationLevel);
+                    Assert.Equal(IsolationLevel.Serializable, GetCurrentStoreTransaction(entityConnection).IsolationLevel);
                 }
             }
         }
@@ -331,7 +348,9 @@ namespace System.Data.Entity.Objects
                             ctx.Database.UseTransaction(sqlTransaction);
                             // add entry using the DbContext
                             AddLogEntryToDatabase(ctx);
-                            Assert.Equal<DbTransaction>(sqlTransaction, GetCurrentStoreTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
+                            Assert.Equal<DbTransaction>(
+                                sqlTransaction,
+                                GetCurrentStoreTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
                         }
 
                         sqlTransaction.Commit();
@@ -366,7 +385,9 @@ namespace System.Data.Entity.Objects
                             ctx.Database.UseTransaction(sqlTransaction);
                             // add entry using the DbContext
                             AddLogEntryToDatabase(ctx);
-                            Assert.Equal<DbTransaction>(sqlTransaction, GetCurrentStoreTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
+                            Assert.Equal<DbTransaction>(
+                                sqlTransaction,
+                                GetCurrentStoreTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
                         }
 
                         sqlTransaction.Rollback();
@@ -400,7 +421,9 @@ namespace System.Data.Entity.Objects
                             var objCtx = ((IObjectContextAdapter)ctx).ObjectContext;
                             var commandText = @"INSERT INTO TransactionLog Values(-1)";
                             Assert.Equal(1, objCtx.ExecuteStoreCommand(commandText));
-                            Assert.Equal<DbTransaction>(sqlTransaction, GetCurrentStoreTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
+                            Assert.Equal<DbTransaction>(
+                                sqlTransaction,
+                                GetCurrentStoreTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
                         }
 
                         sqlTransaction.Commit();
@@ -434,8 +457,9 @@ namespace System.Data.Entity.Objects
 
                             Assert.Equal(0, CountLogEntriesUsingAdoNet(sqlConnection));
 
-                            Assert.Null(GetCurrentEntityTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
-                        
+                            Assert.Null(
+                                GetCurrentEntityTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
+
                             var objCtx = ((IObjectContextAdapter)ctx).ObjectContext;
                             var commandText = @"INSERT INTO TransactionLog Values(-1)";
                             Assert.Equal(1, objCtx.ExecuteStoreCommand(commandText));
@@ -470,8 +494,9 @@ namespace System.Data.Entity.Objects
 
                             Assert.Equal(0, CountLogEntriesUsingAdoNet(sqlConnection));
 
-                            Assert.Null(GetCurrentEntityTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
-                        
+                            Assert.Null(
+                                GetCurrentEntityTransaction(((EntityConnection)(((IObjectContextAdapter)ctx).ObjectContext).Connection)));
+
                             var objCtx = ((IObjectContextAdapter)ctx).ObjectContext;
                             var commandText = @"INSERT INTO TransactionLog Values(-1)";
                             Assert.Equal(1, objCtx.ExecuteStoreCommand(commandText));
@@ -551,7 +576,7 @@ namespace System.Data.Entity.Objects
                 using (var ctx = CreateTransactionDbContext())
                 {
                     ctx.Database.Connection.Open();
-                    using (var txn = ctx.Database.Connection.BeginTransaction()) 
+                    using (var txn = ctx.Database.Connection.BeginTransaction())
                     {
                         ctx.Database.UseTransaction(txn);
                         AddLogEntryToDatabase(ctx);
@@ -584,7 +609,7 @@ namespace System.Data.Entity.Objects
                     using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
                     {
                         Assert.Throws<InvalidOperationException>(() => ctx.Database.UseTransaction(sqlTransaction))
-                            .ValidateMessage("DbContext_InvalidTransactionNoConnection");
+                              .ValidateMessage("DbContext_InvalidTransactionNoConnection");
                     }
                 }
             }
@@ -610,7 +635,7 @@ namespace System.Data.Entity.Objects
                     using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
                     {
                         Assert.Throws<InvalidOperationException>(() => ctx.Database.UseTransaction(sqlTransaction))
-                            .ValidateMessage("DbContext_InvalidTransactionNoConnection");
+                              .ValidateMessage("DbContext_InvalidTransactionNoConnection");
                     }
                 }
             }
@@ -687,28 +712,28 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                Assert.Throws<TransactionAbortedException>(() =>
-                    {
-                        using (var txnScope = new TransactionScope())
+                Assert.Throws<TransactionAbortedException>(
+                    () =>
                         {
-                            using (var ctx = CreateTransactionDbContext())
+                            using (var txnScope = new TransactionScope())
                             {
-                                Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
-                                using (var txn = ctx.Database.BeginTransaction())
+                                using (var ctx = CreateTransactionDbContext())
                                 {
-                                    Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
-                                    AddLogEntryToDatabase(ctx);
-                                    txn.Rollback();
+                                    Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                                    using (var txn = ctx.Database.BeginTransaction())
+                                    {
+                                        Assert.Equal(ConnectionState.Open, ctx.Database.Connection.State);
+                                        AddLogEntryToDatabase(ctx);
+                                        txn.Rollback();
+                                    }
+
+                                    Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
                                 }
 
-                                Assert.Equal(ConnectionState.Closed, ctx.Database.Connection.State);
+                                txnScope.Complete();
                             }
-
-                            txnScope.Complete();
                         }
-                    }
-                );
-
+                    );
             }
             finally
             {
@@ -750,7 +775,9 @@ namespace System.Data.Entity.Objects
         #endregion
 
         [Fact]
-        public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_closed()
+        public void
+            Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_closed
+            ()
         {
             var entityConnection = new EntityConnection(_entityConnectionString);
             using (new TransactionScope())
@@ -767,7 +794,9 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_SqlConnection_is_closed()
+        public void
+            Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_SqlConnection_is_closed
+            ()
         {
             var connection = new SqlConnection(_connectionString);
             using (new TransactionScope())
@@ -784,7 +813,9 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_opened_inside_transaction_scope()
+        public void
+            Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_opened_inside_transaction_scope
+            ()
         {
             var connection = new EntityConnection(_entityConnectionString);
             using (new TransactionScope())
@@ -849,7 +880,9 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_created_outside_context_and_is_closed()
+        public void
+            Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_created_outside_context_and_is_closed
+            ()
         {
             try
             {
@@ -884,6 +917,7 @@ namespace System.Data.Entity.Objects
                     // Implicit transaction committed. 1 entity expected.
                     Assert.Equal(1, LogEntriesCount());
                     Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                    ctx.Connection.Close();
                 }
             }
             finally
@@ -893,20 +927,24 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_created_outside_context_and_is_open()
+        public void
+            Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_created_outside_context_and_is_open
+            ()
         {
             try
             {
-                var connection = new EntityConnection(_entityConnectionString);
-                connection.Open();
-                using (var ctx = CreateTransactionContext(connection))
+                using (var connection = new EntityConnection(_entityConnectionString))
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
+                    connection.Open();
+                    using (var ctx = CreateTransactionContext(connection))
+                    {
+                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                        Assert.Equal(1, transactionLogEntry.TransactionCount);
 
-                    // Implicit transaction committed. 1 entity expected.
-                    Assert.Equal(1, LogEntriesCount(connection));
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                        // Implicit transaction committed. 1 entity expected.
+                        Assert.Equal(1, LogEntriesCount(connection));
+                        Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                    }
                 }
             }
             finally
@@ -916,7 +954,8 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_is_closed()
+        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_is_closed
+            ()
         {
             using (new TransactionScope())
             {
@@ -933,7 +972,9 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_closed()
+        public void
+            Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_closed
+            ()
         {
             using (new TransactionScope())
             {
@@ -951,7 +992,9 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_closed_plus_AdoNet_calls()
+        public void
+            Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_closed_plus_AdoNet_calls
+            ()
         {
             using (new TransactionScope())
             {
@@ -971,7 +1014,9 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed()
+        public void
+            Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed
+            ()
         {
             var connection = new EntityConnection(_entityConnectionString);
             using (new TransactionScope())
@@ -989,7 +1034,9 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed_plus_AdoNet_calls()
+        public void
+            Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed_plus_AdoNet_calls
+            ()
         {
             var connection = new EntityConnection(_entityConnectionString);
             using (new TransactionScope())
@@ -1008,7 +1055,9 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_only_one_transaction_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed_plus_AdoNet_calls_and_transaction_is_completed()
+        public void
+            Verify_only_one_transaction_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed_plus_AdoNet_calls_and_transaction_is_completed
+            ()
         {
             try
             {
@@ -1051,6 +1100,7 @@ namespace System.Data.Entity.Objects
                     var transactionLogEntry = AddLogEntryToDatabase(ctx);
                     Assert.Equal(1, transactionLogEntry.TransactionCount);
                     Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                    ctx.Connection.Close();
                 }
             }
 
@@ -1059,17 +1109,21 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_open()
+        public void
+            Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_open
+            ()
         {
             using (new TransactionScope())
             {
-                var connection = new EntityConnection(_entityConnectionString);
-                connection.Open();
-                using (var ctx = CreateTransactionContext(connection))
+                using (var connection = new EntityConnection(_entityConnectionString))
                 {
-                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-                    Assert.Equal(1, transactionLogEntry.TransactionCount);
-                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                    connection.Open();
+                    using (var ctx = CreateTransactionContext(connection))
+                    {
+                        var transactionLogEntry = AddLogEntryToDatabase(ctx);
+                        Assert.Equal(1, transactionLogEntry.TransactionCount);
+                        Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                    }
                 }
             }
 
@@ -1186,6 +1240,7 @@ namespace System.Data.Entity.Objects
                     transactionLogEntry = AddLogEntryToDatabase(ctx);
                     Assert.Equal(1, transactionLogEntry.TransactionCount);
                     Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                    ctx.Connection.Close();
                 }
             }
 
@@ -1238,6 +1293,7 @@ namespace System.Data.Entity.Objects
                     Assert.Equal(1, transactionLogEntry.TransactionCount);
                     Assert.Equal(ConnectionState.Open, ctx.Connection.State);
                 }
+                ctx.Connection.Close();
             }
 
             // "Transaction not commited. No entities should be saved to the database."
@@ -1258,6 +1314,7 @@ namespace System.Data.Entity.Objects
                     Assert.Equal(1, transactionLogEntry.TransactionCount);
                     Assert.Equal(ConnectionState.Open, ctx.Connection.State);
                 }
+                ctx.Connection.Close();
             }
 
             // "Transaction not commited. No entities should be saved to the database."
@@ -1281,6 +1338,7 @@ namespace System.Data.Entity.Objects
 
                     Transaction.Current = null;
                 }
+                ctx.Connection.Close();
             }
 
             // Transaction not commited. No entities should be saved to the database.
@@ -1299,6 +1357,7 @@ namespace System.Data.Entity.Objects
                     Assert.Equal(1, transactionLogEntry.TransactionCount);
                     Assert.Equal(ConnectionState.Open, ctx.Connection.State);
                 }
+                ctx.Connection.Close();
             }
 
             // "Transaction not commited. No entities should be saved to the database."
@@ -1321,9 +1380,10 @@ namespace System.Data.Entity.Objects
                             ctx.AddObject("Entities.TransactionLog", transactionLogEntry);
 
                             Assert.Throws<EntityException>(() => ctx.SaveChanges())
-                                .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                                  .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
                         }
                     }
+                    ctx.Connection.Close();
                 }
             }
             finally
@@ -1348,6 +1408,7 @@ namespace System.Data.Entity.Objects
                                   .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
                         }
                     }
+                    ctx.Connection.Close();
                 }
             }
             finally
@@ -1370,6 +1431,7 @@ namespace System.Data.Entity.Objects
                         Assert.Equal(2, transactionLogEntry.TransactionCount);
                         Assert.Equal(ConnectionState.Open, ctx.Connection.State);
                     }
+                    ctx.Connection.Close();
                 }
             }
 
@@ -1410,7 +1472,8 @@ namespace System.Data.Entity.Objects
         ////}
 
         [Fact]
-        public void Verify_using_CommittableTransaction_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created()
+        public void
+            Verify_using_CommittableTransaction_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created()
         {
             using (var ctx = CreateTransactionContext())
             {
@@ -1426,6 +1489,7 @@ namespace System.Data.Entity.Objects
                         Assert.Equal(ConnectionState.Open, ctx.Connection.State);
                     }
                 }
+                ctx.Connection.Close();
             }
 
             // "Transaction not commited. No entities should be saved to the database."
@@ -1445,8 +1509,9 @@ namespace System.Data.Entity.Objects
                         using (var committableTransaction = new CommittableTransaction())
                         {
                             Assert.Throws<EntityException>(() => ctx.Connection.EnlistTransaction(committableTransaction))
-                                .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                                  .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
                         }
+                        ctx.Connection.Close();
                     }
                 }
             }
@@ -1473,9 +1538,10 @@ namespace System.Data.Entity.Objects
                             ctx.AddObject("Entities.TransactionLog", transactionLogEntry);
 
                             Assert.Throws<EntityException>(() => ctx.SaveChanges())
-                                .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                                  .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
                         }
                     }
+                    ctx.Connection.Close();
                 }
             }
             finally
@@ -1507,6 +1573,7 @@ namespace System.Data.Entity.Objects
                     // "Implicit transaction committed. 1 entity expected."
                     Assert.Equal(1, LogEntriesCount());
                     Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+                    ctx.Connection.Close();
                 }
             }
             finally
@@ -1516,7 +1583,9 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_no_implicit_transaction_created_when_if_enlisted_in_explicit_transaction_after_transaction_from_previous_operation_disposed()
+        public void
+            Verify_no_implicit_transaction_created_when_if_enlisted_in_explicit_transaction_after_transaction_from_previous_operation_disposed
+            ()
         {
             using (var ctx = CreateObjectContext())
             {
@@ -1541,6 +1610,7 @@ namespace System.Data.Entity.Objects
 
                 // "Transaction not commited. No entities should be saved to the database."
                 Assert.Equal(0, LogEntriesCount());
+                ctx.Connection.Close();
             }
         }
 
@@ -1597,6 +1667,7 @@ namespace System.Data.Entity.Objects
 
                     // "Implicit transaction committed. 1 entity expected."
                     Assert.Equal(1, CreateTransactionContext().LogEntries.Count());
+                    ctx.Connection.Close();
                 }
             }
             finally
@@ -1625,6 +1696,7 @@ namespace System.Data.Entity.Objects
                     Assert.Equal(1, transactionLogEntry.TransactionCount);
                     Assert.Equal(ConnectionState.Open, ctx.Connection.State);
                 }
+                ctx.Connection.Close();
             }
 
             // "Transaction not commited. No entities should be saved to the database."
@@ -1653,6 +1725,7 @@ namespace System.Data.Entity.Objects
                     Assert.Equal(1, transactionLogEntry.TransactionCount);
                     Assert.Equal(ConnectionState.Open, ctx.Connection.State);
                 }
+                ctx.Connection.Close();
             }
 
             // "Transaction not commited. No entities should be saved to the database."
@@ -1679,6 +1752,7 @@ namespace System.Data.Entity.Objects
                     Assert.Equal(1, transactionLogEntry.TransactionCount);
                     Assert.Equal(ConnectionState.Closed, ctx.Connection.State);
                 }
+                ctx.Connection.Close();
             }
 
             // "Transaction not commited. No entities should be saved to the database."
@@ -1700,9 +1774,10 @@ namespace System.Data.Entity.Objects
                             ctx.Connection.EnlistTransaction(committableTransaction);
 
                             Assert.Throws<EntityException>(() => ctx.Connection.EnlistTransaction(newCommittableTransaction))
-                                .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
+                                  .ValidateMessage("EntityClient_ProviderSpecificError", "EnlistTransaction");
                         }
                     }
+                    ctx.Connection.Close();
                 }
             }
             finally
@@ -1730,6 +1805,7 @@ namespace System.Data.Entity.Objects
                             ctx.Connection.EnlistTransaction(newCommittableTransaction);
                         }
                     }
+                    ctx.Connection.Close();
                 }
             }
             finally
@@ -1793,7 +1869,8 @@ namespace System.Data.Entity.Objects
             return ctx;
         }
 
-        private TransactionDbContext CreateTransactionDbContext(SqlConnection connection, DbCompiledModel compiledModel, bool contextOwnsConnection)
+        private TransactionDbContext CreateTransactionDbContext(
+            SqlConnection connection, DbCompiledModel compiledModel, bool contextOwnsConnection)
         {
             var ctx = new TransactionDbContext(connection, compiledModel, contextOwnsConnection);
 
@@ -1836,7 +1913,7 @@ namespace System.Data.Entity.Objects
 
         private void AddLogEntryUsingAdoNet(SqlConnection connection, SqlTransaction sqlTransaction = null)
         {
-            bool shouldCloseConnection = false;
+            var shouldCloseConnection = false;
             if (connection.State == ConnectionState.Closed)
             {
                 connection.Open();
@@ -1860,7 +1937,7 @@ namespace System.Data.Entity.Objects
 
         private int CountLogEntriesUsingAdoNet(SqlConnection connection, SqlTransaction sqlTransaction = null)
         {
-            bool shouldCloseConnection = false;
+            var shouldCloseConnection = false;
             if (connection.State == ConnectionState.Closed)
             {
                 connection.Open();
@@ -1874,10 +1951,11 @@ namespace System.Data.Entity.Objects
                 command.Transaction = sqlTransaction;
             }
             command.CommandText = @"SELECT COUNT(*) FROM TransactionLog";
-            int count = -1;
+            var count = -1;
             using (var reader = command.ExecuteReader())
             {
-                if (reader.Read() && false == reader.IsDBNull(0))
+                if (reader.Read()
+                    && false == reader.IsDBNull(0))
                 {
                     count = reader.GetInt32(0);
                 }
@@ -1919,7 +1997,7 @@ namespace System.Data.Entity.Objects
             {
                 masterConnection.Open();
                 var createDatabaseScript = string.Format(
-@"if exists(select * from sys.databases where name = '{0}')
+                    @"if exists(select * from sys.databases where name = '{0}')
 drop database {0}
 create database {0}", DatabaseName);
                 new SqlCommand(createDatabaseScript, masterConnection).ExecuteNonQuery();
@@ -1930,7 +2008,7 @@ create database {0}", DatabaseName);
             {
                 connection.Open();
                 new SqlCommand(
-@"CREATE TABLE [dbo].[TransactionLog](
+                    @"CREATE TABLE [dbo].[TransactionLog](
   [ID] [int] IDENTITY(1,1) NOT NULL,
   [TransactionCount] [int] NOT NULL,
 CONSTRAINT [PK_TransactionLog] PRIMARY KEY CLUSTERED ([ID] ASC)
@@ -1938,7 +2016,7 @@ WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW
 ON [PRIMARY]", connection).ExecuteNonQuery();
 
                 new SqlCommand(
-@"CREATE PROCEDURE [dbo].[CreateTransactionLogEntry] 
+                    @"CREATE PROCEDURE [dbo].[CreateTransactionLogEntry] 
 AS
 BEGIN
   DECLARE @tranCount AS int = @@TRANCOUNT  -- assigning to a variable prevents from counting an implicit transaction created for insert
@@ -1949,7 +2027,7 @@ BEGIN
 END", connection).ExecuteNonQuery();
 
                 new SqlCommand(
-@"CREATE PROCEDURE [dbo].[TransactionLogEntry_Insert] 
+                    @"CREATE PROCEDURE [dbo].[TransactionLogEntry_Insert] 
 AS
 BEGIN
   DECLARE @tranCount AS int = @@TRANCOUNT
