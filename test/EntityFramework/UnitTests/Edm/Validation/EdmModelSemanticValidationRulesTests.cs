@@ -134,6 +134,24 @@ namespace System.Data.Entity.Edm.Validation
         }
 
         [Fact]
+        public void EdmType_SystemNamespaceEncountered_not_triggered_for_row_types()
+        {
+            var rowType =
+                new RowType(new[] { EdmProperty.Primitive("Property", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) });
+
+            var validationContext
+                = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            EdmModelSemanticValidationRules
+                .EdmType_SystemNamespaceEncountered
+                .Evaluate(validationContext, rowType);
+
+            Assert.Null(errorEventArgs);
+        }
+
+        [Fact]
         public void EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2()
         {
             var errorEventArgs = EdmFunction_ComposableFunctionImportsNotAllowed_V1_V2_runner(1.0);

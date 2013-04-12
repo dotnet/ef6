@@ -108,7 +108,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     Add a property mapping as a child of this complex property mapping
         /// </summary>
         /// <param name="propertyMapping"> The mapping that needs to be added </param>
-        public override void AddProperty(StoragePropertyMapping propertyMapping)
+        internal override void AddProperty(StoragePropertyMapping propertyMapping)
         {
             m_properties.Add(propertyMapping.EdmProperty.Name, propertyMapping);
         }

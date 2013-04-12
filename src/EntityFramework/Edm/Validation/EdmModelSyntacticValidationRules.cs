@@ -29,7 +29,7 @@ namespace System.Data.Entity.Edm.Validation
                 (context, item) =>
                     {
                         if (!string.IsNullOrWhiteSpace(item.Name)
-                            && item.Name.Length > 480)
+                            && item.Name.Length > 480 && !(item is RowType))
                         {
                             context.AddError(
                                 item,
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Edm.Validation
                     {
                         if (!string.IsNullOrWhiteSpace(item.Name)
                             && (context.IsCSpace && !item.Name.IsValidUndottedName())
-                            || item.Name.Contains("."))
+                            || (item.Name.Contains(".") && !(item is RowType)))
                         {
                             context.AddError(
                                 (MetadataItem)item,

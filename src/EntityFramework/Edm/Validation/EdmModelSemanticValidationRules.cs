@@ -57,7 +57,7 @@ namespace System.Data.Entity.Edm.Validation
             new EdmModelValidationRule<EdmType>(
                 (context, edmType) =>
                     {
-                        if (IsEdmSystemNamespace(edmType.NamespaceName))
+                        if (IsEdmSystemNamespace(edmType.NamespaceName) && edmType.BuiltInTypeKind != BuiltInTypeKind.RowType)
                         {
                             context.AddError(
                                 edmType,

@@ -80,10 +80,16 @@ namespace System.Data.Entity.Edm.Serialization
             Action<DataModelErrorEventArgs> onErrorAction =
                 e => 
                     {
-                        modelIsValid = false;
-                        if (OnError != null)
+                        // Ssdl serializer writes metadata items marked as invalid as comments
+                        // therefore we should not report errors for those.
+                        var metadataItem = e.Item as MetadataItem;
+                        if (metadataItem == null || !MetadataItemHelper.IsInvalid(metadataItem))
                         {
-                            OnError(this, e);
+                            modelIsValid = false;
+                            if (OnError != null)
+                            {
+                                OnError(this, e);
+                            }
                         }
                     };
 

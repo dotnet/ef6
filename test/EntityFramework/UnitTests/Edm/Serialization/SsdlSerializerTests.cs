@@ -254,5 +254,27 @@ namespace System.Data.Entity.Edm.Serialization
                     .Descendants(Ssdl3Ns + "Property").
                     Single(p => (string)p.Attribute("Name") == propertyName);
         }
+
+        [Fact]
+        public void Validation_error_not_reported_for_types_marked_as_invalid()
+        {
+            var invalidAttribute =
+                MetadataProperty.Create(
+                    "EdmSchemaInvalid",
+                    TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    true);
+
+            var model = new EdmModel(DataSpace.SSpace);
+            model.AddItem(
+                EntityType.Create("E", "N", DataSpace.SSpace, new string[0], new EdmMember[0], new[] { invalidAttribute }));
+
+            using (var writer = XmlWriter.Create(new StringBuilder()))
+            {
+                var ssdlSerializer = new SsdlSerializer();
+                ssdlSerializer.OnError += (_, e) => { throw new Exception("Should not be invoked."); };
+
+                Assert.True(ssdlSerializer.Serialize(model, "N", "invName", "42", writer));
+            }
+        }
     }
 }

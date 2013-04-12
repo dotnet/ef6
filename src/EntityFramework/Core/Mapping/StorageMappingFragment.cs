@@ -303,7 +303,7 @@ namespace System.Data.Entity.Core.Mapping
         ///     Add a property mapping as a child of this mapping fragment
         /// </summary>
         /// <param name="propertyMapping"> child property mapping to be added </param>
-        public override void AddProperty(StoragePropertyMapping propertyMapping)
+        internal override void AddProperty(StoragePropertyMapping propertyMapping)
         {
             m_properties.Add(propertyMapping);
         }
