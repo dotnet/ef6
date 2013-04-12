@@ -64,20 +64,20 @@ namespace System.Data.Entity.Objects
 
     public class TransactionsTests : FunctionalTestBase, IUseFixture<TransactionFixture>
     {
-        private string entityConnectionString;
-        private string connectionString;
-        private string modelDirectory;
-        private MetadataWorkspace workspace;
-        private DbCompiledModel compiledModel;
+        private string _entityConnectionString;
+        private string _connectionString;
+        private string _modelDirectory;
+        private MetadataWorkspace _workspace;
+        private DbCompiledModel _compiledModel;
 
         public void SetFixture(TransactionFixture data)
         {
-            compiledModel = data.CompiledModel;
-            connectionString = data.ConnectionString;
+            _compiledModel = data.CompiledModel;
+            _connectionString = data.ConnectionString;
 
-            entityConnectionString = string.Format(
+            _entityConnectionString = string.Format(
                 @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Objects.TransactionsModel.msl;provider=System.Data.SqlClient;provider connection string=""{0}""",
-                connectionString);
+                _connectionString);
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                var entityConnection = new EntityConnection(entityConnectionString);
+                var entityConnection = new EntityConnection(_entityConnectionString);
                 entityConnection.Open();
 
                 using (var ctx = CreateTransactionDbContext(entityConnection, contextOwnsConnection: true))
@@ -132,7 +132,7 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                var entityConnection = new EntityConnection(entityConnectionString);
+                var entityConnection = new EntityConnection(_entityConnectionString);
                 entityConnection.Open();
                 using (var ctx = CreateTransactionDbContext(entityConnection, contextOwnsConnection: false))
                 {
@@ -157,10 +157,10 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                var sqlConnection = new SqlConnection(connectionString);
+                var sqlConnection = new SqlConnection(_connectionString);
                 sqlConnection.Open();
 
-                using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: true))
+                using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: true))
                 {
                     var transactionLogEntry = AddLogEntryToDatabase(ctx);
                     Assert.Equal(1, transactionLogEntry.TransactionCount);
@@ -183,10 +183,10 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                var sqlConnection = new SqlConnection(connectionString);
+                var sqlConnection = new SqlConnection(_connectionString);
                 sqlConnection.Open();
 
-                using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
                 {
                     var transactionLogEntry = AddLogEntryToDatabase(ctx);
                     Assert.Equal(1, transactionLogEntry.TransactionCount);
@@ -208,13 +208,13 @@ namespace System.Data.Entity.Objects
         [Fact]
         public void Passing_null_to_UseStoreTransaction_Clears_Current_Transaction()
         {
-            using (var sqlConnection = new SqlConnection(connectionString))
+            using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 sqlConnection.Open();
 
                 using (var sqlTransaction = sqlConnection.BeginTransaction())
                 {
-                    using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                    using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
                     {
                         // set up EntityConnection with a transaction which we test we can subsequently clear below
                         ctx.Database.UseTransaction(sqlTransaction);
@@ -312,7 +312,7 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var sqlConnection = new SqlConnection(connectionString))
+                using (var sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
 
@@ -321,7 +321,7 @@ namespace System.Data.Entity.Objects
                         // add entry using the external SqlConnection
                         AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
 
-                        using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                        using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
                         {
                             ctx.Database.UseTransaction(sqlTransaction);
                             // add entry using the DbContext
@@ -347,7 +347,7 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var sqlConnection = new SqlConnection(connectionString))
+                using (var sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
 
@@ -356,7 +356,7 @@ namespace System.Data.Entity.Objects
                         // add entry using the external SqlConnection
                         AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
 
-                        using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                        using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
                         {
                             ctx.Database.UseTransaction(sqlTransaction);
                             // add entry using the DbContext
@@ -382,13 +382,13 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var sqlConnection = new SqlConnection(connectionString))
+                using (var sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
 
                     using (var sqlTransaction = sqlConnection.BeginTransaction())
                     {
-                        using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                        using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
                         {
                             ctx.Database.UseTransaction(sqlTransaction);
 
@@ -415,13 +415,13 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var sqlConnection = new SqlConnection(connectionString))
+                using (var sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
 
                     using (var sqlTransaction = sqlConnection.BeginTransaction())
                     {
-                        using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                        using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
                         {
                             ctx.Database.UseTransaction(sqlTransaction);
 
@@ -451,13 +451,13 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var sqlConnection = new SqlConnection(connectionString))
+                using (var sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
 
                     using (var sqlTransaction = sqlConnection.BeginTransaction())
                     {
-                        using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                        using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
                         {
                             ctx.Database.UseTransaction(sqlTransaction);
 
@@ -568,7 +568,7 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var sqlConnection = new SqlConnection(connectionString))
+                using (var sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
 
@@ -576,7 +576,7 @@ namespace System.Data.Entity.Objects
                     AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
                     sqlTransaction.Commit();
 
-                    using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                    using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
                     {
                         Assert.Throws<InvalidOperationException>(() => ctx.Database.UseTransaction(sqlTransaction))
                             .ValidateMessage("DbContext_InvalidTransactionNoConnection");
@@ -594,7 +594,7 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                using (var sqlConnection = new SqlConnection(connectionString))
+                using (var sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
 
@@ -602,7 +602,7 @@ namespace System.Data.Entity.Objects
                     AddLogEntryUsingAdoNet(sqlConnection, sqlTransaction);
                     sqlTransaction.Rollback();
 
-                    using (var ctx = CreateTransactionDbContext(sqlConnection, compiledModel, contextOwnsConnection: false))
+                    using (var ctx = CreateTransactionDbContext(sqlConnection, _compiledModel, contextOwnsConnection: false))
                     {
                         Assert.Throws<InvalidOperationException>(() => ctx.Database.UseTransaction(sqlTransaction))
                             .ValidateMessage("DbContext_InvalidTransactionNoConnection");
@@ -747,7 +747,7 @@ namespace System.Data.Entity.Objects
         [Fact]
         public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_closed()
         {
-            var entityConnection = new EntityConnection(entityConnectionString);
+            var entityConnection = new EntityConnection(_entityConnectionString);
             using (new TransactionScope())
             {
                 using (var ctx = CreateTransactionDbContext(entityConnection, true))
@@ -764,10 +764,10 @@ namespace System.Data.Entity.Objects
         [Fact]
         public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_SqlConnection_is_closed()
         {
-            var connection = new SqlConnection(connectionString);
+            var connection = new SqlConnection(_connectionString);
             using (new TransactionScope())
             {
-                using (var ctx = CreateTransactionDbContext(connection, compiledModel, contextOwnsConnection: true))
+                using (var ctx = CreateTransactionDbContext(connection, _compiledModel, contextOwnsConnection: true))
                 {
                     var transactionLogEntry = AddLogEntryToDatabase(ctx);
                     Assert.Equal(1, transactionLogEntry.TransactionCount);
@@ -781,7 +781,7 @@ namespace System.Data.Entity.Objects
         [Fact]
         public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_opened_inside_transaction_scope()
         {
-            var connection = new EntityConnection(entityConnectionString);
+            var connection = new EntityConnection(_entityConnectionString);
             using (new TransactionScope())
             {
                 connection.Open();
@@ -848,7 +848,7 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                var connection = new EntityConnection(entityConnectionString);
+                var connection = new EntityConnection(_entityConnectionString);
                 using (var ctx = CreateTransactionContext(connection))
                 {
                     var transactionLogEntry = AddLogEntryToDatabase(ctx);
@@ -892,7 +892,7 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                var connection = new EntityConnection(entityConnectionString);
+                var connection = new EntityConnection(_entityConnectionString);
                 connection.Open();
                 using (var ctx = CreateTransactionContext(connection))
                 {
@@ -932,7 +932,7 @@ namespace System.Data.Entity.Objects
         {
             using (new TransactionScope())
             {
-                var connection = new EntityConnection(entityConnectionString);
+                var connection = new EntityConnection(_entityConnectionString);
                 using (var ctx = CreateTransactionContext(connection))
                 {
                     var transactionLogEntry = AddLogEntryToDatabase(ctx);
@@ -950,7 +950,7 @@ namespace System.Data.Entity.Objects
         {
             using (new TransactionScope())
             {
-                var connection = new EntityConnection(entityConnectionString);
+                var connection = new EntityConnection(_entityConnectionString);
                 AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
 
                 using (var ctx = CreateTransactionContext(connection))
@@ -968,7 +968,7 @@ namespace System.Data.Entity.Objects
         [Fact]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed()
         {
-            var connection = new EntityConnection(entityConnectionString);
+            var connection = new EntityConnection(_entityConnectionString);
             using (new TransactionScope())
             {
                 using (var ctx = CreateTransactionContext(connection))
@@ -986,7 +986,7 @@ namespace System.Data.Entity.Objects
         [Fact]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed_plus_AdoNet_calls()
         {
-            var connection = new EntityConnection(entityConnectionString);
+            var connection = new EntityConnection(_entityConnectionString);
             using (new TransactionScope())
             {
                 AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
@@ -1007,7 +1007,7 @@ namespace System.Data.Entity.Objects
         {
             try
             {
-                var connection = new EntityConnection(entityConnectionString);
+                var connection = new EntityConnection(_entityConnectionString);
                 using (var transactionScope = new TransactionScope())
                 {
                     AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
@@ -1058,7 +1058,7 @@ namespace System.Data.Entity.Objects
         {
             using (new TransactionScope())
             {
-                var connection = new EntityConnection(entityConnectionString);
+                var connection = new EntityConnection(_entityConnectionString);
                 connection.Open();
                 using (var ctx = CreateTransactionContext(connection))
                 {
@@ -1752,7 +1752,7 @@ namespace System.Data.Entity.Objects
 
         private TransactionContext CreateTransactionContext()
         {
-            var ctx = new TransactionContext(entityConnectionString);
+            var ctx = new TransactionContext(_entityConnectionString);
             ctx.MetadataWorkspace.LoadFromAssembly(Assembly.GetExecutingAssembly());
 
             return ctx;
@@ -1768,7 +1768,7 @@ namespace System.Data.Entity.Objects
 
         private ObjectContext CreateObjectContext()
         {
-            var ctx = new ObjectContext(entityConnectionString);
+            var ctx = new ObjectContext(_entityConnectionString);
             ctx.MetadataWorkspace.LoadFromAssembly(Assembly.GetExecutingAssembly());
 
             return ctx;
@@ -1776,7 +1776,7 @@ namespace System.Data.Entity.Objects
 
         private TransactionDbContext CreateTransactionDbContext()
         {
-            var ctx = new TransactionDbContext(entityConnectionString);
+            var ctx = new TransactionDbContext(_entityConnectionString);
 
             return ctx;
         }
@@ -1892,7 +1892,7 @@ namespace System.Data.Entity.Objects
         /// </summary>
         private void ResetTables()
         {
-            using (var connection = new SqlConnection(connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 new SqlCommand("DELETE FROM TransactionLog", connection).ExecuteNonQuery();
