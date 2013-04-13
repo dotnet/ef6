@@ -160,6 +160,7 @@
     <Compile Include="ProductivityApi\TimeoutTests.cs" />
     <Compile Include="Query\ApplyOpRulesTests.cs" />
     <Compile Include="Query\LinqToEntities\EnumTests.cs" />
+    <Compile Include="Query\LinqToEntities\SqlCeFunctionsTests.cs" />
     <Compile Include="Query\ModelDefinedFunctionTests.cs" />
     <Compile Include="Query\ProductModel.cs" />
     <Compile Include="Query\StoredProcedures\IceAndFireModel.cs" />
@@ -179,6 +180,9 @@
     <Compile Include="TestModels\ArubaModel\ArubaTask.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaTaskInfo.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaTestFailure.cs" />
+    <Compile Include="TestModels\ArubaCeModel\ArubaCeContext.cs" />
+    <Compile Include="TestModels\ArubaCeModel\ArubaCeInitializer.cs" />
+    <Compile Include="TestModels\ArubaCeModel\ArubaAllCeTypes.cs" />
     <Compile Include="ViewGeneration\PregenContextEdmxViews.cs" />
     <Compile Include="ViewGeneration\PregenContextViews.cs" />
     <Compile Include="ViewGeneration\PregeneratedViewsTests.cs" />
@@ -335,6 +339,7 @@
     <Compile Include="Migrations\TestHelpers\DbProviders.cs" />
     <Compile Include="TestHelpers\PartialTrustSandbox.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if not exist "$(TargetDir)x86" md "$(TargetDir)x86"

@@ -356,6 +356,14 @@ namespace System.Data.Entity.SqlServerCompact.Resources
         {
             return EntityRes.GetString(EntityRes.ColumnGreaterThanMaxLengthNotSupported, p0, p1);
         }
+
+        /// <summary>
+        ///     A string like "This function can only be invoked from LINQ to Entities."
+        /// </summary>
+        internal static string ELinq_DbFunctionDirectCall
+        {
+            get { return EntityRes.GetString(EntityRes.ELinq_DbFunctionDirectCall); }
+        }
     }
 
     /// <summary>
@@ -440,6 +448,7 @@ namespace System.Data.Entity.SqlServerCompact.Resources
         internal const string CreateDatabaseNotAllowedWithinTransaction = "CreateDatabaseNotAllowedWithinTransaction";
         internal const string DeleteDatabaseWithOpenConnection = "DeleteDatabaseWithOpenConnection";
         internal const string ColumnGreaterThanMaxLengthNotSupported = "ColumnGreaterThanMaxLengthNotSupported";
+        internal const string ELinq_DbFunctionDirectCall = "ELinq_DbFunctionDirectCall";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

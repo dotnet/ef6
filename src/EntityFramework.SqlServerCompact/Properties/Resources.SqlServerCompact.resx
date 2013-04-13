@@ -246,4 +246,7 @@
   <data name="ColumnGreaterThanMaxLengthNotSupported" xml:space="preserve">
     <value>{0} column with MaxLength greater than {1} is not supported.</value>
   </data>
+  <data name="ELinq_DbFunctionDirectCall" xml:space="preserve">
+    <value>This function can only be invoked from LINQ to Entities.</value>
+  </data>
 </root>

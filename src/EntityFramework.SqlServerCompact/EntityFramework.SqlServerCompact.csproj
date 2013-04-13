@@ -115,6 +115,7 @@
     <Compile Include="SqlCeProviderManifest.cs" />
     <Compile Include="SqlCeProviderServices.cs" />
     <Compile Include="SqlDdlBuilder.cs" />
+    <Compile Include="SqlCeFunctions.cs" />
     <Compile Include="SqlGen\DmlSqlGenerator.cs" />
     <Compile Include="SqlGen\ISqlFragment.cs" />
     <Compile Include="SqlGen\JoinSymbol.cs" />
