@@ -2,12 +2,15 @@
 
 namespace System.Data.Entity.Internal
 {
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Configuration;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Linq;
 
     /// <summary>
     ///     A simple representation of an app.config or web.config file.
@@ -25,6 +28,9 @@ namespace System.Data.Entity.Internal
 
         private readonly Lazy<IDbConnectionFactory> _defaultDefaultConnectionFactory =
             new Lazy<IDbConnectionFactory>(() => null, isThreadSafe: true);
+
+        private readonly ProviderServicesFactory _providerServicesFactory;
+        private readonly Lazy<IList<NamedDbProviderService>> _providerServices;
 
         /// <summary>
         ///     Initializes a new instance of AppConfig based on supplied configuration
@@ -67,13 +73,25 @@ namespace System.Data.Entity.Internal
         internal AppConfig(
             ConnectionStringSettingsCollection connectionStrings,
             KeyValueConfigurationCollection appSettings,
-            EntityFrameworkSection entityFrameworkSettings)
+            EntityFrameworkSection entityFrameworkSettings,
+            ProviderServicesFactory providerServicesFactory = null)
         {
             DebugCheck.NotNull(connectionStrings);
 
             _connectionStrings = connectionStrings;
             _appSettings = appSettings ?? new KeyValueConfigurationCollection();
             _entityFrameworkSettings = entityFrameworkSettings ?? new EntityFrameworkSection();
+            _providerServicesFactory = providerServicesFactory ?? new ProviderServicesFactory();
+
+            _providerServices = new Lazy<IList<NamedDbProviderService>>(
+                () => _entityFrameworkSettings
+                          .Providers
+                          .OfType<ProviderElement>()
+                          .Select(
+                              e => new NamedDbProviderService(
+                                       e.InvariantName,
+                                       _providerServicesFactory.GetInstance(e.ProviderTypeName, e.InvariantName)))
+                          .ToList());
 
             if (_entityFrameworkSettings.DefaultConnectionFactory.ElementInformation.IsPresent)
             {
@@ -139,11 +157,6 @@ namespace System.Data.Entity.Internal
             return settings;
         }
 
-        public virtual ProviderConfig Providers
-        {
-            get { return new ProviderConfig(_entityFrameworkSettings); }
-        }
-
         public virtual InitializerConfig Initializers
         {
             get { return new InitializerConfig(_entityFrameworkSettings, _appSettings); }
@@ -152,6 +165,11 @@ namespace System.Data.Entity.Internal
         public virtual string ConfigurationTypeName
         {
             get { return _entityFrameworkSettings.ConfigurationTypeName; }
+        }
+
+        public virtual IList<NamedDbProviderService> DbProviderServices
+        {
+            get { return _providerServices.Value; }
         }
     }
 }

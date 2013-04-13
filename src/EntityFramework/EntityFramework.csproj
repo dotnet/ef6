@@ -103,6 +103,7 @@
     <Compile Include="Config\DefaultExecutionStrategyResolver.cs" />
     <Compile Include="Config\ExecutionStrategyResolver.cs" />
     <Compile Include="Config\InvariantNameResolver.cs" />
+    <Compile Include="Config\NamedDbProviderService.cs" />
     <Compile Include="Config\TransientDependencyResolver.cs" />
     <Compile Include="Config\DatabaseInitializerResolver.cs" />
     <Compile Include="Config\DbConfiguration.cs" />
@@ -437,7 +438,6 @@
     <Compile Include="ModelConfiguration\Edm\Services\FunctionParameterMappingGenerator.cs" />
     <Compile Include="Internal\ThrowingMonitor.cs" />
     <Compile Include="NullDatabaseInitializer.cs" />
-    <Compile Include="Internal\ProviderConfig.cs" />
     <Compile Include="Spatial\SpatialServicesLoader.cs" />
     <Compile Include="Utilities\BoolExtensions.cs" />
     <Compile Include="Utilities\Check.cs" />

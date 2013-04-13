@@ -27,7 +27,6 @@ namespace System.Data.Entity.Config
             RootDependencyResolver rootResolver = null,
             AppConfigDependencyResolver appConfigResolver = null)
         {
-
             _rootResolver = rootResolver ?? new RootDependencyResolver();
             _resolvers = new CompositeResolver<ResolverChain, ResolverChain>(appConfigChain ?? new ResolverChain(), normalResolverChain ?? new ResolverChain());
             _resolvers.Second.Add(_rootResolver);

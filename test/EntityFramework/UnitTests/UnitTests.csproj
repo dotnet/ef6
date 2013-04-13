@@ -396,7 +396,6 @@
     <Compile Include="Internal\DefaultModelCacheKeyFactoryTests.cs" />
     <Compile Include="Internal\DefaultModelCacheKeyTests.cs" />
     <Compile Include="Internal\InternalContextTests.cs" />
-    <Compile Include="Internal\ProviderConfigTests.cs" />
     <Compile Include="IQueryableExtensionsTests.cs" />
     <Compile Include="Internal\InternalSqlNonSetQueryTests.cs" />
     <Compile Include="Internal\Linq\TestHelpers\InternalSetForMock`.cs" />

@@ -7,7 +7,6 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
-    using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Utilities;
     using System.Linq;
 
@@ -25,7 +24,7 @@ namespace System.Data.Entity.Config
         private readonly Dictionary<string, DbProviderServices> _providerFactories
             = new Dictionary<string, DbProviderServices>();
 
-        private bool _providersLoaded;
+        private bool _providersRegistered;
 
         private readonly ProviderServicesFactory _providerServicesFactory;
 
@@ -57,14 +56,14 @@ namespace System.Data.Entity.Config
 
         public virtual Func<object> GetServiceFactory(Type type, string name)
         {
-            if (!_providersLoaded)
+            if (!_providersRegistered)
             {
                 lock (_providerFactories)
                 {
-                    if (!_providersLoaded)
+                    if (!_providersRegistered)
                     {
-                        LoadAllDbProviderServices();
-                        _providersLoaded = true;
+                        RegisterDbProviderServices();
+                        _providersRegistered = true;
                     }
                 }
             }
@@ -116,9 +115,9 @@ namespace System.Data.Entity.Config
             return () => null;
         }
 
-        private void LoadAllDbProviderServices()
+        private void RegisterDbProviderServices()
         {
-            var providers = _appConfig.Providers.GetAllDbProviderServices().ToList();
+            var providers = _appConfig.DbProviderServices;
 
             if (providers.All(p => p.InvariantName != "System.Data.SqlClient"))
             {
@@ -127,16 +126,12 @@ namespace System.Data.Entity.Config
                 RegisterSqlServerProvider();
             }
 
-            providers.Each(RegisterProvider);
-        }
-
-        private void RegisterProvider(ProviderElement providerElement)
-        {
-            DebugCheck.NotNull(providerElement);
-
-            var provider = _providerServicesFactory.GetInstance(providerElement.ProviderTypeName, providerElement.InvariantName);
-            _providerFactories[providerElement.InvariantName] = provider;
-            _internalConfiguration.AddSecondaryResolver(provider);
+            providers.Each(
+                p =>
+                    {
+                        _providerFactories[p.InvariantName] = p.ProviderServices;
+                        _internalConfiguration.AddSecondaryResolver(p.ProviderServices);
+                    });
         }
 
         private void RegisterSqlServerProvider()

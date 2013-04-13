@@ -205,11 +205,20 @@ namespace System.Data.Entity.Config
             get { return _configuration.IsValueCreated; }
         }
 
-        public virtual void PushConfiguration(AppConfig config, Type contextType)
+        public virtual bool PushConfiguration(AppConfig config, Type contextType)
         {
             DebugCheck.NotNull(config);
             DebugCheck.NotNull(contextType);
             Debug.Assert(typeof(DbContext).IsAssignableFrom(contextType));
+
+            // Perf optimization: if there is no change to the default app-domain config and if the
+            // context assembly has already been checked for configurations, then avoid creating
+            // and pushing a new configuration since it would be the same as the current one anyway.
+            if (config == AppConfig.DefaultInstance
+                && (contextType == typeof(DbContext) || _knownAssemblies.ContainsKey(contextType.Assembly)))
+            {
+                return false;
+            }
 
             var configuration = (_loader.TryLoadFromConfig(config)
                                  ?? _finder.TryFindConfigurationType(contextType)
@@ -226,6 +235,8 @@ namespace System.Data.Entity.Config
             }
 
             configuration.Lock();
+
+            return true;
         }
 
         public virtual void PopConfiguration(AppConfig config)
