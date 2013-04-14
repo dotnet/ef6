@@ -1030,6 +1030,10 @@ namespace FunctionalTests
                 Assert.Equal("DEA", context.People.OfType<Officer>().Single(p => p.Name == "Hank").Department);
                 Assert.Equal("Skyler", context.People.Single(p => p.Name == "Skyler").Name);
 
+                Assert.IsType<CarWash>(context.Covers.OfType<CarWash>().Single(p => p.Name == "Skyler's Car Wash"));
+                Assert.IsType<FastFoodChain>(context.Covers.OfType<FastFoodChain>().Single(p => p.Name == "Chickin' Lickin'"));
+                Assert.IsType<LosPollosHermanos>(context.Covers.OfType<FastFoodChain>().Single(p => p.Name == "Chicken Bros"));
+
                 Assert.Equal(1, context.Labs.OfType<MobileLab>().Single().Vehicle.Registration);
                 Assert.Equal(2, context.Labs.OfType<MobileLab>().Single().Vehicle.Info.Depth);
                 Assert.Equal(3, context.Labs.OfType<MobileLab>().Single().Vehicle.Info.Size);
@@ -1138,6 +1142,7 @@ namespace FunctionalTests
 
             public DbSet<Person> People { get; set; }
             public DbSet<Lab> Labs { get; set; }
+            public DbSet<CoverBusiness> Covers { get; set; }
 
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
@@ -1214,6 +1219,24 @@ namespace FunctionalTests
                                     Size = 6
                                 }
                         });
+
+                context.Covers.Add(
+                    new CarWash
+                        {
+                            Name = "Skyler's Car Wash"
+                        });
+
+                context.Covers.Add(
+                    new FastFoodChain
+                    {
+                        Name = "Chickin' Lickin'"
+                    });
+
+                context.Covers.Add(
+                    new LosPollosHermanos
+                    {
+                        Name = "Chicken Bros"
+                    });
             }
         }
 
@@ -1273,6 +1296,27 @@ namespace FunctionalTests
         {
             public int Size { get; set; }
             public int Depth { get; set; }
+        }
+
+        public abstract class CoverBusiness
+        {
+            public int Id { get; set; }
+        }
+
+        public class CarWash : CoverBusiness
+        {
+            [Column("Name")]
+            public string Name { get; set; }
+        }
+
+        public class FastFoodChain : CoverBusiness
+        {
+            [Column("Name")]
+            public string Name { get; set; }
+        }
+
+        public class LosPollosHermanos : FastFoodChain
+        {
         }
     }
 

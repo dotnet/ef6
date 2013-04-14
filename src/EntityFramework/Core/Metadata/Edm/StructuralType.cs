@@ -149,6 +149,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _members.Remove(member);
         }
 
+        internal virtual bool HasMember(EdmMember member)
+        {
+            DebugCheck.NotNull(member);
+
+            return _members.Contains(member);
+        }
+
         internal virtual void NotifyItemIdentityChanged()
         {
             _members.InvalidateCache();

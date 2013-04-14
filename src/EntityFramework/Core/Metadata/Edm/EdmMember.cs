@@ -122,7 +122,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 base.SetReadOnly();
 
+                var currentIdentity = _identity;
                 _identity = Name;
+
+                if (_declaringType != null
+                    && currentIdentity != null
+                    && !string.Equals(currentIdentity, _identity, StringComparison.Ordinal))
+                {
+                    _declaringType.NotifyItemIdentityChanged();
+                }
 
                 // TypeUsage is always readonly, no need to set it
             }

@@ -55,26 +55,33 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
-        public void Identity_synced_when_member_goes_readonly()
+        public void Identity_synced_when_member_goes_readonly_and_parent_notified()
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
             var property1 = EdmProperty.Primitive("Foo", primitiveType);
             var property2 = EdmProperty.Primitive("Bar", primitiveType);
 
-            var entityType = new EntityType("T", "S", DataSpace.CSpace);
+            var entityTypeMock = new Mock<EntityType>("T", "S", DataSpace.CSpace)
+            {
+                CallBase = true
+            };
+            entityTypeMock.Setup(e => e.NotifyItemIdentityChanged());
 
-            entityType.AddMember(property1);
-            entityType.AddMember(property2);
+            entityTypeMock.Object.AddMember(property1);
+            entityTypeMock.Object.AddMember(property2);
 
             property2.Name = "Foo";
 
             Assert.Equal("Foo1", property2.Identity);
+            entityTypeMock.Verify(e => e.NotifyItemIdentityChanged(), Times.Once());
 
             property2.SetReadOnly();
 
             Assert.Equal("Foo", property2.Identity);
+            entityTypeMock.Verify(e => e.NotifyItemIdentityChanged(), Times.Exactly(2));
         }
+
 
         [Fact]
         public void IsPrimaryKeyColumn_should_return_true_when_parent_key_members_contains_member()

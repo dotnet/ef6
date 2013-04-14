@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var mockTableType = CreateMockType("Ankh-Morpork");
             mockTableType.Setup(m => m.RemoveMember(It.IsAny<EdmMember>())).Callback<EdmMember>(removed.Add);
 
-            var columns = CreateColumns(mockTableType.Object, "Moist", "Moist");
+            var columns = CreateColumns(mockTableType, "Moist", "Moist");
             var mappings = CreateMappings(columns, "von", "Lipwig");
 
             new TphColumnFixer(mappings).RemoveDuplicateTphColumns();
@@ -39,7 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             mockTableType.Setup(m => m.RemoveMember(It.IsAny<EdmMember>())).Callback<EdmMember>(removed.Add);
 
             var columns = CreateColumns(
-                mockTableType.Object,
+                mockTableType,
                 "Nanny", "Ogg", "Nanny", "Nanny", "Granny", "Magrat", "Weatherwax", "Weatherwax", "Magrat", "Garlik", "Tiffany", "Tiffany");
 
             var mappings = CreateMappings(
@@ -61,6 +61,27 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             AssertDuplicatesRemoved(mappings, "Tiffany");
         }
 
+        [Fact] // CodePlex 1021
+        public void RemoveDuplicateTphColumns_does_not_attempt_to_remove_inherited_columns_twice()
+        {
+            var removed = new List<EdmMember>();
+            var mockTableType = CreateMockType("Lancre");
+            mockTableType.Setup(m => m.RemoveMember(It.IsAny<EdmMember>())).Callback<EdmMember>(removed.Add);
+
+            var columns = CreateColumns(mockTableType, "Nanny", "Nanny");
+            columns.Add(columns.Last());
+            var mappings = CreateMappings(columns, "Nanny", "Nanny", "Nanny");
+
+            mockTableType.Setup(m => m.HasMember(It.IsAny<EdmMember>())).Returns<EdmMember>(m => !removed.Contains(m));
+
+            new TphColumnFixer(mappings).RemoveDuplicateTphColumns();
+
+            Assert.Equal(1, removed.Count);
+            Assert.Equal(1, removed.Select(m => m.Name).Count(n => n == "Nanny"));
+
+            AssertDuplicatesRemoved(mappings, "Nanny");
+        }
+
         private static void AssertDuplicatesRemoved(IEnumerable<ColumnMappingBuilder> mappings, string columnName)
         {
             EdmProperty refColumn = null;
@@ -79,12 +100,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var columns = new[]
                 {
                     CreateColumn(
-                        mockTableType.Object, "Duke", new PrimitivePropertyConfiguration
+                        mockTableType, "Duke", new PrimitivePropertyConfiguration
                             {
                                 ColumnType = "int"
                             }),
                     CreateColumn(
-                        mockTableType.Object, "Duke", new PrimitivePropertyConfiguration
+                        mockTableType, "Duke", new PrimitivePropertyConfiguration
                             {
                                 ColumnType = "nvarchar(max)"
                             })
@@ -108,12 +129,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var columns = new[]
                 {
                     CreateColumn(
-                        mockTableType.Object, "Duke", new Properties.Primitive.StringPropertyConfiguration
+                        mockTableType, "Duke", new Properties.Primitive.StringPropertyConfiguration
                             {
                                 IsUnicode = true
                             }),
                     CreateColumn(
-                        mockTableType.Object, "Duke", new Properties.Primitive.StringPropertyConfiguration
+                        mockTableType, "Duke", new Properties.Primitive.StringPropertyConfiguration
                             {
                                 IsUnicode = false
                             })
@@ -137,18 +158,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var columns = new[]
                 {
                     CreateColumn(
-                        mockTableType.Object, "Duke", new Properties.Primitive.StringPropertyConfiguration
+                        mockTableType, "Duke", new Properties.Primitive.StringPropertyConfiguration
                             {
                                 IsUnicode = false
                             }),
                     CreateColumn(
-                        mockTableType.Object, "Duke", new Properties.Primitive.StringPropertyConfiguration
+                        mockTableType, "Duke", new Properties.Primitive.StringPropertyConfiguration
                             {
                                 MaxLength = 256,
                                 IsFixedLength = true
                             }),
                     CreateColumn(
-                        mockTableType.Object, "Duke", new Properties.Primitive.StringPropertyConfiguration
+                        mockTableType, "Duke", new Properties.Primitive.StringPropertyConfiguration
                             {
                                 MaxLength = 256,
                                 IsNullable = true
@@ -168,7 +189,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void RemoveDuplicateTphColumns_does_not_remove_columns_from_same_type()
         {
             var mockTableType = CreateMockType("Ankh-Morpork");
-            var columns = CreateColumns(mockTableType.Object, "Duke", "Duke");
+            var columns = CreateColumns(mockTableType, "Duke", "Duke");
 
             var entityType = CreateMockType("TheType", CreateMockType("Base").Object).Object;
             var mappings = new[]
@@ -186,7 +207,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void RemoveDuplicateTphColumns_does_not_remove_possibly_colliding_columns_from_types_in_different_hierarchies()
         {
             var mockTableType = CreateMockType("Ankh-Morpork");
-            var columns = CreateColumns(mockTableType.Object, "Duke", "Duke");
+            var columns = CreateColumns(mockTableType, "Duke", "Duke");
 
             var mappings = new[]
                 {
@@ -199,9 +220,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             mockTableType.Verify(m => m.RemoveMember(It.IsAny<EdmMember>()), Times.Never());
         }
 
-        private static IList<EdmProperty> CreateColumns(EntityType table, params string[] names)
+        private static IList<EdmProperty> CreateColumns(Mock<EntityType> mockTable, params string[] names)
         {
-            return names.Select(n => CreateColumn(table, n)).ToList();
+            return names.Select(n => CreateColumn(mockTable, n)).ToList();
         }
 
         private static IList<ColumnMappingBuilder> CreateMappings(IEnumerable<EdmProperty> columns, params string[] propertyNames)
@@ -215,9 +236,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return new ColumnMappingBuilder(column, new[] { CreateMockMember(baseType, propertyName).Object });
         }
 
-        private static EdmProperty CreateColumn(EntityType tableType, string name, PrimitivePropertyConfiguration config = null)
+        private static EdmProperty CreateColumn(Mock<EntityType> mockTableType, string name, PrimitivePropertyConfiguration config = null)
         {
-            var mockColumn = CreateMockMember(tableType, name);
+            var mockColumn = CreateMockMember(mockTableType.Object, name);
             mockColumn.Setup(m => m.Annotations).Returns(
                 config == null
                     ? new DataModelAnnotation[0]
@@ -229,8 +250,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                                     Value = config
                                 }
                         });
+            
             mockColumn.SetupProperty(
                 m => m.TypeUsage, TypeUsage.CreateStringTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), true, false));
+
+            mockTableType.Setup(m => m.HasMember(mockColumn.Object)).Returns(true);
+
             return mockColumn.Object;
         }
 
@@ -239,6 +264,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var mockMember = new Mock<EdmProperty>(name);
             mockMember.Setup(m => m.DeclaringType).Returns(declaringType);
             mockMember.Setup(m => m.Name).Returns(name);
+            mockMember.Setup(m => m.Identity).Returns(name);
             return mockMember;
         }
 

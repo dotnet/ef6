@@ -80,7 +80,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                                 configError));
                     }
 
-                    toFixup.ColumnProperty.DeclaringType.RemoveMember(toFixup.ColumnProperty);
+                    if (toFixup.ColumnProperty.DeclaringType.HasMember(toFixup.ColumnProperty))
+                    {
+                        toFixup.ColumnProperty.DeclaringType.RemoveMember(toFixup.ColumnProperty);
+                    }
                     toFixup.ColumnProperty = column;
                 }
 
