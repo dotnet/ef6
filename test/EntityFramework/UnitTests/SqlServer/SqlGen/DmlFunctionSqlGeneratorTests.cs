@@ -4,7 +4,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
-    using System.Data.SqlClient;
     using System.Linq;
     using Xunit;
 
