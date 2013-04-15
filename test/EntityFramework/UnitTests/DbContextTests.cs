@@ -735,23 +735,18 @@ END";
         #endregion
 
         #region Other tests
-        public class UseCSharpNullComparisonBehaviorDbContext : DbContext
+        public class UseDatabaseNullSemanticsDbContext : DbContext
         {
         }
 
         [Fact]
-        public static void UseCSharpNullComparisonBehavior_is_retrieved_and_set_correctly()
+        public static void UseDatabaseNullSemantics_is_retrieved_and_set_correctly()
         {
-            Database.SetInitializer<UseCSharpNullComparisonBehaviorDbContext>(null);
+            Database.SetInitializer<UseDatabaseNullSemanticsDbContext>(null);
 
-            using (var dbContext = new UseCSharpNullComparisonBehaviorDbContext())
+            using (var dbContext = new UseDatabaseNullSemanticsDbContext())
             {
                 var objectContext = ((IObjectContextAdapter)dbContext).ObjectContext;
-
-                Assert.True(dbContext.Configuration.UseDatabaseNullSemantics);
-                Assert.False(objectContext.ContextOptions.UseCSharpNullComparisonBehavior);
-
-                dbContext.Configuration.UseDatabaseNullSemantics = false;
 
                 Assert.False(dbContext.Configuration.UseDatabaseNullSemantics);
                 Assert.True(objectContext.ContextOptions.UseCSharpNullComparisonBehavior);
@@ -760,6 +755,11 @@ END";
 
                 Assert.True(dbContext.Configuration.UseDatabaseNullSemantics);
                 Assert.False(objectContext.ContextOptions.UseCSharpNullComparisonBehavior);
+
+                dbContext.Configuration.UseDatabaseNullSemantics = false;
+
+                Assert.False(dbContext.Configuration.UseDatabaseNullSemantics);
+                Assert.True(objectContext.ContextOptions.UseCSharpNullComparisonBehavior);
             }
         }
         #endregion

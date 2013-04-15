@@ -92,7 +92,7 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Gets or sets a value indicating whether database null semantics are exhibited when comparing
-        ///     two operands, both of which are potentially nullable. The default value is true.
+        ///     two operands, both of which are potentially nullable. The default value is false.
         ///     
         ///     For example (operand1 == operand2) will be translated as:
         ///     
@@ -100,7 +100,7 @@ namespace System.Data.Entity.Infrastructure
         ///     
         ///     if UseDatabaseNullSemantics is true, respectively
         ///     
-        ///     (((operand1 = operand2) AND NOT (operand1 IS NULL OR operand2 IS NULL)) || (operand1 IS NULL && operand2 IS NULL))
+        ///     (((operand1 = operand2) AND (NOT (operand1 IS NULL OR operand2 IS NULL))) OR ((operand1 IS NULL) AND (operand2 IS NULL)))
         ///     
         ///     if UseDatabaseNullSemantics is false.
         /// </summary>

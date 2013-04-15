@@ -67,8 +67,8 @@ namespace System.Data.Entity.Internal
         // This flag is used to keep the user's selected proxy creation option before the ObjectContext is initialized.  
         private bool _initialProxyCreationFlag = true;
 
-        // This flag is used to keep the user's C# null comparison behavior option before the ObjectContext is initialized.  
-        private bool _useDatabaseNullSemanticsFlag = true;
+        // This flag is used to keep the user's database null comparison behavior option before the ObjectContext is initialized.  
+        private bool _useDatabaseNullSemanticsFlag;
 
         // This flag is used to keep the user's command timeout before the ObjectContext is initialized.  
         private int? _commandTimeout;
