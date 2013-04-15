@@ -229,6 +229,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="dataSpace">The dataspace in which the EntityType belongs to.</param>
         /// <param name="members">Members of the entity type (primitive and navigation properties).</param>
         /// <param name="keyMemberNames">Name of key members for the type.</param>
+        /// <param name="metadataProperties">Metadata properties to be associated with the instance.</param>
         /// <exception cref="System.ArgumentException">Thrown if either name, namespace arguments are null.</exception>
         /// <notes>The newly created EntityType will be read only.</notes>
         public static EntityType Create(

@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="namespaceName">The namespace of the complex type.</param>
         /// <param name="dataSpace">The dataspace to which the complex type belongs to.</param>
         /// <param name="members">Members of the complex type.</param>
-        /// <param name="metadataProperties"></param>
+        /// <param name="metadataProperties">Metadata properties to be associated with the instance.</param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or members argument is null.</exception>
         /// <returns>
         ///     A new instance a the <see cref="ComplexType " /> type.

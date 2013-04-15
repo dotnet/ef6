@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Linq;
     using Xunit;
 
     public class EntityContainerTests
@@ -72,13 +73,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     };
 
 
-            var entityContainer = 
-                EntityContainer.Create("Foo", DataSpace.SSpace, entitySets, functionImports);
+            var entityContainer =
+                EntityContainer.Create("Foo", DataSpace.SSpace, entitySets, functionImports, 
+                    new[]
+                        {
+                            new MetadataProperty(
+                                "TestProperty",
+                                TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                                "value"),
+                        });
 
             Assert.Equal("Foo", entityContainer.Name);
             Assert.Equal(entitySets, entityContainer.EntitySets);
             Assert.Equal(functionImports, entityContainer.FunctionImports);
             Assert.True(entityContainer.IsReadOnly);
+
+            var metadataProperty = entityContainer.MetadataProperties.SingleOrDefault(p => p.Name == "TestProperty");
+            Assert.NotNull(metadataProperty);
+            Assert.Equal("value", metadataProperty.Value);
         }
 
         [Fact]
@@ -97,7 +109,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Resources.Strings.OnlyFunctionImportsCanBeAddedToEntityContainer("foo"),
                 Assert.Throws<ArgumentException>(
                     () =>
-                    EntityContainer.Create("Foo", DataSpace.SSpace, null, new[] { function })).Message);
+                    EntityContainer.Create("Foo", DataSpace.SSpace, null, new[] { function }, null)).Message);
         }
     }
 }
