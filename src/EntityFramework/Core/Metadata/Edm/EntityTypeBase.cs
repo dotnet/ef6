@@ -56,10 +56,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public virtual ReadOnlyMetadataCollection<EdmProperty> KeyProperties
         {
-            get
-            {
-                return new ReadOnlyMetadataCollection<EdmProperty>(KeyMembers.Cast<EdmProperty>().ToList());
-            }
+            get { return new ReadOnlyMetadataCollection<EdmProperty>(KeyMembers.Cast<EdmProperty>().ToList()); }
         }
 
         /// <summary>

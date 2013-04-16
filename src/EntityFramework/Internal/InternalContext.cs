@@ -112,7 +112,8 @@ namespace System.Data.Entity.Internal
             new Dictionary<Type, IInternalSetAdapter>();
 
         // Used to create validators to validate entities or properties and contexts for validating entities and properties.
-        private readonly ValidationProvider _validationProvider = new ValidationProvider(null, DbConfiguration.GetService<AttributeProvider>());
+        private readonly ValidationProvider _validationProvider = new ValidationProvider(
+            null, DbConfiguration.GetService<AttributeProvider>());
 
         private bool _oSpaceLoadingForced;
 

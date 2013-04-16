@@ -73,7 +73,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             foreach (var declaringType in entityType.ToHierarchy().Reverse())
             {
-                if (declaringType.BaseType == null && declaringType.KeyProperties.Any())
+                if (declaringType.BaseType == null
+                    && declaringType.KeyProperties.Any())
                 {
                     if (keyProps != null)
                     {

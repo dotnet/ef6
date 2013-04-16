@@ -53,7 +53,8 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
         {
             DebugCheck.NotNull(propertyInfo);
 
-            return _discoveredAttributes.GetOrAdd(propertyInfo, (pi) =>
+            return _discoveredAttributes.GetOrAdd(
+                propertyInfo, (pi) =>
                    {
                        var typeDescriptor = GetTypeDescriptor(propertyInfo.DeclaringType);
                        var propertyCollection = typeDescriptor.GetProperties();

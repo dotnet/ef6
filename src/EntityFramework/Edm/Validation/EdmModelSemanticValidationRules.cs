@@ -368,7 +368,7 @@ namespace System.Data.Entity.Edm.Validation
                 (context, edmEntityType) =>
                     {
                         if (edmEntityType.BaseType == null
-                            && !edmEntityType.KeyProperties.Any())
+                            && edmEntityType.KeyProperties.Count == 0)
                         {
                             context.AddError(
                                 edmEntityType,
