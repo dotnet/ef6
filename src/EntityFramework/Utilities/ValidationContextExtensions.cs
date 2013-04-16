@@ -12,7 +12,7 @@ namespace System.Data.Entity.Utilities
         {
             DebugCheck.NotNull(validationContext);
 
-            var displayName = displayAttribute == null ? null : displayAttribute.Name;
+            var displayName = displayAttribute == null ? null : displayAttribute.GetName();
             if (property == null)
             {
                 var objectType = ObjectContextTypeCache.GetObjectType(validationContext.ObjectType);

@@ -118,6 +118,10 @@
     <EmbeddedResource Include="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSDLSchema_1.xsd" />
     <EmbeddedResource Include="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.CSMSL_1.xsd" />
     <EmbeddedResource Include="ModelConfiguration\Edm\Serialization\Xsd\System.Data.Resources.SSDLSchema_1.xsd" />
+    <EmbeddedResource Include="Properties\UnitTestResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UnitTestResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <Compile Include="AssemblyTests.cs" />
     <Compile Include="CommandLine\CommandLineExceptionTests.cs" />
@@ -435,6 +439,11 @@
     <Compile Include="TestHelpers\DbEnumeratorShim.cs" />
     <Compile Include="TestHelpers\Fake\FakeSqlGenerator.cs" />
     <Compile Include="TestHelpers\Mock\DbContextUsingMockInternalContext.cs" />
+    <Compile Include="Properties\UnitTestResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UnitTestResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\AssemblyExtensionsTests.cs" />
     <Compile Include="Utilities\ByteExtensionsTests.cs" />
     <Compile Include="Utilities\DbModelExtensionsTests.cs" />

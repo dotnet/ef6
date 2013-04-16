@@ -120,5 +120,29 @@ namespace System.Data.Entity.Validation
                             MockHelper.CreateEntityValidationContext(mockInternalEntityEntry.Object),
                             mockInternalEntityEntry.Object.Property("Airport"))).Message);
         }
+
+        [Fact]
+        public void ValidatableObjectValidator_uses_localized_name()
+        {
+            var entity = new DepartureArrivalInfoWithNestedComplexType
+            {
+                Airport = new AirportDetails(),
+            };
+            var mockInternalEntityEntry = Internal.MockHelper.CreateMockInternalEntityEntry(entity);
+
+            var validator = new ValidatableObjectValidator(
+                new DisplayAttribute
+                {
+                    Name = "ValidationContextDisplayAttributeName",
+                    ResourceType = typeof(System.Data.Entity.Properties.UnitTestResources)
+                });
+
+            Assert.Equal(
+                    Strings.DbUnexpectedValidationException_IValidatableObject("xyzzy", typeof(AirportDetails).FullName),
+                    Assert.Throws<DbUnexpectedValidationException>(
+                        () => validator.Validate(
+                            MockHelper.CreateEntityValidationContext(mockInternalEntityEntry.Object),
+                            mockInternalEntityEntry.Object.Property("Airport"))).Message);
+        }
     }
 }
