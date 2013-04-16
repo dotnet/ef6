@@ -143,12 +143,12 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            CreateMigrator<ShopContext_v1>().Update();
+            CreateMigrator<ShopContext_v2>().Update();
 
-            var migrator1 = CreateMigrator<ShopContext_v2>();
+            var migrator1 = CreateMigrator<ShopContext_v3>();
             var version2 = new MigrationScaffolder(migrator1.Configuration).Scaffold("Version2");
 
-            var migrator2 = CreateMigrator<ShopContext_v2>(scaffoldedMigrations: version2);
+            var migrator2 = CreateMigrator<ShopContext_v3>(scaffoldedMigrations: version2);
 
             migrator2.Update();
 
@@ -158,7 +158,7 @@ namespace System.Data.Entity.Migrations
             }
 
             var scriptingDecorator
-                = new MigratorScriptingDecorator(CreateMigrator<ShopContext_v2>(scaffoldedMigrations: version2));
+                = new MigratorScriptingDecorator(CreateMigrator<ShopContext_v3>(scaffoldedMigrations: version2));
 
             // Act
             var script = scriptingDecorator.ScriptUpdate(DbMigrator.InitialDatabase, version2.MigrationId);
@@ -169,15 +169,13 @@ namespace System.Data.Entity.Migrations
             Assert.True(script.Contains("Version2"));
         }
 
-        //[MigrationsTheory]
-        // TODO: Re-enable when Migrations SPROC fluent APIS implemented.
+        [MigrationsTheory]
         public void Can_script_middle_migration_with_leading_automatic_migration_whenDatabaseExists_true()
         {
             Can_script_middle_migration_with_leading_automatic_migration(true);
         }
 
-        //[MigrationsTheory]
-        // TODO: Re-enable when Migrations SPROC fluent APIS implemented.
+        [MigrationsTheory]
         public void Can_script_middle_migration_with_leading_automatic_migration_whenDatabaseExists_false()
         {
             Can_script_middle_migration_with_leading_automatic_migration(false);
@@ -219,15 +217,13 @@ namespace System.Data.Entity.Migrations
             Assert.True(script.Contains("Version3"));
         }
 
-        //[MigrationsTheory]
-        // TODO: Re-enable when Migrations SPROC fluent APIS implemented.
+        [MigrationsTheory]
         public void Can_script_last_migration_with_trailing_automatic_migration_whenDatabaseExists_true()
         {
             Can_script_last_migration_with_trailing_automatic_migration(true);
         }
 
-        //[MigrationsTheory]
-        // TODO: Re-enable when Migrations SPROC fluent APIS implemented.
+        [MigrationsTheory]
         public void Can_script_last_migration_with_trailing_automatic_migration_whenDatabaseExists_false()
         {
             Can_script_last_migration_with_trailing_automatic_migration(false);
@@ -258,15 +254,13 @@ namespace System.Data.Entity.Migrations
             Assert.False(script.Contains("AutomaticMigration"));
         }
 
-        //[MigrationsTheory]
-        // TODO: Re-enable when Migrations SPROC fluent APIS implemented.
+        [MigrationsTheory]
         public void Can_script_trailing_automatic_migration_whenDatabaseExists_true()
         {
             Can_script_trailing_automatic_migration(true);
         }
 
-        //[MigrationsTheory]
-        // TODO: Re-enable when Migrations SPROC fluent APIS implemented.
+        [MigrationsTheory]
         public void Can_script_trailing_automatic_migration_whenDatabaseExists_false()
         {
             Can_script_trailing_automatic_migration(false);

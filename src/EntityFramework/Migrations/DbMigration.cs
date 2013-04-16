@@ -31,6 +31,60 @@ namespace System.Data.Entity.Migrations
         {
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        public void CreateStoredProcedure(string name, string body, object anonymousArguments = null)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(body, "body");
+
+            CreateStoredProcedure<object>(name, _ => new { }, body, anonymousArguments);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        public void CreateStoredProcedure<TParameters>(
+            string name,
+            Func<ParameterBuilder, TParameters> parametersAction,
+            string body,
+            object anonymousArguments = null)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotNull(parametersAction, "parametersAction");
+            Check.NotEmpty(body, "body");
+
+            var createProcedureOperation = new CreateProcedureOperation(name, body, anonymousArguments);
+
+            AddOperation(createProcedureOperation);
+
+            var parameters = parametersAction(new ParameterBuilder());
+
+            parameters.GetType().GetProperties()
+                      .Each(
+                          (p, i) =>
+                              {
+                                  var parameterModel = p.GetValue(parameters, null) as ParameterModel;
+
+                                  if (parameterModel != null)
+                                  {
+                                      if (string.IsNullOrWhiteSpace(parameterModel.Name))
+                                      {
+                                          parameterModel.Name = p.Name;
+                                      }
+
+                                      createProcedureOperation.Parameters.Add(parameterModel);
+                                  }
+                              });
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        public void DropStoredProcedure(
+            string name,
+            object anonymousArguments = null)
+        {
+            Check.NotEmpty(name, "name");
+
+            AddOperation(new DropProcedureOperation(name, anonymousArguments));
+        }
+
         /// <summary>
         ///     Adds an operation to create a new table.
         /// </summary>
@@ -55,19 +109,19 @@ namespace System.Data.Entity.Migrations
             columns.GetType().GetProperties()
                    .Each(
                        (p, i) =>
-                       {
-                           var columnModel = p.GetValue(columns, null) as ColumnModel;
-
-                           if (columnModel != null)
                            {
-                               if (string.IsNullOrWhiteSpace(columnModel.Name))
-                               {
-                                   columnModel.Name = p.Name;
-                               }
+                               var columnModel = p.GetValue(columns, null) as ColumnModel;
 
-                               createTableOperation.Columns.Add(columnModel);
-                           }
-                       });
+                               if (columnModel != null)
+                               {
+                                   if (string.IsNullOrWhiteSpace(columnModel.Name))
+                                   {
+                                       columnModel.Name = p.Name;
+                                   }
+
+                                   createTableOperation.Columns.Add(columnModel);
+                               }
+                           });
 
             return new TableBuilder<TColumns>(createTableOperation, this);
         }
@@ -137,12 +191,12 @@ namespace System.Data.Entity.Migrations
 
             var addForeignKeyOperation
                 = new AddForeignKeyOperation(anonymousArguments)
-                {
-                    DependentTable = dependentTable,
-                    PrincipalTable = principalTable,
-                    CascadeDelete = cascadeDelete,
-                    Name = name
-                };
+                      {
+                          DependentTable = dependentTable,
+                          PrincipalTable = principalTable,
+                          CascadeDelete = cascadeDelete,
+                          Name = name
+                      };
 
             dependentColumns.Each(c => addForeignKeyOperation.DependentColumns.Add(c));
 
@@ -168,10 +222,10 @@ namespace System.Data.Entity.Migrations
 
             var dropForeignKeyOperation
                 = new DropForeignKeyOperation(anonymousArguments)
-                {
-                    DependentTable = dependentTable,
-                    Name = name
-                };
+                      {
+                          DependentTable = dependentTable,
+                          Name = name
+                      };
 
             AddOperation(dropForeignKeyOperation);
         }
@@ -228,10 +282,10 @@ namespace System.Data.Entity.Migrations
 
             var dropForeignKeyOperation
                 = new DropForeignKeyOperation(anonymousArguments)
-                {
-                    DependentTable = dependentTable,
-                    PrincipalTable = principalTable
-                };
+                      {
+                          DependentTable = dependentTable,
+                          PrincipalTable = principalTable
+                      };
 
             dependentColumns.Each(c => dropForeignKeyOperation.DependentColumns.Add(c));
 
@@ -408,11 +462,11 @@ namespace System.Data.Entity.Migrations
 
             var addPrimaryKeyOperation
                 = new AddPrimaryKeyOperation(anonymousArguments)
-                {
-                    Table = table,
-                    Name = name,
-                    IsClustered = clustered
-                };
+                      {
+                          Table = table,
+                          Name = name,
+                          IsClustered = clustered
+                      };
 
             columns.Each(c => addPrimaryKeyOperation.Columns.Add(c));
 
@@ -433,10 +487,10 @@ namespace System.Data.Entity.Migrations
 
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation(anonymousArguments)
-                {
-                    Table = table,
-                    Name = name,
-                };
+                      {
+                          Table = table,
+                          Name = name,
+                      };
 
             AddOperation(dropPrimaryKeyOperation);
         }
@@ -453,9 +507,9 @@ namespace System.Data.Entity.Migrations
 
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation(anonymousArguments)
-                {
-                    Table = table,
-                };
+                      {
+                          Table = table,
+                      };
 
             AddOperation(dropPrimaryKeyOperation);
         }
@@ -512,12 +566,12 @@ namespace System.Data.Entity.Migrations
 
             var createIndexOperation
                 = new CreateIndexOperation(anonymousArguments)
-                {
-                    Table = table,
-                    IsUnique = unique,
-                    Name = name,
-                    IsClustered = clustered
-                };
+                      {
+                          Table = table,
+                          IsUnique = unique,
+                          Name = name,
+                          IsClustered = clustered
+                      };
 
             columns.Each(c => createIndexOperation.Columns.Add(c));
 
@@ -541,10 +595,10 @@ namespace System.Data.Entity.Migrations
 
             var dropIndexOperation
                 = new DropIndexOperation(anonymousArguments)
-                {
-                    Table = table,
-                    Name = name,
-                };
+                      {
+                          Table = table,
+                          Name = name,
+                      };
 
             AddOperation(dropIndexOperation);
         }
@@ -571,9 +625,9 @@ namespace System.Data.Entity.Migrations
 
             var dropIndexOperation
                 = new DropIndexOperation(anonymousArguments)
-                {
-                    Table = table,
-                };
+                      {
+                          Table = table,
+                      };
 
             columns.Each(c => dropIndexOperation.Columns.Add(c));
 
@@ -594,9 +648,9 @@ namespace System.Data.Entity.Migrations
 
             AddOperation(
                 new SqlOperation(sql, anonymousArguments)
-                {
-                    SuppressTransaction = suppressTransaction
-                });
+                    {
+                        SuppressTransaction = suppressTransaction
+                    });
         }
 
         /// <inheritdoc />

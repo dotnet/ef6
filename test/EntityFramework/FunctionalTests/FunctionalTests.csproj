@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeFirst\NonPublicPropertyTests.cs" />
+    <Compile Include="Migrations\ModificationFunctionsScenarios.cs" />
     <Compile Include="Migrations\InitializerScenarios.cs" />
     <Compile Include="Objects\TransactionsTests.cs" />
     <Compile Include="Migrations\SpatialScenarios.cs" />

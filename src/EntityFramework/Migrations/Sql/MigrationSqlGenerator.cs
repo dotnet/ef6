@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations.Sql
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Migrations.Model;
 
     /// <summary>
@@ -19,5 +20,13 @@ namespace System.Data.Entity.Migrations.Sql
         /// <returns> A list of SQL statements to be executed to perform the migration operations. </returns>
         public abstract IEnumerable<MigrationStatement> Generate(
             IEnumerable<MigrationOperation> migrationOperations, string providerManifestToken);
+
+        public virtual string GenerateProcedureBody(
+            ICollection<DbModificationCommandTree> commandTrees,
+            string rowsAffectedParameter,
+            string providerManifestToken)
+        {
+            return null;
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Design
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Globalization;
@@ -13,6 +14,114 @@ namespace System.Data.Entity.Migrations.Design
 
     public class CSharpMigrationCodeGeneratorTests
     {
+        [Fact]
+        public void Generate_can_output_create_procedure_operations()
+        {
+            var createProcedureOperation
+                = new CreateProcedureOperation("Foo", "SELECT ShinyHead\r\nFROM Pilkingtons");
+
+            createProcedureOperation.Parameters.Add(
+                new ParameterModel(PrimitiveTypeKind.String)
+                    {
+                        Name = "P'",
+                        DefaultValue = "Bar"
+                    });
+
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            createProcedureOperation
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            CreateStoredProcedure(
+                ""Foo"",
+                p => new
+                    {
+                        P = p.String(name: ""P'"", defaultValue: ""Bar""),
+                    },
+                body:
+                    @""SELECT ShinyHead
+                      FROM Pilkingtons""
+            );
+            
+        }
+        
+        public override void Down()
+        {
+            DropStoredProcedure(""Foo"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_drop_procedure_operations()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            new DropProcedureOperation("Foo"),
+                            new DropTableOperation("Bar", new CreateTableOperation("Bar"))
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            DropStoredProcedure(""Foo"");
+            DropTable(""Bar"");
+        }
+        
+        public override void Down()
+        {
+            CreateTable(
+                ""Bar"",
+                c => new
+                    {
+                    });
+            
+            throw new NotSupportedException(""" + Strings.ScaffoldSprocInDownNotSupported + @""");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
         [Fact]
         public void Generate_should_output_invariant_decimals_when_non_invariant_culture()
         {

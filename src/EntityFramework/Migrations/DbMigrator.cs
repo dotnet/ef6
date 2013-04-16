@@ -328,8 +328,9 @@ namespace System.Data.Entity.Migrations
             }
 
             var migrationOperations
-                = _modelDiffer.Diff(_emptyModel.Value, databaseModel, false, _modificationCommandTreeGenerator)
-                              .ToList();
+                = _modelDiffer
+                    .Diff(_emptyModel.Value, databaseModel, false)
+                    .ToList();
 
             var generatedMigration
                 = _configuration.CodeGenerator.Generate(
@@ -378,7 +379,7 @@ namespace System.Data.Entity.Migrations
             var migrationOperations
                 = ignoreChanges
                       ? Enumerable.Empty<MigrationOperation>()
-                      : _modelDiffer.Diff(sourceModel, _currentModel, false, _modificationCommandTreeGenerator)
+                      : _modelDiffer.Diff(sourceModel, _currentModel, false, _modificationCommandTreeGenerator, SqlGenerator)
                                     .ToList();
 
             if (!rescaffolding)
@@ -473,7 +474,8 @@ namespace System.Data.Entity.Migrations
                             _emptyModel.Value,
                             _currentModel,
                             true,
-                            _modificationCommandTreeGenerator)
+                            _modificationCommandTreeGenerator,
+                            SqlGenerator)
                                     .Where(o => o.IsSystem),
                         false));
             }
@@ -694,7 +696,7 @@ namespace System.Data.Entity.Migrations
             }
 
             var systemOperations
-                = _modelDiffer.Diff(sourceModel, targetModel, includeSystemOps, _modificationCommandTreeGenerator)
+                = _modelDiffer.Diff(sourceModel, targetModel, includeSystemOps)
                               .Where(o => o.IsSystem);
 
             migration.Down();
@@ -775,8 +777,16 @@ namespace System.Data.Entity.Migrations
             }
 
             var operations
-                = _modelDiffer.Diff(sourceModel, targetModel, includeSystemOps, _modificationCommandTreeGenerator)
-                              .ToList();
+                = _modelDiffer
+                    .Diff(
+                        sourceModel,
+                        targetModel,
+                        includeSystemOps,
+                        targetModel == _currentModel
+                            ? _modificationCommandTreeGenerator
+                            : null,
+                        SqlGenerator)
+                    .ToList();
 
             if (!_calledByCreateDatabase
                 && !downgrading)
@@ -788,6 +798,12 @@ namespace System.Data.Entity.Migrations
                 && operations.Any(o => o.IsDestructiveChange))
             {
                 throw Error.AutomaticDataLoss();
+            }
+
+            if ((targetModel != _currentModel)
+                && (operations.Any(o => o is CreateProcedureOperation)))
+            {
+                throw Error.AutomaticStaleFunctions(migrationId);
             }
 
             ExecuteOperations(migrationId, targetModel, operations, downgrading, auto: true);
@@ -921,6 +937,8 @@ namespace System.Data.Entity.Migrations
             {
                 return;
             }
+
+            //Console.WriteLine(migrationStatement.Sql);
 
             if (!migrationStatement.SuppressTransaction)
             {

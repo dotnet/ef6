@@ -7,22 +7,18 @@ namespace System.Data.Entity.Migrations.Model
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
     /// <summary>
     ///     Represents information about a column.
     /// </summary>
-    public class ColumnModel
+    public class ColumnModel : PropertyModel
     {
-        private readonly PrimitiveTypeKind _type;
         private readonly Type _clrType;
         private readonly object _clrDefaultValue;
 
-        private TypeUsage _typeUsage;
-
         /// <summary>
-        ///     Initializes a new instance of the  class.
+        ///     Initializes a new instance of the ColumnModel class.
         /// </summary>
         /// <param name="type"> The data type for this column. </param>
         public ColumnModel(PrimitiveTypeKind type)
@@ -31,15 +27,14 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Initializes a new instance of the  class.
+        ///     Initializes a new instance of the ColumnModel class.
         /// </summary>
         /// <param name="type"> The data type for this column. </param>
         /// <param name="typeUsage"> Additional details about the data type. This includes details such as maximum length, nullability etc. </param>
         public ColumnModel(PrimitiveTypeKind type, TypeUsage typeUsage)
+            : base(type, typeUsage)
         {
-            _type = type;
-            _typeUsage = typeUsage;
-            _clrType = PrimitiveType.GetEdmPrimitiveType(_type).ClrEquivalentType;
+            _clrType = PrimitiveType.GetEdmPrimitiveType(type).ClrEquivalentType;
             _clrDefaultValue = CreateDefaultValue();
         }
 
@@ -68,15 +63,6 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the data type for this column.
-        /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
-        public virtual PrimitiveTypeKind Type
-        {
-            get { return _type; }
-        }
-
-        /// <summary>
         ///     Gets the CLR type corresponding to the database type of this column.
         /// </summary>
         public virtual Type ClrType
@@ -93,25 +79,6 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets additional details about the data type of this column.
-        ///     This includes details such as maximum length, nullability etc.
-        /// </summary>
-        public TypeUsage TypeUsage
-        {
-            get { return _typeUsage ?? (_typeUsage = BuildTypeUsage()); }
-        }
-
-        /// <summary>
-        ///     Gets or sets the name of the column.
-        /// </summary>
-        public virtual string Name { get; set; }
-
-        /// <summary>
-        ///     Gets or sets a provider specific data type to use for this column.
-        /// </summary>
-        public virtual string StoreType { get; set; }
-
-        /// <summary>
         ///     Gets or sets a value indicating if this column can store null values.
         /// </summary>
         public virtual bool? IsNullable { get; set; }
@@ -122,85 +89,45 @@ namespace System.Data.Entity.Migrations.Model
         public virtual bool IsIdentity { get; set; }
 
         /// <summary>
-        ///     Gets or sets the maximum length for this column.
-        ///     Only valid for array data types.
-        /// </summary>
-        public virtual int? MaxLength { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the precision for this column.
-        ///     Only valid for decimal data types.
-        /// </summary>
-        public virtual byte? Precision { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the scale for this column.
-        ///     Only valid for decimal data types.
-        /// </summary>
-        public virtual byte? Scale { get; set; }
-
-        /// <summary>
-        ///     Gets or sets a constant value to use as the default value for this column.
-        /// </summary>
-        public virtual object DefaultValue { get; set; }
-
-        /// <summary>
-        ///     Gets or sets a SQL expression used as the default value for this column.
-        /// </summary>
-        public virtual string DefaultValueSql { get; set; }
-
-        /// <summary>
-        ///     Gets or sets a value indicating if this column is fixed length.
-        ///     Only valid for array data types.
-        /// </summary>
-        public virtual bool? IsFixedLength { get; set; }
-
-        /// <summary>
-        ///     Gets or sets a value indicating if this column supports Unicode characters.
-        ///     Only valid for textual data types.
-        /// </summary>
-        public virtual bool? IsUnicode { get; set; }
-
-        /// <summary>
-        ///     Gets or sets a value indicating if this column should be configured as a timestamp.
+        ///     Gets or sets a value indicating if this property model should be configured as a timestamp.
         /// </summary>
         public virtual bool IsTimestamp { get; set; }
 
         private static readonly Dictionary<PrimitiveTypeKind, int> _typeSize // in bytes
             = new Dictionary<PrimitiveTypeKind, int>
-                {
-                    { PrimitiveTypeKind.Binary, int.MaxValue },
-                    { PrimitiveTypeKind.Boolean, 1 },
-                    { PrimitiveTypeKind.Byte, 1 },
-                    { PrimitiveTypeKind.DateTime, 8 },
-                    { PrimitiveTypeKind.DateTimeOffset, 10 },
-                    { PrimitiveTypeKind.Decimal, 17 },
-                    { PrimitiveTypeKind.Double, 53 },
-                    { PrimitiveTypeKind.Guid, 16 },
-                    { PrimitiveTypeKind.Int16, 2 },
-                    { PrimitiveTypeKind.Int32, 4 },
-                    { PrimitiveTypeKind.Int64, 8 },
-                    { PrimitiveTypeKind.SByte, 1 },
-                    { PrimitiveTypeKind.Single, 4 },
-                    { PrimitiveTypeKind.String, int.MaxValue },
-                    { PrimitiveTypeKind.Time, 5 },
-                    { PrimitiveTypeKind.Geometry, int.MaxValue },
-                    { PrimitiveTypeKind.Geography, int.MaxValue },
-                    { PrimitiveTypeKind.GeometryPoint, int.MaxValue },
-                    { PrimitiveTypeKind.GeometryLineString, int.MaxValue },
-                    { PrimitiveTypeKind.GeometryPolygon, int.MaxValue },
-                    { PrimitiveTypeKind.GeometryMultiPoint, int.MaxValue },
-                    { PrimitiveTypeKind.GeometryMultiLineString, int.MaxValue },
-                    { PrimitiveTypeKind.GeometryMultiPolygon, int.MaxValue },
-                    { PrimitiveTypeKind.GeometryCollection, int.MaxValue },
-                    { PrimitiveTypeKind.GeographyPoint, int.MaxValue },
-                    { PrimitiveTypeKind.GeographyLineString, int.MaxValue },
-                    { PrimitiveTypeKind.GeographyPolygon, int.MaxValue },
-                    { PrimitiveTypeKind.GeographyMultiPoint, int.MaxValue },
-                    { PrimitiveTypeKind.GeographyMultiLineString, int.MaxValue },
-                    { PrimitiveTypeKind.GeographyMultiPolygon, int.MaxValue },
-                    { PrimitiveTypeKind.GeographyCollection, int.MaxValue },
-                };
+                  {
+                      { PrimitiveTypeKind.Binary, int.MaxValue },
+                      { PrimitiveTypeKind.Boolean, 1 },
+                      { PrimitiveTypeKind.Byte, 1 },
+                      { PrimitiveTypeKind.DateTime, 8 },
+                      { PrimitiveTypeKind.DateTimeOffset, 10 },
+                      { PrimitiveTypeKind.Decimal, 17 },
+                      { PrimitiveTypeKind.Double, 53 },
+                      { PrimitiveTypeKind.Guid, 16 },
+                      { PrimitiveTypeKind.Int16, 2 },
+                      { PrimitiveTypeKind.Int32, 4 },
+                      { PrimitiveTypeKind.Int64, 8 },
+                      { PrimitiveTypeKind.SByte, 1 },
+                      { PrimitiveTypeKind.Single, 4 },
+                      { PrimitiveTypeKind.String, int.MaxValue },
+                      { PrimitiveTypeKind.Time, 5 },
+                      { PrimitiveTypeKind.Geometry, int.MaxValue },
+                      { PrimitiveTypeKind.Geography, int.MaxValue },
+                      { PrimitiveTypeKind.GeometryPoint, int.MaxValue },
+                      { PrimitiveTypeKind.GeometryLineString, int.MaxValue },
+                      { PrimitiveTypeKind.GeometryPolygon, int.MaxValue },
+                      { PrimitiveTypeKind.GeometryMultiPoint, int.MaxValue },
+                      { PrimitiveTypeKind.GeometryMultiLineString, int.MaxValue },
+                      { PrimitiveTypeKind.GeometryMultiPolygon, int.MaxValue },
+                      { PrimitiveTypeKind.GeometryCollection, int.MaxValue },
+                      { PrimitiveTypeKind.GeographyPoint, int.MaxValue },
+                      { PrimitiveTypeKind.GeographyLineString, int.MaxValue },
+                      { PrimitiveTypeKind.GeographyPolygon, int.MaxValue },
+                      { PrimitiveTypeKind.GeographyMultiPoint, int.MaxValue },
+                      { PrimitiveTypeKind.GeographyMultiLineString, int.MaxValue },
+                      { PrimitiveTypeKind.GeographyMultiPolygon, int.MaxValue },
+                      { PrimitiveTypeKind.GeographyCollection, int.MaxValue },
+                  };
 
         /// <summary>
         ///     Determines if this column is a narrower data type than another column.
@@ -254,71 +181,6 @@ namespace System.Data.Entity.Migrations.Model
             }
 
             return false;
-        }
-
-        private TypeUsage BuildTypeUsage()
-        {
-            var primitiveType = PrimitiveType.GetEdmPrimitiveType(Type);
-
-            if (Type == PrimitiveTypeKind.Binary)
-            {
-                if (MaxLength != null)
-                {
-                    return TypeUsage.CreateBinaryTypeUsage(
-                        primitiveType,
-                        IsFixedLength ?? false,
-                        MaxLength.Value);
-                }
-
-                return TypeUsage.CreateBinaryTypeUsage(
-                    primitiveType,
-                    IsFixedLength ?? false);
-            }
-
-            if (Type == PrimitiveTypeKind.String)
-            {
-                if (MaxLength != null)
-                {
-                    return TypeUsage.CreateStringTypeUsage(
-                        primitiveType,
-                        IsUnicode ?? true,
-                        IsFixedLength ?? false,
-                        MaxLength.Value);
-                }
-
-                return TypeUsage.CreateStringTypeUsage(
-                    primitiveType,
-                    IsUnicode ?? true,
-                    IsFixedLength ?? false);
-            }
-
-            if (Type == PrimitiveTypeKind.DateTime)
-            {
-                return TypeUsage.CreateDateTimeTypeUsage(primitiveType, Precision);
-            }
-
-            if (Type == PrimitiveTypeKind.DateTimeOffset)
-            {
-                return TypeUsage.CreateDateTimeOffsetTypeUsage(primitiveType, Precision);
-            }
-
-            if (Type == PrimitiveTypeKind.Decimal)
-            {
-                if ((Precision != null)
-                    || (Scale != null))
-                {
-                    return TypeUsage.CreateDecimalTypeUsage(
-                        primitiveType,
-                        Precision ?? 18,
-                        Scale ?? 0);
-                }
-
-                return TypeUsage.CreateDecimalTypeUsage(primitiveType);
-            }
-
-            return (Type == PrimitiveTypeKind.Time)
-                       ? TypeUsage.CreateTimeTypeUsage(primitiveType, Precision)
-                       : TypeUsage.CreateDefaultTypeUsage(primitiveType);
         }
     }
 }

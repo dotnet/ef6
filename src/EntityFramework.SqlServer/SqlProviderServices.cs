@@ -104,6 +104,9 @@ namespace System.Data.Entity.SqlServer
         // TODO: Remove when the migrations SQL generator lives in this assembly.
         public override string GenerateFunctionSql(ICollection<DbModificationCommandTree> commandTrees, string rowsAffectedParameter)
         {
+            DebugCheck.NotNull(commandTrees);
+            Debug.Assert(commandTrees.Any());
+            
             var functionSqlGenerator
                 = new DmlFunctionSqlGenerator(GetDbProviderManifest("2008"));
 

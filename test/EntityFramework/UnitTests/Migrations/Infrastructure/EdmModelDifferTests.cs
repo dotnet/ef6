@@ -12,6 +12,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.UserRoles_v1;
     using System.Data.Entity.Migrations.UserRoles_v2;
     using System.Data.Entity.Utilities;
@@ -473,7 +474,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                          ProviderInfo = providerInfo
                                      };
 
-            var operations = new EdmModelDiffer().Diff(sourceMetadata, targetMetadata, false, null);
+            var operations = new EdmModelDiffer().Diff(sourceMetadata, targetMetadata, false, null, null);
 
             Assert.Equal(2, operations.Count());
             operations.OfType<AlterColumnOperation>().Each(
@@ -552,20 +553,20 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var commandTreeGenerator
                 = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel());
 
-            var operations = new EdmModelDiffer().Diff(
-                model1.GetModel(), model2.GetModel(), false, commandTreeGenerator);
+            var createProcedureOperations
+                = new EdmModelDiffer()
+                    .Diff(
+                        model1.GetModel(), 
+                        model2.GetModel(), 
+                        false, 
+                        commandTreeGenerator, 
+                        new SqlServerMigrationSqlGenerator())
+                    .OfType<CreateProcedureOperation>()
+                    .ToList();
 
-            Assert.Equal(25, operations.Count());
-
-            var createModificationsFunctionOperation
-                = operations
-                    .OfType<CreateModificationFunctionsOperation>()
-                    .Single(c => c.ModificationFunctionMapping.EntityType.Name == "ExtraSpecialOrder");
-
-            Assert.NotNull(createModificationsFunctionOperation.ModificationFunctionMapping);
-            Assert.Equal(3, createModificationsFunctionOperation.InsertCommandTrees.Count);
-            Assert.Equal(3, createModificationsFunctionOperation.UpdateCommandTrees.Count);
-            Assert.Equal(3, createModificationsFunctionOperation.DeleteCommandTrees.Count);
+            Assert.Equal(12, createProcedureOperations.Count);
+            Assert.True(createProcedureOperations.All(c => c.Name.Any()));
+            Assert.True(createProcedureOperations.All(c => c.BodySql.Any()));
         }
 
         [MigrationsTheory]
@@ -579,15 +580,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations = new EdmModelDiffer().Diff(
-                model2.GetModel(), model1.GetModel());
+            var dropProcedureOperations
+                = new EdmModelDiffer().Diff(model2.GetModel(), model1.GetModel())
+                                      .OfType<DropProcedureOperation>()
+                                      .ToList();
 
-            Assert.Equal(2, operations.Count());
-
-            var dropModificationsFunctionOperation
-                = operations.OfType<DropModificationFunctionsOperation>().Single();
-
-            Assert.NotNull(dropModificationsFunctionOperation.ModificationFunctionMapping);
+            Assert.Equal(3, dropProcedureOperations.Count);
+            Assert.Equal("OrderLine_Insert", dropProcedureOperations[0].Name);
+            Assert.Equal("OrderLine_Update", dropProcedureOperations[1].Name);
+            Assert.Equal("OrderLine_Delete", dropProcedureOperations[2].Name);
         }
 
         [MigrationsTheory]

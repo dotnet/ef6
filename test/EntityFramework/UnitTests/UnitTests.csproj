@@ -177,6 +177,7 @@
     <Compile Include="Core\Mapping\StorageAssociationTypeMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageEntityTypeModificationFunctionMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageMappingItemCollectionTests.cs" />
+    <Compile Include="Core\Mapping\StorageModificationFunctionMappingTests.cs" />
     <Compile Include="Core\Mapping\StoragePropertyMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageTypeMappingTests.cs" />
     <Compile Include="Core\Mapping\StorageAssociationSetMappingTests.cs" />
@@ -319,11 +320,13 @@
     <Compile Include="Internal\TestHelpers\PropertyEntryMetadataForMock.cs" />
     <Compile Include="Internal\ThrowingMonitorTests.cs" />
     <Compile Include="Migrations\AddMigrationCommandTests.cs" />
+    <Compile Include="Migrations\Builders\ParameterBuilderTests.cs" />
     <Compile Include="Migrations\Infrastructure\DynamicToFunctionModificationCommandConverterTests.cs" />
     <Compile Include="Migrations\Infrastructure\FunctionsModel.cs" />
     <Compile Include="Migrations\Infrastructure\ModificationCommandTreeGeneratorTests.cs" />
-    <Compile Include="Migrations\Model\DropModificationFunctionsOperationTests.cs" />
-    <Compile Include="Migrations\Model\CreateModificationFunctionsOperationTests.cs" />
+    <Compile Include="Migrations\Model\ParameterModelTests.cs" />
+    <Compile Include="Migrations\Model\DropProcedureOperationTests.cs" />
+    <Compile Include="Migrations\Model\CreateProcedureOperationTests.cs" />
     <Compile Include="Migrations\Utilities\MigrationsConfigurationFinderTests.cs" />
     <Compile Include="Migrations\Utilities\PartialTrustMigrationsConfigurationFinderTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeActivatorTests.cs" />

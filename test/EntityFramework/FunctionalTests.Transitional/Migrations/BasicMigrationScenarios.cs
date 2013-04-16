@@ -215,31 +215,31 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var migrator = CreateMigrator<ShopContext_v1>();
+            var migrator = CreateMigrator<ShopContext_v2>();
 
             var generatedMigration1 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration1");
 
-            migrator = CreateMigrator<ShopContext_v1>(
+            migrator = CreateMigrator<ShopContext_v2>(
                 automaticMigrationsEnabled: false,
                 scaffoldedMigrations: generatedMigration1);
 
             migrator.Update();
 
-            migrator = CreateMigrator<ShopContext_v2>();
+            migrator = CreateMigrator<ShopContext_v3>();
 
             var generatedMigration2 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration2");
 
-            migrator = CreateMigrator<ShopContext_v2>(
+            migrator = CreateMigrator<ShopContext_v3>(
                 automaticMigrationsEnabled: false,
                 scaffoldedMigrations: new[] { generatedMigration1, generatedMigration2 });
 
             migrator.Update();
 
-            Assert.True(TableExists("crm.tbl_customers"));
+            Assert.True(TableExists("MigrationsStores"));
 
             migrator.Update("Migration1");
 
-            Assert.True(TableExists("MigrationsCustomers"));
+            Assert.True(TableExists("crm.tbl_customers"));
         }
 
         [MigrationsTheory]
@@ -306,21 +306,21 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var migrator = CreateMigrator<ShopContext_v1>();
+            var migrator = CreateMigrator<ShopContext_v2>();
 
             var generatedMigration1 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration1");
 
-            migrator = CreateMigrator<ShopContext_v1>(
+            migrator = CreateMigrator<ShopContext_v2>(
                 automaticMigrationsEnabled: false,
                 scaffoldedMigrations: generatedMigration1);
 
             migrator.Update();
 
-            migrator = CreateMigrator<ShopContext_v2>();
+            migrator = CreateMigrator<ShopContext_v3>();
 
             var generatedMigration2 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration2");
 
-            migrator = CreateMigrator<ShopContext_v2>(
+            migrator = CreateMigrator<ShopContext_v3>(
                 automaticMigrationsEnabled: false,
                 scaffoldedMigrations: generatedMigration2);
 
@@ -328,17 +328,17 @@ namespace System.Data.Entity.Migrations
 
             var generatedMigration3 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration3");
 
-            migrator = CreateMigrator<ShopContext_v2>(
+            migrator = CreateMigrator<ShopContext_v3>(
                 automaticMigrationsEnabled: false,
                 scaffoldedMigrations: new[] { generatedMigration1, generatedMigration2, generatedMigration3 });
 
             migrator.Update();
 
-            Assert.True(TableExists("crm.tbl_customers"));
+            Assert.True(TableExists("MigrationsStores"));
 
             migrator.Update(generatedMigration1.MigrationId);
 
-            Assert.True(TableExists("MigrationsCustomers"));
+            Assert.True(TableExists("crm.tbl_customers"));
         }
 
         [MigrationsTheory]
@@ -379,22 +379,22 @@ namespace System.Data.Entity.Migrations
 
             var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
 
-            var migrator = CreateMigrator<ShopContext_v1>(automaticDataLossEnabled: true);
-
-            migrator.Update();
-
-            Assert.True(TableExists("MigrationsCustomers"));
-
-            migrator = CreateMigrator<ShopContext_v2>(automaticDataLossEnabled: true);
+            var migrator = CreateMigrator<ShopContext_v2>(automaticDataLossEnabled: true);
 
             migrator.Update();
 
             Assert.True(TableExists("crm.tbl_customers"));
 
+            migrator = CreateMigrator<ShopContext_v3>(automaticDataLossEnabled: true);
+
+            migrator.Update();
+
+            Assert.True(TableExists("MigrationsStores"));
+
             migrator.Update(DbMigrator.InitialDatabase);
 
-            Assert.False(TableExists("MigrationsCustomers"));
-            Assert.False(TableExists("tbl_customers"));
+            Assert.False(TableExists("crm.tbl_customers"));
+            Assert.False(TableExists("MigrationsStores"));
             Assert.Null(historyRepository.GetLastModel());
         }
 
@@ -455,17 +455,17 @@ namespace System.Data.Entity.Migrations
 
             var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
 
-            var migrator = CreateMigrator<ShopContext_v1>();
+            var migrator = CreateMigrator<ShopContext_v2>();
 
             migrator.Update();
 
-            Assert.True(TableExists("MigrationsCustomers"));
+            Assert.True(TableExists("crm.tbl_customers"));
 
-            migrator = CreateMigrator<ShopContext_v2>(automaticDataLossEnabled: true);
+            migrator = CreateMigrator<ShopContext_v3>(automaticDataLossEnabled: true);
 
             var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
 
-            migrator = CreateMigrator<ShopContext_v2>(
+            migrator = CreateMigrator<ShopContext_v3>(
                 automaticDataLossEnabled: true,
                 scaffoldedMigrations: generatedMigration);
 
@@ -475,7 +475,7 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update(DbMigrator.InitialDatabase);
 
-            Assert.False(TableExists("MigrationsCustomers"));
+            Assert.False(TableExists("MigrationsStores"));
             Assert.False(TableExists("tbl_customers"));
             Assert.Null(historyRepository.GetLastModel());
         }
@@ -605,15 +605,17 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            CreateMigrator<ShopContext_v1>().Update();
+            CreateMigrator<ShopContext_v2>().Update();
 
-            var migrator = CreateMigrator<ShopContext_v2>();
+            var migrator = CreateMigrator<ShopContext_v3>();
 
             var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Version 2");
 
             ResetDatabase();
 
-            CreateMigrator<ShopContext_v3>(scaffoldedMigrations: generatedMigration).Update();
+            CreateMigrator<ShopContext_v4>(
+                automaticDataLossEnabled: true,
+                scaffoldedMigrations: generatedMigration).Update();
 
             Assert.True(TableExists("MigrationsStores"));
         }
@@ -623,15 +625,15 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            CreateMigrator<ShopContext_v1>().Update();
+            CreateMigrator<ShopContext_v2>().Update();
 
-            var migrator = CreateMigrator<ShopContext_v2>();
+            var migrator = CreateMigrator<ShopContext_v3>();
 
             var scaffoldedMigration
                 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
 
             migrator
-                = CreateMigrator<ShopContext_v2>(
+                = CreateMigrator<ShopContext_v3>(
                     scaffoldedMigrations: scaffoldedMigration,
                     automaticDataLossEnabled: true);
 

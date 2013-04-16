@@ -78,7 +78,7 @@ namespace System.Data.Entity.Migrations.Utilities
         ///     The <see cref="T:System.IO.TextWriter" /> to use for output.
         /// </param>
         public IndentedTextWriter(TextWriter writer)
-            : this(writer, "    ")
+            : this(writer, DefaultTabString)
         {
         }
 

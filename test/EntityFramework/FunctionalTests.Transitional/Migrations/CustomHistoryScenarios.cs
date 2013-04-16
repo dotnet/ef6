@@ -83,21 +83,20 @@ namespace System.Data.Entity.Migrations
             Assert.Null(historyRepository.GetLastModel());
         }
 
-        //[MigrationsTheory]
-        // TODO: Re-enable when Migrations SPROC fluent APIS implemented.
+        [MigrationsTheory]
         public void Can_auto_update_after_explicit_update_when_custom_history_factory()
         {
             ResetDatabase();
 
             var migrator
-                = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryA);
+                = CreateMigrator<ShopContext_v2>(historyContextFactory: _testHistoryContextFactoryA);
 
             var generatedMigration
                 = new MigrationScaffolder(migrator.Configuration)
                     .Scaffold("Migration_v1");
 
             migrator
-                = CreateMigrator<ShopContext_v1>(
+                = CreateMigrator<ShopContext_v2>(
                     automaticMigrationsEnabled: false,
                     historyContextFactory: _testHistoryContextFactoryA,
                     scaffoldedMigrations: generatedMigration);
@@ -108,7 +107,7 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("__Migrations"));
 
             migrator
-                = CreateMigrator<ShopContext_v2>(
+                = CreateMigrator<ShopContext_v3>(
                     automaticDataLossEnabled: true,
                     historyContextFactory: _testHistoryContextFactoryA,
                     scaffoldedMigrations: generatedMigration);
@@ -130,14 +129,14 @@ namespace System.Data.Entity.Migrations
             ResetDatabase();
 
             var migrator
-                = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryA);
+                = CreateMigrator<ShopContext_v2>(historyContextFactory: _testHistoryContextFactoryA);
 
             var generatedMigrationA
                 = new MigrationScaffolder(migrator.Configuration)
                     .Scaffold("Migration_v1");
 
             migrator
-                = CreateMigrator<ShopContext_v1>(
+                = CreateMigrator<ShopContext_v2>(
                     automaticMigrationsEnabled: false,
                     historyContextFactory: _testHistoryContextFactoryA,
                     scaffoldedMigrations: generatedMigrationA);
@@ -148,7 +147,7 @@ namespace System.Data.Entity.Migrations
             Assert.True(TableExists("__Migrations"));
 
             migrator
-                = CreateMigrator<ShopContext_v2>(
+                = CreateMigrator<ShopContext_v3>(
                     historyContextFactory: _testHistoryContextFactoryA,
                     scaffoldedMigrations: generatedMigrationA);
 
@@ -157,7 +156,7 @@ namespace System.Data.Entity.Migrations
                     .Scaffold("Migration_v2");
 
             migrator
-                = CreateMigrator<ShopContext_v2>(
+                = CreateMigrator<ShopContext_v3>(
                     automaticMigrationsEnabled: false,
                     automaticDataLossEnabled: true,
                     historyContextFactory: _testHistoryContextFactoryA,

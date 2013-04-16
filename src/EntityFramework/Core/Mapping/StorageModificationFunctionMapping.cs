@@ -49,6 +49,16 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal readonly FunctionParameter RowsAffectedParameter;
 
+        internal string RowsAffectedParameterName
+        {
+            get
+            {
+                return RowsAffectedParameter != null
+                           ? RowsAffectedParameter.Name
+                           : null;
+            }
+        }
+
         /// <summary>
         ///     Gets Metadata of function to which we should bind.
         /// </summary>

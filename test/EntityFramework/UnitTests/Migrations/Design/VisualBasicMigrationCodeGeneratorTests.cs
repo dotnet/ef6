@@ -14,6 +14,112 @@ namespace System.Data.Entity.Migrations.Design
     public class VisualBasicMigrationCodeGeneratorTests
     {
         [Fact]
+        public void Generate_can_output_create_procedure_operations()
+        {
+            var createProcedureOperation
+                = new CreateProcedureOperation("Foo", "SELECT ShinyHead\r\nFROM Pilkingtons");
+
+            createProcedureOperation.Parameters.Add(
+                new ParameterModel(PrimitiveTypeKind.String)
+                    {
+                        Name = "P'",
+                        DefaultValue = "Bar"
+                    });
+
+            var codeGenerator = new VisualBasicMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            createProcedureOperation
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"Imports System
+Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
+
+Namespace Foo
+    Public Partial Class Bar
+        Inherits DbMigration
+    
+        Public Overrides Sub Up()
+            CreateStoredProcedure(
+                ""Foo"",
+                Function(p) New With
+                    {
+                        .P = p.String(name := ""P'"", defaultValue := ""Bar"")
+                    },
+                body :=
+                    ""SELECT ShinyHead"" & vbCrLf & _
+                    ""FROM Pilkingtons""
+            )
+            
+        End Sub
+        
+        Public Overrides Sub Down()
+            DropStoredProcedure(""Foo"")
+        End Sub
+    End Class
+End Namespace
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_drop_procedure_operations()
+        {
+            var codeGenerator = new VisualBasicMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            new DropProcedureOperation("Foo"),
+                            new DropTableOperation("Bar", new CreateTableOperation("Bar"))
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"Imports System
+Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
+
+Namespace Foo
+    Public Partial Class Bar
+        Inherits DbMigration
+    
+        Public Overrides Sub Up()
+            DropStoredProcedure(""Foo"")
+            DropTable(""Bar"")
+        End Sub
+        
+        Public Overrides Sub Down()
+            CreateTable(
+                ""Bar"",
+                Function(c) New With
+                    {
+                    })
+            
+            Throw New NotSupportedException(""Scaffolding create procedure operations is not supported in down methods."")
+        End Sub
+    End Class
+End Namespace
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
         public void Generate_should_output_invariant_decimals_when_non_invariant_culture()
         {
             var lastCulture = Thread.CurrentThread.CurrentCulture;
@@ -43,6 +149,7 @@ namespace System.Data.Entity.Migrations.Design
                 Assert.Equal(
                     @"Imports System
 Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -96,6 +203,7 @@ End Namespace
                 Assert.Equal(
                     @"Imports System
 Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -170,6 +278,7 @@ End Namespace
             Assert.Equal(
                 @"Imports System
 Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -214,6 +323,7 @@ End Namespace
             Assert.Equal(
                 @"Imports System
 Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -259,6 +369,7 @@ End Namespace
             Assert.Equal(
                 @"Imports System
 Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -303,6 +414,7 @@ End Namespace
             Assert.Equal(
                 @"Imports System
 Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -349,6 +461,7 @@ End Namespace
             Assert.Equal(
                 @"Imports System
 Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -396,6 +509,7 @@ End Namespace
             Assert.Equal(
                 @"Imports System
 Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -433,6 +547,7 @@ End Namespace
             Assert.Equal(
                 @"Imports System
 Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -475,6 +590,7 @@ End Namespace
             Assert.Equal(
                 @"Imports System
 Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -550,6 +666,7 @@ End Namespace
             Assert.Equal(
                 @"Imports System
 Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -638,6 +755,7 @@ End Namespace
             Assert.Equal(
                 @"Imports System
 Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -760,6 +878,7 @@ End Namespace
                 @"Imports System
 Imports System.Data.Entity.Migrations
 Imports System.Data.Entity.Spatial
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -804,6 +923,7 @@ End Namespace
                 @"Imports System
 Imports System.Data.Entity.Migrations
 Imports System.Data.Entity.Spatial
+Imports Microsoft.VisualBasic
 
 Namespace Foo
     Public Partial Class Bar
@@ -875,6 +995,7 @@ End Class
             Assert.Equal(
                 @"Imports System
 Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
 
 Public Partial Class Bar
     Inherits DbMigration

@@ -48,10 +48,13 @@ namespace System.Data.Entity.Migrations
             var sources = scaffoldedMigrations.SelectMany(g => new[] { g.UserCode, g.DesignerCode });
 
             var compilerResults = _codeProvider.CompileAssemblyFromSource(options, sources.ToArray());
-            embededResources.Each(r => File.Delete(r));
+
+            embededResources.Each(File.Delete);
 
             if (compilerResults.Errors.Count > 0)
             {
+                Console.WriteLine(scaffoldedMigrations.First().UserCode);
+
                 throw new InvalidOperationException(BuildCompileErrorMessage(compilerResults.Errors));
             }
 

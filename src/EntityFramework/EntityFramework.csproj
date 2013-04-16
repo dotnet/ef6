@@ -211,8 +211,12 @@
     <Compile Include="Core\Common\CommandTrees\DbUnionAllExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbScanExpression.cs" />
     <Compile Include="Edm\Serialization\MetadataItemHelper.cs" />
+    <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
     <Compile Include="Migrations\History\HistoryContextFactory.cs" />
-    <Compile Include="Migrations\Model\DropModificationFunctionsOperation.cs" />
+    <Compile Include="Migrations\Model\NotSupportedOperation.cs" />
+    <Compile Include="Migrations\Model\ParameterModel.cs" />
+    <Compile Include="Migrations\Model\DropProcedureOperation.cs" />
+    <Compile Include="Migrations\Model\PropertyModel.cs" />
     <Compile Include="TransactionalBehavior.cs" />
     <Compile Include="Internal\InterceptableDbCommand.cs">
       <SubType>Component</SubType>
@@ -396,7 +400,7 @@
     <Compile Include="Internal\LazyAsyncEnumerator.cs" />
     <Compile Include="Internal\LazyEnumerator`.cs" />
     <Compile Include="Migrations\Infrastructure\MigrationsPendingException.cs" />
-    <Compile Include="Migrations\Model\CreateModificationFunctionsOperation.cs" />
+    <Compile Include="Migrations\Model\CreateProcedureOperation.cs" />
     <Compile Include="Migrations\Utilities\MigrationsConfigurationFinder.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeActivator.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeFilter.cs" />

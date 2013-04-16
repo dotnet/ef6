@@ -179,12 +179,12 @@ namespace System.Data.Entity.Migrations
 
             migration.CreateTable(
                 "Foo", cs => new
-                {
-                    Id = cs.Int()
-                }, new
-                {
-                    Foo = 123
-                });
+                                 {
+                                     Id = cs.Int()
+                                 }, new
+                                        {
+                                            Foo = 123
+                                        });
 
             var createTableOperation = migration.Operations.Cast<CreateTableOperation>().Single();
 
@@ -207,6 +207,68 @@ namespace System.Data.Entity.Migrations
         }
 
         [Fact]
+        public void CreateStoredProcedure_can_build_procedure_with_parameters()
+        {
+            var migration = new TestMigration();
+
+            migration.CreateStoredProcedure(
+                "Customers_Insert",
+                p => new
+                         {
+                             Id = p.Int(),
+                             Name = p.String()
+                         },
+                "insert into customers...");
+
+            var createProcedureOperation 
+                = migration.Operations.Cast<CreateProcedureOperation>().Single();
+
+            Assert.Equal("Customers_Insert", createProcedureOperation.Name);
+            Assert.Equal("insert into customers...", createProcedureOperation.BodySql);
+            Assert.Equal(2, createProcedureOperation.Parameters.Count());
+
+            var parameterModel = createProcedureOperation.Parameters.First();
+
+            Assert.Equal("Id", parameterModel.Name);
+            Assert.Equal(PrimitiveTypeKind.Int32, parameterModel.Type);
+
+            parameterModel = createProcedureOperation.Parameters.Last();
+
+            Assert.Equal("Name", parameterModel.Name);
+            Assert.Equal(PrimitiveTypeKind.String, parameterModel.Type);
+        }
+
+        [Fact]
+        public void CreateStoredProcedure_can_build_procedure_without_parameters()
+        {
+            var migration = new TestMigration();
+
+            migration.CreateStoredProcedure(
+                "Customers_Insert",
+                "insert into customers...");
+
+            var createProcedureOperation
+                = migration.Operations.Cast<CreateProcedureOperation>().Single();
+
+            Assert.Equal("Customers_Insert", createProcedureOperation.Name);
+            Assert.Equal("insert into customers...", createProcedureOperation.BodySql);
+            Assert.Equal(0, createProcedureOperation.Parameters.Count());
+        }
+
+        [Fact]
+        public void DropStoredProcedure_should_add_drop_procedure_operation()
+        {
+            var migration = new TestMigration();
+
+            migration.DropStoredProcedure("Customers_Insert");
+
+            var dropProcedureOperation = migration.Operations.Cast<DropProcedureOperation>().Single();
+
+            Assert.NotNull(dropProcedureOperation);
+            Assert.Equal("Customers_Insert", dropProcedureOperation.Name);
+        }
+
+        [Fact]
         public void CreateTable_can_build_table_with_columns()
         {
             var migration = new TestMigration();
@@ -214,10 +276,10 @@ namespace System.Data.Entity.Migrations
             migration.CreateTable(
                 "Customers",
                 cs => new
-                {
-                    Id = cs.Int(),
-                    Name = cs.String()
-                });
+                          {
+                              Id = cs.Int(),
+                              Name = cs.String()
+                          });
 
             var createTableOperation = migration.Operations.Cast<CreateTableOperation>().Single();
 
@@ -243,9 +305,9 @@ namespace System.Data.Entity.Migrations
             migration.CreateTable(
                 "Customers",
                 cs => new
-                {
-                    Id = cs.Int(name: "Customer Id")
-                });
+                          {
+                              Id = cs.Int(name: "Customer Id")
+                          });
 
             var createTableOperation = migration.Operations.Cast<CreateTableOperation>().Single();
 
@@ -263,16 +325,16 @@ namespace System.Data.Entity.Migrations
             migration.CreateTable(
                 "Customers",
                 cs => new
-                {
-                    Id = cs.Int(),
-                    Name = cs.String()
-                })
+                          {
+                              Id = cs.Int(),
+                              Name = cs.String()
+                          })
                      .Index(
                          t => new
-                         {
-                             t.Id,
-                             t.Name
-                         }, unique: true, clustered: true);
+                                  {
+                                      t.Id,
+                                      t.Name
+                                  }, unique: true, clustered: true);
 
             var createIndexOperation = migration.Operations.OfType<CreateIndexOperation>().Single();
 

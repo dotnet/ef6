@@ -8,8 +8,11 @@ namespace System.Data.Entity.Migrations
 
     public class CrossDatabaseScenarios : DbTestCase
     {
-        private class CrossProviderContext_v1 : ShopContext_v1
+        public class CrossProviderContext_v1 : DbContext
         {
+            public DbSet<MigrationsCustomer> Customers { get; set; }
+            public DbSet<MigrationsProduct> Products { get; set; }
+
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
                 modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>();
@@ -18,7 +21,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        private class CrossProviderContext_v2 : CrossProviderContext_v1
+        public class CrossProviderContext_v2 : CrossProviderContext_v1
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {

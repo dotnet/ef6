@@ -13436,6 +13436,22 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.MetadataItemErrorsFoundDuringGeneration); }
         }
+
+        /// <summary>
+        ///     A string like "Could not apply auto-migration '{0}' because it includes modification function creation operations. When using auto-migrations, modification function creation operations are only supported when migrating to the current model."
+        /// </summary>
+        internal static string AutomaticStaleFunctions(object p0)
+        {
+            return EntityRes.GetString(EntityRes.AutomaticStaleFunctions, p0);
+        }
+
+        /// <summary>
+        ///     A string like "Scaffolding create procedure operations is not supported in down methods."
+        /// </summary>
+        internal static string ScaffoldSprocInDownNotSupported
+        {
+            get { return EntityRes.GetString(EntityRes.ScaffoldSprocInDownNotSupported); }
+        }
     }
 
     /// <summary>
@@ -15098,6 +15114,14 @@ namespace System.Data.Entity.Resources
         internal static Exception ConflictingFunctionsMapping(object p0, object p1)
         {
             return new InvalidOperationException(Strings.ConflictingFunctionsMapping(p0, p1));
+        }
+
+        /// <summary>
+        ///     Migrations.Infrastructure.MigrationsException with message like "Could not apply auto-migration '{0}' because it includes modification function creation operations. When using auto-migrations, modification function creation operations are only supported when migrating to the current model."
+        /// </summary>
+        internal static Exception AutomaticStaleFunctions(object p0)
+        {
+            return new Migrations.Infrastructure.MigrationsException(Strings.AutomaticStaleFunctions(p0));
         }
 
         /// <summary>
@@ -16811,6 +16835,8 @@ namespace System.Data.Entity.Resources
         internal const string InvalidColumnBuilderArgument = "InvalidColumnBuilderArgument";
         internal const string StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed = "StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed";
         internal const string MetadataItemErrorsFoundDuringGeneration = "MetadataItemErrorsFoundDuringGeneration";
+        internal const string AutomaticStaleFunctions = "AutomaticStaleFunctions";
+        internal const string ScaffoldSprocInDownNotSupported = "ScaffoldSprocInDownNotSupported";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

@@ -72,17 +72,17 @@ namespace System.Data.Entity.Edm.Serialization
                 "Bar",
                 DataSpace.SSpace,
                 new EdmFunctionPayload
-                {
-                    Schema = "dbo",
-                    ReturnParameters =
-                        new[]
+                    {
+                        Schema = "dbo",
+                        ReturnParameters =
+                            new[]
                                 {
                                     new FunctionParameter(
                                         "r",
                                         returnParameterType,
                                         ParameterMode.ReturnValue)
                                 }
-                });
+                    });
 
             fixture.Writer.WriteFunctionElementHeader(function);
 
@@ -96,16 +96,47 @@ namespace System.Data.Entity.Edm.Serialization
         {
             var fixture = new Fixture();
 
+            var typeUsage
+                = TypeUsage.Create(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String),
+                    new FacetValues
+                        {
+                            MaxLength = 123
+                        });
+
             var functionParameter
                 = new FunctionParameter(
                     "Foo",
-                    TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    typeUsage,
                     ParameterMode.In);
 
             fixture.Writer.WriteFunctionParameterHeader(functionParameter);
 
             Assert.Equal(
-                "<Parameter Name=\"Foo\" Type=\"String\" Mode=\"In\"",
+                "<Parameter Name=\"Foo\" Type=\"String\" Mode=\"In\" MaxLength=\"123\"",
+                fixture.ToString());
+
+            fixture = new Fixture();
+
+            typeUsage
+                = TypeUsage.Create(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal),
+                    new FacetValues
+                        {
+                            Precision = (byte?)4,
+                            Scale = (byte?)8
+                        });
+
+            functionParameter
+                = new FunctionParameter(
+                    "Foo",
+                    typeUsage,
+                    ParameterMode.In);
+
+            fixture.Writer.WriteFunctionParameterHeader(functionParameter);
+
+            Assert.Equal(
+                "<Parameter Name=\"Foo\" Type=\"Decimal\" Mode=\"In\" Precision=\"4\" Scale=\"8\"",
                 fixture.ToString());
         }
 
@@ -123,7 +154,7 @@ namespace System.Data.Entity.Edm.Serialization
                     ParameterMode.ReturnValue);
 
             var functionPayload =
-                new EdmFunctionPayload()
+                new EdmFunctionPayload
                     {
                         IsComposable = true,
                         ReturnParameters = new[] { returnParameter },
@@ -151,11 +182,11 @@ namespace System.Data.Entity.Edm.Serialization
                     ParameterMode.ReturnValue);
 
             var functionPayload =
-                new EdmFunctionPayload()
-                {
-                    IsComposable = false,
-                    ReturnParameters = new[] { returnParameter },
-                };
+                new EdmFunctionPayload
+                    {
+                        IsComposable = false,
+                        ReturnParameters = new[] { returnParameter },
+                    };
 
             var functionImport
                 = new EdmFunction("foo", "nction", DataSpace.CSpace, functionPayload);
@@ -172,10 +203,10 @@ namespace System.Data.Entity.Edm.Serialization
         {
             var fixture = new Fixture();
 
-            var functionImportParameter = 
+            var functionImportParameter =
                 new FunctionParameter(
-                    "miles", 
-                    TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)), 
+                    "miles",
+                    TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
                     ParameterMode.InOut);
 
             fixture.Writer.WriteFunctionImportParameterElementHeader(functionImportParameter);

@@ -26,12 +26,13 @@ namespace System.Data.Entity.Migrations.Sql
     ///     Provider to convert provider agnostic migration operations into SQL commands
     ///     that can be run against a Microsoft SQL Server database.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), DbProviderName("System.Data.SqlClient")]
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+    [DbProviderName("System.Data.SqlClient")]
     public class SqlServerMigrationSqlGenerator : MigrationSqlGenerator
     {
         internal const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffK";
         internal const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ss.fffzzz";
-        
+
         private const int DefaultMaxLength = 128;
         private const int DefaultNumericPrecision = 18;
         private const byte DefaultTimePrecision = 7;
@@ -39,7 +40,7 @@ namespace System.Data.Entity.Migrations.Sql
 
         private static readonly Regex _sqlKeywordUpcaser
             = new Regex(
-                "^(insert|values|delete|where|update|declare|select|from|output|from|join|set)",
+                @"^(insert|values|delete|where|update|declare|select|from|output|from|join|set|default\svalues|and)",
                 RegexOptions.Multiline | RegexOptions.Compiled);
 
         private DbProviderServices _providerServices;
@@ -66,6 +67,34 @@ namespace System.Data.Entity.Migrations.Sql
             _statements = new List<MigrationStatement>();
             _generatedSchemas = new HashSet<string>();
             _variableCounter = 0;
+
+            InitializeProviderServices(providerManifestToken);
+
+            migrationOperations.Each<dynamic>(o => Generate(o));
+
+            return _statements;
+        }
+
+        public override string GenerateProcedureBody(
+            ICollection<DbModificationCommandTree> commandTrees,
+            string rowsAffectedParameter,
+            string providerManifestToken)
+        {
+            Check.NotNull(commandTrees, "commandTrees");
+            Check.NotEmpty(providerManifestToken, "providerManifestToken");
+
+            if (!commandTrees.Any())
+            {
+                return "RETURN";
+            }
+
+            InitializeProviderServices(providerManifestToken);
+
+            return UpperCaseKeywords(_providerServices.GenerateFunctionSql(commandTrees, rowsAffectedParameter));
+        }
+
+        private void InitializeProviderServices(string providerManifestToken)
+        {
             _providerManifestToken = providerManifestToken;
 
             using (var connection = CreateConnection())
@@ -73,10 +102,6 @@ namespace System.Data.Entity.Migrations.Sql
                 _providerServices = DbProviderServices.GetProviderServices(connection);
                 _providerManifest = _providerServices.GetProviderManifest(providerManifestToken);
             }
-
-            migrationOperations.Each<dynamic>(o => Generate(o));
-
-            return _statements;
         }
 
         /// <summary>
@@ -102,61 +127,25 @@ namespace System.Data.Entity.Migrations.Sql
             return DbConfiguration.GetService<DbProviderFactory>("System.Data.SqlClient").CreateConnection();
         }
 
-        protected virtual void Generate(CreateModificationFunctionsOperation createModificationFunctionsOperation)
+        protected virtual void Generate(CreateProcedureOperation createProcedureOperation)
         {
-            Check.NotNull(createModificationFunctionsOperation, "createModificationFunctionsOperation");
-
-            var modificationFunctionMapping
-                = createModificationFunctionsOperation.ModificationFunctionMapping;
-
-            WriteCreateProcedure(
-                modificationFunctionMapping.InsertFunctionMapping.Function,
-                createModificationFunctionsOperation.InsertCommandTrees);
-
-            WriteCreateProcedure(
-                modificationFunctionMapping.UpdateFunctionMapping.Function,
-                createModificationFunctionsOperation.UpdateCommandTrees,
-                modificationFunctionMapping.UpdateFunctionMapping.RowsAffectedParameter);
-
-            WriteCreateProcedure(
-                modificationFunctionMapping.DeleteFunctionMapping.Function,
-                createModificationFunctionsOperation.DeleteCommandTrees,
-                modificationFunctionMapping.DeleteFunctionMapping.RowsAffectedParameter);
-        }
-
-        private void WriteCreateProcedure<TModificationCommandTree>(
-            EdmFunction function,
-            ICollection<TModificationCommandTree> commandTrees,
-            FunctionParameter rowsAffectedParameter = null)
-            where TModificationCommandTree : DbModificationCommandTree
-        {
-            DebugCheck.NotNull(function);
-            DebugCheck.NotNull(commandTrees);
+            Check.NotNull(createProcedureOperation, "createProcedureOperation");
 
             using (var writer = Writer())
             {
-                writer.WriteLine("CREATE PROCEDURE " + Name(function.Name));
+                writer.WriteLine("CREATE PROCEDURE " + Name(createProcedureOperation.Name));
                 writer.Indent++;
 
-                for (var i = 0; i < function.Parameters.Count; i++)
-                {
-                    var parameter = function.Parameters[i];
+                createProcedureOperation.Parameters.Each(
+                    (p, i) =>
+                        {
+                            Generate(p, writer);
 
-                    if (i > 0)
-                    {
-                        writer.WriteLine(",");
-                    }
-
-                    writer.Write("@");
-                    writer.Write(parameter.Name);
-                    writer.Write(" ");
-                    writer.Write(parameter.TypeName);
-
-                    if (parameter.Mode == ParameterMode.Out)
-                    {
-                        writer.Write(" OUT");
-                    }
-                }
+                            if (i < createProcedureOperation.Parameters.Count - 1)
+                            {
+                                writer.WriteLine(",");
+                            }
+                        });
 
                 writer.WriteLine();
                 writer.Indent--;
@@ -164,13 +153,20 @@ namespace System.Data.Entity.Migrations.Sql
                 writer.WriteLine("BEGIN");
                 writer.Indent++;
 
-                writer.WriteLine(
-                    UpperCaseKeywords(
-                        _providerServices
-                            .GenerateFunctionSql(
-                                commandTrees.Cast<DbModificationCommandTree>().ToList(),
-                                rowsAffectedParameter != null ? rowsAffectedParameter.Name : null))
-                        .Replace(Environment.NewLine, Environment.NewLine + "    "));
+                if (!string.IsNullOrWhiteSpace(createProcedureOperation.BodySql))
+                {
+                    var indentString
+                        = writer.NewLine
+                          + new string(' ', (writer.Indent * 4));
+
+                    var indentReplacer = new Regex(@"\r?\n *");
+
+                    writer.WriteLine(indentReplacer.Replace(createProcedureOperation.BodySql, indentString));
+                }
+                else
+                {
+                    writer.WriteLine("RETURN");
+                }
 
                 writer.Indent--;
                 writer.Write("END");
@@ -179,27 +175,42 @@ namespace System.Data.Entity.Migrations.Sql
             }
         }
 
-        protected virtual void Generate(DropModificationFunctionsOperation dropModificationFunctionsOperation)
+        private void Generate(ParameterModel parameterModel, IndentedTextWriter writer)
         {
-            Check.NotNull(dropModificationFunctionsOperation, "dropModificationFunctionsOperation");
+            DebugCheck.NotNull(parameterModel);
+            DebugCheck.NotNull(writer);
 
-            var modificationFunctionMapping
-                = dropModificationFunctionsOperation.ModificationFunctionMapping;
+            writer.Write("@");
+            writer.Write(parameterModel.Name);
+            writer.Write(" ");
+            writer.Write(BuildPropertyType(parameterModel));
 
-            WriteDropProcedure(modificationFunctionMapping.InsertFunctionMapping.Function);
-            WriteDropProcedure(modificationFunctionMapping.UpdateFunctionMapping.Function);
-            WriteDropProcedure(modificationFunctionMapping.DeleteFunctionMapping.Function);
+            if (parameterModel.IsOutParameter)
+            {
+                writer.Write(" OUT");
+            }
+
+            if (parameterModel.DefaultValue != null)
+            {
+                writer.Write(" = ");
+                writer.Write(Generate((dynamic)parameterModel.DefaultValue));
+            }
+            else if (!string.IsNullOrWhiteSpace(parameterModel.DefaultValueSql))
+            {
+                writer.Write(" = ");
+                writer.Write(parameterModel.DefaultValueSql);
+            }
         }
 
-        private void WriteDropProcedure(EdmFunction function)
+        protected virtual void Generate(DropProcedureOperation dropProcedureOperation)
         {
-            DebugCheck.NotNull(function);
+            Check.NotNull(dropProcedureOperation, "dropProcedureOperation");
 
             using (var writer = Writer())
             {
                 writer.Write("DROP PROCEDURE ");
-                writer.Write(Name(function.Name));
-               
+                writer.Write(Name(dropProcedureOperation.Name));
+
                 Statement(writer);
             }
         }
@@ -242,14 +253,12 @@ namespace System.Data.Entity.Migrations.Sql
             writer.WriteLine("CREATE TABLE " + Name(createTableOperation.Name) + " (");
             writer.Indent++;
 
-            var columnCount = createTableOperation.Columns.Count();
-
             createTableOperation.Columns.Each(
                 (c, i) =>
                     {
                         Generate(c, writer);
 
-                        if (i < columnCount - 1)
+                        if (i < createTableOperation.Columns.Count - 1)
                         {
                             writer.WriteLine(",");
                         }
@@ -984,20 +993,27 @@ namespace System.Data.Entity.Migrations.Sql
         /// </summary>
         /// <param name="defaultValue"> The definition of the column. </param>
         /// <returns> SQL representing the data type. </returns>
-        protected virtual string BuildColumnType(ColumnModel column)
+        protected virtual string BuildColumnType(ColumnModel columnModel)
         {
-            Check.NotNull(column, "column");
+            Check.NotNull(columnModel, "columnModel");
 
-            if (column.IsTimestamp)
+            if (columnModel.IsTimestamp)
             {
                 return "rowversion";
             }
 
-            var originalStoreTypeName = column.StoreType;
+            return BuildPropertyType(columnModel);
+        }
+
+        private string BuildPropertyType(PropertyModel propertyModel)
+        {
+            DebugCheck.NotNull(propertyModel);
+
+            var originalStoreTypeName = propertyModel.StoreType;
 
             if (string.IsNullOrWhiteSpace(originalStoreTypeName))
             {
-                var typeUsage = _providerManifest.GetStoreType(column.TypeUsage).EdmType;
+                var typeUsage = _providerManifest.GetStoreType(propertyModel.TypeUsage).EdmType;
 
                 originalStoreTypeName = typeUsage.Name;
             }
@@ -1019,13 +1035,13 @@ namespace System.Data.Entity.Migrations.Sql
             {
                 case "decimal":
                 case "numeric":
-                    storeTypeName += "(" + (column.Precision ?? DefaultNumericPrecision)
-                                     + ", " + (column.Scale ?? DefaultScale) + ")";
+                    storeTypeName += "(" + (propertyModel.Precision ?? DefaultNumericPrecision)
+                                     + ", " + (propertyModel.Scale ?? DefaultScale) + ")";
                     break;
                 case "datetime2":
                 case "datetimeoffset":
                 case "time":
-                    storeTypeName += "(" + (column.Precision ?? DefaultTimePrecision) + ")";
+                    storeTypeName += "(" + (propertyModel.Precision ?? DefaultTimePrecision) + ")";
                     break;
                 case "binary":
                 case "varbinary":
@@ -1033,7 +1049,7 @@ namespace System.Data.Entity.Migrations.Sql
                 case "varchar":
                 case "char":
                 case "nchar":
-                    storeTypeName += "(" + (column.MaxLength ?? DefaultMaxLength) + ")";
+                    storeTypeName += "(" + (propertyModel.MaxLength ?? DefaultMaxLength) + ")";
                     break;
             }
 
@@ -1101,7 +1117,7 @@ namespace System.Data.Entity.Migrations.Sql
         ///     Adds a new Statement to be executed against the database.
         /// </summary>
         /// <param name="writer"> The writer containing the SQL to be executed. </param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected void Statement(IndentedTextWriter writer, string batchTerminator = null)
         {
             Check.NotNull(writer, "writer");

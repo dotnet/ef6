@@ -2,8 +2,6 @@
 
 namespace System.Data.Entity.Migrations.Sql
 {
-    using System.Collections.Generic;
-    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure;
@@ -18,7 +16,6 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Threading;
     using Moq;
     using Xunit;
-    using Console = System.Console;
 
     public class SqlServerMigrationSqlGeneratorTests
     {
@@ -207,100 +204,93 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         [Fact]
-        public void Generate_can_output_create_modification_functions_statements()
+        public void Generate_can_output_create_procedure_statements()
         {
-            var modificationFunctionMapping
-                = TestContext.GetModificationFunctionMapping("Customer");
+            var modelBuilder = new DbModelBuilder();
 
-            var modificationCommandTreeGenerator 
+            var model1 = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
+
+            var model2 = new TestContext();
+
+            var commandTreeGenerator
                 = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel());
 
-            var dynamicToFunctionModificationCommandConverter 
-                = new DynamicToFunctionModificationCommandConverter(
-                    modificationFunctionMapping.Item1, 
-                    modificationFunctionMapping.Item2);
+            var createProcedureOperation
+                = new EdmModelDiffer()
+                    .Diff(
+                        model1.GetModel(),
+                        model2.GetModel(),
+                        false,
+                        commandTreeGenerator,
+                        new SqlServerMigrationSqlGenerator())
+                    .OfType<CreateProcedureOperation>()
+                    .Single(c => c.Name == "ExtraSpecialOrder_Update");
 
-            var insertTrees
-                = dynamicToFunctionModificationCommandConverter
-                    .Convert(modificationCommandTreeGenerator
-                        .GenerateInsert(modificationFunctionMapping.Item1.EntityType.FullName))
-                    .ToList();
-
-            var updateTrees
-                = dynamicToFunctionModificationCommandConverter
-                    .Convert(modificationCommandTreeGenerator
-                        .GenerateUpdate(modificationFunctionMapping.Item1.EntityType.FullName))
-                    .ToList();
-
-            var deleteTrees
-                = dynamicToFunctionModificationCommandConverter
-                    .Convert(modificationCommandTreeGenerator
-                        .GenerateDelete(modificationFunctionMapping.Item1.EntityType.FullName))
-                    .ToList();
-
-            var createModificationFunctionsOperation 
-                = new CreateModificationFunctionsOperation(
-                        modificationFunctionMapping.Item1,
-                        insertTrees,
-                        updateTrees,
-                        deleteTrees);
-            
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
-            var sql = migrationSqlGenerator.Generate(new[] { createModificationFunctionsOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql = migrationSqlGenerator.Generate(new[] { createProcedureOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.Contains(
-                @"CREATE PROCEDURE [Customer_Insert]
-    @Name nvarchar(max)
+            Assert.Equal(
+                @"CREATE PROCEDURE [ExtraSpecialOrder_Update]
+    @xid [int],
+    @key_for_update [uniqueidentifier],
+    @Code [nvarchar](128),
+    @Signature [varbinary](128),
+    @Name [nvarchar](max),
+    @Name_Original [nvarchar](max),
+    @Address_Street [nvarchar](max),
+    @Address_City [nvarchar](max),
+    @Address_Country_Name [nvarchar](max),
+    @OrderGroupId [int],
+    @RowVersion_Original [rowversion],
+    @OtherAddress_Street [nvarchar](max),
+    @OtherAddress_City [nvarchar](max),
+    @OtherAddress_Country_Name [nvarchar](max),
+    @TheSpecialist [int],
+    @Customer_CustomerId [int],
+    @OtherCustomer_CustomerId [int],
+    @RowsAffected [int] OUT
 AS
 BEGIN
-    INSERT [dbo].[Customers]([Name])
-    VALUES (@Name)
+    UPDATE [dbo].[Orders]
+    SET [Name] = @Name, [Address_Street] = @Address_Street, [Address_City] = @Address_City, [Address_Country_Name] = @Address_Country_Name, [OrderGroupId] = @OrderGroupId, [Customer_CustomerId] = @Customer_CustomerId
+    WHERE ((((((([order_id] = @xid) and ([Key] = @key_for_update)) and ([Code] = @Code)) and ([Signature] = @Signature)) and (([Name] = @Name_Original) or ([Name] is null and @Name_Original is null))) and (([RowVersion] = @RowVersion_Original) or ([RowVersion] is null and @RowVersion_Original is null))) and (([Customer_CustomerId] = @Customer_CustomerId) or ([Customer_CustomerId] is null and @Customer_CustomerId is null)))
     
-    DECLARE @CustomerId int
-    SELECT @CustomerId = [CustomerId]
-    FROM [dbo].[Customers]
-    WHERE @@ROWCOUNT > 0 and [CustomerId] = scope_identity()
+    UPDATE [dbo].[special_orders]
+    SET [OtherCustomer_CustomerId] = @OtherCustomer_CustomerId, [OtherAddress_Street] = @OtherAddress_Street, [OtherAddress_City] = @OtherAddress_City, [OtherAddress_Country_Name] = @OtherAddress_Country_Name
+    WHERE ((((([order_id] = @xid) and ([so_key] = @key_for_update)) and ([Code] = @Code)) and ([Signature] = @Signature)) and (([OtherCustomer_CustomerId] = @OtherCustomer_CustomerId) or ([OtherCustomer_CustomerId] is null and @OtherCustomer_CustomerId is null)))
+    AND @@ROWCOUNT > 0
     
-    SELECT t0.[CustomerId]
-    FROM [dbo].[Customers] as t0
-    WHERE @@ROWCOUNT > 0 and t0.[CustomerId] = @CustomerId
-END
-CREATE PROCEDURE [Customer_Update]
-    @CustomerId int,
-    @Name nvarchar(max)
-AS
-BEGIN
-    UPDATE [dbo].[Customers]
-    SET [Name] = @Name
-    WHERE ([CustomerId] = @CustomerId)
-END
-CREATE PROCEDURE [Customer_Delete]
-    @CustomerId int
-AS
-BEGIN
-    DELETE [dbo].[Customers]
-    WHERE ([CustomerId] = @CustomerId)
+    UPDATE [dbo].[xspecial_orders]
+    SET [TheSpecialist] = @TheSpecialist
+    WHERE (((([xid] = @xid) and ([so_key] = @key_for_update)) and ([Code] = @Code)) and ([Signature] = @Signature))
+    AND @@ROWCOUNT > 0
+    
+    SELECT t0.[OrderNo] as order_fu, t0.[RowVersion], t1.[MagicOrderToken], t2.[FairyDust]
+    FROM [dbo].[Orders] as t0
+    JOIN [dbo].[special_orders] as t1 on t1.[order_id] = t0.[order_id] and t1.[so_key] = t0.[Key] and t1.[Code] = t0.[Code] and t1.[Signature] = t0.[Signature]
+    JOIN [dbo].[xspecial_orders] as t2 on t2.[xid] = t0.[order_id] and t2.[so_key] = t0.[Key] and t2.[Code] = t0.[Code] and t2.[Signature] = t0.[Signature]
+    WHERE @@ROWCOUNT > 0 and t0.[order_id] = @xid and t0.[Key] = @key_for_update and t0.[Code] = @Code and t0.[Signature] = @Signature
+    
+    SET @RowsAffected = @@ROWCOUNT
 END", sql);
         }
 
         [Fact]
-        public void Generate_can_output_drop_modification_functions_statements()
+        public void Generate_can_output_drop_procedure_statement()
         {
-            var modificationFunctionMapping
-                = TestContext.GetModificationFunctionMapping("Customer");
-
             var dropModificationFunctionsOperation
-                = new DropModificationFunctionsOperation(modificationFunctionMapping.Item1);
+                = new DropProcedureOperation("Customer_Insert");
 
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
-            var sql = migrationSqlGenerator.Generate(new[] { dropModificationFunctionsOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+            var sql
+                = migrationSqlGenerator
+                    .Generate(new[] { dropModificationFunctionsOperation }, "2008")
+                    .Join(s => s.Sql, Environment.NewLine);
 
             Assert.Contains(
-                @"DROP PROCEDURE [Customer_Insert]
-DROP PROCEDURE [Customer_Update]
-DROP PROCEDURE [Customer_Delete]", sql);
+                @"DROP PROCEDURE [Customer_Insert]", sql);
         }
 
         [Fact]

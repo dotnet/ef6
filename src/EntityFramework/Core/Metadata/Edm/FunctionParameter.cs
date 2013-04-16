@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -109,6 +110,82 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public string TypeName
         {
             get { return TypeUsage.EdmType.Name; }
+        }
+
+        public bool IsMaxLengthConstant
+        {
+            get
+            {
+                Facet facet;
+                return
+                    TypeUsage.Facets.TryGetValue(DbProviderManifest.MaxLengthFacetName, false, out facet)
+                    && facet.Description.IsConstant;
+            }
+        }
+
+        public int? MaxLength
+        {
+            get
+            {
+                Facet facet;
+                return TypeUsage.Facets.TryGetValue(DbProviderManifest.MaxLengthFacetName, false, out facet)
+                           ? facet.Value as int?
+                           : null;
+            }
+        }
+
+        public bool IsMaxLength
+        {
+            get
+            {
+                Facet facet;
+                return TypeUsage.Facets.TryGetValue(DbProviderManifest.MaxLengthFacetName, false, out facet)
+                       && facet.IsUnbounded;
+            }
+        }
+
+        public bool IsPrecisionConstant
+        {
+            get
+            {
+                Facet facet;
+                return
+                    TypeUsage.Facets.TryGetValue(DbProviderManifest.PrecisionFacetName, false, out facet)
+                    && facet.Description.IsConstant;
+            }
+        }
+
+        public byte? Precision
+        {
+            get
+            {
+                Facet facet;
+                return TypeUsage.Facets.TryGetValue(DbProviderManifest.PrecisionFacetName, false, out facet)
+                           ? facet.Value as byte?
+                           : null;
+            }
+        }
+
+        public bool IsScaleConstant
+        {
+            get
+            {
+                Facet facet;
+                return
+                    TypeUsage.Facets.TryGetValue(DbProviderManifest.ScaleFacetName, false, out facet)
+                    && facet.Description.IsConstant;
+            }
+        }
+
+        public byte? Scale
+        {
+            get
+            {
+                Facet facet;
+                return TypeUsage.Facets.TryGetValue(DbProviderManifest.ScaleFacetName, false, out facet)
+                           ? facet.Value as byte?
+                           : null;
+            }
         }
 
         /// <summary>

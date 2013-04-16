@@ -12,6 +12,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -53,7 +54,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             XDocument sourceModel,
             XDocument targetModel,
             bool? includeSystemOperations = null,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator = null)
+            ModificationCommandTreeGenerator modificationCommandTreeGenerator = null,
+            MigrationSqlGenerator migrationSqlGenerator = null)
         {
             DebugCheck.NotNull(sourceModel);
             DebugCheck.NotNull(targetModel);
@@ -95,24 +97,25 @@ namespace System.Data.Entity.Migrations.Infrastructure
                       && targetModel.HasSystemOperations();
             }
 
-            return Diff(source, target, (bool)includeSystemOperations, modificationCommandTreeGenerator);
+            return Diff(source, target, (bool)includeSystemOperations, modificationCommandTreeGenerator, migrationSqlGenerator);
         }
 
         /// <summary>
         ///     For testing.
         /// </summary>
         public IEnumerable<MigrationOperation> Diff(
-            ModelMetadata source, 
+            ModelMetadata source,
             ModelMetadata target,
             bool includeSystemOperations,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator)
+            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            MigrationSqlGenerator migrationSqlGenerator)
         {
             DebugCheck.NotNull(source);
             DebugCheck.NotNull(target);
 
             _source = source;
             _target = target;
-            
+
             _consistentProviders
                 = _source.ProviderInfo.ProviderInvariantName.EqualsIgnoreCase(
                     _target.ProviderInfo.ProviderInvariantName)
@@ -134,7 +137,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var removedForeignKeys = FindRemovedForeignKeys(columnNormalizedSourceModel).ToList();
             var changedPrimaryKeys = FindChangedPrimaryKeys(columnNormalizedSourceModel).ToList();
 
-            var addedModificationFunctions = FindAddedModificationFunctions(modificationCommandTreeGenerator).ToList();
+            var addedModificationFunctions
+                = FindAddedModificationFunctions(modificationCommandTreeGenerator, migrationSqlGenerator)
+                    .ToList();
+
             var removedModificationFunctions = FindRemovedModificationFunctions().ToList();
 
             return renamedTables
@@ -198,8 +204,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return columnNormalizedSourceModel;
         }
 
-        private IEnumerable<CreateModificationFunctionsOperation> FindAddedModificationFunctions(
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator)
+        private IEnumerable<CreateProcedureOperation> FindAddedModificationFunctions(
+            ModificationCommandTreeGenerator modificationCommandTreeGenerator, MigrationSqlGenerator migrationSqlGenerator)
         {
             return
                 from esm1 in _target.StorageEntityContainerMapping.EntitySetMappings
@@ -209,18 +215,20 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         where mfm1.EntityType.Identity == mfm2.EntityType.Identity
                         select mfm2
                        ).Any()
-                select BuildCreateModificationFunctionsOperation(mfm1, modificationCommandTreeGenerator);
+                from o in BuildCreateProcedureOperations(mfm1, modificationCommandTreeGenerator, migrationSqlGenerator)
+                select o;
         }
 
-        private CreateModificationFunctionsOperation BuildCreateModificationFunctionsOperation(
+        private IEnumerable<CreateProcedureOperation> BuildCreateProcedureOperations(
             StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator)
+            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            MigrationSqlGenerator migrationSqlGenerator)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
 
-            var convertedInsertTrees = new DbInsertCommandTree[0];
-            var convertedUpdateTrees = new DbUpdateCommandTree[0];
-            var convertedDeleteTrees = new DbDeleteCommandTree[0];
+            var insertCommandTrees = new DbInsertCommandTree[0];
+            var updateCommandTrees = new DbUpdateCommandTree[0];
+            var deleteCommandTrees = new DbDeleteCommandTree[0];
 
             if (modificationCommandTreeGenerator != null)
             {
@@ -229,21 +237,21 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         modificationFunctionMapping,
                         _target.StorageEntityContainerMapping);
 
-                convertedInsertTrees
+                insertCommandTrees
                     = dynamicToFunctionModificationCommandConverter
                         .Convert(
                             modificationCommandTreeGenerator
                                 .GenerateInsert(modificationFunctionMapping.EntityType.Identity))
                         .ToArray();
 
-                convertedUpdateTrees
+                updateCommandTrees
                     = dynamicToFunctionModificationCommandConverter
                         .Convert(
                             modificationCommandTreeGenerator
                                 .GenerateUpdate(modificationFunctionMapping.EntityType.Identity))
                         .ToArray();
 
-                convertedDeleteTrees
+                deleteCommandTrees
                     = dynamicToFunctionModificationCommandConverter
                         .Convert(
                             modificationCommandTreeGenerator
@@ -251,14 +259,118 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         .ToArray();
             }
 
-            return new CreateModificationFunctionsOperation(
-                modificationFunctionMapping,
-                convertedInsertTrees,
-                convertedUpdateTrees,
-                convertedDeleteTrees);
+            string insertBodySql = null, updateBodySql = null, deleteBodySql = null;
+
+            if (migrationSqlGenerator != null)
+            {
+                var providerManifestToken 
+                    = _target.ProviderInfo.ProviderManifestToken;
+
+                insertBodySql
+                    = migrationSqlGenerator
+                        .GenerateProcedureBody(insertCommandTrees, null, providerManifestToken);
+
+                updateBodySql
+                    = migrationSqlGenerator.GenerateProcedureBody(
+                        updateCommandTrees,
+                        modificationFunctionMapping.UpdateFunctionMapping.RowsAffectedParameterName,
+                        providerManifestToken);
+
+                deleteBodySql
+                    = migrationSqlGenerator.GenerateProcedureBody(
+                        deleteCommandTrees,
+                        modificationFunctionMapping.DeleteFunctionMapping.RowsAffectedParameterName,
+                        providerManifestToken);
+            }
+
+            yield return BuildCreateProcedureOperation(
+                modificationFunctionMapping.InsertFunctionMapping.Function,
+                insertBodySql);
+
+            yield return BuildCreateProcedureOperation(
+                modificationFunctionMapping.UpdateFunctionMapping.Function,
+                updateBodySql);
+
+            yield return BuildCreateProcedureOperation(
+                modificationFunctionMapping.DeleteFunctionMapping.Function,
+                deleteBodySql);
         }
 
-        private IEnumerable<DropModificationFunctionsOperation> FindRemovedModificationFunctions()
+        private CreateProcedureOperation BuildCreateProcedureOperation(EdmFunction function, string bodySql)
+        {
+            DebugCheck.NotNull(function);
+
+            var createProcedureOpeation
+                = new CreateProcedureOperation(function.Name, bodySql);
+
+            function.Parameters
+                    .Each(p => createProcedureOpeation.Parameters.Add(BuildParameterModel(p, _target)));
+
+            return createProcedureOpeation;
+        }
+
+        private static ParameterModel BuildParameterModel(
+            FunctionParameter functionParameter,
+            ModelMetadata modelMetadata)
+        {
+            DebugCheck.NotNull(functionParameter);
+            DebugCheck.NotNull(modelMetadata);
+
+            var edmTypeUsage
+                = functionParameter.TypeUsage.GetModelTypeUsage();
+
+            var defaultStoreTypeName
+                = modelMetadata.ProviderManifest.GetStoreType(edmTypeUsage).EdmType.Name;
+
+            var parameterModel
+                = new ParameterModel(((PrimitiveType)edmTypeUsage.EdmType).PrimitiveTypeKind, edmTypeUsage)
+                      {
+                          Name = functionParameter.Name,
+                          IsOutParameter = functionParameter.Mode == ParameterMode.Out,
+                          StoreType
+                              = !functionParameter.TypeName.EqualsIgnoreCase(defaultStoreTypeName)
+                                    ? functionParameter.TypeName
+                                    : null
+                      };
+
+            Facet facet;
+
+            if (edmTypeUsage.Facets.TryGetValue(DbProviderManifest.MaxLengthFacetName, true, out facet)
+                && facet.Value != null)
+            {
+                parameterModel.MaxLength = facet.Value as int?; // could be MAX sentinel
+            }
+
+            if (edmTypeUsage.Facets.TryGetValue(DbProviderManifest.PrecisionFacetName, true, out facet)
+                && facet.Value != null)
+            {
+                parameterModel.Precision = (byte?)facet.Value;
+            }
+
+            if (edmTypeUsage.Facets.TryGetValue(DbProviderManifest.ScaleFacetName, true, out facet)
+                && facet.Value != null)
+            {
+                parameterModel.Scale = (byte?)facet.Value;
+            }
+
+            if (edmTypeUsage.Facets.TryGetValue(DbProviderManifest.FixedLengthFacetName, true, out facet)
+                && facet.Value != null
+                && (bool)facet.Value)
+            {
+                parameterModel.IsFixedLength = true;
+            }
+
+            if (edmTypeUsage.Facets.TryGetValue(DbProviderManifest.UnicodeFacetName, true, out facet)
+                && facet.Value != null
+                && !(bool)facet.Value)
+            {
+                parameterModel.IsUnicode = false;
+            }
+
+            return parameterModel;
+        }
+
+        private IEnumerable<DropProcedureOperation> FindRemovedModificationFunctions()
         {
             return
                 from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
@@ -268,7 +380,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         where mfm1.EntityType.Identity == mfm2.EntityType.Identity
                         select mfm2
                        ).Any()
-                select new DropModificationFunctionsOperation(mfm1);
+                from o in new[]
+                              {
+                                  new DropProcedureOperation(mfm1.InsertFunctionMapping.Function.Name),
+                                  new DropProcedureOperation(mfm1.UpdateFunctionMapping.Function.Name),
+                                  new DropProcedureOperation(mfm1.DeleteFunctionMapping.Function.Name)
+                              }
+                select o;
         }
 
         private IEnumerable<RenameTableOperation> FindRenamedTables()

@@ -29,7 +29,7 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var migrator = CreateMigrator<ShopContext_v1>(new AddPrimaryKeyMigration());
+            var migrator = CreateMigrator<ShopContext_v2>(new AddPrimaryKeyMigration());
 
             migrator.Update();
 

@@ -291,6 +291,34 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteAttributeString(XmlConstants.Name, functionParameter.Name);
             _xmlWriter.WriteAttributeString(XmlConstants.TypeAttribute, functionParameter.TypeName);
             _xmlWriter.WriteAttributeString(XmlConstants.Mode, functionParameter.Mode.ToString());
+
+            if (functionParameter.IsMaxLength)
+            {
+                _xmlWriter.WriteAttributeString(XmlConstants.MaxLengthElement, XmlConstants.Max);
+            }
+            else if (!functionParameter.IsMaxLengthConstant
+                     && functionParameter.MaxLength.HasValue)
+            {
+                _xmlWriter.WriteAttributeString(
+                    XmlConstants.MaxLengthElement,
+                    functionParameter.MaxLength.Value.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (!functionParameter.IsPrecisionConstant
+                && functionParameter.Precision.HasValue)
+            {
+                _xmlWriter.WriteAttributeString(
+                    XmlConstants.PrecisionElement,
+                    functionParameter.Precision.Value.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (!functionParameter.IsScaleConstant
+                && functionParameter.Scale.HasValue)
+            {
+                _xmlWriter.WriteAttributeString(
+                    XmlConstants.ScaleElement, functionParameter.Scale.Value.ToString(CultureInfo.InvariantCulture));
+            }
+
         }
 
         internal virtual void WriteFunctionReturnTypeElementHeader()

@@ -61,12 +61,12 @@ namespace System.Data.Entity.Migrations.Sql
         }
 
         /// <inheritdoc />
-        protected override void Generate(CreateModificationFunctionsOperation createModificationFunctionsOperation)
+        protected override void Generate(CreateProcedureOperation createProcedureOperation)
         {
         }
 
         /// <inheritdoc />
-        protected override void Generate(DropModificationFunctionsOperation dropModificationFunctionsOperation)
+        protected override void Generate(DropProcedureOperation dropProcedureOperation)
         {
         }
 

@@ -5358,4 +5358,11 @@
   <data name="MetadataItemErrorsFoundDuringGeneration" xml:space="preserve">
     <value>Errors Found During Generation:</value>
   </data>
+  <data name="AutomaticStaleFunctions" xml:space="preserve">
+    <value>Could not apply auto-migration '{0}' because it includes modification function creation operations. When using auto-migrations, modification function creation operations are only supported when migrating to the current model.</value>
+    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
+  </data>
+  <data name="ScaffoldSprocInDownNotSupported" xml:space="preserve">
+    <value>Scaffolding create procedure operations is not supported in down methods.</value>
+  </data>
 </root>

@@ -143,7 +143,7 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var migrator = CreateMigrator<ShopContext_v1>(new CreateCustomClusteredIndex());
+            var migrator = CreateMigrator<ShopContext_v2>(new CreateCustomClusteredIndex());
 
             migrator.Update();
         }
