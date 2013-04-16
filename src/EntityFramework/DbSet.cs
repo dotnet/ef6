@@ -172,6 +172,30 @@ namespace System.Data.Entity
         }
 
         /// <summary>
+        ///     Adds the given collection of entities into context underlying the set with each entity being put into
+        ///     the Added state such that it will be inserted into the database when SaveChanges is called.
+        /// </summary>
+        /// <param name="entities">The collection of entities to add.</param>
+        /// <returns>
+        ///     The collection of entities.
+        /// </returns>
+        /// <remarks>
+        ///     Note that if <see cref="DbContextConfiguration.AutoDetectChangesEnabled" /> is set to true (which is
+        ///     the default), then DetectChanges will be called once before adding any entities and will not be called
+        ///     again. This means that in some situations AddRange may perform significantly better than calling
+        ///     Add multiple times would do.
+        ///     Note that entities that are already in the context in some other state will have their state set to
+        ///     Added.  AddRange is a no-op for entities that are already in the context in the Added state.
+        /// </remarks>
+        public IEnumerable AddRange(IEnumerable entities)
+        {
+            Check.NotNull(entities, "entities");
+
+            InternalSet.AddRange(entities);
+            return entities;
+        }
+
+        /// <summary>
         ///     Marks the given entity as Deleted such that it will be deleted from the database when SaveChanges
         ///     is called.  Note that the entity must exist in the context in some other state before this method
         ///     is called.

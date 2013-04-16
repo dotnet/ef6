@@ -34,15 +34,17 @@ namespace System.Data.Entity.Internal.Linq
             // The query shouldn't have run yet
             objectContextMock
                 .Verify(
-                    m => m.ExecuteStoreQuery<string>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<object[]>()),
+                    m =>
+                    m.ExecuteStoreQuery<string>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<object[]>()),
                     Times.Never());
 
             actualEnumerator.MoveNext();
 
             objectContextMock
                 .Verify(
-                    m => m.ExecuteStoreQuery<string>(It.IsAny<string>(), It.IsAny<string>(),
-                        new ExecutionOptions(noTracking? MergeOption.NoTracking : MergeOption.AppendOnly, streaming),
+                    m => m.ExecuteStoreQuery<string>(
+                        It.IsAny<string>(), It.IsAny<string>(),
+                        new ExecutionOptions(noTracking ? MergeOption.NoTracking : MergeOption.AppendOnly, streaming),
                         It.IsAny<object[]>()),
                     Times.Once());
 
@@ -56,6 +58,7 @@ namespace System.Data.Entity.Internal.Linq
         {
             ExecuteSqlQueryAsync_delegates_lazily(true, false);
         }
+
         [Fact]
         public void ExecuteSqlQueryAsync_delegates_lazily_with_tracking_and_streaming()
         {
@@ -74,7 +77,8 @@ namespace System.Data.Entity.Internal.Linq
                 .Verify(
                     m =>
                     m.ExecuteStoreQueryAsync<string>(
-                        It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()),
+                        It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<CancellationToken>(),
+                        It.IsAny<object[]>()),
                     Times.Never());
 
             actualEnumerator.MoveNextAsync(CancellationToken.None).Wait();
@@ -149,13 +153,14 @@ namespace System.Data.Entity.Internal.Linq
                 new DbEnumeratorShim<TEntity>(((IEnumerable<TEntity>)new[] { value }).GetEnumerator()));
 
             var objectResultMock = new Mock<ObjectResult<TEntity>>(shaperMock.Object, null, null)
-                                       {
-                                           CallBase = true
-                                       };
+                {
+                    CallBase = true
+                };
 
             objectContextMock
                 .Setup(
-                    m => m.ExecuteStoreQuery<TEntity>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<object[]>()))
+                    m =>
+                    m.ExecuteStoreQuery<TEntity>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<object[]>()))
                 .Returns(objectResultMock.Object);
 
 #if !NET40
@@ -163,19 +168,20 @@ namespace System.Data.Entity.Internal.Linq
                 .Setup(
                     m =>
                     m.ExecuteStoreQueryAsync<TEntity>(
-                        It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<CancellationToken>(), It.IsAny<object[]>()))
+                        It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<CancellationToken>(),
+                        It.IsAny<object[]>()))
                 .Returns(Task.FromResult(objectResultMock.Object));
 #endif
 
             var internalContextMock = new Mock<InternalContextForMock>(objectContextMock.Object)
-                                          {
-                                              CallBase = true
-                                          };
+                {
+                    CallBase = true
+                };
 
             var entitySet = new EntitySet("set", "", "", "", new EntityType("E", "N", DataSpace.CSpace));
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("container", DataSpace.OSpace));
             internalContextMock.Setup(m => m.GetEntitySetAndBaseTypeForType(It.IsAny<Type>()))
-                .Returns(new EntitySetTypePair(entitySet, typeof(TEntity)));
+                               .Returns(new EntitySetTypePair(entitySet, typeof(TEntity)));
 
             return new InternalSet<TEntity>(internalContextMock.Object);
         }
@@ -185,7 +191,7 @@ namespace System.Data.Entity.Internal.Linq
         {
             var objectContextMock = Mock.Get(MockHelper.CreateMockObjectContext<string>());
             var internalSet = CreateInternalSet(objectContextMock, "foo");
-            
+
             Assert.False(internalSet.ObjectQuery.Streaming);
             var streamingQuery = internalSet.AsStreaming();
             Assert.True(streamingQuery.ObjectQuery.Streaming);

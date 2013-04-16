@@ -356,6 +356,16 @@ namespace System.Data.Entity.Internal.Linq
                 () => InternalContext.ObjectContext.AddObject(EntitySetName, entity), EntityState.Added, entity, "Add");
         }
 
+        public virtual void AddRange(IEnumerable entities)
+        {
+            DebugCheck.NotNull(entities);
+
+            InternalContext.DetectChanges();
+
+            ActOnSet(
+                entity => InternalContext.ObjectContext.AddObject(EntitySetName, entity), EntityState.Added, entities, "Add");
+        }
+
         /// <summary>
         ///     Marks the given entity as Deleted such that it will be deleted from the database when SaveChanges
         ///     is called.  Note that the entity must exist in the context in some other state before this method
@@ -411,6 +421,32 @@ namespace System.Data.Entity.Internal.Linq
             else
             {
                 action();
+            }
+        }
+
+        private void ActOnSet(Action<object> action, EntityState newState, IEnumerable entities, string methodName)
+        {
+            DebugCheck.NotNull(entities);
+
+            foreach (var entity in entities)
+            {
+                Check.NotNull(entity, "entity");
+
+                if (!(entity is TEntity))
+                {
+                    throw Error.DbSet_BadTypeForAddAttachRemove(methodName, entity.GetType().Name, typeof(TEntity).Name);
+                }
+
+                ObjectStateEntry stateEntry;
+                if (InternalContext.ObjectContext.ObjectStateManager.TryGetObjectStateEntry(entity, out stateEntry))
+                {
+                    // Will be no-op if state is already added.
+                    stateEntry.ChangeState(newState);
+                }
+                else
+                {
+                    action(entity);
+                }
             }
         }
 

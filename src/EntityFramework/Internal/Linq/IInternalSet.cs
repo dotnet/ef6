@@ -13,6 +13,7 @@ namespace System.Data.Entity.Internal.Linq
     {
         void Attach(object entity);
         void Add(object entity);
+        void AddRange(IEnumerable entities);
         void Remove(object entity);
         void Initialize();
         void TryInitialize();

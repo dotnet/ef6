@@ -2,13 +2,15 @@
 
 namespace System.Data.Entity
 {
-    using System;
+    using System.Collections.Generic;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
+    using System.Linq;
     using Moq;
     using Xunit;
+    using MockHelper = System.Data.Entity.Core.Objects.MockHelper;
 
     /// <summary>
     ///     Unit tests for <see cref="DbSet" /> and <see cref="DbSet{T}" />.
@@ -31,15 +33,82 @@ namespace System.Data.Entity
             }
         }
 
+        public class AddRange_Generic
+        {
+            [Fact]
+            public void With_valid_entities_returns_the_added_entities()
+            {
+                var internalContext = new Mock<InternalContext>();
+                var internalSet = new Mock<InternalSetForMock<FakeEntity>>();
+
+                internalSet.Setup(i => i.InternalContext)
+                           .Returns(internalContext.Object);
+
+                var set = new DbSet<FakeEntity>(internalSet.Object);
+                var entity1 = new FakeEntity();
+                var entity2 = new FakeEntity();
+
+                var retVal = set.AddRange(new[] { entity1, entity2 });
+
+                Assert.True(retVal.Contains(entity1));
+                Assert.True(retVal.Contains(entity2));
+            }
+
+            [Fact]
+            public void Throw_if_collection_is_null()
+            {
+                var internalContext = new Mock<InternalContext>();
+                var internalSet = new Mock<InternalSetForMock<FakeEntity>>();
+
+                internalSet.Setup(i => i.InternalContext)
+                           .Returns(internalContext.Object);
+
+                var set = new DbSet<FakeEntity>(internalSet.Object);
+
+                Assert.Equal(
+                    new ArgumentNullException("entities").Message,
+                    Assert.Throws<ArgumentNullException>(() => set.AddRange(null)).Message);
+            }
+
+            [Fact]
+            public void Throw_if_some_item_in_collection_is_null()
+            {
+                var internalSet = new InternalSetForTests();
+                var set = new DbSet<FakeEntity>(internalSet);
+
+                Assert.Equal(
+                    new ArgumentNullException("entity").Message,
+                    Assert.Throws<ArgumentNullException>(() => set.AddRange(new[] { null, new FakeEntity() })).Message);
+            }
+
+            [Fact]
+            public void Call_to_detect_changes_only_once()
+            {
+                var objectContextMock = Mock.Get(MockHelper.CreateMockObjectContext<FakeEntity>());
+                objectContextMock.Setup(s => s.AddObject(It.IsAny<string>(), It.IsAny<FakeEntity>()));
+
+                var internalContext = new Mock<InternalContextForMock>();
+                internalContext.Setup(c => c.ObjectContext)
+                               .Returns(objectContextMock.Object);
+
+                var internalSet = new InternalSetForTests(internalContext.Object);
+                var set = new DbSet<FakeEntity>(internalSet);
+
+                set.AddRange(new[] { new FakeEntity(), new FakeEntity() });
+
+                internalContext.Verify(c => c.DetectChanges(It.Is<bool>(b => b == false)), Times.Once());
+            }
+        }
+
         public class Add_NonGeneric
         {
             [Fact]
             public void With_wrong_type_throws()
             {
                 var set = new Mock<InternalContextForMock>
-                              {
-                                  CallBase = true
-                              }
+                    {
+                        CallBase = true
+                    }
                     .Object.Owner.Set(typeof(FakeEntity));
                 Assert.Equal(
                     Strings.DbSet_BadTypeForAddAttachRemove("Add", "String", "FakeEntity"),
@@ -55,6 +124,79 @@ namespace System.Data.Entity
                 var retVal = set.Add(entity);
 
                 Assert.Same(entity, retVal);
+            }
+        }
+
+        public class AddRange_NonGeneric
+        {
+            [Fact]
+            public void With_valid_entities_returns_the_added_entities()
+            {
+                var internalContext = new Mock<InternalContext>();
+                var internalSet = new Mock<InternalSetForMock<FakeEntity>>();
+                internalSet.Setup(i => i.InternalContext).Returns(internalContext.Object);
+
+                var set = new InternalDbSet<FakeEntity>(internalSet.Object);
+
+                var entity1 = new FakeEntity();
+                var entity2 = new FakeEntity();
+
+                var retVal = (IEnumerable<FakeEntity>)set
+                                                          .AddRange(new[] { entity1, entity2 });
+
+                Assert.True(retVal.Contains(entity1));
+                Assert.True(retVal.Contains(entity2));
+            }
+
+            [Fact]
+            public void Throw_if_collection_is_null()
+            {
+                var internalContext = new Mock<InternalContext>();
+                var internalSet = new Mock<InternalSetForMock<FakeEntity>>();
+                internalSet.Setup(i => i.InternalContext).Returns(internalContext.Object);
+
+                var set = new InternalDbSet<FakeEntity>(internalSet.Object);
+
+                Assert.Equal(
+                    new ArgumentNullException("entities").Message,
+                    Assert.Throws<ArgumentNullException>(() => set.AddRange(null)).Message);
+            }
+
+            [Fact]
+            public void With_wrong_type_throws()
+            {
+                var set = new InternalSetForTests();
+
+                Assert.Equal(
+                    Strings.DbSet_BadTypeForAddAttachRemove("Add", "String", "FakeEntity"),
+                    Assert.Throws<ArgumentException>(() => set.AddRange(new[] { "Bang!" })).Message);
+            }
+
+            [Fact]
+            public void Throw_if_some_item_in_collection_is_null()
+            {
+                var set = new InternalSetForTests();
+
+                Assert.Equal(
+                    new ArgumentNullException("entity").Message,
+                    Assert.Throws<ArgumentNullException>(() => set.AddRange(new[] { null, new FakeEntity() })).Message);
+            }
+
+            [Fact]
+            public void Call_to_detect_changes_only_once()
+            {
+                var objectContextMock = Mock.Get(MockHelper.CreateMockObjectContext<FakeEntity>());
+                objectContextMock.Setup(s => s.AddObject(It.IsAny<string>(), It.IsAny<FakeEntity>()));
+
+                var internalContext = new Mock<InternalContextForMock>();
+                internalContext.Setup(c => c.ObjectContext)
+                               .Returns(objectContextMock.Object);
+
+                var set = new InternalSetForTests(internalContext.Object);
+
+                set.AddRange(new[] { new FakeEntity(), new FakeEntity() });
+
+                internalContext.Verify(c => c.DetectChanges(It.Is<bool>(b => b == false)), Times.Once());
             }
         }
 
@@ -78,9 +220,9 @@ namespace System.Data.Entity
             public void With_wrong_type_throws()
             {
                 var set = new Mock<InternalContextForMock>
-                              {
-                                  CallBase = true
-                              }.Object.Owner.Set(typeof(FakeEntity));
+                    {
+                        CallBase = true
+                    }.Object.Owner.Set(typeof(FakeEntity));
                 Assert.Equal(
                     Strings.DbSet_BadTypeForAddAttachRemove("Attach", "String", "FakeEntity"),
                     Assert.Throws<ArgumentException>(() => set.Attach("Bang!")).Message);
@@ -118,9 +260,9 @@ namespace System.Data.Entity
             public void With_wrong_type_throws()
             {
                 var set = new Mock<InternalContextForMock>
-                              {
-                                  CallBase = true
-                              }.Object.Owner.Set(typeof(FakeEntity));
+                    {
+                        CallBase = true
+                    }.Object.Owner.Set(typeof(FakeEntity));
                 Assert.Equal(
                     Strings.DbSet_BadTypeForAddAttachRemove("Remove", "String", "FakeEntity"),
                     Assert.Throws<ArgumentException>(() => set.Remove("Bang!")).Message);
@@ -144,9 +286,9 @@ namespace System.Data.Entity
             public void With_same_type_returns_non_null_object()
             {
                 var internalContextMock = new Mock<InternalContextForMock>
-                                              {
-                                                  CallBase = true
-                                              };
+                    {
+                        CallBase = true
+                    };
 
                 internalContextMock.Setup(m => m.CreateObject<FakeEntity>()).Returns(new FakeEntity());
 
@@ -161,9 +303,9 @@ namespace System.Data.Entity
             public void With_derived_type_returns_non_null_object()
             {
                 var internalContextMock = new Mock<InternalContextForMock>
-                                              {
-                                                  CallBase = true
-                                              };
+                    {
+                        CallBase = true
+                    };
 
                 internalContextMock.Setup(m => m.CreateObject<FakeDerivedEntity>()).Returns(new FakeDerivedEntity());
 
@@ -181,9 +323,9 @@ namespace System.Data.Entity
             public void With_null_type_throws()
             {
                 var set = new Mock<InternalContextForMock>
-                              {
-                                  CallBase = true
-                              }.Object.Owner.Set(typeof(FakeEntity));
+                    {
+                        CallBase = true
+                    }.Object.Owner.Set(typeof(FakeEntity));
                 Assert.Equal("derivedEntityType", Assert.Throws<ArgumentNullException>(() => set.Create(null)).ParamName);
             }
 
@@ -191,9 +333,9 @@ namespace System.Data.Entity
             public void With_wrong_type_throws()
             {
                 var set = new Mock<InternalContextForMock>
-                              {
-                                  CallBase = true
-                              }.Object.Owner.Set(typeof(FakeEntity));
+                    {
+                        CallBase = true
+                    }.Object.Owner.Set(typeof(FakeEntity));
                 Assert.Equal(
                     Strings.DbSet_BadTypeForCreate("String", "FakeEntity"),
                     Assert.Throws<ArgumentException>(() => set.Create(typeof(string))).Message);
@@ -203,9 +345,9 @@ namespace System.Data.Entity
             public void With_same_type_returns_non_null_object()
             {
                 var internalContextMock = new Mock<InternalContextForMock>
-                                              {
-                                                  CallBase = true
-                                              };
+                    {
+                        CallBase = true
+                    };
 
                 internalContextMock.Setup(m => m.CreateObject<FakeEntity>()).Returns(new FakeEntity());
 
@@ -221,9 +363,9 @@ namespace System.Data.Entity
             public void With_derived_type_returns_non_null_object()
             {
                 var internalContextMock = new Mock<InternalContextForMock>
-                                              {
-                                                  CallBase = true
-                                              };
+                    {
+                        CallBase = true
+                    };
 
                 internalContextMock.Setup(m => m.CreateObject<FakeDerivedEntity>()).Returns(new FakeDerivedEntity());
 
@@ -242,9 +384,9 @@ namespace System.Data.Entity
             public void With_wrong_type_throws()
             {
                 var set = new Mock<InternalContextForMock>
-                              {
-                                  CallBase = true
-                              }.Object.Owner.Set(typeof(FakeEntity));
+                    {
+                        CallBase = true
+                    }.Object.Owner.Set(typeof(FakeEntity));
                 Assert.Equal(
                     Strings.DbEntity_BadTypeForCast("DbSet", "String", "FakeEntity"),
                     Assert.Throws<InvalidCastException>(() => set.Cast<string>()).Message);
@@ -254,9 +396,9 @@ namespace System.Data.Entity
             public void With_derived_type_throws()
             {
                 var set = new Mock<InternalContextForMock>
-                              {
-                                  CallBase = true
-                              }.Object.Owner.Set(typeof(FakeEntity));
+                    {
+                        CallBase = true
+                    }.Object.Owner.Set(typeof(FakeEntity));
                 Assert.Equal(
                     Strings.DbEntity_BadTypeForCast("DbSet", "FakeDerivedEntity", "FakeEntity"),
                     Assert.Throws<InvalidCastException>(() => set.Cast<FakeDerivedEntity>()).Message);
@@ -266,9 +408,9 @@ namespace System.Data.Entity
             public void With_base_type_throws()
             {
                 var set = new Mock<InternalContextForMock>
-                              {
-                                  CallBase = true
-                              }.Object.Owner.Set(typeof(FakeDerivedEntity));
+                    {
+                        CallBase = true
+                    }.Object.Owner.Set(typeof(FakeDerivedEntity));
                 Assert.Equal(
                     Strings.DbEntity_BadTypeForCast("DbSet", "FakeEntity", "FakeDerivedEntity"),
                     Assert.Throws<InvalidCastException>(() => set.Cast<FakeEntity>()).Message);
@@ -278,9 +420,9 @@ namespace System.Data.Entity
             public void With_same_type_returns_generic_DbSet()
             {
                 var internalContextMock = new Mock<InternalContextForMock>
-                                              {
-                                                  CallBase = true
-                                              };
+                    {
+                        CallBase = true
+                    };
 
                 var internalSetMock = new Mock<InternalSet<FakeEntity>>(internalContextMock.Object);
                 internalSetMock.Setup(m => m.InternalContext).Returns(internalContextMock.Object);
@@ -379,6 +521,24 @@ namespace System.Data.Entity
                 var query = set.SqlQuery("query");
                 Assert.NotNull(query);
                 Assert.False(query.InternalQuery.Streaming);
+            }
+        }
+
+        internal class InternalSetForTests
+            : InternalSet<FakeEntity>
+        {
+            public InternalSetForTests()
+                : base(new Mock<InternalContextForMock>(MockBehavior.Loose).Object)
+            {
+            }
+
+            public InternalSetForTests(InternalContext internalContext)
+                : base(internalContext)
+            {
+            }
+
+            public override void Initialize()
+            {
             }
         }
     }
