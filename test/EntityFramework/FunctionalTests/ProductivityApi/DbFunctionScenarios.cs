@@ -1461,6 +1461,37 @@ namespace FunctionalTests.ProductivityApi
             }
         }
 
+        public class MathTruncate : FunctionalTestBase
+        {
+            [Fact]
+            public void MathTruncate_on_double_can_be_used_in_DbQuery_or_ObjectQuery()
+            {
+                using (var context = new EntityFunctionContext())
+                {
+                    Assert.Equal(
+                        1.0, (double)context.WithTypes.OrderBy(e => e.Id).Select(e => Math.Truncate(e.Double)).First(), 7);
+
+                    Assert.Equal(
+                        1.0, (double)GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
+                            e => Math.Truncate(e.Double)).First(), 7);
+                }
+            }
+
+            [Fact]
+            public void MathTruncate_on_decimal_can_be_used_in_DbQuery_or_ObjectQuery()
+            {
+                using (var context = new EntityFunctionContext())
+                {
+                    Assert.Equal(
+                        1, (decimal)context.WithTypes.OrderBy(e => e.Id).Select(e => Math.Truncate(e.Decimal)).First(), 7);
+
+                    Assert.Equal(
+                        1, (decimal)GetObjectSet<EntityWithTypes>(context).OrderBy(e => e.Id).Select(
+                            e => Math.Truncate(e.Decimal)).First(), 7);
+                }
+            }
+        }
+
 #pragma warning disable 612,618
         /// <summary>
         ///     Tests for the proxy implementations of the <see cref="DbFunctions" /> functions

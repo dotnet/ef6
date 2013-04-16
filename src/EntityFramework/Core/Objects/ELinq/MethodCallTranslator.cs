@@ -207,6 +207,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         new CanonicalFunctionDefaultTranslator(),
                         new AsUnicodeFunctionTranslator(),
                         new AsNonUnicodeFunctionTranslator(),
+                        new MathTruncateTranslator(),
                         new MathPowerTranslator(),
                         new GuidNewGuidTranslator(),
                         new StringContainsTranslator(),
@@ -1061,6 +1062,31 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             #region System.Math method translators
+
+            private sealed class MathTruncateTranslator : CallTranslator
+            {
+                internal MathTruncateTranslator()
+                    : base(new[]
+                        {
+                            typeof(Math).GetMethod(
+                                "Truncate", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
+                            typeof(Math).GetMethod(
+                                "Truncate", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double) }, null)
+                        })
+                {      
+                }
+
+                // Translation:
+                //      Truncate(arg1)		     -> Truncate(arg1, 0)
+                internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
+                {
+                    Debug.Assert(call.Arguments.Count == 1, "Expecting 1 argument for Math.Truncate");
+
+                    var arg1 = parent.TranslateExpression(call.Arguments[0]);
+                    var zeroDigits = DbExpressionBuilder.Constant(0); 
+                    return arg1.Truncate(zeroDigits);
+                }
+            }
 
             private sealed class MathPowerTranslator : CallTranslator
             {
