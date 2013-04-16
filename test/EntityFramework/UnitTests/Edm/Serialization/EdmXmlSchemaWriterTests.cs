@@ -215,6 +215,50 @@ namespace System.Data.Entity.Edm.Serialization
             Assert.Equal("<RowType", fixture.ToString());
         }
 
+        [Fact]
+        public void WriteSchemaElementHeader_writes_annotation_prefix_for_UseStrongSpatialTypes_attribute()
+        {
+            var fixture = new Fixture();
+            fixture.Writer.WriteSchemaElementHeader("test");
+
+            Assert.Equal(@"<Schema Namespace=""test"" Alias=""Self"" annotation:UseStrongSpatialTypes=""false"" xmlns:annotation=""http://schemas.microsoft.com/ado/2009/02/edm/annotation""", 
+            fixture.ToString());
+        }
+        
+        [Fact]
+        public void WriteSchemaElementHeader_writes_annotation_namespace_declaration_if_UseStrongSpatialTypes_not_present()
+        {
+            var fixture = new Fixture(2.0);
+            fixture.Writer.WriteSchemaElementHeader("test");
+
+            Assert.Equal(@"<Schema Namespace=""test"" Alias=""Self"" xmlns:annotation=""http://schemas.microsoft.com/ado/2009/02/edm/annotation""",
+            fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteContainer_writes_annotation_namespace_when_requested()
+        {
+            var container = EntityContainer.Create(
+                "C", DataSpace.CSpace, new EntitySetBase[0], null,
+                new[]
+                    {
+                        new MetadataProperty(
+                            "http://schemas.microsoft.com/ado/2009/02/edm/annotation:LazyLoadingEnabled",
+                            TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)), "true")
+                    });
+
+            var fixture = new Fixture();
+
+            // WriteSchemaElementHeader binds the "annotation" namespace prefix to the annotation namespace uri
+            fixture.Writer.WriteSchemaElementHeader("ns");
+            fixture.Writer.WriteEntityContainerElementHeader(container);
+
+            Assert.Equal(
+                @"<Schema Namespace=""ns"" Alias=""Self"" annotation:UseStrongSpatialTypes=""false"" xmlns:annotation=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"">" + 
+                @"<EntityContainer Name=""C"" annotation:LazyLoadingEnabled=""true""",
+            fixture.ToString());
+        }
+
         private class Fixture
         {
             public readonly EdmXmlSchemaWriter Writer;
@@ -222,7 +266,7 @@ namespace System.Data.Entity.Edm.Serialization
             private readonly StringBuilder _stringBuilder;
             private readonly XmlWriter _xmlWriter;
 
-            public Fixture()
+            public Fixture(double version = 3.0)
             {
                 _stringBuilder = new StringBuilder();
 
@@ -233,7 +277,7 @@ namespace System.Data.Entity.Edm.Serialization
                             OmitXmlDeclaration = true
                         });
 
-                Writer = new EdmXmlSchemaWriter(_xmlWriter, 3.0, false);
+                Writer = new EdmXmlSchemaWriter(_xmlWriter, version, false);
             }
 
             public override string ToString()

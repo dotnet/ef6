@@ -16,6 +16,7 @@ namespace System.Data.Entity.Edm.Serialization
     internal class EdmXmlSchemaWriter : XmlSchemaWriter
     {
         private readonly bool _serializeDefaultNullability;
+        private const string AnnotationNamespacePrefix = "annotation";
         private const string DataServicesPrefix = "m";
         private const string DataServicesNamespace = "http://schemas.microsoft.com/ado/2007/08/dataservices/metadata";
         private const string DataServicesMimeTypeAttribute = "System.Data.Services.MimeTypeAttribute";
@@ -215,9 +216,13 @@ namespace System.Data.Entity.Edm.Serialization
             if (_version == XmlConstants.EdmVersionForV3)
             {
                 _xmlWriter.WriteAttributeString(
-                    XmlConstants.UseStrongSpatialTypes, XmlConstants.AnnotationNamespace,
+                    AnnotationNamespacePrefix,
+                    XmlConstants.UseStrongSpatialTypes, 
+                    XmlConstants.AnnotationNamespace,
                     XmlConstants.False);
             }
+
+            _xmlWriter.WriteAttributeString("xmlns", AnnotationNamespacePrefix, null, XmlConstants.AnnotationNamespace);
         }
 
         internal void WriteSchemaElementHeader(string schemaNamespace, string provider, string providerManifestToken)
@@ -710,6 +715,8 @@ namespace System.Data.Entity.Edm.Serialization
 
             _xmlWriter.WriteStartElement(XmlConstants.EntityContainer);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, container.Name);
+
+            WriteExtendedProperties(container);
         }
 
         internal void WriteAssociationSetElementHeader(AssociationSet associationSet)
