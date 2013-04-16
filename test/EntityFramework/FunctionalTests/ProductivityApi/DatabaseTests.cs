@@ -240,16 +240,24 @@ END", DefaultDbName<SimpleModelContext>());
             Assert.False(databaseExists());
         }
 
+        public class NoMasterPermissionContext : SimpleModelContext
+        {
+            public NoMasterPermissionContext(string nameOrConnectionString)
+                : base(nameOrConnectionString)
+            {
+            }
+        }
+
         [Fact]
         public void DatabaseExists_returns_true_for_existing_database_when_no_master_permissions()
         {
-            using (var context = new SimpleModelContext(SimpleConnectionString<SimpleModelContext>()))
+            using (var context = new NoMasterPermissionContext(SimpleConnectionString<NoMasterPermissionContext>()))
             {
                 context.Database.Delete();
                 context.Database.Initialize(force: false);
             }
 
-            using (var connection = new SqlConnection(SimpleConnectionString<SimpleModelContext>()))
+            using (var connection = new SqlConnection(SimpleConnectionString<NoMasterPermissionContext>()))
             {
                 connection.Open();
 
@@ -266,11 +274,11 @@ END");
             }
 
             var connectionString
-                = SimpleConnectionStringWithCredentials<SimpleModelContext>(
+                = SimpleConnectionStringWithCredentials<NoMasterPermissionContext>(
                     "EFTestSimpleModelUser",
                     "Password1");
 
-            using (var context = new SimpleModelContext(connectionString))
+            using (var context = new NoMasterPermissionContext(connectionString))
             {
                 // Note: Database gets created as part of TestInit
                 Assert.True(context.Database.Exists());
@@ -280,13 +288,13 @@ END");
         [Fact]
         public void DatabaseExists_returns_false_for_existing_database_when_no_master_nor_database_permissions()
         {
-            using (var context = new SimpleModelContext(SimpleConnectionString<SimpleModelContext>()))
+            using (var context = new NoMasterPermissionContext(SimpleConnectionString<NoMasterPermissionContext>()))
             {
                 context.Database.Delete();
                 context.Database.Initialize(force: false);
             }
 
-            using (var connection = new SqlConnection(SimpleConnectionString<SimpleModelContext>()))
+            using (var connection = new SqlConnection(SimpleConnectionString<NoMasterPermissionContext>()))
             {
                 connection.Open();
 
@@ -304,11 +312,11 @@ END");
             }
 
             var connectionString
-                = SimpleConnectionStringWithCredentials<SimpleModelContext>(
+                = SimpleConnectionStringWithCredentials<NoMasterPermissionContext>(
                     "EFTestSimpleModelUser",
                     "Password1");
-            
-            using (var context = new SimpleModelContext(connectionString))
+
+            using (var context = new NoMasterPermissionContext(connectionString))
             {
                 Assert.False(context.Database.Exists());
             }
