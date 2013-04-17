@@ -2,15 +2,11 @@
 
 namespace System.Data.Entity.ProductivityApi
 {
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.Infrastructure;
+    using System.IO;
     using System.Linq;
-    using System.Linq.Expressions;
-    using System.Threading;
-    using System.Threading.Tasks;
+    using System.Runtime.Serialization.Formatters.Binary;
     using Xunit;
 
     public class GetHashCodeTests : TestBase
@@ -68,12 +64,14 @@ namespace System.Data.Entity.ProductivityApi
             }
         }
 
+        [Serializable]
         public class GetHashCodeProduct
         {
-            public string Id { get; set; }
-            public int SupplierId { get; set; }
-            public GetHashCodeProductDetails Details { get; set; }
+            public virtual string Id { get; set; }
+            public virtual int SupplierId { get; set; }
+            public virtual GetHashCodeProductDetails Details { get; set; }
             public virtual HashSet<GetHashCodeSku> Skus { get; set; }
+            public virtual ICollection<GetHashCodeSku> DeprecatedSkus { get; set; }
 
             public override int GetHashCode()
             {
@@ -86,6 +84,7 @@ namespace System.Data.Entity.ProductivityApi
             }
         }
 
+        [Serializable]
         public class GetHashCodeProductDetails
         {
             public string Name { get; set; }
@@ -102,12 +101,14 @@ namespace System.Data.Entity.ProductivityApi
             }
         }
 
+        [Serializable]
         public class GetHashCodeSku
         {
-            public int Id { get; set; }
-            public string Name { get; set; }
+            public virtual int Id { get; set; }
+            public virtual string Name { get; set; }
             public virtual string ProductId { get; set; }
             public virtual GetHashCodeProduct Product { get; set; }
+            public virtual GetHashCodeSku Parent { get; set; }
 
             public override int GetHashCode()
             {
@@ -139,6 +140,19 @@ namespace System.Data.Entity.ProductivityApi
                         });
 
                 Assert.Equal(2, context.Skus.Local.Count());
+            }
+        }
+
+        [Fact]
+        public void Removing_from_Local_entities_that_override_Equals_shouldnt_throw()
+        {
+            using (var context = new GetHashCodeContext())
+            {
+                context.Skus.Load();
+                Assert.Equal(2, context.Skus.Local.Count());
+
+                context.Skus.Local.ToList().ForEach(s => context.Skus.Remove(s));
+                Assert.Equal(0, context.Skus.Local.Count());
             }
         }
 
@@ -211,6 +225,40 @@ namespace System.Data.Entity.ProductivityApi
             using (var context = new GetHashCodeContext())
             {
                 Assert.NotNull(context.Products.First().Skus.First());
+            }
+        }
+
+        [Fact]
+        public void Attach_and_Remove_on_an_entity_that_overrides_GetHashCode_shouldnt_shouldnt_throw()
+        {
+            using (var context = new GetHashCodeContext())
+            {
+                var product = context.Products.First();
+
+                var sku = new GetHashCodeSku
+                    {
+                        Name = "Sprinkled",
+                        ProductId = product.Id
+                    };
+
+                product.DeprecatedSkus.Add(sku);
+                context.Products.Attach(product);
+                context.Products.Remove(product);
+            }
+        }
+
+        [Fact]
+        public void Serializing_an_entity_that_overrides_GetHashCode_shouldnt_shouldnt_throw()
+        {
+            using (var context = new GetHashCodeContext())
+            {
+                var skuProxy = context.Skus.Create();
+                skuProxy.Parent = context.Skus.Create();
+
+                var stream = new MemoryStream();
+                var formatter = new BinaryFormatter();
+
+                formatter.Serialize(stream, skuProxy);
             }
         }
     }

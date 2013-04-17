@@ -278,6 +278,7 @@
     <Compile Include="Edm\Validation\EdmModelSyntacticValidationRulesTests.cs" />
     <Compile Include="Edm\Validation\EdmModelValidationContextTests.cs" />
     <Compile Include="Edm\Validation\DataModelValidatorTests.cs" />
+    <Compile Include="Infrastructure\DbLocalViewTests.cs" />
     <Compile Include="Infrastructure\DbProviderInfoTests.cs" />
     <Compile Include="Infrastructure\DbQueryTests.cs" />
     <Compile Include="Infrastructure\DbSqlQueryTests.cs" />

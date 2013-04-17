@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Globalization;
 
     /// <summary>
-    ///     Instances of this class would be returned to user via Query&lt;T&gt;
+    ///     Instances of this class would be returned to user via <see cref="ObjectQuery{T}"/>.
     /// </summary>
     internal sealed class MaterializedDataRecord : DbDataRecord, IExtendedDataRecord, ICustomTypeDescriptor
     {

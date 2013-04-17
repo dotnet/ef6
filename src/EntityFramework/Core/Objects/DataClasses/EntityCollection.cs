@@ -882,7 +882,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 throw new InvalidOperationException(Strings.RelatedEnd_CannotSerialize("EntityCollection"));
             }
-            _relatedEntities = _wrappedRelatedEntities == null ? null : new HashSet<TEntity>(_wrappedRelatedEntities.Keys);
+            _relatedEntities = _wrappedRelatedEntities == null ? null : new HashSet<TEntity>(_wrappedRelatedEntities.Keys, new ObjectReferenceEqualityComparer());
         }
 
         // This method is required to maintain compatibility with the v1 binary serialization format. 

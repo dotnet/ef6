@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Internal.Linq
 {
-    using System.Collections.ObjectModel;
+    using System.Data.Entity.Infrastructure;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -22,6 +22,6 @@ namespace System.Data.Entity.Internal.Linq
 
         TEntity Create();
         TEntity Create(Type derivedEntityType);
-        ObservableCollection<TEntity> Local { get; }
+        DbLocalView<TEntity> Local { get; }
     }
 }

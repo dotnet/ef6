@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -20,7 +21,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     implementation of ObjectStateManager class
+    ///     Maintains object state and identity management for entity type instances and relationship instances.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class ObjectStateManager : IEntityStateManager

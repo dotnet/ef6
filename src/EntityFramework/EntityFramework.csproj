@@ -339,7 +339,7 @@
     <Compile Include="Core\Common\EntitySql\TypeResolver.cs" />
     <Compile Include="Core\Common\EntitySql\ValueExpression.cs" />
     <Compile Include="Core\Common\EntityUtil.cs" />
-    <Compile Include="Core\Objects\ObjectReferenceEqualityComparer.cs" />
+    <Compile Include="Infrastructure\ObjectReferenceEqualityComparer.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderFactory.cs" />
     <Compile Include="DataAnnotations\MaxLengthAttribute.cs" />
     <Compile Include="DataAnnotations\MinLengthAttribute.cs" />
@@ -1513,7 +1513,7 @@
     <Compile Include="Internal\DatabaseOperations.cs" />
     <Compile Include="Internal\DbContextTypesInitializersPair.cs" />
     <Compile Include="Internal\DbHelpers.cs" />
-    <Compile Include="Internal\DbLocalView`.cs" />
+    <Compile Include="Infrastructure\DbLocalView`.cs" />
     <Compile Include="Internal\DbSetDiscoveryService.cs" />
     <Compile Include="Internal\EagerInternalConnection.cs" />
     <Compile Include="Internal\EagerInternalContext.cs" />

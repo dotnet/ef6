@@ -4,7 +4,6 @@ namespace System.Data.Entity.Internal.Linq
 {
     using System.Collections;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
@@ -302,7 +301,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <summary>
         ///     Gets the ObservableCollection representing the local view for the set based on this query.
         /// </summary>
-        public ObservableCollection<TEntity> Local
+        public DbLocalView<TEntity> Local
         {
             get
             {

@@ -4,6 +4,7 @@ namespace System.Data.Entity
 {
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Utilities;
 
@@ -11,9 +12,7 @@ namespace System.Data.Entity
     {
         /// <summary>
         ///     Returns an <see cref="BindingList{T}" /> implementation that stays in sync with the given
-        ///     <see
-        ///         cref="ObservableCollection{T}" />
-        ///     .
+        ///     <see cref="ObservableCollection{T}" />.
         /// </summary>
         /// <typeparam name="T"> The element type. </typeparam>
         /// <param name="source"> The collection that the binding list will stay in sync with. </param>

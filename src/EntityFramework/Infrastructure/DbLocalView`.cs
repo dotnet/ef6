@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Internal
+namespace System.Data.Entity.Infrastructure
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
-    using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -20,7 +21,7 @@ namespace System.Data.Entity.Internal
     /// <typeparam name="TEntity"> The type of the entity. </typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
-    internal class DbLocalView<TEntity> : ObservableCollection<TEntity>
+    public class DbLocalView<TEntity> : ObservableCollection<TEntity>, ICollection<TEntity>, IList
         where TEntity : class
     {
         #region Fields and constructors
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Internal
         ///     of the given generic type in the given internal context.
         /// </summary>
         /// <param name="internalContext"> The internal context. </param>
-        public DbLocalView(InternalContext internalContext)
+        internal DbLocalView(InternalContext internalContext)
         {
             DebugCheck.NotNull(internalContext);
 
@@ -66,7 +67,7 @@ namespace System.Data.Entity.Internal
         ///     Returns a cached binding list implementation backed by this ObservableCollection.
         /// </summary>
         /// <value> The binding list. </value>
-        public ObservableBackedBindingList<TEntity> BindingList
+        internal ObservableBackedBindingList<TEntity> BindingList
         {
             get { return _bindingList ?? (_bindingList = new ObservableBackedBindingList<TEntity>(this)); }
         }
@@ -189,7 +190,14 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        public new bool Contains(TEntity item)
+        /// <summary>
+        ///     Determines whether an entity is in the set.
+        /// </summary>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="item"/> is found in the set; otherwise, false.
+        /// </returns>
+        /// <param name="item"> The entity to locate in the set. The value can be null.</param>
+        public new virtual bool Contains(TEntity item)
         {
             IEqualityComparer<TEntity> comparer = new ObjectReferenceEqualityComparer();
             foreach (var entity in Items)
@@ -200,6 +208,75 @@ namespace System.Data.Entity.Internal
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        ///     Removes the first occurrence of a specific entity object from the set.
+        /// </summary>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="item"/> is successfully removed; otherwise, false.
+        ///     This method also returns <c>false</c> if <paramref name="item"/> was not found in the set.
+        /// </returns>
+        /// <param name="item"> The entity to remove from the set. The value can be null.</param>
+        public new virtual bool Remove(TEntity item)
+        {
+            IEqualityComparer<TEntity> comparer = new ObjectReferenceEqualityComparer();
+
+            var index = 0;
+            for (; index < Count; index++)
+            {
+                if (comparer.Equals(Items[index], item))
+                {
+                    break;
+                }
+            }
+
+            if (index == Count)
+            {
+                return false;
+            }
+
+            RemoveItem(index);
+            return true;
+        }
+
+        /// <inheritdoc/>
+        bool ICollection<TEntity>.Contains(TEntity item)
+        {
+            return Contains(item);
+        }
+
+        /// <inheritdoc/>
+        bool ICollection<TEntity>.Remove(TEntity item)
+        {
+            return Remove(item);
+        }
+
+        /// <inheritdoc/>
+        bool IList.Contains(object value)
+        {
+            if (IsCompatibleObject(value))
+            {
+                return Contains((TEntity)value);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <inheritdoc/>
+        void IList.Remove(object value)
+        {
+            if (IsCompatibleObject(value))
+            {
+                Remove((TEntity)value);
+            }
+        }
+
+        private static bool IsCompatibleObject(object value)
+        {
+            return value is TEntity || value == null;
         }
 
         #endregion
