@@ -15,7 +15,7 @@ namespace System.Data.Entity.Migrations
     /// <summary>
     ///     A set of extension methods for <see cref="IDbSet{TEntity}" />
     /// </summary>
-    public static class IDbSetExtensions
+    public static class DbSetMigrationsExtensions
     {
         private const BindingFlags KeyPropertyBindingFlags
             = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;

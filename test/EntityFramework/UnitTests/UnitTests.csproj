@@ -409,7 +409,7 @@
     <Compile Include="Internal\DefaultModelCacheKeyFactoryTests.cs" />
     <Compile Include="Internal\DefaultModelCacheKeyTests.cs" />
     <Compile Include="Internal\InternalContextTests.cs" />
-    <Compile Include="IQueryableExtensionsTests.cs" />
+    <Compile Include="DbQueryExtensionsTests.cs" />
     <Compile Include="Internal\InternalSqlNonSetQueryTests.cs" />
     <Compile Include="Internal\Linq\TestHelpers\InternalSetForMock`.cs" />
     <Compile Include="Internal\TestHelpers\InternalCollectionEntryForMock.cs" />
@@ -463,7 +463,7 @@
     <Compile Include="Utilities\XContainerExtensionsTests.cs" />
     <Compile Include="Utilities\XDocumentExtensionsTests.cs" />
     <Compile Include="Migrations\History\HistoryRepositoryTests.cs" />
-    <Compile Include="Migrations\IDbSetExtensionsTests.cs" />
+    <Compile Include="Migrations\DbSetMigrationsExtensionsTests.cs" />
     <Compile Include="Migrations\Infrastructure\EdmModelDifferTests.cs" />
     <Compile Include="Migrations\Infrastructure\MigrationAssemblyTests.cs" />
     <Compile Include="Migrations\Infrastructure\MigratorScriptingDecoratorTests.cs" />

@@ -1291,7 +1291,7 @@
     <Compile Include="Core\UpdateException.cs" />
     <Compile Include="DbFunctionAttribute.cs" />
     <Compile Include="DbFunctions.cs" />
-    <Compile Include="IDbSetExtensions.cs" />
+    <Compile Include="DbSetExtensions.cs" />
     <Compile Include="Edm\Validation\DataModelValidationRule`.cs" />
     <Compile Include="EntityState.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -1320,7 +1320,7 @@
     <Compile Include="Internal\ModelHashCalculator.cs" />
     <Compile Include="Internal\MockingProxies\ObjectContextProxy.cs" />
     <Compile Include="Internal\RepositoryBase.cs" />
-    <Compile Include="IQueryableExtensions.cs" />
+    <Compile Include="DbQueryExtensions.cs" />
     <Compile Include="MigrateDatabaseToLatestVersion`.cs" />
     <Compile Include="Migrations\Builders\ColumnBuilder.cs" />
     <Compile Include="Migrations\Builders\TableBuilder.cs" />
@@ -1330,7 +1330,7 @@
     <Compile Include="Migrations\DbMigrator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Migrations\IDbSetExtensions.cs" />
+    <Compile Include="Migrations\DbSetMigrationsExtensions.cs" />
     <Compile Include="Migrations\Design\CSharpMigrationCodeGenerator.cs" />
     <Compile Include="Migrations\Design\MigrationCodeGenerator.cs" />
     <Compile Include="Migrations\Design\MigrationScaffolder.cs" />

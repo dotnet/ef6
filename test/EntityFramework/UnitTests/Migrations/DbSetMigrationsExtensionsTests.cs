@@ -10,7 +10,7 @@ namespace System.Data.Entity.Migrations
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
-    public class DbSetExtensionsTests : DbTestCase
+    public class DbSetMigrationsExtensionsTests : DbTestCase
     {
         public class FakeDbSet<TEntity>
             where TEntity : class

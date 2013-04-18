@@ -20,7 +20,7 @@ namespace System.Data.Entity
     /// <summary>
     ///     Useful extension methods for use with Entity Framework LINQ queries.
     /// </summary>
-    public static class IQueryableExtensions
+    public static class DbQueryExtensions
     {
         #region Private static fields
 

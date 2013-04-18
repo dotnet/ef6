@@ -12,7 +12,7 @@ namespace System.Data.Entity
     /// <summary>
     ///     Useful extension methods for <see cref="IDbSet{TEntity}" />.
     /// </summary>
-    public static class IDbSetExtensions
+    public static class DbSetExtensions
     {
         /// <summary>
         ///     Asynchronously finds an entity with the given primary key values.
