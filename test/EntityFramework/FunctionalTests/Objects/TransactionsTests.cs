@@ -86,8 +86,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_connection_is_closed(
-            )
+        public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_connection_is_closed()
         {
             try
             {
@@ -108,9 +107,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_EntityConnection_is_opened_and_context_owns_connection
-            ()
+        public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_EntityConnection_is_opened_and_context_owns_connection()
         {
             try
             {
@@ -138,9 +135,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_EntityConnection_is_opened_and_context_does_not_own_connection
-            ()
+        public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_EntityConnection_is_opened_and_context_does_not_own_connection()
         {
             try
             {
@@ -167,9 +162,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_SqlConnection_is_opened_and_context_owns_connection
-            ()
+        public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_SqlConnection_is_opened_and_context_owns_connection()
         {
             try
             {
@@ -197,9 +190,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_SqlConnection_is_opened_and_context_does_not_own_connection
-            ()
+        public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_SqlConnection_is_opened_and_context_does_not_own_connection()
         {
             try
             {
@@ -775,9 +766,7 @@ namespace System.Data.Entity.Objects
         #endregion
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_closed
-            ()
+        public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_closed()
         {
             var entityConnection = new EntityConnection(_entityConnectionString);
             using (new TransactionScope())
@@ -794,9 +783,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_SqlConnection_is_closed
-            ()
+        public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_SqlConnection_is_closed()
         {
             var connection = new SqlConnection(_connectionString);
             using (new TransactionScope())
@@ -813,9 +800,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_opened_inside_transaction_scope
-            ()
+        public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_opened_inside_transaction_scope()
         {
             var connection = new EntityConnection(_entityConnectionString);
             using (new TransactionScope())
@@ -880,9 +865,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_created_outside_context_and_is_closed
-            ()
+        public void Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_created_outside_context_and_is_closed()
         {
             try
             {
@@ -927,9 +910,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_created_outside_context_and_is_open
-            ()
+        public void Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_created_outside_context_and_is_open()
         {
             try
             {
@@ -954,8 +935,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_is_closed
-            ()
+        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_is_closed()
         {
             using (new TransactionScope())
             {
@@ -972,9 +952,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_closed
-            ()
+        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_closed()
         {
             using (new TransactionScope())
             {
@@ -992,9 +970,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_closed_plus_AdoNet_calls
-            ()
+        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_closed_plus_AdoNet_calls()
         {
             using (new TransactionScope())
             {
@@ -1014,9 +990,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed
-            ()
+        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed()
         {
             var connection = new EntityConnection(_entityConnectionString);
             using (new TransactionScope())
@@ -1034,9 +1008,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed_plus_AdoNet_calls
-            ()
+        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed_plus_AdoNet_calls()
         {
             var connection = new EntityConnection(_entityConnectionString);
             using (new TransactionScope())
@@ -1055,9 +1027,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_only_one_transaction_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed_plus_AdoNet_calls_and_transaction_is_completed
-            ()
+        public void Verify_only_one_transaction_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed_plus_AdoNet_calls_and_transaction_is_completed()
         {
             try
             {
@@ -1109,9 +1079,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_open
-            ()
+        public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_open()
         {
             using (new TransactionScope())
             {
@@ -1472,8 +1440,7 @@ namespace System.Data.Entity.Objects
         ////}
 
         [Fact]
-        public void
-            Verify_using_CommittableTransaction_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created()
+        public void Verify_using_CommittableTransaction_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created()
         {
             using (var ctx = CreateTransactionContext())
             {
@@ -1583,9 +1550,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        public void
-            Verify_no_implicit_transaction_created_when_if_enlisted_in_explicit_transaction_after_transaction_from_previous_operation_disposed
-            ()
+        public void Verify_no_implicit_transaction_created_when_if_enlisted_in_explicit_transaction_after_transaction_from_previous_operation_disposed()
         {
             using (var ctx = CreateObjectContext())
             {
@@ -1813,6 +1778,184 @@ namespace System.Data.Entity.Objects
                 ResetTables();
             }
         }
+
+        [Fact]
+        public void ExecuteSqlCommand_by_default_uses_transaction()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.ExecuteSqlCommand("[dbo].[TransactionLogEntry_Insert]");
+                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+
+                    Assert.Equal(1, transactionCount);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void ExecuteSqlCommand_with_TransactionalBehavior_EnsureTransaction_uses_transaction()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.ExecuteSqlCommand(TransactionalBehavior.EnsureTransaction, "[dbo].[TransactionLogEntry_Insert]");
+                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+
+                    Assert.Equal(1, transactionCount);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void ExecuteSqlCommand_with_TransactionalBehavior_DoNotEnsureTransaction_does_not_use_transaction()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "[dbo].[TransactionLogEntry_Insert]");
+                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+
+                    Assert.Equal(0, transactionCount);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void ExecuteSqlCommand_with_TransactionalBehavior_DoNotEnsureTransaction_still_uses_transaction_if_called_inside_transaction_scope()
+        {
+            try
+            {
+                using (new TransactionScope())
+                {
+                    using (var ctx = CreateTransactionDbContext())
+                    {
+                        ctx.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "[dbo].[TransactionLogEntry_Insert]");
+                        var transactionCount = ctx.LogEntries.Single().TransactionCount;
+
+                        Assert.Equal(1, transactionCount);
+                    }
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void ExecuteSqlCommand_with_TransactionalBehavior_DoNotEnsureTransaction_still_uses_transaction_if_called_inside_user_transaction()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.BeginTransaction();
+                    ctx.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction, "[dbo].[TransactionLogEntry_Insert]");
+                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+
+                    Assert.Equal(1, transactionCount);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+#if !NET40
+        [Fact]
+        public void ExecuteSqlCommandAsync_by_default_uses_transaction()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.ExecuteSqlCommandAsync("[dbo].[TransactionLogEntry_Insert]").Wait();
+                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+
+                    Assert.Equal(1, transactionCount);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void ExecuteSqlCommandAsync_with_TransactionalBehavior_EnsureTransaction_uses_transaction()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.ExecuteSqlCommandAsync(TransactionalBehavior.EnsureTransaction, "[dbo].[TransactionLogEntry_Insert]").Wait();
+                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+
+                    Assert.Equal(1, transactionCount);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void ExecuteSqlCommandAsync_with_TransactionalBehavior_DoNotEnsureTransaction_does_not_use_transaction()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.ExecuteSqlCommandAsync(TransactionalBehavior.DoNotEnsureTransaction, "[dbo].[TransactionLogEntry_Insert]").Wait();
+                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+
+                    Assert.Equal(0, transactionCount);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+
+        [Fact]
+        public void ExecuteSqlCommandAsync_with_TransactionalBehavior_DoNotEnsureTransaction_still_uses_transaction_if_called_inside_user_transaction()
+        {
+            try
+            {
+                using (var ctx = CreateTransactionDbContext())
+                {
+                    ctx.Database.BeginTransaction();
+                    ctx.Database.ExecuteSqlCommandAsync(TransactionalBehavior.DoNotEnsureTransaction, "[dbo].[TransactionLogEntry_Insert]").Wait();
+                    var transactionCount = ctx.LogEntries.Single().TransactionCount;
+
+                    Assert.Equal(1, transactionCount);
+                }
+            }
+            finally
+            {
+                ResetTables();
+            }
+        }
+#endif
 
         // TODO: this is temporary, tests that use these internals should be in unit tests
         private EntityTransaction GetCurrentEntityTransaction(EntityConnection connection)
