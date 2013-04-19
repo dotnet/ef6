@@ -169,11 +169,11 @@ namespace System.Data.Entity.Edm.Serialization
             {
                 AppendMetadataItem(builder, item, (v, i) => v.InternalVisitEdmEntityType(i));
 
-                _schemaWriter.WriteComment(builder.ToString());
+                WriteComment(builder.ToString());
             }
             else
             {
-                _schemaWriter.WriteComment(builder.ToString());
+                WriteComment(builder.ToString());
 
                 InternalVisitEdmEntityType(item);
             }
@@ -239,11 +239,11 @@ namespace System.Data.Entity.Edm.Serialization
             {
                 AppendMetadataItem(builder, item, (v, i) => v.InternalVisitEdmAssociationType(i));
 
-                _schemaWriter.WriteComment(builder.ToString());
+                WriteComment(builder.ToString());
             }
             else
             {
-                _schemaWriter.WriteComment(builder.ToString());
+                WriteComment(builder.ToString());
 
                 InternalVisitEdmAssociationType(item);
             }
@@ -289,11 +289,12 @@ namespace System.Data.Entity.Edm.Serialization
         {
             if (MetadataItemHelper.HasSchemaErrors(item))
             {
-                builder.AppendLine(Strings.MetadataItemErrorsFoundDuringGeneration);
+                builder.Append(Strings.MetadataItemErrorsFoundDuringGeneration);
 
                 foreach (var error in MetadataItemHelper.GetSchemaErrors(item))
                 {
-                    builder.AppendLine(error.ToString());
+                    builder.AppendLine();
+                    builder.Append(error.ToString());
                 }
             }
         }
@@ -302,13 +303,25 @@ namespace System.Data.Entity.Edm.Serialization
             StringBuilder builder, T item, Action<EdmSerializationVisitor, T> visitAction) 
             where T : MetadataItem
         {
-            var settings = new XmlWriterSettings { ConformanceLevel = ConformanceLevel.Fragment };
+            var settings = new XmlWriterSettings 
+                { 
+                    ConformanceLevel = ConformanceLevel.Fragment,
+                    Indent = true
+                };
+            settings.NewLineChars += "        ";
+
+            builder.Append(settings.NewLineChars);
 
             using (var writer = XmlWriter.Create(builder, settings))
             {
                 var visitor = new EdmSerializationVisitor(_schemaWriter.Replicate(writer));
                 visitAction(visitor, item);
             }
+        }
+
+        private void WriteComment(string comment)
+        {
+            _schemaWriter.WriteComment(comment.Replace("--", "- -"));
         }
     }
 }
