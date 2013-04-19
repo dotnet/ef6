@@ -27,15 +27,16 @@ namespace System.Data.Entity.Edm.Serialization
             _schemaWriter = schemaWriter;
         }
 
-        public void Visit(EdmModel edmModel)
+        public void Visit(EdmModel edmModel, string modelNamespace)
         {
             DebugCheck.NotNull(edmModel);
 
             var namespaceName
-                = edmModel
-                    .NamespaceNames
-                    .DefaultIfEmpty("Empty")
-                    .Single();
+                = modelNamespace ??
+                  edmModel
+                      .NamespaceNames
+                      .DefaultIfEmpty("Empty")
+                      .Single();
 
             _schemaWriter.WriteSchemaElementHeader(namespaceName);
 

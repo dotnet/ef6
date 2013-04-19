@@ -13,6 +13,7 @@ namespace System.Data.Entity.Edm.Serialization
     using System.Xml;
     using System.Xml.Linq;
     using Moq;
+    using Moq.Protected;
     using Xunit;
 
     public class EdmSerializationVisitorTests
@@ -179,6 +180,42 @@ namespace System.Data.Entity.Edm.Serialization
         }
 
         [Fact]
+        public void Visit_writes_Empty_model_namespace_for_empty_model_if_custom_namespace_not_provided()
+        {
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>(new Mock<XmlWriter>().Object, 3.0, false);
+
+            new EdmSerializationVisitor(schemaWriterMock.Object)
+                .Visit(new EdmModel(DataSpace.CSpace), null);
+
+            schemaWriterMock.Verify(sw => sw.WriteSchemaElementHeader("Empty"), Times.Once());
+        }
+
+        [Fact]
+        public void Visit_writes_custom_model_namespace_if_provided()
+        {
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>(new Mock<XmlWriter>().Object, 3.0, false);
+
+            new EdmSerializationVisitor(schemaWriterMock.Object)
+                .Visit(new EdmModel(DataSpace.CSpace), "NS");
+
+            schemaWriterMock.Verify(sw => sw.WriteSchemaElementHeader("NS"), Times.Once());
+        }
+
+        [Fact]
+        public void Custom_namespace_overrides_inferred_namespace()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+            model.AddItem(new ComplexType("foo", "namespace", DataSpace.CSpace));
+
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>(new Mock<XmlWriter>().Object, 3.0, false);
+
+            new EdmSerializationVisitor(schemaWriterMock.Object)
+                .Visit(new EdmModel(DataSpace.CSpace), "NS");
+
+            schemaWriterMock.Verify(sw => sw.WriteSchemaElementHeader("NS"), Times.Once());
+        }
+
+        [Fact]
         public void VisitRowType_writes_rowtype()
         {
             var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
@@ -191,41 +228,53 @@ namespace System.Data.Entity.Edm.Serialization
         [Fact]
         public static void VisitEdmEntityType_writes_comment_including_errors_followed_by_valid_entity_type()
         {
+            // Need to specify the generic type explicitly to avoid build break on .NET Framework 4
+            // ReSharper disable RedundantTypeArgumentsOfMethod
             EdmSerializationVisitor_writes_expected_xml<EntityType>(
                 constructor: () => new EntityType("AName", "ANamespace", DataSpace.CSpace),
                 invalid: false,
                 visitAction: (visitor, item) => visitor.VisitEdmEntityType(item),
                 expectedFormat: @"<!--{0}--><EntityType Name=""AName"" />");
+            // ReSharper restore RedundantTypeArgumentsOfMethod
         }
 
         [Fact]
         public static void VisitEdmAssociationType_writes_comment_including_errors_followed_by_valid_association_type()
         {
+            // Need to specify the generic type explicitly to avoid build break on .NET Framework 4
+            // ReSharper disable RedundantTypeArgumentsOfMethod
             EdmSerializationVisitor_writes_expected_xml<AssociationType>(
                 constructor: () => new AssociationType("AName", "ANamespace", false, DataSpace.CSpace),
                 invalid: false,
                 visitAction: (visitor, item) => visitor.VisitEdmAssociationType(item),
                 expectedFormat: @"<!--{0}--><Association Name=""AName"" />");
+            // ReSharper restore RedundantTypeArgumentsOfMethod
         }
 
         [Fact]
         public static void VisitEdmEntityType_writes_comment_including_errors_and_invalid_entity_type()
         {
+            // Need to specify the generic type to avoid build break on .NET Framework 4
+            // ReSharper disable RedundantTypeArgumentsOfMethod
             EdmSerializationVisitor_writes_expected_xml<EntityType>(
                 constructor: () => new EntityType("AName", "ANamespace", DataSpace.CSpace),
                 invalid: true,
                 visitAction: (visitor, item) => visitor.VisitEdmEntityType(item),
                 expectedFormat: @"<!--{0}<EntityType Name=""AName"" />-->");
+            // ReSharper restore RedundantTypeArgumentsOfMethod
         }
 
         [Fact]
         public static void VisitEdmAssociationType_writes_comment_including_errors_and_invalid_association_type()
         {
+            // Need to specify the generic type to avoid build break on .NET Framework 4
+            // ReSharper disable RedundantTypeArgumentsOfMethod
             EdmSerializationVisitor_writes_expected_xml<AssociationType>(
                 constructor: () => new AssociationType("AName", "ANamespace", false, DataSpace.CSpace),
                 invalid: true,
                 visitAction: (visitor, item) => visitor.VisitEdmAssociationType(item),
                 expectedFormat: @"<!--{0}<Association Name=""AName"" />-->");
+            // ReSharper restore RedundantTypeArgumentsOfMethods
         }
 
         private static void EdmSerializationVisitor_writes_expected_xml<T>(

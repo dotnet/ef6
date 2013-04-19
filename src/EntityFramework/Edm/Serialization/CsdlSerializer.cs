@@ -6,6 +6,7 @@ namespace System.Data.Entity.Edm.Serialization
     using System.Data.Entity.Edm.Validation;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Xml;
 
@@ -25,7 +26,8 @@ namespace System.Data.Entity.Edm.Serialization
         ///     The EdmModel to serialize.
         /// </param>
         /// <param name="xmlWriter"> The XmlWriter to serialize to </param>
-        public bool Serialize(EdmModel model, XmlWriter xmlWriter)
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        public bool Serialize(EdmModel model, XmlWriter xmlWriter, string modelNamespace = null)
         {
             Check.NotNull(model, "model");
             Check.NotNull(xmlWriter, "xmlWriter");
@@ -59,7 +61,7 @@ namespace System.Data.Entity.Edm.Serialization
 
             if (modelIsValid)
             {
-                new EdmSerializationVisitor(xmlWriter, model.SchemaVersion).Visit(model);
+                new EdmSerializationVisitor(xmlWriter, model.SchemaVersion).Visit(model, modelNamespace);
                 return true;
             }
 

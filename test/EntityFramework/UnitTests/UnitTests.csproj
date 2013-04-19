@@ -269,6 +269,7 @@
     <Compile Include="DbFunctionAttributeTests.cs" />
     <Compile Include="DbFunctionsTests.cs" />
     <Compile Include="Edm\EdmModelVisitorTests.cs" />
+    <Compile Include="Edm\Serialization\CsdlSerializerTests.cs" />
     <Compile Include="Edm\Serialization\EdmSerializationVisitorTests.cs" />
     <Compile Include="Edm\Serialization\EdmXmlSchemaWriterTests.cs" />
     <Compile Include="Edm\Serialization\MslXmlSchemaWriterTests.cs" />

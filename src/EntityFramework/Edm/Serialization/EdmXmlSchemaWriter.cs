@@ -203,7 +203,8 @@ namespace System.Data.Entity.Edm.Serialization
             _version = edmVersion;
         }
 
-        internal void WriteSchemaElementHeader(string schemaNamespace)
+        // virtual for testing
+        internal virtual void WriteSchemaElementHeader(string schemaNamespace)
         {
             DebugCheck.NotEmpty(schemaNamespace);
 
