@@ -760,6 +760,11 @@ END";
 
                 Assert.False(dbContext.Configuration.UseDatabaseNullSemantics);
                 Assert.True(objectContext.ContextOptions.UseCSharpNullComparisonBehavior);
+
+                objectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
+
+                Assert.True(dbContext.Configuration.UseDatabaseNullSemantics);
+                Assert.False(objectContext.ContextOptions.UseCSharpNullComparisonBehavior);
             }
         }
         #endregion
