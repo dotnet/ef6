@@ -30,6 +30,18 @@ namespace System.Data.Entity.Infrastructure
         private bool _inStateManagerChanged;
         private ObservableBackedBindingList<TEntity> _bindingList;
 
+        public DbLocalView()
+        {
+
+        }
+
+        public DbLocalView(IEnumerable<TEntity> collection)
+        {
+            Check.NotNull(collection, "collection");
+
+            collection.Each(Add);
+        } 
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="DbLocalView{TEntity}" /> class for entities
         ///     of the given generic type in the given internal context.
@@ -93,7 +105,7 @@ namespace System.Data.Entity.Infrastructure
             // Avoid recursively reacting to changes made to this list while already processing state manager changes.
             // That is, the ObservableCollection only changed because we made a change based on the state manager.
             // We therefore don't want to try to repeat that change in the state manager.
-            if (!_inStateManagerChanged)
+            if (!_inStateManagerChanged && _internalContext != null)
             {
                 if (e.Action == NotifyCollectionChangedAction.Remove
                     || e.Action == NotifyCollectionChangedAction.Replace)

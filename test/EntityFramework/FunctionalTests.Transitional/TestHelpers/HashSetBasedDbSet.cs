@@ -5,6 +5,7 @@ namespace System.Data.Entity
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading;
@@ -91,9 +92,9 @@ namespace System.Data.Entity
             return _data.GetEnumerator();
         }
 
-        public ObservableCollection<T> Local
+        public DbLocalView<T> Local
         {
-            get { return new ObservableCollection<T>(_data); }
+            get { return new DbLocalView<T>(_data); }
         }
 
         public T Create()
