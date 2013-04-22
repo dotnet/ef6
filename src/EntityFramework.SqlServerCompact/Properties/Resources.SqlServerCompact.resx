@@ -249,4 +249,19 @@
   <data name="ELinq_DbFunctionDirectCall" xml:space="preserve">
     <value>This function can only be invoked from LINQ to Entities.</value>
   </data>
+  <data name="AutomaticMigration" xml:space="preserve">
+    <value>AutomaticMigration</value>
+  </data>
+  <data name="SqlCeColumnRenameNotSupported" xml:space="preserve">
+    <value>Direct column renaming is not supported by SQL Server Compact. To rename a column in SQL Server Compact, you will need to recreate it.</value>
+    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
+  </data>
+  <data name="InvalidDatabaseName" xml:space="preserve">
+    <value>The database name '{0}' is invalid. Database names must be of the form [&lt;schema_name&gt;.]&lt;object_name&gt;.</value>
+    <comment>## ExceptionType=ArgumentException</comment>
+  </data>
+  <data name="SqlServerMigrationSqlGenerator_UnknownOperation" xml:space="preserve">
+    <value>The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation).</value>
+    <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
 </root>

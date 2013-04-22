@@ -23,7 +23,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SQLSERVERCOMPACT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\EntityFramework.SqlServerCompact.xml</DocumentationFile>
@@ -35,7 +35,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    <DefineConstants>TRACE;CODE_ANALYSIS;SQLSERVERCOMPACT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\EntityFramework.SqlServerCompact.xml</DocumentationFile>
@@ -50,7 +50,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\DebugNet40\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET40</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET40;SQLSERVERCOMPACT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\EntityFramework.SqlServerCompact.xml</DocumentationFile>
@@ -62,7 +62,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\ReleaseNet40\</OutputPath>
-    <DefineConstants>TRACE;CODE_ANALYSIS;NET40</DefineConstants>
+    <DefineConstants>TRACE;CODE_ANALYSIS;NET40;SQLSERVERCOMPACT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\EntityFramework.SqlServerCompact.xml</DocumentationFile>
@@ -93,6 +93,24 @@
     <Compile Include="..\SharedAssemblyVersionInfo.cs">
       <Link>Properties\SharedAssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="..\Common\ByteExtensions.cs">
+      <Link>Utilities\ByteExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Check.cs">
+      <Link>Utilities\Check.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DatabaseName.cs">
+      <Link>Utilities\DatabaseName.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DebugCheck.cs">
+      <Link>Utilities\DebugCheck.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\IEnumerableExtensions.cs">
+      <Link>Utilities\IEnumerableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\StringExtensions.cs">
+      <Link>Utilities\StringExtensions.cs</Link>
+    </Compile>
     <Compile Include="ADP1.cs" />
     <Compile Include="AliasGenerator.cs" />
     <Compile Include="CommandTreeUtils.cs" />
@@ -109,6 +127,7 @@
     </Compile>
     <Compile Include="ProviderManifest.cs" />
     <Compile Include="RemoteProviderHelper.cs" />
+    <Compile Include="SqlCeMigrationSqlGenerator.cs" />
     <Compile Include="SqlCeMultiCommand.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -130,9 +149,7 @@
     <Compile Include="SqlGen\TopClause.cs" />
     <Compile Include="TypeHelpers.cs" />
     <Compile Include="TypeSemantics.cs" />
-    <Compile Include="Utilities\Check.cs" />
     <Compile Include="ParameterHelpers.cs" />
-    <Compile Include="Utilities\DebugCheck.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CodeAnalysisDictionary.xml" />

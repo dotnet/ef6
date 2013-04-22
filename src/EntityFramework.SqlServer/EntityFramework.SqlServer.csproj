@@ -21,7 +21,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SQLSERVER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\EntityFramework.SqlServer.xml</DocumentationFile>
@@ -33,7 +33,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    <DefineConstants>TRACE;CODE_ANALYSIS;SQLSERVER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\EntityFramework.SqlServer.xml</DocumentationFile>
@@ -48,7 +48,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\DebugNet40\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET40</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET40;SQLSERVER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\EntityFramework.SqlServer.xml</DocumentationFile>
@@ -60,7 +60,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\ReleaseNet40\</OutputPath>
-    <DefineConstants>TRACE;CODE_ANALYSIS;NET40</DefineConstants>
+    <DefineConstants>TRACE;CODE_ANALYSIS;NET40;SQLSERVER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\EntityFramework.SqlServer.xml</DocumentationFile>
@@ -86,6 +86,24 @@
     <Compile Include="..\SharedAssemblyVersionInfo.cs">
       <Link>Properties\SharedAssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="..\Common\ByteExtensions.cs">
+      <Link>Utilities\ByteExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Check.cs">
+      <Link>Utilities\Check.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DatabaseName.cs">
+      <Link>Utilities\DatabaseName.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DebugCheck.cs">
+      <Link>Utilities\DebugCheck.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\IEnumerableExtensions.cs">
+      <Link>Utilities\IEnumerableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\StringExtensions.cs">
+      <Link>Utilities\StringExtensions.cs</Link>
+    </Compile>
     <Compile Include="DbGeographyAdapter.cs" />
     <Compile Include="DbGeometryAdapter.cs" />
     <Compile Include="DefaultSqlExecutionStrategy.cs" />
@@ -108,13 +126,12 @@
     <Compile Include="SqlGen\BoolWrapper.cs" />
     <Compile Include="SqlGen\DmlFunctionSqlGenerator.cs" />
     <Compile Include="SqlGen\DmlSqlGenerator.cs" />
+    <Compile Include="SqlServerMigrationSqlGenerator.cs" />
     <Compile Include="SqlSpatialFunctions.cs" />
     <Compile Include="SqlTypesAssemblyLoader.cs" />
     <Compile Include="SqlVersionUtils.cs" />
-    <Compile Include="Utilities\Check.cs" />
     <Compile Include="Utilities\SqlDataReaderWrapper.cs" />
     <Compile Include="Utilities\DbExpressionExtensions.cs" />
-    <Compile Include="Utilities\DebugCheck.cs" />
     <Compile Include="Utilities\EdmFunctionExtensions.cs" />
     <Compile Include="Utilities\MetdataItemExtensions.cs" />
     <Compile Include="Utilities\FuncExtensions.cs" />

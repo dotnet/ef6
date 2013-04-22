@@ -13,6 +13,10 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     public sealed class StorageEntityTypeModificationFunctionMapping
     {
+        private readonly StorageModificationFunctionMapping _deleteFunctionMapping;
+        private readonly StorageModificationFunctionMapping _insertFunctionMapping;
+        private readonly StorageModificationFunctionMapping _updateFunctionMapping;
+
         internal StorageEntityTypeModificationFunctionMapping()
         {
             // Testing
@@ -27,9 +31,9 @@ namespace System.Data.Entity.Core.Mapping
             DebugCheck.NotNull(entityType);
 
             EntityType = entityType;
-            DeleteFunctionMapping = deleteFunctionMapping;
-            InsertFunctionMapping = insertFunctionMapping;
-            UpdateFunctionMapping = updateFunctionMapping;
+            _deleteFunctionMapping = deleteFunctionMapping;
+            _insertFunctionMapping = insertFunctionMapping;
+            _updateFunctionMapping = updateFunctionMapping;
         }
 
         /// <summary>
@@ -40,17 +44,26 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Gets delete function for the current entity type.
         /// </summary>
-        internal readonly StorageModificationFunctionMapping DeleteFunctionMapping;
+        public StorageModificationFunctionMapping DeleteFunctionMapping
+        {
+            get { return _deleteFunctionMapping; }
+        }
 
         /// <summary>
         ///     Gets insert function for the current entity type.
         /// </summary>
-        internal readonly StorageModificationFunctionMapping InsertFunctionMapping;
+        public StorageModificationFunctionMapping InsertFunctionMapping
+        {
+            get { return _insertFunctionMapping; }
+        }
 
         /// <summary>
         ///     Gets update function for the current entity type.
         /// </summary>
-        internal readonly StorageModificationFunctionMapping UpdateFunctionMapping;
+        public StorageModificationFunctionMapping UpdateFunctionMapping
+        {
+            get { return _updateFunctionMapping; }
+        }
 
         internal IEnumerable<StorageModificationFunctionParameterBinding> PrimaryParameterBindings
         {

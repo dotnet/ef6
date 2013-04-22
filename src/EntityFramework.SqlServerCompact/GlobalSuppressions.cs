@@ -13,3 +13,12 @@ using System.Diagnostics.CodeAnalysis;
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
         Target = "System.Data.Entity.SqlServerCompact")]
+[assembly:
+    SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
+        Target = "System.Data.Entity.Migrations.Sql")]
+[assembly:
+    SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "schemaname", Scope = "resource",
+        Target = "System.Data.Entity.SqlServerCompact.Properties.Resources.SqlServerCompact.resources")]
+[assembly:
+    SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "objectname", Scope = "resource",
+        Target = "System.Data.Entity.SqlServerCompact.Properties.Resources.SqlServerCompact.resources")]

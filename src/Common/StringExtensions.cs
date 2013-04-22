@@ -1,9 +1,15 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if SQLSERVER
+namespace System.Data.Entity.SqlServer.Utilities
+#elif SQLSERVERCOMPACT
+namespace System.Data.Entity.SqlServerCompact.Utilities
+#else
 namespace System.Data.Entity.Utilities
+#endif
 {
+    using Resources;
     using System.Data.Entity.Migrations;
-    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Globalization;
     using System.Text.RegularExpressions;

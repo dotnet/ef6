@@ -55,9 +55,9 @@ namespace System.Data.Entity.Migrations.Model
                 var databaseName = _name.ToDatabaseName();
 
                 return new MoveTableOperation(NewSchema + '.' + databaseName.Name, databaseName.Schema)
-                    {
-                        IsSystem = IsSystem
-                    };
+                {
+                    IsSystem = IsSystem
+                };
             }
         }
 
@@ -67,8 +67,8 @@ namespace System.Data.Entity.Migrations.Model
             get { return false; }
         }
 
-        internal string ContextKey { get; set; }
+        public string ContextKey { get; internal set; }
 
-        internal CreateTableOperation CreateTableOperation { get; set; }
+        public CreateTableOperation CreateTableOperation { get; internal set; }
     }
 }

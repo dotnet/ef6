@@ -10,10 +10,10 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Migrations.Utilities;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.Migrations.Utilities;    
     using System.Data.Entity.Spatial;
-    using System.Data.Entity.Utilities;
+    using System.Data.Entity.SqlServerCompact.Resources;
+    using System.Data.Entity.SqlServerCompact.Utilities;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -24,11 +24,11 @@ namespace System.Data.Entity.Migrations.Sql
 
     /// <summary>
     ///     Provider to convert provider agnostic migration operations into SQL commands
-    ///     that can be run against a Microsoft SQL Server database.
+    ///     that can be run against a Microsoft SQL Server Compact Edition database.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    [DbProviderName("System.Data.SqlClient")]
-    public class SqlServerMigrationSqlGenerator : MigrationSqlGenerator
+    [DbProviderName("System.Data.SqlServerCe.4.0")]
+    public class SqlCeMigrationSqlGenerator : MigrationSqlGenerator
     {
         internal const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffK";
         internal const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ss.fffzzz";
@@ -45,12 +45,9 @@ namespace System.Data.Entity.Migrations.Sql
 
         private DbProviderServices _providerServices;
         private DbProviderManifest _providerManifest;
-        private string _providerManifestToken;
 
         private List<MigrationStatement> _statements;
         private HashSet<string> _generatedSchemas;
-
-        private int _variableCounter;
 
         /// <summary>
         ///     Converts a set of migration operations into Microsoft SQL Server specific SQL.
@@ -66,7 +63,6 @@ namespace System.Data.Entity.Migrations.Sql
 
             _statements = new List<MigrationStatement>();
             _generatedSchemas = new HashSet<string>();
-            _variableCounter = 0;
 
             InitializeProviderServices(providerManifestToken);
 
@@ -95,8 +91,6 @@ namespace System.Data.Entity.Migrations.Sql
 
         private void InitializeProviderServices(string providerManifestToken)
         {
-            _providerManifestToken = providerManifestToken;
-
             using (var connection = CreateConnection())
             {
                 _providerServices = DbProviderServices.GetProviderServices(connection);
@@ -124,55 +118,11 @@ namespace System.Data.Entity.Migrations.Sql
         /// <returns> </returns>
         protected virtual DbConnection CreateConnection()
         {
-            return DbConfiguration.GetService<DbProviderFactory>("System.Data.SqlClient").CreateConnection();
+            return DbConfiguration.GetService<DbProviderFactory>("System.Data.SqlServerCe.4.0").CreateConnection();
         }
 
         protected virtual void Generate(CreateProcedureOperation createProcedureOperation)
         {
-            Check.NotNull(createProcedureOperation, "createProcedureOperation");
-
-            using (var writer = Writer())
-            {
-                writer.WriteLine("CREATE PROCEDURE " + Name(createProcedureOperation.Name));
-                writer.Indent++;
-
-                createProcedureOperation.Parameters.Each(
-                    (p, i) =>
-                        {
-                            Generate(p, writer);
-
-                            if (i < createProcedureOperation.Parameters.Count - 1)
-                            {
-                                writer.WriteLine(",");
-                            }
-                        });
-
-                writer.WriteLine();
-                writer.Indent--;
-                writer.WriteLine("AS");
-                writer.WriteLine("BEGIN");
-                writer.Indent++;
-
-                if (!string.IsNullOrWhiteSpace(createProcedureOperation.BodySql))
-                {
-                    var indentString
-                        = writer.NewLine
-                          + new string(' ', (writer.Indent * 4));
-
-                    var indentReplacer = new Regex(@"\r?\n *");
-
-                    writer.WriteLine(indentReplacer.Replace(createProcedureOperation.BodySql, indentString));
-                }
-                else
-                {
-                    writer.WriteLine("RETURN");
-                }
-
-                writer.Indent--;
-                writer.Write("END");
-
-                Statement(writer, batchTerminator: "GO");
-            }
         }
 
         private void Generate(ParameterModel parameterModel, IndentedTextWriter writer)
@@ -204,15 +154,6 @@ namespace System.Data.Entity.Migrations.Sql
 
         protected virtual void Generate(DropProcedureOperation dropProcedureOperation)
         {
-            Check.NotNull(dropProcedureOperation, "dropProcedureOperation");
-
-            using (var writer = Writer())
-            {
-                writer.Write("DROP PROCEDURE ");
-                writer.Write(Name(dropProcedureOperation.Name));
-
-                Statement(writer);
-            }
         }
 
         /// <summary>
@@ -302,18 +243,6 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="table"> The table to mark as a system table. </param>
         protected virtual void GenerateMakeSystemTable(CreateTableOperation createTableOperation, IndentedTextWriter writer)
         {
-            Check.NotNull(createTableOperation, "createTableOperation");
-            Check.NotNull(writer, "writer");
-
-            writer.WriteLine("BEGIN TRY");
-
-            writer.Indent++;
-            writer.WriteLine("EXEC sp_MS_marksystemobject '" + createTableOperation.Name + "'");
-            writer.Indent--;
-
-            writer.WriteLine("END TRY");
-            writer.WriteLine("BEGIN CATCH");
-            writer.Write("END CATCH");
         }
 
         /// <summary>
@@ -323,20 +252,6 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="createTableOperation"> The name of the schema to create. </param>
         protected virtual void GenerateCreateSchema(string schema)
         {
-            Check.NotEmpty(schema, "schema");
-
-            using (var writer = Writer())
-            {
-                writer.Write("IF schema_id('");
-                writer.Write(schema);
-                writer.WriteLine("') IS NULL");
-                writer.Indent++;
-                writer.Write("EXECUTE('CREATE SCHEMA ");
-                writer.Write(Quote(schema));
-                writer.Write("')");
-
-                Statement(writer);
-            }
         }
 
         /// <summary>
@@ -433,14 +348,12 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="dropIndexOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropIndexOperation dropIndexOperation)
         {
-            Check.NotNull(dropIndexOperation, "dropIndexOperation");
-
             using (var writer = Writer())
             {
                 writer.Write("DROP INDEX ");
-                writer.Write(Quote(dropIndexOperation.Name));
-                writer.Write(" ON ");
                 writer.Write(Name(dropIndexOperation.Table));
+                writer.Write(".");
+                writer.Write(Quote(dropIndexOperation.Name));
 
                 Statement(writer);
             }
@@ -547,36 +460,8 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="dropColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropColumnOperation dropColumnOperation)
         {
-            Check.NotNull(dropColumnOperation, "dropColumnOperation");
-
             using (var writer = Writer())
             {
-                var variable = "@var" + _variableCounter++;
-
-                writer.Write("DECLARE ");
-                writer.Write(variable);
-                writer.WriteLine(" nvarchar(128)");
-                writer.Write("SELECT ");
-                writer.Write(variable);
-                writer.WriteLine(" = name");
-                writer.WriteLine("FROM sys.default_constraints");
-                writer.Write("WHERE parent_object_id = object_id(N'");
-                writer.Write(dropColumnOperation.Table);
-                writer.WriteLine("')");
-                writer.Write("AND col_name(parent_object_id, parent_column_id) = '");
-                writer.Write(dropColumnOperation.Name);
-                writer.WriteLine("';");
-                writer.Write("IF ");
-                writer.Write(variable);
-                writer.WriteLine(" IS NOT NULL");
-                writer.Indent++;
-                writer.Write("EXECUTE('ALTER TABLE ");
-                writer.Write(Name(dropColumnOperation.Table));
-                writer.Write(" DROP CONSTRAINT ' + ");
-                writer.Write(variable);
-                writer.WriteLine(")");
-                writer.Indent--;
-
                 writer.Write("ALTER TABLE ");
                 writer.Write(Name(dropColumnOperation.Table));
                 writer.Write(" DROP COLUMN ");
@@ -593,31 +478,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="alterColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AlterColumnOperation alterColumnOperation)
         {
-            Check.NotNull(alterColumnOperation, "alterColumnOperation");
-
             var column = alterColumnOperation.Column;
-
-            if ((column.DefaultValue != null)
-                || !string.IsNullOrWhiteSpace(column.DefaultValueSql))
-            {
-                using (var writer = Writer())
-                {
-                    writer.Write("ALTER TABLE ");
-                    writer.Write(Name(alterColumnOperation.Table));
-                    writer.Write(" ADD CONSTRAINT DF_");
-                    writer.Write(column.Name);
-                    writer.Write(" DEFAULT ");
-                    writer.Write(
-                        (column.DefaultValue != null)
-                            ? Generate((dynamic)column.DefaultValue)
-                            : column.DefaultValueSql
-                        );
-                    writer.Write(" FOR ");
-                    writer.Write(Quote(column.Name));
-
-                    Statement(writer);
-                }
-            }
 
             using (var writer = Writer())
             {
@@ -635,6 +496,26 @@ namespace System.Data.Entity.Migrations.Sql
                 }
 
                 Statement(writer);
+            }
+
+            if ((column.DefaultValue != null)
+                || !string.IsNullOrWhiteSpace(column.DefaultValueSql))
+            {
+                using (var writer = Writer())
+                {
+                    writer.Write("ALTER TABLE ");
+                    writer.Write(Name(alterColumnOperation.Table));
+                    writer.Write(" ALTER COLUMN ");
+                    writer.Write(Quote(column.Name));
+                    writer.Write(" SET DEFAULT ");
+                    writer.Write(
+                        (column.DefaultValue != null)
+                            ? Generate((dynamic)column.DefaultValue)
+                            : column.DefaultValueSql
+                        );
+
+                    Statement(writer);
+                }
             }
         }
 
@@ -675,20 +556,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="renameColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(RenameColumnOperation renameColumnOperation)
         {
-            Check.NotNull(renameColumnOperation, "renameColumnOperation");
-
-            using (var writer = Writer())
-            {
-                writer.Write("EXECUTE sp_rename @objname = N'");
-                writer.Write(renameColumnOperation.Table);
-                writer.Write(".");
-                writer.Write(renameColumnOperation.Name);
-                writer.Write("', @newname = N'");
-                writer.Write(renameColumnOperation.NewName);
-                writer.Write("', @objtype = N'COLUMN'");
-
-                Statement(writer);
-            }
+            throw Error.SqlCeColumnRenameNotSupported();
         }
 
         /// <summary>
@@ -698,12 +566,10 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="renameTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(RenameTableOperation renameTableOperation)
         {
-            Check.NotNull(renameTableOperation, "renameTableOperation");
-
             using (var writer = Writer())
             {
                 writer.Write("EXECUTE sp_rename @objname = N'");
-                writer.Write(renameTableOperation.Name);
+                writer.Write(renameTableOperation.Name.ToDatabaseName().Name);
                 writer.Write("', @newname = N'");
                 writer.Write(renameTableOperation.NewName);
                 writer.Write("', @objtype = N'OBJECT'");
@@ -719,69 +585,6 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="moveTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(MoveTableOperation moveTableOperation)
         {
-            Check.NotNull(moveTableOperation, "moveTableOperation");
-
-            var newSchema = moveTableOperation.NewSchema ?? "dbo";
-
-            if (!newSchema.EqualsIgnoreCase("dbo")
-                && !_generatedSchemas.Contains(newSchema))
-            {
-                GenerateCreateSchema(newSchema);
-
-                _generatedSchemas.Add(newSchema);
-            }
-
-            if (!moveTableOperation.IsSystem)
-            {
-                using (var writer = Writer())
-                {
-                    writer.Write("ALTER SCHEMA ");
-                    writer.Write(Quote(newSchema));
-                    writer.Write(" TRANSFER ");
-                    writer.Write(Name(moveTableOperation.Name));
-
-                    Statement(writer);
-                }
-            }
-            else
-            {
-                Debug.Assert(moveTableOperation.CreateTableOperation != null);
-                Debug.Assert(!string.IsNullOrWhiteSpace(moveTableOperation.ContextKey));
-
-                using (var writer = Writer())
-                {
-                    writer.Write("IF object_id('");
-                    writer.Write(moveTableOperation.CreateTableOperation.Name);
-                    writer.WriteLine("') IS NULL BEGIN");
-                    writer.Indent++;
-                    WriteCreateTable(moveTableOperation.CreateTableOperation, writer);
-                    writer.WriteLine();
-                    writer.Indent--;
-                    writer.WriteLine("END");
-
-                    writer.Write("INSERT INTO ");
-                    writer.WriteLine(Name(moveTableOperation.CreateTableOperation.Name));
-                    writer.Write("SELECT * FROM ");
-                    writer.WriteLine(Name(moveTableOperation.Name));
-                    writer.Write("WHERE [ContextKey] = ");
-                    writer.WriteLine(Generate(moveTableOperation.ContextKey));
-
-                    writer.Write("DELETE ");
-                    writer.WriteLine(Name(moveTableOperation.Name));
-                    writer.Write("WHERE [ContextKey] = ");
-                    writer.WriteLine(Generate(moveTableOperation.ContextKey));
-
-                    writer.Write("IF NOT EXISTS(SELECT * FROM ");
-                    writer.Write(Name(moveTableOperation.Name));
-                    writer.WriteLine(")");
-                    writer.Indent++;
-                    writer.Write("DROP TABLE ");
-                    writer.Write(Name(moveTableOperation.Name));
-                    writer.Indent--;
-
-                    Statement(writer);
-                }
-            }
         }
 
         private void Generate(ColumnModel column, IndentedTextWriter writer)
@@ -826,13 +629,12 @@ namespace System.Data.Entity.Migrations.Sql
         /// <summary>
         ///     Returns the column default value to use for store-generated GUID columns when
         ///     no default value is explicitly specified in the migration.
-        ///     Returns newsequentialid() for on-premises SQL Server 2005 and later.
-        ///     Returns newid() for SQL Azure.
+        ///     Always returns newid() for SQL Compact.
         /// </summary>
-        /// <value>Either newsequentialid() or newid() as described above.</value>
+        /// <value>The string newid().</value>
         protected virtual string GuidColumnDefault
         {
-            get { return _providerManifestToken != "2012.Azure" && _providerManifestToken != "2000" ? "newsequentialid()" : "newid()"; }
+            get { return "newid()"; }
         }
 
         /// <summary>
@@ -902,7 +704,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <returns> SQL representing the default value. </returns>
         protected virtual string Generate(DateTime defaultValue)
         {
-            return "'" + defaultValue.ToString(DateTimeFormat, CultureInfo.InvariantCulture) + "'";
+            return "'" + defaultValue.ToString("yyyy-MM-ddTHH:mm:ss.fff", CultureInfo.InvariantCulture) + "'";
         }
 
         /// <summary>
@@ -1064,11 +866,7 @@ namespace System.Data.Entity.Migrations.Sql
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
         protected virtual string Name(string name)
         {
-            Check.NotEmpty(name, "name");
-
-            var databaseName = name.ToDatabaseName();
-
-            return new[] { databaseName.Schema, databaseName.Name }.Join(Quote, ".");
+            return Quote(name.ToDatabaseName().Name);
         }
 
         /// <summary>

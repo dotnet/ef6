@@ -47,6 +47,6 @@ namespace System.Data.Entity.Migrations.Model
         /// </summary>
         public abstract bool IsDestructiveChange { get; }
 
-        internal bool IsSystem { get; set; }
+        public bool IsSystem { get; internal set; }
     }
 }

@@ -13,3 +13,12 @@ using System.Diagnostics.CodeAnalysis;
         Target = "System.Data.Entity.SqlServer.SqlSpatialServices.#InitializeMemberInfo()")]
 [assembly: SuppressMessage("Microsoft.Design", "CA2210:AssembliesShouldHaveValidStrongNames")]
 [assembly: SuppressMessage("Microsoft.Usage", "CA2243:AttributeStringLiteralsShouldParseCorrectly")]
+[assembly:
+    SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
+        Target = "System.Data.Entity.Migrations.Sql")]
+[assembly:
+    SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "schemaname", Scope = "resource",
+        Target = "System.Data.Entity.SqlServer.Properties.Resources.SqlServer.resources")]
+[assembly:
+    SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "objectname", Scope = "resource",
+        Target = "System.Data.Entity.SqlServer.Properties.Resources.SqlServer.resources")]

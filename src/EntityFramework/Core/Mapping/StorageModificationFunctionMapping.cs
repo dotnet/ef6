@@ -13,8 +13,11 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     ///     Describes modification function binding for change processing of entities or associations.
     /// </summary>
-    internal sealed class StorageModificationFunctionMapping
+    public sealed class StorageModificationFunctionMapping
     {
+        private readonly FunctionParameter _rowsAffectedParameter;
+        private readonly EdmFunction _function;
+
         internal StorageModificationFunctionMapping(
             EntitySetBase entitySet,
             EntityTypeBase entityType,
@@ -27,8 +30,8 @@ namespace System.Data.Entity.Core.Mapping
             DebugCheck.NotNull(function);
             DebugCheck.NotNull(parameterBindings);
 
-            Function = function;
-            RowsAffectedParameter = rowsAffectedParameter;
+            _function = function;
+            _rowsAffectedParameter = rowsAffectedParameter;
             ParameterBindings = parameterBindings.ToList().AsReadOnly();
             if (null != resultBindings)
             {
@@ -47,7 +50,10 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Gets output parameter producing number of rows affected. May be null.
         /// </summary>
-        internal readonly FunctionParameter RowsAffectedParameter;
+        public FunctionParameter RowsAffectedParameter
+        {
+            get { return _rowsAffectedParameter; }
+        }
 
         internal string RowsAffectedParameterName
         {
@@ -62,7 +68,10 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Gets Metadata of function to which we should bind.
         /// </summary>
-        internal readonly EdmFunction Function;
+        public EdmFunction Function
+        {
+            get { return _function; }
+        }
 
         /// <summary>
         ///     Gets bindings for function parameters.

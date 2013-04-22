@@ -94,6 +94,24 @@
     <Compile Include="..\SharedAssemblyVersionInfo.cs">
       <Link>Properties\SharedAssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="..\Common\ByteExtensions.cs">
+      <Link>Utilities\ByteExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Check.cs">
+      <Link>Utilities\Check.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DatabaseName.cs">
+      <Link>Utilities\DatabaseName.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DebugCheck.cs">
+      <Link>Utilities\DebugCheck.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\IEnumerableExtensions.cs">
+      <Link>Utilities\IEnumerableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\StringExtensions.cs">
+      <Link>Utilities\StringExtensions.cs</Link>
+    </Compile>
     <Compile Include="Config\AppConfigDependencyResolver.cs" />
     <Compile Include="Config\CachingDependencyResolver.cs" />
     <Compile Include="Config\CompositeResolver`.cs" />
@@ -449,10 +467,8 @@
     <Compile Include="NullDatabaseInitializer.cs" />
     <Compile Include="Spatial\SpatialServicesLoader.cs" />
     <Compile Include="Utilities\BoolExtensions.cs" />
-    <Compile Include="Utilities\Check.cs" />
     <Compile Include="Utilities\DbModelExtensions.cs" />
     <Compile Include="Utilities\DbProviderFactoryExtensions.cs" />
-    <Compile Include="Utilities\DebugCheck.cs" />
     <Compile Include="Utilities\ExceptionExtensions.cs" />
     <Compile Include="Core\Common\FieldMetadata.cs" />
     <Compile Include="Core\Common\FieldNameLookup.cs" />
@@ -1346,15 +1362,12 @@
     <Compile Include="Migrations\Edm\EdmXNames.cs" />
     <Compile Include="Migrations\Edm\ModelCompressor.cs" />
     <Compile Include="Utilities\AssemblyExtensions.cs" />
-    <Compile Include="Utilities\ByteExtensions.cs" />
     <Compile Include="Utilities\DbContextExtensions.cs" />
     <Compile Include="Utilities\ExpressionExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utilities\IEnumerableExtensions.cs" />
     <Compile Include="Utilities\MemberInfoExtensions.cs" />
     <Compile Include="Utilities\ProviderRowFinder.cs" />
-    <Compile Include="Utilities\StringExtensions.cs" />
     <Compile Include="Utilities\TaskHelper.cs" />
     <Compile Include="Utilities\TypeFinder.cs" />
     <Compile Include="Utilities\XContainerExtensions.cs" />
@@ -1400,10 +1413,6 @@
     <Compile Include="Migrations\Model\SqlOperation.cs" />
     <Compile Include="Migrations\Sql\MigrationSqlGenerator.cs" />
     <Compile Include="Migrations\Sql\MigrationStatement.cs" />
-    <Compile Include="Migrations\Sql\SqlCeMigrationSqlGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Migrations\Sql\SqlServerMigrationSqlGenerator.cs" />
     <Compile Include="Migrations\Utilities\ConfigurationFileUpdater.cs" />
     <Compile Include="Migrations\Utilities\DatabaseCreator.cs" />
     <Compile Include="ObservableCollectionExtensions.cs" />
@@ -1718,7 +1727,6 @@
     <Compile Include="ModelConfiguration\Mappers\TypeMapper.cs" />
     <Compile Include="ModelConfiguration\ModelValidationException.cs" />
     <Compile Include="ModelConfiguration\Utilities\AttributeProvider.cs" />
-    <Compile Include="Utilities\DatabaseName.cs" />
     <Compile Include="Utilities\DbConnectionExtensions.cs" />
     <Compile Include="Utilities\DbProviderInfoExtensions.cs" />
     <Compile Include="Utilities\DbProviderManifestExtensions.cs" />

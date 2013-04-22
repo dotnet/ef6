@@ -372,6 +372,30 @@ namespace System.Data.Entity.SqlServer.Resources
         {
             get { return EntityRes.GetString(EntityRes.ELinq_DbFunctionDirectCall); }
         }
+
+        /// <summary>
+        ///     A string like "AutomaticMigration"
+        /// </summary>
+        internal static string AutomaticMigration
+        {
+            get { return EntityRes.GetString(EntityRes.AutomaticMigration); }
+        }
+
+        /// <summary>
+        ///     A string like "The database name '{0}' is invalid. Database names must be of the form [<schema_name>.]<object_name>."
+        /// </summary>
+        internal static string InvalidDatabaseName(object p0)
+        {
+            return EntityRes.GetString(EntityRes.InvalidDatabaseName, p0);
+        }
+
+        /// <summary>
+        ///     A string like "The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation)."
+        /// </summary>
+        internal static string SqlServerMigrationSqlGenerator_UnknownOperation(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.SqlServerMigrationSqlGenerator_UnknownOperation, p0, p1);
+        }
     }
 
     /// <summary>
@@ -380,6 +404,22 @@ namespace System.Data.Entity.SqlServer.Resources
     [GeneratedCode("Resources.SqlServer.tt", "1.0.0.0")]
     internal static class Error
     {
+        
+        /// <summary>
+        ///     ArgumentException with message like "The database name '{0}' is invalid. Database names must be of the form [<schema_name>.]<object_name>."
+        /// </summary>
+        internal static Exception InvalidDatabaseName(object p0)
+        {
+            return new ArgumentException(Strings.InvalidDatabaseName(p0));
+        }
+        
+        /// <summary>
+        ///     InvalidOperationException with message like "The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation)."
+        /// </summary>
+        internal static Exception SqlServerMigrationSqlGenerator_UnknownOperation(object p0, object p1)
+        {
+            return new InvalidOperationException(Strings.SqlServerMigrationSqlGenerator_UnknownOperation(p0, p1));
+        }
         /// <summary>
         ///     The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
@@ -458,6 +498,9 @@ namespace System.Data.Entity.SqlServer.Resources
         internal const string SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt = "SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt";
         internal const string TransientExceptionDetected = "TransientExceptionDetected";
         internal const string ELinq_DbFunctionDirectCall = "ELinq_DbFunctionDirectCall";
+        internal const string AutomaticMigration = "AutomaticMigration";
+        internal const string InvalidDatabaseName = "InvalidDatabaseName";
+        internal const string SqlServerMigrationSqlGenerator_UnknownOperation = "SqlServerMigrationSqlGenerator_UnknownOperation";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;
