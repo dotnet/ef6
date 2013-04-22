@@ -3,13 +3,54 @@
 namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
-    using System.Data.SqlClient;
     using System.Linq;
     using Xunit;
-    using Console = System.Console;
 
     public class ModificationCommandTreeGeneratorTests
     {
+        [Fact]
+        public void Can_generate_dynamic_insert_command_trees_for_many_to_many_association()
+        {
+            var model = TestContext.CreateDynamicUpdateModel();
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateAssociationInsert(GetType().Namespace + ".FunctionsModel.OrderThing_Orders")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+
+            var commandTree = commandTrees.First();
+
+            Assert.Equal(5, commandTree.SetClauses.Count);
+            Assert.Equal("OrderThingOrder", commandTree.Target.VariableType.EdmType.Name);
+            Assert.Null(commandTree.Returning);
+        }
+
+        [Fact]
+        public void Can_generate_dynamic_delete_command_trees_for_many_to_many_association()
+        {
+            var model = TestContext.CreateDynamicUpdateModel();
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateAssociationDelete(GetType().Namespace + ".FunctionsModel.OrderThing_Orders")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+
+            var commandTree = commandTrees.First();
+
+            Assert.Equal("OrderThingOrder", commandTree.Target.VariableType.EdmType.Name);
+            Assert.NotNull(commandTree.Predicate);
+        }
+
         [Fact]
         public void Can_generate_dynamic_insert_command_trees()
         {
@@ -110,12 +151,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal(2, commandTrees.Count());
 
             var commandTree = commandTrees.First();
-            
+
             Assert.NotNull(commandTree.Predicate);
             Assert.Equal("special_orders", commandTree.Target.VariableType.EdmType.Name);
 
             commandTree = commandTrees.Last();
-            
+
             Assert.NotNull(commandTree.Predicate);
             Assert.Equal("Order", commandTree.Target.VariableType.EdmType.Name);
 

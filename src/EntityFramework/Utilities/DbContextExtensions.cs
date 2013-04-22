@@ -5,6 +5,7 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Linq;
     using System.Xml;
     using System.Xml.Linq;
 
@@ -15,12 +16,24 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(context);
             DebugCheck.NotNull(providerInfo);
 
-            var modelBuilder
-                = context.InternalContext.CodeFirstModel.CachedModelBuilder.Clone();
+            var model
+                = context
+                    .InternalContext
+                    .CodeFirstModel
+                    .CachedModelBuilder
+                    .Build(providerInfo);
 
-            modelBuilder.Entities().Configure(c => c.MapToTable());
+            var entityContainerMapping = model.DatabaseMapping.EntityContainerMappings.Single();
 
-            return modelBuilder.Build(providerInfo);
+            entityContainerMapping
+                .EntitySetMappings
+                .Each(esm => esm.ClearModificationFunctionMappings());
+
+            entityContainerMapping
+                .AssociationSetMappings
+                .Each(asm => asm.ModificationFunctionMapping = null);
+
+            return model;
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]

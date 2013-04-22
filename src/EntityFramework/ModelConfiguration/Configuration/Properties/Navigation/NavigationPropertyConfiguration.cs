@@ -158,7 +158,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             set
             {
                 DebugCheck.NotNull(value);
-
+                
                 _modificationFunctionsConfiguration = value;
             }
         }

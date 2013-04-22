@@ -44,6 +44,42 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         [Fact]
+        public void Can_clear_modification_function_mappings()
+        {
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+            var entitySet = new EntitySet("S", "N", null, null, entityType);
+            var function = new EdmFunction("F", "N", DataSpace.SSpace, new EdmFunctionPayload());
+
+            var container = new EntityContainer("C", DataSpace.CSpace);
+            container.AddEntitySetBase(entitySet);
+
+            var entitySetMapping =
+                new StorageEntitySetMapping(
+                    entitySet,
+                    new StorageEntityContainerMapping(container));
+
+            var functionMapping =
+                new StorageModificationFunctionMapping(
+                    entitySet,
+                    entityType,
+                    function,
+                    Enumerable.Empty<StorageModificationFunctionParameterBinding>(),
+                    null,
+                    null);
+
+            var entityFunctionMappings =
+                new StorageEntityTypeModificationFunctionMapping(entityType, functionMapping, null, null);
+
+            entitySetMapping.AddModificationFunctionMapping(entityFunctionMappings);
+
+            Assert.Equal(1, entitySetMapping.ModificationFunctionMappings.Count());
+
+            entitySetMapping.ClearModificationFunctionMappings();
+
+            Assert.Equal(0, entitySetMapping.ModificationFunctionMappings.Count());
+        }
+
+        [Fact]
         public void Can_get_modification_function_mappings()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
@@ -59,18 +95,18 @@ namespace System.Data.Entity.Core.Mapping
             container.AddEntitySetBase(entitySet);
             container.AddFunctionImport(function);
 
-            var entitySetMapping = 
+            var entitySetMapping =
                 new StorageEntitySetMapping(
-                    entitySet, 
+                    entitySet,
                     new StorageEntityContainerMapping(container));
 
-            var functionMapping = 
+            var functionMapping =
                 new StorageModificationFunctionMapping(
-                    entitySet, 
-                    entityType, 
-                    function, 
-                    Enumerable.Empty<StorageModificationFunctionParameterBinding>(), 
-                    null, 
+                    entitySet,
+                    entityType,
+                    function,
+                    Enumerable.Empty<StorageModificationFunctionParameterBinding>(),
+                    null,
                     null);
 
             var entityFunctionMappings =

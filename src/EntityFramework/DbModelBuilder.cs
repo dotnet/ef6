@@ -354,9 +354,11 @@ namespace System.Data.Entity
             DebugCheck.NotNull(providerManifest);
             DebugCheck.NotNull(providerInfo);
 
-            var model = new EdmModel(DataSpace.CSpace, _modelBuilderVersion.GetEdmVersion());
-
-            model.ProviderInfo = providerInfo;
+            var model 
+                = new EdmModel(DataSpace.CSpace, _modelBuilderVersion.GetEdmVersion())
+                      {
+                          ProviderInfo = providerInfo
+                      };
 
             _conventionsConfiguration.ApplyModelConfiguration(_modelConfiguration);
 
@@ -419,8 +421,6 @@ namespace System.Data.Entity
                                .Each(t => { throw Error.CodeFirstInvalidComplexType(t); });
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
         internal ModelConfiguration.Configuration.ModelConfiguration ModelConfiguration
         {
             get { return _modelConfiguration; }

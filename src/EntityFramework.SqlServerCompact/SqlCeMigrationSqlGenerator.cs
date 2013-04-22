@@ -6,11 +6,10 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Migrations.Utilities;    
+    using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServerCompact.Resources;
     using System.Data.Entity.SqlServerCompact.Utilities;
@@ -71,24 +70,6 @@ namespace System.Data.Entity.Migrations.Sql
             return _statements;
         }
 
-        public override string GenerateProcedureBody(
-            ICollection<DbModificationCommandTree> commandTrees,
-            string rowsAffectedParameter,
-            string providerManifestToken)
-        {
-            Check.NotNull(commandTrees, "commandTrees");
-            Check.NotEmpty(providerManifestToken, "providerManifestToken");
-
-            if (!commandTrees.Any())
-            {
-                return "RETURN";
-            }
-
-            InitializeProviderServices(providerManifestToken);
-
-            return UpperCaseKeywords(_providerServices.GenerateFunctionSql(commandTrees, rowsAffectedParameter));
-        }
-
         private void InitializeProviderServices(string providerManifestToken)
         {
             using (var connection = CreateConnection())
@@ -123,33 +104,6 @@ namespace System.Data.Entity.Migrations.Sql
 
         protected virtual void Generate(CreateProcedureOperation createProcedureOperation)
         {
-        }
-
-        private void Generate(ParameterModel parameterModel, IndentedTextWriter writer)
-        {
-            DebugCheck.NotNull(parameterModel);
-            DebugCheck.NotNull(writer);
-
-            writer.Write("@");
-            writer.Write(parameterModel.Name);
-            writer.Write(" ");
-            writer.Write(BuildPropertyType(parameterModel));
-
-            if (parameterModel.IsOutParameter)
-            {
-                writer.Write(" OUT");
-            }
-
-            if (parameterModel.DefaultValue != null)
-            {
-                writer.Write(" = ");
-                writer.Write(Generate((dynamic)parameterModel.DefaultValue));
-            }
-            else if (!string.IsNullOrWhiteSpace(parameterModel.DefaultValueSql))
-            {
-                writer.Write(" = ");
-                writer.Write(parameterModel.DefaultValueSql);
-            }
         }
 
         protected virtual void Generate(DropProcedureOperation dropProcedureOperation)

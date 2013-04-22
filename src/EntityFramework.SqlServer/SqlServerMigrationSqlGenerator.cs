@@ -13,6 +13,7 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
+    using System.Data.Entity.SqlServer.SqlGen;
     using System.Data.Entity.SqlServer.Utilities;
     using System.Data.SqlClient;
     using System.Diagnostics;
@@ -90,7 +91,7 @@ namespace System.Data.Entity.Migrations.Sql
 
             InitializeProviderServices(providerManifestToken);
 
-            return UpperCaseKeywords(_providerServices.GenerateFunctionSql(commandTrees, rowsAffectedParameter));
+            return UpperCaseKeywords(GenerateFunctionSql(commandTrees, rowsAffectedParameter));
         }
 
         private void InitializeProviderServices(string providerManifestToken)
@@ -102,6 +103,27 @@ namespace System.Data.Entity.Migrations.Sql
                 _providerServices = DbProviderServices.GetProviderServices(connection);
                 _providerManifest = _providerServices.GetProviderManifest(providerManifestToken);
             }
+        }
+
+        private string GenerateFunctionSql(ICollection<DbModificationCommandTree> commandTrees, string rowsAffectedParameter)
+        {
+            DebugCheck.NotNull(commandTrees);
+            Debug.Assert(commandTrees.Any());
+
+            var functionSqlGenerator
+                = new DmlFunctionSqlGenerator(_providerServices.GetProviderManifest(_providerManifestToken));
+
+            switch (commandTrees.First().CommandTreeKind)
+            {
+                case DbCommandTreeKind.Insert:
+                    return functionSqlGenerator.GenerateInsert(commandTrees.Cast<DbInsertCommandTree>().ToList());
+                case DbCommandTreeKind.Update:
+                    return functionSqlGenerator.GenerateUpdate(commandTrees.Cast<DbUpdateCommandTree>().ToList(), rowsAffectedParameter);
+                case DbCommandTreeKind.Delete:
+                    return functionSqlGenerator.GenerateDelete(commandTrees.Cast<DbDeleteCommandTree>().ToList(), rowsAffectedParameter);
+            }
+
+            return null;
         }
 
         /// <summary>

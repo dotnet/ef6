@@ -23,7 +23,8 @@ namespace System.Data.Entity.Migrations.Design
                 new ParameterModel(PrimitiveTypeKind.String)
                     {
                         Name = "P'",
-                        DefaultValue = "Bar"
+                        DefaultValue = "Bar",
+                        IsOutParameter = true
                     });
 
             var codeGenerator = new VisualBasicMigrationCodeGenerator();
@@ -54,7 +55,7 @@ Namespace Foo
                 ""Foo"",
                 Function(p) New With
                     {
-                        .P = p.String(name := ""P'"", defaultValue := ""Bar"")
+                        .P = p.String(name := ""P'"", defaultValue := ""Bar"", outParameter := True)
                     },
                 body :=
                     ""SELECT ShinyHead"" & vbCrLf & _

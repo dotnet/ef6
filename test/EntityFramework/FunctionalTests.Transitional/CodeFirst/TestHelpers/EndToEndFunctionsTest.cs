@@ -21,7 +21,15 @@ namespace FunctionalTests
 
             using (var context = CreateContext())
             {
-                context.Database.CreateIfNotExists();
+                if (!context.Database.Exists())
+                {
+                    context.Database.Create();
+                }
+                else if (!context.Database.CompatibleWithModel(throwIfNoMetadata: true))
+                {
+                    context.Database.Delete();
+                    context.Database.Create();
+                }
             }
         }
 

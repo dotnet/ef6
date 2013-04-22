@@ -16,7 +16,11 @@ namespace System.Data.Entity.Utilities
             var model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.NotNull(model);
-            Assert.False(model.DatabaseMapping.Database.Functions.Any());
+            
+            var entityContainerMapping = model.DatabaseMapping.EntityContainerMappings.Single();
+
+            Assert.False(entityContainerMapping.EntitySetMappings.SelectMany(esm => esm.ModificationFunctionMappings).Any());
+            Assert.False(entityContainerMapping.AssociationSetMappings.Any(asm => asm.ModificationFunctionMapping != null));
         }
 
         [Fact]

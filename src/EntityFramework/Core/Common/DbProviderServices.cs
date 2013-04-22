@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Core.Common
 {
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -16,7 +15,6 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.IO;
     using System.Reflection;
     using System.Transactions;
     using System.Xml;
@@ -68,12 +66,6 @@ namespace System.Data.Entity.Core.Common
 
             _resolver = new Lazy<IDbDependencyResolver>(resolver);
             _interception = interception;
-        }
-
-        // TODO: Remove this when the migrations SQL generator lives in the provider assembly
-        public virtual string GenerateFunctionSql(ICollection<DbModificationCommandTree> commandTrees, string rowsAffectedParameter)
-        {
-            return null;
         }
 
         /// <summary>
@@ -343,7 +335,9 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <returns>The spatial services.</returns>
         /// <param name="manifestToken">The token information associated with the provider manifest.</param>
-        [Obsolete("Use GetSpatialServices(DbProviderInfo) or DbConfiguration to ensure the configured spatial services are used. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.")]
+        [Obsolete(
+            "Use GetSpatialServices(DbProviderInfo) or DbConfiguration to ensure the configured spatial services are used. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information."
+            )]
         public DbSpatialServices GetSpatialServices(string manifestToken)
         {
             return GetSpatialServicesInternal(manifestToken, throwIfNotImplemented: true);
@@ -400,7 +394,7 @@ namespace System.Data.Entity.Core.Common
 
         private static DbSpatialServices GetSpatialServices(
             IDbDependencyResolver resolver,
-            DbProviderInfo key, 
+            DbProviderInfo key,
             Func<DbProviderServices> providerServices) // Delegate use to avoid lookup when not needed
         {
             DebugCheck.NotNull(resolver);
@@ -440,7 +434,8 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <returns>The spatial services.</returns>
         /// <param name="manifestToken">The token information associated with the provider manifest.</param>
-        [Obsolete("Return DbSpatialServices from the GetService method. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.")]
+        [Obsolete(
+            "Return DbSpatialServices from the GetService method. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.")]
         protected virtual DbSpatialServices DbGetSpatialServices(string manifestToken)
         {
             // Must be a virtual method; abstract would break previous implementors of DbProviderServices

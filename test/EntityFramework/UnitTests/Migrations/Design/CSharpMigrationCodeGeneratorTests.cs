@@ -24,7 +24,8 @@ namespace System.Data.Entity.Migrations.Design
                 new ParameterModel(PrimitiveTypeKind.String)
                     {
                         Name = "P'",
-                        DefaultValue = "Bar"
+                        DefaultValue = "Bar",
+                        IsOutParameter = true
                     });
 
             var codeGenerator = new CSharpMigrationCodeGenerator();
@@ -55,7 +56,7 @@ namespace System.Data.Entity.Migrations.Design
                 ""Foo"",
                 p => new
                     {
-                        P = p.String(name: ""P'"", defaultValue: ""Bar""),
+                        P = p.String(name: ""P'"", defaultValue: ""Bar"", outParameter: true),
                     },
                 body:
                     @""SELECT ShinyHead

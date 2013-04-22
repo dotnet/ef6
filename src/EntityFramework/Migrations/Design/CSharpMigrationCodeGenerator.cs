@@ -464,6 +464,11 @@ namespace System.Data.Entity.Migrations.Design
                 args.Add("storeType: " + Quote(parameterModel.StoreType));
             }
 
+            if (parameterModel.IsOutParameter)
+            {
+                args.Add("outParameter: true");
+            }
+
             writer.Write(args.Join());
             writer.Write(")");
         }

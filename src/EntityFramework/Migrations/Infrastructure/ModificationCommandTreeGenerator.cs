@@ -57,6 +57,75 @@ namespace System.Data.Entity.Migrations.Infrastructure
                        : new TempDbContext(_connection, _compiledModel);
         }
 
+        public IEnumerable<DbInsertCommandTree> GenerateAssociationInsert(string associationIdentity)
+        {
+            DebugCheck.NotEmpty(associationIdentity);
+
+            return GenerateAssociation<DbInsertCommandTree>(associationIdentity, EntityState.Added);
+        }
+
+        public IEnumerable<DbDeleteCommandTree> GenerateAssociationDelete(string associationIdentity)
+        {
+            DebugCheck.NotEmpty(associationIdentity);
+
+            return GenerateAssociation<DbDeleteCommandTree>(associationIdentity, EntityState.Deleted);
+        }
+
+        private IEnumerable<TCommandTree> GenerateAssociation<TCommandTree>(string associationIdentity, EntityState state)
+            where TCommandTree : DbCommandTree
+        {
+            DebugCheck.NotEmpty(associationIdentity);
+
+            var associationType
+                = _metadataWorkspace
+                    .GetItem<AssociationType>(associationIdentity, DataSpace.CSpace);
+
+            using (var context = CreateContext())
+            {
+                var sourceEntityType = associationType.SourceEnd.GetEntityType();
+                var sourceSet = context.Set(sourceEntityType.GetClrType());
+                var sourceEntity = sourceSet.Create();
+
+                InstantiateNullableKeys(sourceEntity, sourceEntityType);
+                InstantiateComplexProperties(sourceEntity, sourceEntityType.Properties);
+
+                sourceSet.Attach(sourceEntity);
+
+                var targetEntityType = associationType.TargetEnd.GetEntityType();
+                var targetSet = context.Set(targetEntityType.GetClrType());
+                var targetEntity = targetSet.Create();
+
+                InstantiateNullableKeys(targetEntity, targetEntityType);
+                InstantiateComplexProperties(targetEntity, targetEntityType.Properties);
+
+                targetSet.Attach(targetEntity);
+
+                var objectStateManager
+                    = ((IObjectContextAdapter)context)
+                        .ObjectContext
+                        .ObjectStateManager;
+
+                objectStateManager
+                    .ChangeRelationshipState(
+                        sourceEntity,
+                        targetEntity,
+                        associationType.FullName,
+                        associationType.TargetEnd.Name,
+                        state == EntityState.Deleted ? state : EntityState.Added
+                    );
+
+                using (var commandTracer = new CommandTracer(context))
+                {
+                    context.SaveChanges();
+
+                    foreach (var commandTree in commandTracer.CommandTrees)
+                    {
+                        yield return (TCommandTree)commandTree;
+                    }
+                }
+            }
+        }
+
         public IEnumerable<DbInsertCommandTree> GenerateInsert(string entityIdentity)
         {
             DebugCheck.NotEmpty(entityIdentity);
@@ -160,7 +229,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
                     if (principalStub == null)
                     {
-                        principalStub = Activator.CreateInstance(principalClrType);
+                        principalStub = set.Create();
 
                         InstantiateNullableKeys(principalStub, principalEnd.GetEntityType());
 

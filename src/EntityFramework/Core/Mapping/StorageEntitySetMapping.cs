@@ -53,6 +53,11 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_modificationFunctionMappings.AsReadOnly(); }
         }
 
+        public void ClearModificationFunctionMappings()
+        {
+            m_modificationFunctionMappings.Clear();
+        }
+
         /// <summary>
         ///     Gets all association sets that are implicitly "covered" through function mappings.
         /// </summary>

@@ -4,13 +4,86 @@ namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
-    using System.Data.SqlClient;
     using System.Linq;
     using Xunit;
-    using Console = System.Console;
 
     public class DynamicToFunctionModificationCommandConverterTests
     {
+        [Fact]
+        public void Can_convert_insert_command_trees_when_many_to_many()
+        {
+            var model = TestContext.CreateDynamicUpdateModel();
+
+            var modificationFunctionMapping
+                = TestContext.GetAssociationModificationFunctionMapping("OrderThing_Orders");
+
+            var converter
+                = new DynamicToFunctionModificationCommandConverter(
+                    modificationFunctionMapping.Item1, modificationFunctionMapping.Item2);
+
+            var modificationCommandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = modificationCommandTreeGenerator
+                    .GenerateAssociationInsert(modificationFunctionMapping.Item1.AssociationSet.ElementType.FullName);
+
+            Assert.Equal(1, commandTrees.Count());
+
+            var resultTrees = converter.Convert(commandTrees);
+
+            Assert.Equal(1, resultTrees.Count());
+
+            var commandTree = resultTrees.First();
+
+            Assert.Equal(5, commandTree.Parameters.Count());
+            Assert.Equal(5, commandTree.SetClauses.Count());
+
+            Assert.Equal("order_thing_id", commandTree.Parameters.ElementAt(0).Key);
+            Assert.Equal("Order_Id", commandTree.Parameters.ElementAt(1).Key);
+            Assert.Equal("Order_Key", commandTree.Parameters.ElementAt(2).Key);
+            Assert.Equal("teh_codez_bro", commandTree.Parameters.ElementAt(3).Key);
+            Assert.Equal("Order_Signature", commandTree.Parameters.ElementAt(4).Key);
+            Assert.Null(commandTree.Returning);
+        }
+
+        [Fact]
+        public void Can_convert_delete_command_trees_when_many_to_many()
+        {
+            var model = TestContext.CreateDynamicUpdateModel();
+
+            var modificationFunctionMapping
+                = TestContext.GetAssociationModificationFunctionMapping("OrderThing_Orders");
+
+            var converter
+                = new DynamicToFunctionModificationCommandConverter(
+                    modificationFunctionMapping.Item1, modificationFunctionMapping.Item2);
+
+            var modificationCommandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = modificationCommandTreeGenerator
+                    .GenerateAssociationDelete(modificationFunctionMapping.Item1.AssociationSet.ElementType.FullName);
+
+            Assert.Equal(1, commandTrees.Count());
+
+            var resultTrees = converter.Convert(commandTrees);
+
+            Assert.Equal(1, resultTrees.Count());
+
+            var commandTree = resultTrees.First();
+
+            Assert.Equal(5, commandTree.Parameters.Count());
+
+            Assert.Equal("order_thing_id", commandTree.Parameters.ElementAt(0).Key);
+            Assert.Equal("Order_Id", commandTree.Parameters.ElementAt(1).Key);
+            Assert.Equal("Order_Key", commandTree.Parameters.ElementAt(2).Key);
+            Assert.Equal("teh_codez_bro", commandTree.Parameters.ElementAt(3).Key);
+            Assert.Equal("Order_Signature", commandTree.Parameters.ElementAt(4).Key);
+            Assert.NotNull(commandTree.Predicate);
+        }
+
         [Fact]
         public void Can_convert_insert_command_trees()
         {
@@ -23,11 +96,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2);
 
-            var updateCommandTreeGenerator
+            var modificationCommandTreeGenerator
                 = new ModificationCommandTreeGenerator(model);
 
             var commandTrees
-                = updateCommandTreeGenerator
+                = modificationCommandTreeGenerator
                     .GenerateInsert(modificationFunctionMapping.Item1.EntityType.FullName);
 
             Assert.Equal(3, commandTrees.Count());
@@ -68,11 +141,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2);
 
-            var updateCommandTreeGenerator
+            var modificationCommandTreeGenerator
                 = new ModificationCommandTreeGenerator(model);
 
             var commandTrees
-                = updateCommandTreeGenerator
+                = modificationCommandTreeGenerator
                     .GenerateUpdate(modificationFunctionMapping.Item1.EntityType.FullName);
 
             Assert.Equal(3, commandTrees.Count());
@@ -117,11 +190,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2);
 
-            var updateCommandTreeGenerator
+            var modificationCommandTreeGenerator
                 = new ModificationCommandTreeGenerator(model);
 
             var commandTrees
-                = updateCommandTreeGenerator
+                = modificationCommandTreeGenerator
                     .GenerateDelete(modificationFunctionMapping.Item1.EntityType.FullName);
 
             Assert.Equal(3, commandTrees.Count());

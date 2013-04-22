@@ -564,7 +564,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .OfType<CreateProcedureOperation>()
                     .ToList();
 
-            Assert.Equal(12, createProcedureOperations.Count);
+            Assert.Equal(14, createProcedureOperations.Count);
             Assert.True(createProcedureOperations.All(c => c.Name.Any()));
             Assert.True(createProcedureOperations.All(c => c.BodySql.Any()));
         }
@@ -578,17 +578,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             modelBuilder.Entity<OrderLine>().MapToStoredProcedures();
 
-            var model2 = modelBuilder.Build(ProviderInfo);
+            var model2 = new TestContext();
 
             var dropProcedureOperations
                 = new EdmModelDiffer().Diff(model2.GetModel(), model1.GetModel())
                                       .OfType<DropProcedureOperation>()
                                       .ToList();
 
-            Assert.Equal(3, dropProcedureOperations.Count);
-            Assert.Equal("OrderLine_Insert", dropProcedureOperations[0].Name);
-            Assert.Equal("OrderLine_Update", dropProcedureOperations[1].Name);
-            Assert.Equal("OrderLine_Delete", dropProcedureOperations[2].Name);
+            Assert.Equal(14, dropProcedureOperations.Count);
+            Assert.True(dropProcedureOperations.All(c => c.Name.Any()));
         }
 
         [MigrationsTheory]

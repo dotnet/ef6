@@ -6,11 +6,9 @@ namespace FunctionalTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Resources;
-    using System.Diagnostics;
     using System.Linq;
     using ConcurrencyModel;
     using Xunit;
@@ -2196,23 +2194,6 @@ namespace FunctionalTests
                 [AutoRollback]
                 public void Can_insert_and_delete_when_many_to_many()
                 {
-                    Execute(@"CREATE PROCEDURE [Tag_Products_Insert]
-    @Tag_Id int,
-    @ProductA_Id int
-AS
-BEGIN
-    insert [dbo].[TagProductAs]([Tag_Id], [ProductA_Id])
-    values (@Tag_Id, @ProductA_Id)
-END");
-                    Execute(@"CREATE PROCEDURE [Tag_Products_Delete]
-    @Tag_Id int,
-    @ProductA_Id int
-AS
-BEGIN
-    delete [dbo].[TagProductAs]
-    where (([Tag_Id] = @Tag_Id) and ([ProductA_Id] = @ProductA_Id))
-END");
-
                     using (var context = CreateContext())
                     {
                         var tag = new Tag

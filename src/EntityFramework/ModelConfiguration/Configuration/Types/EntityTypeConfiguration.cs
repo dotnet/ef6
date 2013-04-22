@@ -218,11 +218,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _modificationFunctionsConfiguration = modificationFunctionsConfiguration;
         }
 
-        internal virtual void MapToTable()
-        {
-            _modificationFunctionsConfiguration = null;
-        }
-
         internal void ReplaceFrom(EntityTypeConfiguration existing)
         {
             if (EntitySetName == null)
@@ -460,10 +455,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 var primaryKeys
                     = from p in _keyProperties
                       select new
-                          {
-                              PropertyInfo = p,
-                              Property(new PropertyPath(p)).ColumnOrder
-                          };
+                                 {
+                                     PropertyInfo = p,
+                                     Property(new PropertyPath(p)).ColumnOrder
+                                 };
 
                 if ((_keyProperties.Count > 1)
                     && primaryKeys.Any(p => !p.ColumnOrder.HasValue))

@@ -100,7 +100,7 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
             }
         }
 
-        public static Tuple<StorageEntityTypeModificationFunctionMapping, StorageEntityContainerMapping>
+        internal static Tuple<StorageEntityTypeModificationFunctionMapping, StorageEntityContainerMapping>
             GetModificationFunctionMapping(string entityName)
         {
             MetadataWorkspace metadataWorkspace;
@@ -131,6 +131,39 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
             return Tuple.Create(modificationFunctionMapping, storageEntityContainerMapping);
         }
 
+        internal static Tuple<StorageAssociationSetModificationFunctionMapping, StorageEntityContainerMapping>
+            GetAssociationModificationFunctionMapping(string associationName)
+        {
+            MetadataWorkspace metadataWorkspace;
+
+            using (var context = new TestContext())
+            {
+                metadataWorkspace = ((IObjectContextAdapter)context).ObjectContext.MetadataWorkspace;
+            }
+
+            var entityContainer
+                = metadataWorkspace
+                    .GetItems<EntityContainer>(DataSpace.CSpace)
+                    .Single();
+
+            var associationType
+                = metadataWorkspace
+                    .GetItem<AssociationType>(typeof(TestContext).Namespace + "." + associationName, DataSpace.CSpace);
+
+            var storageEntityContainerMapping
+                = (StorageEntityContainerMapping)metadataWorkspace.GetMap(entityContainer, DataSpace.CSSpace);
+
+            var modificationFunctionMapping
+                = storageEntityContainerMapping
+                    .AssociationSetMappings
+                    .Select(esm => esm.ModificationFunctionMapping)
+                    .Single(
+                        mfm => mfm != null
+                               && mfm.AssociationSet.ElementType == associationType);
+
+            return Tuple.Create(modificationFunctionMapping, storageEntityContainerMapping);
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder
@@ -154,6 +187,29 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
 
             modelBuilder
                 .Entity<OrderGroup>();
+
+            modelBuilder
+                .Entity<OrderThing>()
+                .HasMany(ot => ot.Orders)
+                .WithMany(o => o.OrderThings)
+                .MapToStoredProcedures(
+                    m =>
+                        {
+                            m.Insert(
+                                c =>
+                                    {
+                                        c.LeftKeyParameter(o => o.Id, "order_thing_id");
+                                        c.RightKeyParameter(o => o.Code, "teh_codez_bro");
+                                    });
+
+                            m.Delete(
+                                c =>
+                                    {
+                                        c.LeftKeyParameter(o => o.Id, "order_thing_id");
+                                        c.RightKeyParameter(o => o.Code, "teh_codez_bro");
+                                    });
+                        }
+                );
 
             modelBuilder.Entity<SpecialOrder>()
                         .ToTable("special_orders")

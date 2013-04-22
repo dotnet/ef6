@@ -10,11 +10,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     internal class DynamicToFunctionModificationCommandConverter : DefaultExpressionVisitor
     {
-        private readonly StorageEntityTypeModificationFunctionMapping _modificationFunctionMapping;
+        private readonly StorageEntityTypeModificationFunctionMapping _entityTypeModificationFunctionMapping;
+        private readonly StorageAssociationSetModificationFunctionMapping _associationSetModificationFunctionMapping;
         private readonly StorageEntityContainerMapping _entityContainerMapping;
 
         private StorageModificationFunctionMapping _currentFunctionMapping;
@@ -23,13 +25,24 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private int _nextStoreGeneratedKey;
 
         public DynamicToFunctionModificationCommandConverter(
-            StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
+            StorageEntityTypeModificationFunctionMapping entityTypeModificationFunctionMapping,
             StorageEntityContainerMapping entityContainerMapping)
         {
-            DebugCheck.NotNull(modificationFunctionMapping);
+            DebugCheck.NotNull(entityTypeModificationFunctionMapping);
             DebugCheck.NotNull(entityContainerMapping);
 
-            _modificationFunctionMapping = modificationFunctionMapping;
+            _entityTypeModificationFunctionMapping = entityTypeModificationFunctionMapping;
+            _entityContainerMapping = entityContainerMapping;
+        }
+
+        public DynamicToFunctionModificationCommandConverter(
+            StorageAssociationSetModificationFunctionMapping associationSetModificationFunctionMapping,
+            StorageEntityContainerMapping entityContainerMapping)
+        {
+            DebugCheck.NotNull(associationSetModificationFunctionMapping);
+            DebugCheck.NotNull(entityContainerMapping);
+
+            _associationSetModificationFunctionMapping = associationSetModificationFunctionMapping;
             _entityContainerMapping = entityContainerMapping;
         }
 
@@ -55,7 +68,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             if (_currentFunctionMapping == null)
             {
-                _currentFunctionMapping = _modificationFunctionMapping.InsertFunctionMapping;
+                _currentFunctionMapping
+                    = _entityTypeModificationFunctionMapping != null
+                          ? _entityTypeModificationFunctionMapping.InsertFunctionMapping
+                          : _associationSetModificationFunctionMapping.InsertFunctionMapping;
 
                 var firstTable
                     = ((DbScanExpression)commandTree.Target.Expression).Target.ElementType;
@@ -81,7 +97,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             DebugCheck.NotNull(commandTree);
 
-            _currentFunctionMapping = _modificationFunctionMapping.UpdateFunctionMapping;
+            _currentFunctionMapping = _entityTypeModificationFunctionMapping.UpdateFunctionMapping;
 
             return
                 new DbUpdateCommandTree(
@@ -97,7 +113,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             DebugCheck.NotNull(commandTree);
 
-            _currentFunctionMapping = _modificationFunctionMapping.DeleteFunctionMapping;
+            _currentFunctionMapping
+                = _entityTypeModificationFunctionMapping != null
+                      ? _entityTypeModificationFunctionMapping.DeleteFunctionMapping
+                      : _associationSetModificationFunctionMapping.DeleteFunctionMapping;
 
             return
                 new DbDeleteCommandTree(
@@ -185,7 +204,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     var parameterReferenceExpression
                         = new DbParameterReferenceExpression(parameter.TypeUsage, parameter.Name);
 
-                    var equalityPredicate 
+                    var equalityPredicate
                         = propertyExpression.Equal(parameterReferenceExpression);
 
                     var nullPredicate
@@ -242,7 +261,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return DbExpressionBuilder.NewRow(arguments);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private FunctionParameter GetParameter(EdmProperty column, bool originalValue = false)
         {
             DebugCheck.NotNull(column);
