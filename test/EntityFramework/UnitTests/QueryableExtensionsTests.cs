@@ -14,7 +14,7 @@ namespace System.Data.Entity
     using Moq;
     using Xunit;
 
-    public class DbQueryExtensionsTests
+    public class QueryableExtensionsTests
     {
         #region Entity types for Include tests
 
@@ -57,7 +57,7 @@ namespace System.Data.Entity
             public void With_null_source_called_on_extension_method_throws()
             {
                 Assert.Equal(
-                    "source", Assert.Throws<ArgumentNullException>(() => DbQueryExtensions.AsNoTracking<FakeEntity>(null)).ParamName);
+                    "source", Assert.Throws<ArgumentNullException>(() => QueryableExtensions.AsNoTracking<FakeEntity>(null)).ParamName);
             }
 
             [Fact]
@@ -165,7 +165,7 @@ namespace System.Data.Entity
             [Fact]
             public void With_null_source_called_on_extension_method_throws()
             {
-                Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => DbQueryExtensions.AsNoTracking(null)).ParamName);
+                Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => QueryableExtensions.AsNoTracking(null)).ParamName);
             }
 
             [Fact]
@@ -274,7 +274,7 @@ namespace System.Data.Entity
             public void With_null_source_called_on_extension_method_throws()
             {
                 Assert.Equal(
-                    "source", Assert.Throws<ArgumentNullException>(() => DbQueryExtensions.AsStreaming<FakeEntity>(null)).ParamName);
+                    "source", Assert.Throws<ArgumentNullException>(() => QueryableExtensions.AsStreaming<FakeEntity>(null)).ParamName);
             }
 
             [Fact]
@@ -382,7 +382,7 @@ namespace System.Data.Entity
             [Fact]
             public void With_null_source_called_on_extension_method_throws()
             {
-                Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => DbQueryExtensions.AsStreaming(null)).ParamName);
+                Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => QueryableExtensions.AsStreaming(null)).ParamName);
             }
 
             [Fact]
@@ -494,7 +494,7 @@ namespace System.Data.Entity
                     Strings.ArgumentIsNullOrWhitespace("path"),
                     Assert.Throws<ArgumentException>(
                         () =>
-                        DbQueryExtensions.Include(new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), null)).Message);
+                        QueryableExtensions.Include(new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), null)).Message);
             }
 
             [Fact]
@@ -504,7 +504,7 @@ namespace System.Data.Entity
                     Strings.ArgumentIsNullOrWhitespace("path"),
                     Assert.Throws<ArgumentException>(
                         () =>
-                        DbQueryExtensions.Include(new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), "")).Message);
+                        QueryableExtensions.Include(new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), "")).Message);
             }
 
             [Fact]
@@ -514,7 +514,7 @@ namespace System.Data.Entity
                     Strings.ArgumentIsNullOrWhitespace("path"),
                     Assert.Throws<ArgumentException>(
                         () =>
-                        DbQueryExtensions.Include(new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), " ")).Message);
+                        QueryableExtensions.Include(new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), " ")).Message);
             }
 
             [Fact]
@@ -523,7 +523,7 @@ namespace System.Data.Entity
                 Assert.Equal(
                     "source", Assert.Throws<ArgumentNullException>(
                         () =>
-                        DbQueryExtensions.Include<FakeEntity>(null, "SomePath")).ParamName);
+                        QueryableExtensions.Include<FakeEntity>(null, "SomePath")).ParamName);
             }
 
             [Fact]
@@ -778,7 +778,7 @@ namespace System.Data.Entity
             {
                 Assert.Equal(
                     "source",
-                    Assert.Throws<ArgumentNullException>(() => DbQueryExtensions.Include<FakeEntity, int>(null, e => e.Id)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => QueryableExtensions.Include<FakeEntity, int>(null, e => e.Id)).ParamName);
             }
 
             [Fact]
@@ -877,7 +877,7 @@ namespace System.Data.Entity
                     Strings.ArgumentIsNullOrWhitespace("path"),
                     Assert.Throws<ArgumentException>(
                         () =>
-                        DbQueryExtensions.Include(new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), null))
+                        QueryableExtensions.Include(new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), null))
                           .Message);
             }
 
@@ -888,7 +888,7 @@ namespace System.Data.Entity
                     Strings.ArgumentIsNullOrWhitespace("path"),
                     Assert.Throws<ArgumentException>(
                         () =>
-                        DbQueryExtensions.Include(new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), ""))
+                        QueryableExtensions.Include(new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), ""))
                           .Message);
             }
 
@@ -899,14 +899,14 @@ namespace System.Data.Entity
                     Strings.ArgumentIsNullOrWhitespace("path"),
                     Assert.Throws<ArgumentException>(
                         () =>
-                        DbQueryExtensions.Include(new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), " "))
+                        QueryableExtensions.Include(new InternalDbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object), " "))
                           .Message);
             }
 
             [Fact]
             public void Non_generic_String_Include_with_null_source_called_on_extension_method_throws()
             {
-                Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => DbQueryExtensions.Include(null, "SomePath")).ParamName);
+                Assert.Equal("source", Assert.Throws<ArgumentNullException>(() => QueryableExtensions.Include(null, "SomePath")).ParamName);
             }
 
             [Fact]
@@ -1058,74 +1058,74 @@ namespace System.Data.Entity
         [Fact]
         public void Extension_methods_validate_arguments()
         {
-            ArgumentNullTest("source", () => DbQueryExtensions.FirstAsync<int>(null));
-            ArgumentNullTest("source", () => DbQueryExtensions.FirstAsync<int>(null, new CancellationToken()));
-            ArgumentNullTest("source", () => DbQueryExtensions.FirstAsync<int>(null, s => true));
-            ArgumentNullTest("source", () => DbQueryExtensions.FirstAsync<int>(null, s => true, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.FirstAsync<int>(null));
+            ArgumentNullTest("source", () => QueryableExtensions.FirstAsync<int>(null, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.FirstAsync<int>(null, s => true));
+            ArgumentNullTest("source", () => QueryableExtensions.FirstAsync<int>(null, s => true, new CancellationToken()));
             ArgumentNullTest("predicate", () => Source().FirstAsync(null));
             ArgumentNullTest("predicate", () => Source().FirstAsync(null, new CancellationToken()));
 
-            ArgumentNullTest("source", () => DbQueryExtensions.FirstOrDefaultAsync<int>(null));
-            ArgumentNullTest("source", () => DbQueryExtensions.FirstOrDefaultAsync<int>(null, new CancellationToken()));
-            ArgumentNullTest("source", () => DbQueryExtensions.FirstOrDefaultAsync<int>(null, s => true));
-            ArgumentNullTest("source", () => DbQueryExtensions.FirstOrDefaultAsync<int>(null, s => true, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.FirstOrDefaultAsync<int>(null));
+            ArgumentNullTest("source", () => QueryableExtensions.FirstOrDefaultAsync<int>(null, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.FirstOrDefaultAsync<int>(null, s => true));
+            ArgumentNullTest("source", () => QueryableExtensions.FirstOrDefaultAsync<int>(null, s => true, new CancellationToken()));
             ArgumentNullTest("predicate", () => Source().FirstOrDefaultAsync(null));
             ArgumentNullTest("predicate", () => Source().FirstOrDefaultAsync(null, new CancellationToken()));
 
-            ArgumentNullTest("source", () => DbQueryExtensions.SingleAsync<int>(null));
-            ArgumentNullTest("source", () => DbQueryExtensions.SingleAsync<int>(null, new CancellationToken()));
-            ArgumentNullTest("source", () => DbQueryExtensions.SingleAsync<int>(null, s => true));
-            ArgumentNullTest("source", () => DbQueryExtensions.SingleAsync<int>(null, s => true, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.SingleAsync<int>(null));
+            ArgumentNullTest("source", () => QueryableExtensions.SingleAsync<int>(null, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.SingleAsync<int>(null, s => true));
+            ArgumentNullTest("source", () => QueryableExtensions.SingleAsync<int>(null, s => true, new CancellationToken()));
             ArgumentNullTest("predicate", () => Source().SingleAsync(null));
             ArgumentNullTest("predicate", () => Source().SingleAsync(null, new CancellationToken()));
 
-            ArgumentNullTest("source", () => DbQueryExtensions.SingleOrDefaultAsync<int>(null));
-            ArgumentNullTest("source", () => DbQueryExtensions.SingleOrDefaultAsync<int>(null, new CancellationToken()));
-            ArgumentNullTest("source", () => DbQueryExtensions.SingleOrDefaultAsync<int>(null, s => true));
-            ArgumentNullTest("source", () => DbQueryExtensions.SingleOrDefaultAsync<int>(null, s => true, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.SingleOrDefaultAsync<int>(null));
+            ArgumentNullTest("source", () => QueryableExtensions.SingleOrDefaultAsync<int>(null, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.SingleOrDefaultAsync<int>(null, s => true));
+            ArgumentNullTest("source", () => QueryableExtensions.SingleOrDefaultAsync<int>(null, s => true, new CancellationToken()));
             ArgumentNullTest("predicate", () => Source().SingleOrDefaultAsync(null));
             ArgumentNullTest("predicate", () => Source().SingleOrDefaultAsync(null, new CancellationToken()));
 
-            ArgumentNullTest("source", () => DbQueryExtensions.ContainsAsync(null, 1));
-            ArgumentNullTest("source", () => DbQueryExtensions.ContainsAsync(null, 1, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.ContainsAsync(null, 1));
+            ArgumentNullTest("source", () => QueryableExtensions.ContainsAsync(null, 1, new CancellationToken()));
 
-            ArgumentNullTest("source", () => DbQueryExtensions.AnyAsync<int>(null));
-            ArgumentNullTest("source", () => DbQueryExtensions.AnyAsync<int>(null, new CancellationToken()));
-            ArgumentNullTest("source", () => DbQueryExtensions.AnyAsync<int>(null, s => true));
-            ArgumentNullTest("source", () => DbQueryExtensions.AnyAsync<int>(null, s => true, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.AnyAsync<int>(null));
+            ArgumentNullTest("source", () => QueryableExtensions.AnyAsync<int>(null, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.AnyAsync<int>(null, s => true));
+            ArgumentNullTest("source", () => QueryableExtensions.AnyAsync<int>(null, s => true, new CancellationToken()));
             ArgumentNullTest("predicate", () => Source().AnyAsync(null));
             ArgumentNullTest("predicate", () => Source().AnyAsync(null, new CancellationToken()));
 
-            ArgumentNullTest("source", () => DbQueryExtensions.AllAsync<int>(null, s => true));
-            ArgumentNullTest("source", () => DbQueryExtensions.AllAsync<int>(null, s => true, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.AllAsync<int>(null, s => true));
+            ArgumentNullTest("source", () => QueryableExtensions.AllAsync<int>(null, s => true, new CancellationToken()));
             ArgumentNullTest("predicate", () => Source().AllAsync(null));
             ArgumentNullTest("predicate", () => Source().AllAsync(null, new CancellationToken()));
 
-            ArgumentNullTest("source", () => DbQueryExtensions.CountAsync<int>(null));
-            ArgumentNullTest("source", () => DbQueryExtensions.CountAsync<int>(null, new CancellationToken()));
-            ArgumentNullTest("source", () => DbQueryExtensions.CountAsync<int>(null, s => true));
-            ArgumentNullTest("source", () => DbQueryExtensions.CountAsync<int>(null, s => true, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.CountAsync<int>(null));
+            ArgumentNullTest("source", () => QueryableExtensions.CountAsync<int>(null, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.CountAsync<int>(null, s => true));
+            ArgumentNullTest("source", () => QueryableExtensions.CountAsync<int>(null, s => true, new CancellationToken()));
             ArgumentNullTest("predicate", () => Source().CountAsync(null));
             ArgumentNullTest("predicate", () => Source().CountAsync(null, new CancellationToken()));
 
-            ArgumentNullTest("source", () => DbQueryExtensions.LongCountAsync<int>(null));
-            ArgumentNullTest("source", () => DbQueryExtensions.LongCountAsync<int>(null, new CancellationToken()));
-            ArgumentNullTest("source", () => DbQueryExtensions.LongCountAsync<int>(null, s => true));
-            ArgumentNullTest("source", () => DbQueryExtensions.LongCountAsync<int>(null, s => true, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.LongCountAsync<int>(null));
+            ArgumentNullTest("source", () => QueryableExtensions.LongCountAsync<int>(null, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.LongCountAsync<int>(null, s => true));
+            ArgumentNullTest("source", () => QueryableExtensions.LongCountAsync<int>(null, s => true, new CancellationToken()));
             ArgumentNullTest("predicate", () => Source().LongCountAsync(null));
             ArgumentNullTest("predicate", () => Source().LongCountAsync(null, new CancellationToken()));
 
-            ArgumentNullTest("source", () => DbQueryExtensions.MinAsync<int>(null));
-            ArgumentNullTest("source", () => DbQueryExtensions.MinAsync<int>(null, new CancellationToken()));
-            ArgumentNullTest("source", () => DbQueryExtensions.MinAsync<int, bool>(null, s => true));
-            ArgumentNullTest("source", () => DbQueryExtensions.MinAsync<int, bool>(null, s => true, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.MinAsync<int>(null));
+            ArgumentNullTest("source", () => QueryableExtensions.MinAsync<int>(null, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.MinAsync<int, bool>(null, s => true));
+            ArgumentNullTest("source", () => QueryableExtensions.MinAsync<int, bool>(null, s => true, new CancellationToken()));
             ArgumentNullTest("selector", () => Source().MinAsync<int, bool>(null));
             ArgumentNullTest("selector", () => Source().MinAsync<int, bool>(null, new CancellationToken()));
 
-            ArgumentNullTest("source", () => DbQueryExtensions.MaxAsync<int>(null));
-            ArgumentNullTest("source", () => DbQueryExtensions.MaxAsync<int>(null, new CancellationToken()));
-            ArgumentNullTest("source", () => DbQueryExtensions.MaxAsync<int, bool>(null, s => true));
-            ArgumentNullTest("source", () => DbQueryExtensions.MaxAsync<int, bool>(null, s => true, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.MaxAsync<int>(null));
+            ArgumentNullTest("source", () => QueryableExtensions.MaxAsync<int>(null, new CancellationToken()));
+            ArgumentNullTest("source", () => QueryableExtensions.MaxAsync<int, bool>(null, s => true));
+            ArgumentNullTest("source", () => QueryableExtensions.MaxAsync<int, bool>(null, s => true, new CancellationToken()));
             ArgumentNullTest("selector", () => Source().MaxAsync<int, bool>(null));
             ArgumentNullTest("selector", () => Source().MaxAsync<int, bool>(null, new CancellationToken()));
 

@@ -370,6 +370,7 @@
     <Compile Include="ModelConfiguration\Edm\Services\FunctionParameterMappingGeneratorTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\ModificationFunctionMappingGeneratorTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\StructuralTypeMappingGeneratorTests.cs" />
+    <Compile Include="QueryableExtensionsTests.cs" />
     <Compile Include="Spatial\DefaultServicesTests.cs" />
     <Compile Include="SqlServerCompact\SqlCeProviderServicesTests.cs" />
     <Compile Include="SqlServerCompact\SqlGen\DmlSqlGeneratorTests.cs" />
@@ -412,7 +413,6 @@
     <Compile Include="Internal\DefaultModelCacheKeyFactoryTests.cs" />
     <Compile Include="Internal\DefaultModelCacheKeyTests.cs" />
     <Compile Include="Internal\InternalContextTests.cs" />
-    <Compile Include="DbQueryExtensionsTests.cs" />
     <Compile Include="Internal\InternalSqlNonSetQueryTests.cs" />
     <Compile Include="Internal\Linq\TestHelpers\InternalSetForMock`.cs" />
     <Compile Include="Internal\TestHelpers\InternalCollectionEntryForMock.cs" />
