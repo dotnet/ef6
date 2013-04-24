@@ -390,18 +390,24 @@ namespace System.Data.Entity.Edm.Serialization
                         structuralTypeMapping
                     });
 
+
+            var containerMapping = new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.SSpace));
+            containerMapping.AddFunctionImportMapping(functionImportMapping);
+
             var fixture = new Fixture();
-            fixture.Writer.WriteFunctionImportMappingElement(functionImportMapping);
+            fixture.Writer.WriteEntityContainerMappingElement(containerMapping);
 
             Assert.Equal(
-                @"<FunctionImportMapping FunctionName=""Ns.Store.f_s"" FunctionImportName=""f_c"">
-  <ResultMapping>
-    <ComplexTypeMapping TypeName=""Ns.CT"">
-      <ScalarProperty Name=""CTProperty1"" ColumnName=""RTProperty1"" />
-      <ScalarProperty Name=""CTProperty2"" ColumnName=""RTProperty2"" />
-    </ComplexTypeMapping>
-  </ResultMapping>
-</FunctionImportMapping>",
+                @"<EntityContainerMapping StorageEntityContainer="""" CdmEntityContainer=""C"">
+  <FunctionImportMapping FunctionName=""Ns.Store.f_s"" FunctionImportName=""f_c"">
+    <ResultMapping>
+      <ComplexTypeMapping TypeName=""Ns.CT"">
+        <ScalarProperty Name=""CTProperty1"" ColumnName=""RTProperty1"" />
+        <ScalarProperty Name=""CTProperty2"" ColumnName=""RTProperty2"" />
+      </ComplexTypeMapping>
+    </ResultMapping>
+  </FunctionImportMapping>
+</EntityContainerMapping>",
                 fixture.ToString());
         }
 

@@ -49,7 +49,8 @@ namespace System.Data.Entity.Edm.Serialization
             WriteEntityContainerMappingElement(databaseMapping.EntityContainerMappings.First());
         }
 
-        private void WriteEntityContainerMappingElement(StorageEntityContainerMapping containerMapping)
+        // internal for testing
+        internal void WriteEntityContainerMappingElement(StorageEntityContainerMapping containerMapping)
         {
             DebugCheck.NotNull(containerMapping);
 
@@ -66,6 +67,11 @@ namespace System.Data.Entity.Edm.Serialization
             foreach (var set in containerMapping.AssociationSetMappings)
             {
                 WriteAssociationSetMappingElement(set);
+            }
+
+            foreach (var functionMapping in containerMapping.FunctionImportMappings.OfType<FunctionImportMappingComposable>())
+            {
+                WriteFunctionImportMappingElement(functionMapping);
             }
 
             _xmlWriter.WriteEndElement();
