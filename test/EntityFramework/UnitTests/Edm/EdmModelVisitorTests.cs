@@ -145,7 +145,29 @@ namespace System.Data.Entity.Edm
         }
 
         [Fact]
-        public void VisitFunctionReturnParameter_visits_rowtype_if_parameter_type_is_rowtype()
+        public void VisitFunctionReturnParameter_visits_parameter_type()
+        {
+            var visitorMock =
+                new Mock<EdmModelVisitor>
+                    {
+                        CallBase = true
+                    };
+
+            var returnParameter =
+                new FunctionParameter(
+                    "r",
+                    TypeUsage.CreateDefaultTypeUsage(new RowType().GetCollectionType()),
+                    ParameterMode.ReturnValue);
+
+            visitorMock.Object.VisitFunctionReturnParameter(returnParameter);
+
+            visitorMock.Verify(v => v.VisitEdmType(returnParameter.TypeUsage.EdmType), Times.Once());
+            visitorMock.Verify(v => v.VisitCollectionType((CollectionType)returnParameter.TypeUsage.EdmType), Times.Once());
+            visitorMock.Verify(v => v.VisitRowType((RowType)((CollectionType)returnParameter.TypeUsage.EdmType).TypeUsage.EdmType), Times.Once());
+        }
+
+        [Fact]
+        public void VisitEdmType_should_visit_primitive_type()
         {
             var visitorMock =
                 new Mock<EdmModelVisitor>
@@ -153,14 +175,8 @@ namespace System.Data.Entity.Edm
                     CallBase = true
                 };
 
-            var returnParameter =
-                new FunctionParameter(
-                    "r",
-                    TypeUsage.CreateDefaultTypeUsage(new RowType()),
-                    ParameterMode.ReturnValue);
-
-            visitorMock.Object.VisitFunctionReturnParameter(returnParameter);
-            visitorMock.Verify(v => v.VisitRowType((RowType)returnParameter.TypeUsage.EdmType), Times.Once());
+            visitorMock.Object.VisitEdmType(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Byte));
+            visitorMock.Verify(v => v.VisitPrimitiveType(It.IsAny<PrimitiveType>()), Times.Once());
         }
 
         [Fact]

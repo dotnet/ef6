@@ -150,8 +150,12 @@ namespace System.Data.Entity.Edm.Serialization
         public void VisitFunctionReturnParameter_writes_return_and_collection_header_for_rowtype()
         {
             var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
+
             var returnParameter =
-                new FunctionParameter("r", TypeUsage.CreateDefaultTypeUsage(new RowType()), ParameterMode.ReturnValue);
+                new FunctionParameter(
+                    "r", 
+                    TypeUsage.CreateDefaultTypeUsage(new RowType().GetCollectionType()), 
+                    ParameterMode.ReturnValue);
 
             new EdmSerializationVisitor(schemaWriterMock.Object).VisitFunctionReturnParameter(returnParameter);
 

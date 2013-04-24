@@ -8,7 +8,7 @@ namespace System.Data.Entity.Edm.Validation
     public class EdmModelSyntacticValidationRulesTests
     {
         [Fact]
-        public void EdmModel_NameIsTooLong_not_triggered_for_row_types()
+        public void EdmModel_NameIsTooLong_not_triggered_for_row_and_collection_types()
         {
             var intType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
@@ -20,34 +20,40 @@ namespace System.Data.Entity.Edm.Validation
 
             var rowType = new RowType(properties);
 
-            var validationContext
-                = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
-            DataModelErrorEventArgs errorEventArgs = null;
-            validationContext.OnError += (_, e) => errorEventArgs = e;
+            foreach (var type in new EdmType[] { rowType, rowType.GetCollectionType() })
+            {
+                var validationContext
+                    = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
+                DataModelErrorEventArgs errorEventArgs = null;
+                validationContext.OnError += (_, e) => errorEventArgs = e;
 
-            EdmModelSyntacticValidationRules
-                .EdmModel_NameIsTooLong
-                .Evaluate(validationContext, rowType);
+                EdmModelSyntacticValidationRules
+                    .EdmModel_NameIsTooLong
+                    .Evaluate(validationContext, type);
 
-            Assert.Null(errorEventArgs);
+                Assert.Null(errorEventArgs);
+            }
         }
 
         [Fact]
-        public void EdmModel_NameIsNotAllowed_not_triggered_for_row_types()
+        public void EdmModel_NameIsNotAllowed_not_triggered_for_row_and_collection_types()
         {
             var rowType =
                 new RowType(new[] { EdmProperty.Primitive("Property", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) });
 
-            var validationContext
-                = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
-            DataModelErrorEventArgs errorEventArgs = null;
-            validationContext.OnError += (_, e) => errorEventArgs = e;
+            foreach (var type in new EdmType[] { rowType, rowType.GetCollectionType() })
+            {
+                var validationContext
+                    = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
+                DataModelErrorEventArgs errorEventArgs = null;
+                validationContext.OnError += (_, e) => errorEventArgs = e;
 
-            EdmModelSyntacticValidationRules
-                .EdmModel_NameIsNotAllowed
-                .Evaluate(validationContext, rowType);
+                EdmModelSyntacticValidationRules
+                    .EdmModel_NameIsNotAllowed
+                    .Evaluate(validationContext, type);
 
-            Assert.Null(errorEventArgs);
+                Assert.Null(errorEventArgs);
+            }
         }
     }
 }

@@ -91,22 +91,23 @@ namespace System.Data.Entity.Edm.Serialization
 
         protected internal override void VisitFunctionReturnParameter(FunctionParameter returnParameter)
         {
-            if (returnParameter.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.RowType)
+            if (returnParameter.TypeUsage.EdmType.BuiltInTypeKind != BuiltInTypeKind.PrimitiveType)
             {
                 _schemaWriter.WriteFunctionReturnTypeElementHeader();
-                _schemaWriter.WriteCollectionTypeElementHeader();
                 base.VisitFunctionReturnParameter(returnParameter);
-                _schemaWriter.WriteEndElement();
                 _schemaWriter.WriteEndElement();
             }
             else
             {
-                Debug.Assert(
-                    returnParameter.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType,
-                    "Unsupported return parameter type");
-
                 base.VisitFunctionReturnParameter(returnParameter);
             }
+        }
+
+        protected internal override void VisitCollectionType(CollectionType collectionType)
+        {
+            _schemaWriter.WriteCollectionTypeElementHeader();
+            base.VisitCollectionType(collectionType);
+            _schemaWriter.WriteEndElement();
         }
 
         protected override void VisitEdmAssociationSet(AssociationSet item)
