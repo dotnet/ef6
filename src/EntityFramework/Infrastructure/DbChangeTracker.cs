@@ -64,32 +64,33 @@ namespace System.Data.Entity.Infrastructure
         #region DetectChanges
 
         /// <summary>
-        ///     Check if the <see cref="DbContext" /> contain changes, added, modified or deleted entities and relationships of POCO entities. 
-        ///     This method call first to detect changes on the underlying <see cref="DbContext" />.
+        ///     Checks if the <see cref="DbContext" /> is tracking any new, deleted, or changed entities or
+        ///     relationships that will be sent to the database if <see cref="DbContext.SaveChanges" /> is called.
         /// </summary>
-        /// <returns>True if underlying <see cref="DbContext" /> have changes, else false.</returns>
+        /// <remarks>
+        ///     Functionally, calling this method is equivalent to checking if there are any entities or
+        ///     relationships in the Added, Updated, or Deleted state.
+        ///     Note that this method calls <see cref="DbChangeTracker.DetectChanges" /> unless
+        ///     <see cref="DbContextConfiguration.AutoDetectChangesEnabled" /> has been set to false.
+        /// </remarks>
+        /// <returns>
+        ///     True if underlying <see cref="DbContext" /> have changes, else false.
+        /// </returns>
         public bool HasChanges()
         {
             _internalContext.DetectChanges();
 
-            var objectStateManager = _internalContext
-               .ObjectContext.ObjectStateManager;
+            var objectStateManager = _internalContext.ObjectContext.ObjectStateManager;
 
             DebugCheck.NotNull(objectStateManager);
 
-            var entriesAffected =
-              objectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified);
-
-
-            return entriesAffected > 0;
+            return objectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified) > 0;
         }
 
         /// <summary>
         ///     Detects changes made to the properties and relationships of POCO entities.  Note that some types of
         ///     entity (such as change tracking proxies and entities that derive from
-        ///     <see
-        ///         cref="System.Data.Entity.Core.Objects.DataClasses.EntityObject" />
-        ///     )
+        ///     <see cref="System.Data.Entity.Core.Objects.DataClasses.EntityObject" />)
         ///     report changes automatically and a call to DetectChanges is not normally needed for these types of entities.
         ///     Also note that normally DetectChanges is called automatically by many of the methods of <see cref="DbContext" />
         ///     and its related classes such that it is rare that this method will need to be called explicitly.

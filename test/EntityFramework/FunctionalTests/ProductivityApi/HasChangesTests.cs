@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
 namespace System.Data.Entity.ProductivityApi
 {
     using Xunit;
 
-    public class HasChangesTests
+    public class HasChangesTests : FunctionalTestBase
     {
         public HasChangesTests()
         {
             //reduce the overhead for this tests
-            Database.SetInitializer<SomeContext>(new NullDatabaseInitializer<SomeContext>());
+            Database.SetInitializer<SomeContext>(null);
         }
 
         [Fact]
@@ -16,23 +17,19 @@ namespace System.Data.Entity.ProductivityApi
         {
             using (var context = new SomeContext())
             {
-                context.Foos.Attach(new Foo() { Bar = "bar" });
+                context.Foos.Attach(new Foo { Bar = "bar" });
 
                 Assert.False(context.ChangeTracker.HasChanges());
             }
         }
-
 
         [Fact]
         public void HasChanges_return_true_if_context_have_entities_in_added_state()
         {
             using (var context = new SomeContext())
             {
-                var foo1 = new Foo() { Bar = "the foo" };
-
-                var foo2 = new Foo() { Bar = "the foo" };
-
-                context.Foos.AddRange(new[] { foo1, foo2 });
+                context.Foos.AddRange(new[] { new Foo { Bar = "the foo" }, new Foo { Bar = "the foo" } });
+                
                 Assert.True(context.ChangeTracker.HasChanges());
             }
         }
@@ -42,10 +39,7 @@ namespace System.Data.Entity.ProductivityApi
         {
             using (var context = new SomeContext())
             {
-                var foo = new Foo() { Bar = "the foo" };
-
-                context.Foos.Attach(foo);
-                context.Entry(foo).State = EntityState.Deleted;
+                context.Entry(new Foo { Bar = "the foo" }).State = EntityState.Deleted;
 
                 Assert.True(context.ChangeTracker.HasChanges());
             }
@@ -56,31 +50,32 @@ namespace System.Data.Entity.ProductivityApi
         {
             using (var context = new SomeContext())
             {
-                var foo = new Foo() { Bar = "the foo" };
-
-                context.Entry(foo).State = EntityState.Modified;
+                context.Entry(new Foo { Bar = "the foo" }).State = EntityState.Modified;
 
                 Assert.True(context.ChangeTracker.HasChanges());
             }
         }
 
         [Fact]
-        public void HasChanges_detect_changes_for_non_proxy_types()
+        public void HasChanges_does_not_call_DetectChanges_if_it_has_been_disabled()
         {
             using (var context = new SomeContext())
             {
-                var foo = new Foo() { Bar = "the foo" };
+                var foo = context.Foos.Attach(new Foo { Bar = "the foo" });
 
-                context.Foos.Attach(foo);
+                context.Configuration.AutoDetectChangesEnabled = false;
 
-                foo.Bar = "ops!";
+                foo.Bar = "the bar";
+
+                Assert.False(context.ChangeTracker.HasChanges());
+
+                context.ChangeTracker.DetectChanges();
 
                 Assert.True(context.ChangeTracker.HasChanges());
             }
         }
     }
 
-    
     internal class SomeContext
         : DbContext
     {
