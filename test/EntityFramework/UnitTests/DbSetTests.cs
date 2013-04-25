@@ -2,13 +2,13 @@
 
 namespace System.Data.Entity
 {
-    using Moq;
     using System.Collections.Generic;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Linq;
+    using Moq;
     using Xunit;
     using MockHelper = System.Data.Entity.Core.Objects.MockHelper;
 
@@ -168,7 +168,7 @@ namespace System.Data.Entity
                 var set = new InternalSetForTests();
 
                 Assert.Equal(
-                    Strings.DbSet_BadTypeForAddAttachRemove("Add", "String", "FakeEntity"),
+                    Strings.DbSet_BadTypeForAddAttachRemove("AddRange", "String", "FakeEntity"),
                     Assert.Throws<ArgumentException>(() => set.AddRange(new[] { "Bang!" })).Message);
             }
 
@@ -388,7 +388,7 @@ namespace System.Data.Entity
                 var set = new InternalSetForTests();
 
                 Assert.Equal(
-                    Strings.DbSet_BadTypeForAddAttachRemove("Delete", "String", "FakeEntity"),
+                    Strings.DbSet_BadTypeForAddAttachRemove("RemoveRange", "String", "FakeEntity"),
                     Assert.Throws<ArgumentException>(() => set.RemoveRange(new[] { "Bang!" })).Message);
             }
 

@@ -362,7 +362,7 @@ namespace System.Data.Entity.Internal.Linq
             InternalContext.DetectChanges();
 
             ActOnSet(
-                entity => InternalContext.ObjectContext.AddObject(EntitySetName, entity), EntityState.Added, entities, "Add");
+                entity => InternalContext.ObjectContext.AddObject(EntitySetName, entity), EntityState.Added, entities, "AddRange");
         }
 
         /// <summary>
@@ -398,13 +398,12 @@ namespace System.Data.Entity.Internal.Linq
             // prevent "enumerator was changed" exception
             // if entities is syncronized with other elements
             // (e.g: local view from DbSet.Local.)
-            var copyOfEntities = entities
-                .Cast<object>().ToList();
+            var copyOfEntities = entities.Cast<object>().ToList();
 
             InternalContext.DetectChanges();
 
             ActOnSet(
-                entity => InternalContext.ObjectContext.DeleteObject(entity), EntityState.Deleted, copyOfEntities, "Delete");
+                entity => InternalContext.ObjectContext.DeleteObject(entity), EntityState.Deleted, copyOfEntities, "RemoveRange");
         }
 
         /// <summary>
@@ -430,7 +429,7 @@ namespace System.Data.Entity.Internal.Linq
             ObjectStateEntry stateEntry;
             if (InternalContext.ObjectContext.ObjectStateManager.TryGetObjectStateEntry(entity, out stateEntry))
             {
-                // Will be no-op if state is already added.
+                // Will be no-op if state is already newState.
                 stateEntry.ChangeState(newState);
             }
             else

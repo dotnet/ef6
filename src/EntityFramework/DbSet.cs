@@ -216,7 +216,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Remove the given collection of entities from context underlying the set with each entity being put into
+        ///     Removes the given collection of entities from the context underlying the set with each entity being put into
         ///     the Deleted state such that it will be deleted from the database when SaveChanges is called.
         /// </summary>
         /// <param name="entities">The collection of entities to delete.</param>
