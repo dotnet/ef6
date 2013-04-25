@@ -64,6 +64,27 @@ namespace System.Data.Entity.Infrastructure
         #region DetectChanges
 
         /// <summary>
+        ///     Check if the <see cref="DbContext" /> contain changes, added, modified or deleted entities and relationships of POCO entities. 
+        ///     This method call first to detect changes on the underlying <see cref="DbContext" />.
+        /// </summary>
+        /// <returns>True if underlying <see cref="DbContext" /> have changes, else false.</returns>
+        public bool HasChanges()
+        {
+            _internalContext.DetectChanges();
+
+            var objectStateManager = _internalContext
+               .ObjectContext.ObjectStateManager;
+
+            DebugCheck.NotNull(objectStateManager);
+
+            var entriesAffected =
+              objectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified);
+
+
+            return entriesAffected > 0;
+        }
+
+        /// <summary>
         ///     Detects changes made to the properties and relationships of POCO entities.  Note that some types of
         ///     entity (such as change tracking proxies and entities that derive from
         ///     <see

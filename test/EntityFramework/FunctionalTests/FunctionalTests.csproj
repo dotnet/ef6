@@ -159,6 +159,7 @@
     <Compile Include="PlanCompiler\LinqGroupByTests.cs" />
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\GetHashCodeTests.cs" />
+    <Compile Include="ProductivityApi\HasChangesTests.cs" />
     <Compile Include="ProductivityApi\StreamingTests.cs" />
     <Compile Include="ProductivityApi\NamespaceAndNestingTests.cs" />
     <Compile Include="ProductivityApi\TimeoutTests.cs" />
