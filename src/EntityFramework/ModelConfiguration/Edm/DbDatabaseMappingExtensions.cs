@@ -92,7 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return mappings.SingleOrDefault(m => m.IsHierarchyMapping);
         }
 
-        public static IReadOnlyList<StorageEntityTypeMapping> GetEntityTypeMappings(
+        public static IList<StorageEntityTypeMapping> GetEntityTypeMappings(
             this DbDatabaseMapping databaseMapping, EntityType entityType)
         {
             DebugCheck.NotNull(databaseMapping);
