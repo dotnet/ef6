@@ -5226,10 +5226,6 @@
     <value>Sequence contains more than one matching element</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
-  <data name="HistoryMigrationNotSupported" xml:space="preserve">
-    <value>Migrating the history system table is only supported for move table operations. Ensure all other history table configuration happens as part of an initial explicit migration. </value>
-    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
-  </data>
   <data name="CreateConfigurationType_NoParameterlessConstructor" xml:space="preserve">
     <value>An instance of '{0}' could not be created because it does not define a parameterless constructor. Every type derived from EntityTypeConfiguration in an assembly must have a parameterless constructor when using AddFromAssembly to add Code First configurations from that assembly.</value>
   </data>

@@ -56,10 +56,7 @@ namespace System.Data.Entity.Migrations.Model
                 var originalName = DatabaseName.Parse(_name);
                 var newTable = DatabaseName.Parse(_newName).Name;
 
-                return new RenameTableOperation(new DatabaseName(newTable, originalName.Schema).ToString(), originalName.Name)
-                    {
-                        IsSystem = IsSystem
-                    };
+                return new RenameTableOperation(new DatabaseName(newTable, originalName.Schema).ToString(), originalName.Name);
             }
         }
 

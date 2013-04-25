@@ -46,7 +46,5 @@ namespace System.Data.Entity.Migrations.Model
         ///     Gets a value indicating if this operation may result in data loss.
         /// </summary>
         public abstract bool IsDestructiveChange { get; }
-
-        public bool IsSystem { get; internal set; }
     }
 }

@@ -40,16 +40,12 @@ namespace System.Data.Entity.Migrations.Model
         public void Inverse_should_produce_move_table_operation()
         {
             var moveTableOperation
-                = new MoveTableOperation("dbo.MyCustomers", "crm")
-                      {
-                          IsSystem = true
-                      };
+                = new MoveTableOperation("dbo.MyCustomers", "crm");
 
             var inverse = (MoveTableOperation)moveTableOperation.Inverse;
 
             Assert.Equal("crm.MyCustomers", inverse.Name);
             Assert.Equal("dbo", inverse.NewSchema);
-            Assert.True(inverse.IsSystem);
         }
     }
 }

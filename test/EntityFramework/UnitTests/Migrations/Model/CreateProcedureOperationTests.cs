@@ -41,10 +41,7 @@ namespace System.Data.Entity.Migrations.Model
         public void Inverse_should_produce_drop_table_operation()
         {
             var createProcedureOperation
-                = new CreateProcedureOperation("Foo", "Bar")
-                      {
-                          IsSystem = true
-                      };
+                = new CreateProcedureOperation("Foo", "Bar");
 
             var dropProcedureOperation = (DropProcedureOperation)createProcedureOperation.Inverse;
 

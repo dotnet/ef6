@@ -322,7 +322,7 @@ namespace System.Data.Entity.Internal
                 ProviderFactory,
                 ContextKey,
                 CommandTimeout,
-                new[] { DefaultSchema });
+                new [] { DefaultSchema });
         }
 
         /// <summary>

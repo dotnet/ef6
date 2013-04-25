@@ -3,9 +3,12 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Common;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
+    using System.Data.SqlClient;
+    using System.Data.SqlServerCe;
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
@@ -174,31 +177,35 @@ namespace System.Data.Entity.Migrations
         }
 
         [MigrationsTheory]
-        public void Auto_update_when_initial_move_should_throw()
+        public void Auto_update_when_initial_move_should_not_throw()
         {
             ResetDatabase();
 
             var migrator
                 = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryA);
 
-            Assert.Throws<MigrationsException>(() => migrator.Update())
-                  .ValidateMessage("HistoryMigrationNotSupported");
+            migrator.Update();
+
+            Assert.True(TableExists("dbo.__Migrations"));
         }
 
         [MigrationsTheory]
-        public void Auto_update_when_initial_no_move_should_throw()
+        public void Auto_update_when_factory_changed_default_schema_changed_should_throw()
         {
             ResetDatabase();
 
-            var migrator
-                = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryB);
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v5>();
 
             Assert.Throws<MigrationsException>(() => migrator.Update())
-                  .ValidateMessage("HistoryMigrationNotSupported");
+                  .ValidateMessage("UnableToMoveHistoryTableWithAuto");
         }
 
         [MigrationsTheory]
-        public void Auto_update_when_factory_changed_move_should_throw()
+        public void Auto_update_when_factory_changed_should_fail()
         {
             ResetDatabase();
 
@@ -207,31 +214,13 @@ namespace System.Data.Entity.Migrations
             migrator.Update();
 
             migrator
-                = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryA);
-
-            Assert.Throws<MigrationsException>(() => migrator.Update())
-                  .ValidateMessage("HistoryMigrationNotSupported");
-        }
-
-        [MigrationsTheory]
-        public void Auto_update_when_factory_changed_no_move_should_throw()
-        {
-            ResetDatabase();
-
-            var migrator
-                = CreateMigrator<ShopContext_v1>();
-
-            migrator.Update();
-
-            migrator
                 = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryB);
 
-            Assert.Throws<MigrationsException>(() => migrator.Update())
-                  .ValidateMessage("HistoryMigrationNotSupported");
+            Assert.Throws<EntityCommandExecutionException>(() => migrator.Update());
         }
 
         [MigrationsTheory]
-        public void Explicit_update_when_factory_changed_move_should_throw()
+        public void Explicit_update_when_factory_changed_move_should_fail()
         {
             ResetDatabase();
 
@@ -256,12 +245,12 @@ namespace System.Data.Entity.Migrations
                     scaffoldedMigrations: new[] { generatedMigrationA, generatedMigrationB },
                     historyContextFactory: _testHistoryContextFactoryA);
 
-            Assert.Throws<MigrationsException>(() => migrator.Update())
-                  .ValidateMessage("HistoryMigrationNotSupported");
+            WhenNotSqlCe(() => Assert.Throws<SqlException>(() => migrator.Update()));
+            WhenSqlCe(() => Assert.Throws<SqlCeException>(() => migrator.Update()));
         }
 
         [MigrationsTheory]
-        public void Explicit_update_when_factory_changed_no_move_should_throw()
+        public void Explicit_update_when_factory_changed_no_move_should_fail()
         {
             ResetDatabase();
 
@@ -286,8 +275,7 @@ namespace System.Data.Entity.Migrations
                     scaffoldedMigrations: new[] { generatedMigrationA, generatedMigrationB },
                     historyContextFactory: _testHistoryContextFactoryB);
 
-            Assert.Throws<MigrationsException>(() => migrator.Update())
-                  .ValidateMessage("HistoryMigrationNotSupported");
+            Assert.Throws<EntityCommandExecutionException>(() => migrator.Update());
         }
 
         [MigrationsTheory]
@@ -313,35 +301,7 @@ namespace System.Data.Entity.Migrations
 
             migrator = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryA);
 
-            Assert.NotEmpty(migrator.GetDatabaseMigrations());
-        }
-
-        [MigrationsTheory]
-        public void Get_database_migrations_when_factory_introduced_after_explicit_should_throw()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            var generatedMigration
-                = new MigrationScaffolder(migrator.Configuration)
-                    .Scaffold("Migration_v1");
-
-            migrator
-                = CreateMigrator<ShopContext_v1>(
-                    automaticMigrationsEnabled: false,
-                    scaffoldedMigrations: generatedMigration);
-
-            migrator.Update();
-
-            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
-
-            migrator = CreateMigrator<ShopContext_v1>(
-                historyContextFactory: _testHistoryContextFactoryA,
-                scaffoldedMigrations: generatedMigration);
-
-            Assert.Throws<MigrationsException>(() => migrator.GetDatabaseMigrations())
-                  .ValidateMessage("HistoryMigrationNotSupported");
+            Assert.Empty(migrator.GetDatabaseMigrations());
         }
 
         [MigrationsTheory]
@@ -368,34 +328,6 @@ namespace System.Data.Entity.Migrations
             migrator = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryA);
 
             Assert.Empty(migrator.GetPendingMigrations());
-        }
-
-        [MigrationsTheory]
-        public void Get_pending_migrations_when_factory_introduced_after_explicit_should_throw()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            var generatedMigration
-                = new MigrationScaffolder(migrator.Configuration)
-                    .Scaffold("Migration_v1");
-
-            migrator
-                = CreateMigrator<ShopContext_v1>(
-                    automaticMigrationsEnabled: false,
-                    scaffoldedMigrations: generatedMigration);
-
-            migrator.Update();
-
-            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
-
-            migrator = CreateMigrator<ShopContext_v1>(
-                historyContextFactory: _testHistoryContextFactoryA,
-                scaffoldedMigrations: generatedMigration);
-
-            Assert.Throws<MigrationsException>(() => migrator.GetPendingMigrations())
-                  .ValidateMessage("HistoryMigrationNotSupported");
         }
     }
 }

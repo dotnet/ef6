@@ -63,13 +63,7 @@ namespace System.Data.Entity.Migrations.Model
         /// </summary>
         public override MigrationOperation Inverse
         {
-            get
-            {
-                return new RenameColumnOperation(Table, NewName, Name)
-                    {
-                        IsSystem = IsSystem
-                    };
-            }
+            get { return new RenameColumnOperation(Table, NewName, Name); }
         }
 
         /// <inheritdoc />

@@ -22,13 +22,5 @@ namespace System.Data.Entity.Utilities
             Assert.Equal("System.Data.SqlClient", providerInfo.ProviderInvariantName);
             Assert.True(providerInfo.ProviderManifestToken == "2008");
         }
-
-        [Fact]
-        public void HasSystemOperations_should_return_true_when_any_element_has_is_system_attribute()
-        {
-            var xdocument = new XDocument(new XElement("foo", new XAttribute(EdmXNames.IsSystemName, "true")));
-
-            Assert.True(xdocument.HasSystemOperations());
-        }
     }
 }

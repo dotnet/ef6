@@ -27,16 +27,12 @@ namespace System.Data.Entity.Migrations.Model
                              };
 
             var addColumnOperation
-                = new AddColumnOperation("T", column)
-                      {
-                          IsSystem = true
-                      };
+                = new AddColumnOperation("T", column);
 
             var dropColumnOperation = (DropColumnOperation)addColumnOperation.Inverse;
 
             Assert.Equal("C", dropColumnOperation.Name);
             Assert.Equal("T", dropColumnOperation.Table);
-            Assert.True(dropColumnOperation.IsSystem);
         }
 
         [Fact]

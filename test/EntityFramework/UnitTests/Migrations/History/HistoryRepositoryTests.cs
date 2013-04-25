@@ -7,7 +7,6 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.ModelConfiguration.Edm.Db;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
@@ -99,7 +98,7 @@ namespace System.Data.Entity.Migrations.History
             Assert.Equal(2, migrations.Count());
             Assert.Equal("Migration2", migrations.First());
         }
-        
+
         [MigrationsTheory]
         public void HasMigrations_should_return_true_when_table_has_migrations_for_key()
         {

@@ -182,12 +182,6 @@ namespace System.Data.Entity.Migrations.Sql
 
             writer.Indent--;
             writer.Write(")");
-
-            if (createTableOperation.IsSystem)
-            {
-                writer.WriteLine();
-                GenerateMakeSystemTable(createTableOperation, writer);
-            }
         }
 
         /// <summary>

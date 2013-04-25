@@ -53,7 +53,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public IEnumerable<MigrationOperation> Diff(
             XDocument sourceModel,
             XDocument targetModel,
-            bool? includeSystemOperations = null,
             ModificationCommandTreeGenerator modificationCommandTreeGenerator = null,
             MigrationSqlGenerator migrationSqlGenerator = null)
         {
@@ -90,14 +89,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                           ProviderInfo = providerInfo
                       };
 
-            if (includeSystemOperations == null)
-            {
-                includeSystemOperations
-                    = sourceModel.HasSystemOperations()
-                      && targetModel.HasSystemOperations();
-            }
-
-            return Diff(source, target, (bool)includeSystemOperations, modificationCommandTreeGenerator, migrationSqlGenerator);
+            return Diff(source, target, modificationCommandTreeGenerator, migrationSqlGenerator);
         }
 
         /// <summary>
@@ -106,7 +98,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public IEnumerable<MigrationOperation> Diff(
             ModelMetadata source,
             ModelMetadata target,
-            bool includeSystemOperations,
             ModificationCommandTreeGenerator modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
@@ -158,7 +149,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Concat(removedTables)
                 .Concat(addedModificationFunctions)
                 .Concat(removedModificationFunctions)
-                .Where(o => includeSystemOperations || !o.IsSystem)
                 .ToList();
         }
 
@@ -487,10 +477,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                          && !es1.TableAttribute().EqualsIgnoreCase(es2.TableAttribute())
                    select
                        new RenameTableOperation(
-                       GetQualifiedTableName(es1.TableAttribute(), es1.SchemaAttribute()), es2.TableAttribute())
-                           {
-                               IsSystem = es1.IsSystem()
-                           };
+                       GetQualifiedTableName(es1.TableAttribute(), es1.SchemaAttribute()), es2.TableAttribute());
         }
 
         private IEnumerable<CreateTableOperation> FindAddedTables(IEnumerable<RenameTableOperation> renamedTables)
@@ -503,14 +490,16 @@ namespace System.Data.Entity.Migrations.Infrastructure
                           .Select(
                               es =>
                               BuildCreateTableOperation(
-                                  es.NameAttribute(), es.TableAttribute(), es.SchemaAttribute(), es.IsSystem(), _target));
+                                  es.NameAttribute(), 
+                                  es.TableAttribute(),
+                                  es.SchemaAttribute(), 
+                                  _target));
         }
 
         private IEnumerable<MoveTableOperation> FindMovedTables()
         {
             return from es1 in _source.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
                    from es2 in _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
-                   let isSystem = es2.IsSystem()
                    where es1.NameAttribute().EqualsIgnoreCase(es2.NameAttribute())
                          && !es1.SchemaAttribute().EqualsIgnoreCase(es2.SchemaAttribute())
                    select
@@ -518,16 +507,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
                        GetQualifiedTableName(es2.TableAttribute(), es1.SchemaAttribute()),
                        es2.SchemaAttribute())
                            {
-                               IsSystem = isSystem,
                                CreateTableOperation
-                                   = isSystem
-                                         ? BuildCreateTableOperation(
-                                             es2.NameAttribute(),
-                                             es2.TableAttribute(),
-                                             es2.SchemaAttribute(),
-                                             es2.IsSystem(),
-                                             _target)
-                                         : null
+                                   = BuildCreateTableOperation(
+                                       es2.NameAttribute(),
+                                       es2.TableAttribute(),
+                                       es2.SchemaAttribute(),
+                                       _target)
                            };
         }
 
@@ -544,11 +529,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                             es.NameAttribute(),
                                             es.TableAttribute(),
                                             es.SchemaAttribute(),
-                                            es.IsSystem(),
-                                            _source))
-                                        {
-                                            IsSystem = es.IsSystem()
-                                        });
+                                            _source)));
         }
 
         private IEnumerable<DropColumnOperation> FindRemovedColumns(IEnumerable<RenameColumnOperation> renamedColumns)
@@ -565,13 +546,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                    select new DropColumnOperation(
                        t,
                        c.NameAttribute(),
-                       new AddColumnOperation(t, BuildColumnModel(c, t1.NameAttribute(), _source))
-                           {
-                               IsSystem = c.IsSystem()
-                           })
-                              {
-                                  IsSystem = c.IsSystem()
-                              };
+                       new AddColumnOperation(t, BuildColumnModel(c, t1.NameAttribute(), _source)));
         }
 
         private IEnumerable<RenameColumnOperation> FindRenamedColumns()
@@ -610,10 +585,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     from p2 in parent2.Elements(EdmXNames.Msl.ScalarPropertyNames)
                     where p1.NameAttribute().EqualsIgnoreCase(p2.NameAttribute())
                     where !p1.ColumnNameAttribute().EqualsIgnoreCase(p2.ColumnNameAttribute())
-                    select new RenameColumnOperation(table, p1.ColumnNameAttribute(), p2.ColumnNameAttribute())
-                               {
-                                   IsSystem = p1.IsSystem()
-                               })
+                    select new RenameColumnOperation(table, p1.ColumnNameAttribute(), p2.ColumnNameAttribute()))
                 .Concat(
                     from p1 in parent1.Elements(EdmXNames.Msl.ComplexPropertyNames)
                     from p2 in parent2.Elements(EdmXNames.Msl.ComplexPropertyNames)
@@ -643,10 +615,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                    from p2 in parent2.Elements(EdmXNames.Msl.ConditionNames)
                    where p1.ValueAttribute().EqualsIgnoreCase(p2.ValueAttribute())
                    where !p1.ColumnNameAttribute().EqualsIgnoreCase(p2.ColumnNameAttribute())
-                   select new RenameColumnOperation(table, p1.ColumnNameAttribute(), p2.ColumnNameAttribute())
-                              {
-                                  IsSystem = p1.IsSystem()
-                              };
+                   select new RenameColumnOperation(table, p1.ColumnNameAttribute(), p2.ColumnNameAttribute());
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
@@ -674,10 +643,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                    where (n1.index == n2.index)
                          && !n1.name.EqualsIgnoreCase(n2.name)
                    let t = GetQualifiedTableName(_target.Model, d2.RoleAttribute())
-                   select new RenameColumnOperation(t, n1.name, n2.name)
-                              {
-                                  IsSystem = d1.IsSystem()
-                              };
+                   select new RenameColumnOperation(t, n1.name, n2.name);
         }
 
         private IEnumerable<AddColumnOperation> FindAddedColumns(IEnumerable<RenameColumnOperation> renamedColumns)
@@ -692,10 +658,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                             .Any(p1 => columnName.EqualsIgnoreCase(p1.NameAttribute()))
                          && !renamedColumns
                                  .Any(cr => cr.Table.EqualsIgnoreCase(t) && cr.NewName.EqualsIgnoreCase(columnName))
-                   select new AddColumnOperation(t, BuildColumnModel(p2, t2.NameAttribute(), _target))
-                              {
-                                  IsSystem = p2.IsSystem()
-                              };
+                   select new AddColumnOperation(t, BuildColumnModel(p2, t2.NameAttribute(), _target));
         }
 
         private IEnumerable<AlterColumnOperation> FindChangedColumns()
@@ -708,7 +671,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                    from p2 in t2.Descendants(EdmXNames.Ssdl.PropertyNames)
                    where p1.NameAttribute().EqualsIgnoreCase(p2.NameAttribute())
                          && !DiffColumns(p1, p2)
-                   select BuildAlterColumnOperation(t, p2, t2.NameAttribute(), _target, p1, t1.NameAttribute(), _source, p2.IsSystem());
+                   select BuildAlterColumnOperation(t, p2, t2.NameAttribute(), _target, p1, t1.NameAttribute(), _source);
         }
 
         private AlterColumnOperation BuildAlterColumnOperation(
@@ -718,8 +681,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             ModelMetadata targetModelMetadata,
             XElement sourceProperty,
             string sourceEntitySetName,
-            ModelMetadata sourceModelMetadata,
-            bool isSystem)
+            ModelMetadata sourceModelMetadata)
         {
             var targetModel = BuildColumnModel(targetProperty, targetEntitySetName, targetModelMetadata);
             var sourceModel = BuildColumnModel(sourceProperty, sourceEntitySetName, sourceModelMetadata);
@@ -731,10 +693,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 inverse: new AlterColumnOperation(
                     table,
                     sourceModel,
-                    isDestructiveChange: sourceModel.IsNarrowerThan(targetModel, _target.ProviderManifest)))
-                       {
-                           IsSystem = isSystem
-                       };
+                    isDestructiveChange: sourceModel.IsNarrowerThan(targetModel, _target.ProviderManifest)));
         }
 
         private bool DiffColumns(XElement column1, XElement column2)
@@ -856,8 +815,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation
                       {
-                          Table = oldTable,
-                          IsSystem = oldKey.IsSystem()
+                          Table = oldTable
                       };
 
             oldKey.Descendants(EdmXNames.Ssdl.PropertyRefNames).Each(
@@ -868,8 +826,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var addPrimaryKeyOperation
                 = new AddPrimaryKeyOperation
                       {
-                          Table = newTable,
-                          IsSystem = newKey.IsSystem()
+                          Table = newTable
                       };
 
             newKey.Descendants(EdmXNames.Ssdl.PropertyRefNames).Each(
@@ -905,7 +862,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
             string entitySetName,
             string tableName,
             string schema,
-            bool isSystem,
             ModelMetadata modelMetadata)
         {
             DebugCheck.NotEmpty(entitySetName);
@@ -929,7 +885,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Each(pr => addPrimaryKeyOperation.Columns.Add(pr.NameAttribute()));
 
             createTableOperation.PrimaryKey = addPrimaryKeyOperation;
-            createTableOperation.IsSystem = isSystem;
 
             return createTableOperation;
         }
@@ -1047,8 +1002,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 addForeignKeyOperation.CascadeDelete = true;
             }
 
-            addForeignKeyOperation.IsSystem = association.IsSystem();
-
             return addForeignKeyOperation;
         }
 
@@ -1087,7 +1040,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             foreignKeyOperation.PrincipalTable = principalTable;
             foreignKeyOperation.DependentTable = dependentTable;
-            foreignKeyOperation.IsSystem = association.IsSystem();
 
             dependent.Descendants(EdmXNames.Ssdl.PropertyRefNames)
                      .Each(pr => foreignKeyOperation.DependentColumns.Add(pr.NameAttribute()));

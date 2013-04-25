@@ -86,11 +86,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
             base.ApplyMigration(migration, lastMigration);
         }
 
-        internal override void RevertMigration(string migrationId, DbMigration migration, XDocument soureModel, XDocument targetModel)
+        internal override void RevertMigration(string migrationId, DbMigration migration, XDocument targetModel)
         {
             _logger.Info(Strings.LoggingRevertMigration(migrationId));
 
-            base.RevertMigration(migrationId, migration, soureModel, targetModel);
+            base.RevertMigration(migrationId, migration, targetModel);
         }
 
         internal override void SeedDatabase()

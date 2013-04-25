@@ -51,13 +51,7 @@ namespace System.Data.Entity.Migrations.Model
         /// </summary>
         public override MigrationOperation Inverse
         {
-            get
-            {
-                return new DropColumnOperation(Table, Column.Name)
-                    {
-                        IsSystem = IsSystem
-                    };
-            }
+            get { return new DropColumnOperation(Table, Column.Name); }
         }
 
         /// <inheritdoc />

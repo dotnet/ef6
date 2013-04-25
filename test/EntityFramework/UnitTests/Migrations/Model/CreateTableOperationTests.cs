@@ -41,15 +41,11 @@ namespace System.Data.Entity.Migrations.Model
         public void Inverse_should_produce_drop_table_operation()
         {
             var createTableOperation
-                = new CreateTableOperation("Foo")
-                      {
-                          IsSystem = true
-                      };
+                = new CreateTableOperation("Foo");
 
             var dropTableOperation = (DropTableOperation)createTableOperation.Inverse;
 
             Assert.Equal("Foo", dropTableOperation.Name);
-            Assert.True(dropTableOperation.IsSystem);
         }
 
         [Fact]

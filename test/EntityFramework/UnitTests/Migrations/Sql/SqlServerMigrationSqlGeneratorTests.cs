@@ -220,7 +220,6 @@ namespace System.Data.Entity.Migrations.Sql
                     .Diff(
                         model1.GetModel(),
                         model2.GetModel(),
-                        false,
                         commandTreeGenerator,
                         new SqlServerMigrationSqlGenerator())
                     .OfType<CreateProcedureOperation>()
@@ -370,43 +369,6 @@ CREATE TABLE [foo].[Customers] (
         }
 
         [Fact]
-        public void Generate_can_output_create_table_as_system_object_statement()
-        {
-            var createTableOperation = new CreateTableOperation("Customers")
-                                           {
-                                               IsSystem = true
-                                           };
-            var idColumn = new ColumnModel(PrimitiveTypeKind.Int32)
-                               {
-                                   Name = "Id",
-                                   IsNullable = true,
-                                   IsIdentity = true
-                               };
-            createTableOperation.Columns.Add(idColumn);
-            createTableOperation.Columns.Add(
-                new ColumnModel(PrimitiveTypeKind.String)
-                    {
-                        Name = "Name",
-                        IsNullable = false
-                    });
-
-            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
-
-            var sql = migrationSqlGenerator.Generate(new[] { createTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
-
-            Assert.Contains(
-                @"CREATE TABLE [Customers] (
-    [Id] [int] IDENTITY,
-    [Name] [nvarchar](max) NOT NULL
-)
-BEGIN TRY
-    EXEC sp_MS_marksystemobject 'Customers'
-END TRY
-BEGIN CATCH
-END CATCH", sql);
-        }
-
-        [Fact]
         public void Generate_can_output_move_table_as_system_object_statement()
         {
             var createTableOperation
@@ -414,25 +376,25 @@ END CATCH", sql);
 
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Int32)
-                    {
-                        Name = "Id",
-                        IsNullable = false
-                    });
+                {
+                    Name = "Id",
+                    IsNullable = false
+                });
 
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.String)
-                    {
-                        Name = "Name",
-                        IsNullable = false
-                    });
+                {
+                    Name = "Name",
+                    IsNullable = false
+                });
 
             var moveTableOperation
                 = new MoveTableOperation("dbo.History", "foo")
-                      {
-                          IsSystem = true,
-                          ContextKey = "MyKey",
-                          CreateTableOperation = createTableOperation
-                      };
+                {
+                    IsSystem = true,
+                    ContextKey = "MyKey",
+                    CreateTableOperation = createTableOperation
+                };
 
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 

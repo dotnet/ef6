@@ -52,8 +52,7 @@ namespace System.Data.Entity.Migrations.Model
                                              {
                                                  PrincipalTable = "P",
                                                  DependentTable = "D",
-                                                 Name = "Foo",
-                                                 IsSystem = true
+                                                 Name = "Foo"
                                              };
 
             addForeignKeyOperation.PrincipalColumns.Add("pk");
@@ -66,7 +65,6 @@ namespace System.Data.Entity.Migrations.Model
             Assert.Equal("fk", dropForeignKeyOperation.DependentColumns.Single());
             Assert.Equal("Foo", dropForeignKeyOperation.Name);
             Assert.Equal("FK_D_P_fk", dropForeignKeyOperation.DefaultName);
-            Assert.True(dropForeignKeyOperation.IsSystem);
         }
 
         [Fact]

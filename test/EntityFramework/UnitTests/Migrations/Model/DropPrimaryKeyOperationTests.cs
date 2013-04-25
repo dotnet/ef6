@@ -42,8 +42,7 @@ namespace System.Data.Entity.Migrations.Model
             var dropPrimaryKeyOperation = new DropPrimaryKeyOperation
                                               {
                                                   Table = "T",
-                                                  Name = "Pk",
-                                                  IsSystem = true
+                                                  Name = "Pk"
                                               };
 
             dropPrimaryKeyOperation.Columns.Add("pk2");
@@ -53,7 +52,6 @@ namespace System.Data.Entity.Migrations.Model
             Assert.Equal("T", inverse.Table);
             Assert.Equal("Pk", inverse.Name);
             Assert.Equal("pk2", inverse.Columns.Single());
-            Assert.True(inverse.IsSystem);
         }
     }
 }

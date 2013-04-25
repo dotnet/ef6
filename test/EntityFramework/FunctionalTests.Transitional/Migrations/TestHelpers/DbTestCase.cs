@@ -309,8 +309,7 @@ namespace System.Data.Entity.Migrations
                 return (CreateTableOperation)
                        new EdmModelDiffer().Diff(
                            new DbModelBuilder().Build(ProviderInfo).GetModel(),
-                           new HistoryContext(connection, defaultSchema).GetModel(),
-                           includeSystemOperations: true)
+                           new HistoryContext(connection, defaultSchema).GetModel())
                            .Single();
             }
         }
@@ -324,8 +323,7 @@ namespace System.Data.Entity.Migrations
                 return (DropTableOperation)
                        new EdmModelDiffer().Diff(
                            new HistoryContext(connection, defaultSchema: null).GetModel(),
-                           new DbModelBuilder().Build(ProviderInfo).GetModel(),
-                           includeSystemOperations: true)
+                           new DbModelBuilder().Build(ProviderInfo).GetModel())
                            .Single();
             }
         }

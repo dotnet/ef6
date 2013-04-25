@@ -53,8 +53,7 @@ namespace System.Data.Entity.Migrations.Model
             var addPrimaryKeyOperation = new AddPrimaryKeyOperation
                                              {
                                                  Table = "T",
-                                                 Name = "Pk",
-                                                 IsSystem = true
+                                                 Name = "Pk"
                                              };
 
             addPrimaryKeyOperation.Columns.Add("pk2");
@@ -64,7 +63,6 @@ namespace System.Data.Entity.Migrations.Model
             Assert.Equal("T", inverse.Table);
             Assert.Equal("Pk", inverse.Name);
             Assert.Equal("pk2", inverse.Columns.Single());
-            Assert.True(inverse.IsSystem);
         }
 
         [Fact]

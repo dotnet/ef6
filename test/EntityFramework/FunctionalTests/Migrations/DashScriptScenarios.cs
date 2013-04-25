@@ -237,7 +237,9 @@ namespace System.Data.Entity.Migrations
             var version1 = new MigrationScaffolder(migrator1.Configuration).Scaffold("Version1");
 
             var migrator2 = CreateMigrator<ShopContext_v2>(automaticDataLossEnabled: true, scaffoldedMigrations: version1);
+            
             migrator2.Update();
+            
             var scriptingDecorator = new MigratorScriptingDecorator(migrator2);
 
             if (!whenDatabaseExists)

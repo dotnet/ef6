@@ -6,7 +6,6 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Edm;
-    using System.Globalization;
     using System.Linq;
     using System.Xml.Linq;
 
@@ -37,62 +36,10 @@ namespace System.Data.Entity.Utilities
                             ssdlSchemaElement.CreateReader()
                         });
 
-            var msl = new XElement(model.Descendants(EdmXNames.Msl.MappingNames).Single());
-
-            // normalize EDM namespaces
-            // TODO: This can be removed when we stop appending the history model.
-            var schemaNamespace
-                = model
-                    .Descendants(EdmXNames.Csdl.SchemaNames)
-                    .Single()
-                    .NamespaceAttribute();
-
-            msl.Descendants(EdmXNames.Msl.EntityTypeMappingNames)
-               .Where(e => e.IsSystem())
-               .Each(
-                   e =>
-                       {
-                           var typeNameTemplate = "{0}";
-                           var typeNameAttribute = e.TypeNameAttribute();
-
-                           if (typeNameAttribute.StartsWith(StorageMslConstructs.IsTypeOf, StringComparison.Ordinal))
-                           {
-                               typeNameAttribute
-                                   = typeNameAttribute.Substring(
-                                       StorageMslConstructs.IsTypeOf.Length,
-                                       typeNameAttribute.Length
-                                       - StorageMslConstructs.IsTypeOf.Length
-                                       - StorageMslConstructs.IsTypeOfTerminal.Length);
-
-                               typeNameTemplate
-                                   = StorageMslConstructs.IsTypeOf
-                                     + typeNameTemplate
-                                     + StorageMslConstructs.IsTypeOfTerminal;
-                           }
-
-                           e.SetAttributeValue(
-                               StorageMslConstructs.EntityTypeMappingTypeNameAttribute,
-                               string.Format(
-                                   CultureInfo.InvariantCulture,
-                                   typeNameTemplate,
-                                   schemaNamespace + '.' + typeNameAttribute.Split('.').Last()));
-                       });
-
-            // MSL does not allow arbitrary content
-            // TODO: This can be removed when we stop appending the history model.
-            msl.DescendantsAndSelf().Attributes(EdmXNames.IsSystemName).Remove();
-
             return new StorageMappingItemCollection(
                 edmItemCollection,
                 storeItemCollection,
-                new[] { msl.CreateReader() });
-        }
-
-        public static bool HasSystemOperations(this XDocument model)
-        {
-            DebugCheck.NotNull(model);
-
-            return model.Descendants().Attributes(EdmXNames.IsSystemName).Any();
+                new[] { new XElement(model.Descendants(EdmXNames.Msl.MappingNames).Single()).CreateReader() });
         }
     }
 }

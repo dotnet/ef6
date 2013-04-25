@@ -32,16 +32,12 @@ namespace System.Data.Entity.Migrations.Model
         public void Inverse_should_produce_rename_column_operation()
         {
             var renameTableOperation
-                = new RenameTableOperation("dbo.Foo", "dbo.Bar")
-                      {
-                          IsSystem = true
-                      };
+                = new RenameTableOperation("dbo.Foo", "dbo.Bar");
 
             var inverse = (RenameTableOperation)renameTableOperation.Inverse;
 
             Assert.Equal("dbo.Bar", inverse.Name);
             Assert.Equal("Foo", inverse.NewName);
-            Assert.True(inverse.IsSystem);
 
             renameTableOperation = new RenameTableOperation("dbo.Foo", "Bar");
 

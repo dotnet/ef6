@@ -26,54 +26,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
     public class EdmModelDifferTests : DbTestCase
     {
         [MigrationsTheory]
-        public void System_operations_are_ignored_by_default()
-        {
-            var modelBuilder = new DbModelBuilder();
-
-            var model1 = modelBuilder.Build(ProviderInfo).GetModel();
-
-            modelBuilder = new DbModelBuilder();
-            modelBuilder.Entity<MigrationsCustomer>();
-
-            var model2 = modelBuilder.Build(ProviderInfo).GetModel();
-            model2.Descendants().Each(e => e.SetAttributeValue(EdmXNames.IsSystemName, true));
-
-            var operations = new EdmModelDiffer().Diff(model1, model2);
-
-            Assert.Equal(0, operations.Count());
-        }
-
-        [MigrationsTheory]
-        public void System_operations_are_included_when_requested()
-        {
-            var modelBuilder = new DbModelBuilder();
-
-            var model1 = modelBuilder.Build(ProviderInfo).GetModel();
-
-            modelBuilder = new DbModelBuilder();
-            modelBuilder.Entity<MigrationsCustomer>();
-
-            var model2 = modelBuilder.Build(ProviderInfo).GetModel();
-            model2.Descendants().Each(e => e.SetAttributeValue(EdmXNames.IsSystemName, true));
-
-            var operations = new EdmModelDiffer().Diff(model1, model2, includeSystemOperations: true);
-
-            Assert.True(operations.All(o => o.IsSystem));
-
-            var createTableOperation
-                = operations.OfType<CreateTableOperation>().First();
-
-            Assert.True(createTableOperation.IsSystem);
-
-            operations = new EdmModelDiffer().Diff(model2, model1, includeSystemOperations: true);
-
-            var dropTableOperation
-                = operations.OfType<DropTableOperation>().First();
-
-            Assert.True(dropTableOperation.IsSystem);
-        }
-
-        [MigrationsTheory]
         public void Can_diff_identical_models_at_different_edm_versions_and_no_diffs_produced()
         {
             var modelBuilder = new DbModelBuilder(DbModelBuilderVersion.V4_1);
@@ -474,7 +426,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                          ProviderInfo = providerInfo
                                      };
 
-            var operations = new EdmModelDiffer().Diff(sourceMetadata, targetMetadata, false, null, null);
+            var operations = new EdmModelDiffer().Diff(sourceMetadata, targetMetadata, null, null);
 
             Assert.Equal(2, operations.Count());
             operations.OfType<AlterColumnOperation>().Each(
@@ -558,7 +510,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .Diff(
                         model1.GetModel(), 
                         model2.GetModel(), 
-                        false, 
                         commandTreeGenerator, 
                         new SqlServerMigrationSqlGenerator())
                     .OfType<CreateProcedureOperation>()
@@ -822,7 +773,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         [MigrationsTheory]
-        public void Can_detect_moved_system_tables()
+        public void Moved_tables_should_include_create_table_operation()
         {
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<MigrationsCustomer>();
@@ -833,14 +784,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder.Entity<MigrationsCustomer>().ToTable("MigrationsCustomer", "foo");
 
             var model2 = modelBuilder.Build(ProviderInfo).GetModel();
-            model2.Descendants().Each(e => e.SetAttributeValue(EdmXNames.IsSystemName, true));
 
-            var operations = new EdmModelDiffer().Diff(model1, model2, includeSystemOperations: true);
+            var operations = new EdmModelDiffer().Diff(model1, model2);
 
             var moveTableOperation
                 = operations.OfType<MoveTableOperation>().Single();
 
-            Assert.True(moveTableOperation.IsSystem);
             Assert.NotNull(moveTableOperation.CreateTableOperation);
             Assert.Equal("dbo.MigrationsCustomer", moveTableOperation.Name);
             Assert.Equal("foo.MigrationsCustomer", moveTableOperation.CreateTableOperation.Name);

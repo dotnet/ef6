@@ -13134,14 +13134,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "Migrating the history system table is only supported for move table operations. Ensure all other history table configuration happens as part of an initial explicit migration. "
-        /// </summary>
-        internal static string HistoryMigrationNotSupported
-        {
-            get { return EntityRes.GetString(EntityRes.HistoryMigrationNotSupported); }
-        }
-
-        /// <summary>
         ///     A string like "An instance of '{0}' could not be created because it does not define a parameterless constructor. Every type derived from EntityTypeConfiguration in an assembly must have a parameterless constructor when using AddFromAssembly to add Code First configurations from that assembly."
         /// </summary>
         internal static string CreateConfigurationType_NoParameterlessConstructor(object p0)
@@ -14965,14 +14957,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     Migrations.Infrastructure.MigrationsException with message like "Migrating the history system table is only supported for move table operations. Ensure all other history table configuration happens as part of an initial explicit migration. "
-        /// </summary>
-        internal static Exception HistoryMigrationNotSupported()
-        {
-            return new Migrations.Infrastructure.MigrationsException(Strings.HistoryMigrationNotSupported);
-        }
-
-        /// <summary>
         ///     InvalidOperationException with message like "The type '{0}' cannot be used to filter properties. Only scalar types, string, and byte[] are supported."
         /// </summary>
         internal static Exception ModelBuilder_PropertyFilterTypeMustBePrimitive(object p0)
@@ -16789,7 +16773,6 @@ namespace System.Data.Entity.Resources
         internal const string UnableToMoveHistoryTableWithAuto = "UnableToMoveHistoryTableWithAuto";
         internal const string NoMatch = "NoMatch";
         internal const string MoreThanOneMatch = "MoreThanOneMatch";
-        internal const string HistoryMigrationNotSupported = "HistoryMigrationNotSupported";
         internal const string CreateConfigurationType_NoParameterlessConstructor = "CreateConfigurationType_NoParameterlessConstructor";
         internal const string CollectionEmpty = "CollectionEmpty";
         internal const string DbMigrationsConfiguration_ContextType = "DbMigrationsConfiguration_ContextType";

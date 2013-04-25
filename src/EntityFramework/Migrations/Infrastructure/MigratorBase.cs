@@ -129,14 +129,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
             _this.EnsureDatabaseExists(mustSucceedToKeepDatabase);
         }
 
-        internal virtual void RevertMigration(string migrationId, DbMigration migration, XDocument sourceModel, XDocument targetModel)
+        internal virtual void RevertMigration(
+            string migrationId, DbMigration migration, XDocument targetModel)
         {
             DebugCheck.NotEmpty(migrationId);
             DebugCheck.NotNull(migration);
-            DebugCheck.NotNull(sourceModel);
             DebugCheck.NotNull(targetModel);
 
-            _this.RevertMigration(migrationId, migration, sourceModel, targetModel);
+            _this.RevertMigration(migrationId, migration, targetModel);
         }
 
         internal virtual void SeedDatabase()
