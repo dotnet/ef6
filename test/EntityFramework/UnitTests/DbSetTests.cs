@@ -2,13 +2,13 @@
 
 namespace System.Data.Entity
 {
+    using Moq;
     using System.Collections.Generic;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Linq;
-    using Moq;
     using Xunit;
     using MockHelper = System.Data.Entity.Core.Objects.MockHelper;
 
@@ -243,7 +243,7 @@ namespace System.Data.Entity
         public class Remove_Generic
         {
             [Fact]
-            public void With_valid_entity_returns_the_added_entity()
+            public void With_valid_entity_returns_the_removed_entity()
             {
                 var set = new DbSet<FakeEntity>(new Mock<InternalSetForMock<FakeEntity>>().Object);
                 var entity = new FakeEntity();
@@ -251,6 +251,73 @@ namespace System.Data.Entity
                 var retVal = set.Remove(entity);
 
                 Assert.Same(entity, retVal);
+            }
+        }
+
+        public class RemoveRange_Generic
+        {
+            [Fact]
+            public void With_valid_entities_returns_the_removed_entities()
+            {
+                var internalContext = new Mock<InternalContext>();
+                var internalSet = new Mock<InternalSetForMock<FakeEntity>>();
+
+                internalSet.Setup(i => i.InternalContext)
+                           .Returns(internalContext.Object);
+
+                var set = new DbSet<FakeEntity>(internalSet.Object);
+                var entity1 = new FakeEntity();
+                var entity2 = new FakeEntity();
+
+                var retVal = set.RemoveRange(new[] { entity1, entity2 });
+
+                Assert.True(retVal.Contains(entity1));
+                Assert.True(retVal.Contains(entity2));
+            }
+
+            [Fact]
+            public void Throw_if_collection_is_null()
+            {
+                var internalContext = new Mock<InternalContext>();
+                var internalSet = new Mock<InternalSetForMock<FakeEntity>>();
+
+                internalSet.Setup(i => i.InternalContext)
+                           .Returns(internalContext.Object);
+
+                var set = new DbSet<FakeEntity>(internalSet.Object);
+
+                Assert.Equal(
+                    new ArgumentNullException("entities").Message,
+                    Assert.Throws<ArgumentNullException>(() => set.RemoveRange(null)).Message);
+            }
+
+            [Fact]
+            public void Throw_if_some_item_in_collection_is_null()
+            {
+                var internalSet = new InternalSetForTests();
+                var set = new DbSet<FakeEntity>(internalSet);
+
+                Assert.Equal(
+                    new ArgumentNullException("entity").Message,
+                    Assert.Throws<ArgumentNullException>(() => set.RemoveRange(new[] { null, new FakeEntity() })).Message);
+            }
+
+            [Fact]
+            public void Call_to_detect_changes_only_once()
+            {
+                var objectContextMock = Mock.Get(MockHelper.CreateMockObjectContext<FakeEntity>());
+                objectContextMock.Setup(s => s.DeleteObject(It.IsAny<FakeEntity>()));
+
+                var internalContext = new Mock<InternalContextForMock>();
+                internalContext.Setup(c => c.ObjectContext)
+                               .Returns(objectContextMock.Object);
+
+                var internalSet = new InternalSetForTests(internalContext.Object);
+                var set = new DbSet<FakeEntity>(internalSet);
+
+                set.RemoveRange(new[] { new FakeEntity(), new FakeEntity() });
+
+                internalContext.Verify(c => c.DetectChanges(It.Is<bool>(b => b == false)), Times.Once());
             }
         }
 
@@ -277,6 +344,79 @@ namespace System.Data.Entity
                 var retVal = set.Remove(entity);
 
                 Assert.Same(entity, retVal);
+            }
+        }
+
+        public class RemoveRange_NonGeneric
+        {
+            [Fact]
+            public void With_valid_entities_returns_the_removed_entities()
+            {
+                var internalContext = new Mock<InternalContext>();
+                var internalSet = new Mock<InternalSetForMock<FakeEntity>>();
+                internalSet.Setup(i => i.InternalContext).Returns(internalContext.Object);
+
+                var set = new InternalDbSet<FakeEntity>(internalSet.Object);
+
+                var entity1 = new FakeEntity();
+                var entity2 = new FakeEntity();
+
+                var retVal = (IEnumerable<FakeEntity>)set
+                    .RemoveRange(new[] { entity1, entity2 });
+
+                Assert.True(retVal.Contains(entity1));
+                Assert.True(retVal.Contains(entity2));
+            }
+
+            [Fact]
+            public void Throw_if_collection_is_null()
+            {
+                var internalContext = new Mock<InternalContext>();
+                var internalSet = new Mock<InternalSetForMock<FakeEntity>>();
+                internalSet.Setup(i => i.InternalContext).Returns(internalContext.Object);
+
+                var set = new InternalDbSet<FakeEntity>(internalSet.Object);
+
+                Assert.Equal(
+                    new ArgumentNullException("entities").Message,
+                    Assert.Throws<ArgumentNullException>(() => set.RemoveRange(null)).Message);
+            }
+
+            [Fact]
+            public void With_wrong_type_throws()
+            {
+                var set = new InternalSetForTests();
+
+                Assert.Equal(
+                    Strings.DbSet_BadTypeForAddAttachRemove("Delete", "String", "FakeEntity"),
+                    Assert.Throws<ArgumentException>(() => set.RemoveRange(new[] { "Bang!" })).Message);
+            }
+
+            [Fact]
+            public void Throw_if_some_item_in_collection_is_null()
+            {
+                var set = new InternalSetForTests();
+
+                Assert.Equal(
+                    new ArgumentNullException("entity").Message,
+                    Assert.Throws<ArgumentNullException>(() => set.RemoveRange(new[] { null, new FakeEntity() })).Message);
+            }
+
+            [Fact]
+            public void Call_to_detect_changes_only_once()
+            {
+                var objectContextMock = Mock.Get(MockHelper.CreateMockObjectContext<FakeEntity>());
+                objectContextMock.Setup(s => s.DeleteObject(It.IsAny<FakeEntity>()));
+
+                var internalContext = new Mock<InternalContextForMock>();
+                internalContext.Setup(c => c.ObjectContext)
+                               .Returns(objectContextMock.Object);
+
+                var set = new InternalSetForTests(internalContext.Object);
+
+                set.RemoveRange(new[] { new FakeEntity(), new FakeEntity() });
+
+                internalContext.Verify(c => c.DetectChanges(It.Is<bool>(b => b == false)), Times.Once());
             }
         }
 

@@ -391,6 +391,22 @@ namespace System.Data.Entity.Internal.Linq
             InternalContext.ObjectContext.DeleteObject(entity);
         }
 
+        public virtual void RemoveRange(IEnumerable entities)
+        {
+            DebugCheck.NotNull(entities);
+
+            // prevent "enumerator was changed" exception
+            // if entities is syncronized with other elements
+            // (e.g: local view from DbSet.Local.)
+            var copyOfEntities = entities
+                .Cast<object>().ToList();
+
+            InternalContext.DetectChanges();
+
+            ActOnSet(
+                entity => InternalContext.ObjectContext.DeleteObject(entity), EntityState.Deleted, copyOfEntities, "Delete");
+        }
+
         /// <summary>
         ///     This method checks whether an entity is already in the context.  If it is, then the state
         ///     is changed to the new state given.  If it isn't, then the action delegate is executed to

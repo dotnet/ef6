@@ -2256,6 +2256,98 @@ namespace ProductivityApiTests
             }
         }
 
+        [Fact]
+        public void RemoveRange_delete_entities_to_context()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var productDaddies = new Product { Id = 0, Name = "Daddies Sauce" };
+                var productGremolata = new Product { Id = 1, Name = "Gremolata Sauce" };
+
+                context.Entry(productDaddies).State = EntityState.Unchanged;
+                context.Entry(productGremolata).State = EntityState.Unchanged;
+
+                var products = new Product[] { productDaddies, productGremolata };
+
+                context.Products.RemoveRange(products);
+
+                VerifyProducts(context, products, EntityState.Deleted);
+            }
+        }
+
+        [Fact]
+        public void Non_generic_RemoveRange_delete_entities_from_context()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var productDaddies = new Product { Id = 0, Name = "Daddies Sauce" };
+                var productGremolata = new Product { Id = 1, Name = "Gremolata Sauce" };
+
+                context.Entry(productDaddies).State = EntityState.Unchanged;
+                context.Entry(productGremolata).State = EntityState.Unchanged;
+
+                var products = new Product[] { productDaddies, productGremolata };
+
+                context.Set(typeof(Product)).RemoveRange(products);
+
+                VerifyProducts(context, products, EntityState.Deleted);
+            }
+        }
+        [Fact]
+        public void RemoveRange_preserve_auto_detect_changes_flag()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var productDaddies = new Product { Id = 0, Name = "Daddies Sauce" };
+                var productGremolata = new Product { Id = 1, Name = "Gremolata Sauce" };
+
+                context.Entry(productDaddies).State = EntityState.Unchanged;
+                context.Entry(productGremolata).State = EntityState.Unchanged;
+
+                var products = new Product[] { productDaddies, productGremolata };
+
+                context.Configuration.AutoDetectChangesEnabled = false;
+
+                context.Products.RemoveRange(products);
+
+                Assert.False(context.Configuration.AutoDetectChangesEnabled);
+            }
+        }
+
+        [Fact]
+        public void RemoveRange_preserve_auto_detect_changes_flag_if_throw()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var productDaddies = new Product { Id = 0, Name = "Daddies Sauce" };
+
+                context.Entry(productDaddies).State = EntityState.Unchanged;
+
+                var products = new Product[] { productDaddies, null/*throw if item is null*/ };
+
+                context.Configuration.AutoDetectChangesEnabled = false;
+
+                Assert.Throws<ArgumentNullException>(() => { context.Products.RemoveRange(products); });
+                Assert.False(context.Configuration.AutoDetectChangesEnabled);
+            }
+        }
+
+        [Fact]
+        public void RemoveRange_throw_if_item_is_not_exist_in_object_state_manager()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var productDaddies = new Product { Id = 0, Name = "Daddies Sauce" };
+
+                var products = new Product[] { productDaddies };
+
+                Assert.Throws<InvalidOperationException>(() =>
+                {
+                    context.Products.RemoveRange(products);
+                });
+            }
+        }
+
         #endregion
 
         #region Conflicts at the root level for FK graphs
@@ -3286,17 +3378,17 @@ namespace ProductivityApiTests
                 // to the generic Set for the proxy type.
                 Assert.Throws<InvalidOperationException>(
                     () =>
+                    {
+                        try
                         {
-                            try
-                            {
-                                setMethod.Invoke(context, null);
-                            }
-                            catch (TargetInvocationException ex)
-                            {
-                                throw ex.InnerException;
-                            }
-                            ;
-                        }).ValidateMessage("CannotCallGenericSetWithProxyType");
+                            setMethod.Invoke(context, null);
+                        }
+                        catch (TargetInvocationException ex)
+                        {
+                            throw ex.InnerException;
+                        }
+                        ;
+                    }).ValidateMessage("CannotCallGenericSetWithProxyType");
             }
         }
 
