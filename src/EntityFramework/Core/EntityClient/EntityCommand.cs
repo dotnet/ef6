@@ -13,7 +13,9 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -46,22 +48,31 @@ namespace System.Data.Entity.Core.EntityClient
         private DbCommand _storeProviderCommand;
         private readonly EntityDataReaderFactory _entityDataReaderFactory;
         private readonly IDbDependencyResolver _dependencyResolver;
+        private readonly DbInterceptionContext _interceptionContext;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityCommand" /> class using the specified values.
         /// </summary>
         public EntityCommand()
-            : this(new EntityDataReaderFactory())
+            : this(new DbInterceptionContext())
         {
         }
 
-        internal EntityCommand(EntityDataReaderFactory factory)
+        internal EntityCommand(DbInterceptionContext interceptionContext)
+            : this(interceptionContext, new EntityDataReaderFactory())
         {
+        }
+
+        internal EntityCommand(DbInterceptionContext interceptionContext, EntityDataReaderFactory factory)
+        {
+            DebugCheck.NotNull(interceptionContext);
+
             // Initalize the member field with proper default values
             _designTimeVisible = true;
             _commandType = CommandType.Text;
             _updatedRowSource = UpdateRowSource.Both;
             _parameters = new EntityParameterCollection();
+            _interceptionContext = interceptionContext;
 
             // Future Enhancement: (See SQLPT #300004256) At some point it would be  
             // really nice to read defaults from a global configuration, but we're not 
@@ -76,12 +87,12 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="statement">The text of the command.</param>
         public EntityCommand(string statement)
-            : this(statement, new EntityDataReaderFactory())
+            : this(statement, new DbInterceptionContext(), new EntityDataReaderFactory())
         {
         }
 
-        internal EntityCommand(string statement, EntityDataReaderFactory factory)
-            : this(factory)
+        internal EntityCommand(string statement, DbInterceptionContext context, EntityDataReaderFactory factory)
+            : this(context, factory)
         {
             _esqlCommandText = statement;
         }
@@ -109,7 +120,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         internal EntityCommand(string statement, EntityConnection connection, EntityDataReaderFactory factory)
-            : this(statement, factory)
+            : this(statement, new DbInterceptionContext(), factory)
         {
             _connection = connection;
         }
@@ -136,8 +147,8 @@ namespace System.Data.Entity.Core.EntityClient
         ///     Internal constructor used by EntityCommandDefinition
         /// </summary>
         /// <param name="commandDefinition"> The prepared command definition that can be executed using this EntityCommand </param>
-        internal EntityCommand(EntityCommandDefinition commandDefinition, EntityDataReaderFactory factory = null)
-            : this(factory)
+        internal EntityCommand(EntityCommandDefinition commandDefinition, DbInterceptionContext context, EntityDataReaderFactory factory = null)
+            : this(context, factory)
         {
             // Assign other member fields from the parameters
             _commandDefinition = commandDefinition;
@@ -164,10 +175,15 @@ namespace System.Data.Entity.Core.EntityClient
         /// <param name="connection"> The connection against which this EntityCommand should execute </param>
         /// <param name="commandDefinition"> The prepared command definition that can be executed using this EntityCommand </param>
         internal EntityCommand(
-            EntityConnection connection, EntityCommandDefinition entityCommandDefinition, EntityDataReaderFactory factory = null)
-            : this(entityCommandDefinition, factory)
+            EntityConnection connection, EntityCommandDefinition entityCommandDefinition, DbInterceptionContext context, EntityDataReaderFactory factory = null)
+            : this(entityCommandDefinition, context, factory)
         {
             _connection = connection;
+        }
+
+        internal virtual DbInterceptionContext InterceptionContext
+        {
+            get { return _interceptionContext; }
         }
 
         /// <summary>

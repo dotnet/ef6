@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -37,18 +38,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     {
         #region Constructors
 
-        /// <summary>
-        ///     Constructs a new instance of <see cref="UpdateTranslator" /> based on the contents of the given entity state manager.
-        /// </summary>
-        /// <param name="stateManager"> Entity state manager containing changes to be processed. </param>
-        /// <param name="adapter"> Map adapter requesting the changes. </param>
-        public UpdateTranslator(IEntityStateManager stateManager, EntityAdapter adapter)
+        public UpdateTranslator(EntityAdapter adapter)
             : this()
         {
-            DebugCheck.NotNull(stateManager);
             DebugCheck.NotNull(adapter);
 
-            _stateManager = stateManager;
+            _stateManager = adapter.Context.ObjectStateManager;
+            _interceptionContext = adapter.Context.InterceptionContext;
             _adapter = adapter;
 
             // connection state
@@ -99,6 +95,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         // workspace state
         private readonly IEntityStateManager _stateManager;
+        private readonly DbInterceptionContext _interceptionContext;
 
         // ancillary propagation services
         private readonly RecordConverter _recordConverter;
@@ -162,6 +159,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         internal readonly IEqualityComparer<CompositeKey> KeyComparer;
+
+        public virtual DbInterceptionContext InterceptionContext
+        {
+            get { return _interceptionContext; }
+        }
 
         #endregion
 
@@ -701,7 +703,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     MetadataWorkspace, DataSpace.SSpace,
                     functionMapping.Function, resultType, functionParams);
 
-                commandDefinition = _providerServices.CreateCommandDefinition(tree);
+                commandDefinition = _providerServices.CreateCommandDefinition(tree, _interceptionContext);
             }
             return commandDefinition;
         }
@@ -781,7 +783,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             Debug.Assert(null != Connection.StoreConnection, "EntityAdapter.Update ensures the store connection is set");
             try
             {
-                command = new InterceptableDbCommand(_providerServices.CreateCommand(commandTree));
+                command = new InterceptableDbCommand(_providerServices.CreateCommand(commandTree, _interceptionContext), _interceptionContext);
             }
             catch (Exception e)
             {

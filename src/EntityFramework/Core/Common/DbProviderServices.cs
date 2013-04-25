@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Core.Common
     public abstract class DbProviderServices : IDbDependencyResolver
     {
         private readonly Lazy<IDbDependencyResolver> _resolver;
-        private readonly Interception _interception;
+        private readonly DbCommandTreeDispatcher _treeDispatcher;
 
         private static readonly ConcurrentDictionary<DbProviderInfo, DbSpatialServices> _spatialServices =
             new ConcurrentDictionary<DbProviderInfo, DbSpatialServices>();
@@ -55,17 +56,17 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <param name="resolver"> The resolver to use. </param>
         protected DbProviderServices(Func<IDbDependencyResolver> resolver)
-            : this(resolver, Interception.Instance)
+            : this(resolver, Interception.Dispatch.CommandTree)
         {
         }
 
-        internal DbProviderServices(Func<IDbDependencyResolver> resolver, Interception interception)
+        internal DbProviderServices(Func<IDbDependencyResolver> resolver, DbCommandTreeDispatcher treeDispatcher)
         {
             Check.NotNull(resolver, "resolver");
-            DebugCheck.NotNull(interception);
+            DebugCheck.NotNull(treeDispatcher);
 
             _resolver = new Lazy<IDbDependencyResolver>(resolver);
-            _interception = interception;
+            _treeDispatcher = treeDispatcher;
         }
 
         /// <summary>
@@ -79,6 +80,15 @@ namespace System.Data.Entity.Core.Common
         public DbCommandDefinition CreateCommandDefinition(DbCommandTree commandTree)
         {
             Check.NotNull(commandTree, "commandTree");
+
+            return CreateCommandDefinition(commandTree, new DbInterceptionContext());
+        }
+
+        internal DbCommandDefinition CreateCommandDefinition(DbCommandTree commandTree, DbInterceptionContext interceptionContext)
+        {
+            DebugCheck.NotNull(commandTree);
+            DebugCheck.NotNull(interceptionContext);
+            
             ValidateDataSpace(commandTree);
 
             var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
@@ -87,12 +97,12 @@ namespace System.Data.Entity.Core.Common
                 storeMetadata.StoreProviderManifest != null,
                 "StoreItemCollection has null StoreProviderManifest?");
 
-            commandTree = _interception.Dispatch(commandTree);
+            commandTree = _treeDispatcher.Created(commandTree, interceptionContext);
 
             return CreateDbCommandDefinition(storeMetadata.StoreProviderManifest, commandTree);
         }
 
-        /// <summary>Creates command definition from specified manifest andcommand tree.</summary>
+        /// <summary>Creates command definition from specified manifest and command tree.</summary>
         /// <returns>The created command definition.</returns>
         /// <param name="providerManifest">The manifest.</param>
         /// <param name="commandTree">The command tree.</param>
@@ -144,14 +154,12 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
-        /// <summary>
-        ///     Create a DbCommand object given a command tree.
-        /// </summary>
-        /// <param name="commandTree"> command tree for the statement </param>
-        /// <returns> a command object </returns>
-        internal virtual DbCommand CreateCommand(DbCommandTree commandTree)
+        internal virtual DbCommand CreateCommand(DbCommandTree commandTree, DbInterceptionContext interceptionContext)
         {
-            var commandDefinition = CreateCommandDefinition(commandTree);
+            DebugCheck.NotNull(commandTree);
+            DebugCheck.NotNull(interceptionContext);
+
+            var commandDefinition = CreateCommandDefinition(commandTree, interceptionContext);
             var command = commandDefinition.CreateCommand();
             return command;
         }

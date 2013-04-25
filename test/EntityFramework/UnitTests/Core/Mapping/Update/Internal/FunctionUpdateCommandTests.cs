@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -26,13 +27,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var stateEntry = new ExtractedStateEntry(
                     EntityState.Unchanged, PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
-                    new Mock<IEntityStateEntry>(MockBehavior.Strict).Object);
+                    new Mock<IEntityStateEntry>().Object);
 
                 var timeout = 43;
-                var updateTranslatorMock = new Mock<UpdateTranslator>(MockBehavior.Strict);
+                var updateTranslatorMock = new Mock<UpdateTranslator>();
                 updateTranslatorMock.Setup(m => m.CommandTimeout).Returns(timeout);
                 var entityConnection = new Mock<EntityConnection>().Object;
                 updateTranslatorMock.Setup(m => m.Connection).Returns(entityConnection);
+                updateTranslatorMock.Setup(m => m.InterceptionContext).Returns(new DbInterceptionContext());
 
                 var dbCommandMock = new Mock<DbCommand>();
 
@@ -92,12 +94,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         new[] { PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0) },
                         entityType,
                         isModified: false),
-                    new Mock<IEntityStateEntry>(MockBehavior.Strict).Object);
+                    new Mock<IEntityStateEntry>().Object);
 
-                var updateTranslatorMock = new Mock<UpdateTranslator>(MockBehavior.Strict);
+                var updateTranslatorMock = new Mock<UpdateTranslator>();
                 updateTranslatorMock.Setup(m => m.CommandTimeout).Returns(() => null);
                 var entityConnection = new Mock<EntityConnection>().Object;
                 updateTranslatorMock.Setup(m => m.Connection).Returns(entityConnection);
+                updateTranslatorMock.Setup(m => m.InterceptionContext).Returns(new DbInterceptionContext());
 
                 var dbCommandMock = new Mock<DbCommand>();
                 var stateEntries = new ReadOnlyCollection<IEntityStateEntry>(new List<IEntityStateEntry>());
@@ -164,13 +167,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var stateEntry = new ExtractedStateEntry(
                     EntityState.Unchanged, PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
                     PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0),
-                    new Mock<IEntityStateEntry>(MockBehavior.Strict).Object);
+                    new Mock<IEntityStateEntry>().Object);
 
                 var timeout = 43;
-                var updateTranslatorMock = new Mock<UpdateTranslator>(MockBehavior.Strict);
+                var updateTranslatorMock = new Mock<UpdateTranslator>();
                 updateTranslatorMock.Setup(m => m.CommandTimeout).Returns(timeout);
                 var entityConnection = new Mock<EntityConnection>().Object;
                 updateTranslatorMock.Setup(m => m.Connection).Returns(entityConnection);
+                updateTranslatorMock.Setup(m => m.InterceptionContext).Returns(new DbInterceptionContext());
 
                 var dbCommandMock = new Mock<DbCommand>();
 
@@ -231,12 +235,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         new[] { PropagatorResult.CreateSimpleValue(PropagatorFlags.NoFlags, value: 0) },
                         entityType,
                         isModified: false),
-                    new Mock<IEntityStateEntry>(MockBehavior.Strict).Object);
+                    new Mock<IEntityStateEntry>().Object);
 
-                var updateTranslatorMock = new Mock<UpdateTranslator>(MockBehavior.Strict);
+                var updateTranslatorMock = new Mock<UpdateTranslator>();
                 updateTranslatorMock.Setup(m => m.CommandTimeout).Returns(() => null);
                 var entityConnection = new Mock<EntityConnection>().Object;
                 updateTranslatorMock.Setup(m => m.Connection).Returns(entityConnection);
+                updateTranslatorMock.Setup(m => m.InterceptionContext).Returns(new DbInterceptionContext());
 
                 var dbCommandMock = new Mock<DbCommand>();
                 var stateEntries = new ReadOnlyCollection<IEntityStateEntry>(new List<IEntityStateEntry>());

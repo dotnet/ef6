@@ -3,15 +3,15 @@
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient.Internal;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Moq;
     using Xunit;
-#if !NET40
-#endif
 
     public class EntityCommandTests
     {
@@ -126,7 +126,8 @@ namespace System.Data.Entity.Core.EntityClient
                                 passedCommandbehavior = cb;
                             });
 
-                var entityCommand = new EntityCommand(entityConnection, entityCommandDefinitionMock.Object);
+                var entityCommand = new EntityCommand(
+                    entityConnection, entityCommandDefinitionMock.Object, new DbInterceptionContext());
 
                 var commandBehavior = CommandBehavior.SequentialAccess;
                 entityCommand.ExecuteReader(commandBehavior);
@@ -158,7 +159,8 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityDataReaderFactoryMock = new Mock<EntityCommand.EntityDataReaderFactory>();
 
                 var entityCommand = new EntityCommand(
-                    entityConnection, entityCommandDefinitionMock.Object, entityDataReaderFactoryMock.Object);
+                    entityConnection, entityCommandDefinitionMock.Object,
+                    new DbInterceptionContext(), entityDataReaderFactoryMock.Object);
                 var commandBehavior = CommandBehavior.SequentialAccess;
 
                 var entityDataReader = new EntityDataReader(entityCommand, storeDataReader, commandBehavior);
@@ -281,7 +283,8 @@ namespace System.Data.Entity.Core.EntityClient
                                 passedCommandbehavior = cb;
                             });
 
-                var entityCommand = new EntityCommand(entityConnection, entityCommandDefinitionMock.Object);
+                var entityCommand = new EntityCommand(
+                    entityConnection, entityCommandDefinitionMock.Object, new DbInterceptionContext());
 
                 var commandBehavior = CommandBehavior.SequentialAccess;
                 entityCommand.ExecuteReaderAsync(commandBehavior).Wait();
@@ -315,7 +318,8 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityDataReaderFactoryMock = new Mock<EntityCommand.EntityDataReaderFactory>();
 
                 var entityCommand = new EntityCommand(
-                    entityConnection, entityCommandDefinitionMock.Object, entityDataReaderFactoryMock.Object);
+                    entityConnection, entityCommandDefinitionMock.Object,
+                    new DbInterceptionContext(), entityDataReaderFactoryMock.Object);
                 var commandBehavior = CommandBehavior.SequentialAccess;
 
                 var entityDataReader = new EntityDataReader(entityCommand, storeDataReader, commandBehavior);
@@ -347,7 +351,9 @@ namespace System.Data.Entity.Core.EntityClient
                     m => m.CreateEntityDataReader(It.IsAny<EntityCommand>(), It.IsAny<DbDataReader>(), It.IsAny<CommandBehavior>())).
                     Returns(entityDataReaderMock.Object);
 
-                var entityCommand = new EntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
+                var entityCommand = new EntityCommand(
+                    entityConnection, entityCommandDefinition,
+                    new DbInterceptionContext(), entityDataReaderFactoryMock.Object);
                 entityCommand.ExecuteNonQuery();
             }
 
@@ -367,7 +373,8 @@ namespace System.Data.Entity.Core.EntityClient
                     m => m.CreateEntityDataReader(It.IsAny<EntityCommand>(), It.IsAny<DbDataReader>(), It.IsAny<CommandBehavior>())).
                     Returns(entityDataReaderMock.Object);
 
-                var entityCommand = new EntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
+                var entityCommand = new EntityCommand(entityConnection, entityCommandDefinition,
+                    new DbInterceptionContext(), entityDataReaderFactoryMock.Object);
                 entityCommand.ExecuteNonQuery();
 
                 entityDataReaderMock.Verify(m => m.NextResult(), Times.Exactly(5));
@@ -390,7 +397,9 @@ namespace System.Data.Entity.Core.EntityClient
                     m => m.CreateEntityDataReader(It.IsAny<EntityCommand>(), It.IsAny<DbDataReader>(), It.IsAny<CommandBehavior>())).
                     Returns(entityDataReaderMock.Object);
 
-                var entityCommand = new EntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
+                var entityCommand = new EntityCommand(
+                    entityConnection, entityCommandDefinition,
+                    new DbInterceptionContext(), entityDataReaderFactoryMock.Object);
                 var result = entityCommand.ExecuteNonQuery();
 
                 Assert.Equal(10, result);
@@ -417,7 +426,8 @@ namespace System.Data.Entity.Core.EntityClient
                     Returns(entityDataReaderMock.Object);
 
                 var entityCommandMock = new Mock<EntityCommand>(
-                    entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object)
+                    entityConnection, entityCommandDefinition,
+                    new DbInterceptionContext(), entityDataReaderFactoryMock.Object)
                                             {
                                                 CallBase = true
                                             };
@@ -444,7 +454,9 @@ namespace System.Data.Entity.Core.EntityClient
                     m => m.CreateEntityDataReader(It.IsAny<EntityCommand>(), It.IsAny<DbDataReader>(), It.IsAny<CommandBehavior>())).
                     Returns(entityDataReaderMock.Object);
 
-                var entityCommand = new EntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
+                var entityCommand = new EntityCommand(
+                    entityConnection, entityCommandDefinition,
+                    new DbInterceptionContext(), entityDataReaderFactoryMock.Object);
 
                 entityCommand.ExecuteNonQueryAsync().Wait();
 
@@ -469,7 +481,9 @@ namespace System.Data.Entity.Core.EntityClient
                     m => m.CreateEntityDataReader(It.IsAny<EntityCommand>(), It.IsAny<DbDataReader>(), It.IsAny<CommandBehavior>())).
                     Returns(entityDataReaderMock.Object);
 
-                var entityCommand = new EntityCommand(entityConnection, entityCommandDefinition, entityDataReaderFactoryMock.Object);
+                var entityCommand = new EntityCommand(
+                    entityConnection, entityCommandDefinition,
+                    new DbInterceptionContext(), entityDataReaderFactoryMock.Object);
                 var result = entityCommand.ExecuteNonQueryAsync().Result;
 
                 Assert.Equal(10, result);
@@ -486,5 +500,57 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
 #endif
+
+        public class InterceptionContext
+        {
+            [Fact]
+            public void InterceptionContext_can_be_set_in_constructors()
+            {
+                var interceptionContext = new DbInterceptionContext();
+
+                Assert.Same(interceptionContext, new EntityCommand(interceptionContext).InterceptionContext);
+
+                Assert.Same(
+                    interceptionContext,
+                    new EntityCommand(interceptionContext, new EntityCommand.EntityDataReaderFactory()).InterceptionContext);
+
+                var mockCommandDef = new Mock<EntityCommandDefinition>();
+                mockCommandDef.Setup(m => m.Parameters).Returns(Enumerable.Empty<EntityParameter>);
+
+                Assert.Same(
+                    interceptionContext,
+                    new EntityCommand(
+                        mockCommandDef.Object, interceptionContext,
+                        new EntityCommand.EntityDataReaderFactory()).InterceptionContext);
+
+                Assert.Same(
+                    interceptionContext,
+                    new EntityCommand("12", interceptionContext, new EntityCommand.EntityDataReaderFactory()).InterceptionContext);
+            }
+
+            [Fact]
+            public void InterceptionContext_is_non_null_even_if_not_set_in_constructor()
+            {
+                Assert.NotNull(new EntityCommand().InterceptionContext);
+
+                Assert.NotNull(new EntityCommand("37").InterceptionContext);
+
+                Assert.NotNull(new EntityCommand("That's Number Wang!", new EntityConnection()).InterceptionContext);
+
+                Assert.NotNull(
+                    new EntityCommand("2", new EntityConnection(), new EntityCommand.EntityDataReaderFactory()).InterceptionContext);
+
+                Assert.NotNull(
+                    new EntityCommand("That's Number Wang!", new EntityConnection(), new EntityTransaction()).InterceptionContext);
+
+                Assert.NotNull(
+                    new EntityCommand("376", new EntityConnection(), new EntityTransaction(), new EntityCommand.EntityDataReaderFactory())
+                        .InterceptionContext);
+
+                Assert.NotNull(
+                    new EntityCommand("That's Number Wang!", new EntityConnection(), new Mock<IDbDependencyResolver>().Object)
+                        .InterceptionContext);
+            }
+        }
     }
 }

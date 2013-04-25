@@ -3,6 +3,7 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.Common;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.SqlServer.Resources;
     using System.Diagnostics;
     using System.Globalization;
@@ -50,10 +51,13 @@ namespace System.Data.Entity.SqlServer
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = "select serverproperty('EngineEdition')";
-                using (var reader = command.ExecuteReader())
+
+                using (
+                    var reader = Interception.Dispatch.Command.Reader(
+                        command, CommandBehavior.Default, new DbInterceptionContext()))
                 {
                     reader.Read();
-                    
+
                     const int sqlAzureEngineEdition = 5;
                     return reader.GetInt32(0) == sqlAzureEngineEdition ? ServerType.Cloud : ServerType.OnPremises;
                 }

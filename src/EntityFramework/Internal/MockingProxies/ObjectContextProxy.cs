@@ -91,6 +91,8 @@ namespace System.Data.Entity.Internal.MockingProxies
             _objectContext.ContextOptions.UseLegacyPreserveChangesBehavior =
                 source._objectContext.ContextOptions.UseLegacyPreserveChangesBehavior;
             _objectContext.CommandTimeout = source._objectContext.CommandTimeout;
+
+            _objectContext.InterceptionContext = source._objectContext.InterceptionContext.WithObjectContext(_objectContext);
         }
     }
 }

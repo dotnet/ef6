@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
@@ -21,7 +22,7 @@ namespace System.Data.Entity.Core.EntityClient
 
     public class EntityConnectionTests
     {
-        public class InterceptingOpen
+        public class InterceptingOpen : TestBase
         {
             [Fact]
             public void Open_should_dispatch_and_optionally_open_underlying_connection()
@@ -30,7 +31,9 @@ namespace System.Data.Entity.Core.EntityClient
 
                 mockConnection.SetupGet(m => m.DataSource).Returns("Foo");
 
-                var mockInterception = new Mock<Interception>();
+                var dispatcher = new EntityConnectionDispatcher();
+                var mockConnectionInterceptor = new Mock<IEntityConnectionInterceptor>();
+                dispatcher.InternalDispatcher.Add(mockConnectionInterceptor.Object);
 
                 var mockStoreItemCollection = new Mock<StoreItemCollection>();
 
@@ -50,9 +53,16 @@ namespace System.Data.Entity.Core.EntityClient
                         mockConnection.Object,
                         true,
                         true,
-                        mockInterception.Object);
+                        dispatcher);
 
-                mockInterception.Setup(m => m.Dispatch(connection)).Returns(false);
+                var objectContext = new ObjectContext();
+                connection.AssociateContext(objectContext);
+
+                mockConnectionInterceptor
+                    .Setup(m => m.ConnectionOpening(connection, It.IsAny<DbInterceptionContext>()))
+                    .Callback<EntityConnection, DbInterceptionContext>(
+                        (_, c) => Assert.Equal(new[] { objectContext }, c.ObjectContexts))
+                    .Returns(false);
 
                 connection.Open();
 
@@ -60,7 +70,11 @@ namespace System.Data.Entity.Core.EntityClient
 
                 Assert.Equal(ConnectionState.Open, connection.State);
 
-                mockInterception.Setup(m => m.Dispatch(connection)).Returns(true);
+                mockConnectionInterceptor
+                    .Setup(m => m.ConnectionOpening(connection, It.IsAny<DbInterceptionContext>()))
+                    .Callback<EntityConnection, DbInterceptionContext>(
+                        (_, c) => Assert.Equal(new[] { objectContext }, c.ObjectContexts))
+                    .Returns(true);
 
                 mockConnection
                     .Setup(m => m.Open())
@@ -1196,6 +1210,68 @@ namespace System.Data.Entity.Core.EntityClient
             metadataWorkspaceMock.Setup(m => m.IsItemCollectionAlreadyRegistered(DataSpace.CSSpace)).Returns(true);
 
             return metadataWorkspaceMock;
+        }
+    }
+
+    public class AssociatedContexts
+    {
+        [Fact]
+        public void AssociatedContexts_list_is_empty_by_default()
+        {
+            Assert.Empty(new EntityConnection().AssociatedContexts);
+        }
+
+        [Fact]
+        public void Contexts_can_be_associated_with_an_EntityConnection()
+        {
+            var connection = new EntityConnection();
+
+            var contexts = new[]
+                {
+                    new ObjectContext(),
+                    new ObjectContext(),
+                    new ObjectContext(),
+                };
+
+            connection.AssociateContext(contexts[0]);
+
+            Assert.Equal(new[] { contexts[0] }, connection.AssociatedContexts);
+
+            connection.AssociateContext(contexts[1]);
+            connection.AssociateContext(contexts[2]);
+
+            foreach (var context in contexts)
+            {
+                Assert.Contains(context, connection.AssociatedContexts);
+            }
+        }
+
+        [Fact]
+        public void A_disposed_ObjectContext_is_unassociated_when_a_new_ObjectContext_is_associated()
+        {
+            var connection = new EntityConnection();
+            var context1 = new ObjectContext();
+
+            connection.AssociateContext(context1);
+            context1.Dispose();
+
+            var context2 = new ObjectContext();
+
+            connection.AssociateContext(context2);
+
+            Assert.Equal(new[] { context2 }, connection.AssociatedContexts);
+        }
+
+        [Fact]
+        public void Associating_the_same_ObjectContext_twice_does_not_result_in_duplicate_entries()
+        {
+            var connection = new EntityConnection();
+            var context = new ObjectContext();
+
+            connection.AssociateContext(context);
+            connection.AssociateContext(context);
+
+            Assert.Equal(new[] { context }, connection.AssociatedContexts);
         }
     }
 }

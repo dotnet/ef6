@@ -4,12 +4,14 @@ namespace System.Data.Entity.Core.Objects
 {
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.EntityClient.Internal;
 
     public class ObjectContextForMock : ObjectContext
     {
         private readonly EntityConnection _connection;
 
-        internal ObjectContextForMock(EntityConnection connection)
+        internal ObjectContextForMock(EntityConnection connection, IEntityAdapter entityAdapter = null)
+            : base(null, null, null, entityAdapter)
         {
             _connection = connection;
         }

@@ -152,6 +152,9 @@
     <Compile Include="CodeFirst\NonPublicPropertyTests.cs" />
     <Compile Include="Migrations\CreateStoredProcedureScenarios.cs" />
     <Compile Include="Migrations\ModificationFunctionsScenarios.cs" />
+    <Compile Include="Interception\BlogContext.cs" />
+    <Compile Include="Interception\CommandInterceptionTests.cs" />
+    <Compile Include="Interception\CommandTreeInterceptionTests.cs" />
     <Compile Include="Migrations\InitializerScenarios.cs" />
     <Compile Include="Objects\TransactionsTests.cs" />
     <Compile Include="Migrations\SpatialScenarios.cs" />

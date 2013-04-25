@@ -6,6 +6,8 @@ namespace System.Data.Entity.Internal
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -61,7 +63,8 @@ namespace System.Data.Entity.Internal
                 {
                     using (var clonedObjectContext = internalContext.CreateObjectContextForDdlOps())
                     {
-                        databaseTables = GetDatabaseTables(clonedObjectContext.Connection, provider).ToList();
+                        databaseTables = GetDatabaseTables(
+                            clonedObjectContext.ObjectContext, clonedObjectContext.Connection, provider).ToList();
                     }
                 }
 
@@ -108,9 +111,11 @@ namespace System.Data.Entity.Internal
         }
 
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        private static IEnumerable<Tuple<string, string>> GetDatabaseTables(DbConnection connection, IPseudoProvider provider)
+        private static IEnumerable<Tuple<string, string>> GetDatabaseTables(
+            ObjectContext context, DbConnection connection, IPseudoProvider provider)
         {
-            using (var command = connection.CreateCommand())
+            using (var command = new InterceptableDbCommand(
+                connection.CreateCommand(), context.InterceptionContext))
             {
                 command.CommandText = provider.StoreSchemaTablesQuery;
 

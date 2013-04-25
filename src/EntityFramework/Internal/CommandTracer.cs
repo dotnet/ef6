@@ -5,31 +5,32 @@ namespace System.Data.Entity.Internal
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
 
-    internal sealed class CommandTracer : IDisposable, IDbInterceptor
+    internal sealed class CommandTracer : ICancelableDbCommandInterceptor, IDbCommandTreeInterceptor, IEntityConnectionInterceptor, IDisposable
     {
         private readonly List<DbCommand> _commands = new List<DbCommand>();
         private readonly List<DbCommandTree> _commandTrees = new List<DbCommandTree>();
 
         private readonly DbContext _context;
-        private readonly Interception _interception;
+        private readonly Dispatchers _dispatchers;
 
         public CommandTracer(DbContext context)
-            : this(context, Interception.Instance)
+            : this(context, Interception.Dispatch)
         {
         }
 
-        internal CommandTracer(DbContext context, Interception interception)
+        internal CommandTracer(DbContext context, Dispatchers dispatchers)
         {
-            Check.NotNull(context, "context");
-            DebugCheck.NotNull(interception);
+            DebugCheck.NotNull(context);
+            DebugCheck.NotNull(dispatchers);
 
             _context = context;
-            _interception = interception;
+            _dispatchers = dispatchers;
 
-            _interception.Add(_context, this);
+            _dispatchers.AddInterceptor(this);
         }
 
         public IEnumerable<DbCommand> DbCommands
@@ -42,28 +43,36 @@ namespace System.Data.Entity.Internal
             get { return _commandTrees; }
         }
 
-        bool IDbInterceptor.CommandExecuting(DbCommand command)
+        public bool CommandExecuting(DbCommand command, DbInterceptionContext interceptionContext)
         {
-            _commands.Add(command);
+            if (interceptionContext.DbContexts.Contains(_context, ReferenceEquals))
+            {
+                _commands.Add(command);
 
-            return false; // cancel execution
+                return false; // cancel execution
+            }
+
+            return true;
         }
 
-        DbCommandTree IDbInterceptor.CommandTreeCreated(DbCommandTree commandTree)
+        public DbCommandTree TreeCreated(DbCommandTree commandTree, DbInterceptionContext interceptionContext)
         {
-            _commandTrees.Add(commandTree);
+            if (interceptionContext.DbContexts.Contains(_context, ReferenceEquals))
+            {
+                _commandTrees.Add(commandTree);
+            }
 
             return commandTree;
         }
 
-        bool IDbInterceptor.ConnectionOpening(DbConnection connection)
+        public bool ConnectionOpening(EntityConnection connection, DbInterceptionContext interceptionContext)
         {
-            return false; // don't open
+            return !interceptionContext.DbContexts.Contains(_context, ReferenceEquals);
         }
 
         void IDisposable.Dispose()
         {
-            _interception.Remove(_context, this);
+            _dispatchers.RemoveInterceptor(this);
         }
     }
 }

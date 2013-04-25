@@ -850,18 +850,20 @@ namespace System.Data.Entity.SqlServer
                 // invalid connection may now be valid.
                 SqlConnection.ClearPool(sqlConnection);
 
+                var interceptionContext = new DbInterceptionContext();
+
                 var setDatabaseOptionsScript = SqlDdlBuilder.SetDatabaseOptionsScript(sqlVersion, databaseName);
                 if (!String.IsNullOrEmpty(setDatabaseOptionsScript))
                 {
                     UsingMasterConnection(
                         sqlConnection, conn =>
-                                           {
-                                               // set database options
-                                               using (var command = CreateCommand(conn, setDatabaseOptionsScript, commandTimeout))
-                                               {
-                                                   command.ExecuteNonQuery();
-                                               }
-                                           });
+                            {
+                                // set database options
+                                using (var command = CreateCommand(conn, setDatabaseOptionsScript, commandTimeout))
+                                {
+                                    Interception.Dispatch.Command.NonQuery(command, interceptionContext);
+                                }
+                            });
                 }
 
                 var createObjectsScript = CreateObjectsScript(sqlVersion, storeItemCollection);
@@ -869,13 +871,13 @@ namespace System.Data.Entity.SqlServer
                 {
                     UsingConnection(
                         sqlConnection, conn =>
-                                           {
-                                               // create database objects
-                                               using (var command = CreateCommand(conn, createObjectsScript, commandTimeout))
-                                               {
-                                                   command.ExecuteNonQuery();
-                                               }
-                                           });
+                            {
+                                // create database objects
+                                using (var command = CreateCommand(conn, createObjectsScript, commandTimeout))
+                                {
+                                    Interception.Dispatch.Command.NonQuery(command, interceptionContext);
+                                }
+                            });
                 }
             }
             catch (Exception e)
@@ -988,14 +990,14 @@ namespace System.Data.Entity.SqlServer
             SqlVersion sqlVersion = 0;
             UsingMasterConnection(
                 sqlConnection, conn =>
-                                   {
-                                       // create database
-                                       using (var command = CreateCommand(conn, createDatabaseScript, commandTimeout))
-                                       {
-                                           command.ExecuteNonQuery();
-                                       }
-                                       sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                                   });
+                    {
+                        // create database
+                        using (var command = CreateCommand(conn, createDatabaseScript, commandTimeout))
+                        {
+                            Interception.Dispatch.Command.NonQuery(command, new DbInterceptionContext());
+                        }
+                        sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                    });
 
             Debug.Assert(sqlVersion != 0);
             return sqlVersion;
@@ -1055,16 +1057,18 @@ namespace System.Data.Entity.SqlServer
                     var databaseDoesNotExistInSysTables = false;
                     UsingMasterConnection(
                         sqlConnection, conn =>
-                                           {
-                                               var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                                               var databaseExistsScript = SqlDdlBuilder.CreateCountDatabasesBasedOnFileNameScript(
-                                                   fileName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
-                                               using (var command = CreateCommand(conn, databaseExistsScript, commandTimeout))
-                                               {
-                                                   var rowsAffected = (int)command.ExecuteScalar();
-                                                   databaseDoesNotExistInSysTables = (rowsAffected == 0);
-                                               }
-                                           });
+                            {
+                                var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                                var databaseExistsScript = SqlDdlBuilder.CreateCountDatabasesBasedOnFileNameScript(
+                                    fileName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
+                                using (var command = CreateCommand(conn, databaseExistsScript, commandTimeout))
+                                {
+                                    var rowsAffected = (int)Interception.Dispatch.Command.Scalar(
+                                        command, new DbInterceptionContext());
+
+                                    databaseDoesNotExistInSysTables = (rowsAffected == 0);
+                                }
+                            });
                     if (databaseDoesNotExistInSysTables)
                     {
                         return false;
@@ -1082,16 +1086,18 @@ namespace System.Data.Entity.SqlServer
             var databaseExistsInSysTables = false;
             UsingMasterConnection(
                 sqlConnection, conn =>
-                                   {
-                                       var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                                       var databaseExistsScript = SqlDdlBuilder.CreateDatabaseExistsScript(
-                                           databaseName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
-                                       using (var command = CreateCommand(conn, databaseExistsScript, commandTimeout))
-                                       {
-                                           var rowsAffected = (int)command.ExecuteScalar();
-                                           databaseExistsInSysTables = (rowsAffected > 0);
-                                       }
-                                   });
+                    {
+                        var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                        var databaseExistsScript = SqlDdlBuilder.CreateDatabaseExistsScript(
+                            databaseName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
+                        using (var command = CreateCommand(conn, databaseExistsScript, commandTimeout))
+                        {
+                            var rowsAffected = (int)Interception.Dispatch.Command.Scalar(
+                                command, new DbInterceptionContext());
+                         
+                            databaseExistsInSysTables = (rowsAffected > 0);
+                        }
+                    });
             return databaseExistsInSysTables;
         }
 
@@ -1133,20 +1139,23 @@ namespace System.Data.Entity.SqlServer
                 var databaseNames = new List<string>();
                 UsingMasterConnection(
                     sqlConnection, conn =>
-                                       {
-                                           var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
-                                           var getDatabaseNamesScript =
-                                               SqlDdlBuilder.CreateGetDatabaseNamesBasedOnFileNameScript(
-                                                   fullFileName, sqlVersion == SqlVersion.Sql8);
-                                           var command = CreateCommand(conn, getDatabaseNamesScript, commandTimeout);
-                                           using (var reader = command.ExecuteReader())
-                                           {
-                                               while (reader.Read())
-                                               {
-                                                   databaseNames.Add(reader.GetString(0));
-                                               }
-                                           }
-                                       });
+                        {
+                            var sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
+                            var getDatabaseNamesScript =
+                                SqlDdlBuilder.CreateGetDatabaseNamesBasedOnFileNameScript(
+                                    fullFileName, sqlVersion == SqlVersion.Sql8);
+                            var command = CreateCommand(conn, getDatabaseNamesScript, commandTimeout);
+
+                            using (
+                                var reader = Interception.Dispatch.Command.Reader(
+                                    command, CommandBehavior.Default, new DbInterceptionContext()))
+                            {
+                                while (reader.Read())
+                                {
+                                    databaseNames.Add(reader.GetString(0));
+                                }
+                            }
+                        });
                 if (databaseNames.Count > 0)
                 {
                     foreach (var databaseName in databaseNames)
@@ -1177,12 +1186,12 @@ namespace System.Data.Entity.SqlServer
             {
                 UsingMasterConnection(
                     sqlConnection, conn =>
-                                       {
-                                           using (var command = CreateCommand(conn, dropDatabaseScript, commandTimeout))
-                                           {
-                                               command.ExecuteNonQuery();
-                                           }
-                                       });
+                    {
+                        using (var command = CreateCommand(conn, dropDatabaseScript, commandTimeout))
+                        {
+                            Interception.Dispatch.Command.NonQuery(command, new DbInterceptionContext());
+                        }
+                    });
             }
             catch (SqlException sqlException)
             {

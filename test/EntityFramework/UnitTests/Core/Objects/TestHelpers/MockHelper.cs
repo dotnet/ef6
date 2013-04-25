@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
     using System.Data.Entity.Core.Objects.Internal;
@@ -100,21 +101,15 @@ namespace System.Data.Entity.Core.Objects
                 recordStateFactories: recordStateFactories);
         }
 
-        internal static ObjectContextForMock CreateMockObjectContext<TEntity>()
+        internal static ObjectContextForMock CreateMockObjectContext<TEntity>(IEntityAdapter entityAdapter = null)
         {
-            var providerFactoryMock = new Mock<DbProviderFactoryForMock>
-                                          {
-                                              CallBase = true
-                                          };
-
             var dbConnectionMock = new Mock<DbConnection>();
             dbConnectionMock.Setup(m => m.DataSource).Returns("fakeDb");
             var entityConnectionMock = new Mock<EntityConnection>();
-            entityConnectionMock.SetupGet(m => m.StoreProviderFactory).Returns(providerFactoryMock.Object);
             entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
             var entityConnection = entityConnectionMock.Object;
 
-            var objectContextMock = new Mock<ObjectContextForMock>(entityConnection)
+            var objectContextMock = new Mock<ObjectContextForMock>(entityConnection, entityAdapter)
                                         {
                                             CallBase = true
                                         };

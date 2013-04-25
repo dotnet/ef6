@@ -28,6 +28,13 @@ namespace System.Data.Entity.Core.Objects
 
         #region Constructor
 
+        /// <summary>
+        /// For testing.
+        /// </summary>
+        internal ObjectStateEntry()
+        {
+        }
+
         // ObjectStateEntry will not be detached and creation will be handled from ObjectStateManager
         internal ObjectStateEntry(ObjectStateManager cache, EntitySet entitySet, EntityState state)
         {

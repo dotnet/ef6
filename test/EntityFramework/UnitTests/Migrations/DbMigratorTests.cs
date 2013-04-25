@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Design;
@@ -14,6 +15,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.SqlClient;
     using System.Linq;
     using Moq;
+    using Moq.Protected;
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
@@ -262,7 +264,8 @@ namespace System.Data.Entity.Migrations
         [MigrationsTheory]
         public void Ctor_should_validate_preconditions()
         {
-            Assert.Equal("configuration", Assert.Throws<ArgumentNullException>(() => new DbMigrator(null)).ParamName);
+            Assert.Equal("configuration", Assert.Throws<ArgumentNullException>(
+                () => new DbMigrator((DbMigrationsConfiguration)null)).ParamName);
         }
 
         [MigrationsTheory]
@@ -469,6 +472,93 @@ namespace System.Data.Entity.Migrations
             }
 
             executionStrategyMock.Verify(m => m.Execute(It.IsAny<Action>()), Times.Once());
+        }
+    }
+
+    public class ExecuteSql : TestBase
+    {
+        [Fact]
+        public void ExecuteSql_dispatches_commands_to_interceptors()
+        {
+            var mockCommand = new Mock<DbCommand>();
+            mockCommand.Setup(m => m.ExecuteNonQuery()).Returns(2013);
+
+            var mockConnection = new Mock<DbConnection>();
+            mockConnection.Protected().Setup<DbCommand>("CreateDbCommand").Returns(mockCommand.Object);
+
+            var mockTransaction = new Mock<DbTransaction>();
+            mockTransaction.Protected().Setup<DbConnection>("DbConnection").Returns(mockConnection.Object);
+
+            var migrator = new DbMigrator();
+            var statement = new MigrationStatement
+                {
+                    Sql = "Some Sql"
+                };
+
+            var mockInterceptor = new Mock<DbInterceptor> { CallBase = true };
+            Interception.AddInterceptor(mockInterceptor.Object);
+
+            try
+            {
+                migrator.ExecuteSql(mockTransaction.Object, statement);
+            }
+            finally
+            {
+                Interception.RemoveInterceptor(mockInterceptor.Object);
+            }
+
+            mockInterceptor.Verify(m => m.NonQueryExecuting(mockCommand.Object, It.IsAny<DbInterceptionContext>()));
+            mockInterceptor.Verify(m => m.NonQueryExecuted(mockCommand.Object, 2013, It.IsAny<DbInterceptionContext>()));
+        }
+
+        [Fact]
+        public void ExecuteSql_with_transactions_suppressed_dispatches_commands_to_interceptors()
+        {
+            var mockCommand = new Mock<DbCommand>();
+            mockCommand.Setup(m => m.ExecuteNonQuery()).Returns(2013);
+
+            var mockConnection = new Mock<DbConnection>();
+            mockConnection.Protected().Setup<DbCommand>("CreateDbCommand").Returns(mockCommand.Object);
+
+            var mockTransaction = new Mock<DbTransaction>();
+            mockTransaction.Protected().Setup<DbConnection>("DbConnection").Returns(mockConnection.Object);
+
+            var mockFactory = new Mock<DbProviderFactory>();
+            mockFactory.Setup(m => m.CreateConnection()).Returns(mockConnection.Object);
+
+            var objectContext = new ObjectContext();
+            var mockInternalContext = new Mock<InternalContextForMock>();
+            mockInternalContext.Setup(m => m.ObjectContext).Returns(objectContext);
+            var context = mockInternalContext.Object.Owner;
+            objectContext.InterceptionContext = objectContext.InterceptionContext.WithDbContext(context);
+
+            var migrator = new DbMigrator(context, mockFactory.Object);
+            var statement = new MigrationStatement
+            {
+                Sql = "Some Sql",
+                SuppressTransaction = true
+            };
+
+            var mockInterceptor = new Mock<DbInterceptor> { CallBase = true };
+            Interception.AddInterceptor(mockInterceptor.Object);
+
+            try
+            {
+                migrator.ExecuteSql(mockTransaction.Object, statement);
+            }
+            finally
+            {
+                Interception.RemoveInterceptor(mockInterceptor.Object);
+            }
+
+            mockInterceptor.Verify(m => m.NonQueryExecuting(
+                mockCommand.Object, 
+                It.Is<DbInterceptionContext>(c => c.DbContexts.Contains(context))));
+            
+            mockInterceptor.Verify(m => m.NonQueryExecuted(
+                mockCommand.Object, 
+                2013,
+                It.Is<DbInterceptionContext>(c => c.DbContexts.Contains(context))));
         }
     }
 }

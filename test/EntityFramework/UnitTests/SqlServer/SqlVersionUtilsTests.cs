@@ -2,8 +2,11 @@
 
 namespace System.Data.Entity.SqlServer
 {
+    using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.SqlServer.Resources;
+    using System.Linq;
     using Moq;
     using Moq.Protected;
     using Xunit;
@@ -133,7 +136,39 @@ namespace System.Data.Entity.SqlServer
             public class RealDatabase : DbContext 
             {
             }
-        }
 
+            [Fact]
+            public void GetServerType_dispatches_commands_to_interceptors()
+            {
+                var connection = CreateConnectionForAzureQuery(5).Object;
+
+                var interceptor = new TestReaderInterceptor();
+                Interception.AddInterceptor(interceptor);
+                try
+                {
+                    SqlVersionUtils.GetServerType(connection);
+                }
+                finally
+                {
+                    Interception.RemoveInterceptor(interceptor);
+                }
+
+                Assert.Equal(1, interceptor.Commands.Count);
+                Assert.Same(connection.CreateCommand(), interceptor.Commands.Single());
+            }
+
+            public class TestReaderInterceptor : DbInterceptor
+            {
+                public readonly List<DbCommand> Commands = new List<DbCommand>();
+
+                public override void ReaderExecuting(DbCommand command, CommandBehavior behavior, DbInterceptionContext interceptionContext)
+                {
+                    Commands.Add(command);
+
+                    Assert.Empty(interceptionContext.DbContexts);
+                    Assert.Empty(interceptionContext.ObjectContexts);
+                }
+            }
+        }
     }
 }

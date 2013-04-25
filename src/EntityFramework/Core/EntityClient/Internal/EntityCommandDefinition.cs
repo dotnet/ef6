@@ -15,6 +15,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Data.Entity.Core.Query.ResultAssembly;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -62,6 +63,13 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         #endregion
 
         #region constructors
+
+        /// <summary>
+        /// For testing.
+        /// </summary>
+        internal EntityCommandDefinition()
+        {
+        }
 
         /// <summary>
         ///     Creates a new instance of <see cref="EntityCommandDefinition" />.
@@ -346,7 +354,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <returns> </returns>
         public override DbCommand CreateCommand()
         {
-            return new EntityCommand(this);
+            return new EntityCommand(this, new DbInterceptionContext());
         }
 
         #endregion
@@ -601,7 +609,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             var entityTransaction = entityCommand.ValidateAndGetEntityTransaction();
             var definition = _mappedCommandDefinitions[0];
 
-            var storeProviderCommand = new InterceptableDbCommand(definition.CreateCommand());
+            var storeProviderCommand = new InterceptableDbCommand(definition.CreateCommand(), entityCommand.InterceptionContext);
 
             CommandHelper.SetStoreProviderCommandState(entityCommand, entityTransaction, storeProviderCommand);
 

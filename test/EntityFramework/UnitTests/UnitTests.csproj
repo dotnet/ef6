@@ -254,7 +254,6 @@
     <Compile Include="Core\Objects\ObjectResultTests.cs" />
     <Compile Include="Core\Objects\ObjectViewTests.cs" />
     <Compile Include="Core\Objects\ProxyDataContractResolverTests.cs" />
-    <Compile Include="Core\Objects\TestHelpers\DbProviderFactoryForMock.cs" />
     <Compile Include="Core\Objects\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\Query\InternalTrees\VarVecTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderFactoryTests.cs" />
@@ -280,6 +279,11 @@
     <Compile Include="Edm\Validation\EdmModelSyntacticValidationRulesTests.cs" />
     <Compile Include="Edm\Validation\EdmModelValidationContextTests.cs" />
     <Compile Include="Edm\Validation\DataModelValidatorTests.cs" />
+    <Compile Include="Infrastructure\CancelableDbCommandDispatcherTests.cs" />
+    <Compile Include="Infrastructure\DbCommandDispatcherTests.cs" />
+    <Compile Include="Infrastructure\DbCommandTreeDispatcherTests.cs" />
+    <Compile Include="Infrastructure\DbInterceptionContextTests.cs" />
+    <Compile Include="Infrastructure\DbInterceptorTests.cs" />
     <Compile Include="Infrastructure\DbLocalViewTests.cs" />
     <Compile Include="Infrastructure\DbProviderInfoTests.cs" />
     <Compile Include="Infrastructure\DbQueryTests.cs" />
@@ -290,8 +294,11 @@
     <Compile Include="Infrastructure\DbUpdateExceptionTests.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryServiceTests.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenServiceTests.cs" />
+    <Compile Include="Infrastructure\DispatchersTests.cs" />
+    <Compile Include="Infrastructure\EntityConnectionDispatcherTests.cs" />
     <Compile Include="Infrastructure\ExecutionStrategyBaseTests.cs" />
     <Compile Include="Infrastructure\InterceptionTests.cs" />
+    <Compile Include="Infrastructure\InternalDispatcherTests.cs" />
     <Compile Include="Infrastructure\Net40DefaultDbProviderFactoryServiceTests.cs" />
     <Compile Include="Infrastructure\NonRetryingExecutionStrategyTests.cs" />
     <Compile Include="Infrastructure\ModelNamespaceConventionTests.cs" />

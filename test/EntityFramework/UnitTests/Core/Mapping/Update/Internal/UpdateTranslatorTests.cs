@@ -4,9 +4,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.SqlClient;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -105,6 +109,24 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Assert.Equal(Strings.Update_GeneralExecutionException, exception.Message);
                 Assert.Same(dbException, exception.InnerException);
                 Assert.Same(objectStateEntryMock.Object, exception.StateEntries.Single());
+            }
+        }
+
+        public class InterceptionContext
+        {
+            [Fact]
+            public void InterceptionContext_contains_context()
+            {
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(new ObjectStateManager());
+
+                var mockConnection = new Mock<EntityConnection>();
+                mockConnection.Setup(m => m.StoreProviderFactory).Returns(SqlClientFactory.Instance);
+
+                var entityAdapter = new EntityAdapter(mockContext.Object);
+                entityAdapter.Connection = mockConnection.Object;
+                
+                Assert.Equal(new[] { mockContext.Object }, new UpdateTranslator(entityAdapter).InterceptionContext.ObjectContexts);
             }
         }
 

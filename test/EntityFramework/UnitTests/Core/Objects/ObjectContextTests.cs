@@ -15,6 +15,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
@@ -44,7 +45,7 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Parameterless_SaveChanges_calls_SaveOption_flags_to_DetectChangesBeforeSave_and_AcceptAllChangesAfterSave()
             {
-                var objectContextMock = new Mock<ObjectContextForMock>(null /*entityConnection*/);
+                var objectContextMock = new Mock<ObjectContextForMock>(null /*entityConnection*/, null /*entityAdapter*/);
 
                 objectContextMock.Object.SaveChanges();
 
@@ -90,16 +91,15 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Shortcircuits_if_no_state_changes()
             {
-                var mockObjectContext = Mock.Get(MockHelper.CreateMockObjectContext<DbDataRecord>());
+                var entityAdapterMock = new Mock<IEntityAdapter>();
+                var mockObjectContext = Mock.Get(MockHelper.CreateMockObjectContext<DbDataRecord>(entityAdapterMock.Object));
                 mockObjectContext.CallBase = true;
 
-                var mockServiceProvider = (IServiceProvider)((EntityConnection)mockObjectContext.Object.Connection).StoreProviderFactory;
-                var entityAdapterMock = Mock.Get((IEntityAdapter)mockServiceProvider.GetService(typeof(IEntityAdapter)));
-                entityAdapterMock.Setup(m => m.Update(It.IsAny<IEntityStateManager>(), true)).Verifiable();
+                entityAdapterMock.Setup(m => m.Update(true)).Verifiable();
 
                 var entriesAffected = mockObjectContext.Object.SaveChanges(SaveOptions.None);
 
-                entityAdapterMock.Verify(m => m.Update(It.IsAny<IEntityStateManager>(), true), Times.Never());
+                entityAdapterMock.Verify(m => m.Update(true), Times.Never());
                 Assert.Equal(0, entriesAffected);
             }
 
@@ -402,7 +402,7 @@ namespace System.Data.Entity.Core.Objects
                 var connectionMock = new Mock<EntityConnection>();
                 connectionMock.Setup(m => m.State).Returns(ConnectionState.Open);
                 connectionMock.Setup(m => m.EnlistTransaction(It.IsAny<Transaction>())).Throws(new NotImplementedException());
-                var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object)
+                var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object, null /*entityAdapter*/)
                     {
                         CallBase = true
                     };
@@ -428,7 +428,7 @@ namespace System.Data.Entity.Core.Objects
                         });
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => state);
 
-                var objectContextMock = new Mock<ObjectContextForMock>(entityConnectionMock.Object)
+                var objectContextMock = new Mock<ObjectContextForMock>(entityConnectionMock.Object, null /*entityAdapter*/)
                     {
                         CallBase = true
                     };
@@ -1471,7 +1471,7 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void ObjectContext_disposes_underlying_EntityConnection_if_contextOwnConnection_flag_is_set()
             {
-                var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true, null);
+                var entityConnectionMock = new Mock<EntityConnection>(null, null, true, true, null);
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(new Mock<MetadataWorkspace>().Object);
                 entityConnectionMock.Protected().Setup("Dispose", true).Verifiable();
@@ -1486,7 +1486,7 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void ObjectContext_does_not_dispose_underlying_EntityConnection_if_contextOwnConnection_flag_is_not_set()
             {
-                var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true, null);
+                var entityConnectionMock = new Mock<EntityConnection>(null, null, true, true, null);
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(new Mock<MetadataWorkspace>().Object);
                 entityConnectionMock.Protected().Setup("Dispose", false).Verifiable();
@@ -1500,7 +1500,7 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void ObjectContext_does_not_dispose_underlying_EntityConnection_if_contextOwnConnection_flag_is_not_specified()
             {
-                var entityConnectionMock = new Mock<EntityConnection>(MockBehavior.Strict, null, null, true, true, null);
+                var entityConnectionMock = new Mock<EntityConnection>(null, null, true, true, null);
                 entityConnectionMock.SetupGet(m => m.ConnectionString).Returns("Fake connection string");
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(new Mock<MetadataWorkspace>().Object);
                 entityConnectionMock.Protected().Setup("Dispose", true).Verifiable();
@@ -1512,6 +1512,16 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
+        public class InterceptionContext
+        {
+            [Fact]
+            public void InterceptionContext_has_ObjectContext_by_default()
+            {
+                var objectContext = new ObjectContext();
+                Assert.Equal(new [] { objectContext }, objectContext.InterceptionContext.ObjectContexts);
+            }
+        }
+
 #if !NET40
 
         public class SaveChangesAsync : TestBase
@@ -1519,7 +1529,7 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Parameterless_SaveChangesAsync_calls_SaveOption_flags_to_DetectChangesBeforeSave_and_AcceptAllChangesAfterSave()
             {
-                var objectContextMock = new Mock<ObjectContextForMock>(null /*entityConnection*/);
+                var objectContextMock = new Mock<ObjectContextForMock>(null /*entityConnection*/, null /*entityAdapter*/);
                 objectContextMock.Setup(m => m.SaveChangesAsync(It.IsAny<SaveOptions>(), It.IsAny<CancellationToken>()))
                                  .Returns(Task.FromResult(0));
 
@@ -1571,16 +1581,15 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Shortcircuits_if_no_state_changes()
             {
-                var mockObjectContext = Mock.Get(MockHelper.CreateMockObjectContext<DbDataRecord>());
+                var entityAdapterMock = new Mock<IEntityAdapter>();
+                var mockObjectContext = Mock.Get(MockHelper.CreateMockObjectContext<DbDataRecord>(entityAdapterMock.Object));
                 mockObjectContext.CallBase = true;
 
-                var mockServiceProvider = (IServiceProvider)((EntityConnection)mockObjectContext.Object.Connection).StoreProviderFactory;
-                var entityAdapterMock = Mock.Get((IEntityAdapter)mockServiceProvider.GetService(typeof(IEntityAdapter)));
-                entityAdapterMock.Setup(m => m.UpdateAsync(It.IsAny<IEntityStateManager>(), It.IsAny<CancellationToken>())).Verifiable();
+                entityAdapterMock.Setup(m => m.UpdateAsync(It.IsAny<CancellationToken>())).Verifiable();
 
                 var entriesAffected = mockObjectContext.Object.SaveChangesAsync(SaveOptions.None, CancellationToken.None).Result;
 
-                entityAdapterMock.Verify(m => m.UpdateAsync(It.IsAny<IEntityStateManager>(), It.IsAny<CancellationToken>()), Times.Never());
+                entityAdapterMock.Verify(m => m.UpdateAsync(It.IsAny<CancellationToken>()), Times.Never());
                 Assert.Equal(0, entriesAffected);
             }
 
@@ -1923,7 +1932,7 @@ namespace System.Data.Entity.Core.Objects
                 var connectionMock = new Mock<EntityConnection>();
                 connectionMock.Setup(m => m.State).Returns(ConnectionState.Open);
                 connectionMock.Setup(m => m.EnlistTransaction(It.IsAny<Transaction>())).Throws(new NotImplementedException());
-                var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object)
+                var objectContextMock = new Mock<ObjectContextForMock>(connectionMock.Object, null /*entityAdapter*/)
                     {
                         CallBase = true
                     };
@@ -1951,7 +1960,7 @@ namespace System.Data.Entity.Core.Objects
                         });
                 entityConnectionMock.SetupGet(m => m.State).Returns(() => state);
 
-                var objectContextMock = new Mock<ObjectContextForMock>(entityConnectionMock.Object)
+                var objectContextMock = new Mock<ObjectContextForMock>(entityConnectionMock.Object, null /*entityAdapter*/)
                     {
                         CallBase = true
                     };

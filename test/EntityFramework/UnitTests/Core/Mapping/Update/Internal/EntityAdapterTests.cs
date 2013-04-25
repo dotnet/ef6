@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Threading;
     using System.Threading.Tasks;
@@ -18,32 +19,35 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             [Fact]
             public void Returns_0_if_no_changes()
             {
-                var entityAdapter = new EntityAdapter();
-                var entityStateManagerMock = new Mock<IEntityStateManager>();
+                var entityStateManagerMock = new Mock<ObjectStateManager>();
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
 
-                var cacheEntriesAffected = entityAdapter.Update(entityStateManagerMock.Object);
+                var entityAdapter = new EntityAdapter(mockContext.Object);
 
-                Assert.Equal(0, cacheEntriesAffected);
+                Assert.Equal(0, entityAdapter.Update());
             }
 
             [Fact]
             public void Returns_number_of_enties_affected()
             {
+                var entityStateManagerMock = new Mock<ObjectStateManager>();
+                var entityStateEntryMock = new Mock<ObjectStateEntry>();
+                entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
+                    .Returns(new[] { entityStateEntryMock.Object });
+
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
+
                 var mockUpdateTranslator = new Mock<UpdateTranslator>(MockBehavior.Strict);
                 mockUpdateTranslator.Setup(m => m.Update()).Returns(1);
 
-                var updateTranslatorFactory = new Func<IEntityStateManager, EntityAdapter, UpdateTranslator>(
-                    (stateManager, adapter) => mockUpdateTranslator.Object);
+                var updateTranslatorFactory = new Func<EntityAdapter, UpdateTranslator>(adapter => mockUpdateTranslator.Object);
 
-                var entityAdapter = new Mock<EntityAdapter>(updateTranslatorFactory)
+                var entityAdapter = new Mock<EntityAdapter>(mockContext.Object, updateTranslatorFactory)
                                         {
                                             CallBase = true
                                         }.Object;
-
-                var entityStateManagerMock = new Mock<IEntityStateManager>();
-                var entityStateEntryMock = new Mock<IEntityStateEntry>();
-                entityStateManagerMock.Setup(m => m.GetEntityStateEntries(It.IsAny<EntityState>()))
-                    .Returns(new[] { entityStateEntryMock.Object });
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.Setup(m => m.State).Returns(ConnectionState.Open);
@@ -53,7 +57,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     .Returns(EntityProviderFactory.Instance);
                 entityAdapter.Connection = entityConnectionMock.Object;
 
-                var cacheEntriesAffected = entityAdapter.Update(entityStateManagerMock.Object);
+                var cacheEntriesAffected = entityAdapter.Update();
 
                 Assert.Equal(1, cacheEntriesAffected);
             }
@@ -61,25 +65,33 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             [Fact]
             public void Update_throws_if_no_connection_set()
             {
-                var entityAdapter = new EntityAdapter();
-                var entityStateManagerMock = new Mock<IEntityStateManager>();
-                var entityStateEntryMock = new Mock<IEntityStateEntry>();
-                entityStateManagerMock.Setup(m => m.GetEntityStateEntries(It.IsAny<EntityState>()))
+                var entityStateManagerMock = new Mock<ObjectStateManager>();
+                var entityStateEntryMock = new Mock<ObjectStateEntry>();
+                entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
+
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
+
+                var entityAdapter = new EntityAdapter(mockContext.Object);
 
                 Assert.Equal(
                     Strings.EntityClient_NoConnectionForAdapter,
-                    Assert.Throws<InvalidOperationException>(() => entityAdapter.Update(entityStateManagerMock.Object)).Message);
+                    Assert.Throws<InvalidOperationException>(() => entityAdapter.Update()).Message);
             }
 
             [Fact]
             public void Throws_if_no_store_connection_set()
             {
-                var entityAdapter = new EntityAdapter();
-                var entityStateManagerMock = new Mock<IEntityStateManager>();
-                var entityStateEntryMock = new Mock<IEntityStateEntry>();
-                entityStateManagerMock.Setup(m => m.GetEntityStateEntries(It.IsAny<EntityState>()))
+                var entityStateManagerMock = new Mock<ObjectStateManager>();
+                var entityStateEntryMock = new Mock<ObjectStateEntry>();
+                entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
+
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
+
+                var entityAdapter = new EntityAdapter(mockContext.Object);
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.Setup(m => m.StoreProviderFactory)
@@ -88,17 +100,21 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 Assert.Equal(
                     Strings.EntityClient_NoStoreConnectionForUpdate,
-                    Assert.Throws<InvalidOperationException>(() => entityAdapter.Update(entityStateManagerMock.Object)).Message);
+                    Assert.Throws<InvalidOperationException>(() => entityAdapter.Update()).Message);
             }
 
             [Fact]
             public void Throws_if_no_store_provider_factory_set()
             {
-                var entityAdapter = new EntityAdapter();
-                var entityStateManagerMock = new Mock<IEntityStateManager>();
-                var entityStateEntryMock = new Mock<IEntityStateEntry>();
-                entityStateManagerMock.Setup(m => m.GetEntityStateEntries(It.IsAny<EntityState>()))
+                var entityStateManagerMock = new Mock<ObjectStateManager>();
+                var entityStateEntryMock = new Mock<ObjectStateEntry>();
+                entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
+
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
+
+                var entityAdapter = new EntityAdapter(mockContext.Object);
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.Setup(m => m.StoreConnection)
@@ -107,17 +123,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 Assert.Equal(
                     Strings.EntityClient_NoStoreConnectionForUpdate,
-                    Assert.Throws<InvalidOperationException>(() => entityAdapter.Update(entityStateManagerMock.Object)).Message);
+                    Assert.Throws<InvalidOperationException>(() => entityAdapter.Update()).Message);
             }
 
             [Fact]
             public void Throws_if_connection_is_closed()
             {
-                var entityAdapter = new EntityAdapter();
-                var entityStateManagerMock = new Mock<IEntityStateManager>();
-                var entityStateEntryMock = new Mock<IEntityStateEntry>();
-                entityStateManagerMock.Setup(m => m.GetEntityStateEntries(It.IsAny<EntityState>()))
+                var entityStateManagerMock = new Mock<ObjectStateManager>();
+                var entityStateEntryMock = new Mock<ObjectStateEntry>();
+                entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
+
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
+                var entityAdapter = new EntityAdapter(mockContext.Object);
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.Setup(m => m.StoreConnection)
@@ -128,17 +147,21 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                 Assert.Equal(
                     Strings.EntityClient_ClosedConnectionForUpdate,
-                    Assert.Throws<InvalidOperationException>(() => entityAdapter.Update(entityStateManagerMock.Object)).Message);
+                    Assert.Throws<InvalidOperationException>(() => entityAdapter.Update()).Message);
             }
 
             [Fact]
             public void Does_not_throw_invalid_operation_if_connection_is_closed_but_exception_suppressed()
             {
-                var entityAdapter = new EntityAdapter();
-                var entityStateManagerMock = new Mock<IEntityStateManager>();
-                var entityStateEntryMock = new Mock<IEntityStateEntry>();
-                entityStateManagerMock.Setup(m => m.GetEntityStateEntries(It.IsAny<EntityState>()))
+                var entityStateManagerMock = new Mock<ObjectStateManager>();
+                var entityStateEntryMock = new Mock<ObjectStateEntry>();
+                entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
+
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
+
+                var entityAdapter = new EntityAdapter(mockContext.Object);
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.Setup(m => m.StoreConnection)
@@ -147,7 +170,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     .Returns(new Mock<DbProviderFactory>().Object);
                 entityAdapter.Connection = entityConnectionMock.Object;
 
-                Assert.Throws<NotSupportedException>(() => entityAdapter.Update(entityStateManagerMock.Object, false));
+                Assert.Throws<NotSupportedException>(() => entityAdapter.Update(false));
             }
         }
 
@@ -158,10 +181,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             [Fact]
             public void Returns_0_if_no_changes()
             {
-                var entityAdapter = new EntityAdapter();
-                var entityStateManagerMock = new Mock<IEntityStateManager>();
+                var entityStateManagerMock = new Mock<ObjectStateManager>();
 
-                var cacheEntriesAffected = entityAdapter.UpdateAsync(entityStateManagerMock.Object, CancellationToken.None).Result;
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
+
+                var entityAdapter = new EntityAdapter(mockContext.Object);
+
+                var cacheEntriesAffected = entityAdapter.UpdateAsync(CancellationToken.None).Result;
 
                 Assert.Equal(0, cacheEntriesAffected);
             }
@@ -169,22 +196,24 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             [Fact]
             public void Returns_number_of_enties_affected()
             {
+                var entityStateManagerMock = new Mock<ObjectStateManager>();
+                var entityStateEntryMock = new Mock<ObjectStateEntry>();
+                entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
+                    .Returns(new[] { entityStateEntryMock.Object });
+
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
+
                 var mockUpdateTranslator = new Mock<UpdateTranslator>(MockBehavior.Strict);
                 mockUpdateTranslator.Setup(m => m.UpdateAsync(It.IsAny<CancellationToken>()))
                     .Returns(Task.FromResult(1));
 
-                var updateTranslatorFactory = new Func<IEntityStateManager, EntityAdapter, UpdateTranslator>(
-                    (stateManager, adapter) => mockUpdateTranslator.Object);
+                var updateTranslatorFactory = new Func<EntityAdapter, UpdateTranslator>(adapter => mockUpdateTranslator.Object);
 
-                var entityAdapter = new Mock<EntityAdapter>(updateTranslatorFactory)
+                var entityAdapter = new Mock<EntityAdapter>(mockContext.Object, updateTranslatorFactory)
                                         {
                                             CallBase = true
                                         }.Object;
-
-                var entityStateManagerMock = new Mock<IEntityStateManager>();
-                var entityStateEntryMock = new Mock<IEntityStateEntry>();
-                entityStateManagerMock.Setup(m => m.GetEntityStateEntries(It.IsAny<EntityState>()))
-                    .Returns(new[] { entityStateEntryMock.Object });
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.Setup(m => m.State).Returns(ConnectionState.Open);
@@ -194,7 +223,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     .Returns(EntityProviderFactory.Instance);
                 entityAdapter.Connection = entityConnectionMock.Object;
 
-                var cacheEntriesAffected = entityAdapter.UpdateAsync(entityStateManagerMock.Object, CancellationToken.None).Result;
+                var cacheEntriesAffected = entityAdapter.UpdateAsync(CancellationToken.None).Result;
 
                 Assert.Equal(1, cacheEntriesAffected);
             }
@@ -202,26 +231,34 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             [Fact]
             public void Update_throws_if_no_connection_set()
             {
-                var entityAdapter = new EntityAdapter();
-                var entityStateManagerMock = new Mock<IEntityStateManager>();
-                var entityStateEntryMock = new Mock<IEntityStateEntry>();
-                entityStateManagerMock.Setup(m => m.GetEntityStateEntries(It.IsAny<EntityState>()))
+                var entityStateManagerMock = new Mock<ObjectStateManager>();
+                var entityStateEntryMock = new Mock<ObjectStateEntry>();
+                entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
+
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
+
+                var entityAdapter = new EntityAdapter(mockContext.Object);
 
                 Assert.Equal(
                     Strings.EntityClient_NoConnectionForAdapter,
                     Assert.Throws<InvalidOperationException>(
-                        () => entityAdapter.UpdateAsync(entityStateManagerMock.Object, CancellationToken.None)).Message);
+                        () => entityAdapter.UpdateAsync(CancellationToken.None)).Message);
             }
 
             [Fact]
             public void Throws_if_no_store_connection_set()
             {
-                var entityAdapter = new EntityAdapter();
-                var entityStateManagerMock = new Mock<IEntityStateManager>();
-                var entityStateEntryMock = new Mock<IEntityStateEntry>();
-                entityStateManagerMock.Setup(m => m.GetEntityStateEntries(It.IsAny<EntityState>()))
+                var entityStateManagerMock = new Mock<ObjectStateManager>();
+                var entityStateEntryMock = new Mock<ObjectStateEntry>();
+                entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
+
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
+
+                var entityAdapter = new EntityAdapter(mockContext.Object);
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.Setup(m => m.StoreProviderFactory)
@@ -231,17 +268,21 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Assert.Equal(
                     Strings.EntityClient_NoStoreConnectionForUpdate,
                     Assert.Throws<InvalidOperationException>(
-                        () => entityAdapter.UpdateAsync(entityStateManagerMock.Object, CancellationToken.None)).Message);
+                        () => entityAdapter.UpdateAsync(CancellationToken.None)).Message);
             }
 
             [Fact]
             public void Throws_if_no_store_provider_factory_set()
             {
-                var entityAdapter = new EntityAdapter();
-                var entityStateManagerMock = new Mock<IEntityStateManager>();
-                var entityStateEntryMock = new Mock<IEntityStateEntry>();
-                entityStateManagerMock.Setup(m => m.GetEntityStateEntries(It.IsAny<EntityState>()))
+                var entityStateManagerMock = new Mock<ObjectStateManager>();
+                var entityStateEntryMock = new Mock<ObjectStateEntry>();
+                entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
+
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
+
+                var entityAdapter = new EntityAdapter(mockContext.Object);
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.Setup(m => m.StoreConnection)
@@ -251,17 +292,21 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Assert.Equal(
                     Strings.EntityClient_NoStoreConnectionForUpdate,
                     Assert.Throws<InvalidOperationException>(
-                        () => entityAdapter.UpdateAsync(entityStateManagerMock.Object, CancellationToken.None)).Message);
+                        () => entityAdapter.UpdateAsync(CancellationToken.None)).Message);
             }
 
             [Fact]
             public void Throws_if_connection_is_closed()
             {
-                var entityAdapter = new EntityAdapter();
-                var entityStateManagerMock = new Mock<IEntityStateManager>();
-                var entityStateEntryMock = new Mock<IEntityStateEntry>();
-                entityStateManagerMock.Setup(m => m.GetEntityStateEntries(It.IsAny<EntityState>()))
+                var entityStateManagerMock = new Mock<ObjectStateManager>();
+                var entityStateEntryMock = new Mock<ObjectStateEntry>();
+                entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
+
+                var mockContext = new Mock<ObjectContext>(null, null, null, null);
+                mockContext.Setup(m => m.ObjectStateManager).Returns(entityStateManagerMock.Object);
+
+                var entityAdapter = new EntityAdapter(mockContext.Object);
 
                 var entityConnectionMock = new Mock<EntityConnection>();
                 entityConnectionMock.Setup(m => m.StoreConnection)
@@ -273,7 +318,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 Assert.Equal(
                     Strings.EntityClient_ClosedConnectionForUpdate,
                     Assert.Throws<InvalidOperationException>(
-                        () => entityAdapter.UpdateAsync(entityStateManagerMock.Object, CancellationToken.None)).Message);
+                        () => entityAdapter.UpdateAsync(CancellationToken.None)).Message);
             }
         }
 

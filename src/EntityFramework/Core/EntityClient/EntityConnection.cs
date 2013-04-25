@@ -2,18 +2,21 @@
 
 namespace System.Data.Entity.Core.EntityClient
 {
+    using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
     using System.Runtime.Versioning;
     using System.Threading;
     using System.Threading.Tasks;
@@ -53,8 +56,9 @@ namespace System.Data.Entity.Core.EntityClient
         private Transaction _enlistedTransaction;
         private bool _initialized;
 
-        private readonly Interception _interception;
+        private readonly EntityConnectionDispatcher _dispatcher;
         private ConnectionState? _fakeConnectionState;
+        private readonly List<ObjectContext> _associatedContexts = new List<ObjectContext>();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> class.
@@ -85,23 +89,17 @@ namespace System.Data.Entity.Core.EntityClient
         {
             ChangeConnectionString(connectionString);
 
-            _interception = Interception.Instance;
+            _dispatcher = Interception.Dispatch.EntityConnection;
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> class with a specified
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" />
-        ///     and
-        ///     <see
-        ///         cref="T:System.Data.Common.DbConnection" />
-        ///     .
+        ///     <see  cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> and 
+        ///     <see cref="T:System.Data.Common.DbConnection" />.
         /// </summary>
         /// <param name="workspace">
         ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> to be associated with this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
-        ///     .
+        ///     <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />.
         /// </param>
         /// <param name="connection">
         ///     The underlying data source connection for this <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> object.
@@ -138,7 +136,7 @@ namespace System.Data.Entity.Core.EntityClient
             DbConnection connection,
             bool skipInitialization,
             bool entityConnectionOwnsStoreConnection,
-            Interception interception = null)
+            EntityConnectionDispatcher dispatcher = null)
         {
             if (!skipInitialization)
             {
@@ -173,7 +171,7 @@ namespace System.Data.Entity.Core.EntityClient
             _metadataWorkspace = workspace;
             _storeConnection = connection;
             _entityConnectionShouldDisposeStoreConnection = entityConnectionOwnsStoreConnection;
-            _interception = interception ?? Interception.Instance;
+            _dispatcher = dispatcher ?? Interception.Dispatch.EntityConnection;
 
             if (_storeConnection != null)
             {
@@ -312,6 +310,29 @@ namespace System.Data.Entity.Core.EntityClient
                 }
                 ChangeConnectionString(value);
             }
+        }
+
+        internal virtual IEnumerable<ObjectContext> AssociatedContexts
+        {
+            get { return _associatedContexts; }
+        }
+
+        internal virtual void AssociateContext(ObjectContext context)
+        {
+            DebugCheck.NotNull(context);
+
+            if (_associatedContexts.Count != 0)
+            {
+                foreach (var alreadyAssociated in _associatedContexts.ToArray())
+                {
+                    if (ReferenceEquals(context, alreadyAssociated) || alreadyAssociated.IsDisposed)
+                    {
+                        _associatedContexts.Remove(alreadyAssociated);
+                    }
+                }
+            }
+
+            _associatedContexts.Add(context);
         }
 
         /// <summary>
@@ -559,7 +580,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             _fakeConnectionState = null;
 
-            if (!_interception.Dispatch(this))
+            if (!_dispatcher.Opening(this, DbInterceptionContext.Combine(AssociatedContexts.Select(c => c.InterceptionContext))))
             {
                 _fakeConnectionState = ConnectionState.Open;
 

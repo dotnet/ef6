@@ -31,6 +31,9 @@ namespace System.Data.Entity.Core.Objects.Internal
                             }
                     });
 
+            var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
+            objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
+
             entityCommandDefinitionMock.Setup(m => m.ExecuteStoreCommands(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>()))
                                        .Returns(
                                            (EntityCommand ec, CommandBehavior cb) =>
@@ -38,6 +41,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                                                    Assert.Equal(1, ec.Parameters.Count);
                                                    Assert.Equal(2, ec.Parameters[0].Value);
                                                    Assert.Equal(3, ec.CommandTimeout);
+                                                   Assert.Equal(new [] { objectContextMock.Object }, ec.InterceptionContext.ObjectContexts);
                                                    return Common.Internal.Materialization.MockHelper.CreateDbDataReader(
                                                        new[] { new object[] { "Bar" } });
                                                });
@@ -60,9 +64,6 @@ namespace System.Data.Entity.Core.Objects.Internal
                 .Setup(m => m.GetEnumerator())
                 .Returns(((IEnumerable<ObjectParameter>)new[] { new ObjectParameter("Par1", 2) }).GetEnumerator());
 
-            var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
-            objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
-
             var result = objectQueryExecutionPlan.Execute<string>(objectContextMock.Object, objectParameterCollectionMock.Object);
 
             Assert.Equal("Bar", result.Single());
@@ -84,11 +85,15 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             var entityCommandDefinitionMock = Mock.Get(EntityClient.MockHelper.CreateEntityCommandDefinition());
 
+            var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
+            objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
+
             DbDataReader reader = null;
             entityCommandDefinitionMock.Setup(m => m.ExecuteStoreCommands(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>()))
                                        .Returns(
                                            (EntityCommand ec, CommandBehavior cb) =>
                                                {
+                                                   Assert.Equal(new[] { objectContextMock.Object }, ec.InterceptionContext.ObjectContexts);
                                                    reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
                                                        new[] { new object[] { "Bar" } });
                                                    Assert.Equal(streaming ? CommandBehavior.Default : CommandBehavior.SequentialAccess, cb);
@@ -113,9 +118,6 @@ namespace System.Data.Entity.Core.Objects.Internal
                 .Setup(m => m.GetEnumerator())
                 .Returns(((IEnumerable<ObjectParameter>)new ObjectParameter[0]).GetEnumerator());
 
-            var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
-            objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
-
             objectQueryExecutionPlan.Execute<string>(objectContextMock.Object, objectParameterCollectionMock.Object);
 
             Assert.Equal(!streaming, reader.IsClosed);
@@ -137,11 +139,15 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             var entityCommandDefinitionMock = Mock.Get(EntityClient.MockHelper.CreateEntityCommandDefinition());
 
+            var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
+            objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
+
             DbDataReader reader = null;
             entityCommandDefinitionMock.Setup(m => m.ExecuteStoreCommands(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>()))
                                        .Returns(
                                            (EntityCommand ec, CommandBehavior cb) =>
                                                {
+                                                   Assert.Equal(new[] { objectContextMock.Object }, ec.InterceptionContext.ObjectContexts);
                                                    reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
                                                        new[] { new object[] { "Bar" } });
                                                    return reader;
@@ -164,9 +170,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             objectParameterCollectionMock
                 .Setup(m => m.GetEnumerator())
                 .Returns(((IEnumerable<ObjectParameter>)new ObjectParameter[0]).GetEnumerator());
-
-            var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
-            objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
 
             Assert.Throws<InvalidCastException>(
                 () =>
@@ -192,6 +195,9 @@ namespace System.Data.Entity.Core.Objects.Internal
                             }
                     });
 
+            var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
+            objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
+
             entityCommandDefinitionMock.Setup(
                 m => m.ExecuteStoreCommandsAsync(
                     It.IsAny<EntityCommand>(),
@@ -202,6 +208,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                                                    Assert.Equal(1, ec.Parameters.Count);
                                                    Assert.Equal(2, ec.Parameters[0].Value);
                                                    Assert.Equal(3, ec.CommandTimeout);
+                                                   Assert.Equal(new[] { objectContextMock.Object }, ec.InterceptionContext.ObjectContexts);
                                                    return Task.FromResult(
                                                        Common.Internal.Materialization.MockHelper.CreateDbDataReader(
                                                            new[] { new object[] { "Bar" } }));
@@ -224,9 +231,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             objectParameterCollectionMock
                 .Setup(m => m.GetEnumerator())
                 .Returns(((IEnumerable<ObjectParameter>)new[] { new ObjectParameter("Par1", 2) }).GetEnumerator());
-
-            var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
-            objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
 
             var result = objectQueryExecutionPlan.ExecuteAsync<string>(
                 objectContextMock.Object,
@@ -251,6 +255,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             var entityCommandDefinitionMock = Mock.Get(EntityClient.MockHelper.CreateEntityCommandDefinition());
 
+            var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
+            objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
+
             DbDataReader reader = null;
             entityCommandDefinitionMock.Setup(
                 m => m.ExecuteStoreCommandsAsync(
@@ -259,6 +266,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                                        .Returns(
                                            (EntityCommand ec, CommandBehavior cb, CancellationToken ct) =>
                                                {
+                                                   Assert.Equal(new[] { objectContextMock.Object }, ec.InterceptionContext.ObjectContexts);
                                                    reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
                                                        new[] { new object[] { "Bar" } });
                                                    Assert.Equal(streaming ? CommandBehavior.Default : CommandBehavior.SequentialAccess, cb);
@@ -283,9 +291,6 @@ namespace System.Data.Entity.Core.Objects.Internal
                 .Setup(m => m.GetEnumerator())
                 .Returns(((IEnumerable<ObjectParameter>)new[] { new ObjectParameter("Par1", 2) }).GetEnumerator());
 
-            var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
-            objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
-
             var result = objectQueryExecutionPlan.ExecuteAsync<string>(
                 objectContextMock.Object,
                 objectParameterCollectionMock.Object, CancellationToken.None).Result;
@@ -309,6 +314,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             var entityCommandDefinitionMock = Mock.Get(EntityClient.MockHelper.CreateEntityCommandDefinition());
 
+            var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
+            objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
+
             DbDataReader reader = null;
             entityCommandDefinitionMock.Setup(
                 m => m.ExecuteStoreCommandsAsync(
@@ -317,6 +325,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                                        .Returns(
                                            (EntityCommand ec, CommandBehavior cb, CancellationToken ct) =>
                                                {
+                                                   Assert.Equal(new[] { objectContextMock.Object }, ec.InterceptionContext.ObjectContexts);
                                                    reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
                                                        new[] { new object[] { "Bar" } });
                                                    return Task.FromResult(reader);
@@ -339,9 +348,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             objectParameterCollectionMock
                 .Setup(m => m.GetEnumerator())
                 .Returns(((IEnumerable<ObjectParameter>)new[] { new ObjectParameter("Par1", 2) }).GetEnumerator());
-
-            var objectContextMock = Mock.Get(Objects.MockHelper.CreateMockObjectContext<string>());
-            objectContextMock.Setup(m => m.CommandTimeout).Returns(3);
 
             Assert.Throws<InvalidCastException>(
                 () =>

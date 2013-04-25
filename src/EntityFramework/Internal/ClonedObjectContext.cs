@@ -59,7 +59,7 @@ namespace System.Data.Entity.Internal
         /// <summary>
         ///     The cloned context.
         /// </summary>
-        public ObjectContextProxy ObjectContext
+        public virtual ObjectContextProxy ObjectContext
         {
             get { return _objectContext; }
         }

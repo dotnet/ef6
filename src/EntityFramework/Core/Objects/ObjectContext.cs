@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Objects
         #region Fields
 
         private bool _disposed;
-        private IEntityAdapter _adapter;
+        private readonly IEntityAdapter _adapter;
 
         // Connection may be null if used by ObjectMaterializer for detached ObjectContext,
         // but those code paths should not touch the connection.
@@ -89,6 +89,7 @@ namespace System.Data.Entity.Core.Objects
         private const string UseLegacyPreserveChangesBehavior = "EntityFramework_UseLegacyPreserveChangesBehavior";
 
         private readonly ThrowingMonitor _asyncMonitor = new ThrowingMonitor();
+        private DbInterceptionContext _interceptionContext;
 
         #endregion Fields
 
@@ -192,11 +193,15 @@ namespace System.Data.Entity.Core.Objects
         {
             Check.NotNull(connection, "connection");
 
+            _interceptionContext = new DbInterceptionContext().WithObjectContext(this);
+
             _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
             _translator = translator ?? new Translator();
             _columnMapFactory = columnMapFactory ?? new ColumnMapFactory();
+            _adapter = new EntityAdapter(this);
 
             _connection = connection;
+            _connection.AssociateContext(this);
 
             _connection.StateChange += ConnectionStateChange;
             _entityWrapperFactory = new EntityWrapperFactory();
@@ -243,10 +248,12 @@ namespace System.Data.Entity.Core.Objects
             ColumnMapFactory columnMapFactory = null,
             IEntityAdapter adapter = null)
         {
+            _interceptionContext = new DbInterceptionContext().WithObjectContext(this);
+
             _objectQueryExecutionPlanFactory = objectQueryExecutionPlanFactory ?? new ObjectQueryExecutionPlanFactory();
             _translator = translator ?? new Translator();
             _columnMapFactory = columnMapFactory ?? new ColumnMapFactory();
-            _adapter = adapter;
+            _adapter = adapter ?? new EntityAdapter(this);
         }
 
         #endregion //Constructors
@@ -429,6 +436,18 @@ namespace System.Data.Entity.Core.Objects
         ObjectContext IObjectContextAdapter.ObjectContext
         {
             get { return this; }
+        }
+
+        internal DbInterceptionContext InterceptionContext
+        {
+            get { return _interceptionContext; }
+            set
+            {
+                DebugCheck.NotNull(_interceptionContext);
+                Debug.Assert(_interceptionContext.ObjectContexts.Contains(this));
+
+                _interceptionContext = value;
+            }
         }
 
         #endregion //Properties
@@ -2040,7 +2059,6 @@ namespace System.Data.Entity.Core.Objects
                         }
                     }
                     _connection = null; // Marks this object as disposed.
-                    _adapter = null;
                     if (_objectStateManager != null)
                     {
                         _objectStateManager.Dispose();
@@ -2049,6 +2067,11 @@ namespace System.Data.Entity.Core.Objects
 
                 _disposed = true;
             }
+        }
+
+        internal bool IsDisposed
+        {
+            get { return _disposed; }
         }
 
         #region GetEntitySet
@@ -3029,12 +3052,6 @@ namespace System.Data.Entity.Core.Objects
 
         private int SaveChangesToStore(SaveOptions options, bool throwOnExistingTransaction)
         {
-            // get data adapter
-            if (_adapter == null)
-            {
-                _adapter = (IEntityAdapter)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(IEntityAdapter));
-            }
-
             // only accept changes after the local transaction commits
             _adapter.AcceptChangesDuringUpdate = false;
             _adapter.Connection = Connection;
@@ -3042,7 +3059,7 @@ namespace System.Data.Entity.Core.Objects
 
             var entriesAffected
                 = ExecuteInTransaction(
-                    () => _adapter.Update(ObjectStateManager),
+                    () => _adapter.Update(),
                     throwOnExistingTransaction,
                     startLocalTransaction: true,
                     releaseConnectionOnSuccess: true);
@@ -3069,18 +3086,13 @@ namespace System.Data.Entity.Core.Objects
         private async Task<int> SaveChangesToStoreAsync(
             SaveOptions options, bool throwOnExistingTransaction, CancellationToken cancellationToken)
         {
-            if (_adapter == null)
-            {
-                _adapter = (IEntityAdapter)((IServiceProvider)EntityProviderFactory.Instance).GetService(typeof(IEntityAdapter));
-            }
-
             // only accept changes after the local transaction commits
             _adapter.AcceptChangesDuringUpdate = false;
             _adapter.Connection = Connection;
             _adapter.CommandTimeout = CommandTimeout;
 
             var entriesAffected = await ExecuteInTransactionAsync(
-                () => _adapter.UpdateAsync(ObjectStateManager, cancellationToken), throwOnExistingTransaction,
+                () => _adapter.UpdateAsync(cancellationToken), throwOnExistingTransaction,
                                             /*startLocalTransaction:*/ true, /*releaseConnectionOnSuccess:*/ true, cancellationToken)
                                             .ConfigureAwait(continueOnCapturedContext: false);
 
@@ -3547,7 +3559,7 @@ namespace System.Data.Entity.Core.Objects
             var connection = (EntityConnection)Connection;
 
             // create query
-            var entityCommand = new EntityCommand();
+            var entityCommand = new EntityCommand(InterceptionContext);
             entityCommand.CommandType = CommandType.StoredProcedure;
             entityCommand.CommandText = containerName + "." + functionImportName;
             entityCommand.Connection = connection;
@@ -4172,6 +4184,7 @@ namespace System.Data.Entity.Core.Objects
                 {
                     reader = command.ExecuteReader();
                 }
+
                 if (executionOptions.Streaming)
                 {
                     return InternalTranslate<TElement>(
@@ -4670,7 +4683,7 @@ namespace System.Data.Entity.Core.Objects
                 command.Parameters.AddRange(dbParameters);
             }
 
-            return command;
+            return new InterceptableDbCommand(command, InterceptionContext);
         }
 
         /// <summary>

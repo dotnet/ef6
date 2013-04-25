@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Mapping.Update.Internal;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Linq;
@@ -14,16 +15,26 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     {
         private bool _acceptChangesDuringUpdate = true;
         private EntityConnection _connection;
-        private readonly Func<IEntityStateManager, EntityAdapter, UpdateTranslator> _updateTranslatorFactory;
+        private readonly ObjectContext _context;
+        private readonly Func<EntityAdapter, UpdateTranslator> _updateTranslatorFactory;
 
-        public EntityAdapter()
-            : this((stateManager, adapter) => new UpdateTranslator(stateManager, adapter))
+        public EntityAdapter(ObjectContext context)
+            : this(context, a => new UpdateTranslator(a))
         {
         }
 
-        protected EntityAdapter(Func<IEntityStateManager, EntityAdapter, UpdateTranslator> updateTranslatorFactory)
+        protected EntityAdapter(ObjectContext context, Func<EntityAdapter, UpdateTranslator> updateTranslatorFactory)
         {
+            DebugCheck.NotNull(context);
+            DebugCheck.NotNull(updateTranslatorFactory);
+
+            _context = context;
             _updateTranslatorFactory = updateTranslatorFactory;
+        }
+
+        public ObjectContext Context
+        {
+            get { return _context; }
         }
 
         /// <summary>
@@ -59,40 +70,27 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// </summary>
         public int? CommandTimeout { get; set; }
 
-        /// <summary>
-        ///     Persist modifications described in the given cache.
-        /// </summary>
-        /// <param name="entityCache"> Entity cache containing changes to persist to the store. </param>
-        /// <returns> Number of cache entries affected by the udpate. </returns>
-        public int Update(IEntityStateManager entityCache, bool throwOnClosedConnection = true)
+        public int Update(bool throwOnClosedConnection = true)
         {
-            return Update(entityCache, 0, ut => ut.Update(), throwOnClosedConnection);
+            return Update(0, ut => ut.Update(), throwOnClosedConnection);
         }
 
 #if !NET40
 
-        /// <summary>
-        ///     An asynchronous version of Update, which
-        ///     persists modifications described in the given cache.
-        /// </summary>
-        /// <param name="entityCache"> Entity cache containing changes to persist to the store. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns> A Task containing the number of cache entries affected by the update. </returns>
-        public Task<int> UpdateAsync(IEntityStateManager entityCache, CancellationToken cancellationToken)
+        public Task<int> UpdateAsync(CancellationToken cancellationToken)
         {
-            return Update(entityCache, Task.FromResult(0), ut => ut.UpdateAsync(cancellationToken), true);
+            return Update(Task.FromResult(0), ut => ut.UpdateAsync(cancellationToken), true);
         }
 
 #endif
 
         private T Update<T>(
-            IEntityStateManager entityCache,
             T noChangesResult,
             Func<UpdateTranslator, T> updateFunction,
             bool throwOnClosedConnection)
 
         {
-            if (!IsStateManagerDirty(entityCache))
+            if (!IsStateManagerDirty(_context.ObjectStateManager))
             {
                 return noChangesResult;
             }
@@ -117,7 +115,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                 throw Error.EntityClient_ClosedConnectionForUpdate();
             }
 
-            var updateTranslator = _updateTranslatorFactory(entityCache, this);
+            var updateTranslator = _updateTranslatorFactory(this);
 
             return updateFunction(updateTranslator);
         }

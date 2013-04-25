@@ -137,16 +137,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </param>
         object IServiceProvider.GetService(Type serviceType)
         {
-            object result = null;
-            if (serviceType == typeof(DbProviderServices))
-            {
-                result = EntityProviderServices.Instance;
-            }
-            else if (serviceType == typeof(IEntityAdapter))
-            {
-                result = new EntityAdapter();
-            }
-            return result;
+            return serviceType == typeof(DbProviderServices) ? EntityProviderServices.Instance : null;
         }
     }
 }

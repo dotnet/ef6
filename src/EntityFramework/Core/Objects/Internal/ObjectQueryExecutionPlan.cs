@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
+    using System.Data.Entity.Infrastructure;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
@@ -292,7 +293,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             // create entity command (just do this to snarf store command)
             var commandDefinition = (EntityCommandDefinition)CommandDefinition;
-            var entityCommand = new EntityCommand((EntityConnection)context.Connection, commandDefinition);
+            var entityCommand = new EntityCommand(
+                (EntityConnection)context.Connection, commandDefinition, context.InterceptionContext);
 
             // pass through parameters and timeout values
             if (context.CommandTimeout.HasValue)

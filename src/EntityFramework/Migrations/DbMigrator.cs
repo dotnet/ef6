@@ -7,13 +7,13 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
-    using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -23,6 +23,7 @@ namespace System.Data.Entity.Migrations
     using System.Reflection;
     using System.Resources;
     using System.Xml.Linq;
+    using DatabaseCreator = System.Data.Entity.Migrations.Utilities.DatabaseCreator;
 
     /// <summary>
     ///     DbMigrator is used to apply existing migrations to a database.
@@ -58,10 +59,21 @@ namespace System.Data.Entity.Migrations
         private readonly string _targetDatabase;
         private readonly string _legacyContextKey;
         private readonly string _defaultSchema;
-
+        private DbContext _contextForInterception;
         private MigrationSqlGenerator _sqlGenerator;
-
         private bool _emptyMigrationNeeded;
+
+        /// <summary>
+        /// For testing.
+        /// </summary>
+        internal DbMigrator(DbContext usersContext = null, DbProviderFactory providerFactory = null)
+            : base(null)
+        {
+            _contextForInterception = usersContext;
+            _providerFactory = providerFactory;
+            _usersContextInfo = new DbContextInfo(typeof(DbContext));
+            _configuration = new DbMigrationsConfiguration();
+        }
 
         /// <summary>
         ///     Initializes a new instance of the DbMigrator class.
@@ -114,6 +126,7 @@ namespace System.Data.Entity.Migrations
             _modelDiffer = _configuration.ModelDiffer;
 
             var context = usersContext ?? _usersContextInfo.CreateInstance();
+            _contextForInterception = context;
 
             try
             {
@@ -172,6 +185,7 @@ namespace System.Data.Entity.Migrations
             {
                 if (usersContext == null)
                 {
+                    _contextForInterception = null;
                     context.Dispose();
                 }
             }
@@ -907,11 +921,9 @@ namespace System.Data.Entity.Migrations
 
             if (!migrationStatement.SuppressTransaction)
             {
-                using (var command = transaction.Connection.CreateCommand())
+                using (var command = ConfigureCommand(transaction.Connection.CreateCommand(), migrationStatement.Sql))
                 {
-                    command.CommandText = migrationStatement.Sql;
                     command.Transaction = transaction;
-                    ConfigureCommand(command);
 
                     command.ExecuteNonQuery();
                 }
@@ -920,24 +932,32 @@ namespace System.Data.Entity.Migrations
             {
                 using (var connection = CreateConnection())
                 {
-                    using (var command = connection.CreateCommand())
+                    using (var command = ConfigureCommand(connection.CreateCommand(), migrationStatement.Sql))
                     {
-                        command.CommandText = migrationStatement.Sql;
-                        ConfigureCommand(command);
-
                         connection.Open();
+                        
                         command.ExecuteNonQuery();
                     }
                 }
             }
         }
 
-        private void ConfigureCommand(DbCommand command)
+        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
+        private InterceptableDbCommand ConfigureCommand(DbCommand command, string commandText)
         {
+            command.CommandText = commandText;
+
             if (_configuration.CommandTimeout.HasValue)
             {
                 command.CommandTimeout = _configuration.CommandTimeout.Value;
             }
+
+            var interceptionContext = new DbInterceptionContext();
+            if (_contextForInterception != null)
+            {
+                interceptionContext = interceptionContext.WithDbContext(_contextForInterception);
+            }
+            return new InterceptableDbCommand(command, interceptionContext);
         }
 
         private void FillInForeignKeyOperations(IEnumerable<MigrationOperation> operations, XDocument targetModel)

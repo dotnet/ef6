@@ -2,12 +2,17 @@
 
 namespace System.Data.Entity.SqlServerCompact
 {
+    using System.Collections.Generic;
+    using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.SqlServer;
     using System.Data.Entity.SqlServerCompact.Resources;
     using System.Linq;
+    using SimpleModel;
     using Xunit;
 
     public class SqlCeProviderServicesTests : TestBase
@@ -52,6 +57,66 @@ namespace System.Data.Entity.SqlServerCompact
             public void GetService_resolves_the_default_SQL_Compact_connection_factory()
             {
                 Assert.IsType<SqlCeConnectionFactory>(SqlCeProviderServices.Instance.GetService<IDbConnectionFactory>());
+            }
+        }
+
+        public class DbCreateDatabase : TestBase
+        {
+            [Fact]
+            public void DbCreateDatabase_dispatches_commands_to_interceptors()
+            {
+                using (var context = new DdlDatabaseContext(SimpleCeConnection<DdlDatabaseContext>()))
+                {
+                    var storeItemCollection =
+                        (StoreItemCollection)
+                        ((IObjectContextAdapter)context).ObjectContext.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+
+                    context.Database.Delete();
+
+                    var interceptor = new TestNonQueryInterceptor();
+                    Interception.AddInterceptor(interceptor);
+                    try
+                    {
+                        SqlCeProviderServices.Instance.CreateDatabase(context.Database.Connection, null, storeItemCollection);
+                    }
+                    finally
+                    {
+                        Interception.RemoveInterceptor(interceptor);
+                    }
+
+                    Assert.Equal(3, interceptor.CommandTexts.Count);
+
+                    Assert.True(interceptor.CommandTexts.Any(t => t.StartsWith("CREATE TABLE \"Products\" ")));
+                    Assert.True(interceptor.CommandTexts.Any(t => t.StartsWith("CREATE TABLE \"Categories\" ")));
+                    Assert.True(interceptor.CommandTexts.Any(t => t.StartsWith("ALTER TABLE \"Products\" ADD CONSTRAINT ")));
+                }
+            }
+
+            public class DdlDatabaseContext : SimpleModelContext
+            {
+                static DdlDatabaseContext()
+                {
+                    Database.SetInitializer<DdlDatabaseContext>(null);
+                }
+
+                public DdlDatabaseContext(DbConnection connection)
+                    : base(connection, contextOwnsConnection: true)
+                {
+
+                }
+            }
+
+            public class TestNonQueryInterceptor : DbInterceptor
+            {
+                public readonly List<string> CommandTexts = new List<string>();
+
+                public override void NonQueryExecuting(DbCommand command, DbInterceptionContext interceptionContext)
+                {
+                    CommandTexts.Add(command.CommandText);
+
+                    Assert.Empty(interceptionContext.DbContexts);
+                    Assert.Empty(interceptionContext.ObjectContexts);
+                }
             }
         }
     }

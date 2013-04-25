@@ -30,7 +30,7 @@ namespace System.Data.Entity.Internal
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public EagerInternalContext(DbContext owner)
-            : base(owner, null)
+            : base(owner)
         {
         }
 
@@ -46,15 +46,16 @@ namespace System.Data.Entity.Internal
         public EagerInternalContext(
             DbContext owner,
             ObjectContext objectContext,
-            bool objectContextOwned,
-            Interception interception = null)
-            : base(owner, interception)
+            bool objectContextOwned)
+            : base(owner)
         {
             DebugCheck.NotNull(objectContext);
 
             _objectContext = objectContext;
             _objectContextOwned = objectContextOwned;
             _originalConnectionString = InternalConnection.GetStoreConnectionString(_objectContext.Connection);
+
+            _objectContext.InterceptionContext = _objectContext.InterceptionContext.WithDbContext(owner);
 
             InitializeEntitySetMappings();
         }

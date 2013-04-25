@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
 
@@ -93,7 +94,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             DbCommandDefinition definition;
             try
             {
-                definition = services.CreateCommandDefinition(tree);
+                definition = services.CreateCommandDefinition(tree, context.InterceptionContext);
             }
             catch (EntityCommandCompilationException)
             {

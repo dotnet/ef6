@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Core.Query.ResultAssembly;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Threading;
@@ -16,8 +17,6 @@ namespace System.Data.Entity.Core.EntityClient
     using Moq;
     using Moq.Protected;
     using Xunit;
-#if !NET40
-#endif
 
     public class EntityCommandDefinitionTests
     {
@@ -27,9 +26,9 @@ namespace System.Data.Entity.Core.EntityClient
             public void Exception_thrown_if_CommandBehavior_is_not_SequentialAccess()
             {
                 var entityCommandDefinition = new Mock<EntityCommandDefinition>(null, null, null)
-                                                  {
-                                                      CallBase = true
-                                                  }.Object;
+                    {
+                        CallBase = true
+                    }.Object;
 
                 Assert.Equal(
                     Strings.ADP_MustUseSequentialAccess,
@@ -41,11 +40,11 @@ namespace System.Data.Entity.Core.EntityClient
             public void Returns_null_if_nothing_was_executed_and_DbDataReader_is_null()
             {
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, null)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 entityCommandDefinitionMock.Setup(m => m.ExecuteStoreCommands(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
-                    Returns(default(DbDataReader));
+                                            Returns(default(DbDataReader));
 
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
                 var result = entityCommandDefinition.Execute(default(EntityCommand), CommandBehavior.SequentialAccess);
@@ -62,14 +61,14 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbDataReader = dbDataReaderMock.Object;
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, null)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 entityCommandDefinitionMock.Setup(m => m.ExecuteStoreCommands(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
-                    Returns(dbDataReader);
+                                            Returns(dbDataReader);
 
                 entityCommandDefinitionMock.Setup(m => m.CreateColumnMap(It.IsAny<DbDataReader>(), It.IsAny<int>())).
-                    Returns(default(ColumnMap));
+                                            Returns(default(ColumnMap));
 
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
                 var result = entityCommandDefinition.Execute(default(EntityCommand), CommandBehavior.SequentialAccess);
@@ -95,25 +94,25 @@ namespace System.Data.Entity.Core.EntityClient
                     m =>
                     m.Create(
                         It.IsAny<DbDataReader>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(), It.IsAny<IEnumerable<ColumnMap>>()))
-                    .
-                    Returns(bridgeDataReader);
+                                           .
+                                            Returns(bridgeDataReader);
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(bridgeDataReaderFactoryMock.Object, null, null)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 entityCommandDefinitionMock.Setup(m => m.ExecuteStoreCommands(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
-                    Returns(dbDataReaderMock.Object);
+                                            Returns(dbDataReaderMock.Object);
 
                 entityCommandDefinitionMock.Setup(m => m.CreateColumnMap(It.IsAny<DbDataReader>(), It.IsAny<int>())).
-                    Returns(columnMapMock.Object);
+                                            Returns(columnMapMock.Object);
 
-                var entityConnectionMock 
+                var entityConnectionMock
                     = new Mock<EntityConnection>(
-                        null /*workspace*/, 
-                        null /*connection*/, 
-                        true /*skipInitialization*/, 
-                        true /*entityConnectionOwnsStoreConnection*/, 
+                        null /*workspace*/,
+                        null /*connection*/,
+                        true /*skipInitialization*/,
+                        true /*entityConnectionOwnsStoreConnection*/,
                         null);
 
                 var entityCommandMock = new Mock<EntityCommand>();
@@ -129,11 +128,11 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var dbDataReaderMock = new Mock<DbDataReader>();
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, null)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 entityCommandDefinitionMock.Setup(m => m.ExecuteStoreCommands(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>())).
-                    Returns(dbDataReaderMock.Object);
+                                            Returns(dbDataReaderMock.Object);
                 entityCommandDefinitionMock.Setup(m => m.CreateColumnMap(It.IsAny<DbDataReader>(), It.IsAny<int>())).Throws
                     <InvalidOperationException>();
 
@@ -154,9 +153,9 @@ namespace System.Data.Entity.Core.EntityClient
             public void Exception_thrown_if_CommandBehavior_is_not_SequentialAccess()
             {
                 var entityCommandDefinition = new Mock<EntityCommandDefinition>(null, null, null)
-                                                  {
-                                                      CallBase = true
-                                                  }.Object;
+                    {
+                        CallBase = true
+                    }.Object;
 
                 AssertThrowsInAsyncMethod<InvalidOperationException>(
                     Strings.ADP_MustUseSequentialAccess,
@@ -168,17 +167,17 @@ namespace System.Data.Entity.Core.EntityClient
             public void Returns_null_if_nothing_was_executed_and_DbDataReader_is_null()
             {
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, null)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 entityCommandDefinitionMock.Setup(
                     m => m.ExecuteStoreCommandsAsync(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>()))
-                    .Returns(Task.FromResult(default(DbDataReader)));
+                                           .Returns(Task.FromResult(default(DbDataReader)));
 
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
                 var result =
                     entityCommandDefinition.ExecuteAsync(default(EntityCommand), CommandBehavior.SequentialAccess, CancellationToken.None)
-                        .Result;
+                                           .Result;
 
                 Assert.Equal(null, result);
             }
@@ -192,20 +191,20 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbDataReader = dbDataReaderMock.Object;
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, null)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 entityCommandDefinitionMock.Setup(
                     m => m.ExecuteStoreCommandsAsync(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>()))
-                    .Returns(Task.FromResult(dbDataReader));
+                                           .Returns(Task.FromResult(dbDataReader));
 
                 entityCommandDefinitionMock.Setup(m => m.CreateColumnMap(It.IsAny<DbDataReader>(), It.IsAny<int>())).
-                    Returns(default(ColumnMap));
+                                            Returns(default(ColumnMap));
 
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
                 var result =
                     entityCommandDefinition.ExecuteAsync(default(EntityCommand), CommandBehavior.SequentialAccess, CancellationToken.None)
-                        .Result;
+                                           .Result;
 
                 Assert.Same(dbDataReader, result);
                 dbDataReaderMock.VerifyGet(m => m.IsClosed, Times.Once());
@@ -229,31 +228,31 @@ namespace System.Data.Entity.Core.EntityClient
                     m =>
                     m.Create(
                         It.IsAny<DbDataReader>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(), It.IsAny<IEnumerable<ColumnMap>>()))
-                    .
-                    Returns(bridgeDataReader);
+                                           .
+                                            Returns(bridgeDataReader);
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(bridgeDataReaderFactoryMock.Object, null, null)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 entityCommandDefinitionMock.Setup(
                     m => m.ExecuteStoreCommandsAsync(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>()))
-                    .
-                    Returns(Task.FromResult(dbDataReader));
+                                           .
+                                            Returns(Task.FromResult(dbDataReader));
 
                 entityCommandDefinitionMock.Setup(m => m.CreateColumnMap(It.IsAny<DbDataReader>(), It.IsAny<int>())).
-                    Returns(columnMapMock.Object);
+                                            Returns(columnMapMock.Object);
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>();
 
-                var entityConnectionMock 
+                var entityConnectionMock
                     = new Mock<EntityConnection>(
-                        null /*workspace*/, 
-                        null /*connection*/, 
-                        true /*skipInitialization*/, 
+                        null /*workspace*/,
+                        null /*connection*/,
+                        true /*skipInitialization*/,
                         true /*entityConnectionOwnsStoreConnection*/,
                         null);
-                
+
                 entityConnectionMock.Setup(m => m.GetMetadataWorkspace()).Returns(metadataWorkspaceMock.Object);
 
                 var entityCommandMock = new Mock<EntityCommand>();
@@ -262,7 +261,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
                 var result =
                     entityCommandDefinition.ExecuteAsync(entityCommandMock.Object, CommandBehavior.SequentialAccess, CancellationToken.None)
-                        .Result;
+                                           .Result;
 
                 Assert.Same(bridgeDataReader, result);
             }
@@ -272,13 +271,13 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var dbDataReaderMock = new Mock<DbDataReader>();
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, null)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 entityCommandDefinitionMock.Setup(
                     m => m.ExecuteStoreCommandsAsync(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>()))
-                    .
-                    Returns(Task.FromResult(dbDataReaderMock.Object));
+                                           .
+                                            Returns(Task.FromResult(dbDataReaderMock.Object));
                 entityCommandDefinitionMock.Setup(m => m.CreateColumnMap(It.IsAny<DbDataReader>(), It.IsAny<int>())).Throws
                     <InvalidOperationException>();
 
@@ -288,7 +287,7 @@ namespace System.Data.Entity.Core.EntityClient
                     null,
                     () =>
                     entityCommandDefinition.ExecuteAsync(default(EntityCommand), CommandBehavior.SequentialAccess, CancellationToken.None).
-                        Wait());
+                                            Wait());
 
                 dbDataReaderMock.Protected().Verify("Dispose", Times.Once(), true);
             }
@@ -302,18 +301,19 @@ namespace System.Data.Entity.Core.EntityClient
             public void MARS_is_not_supported()
             {
                 var entityCommandMock = new Mock<EntityCommand>();
+                entityCommandMock.Setup(m => m.InterceptionContext).Returns(new DbInterceptionContext());
 
                 var dbCommandDefinitionMock = new Mock<DbCommandDefinition>();
                 var mappedCommandDefinitions = new List<DbCommandDefinition>
-                                                   {
-                                                       dbCommandDefinitionMock.Object,
-                                                       dbCommandDefinitionMock.Object
-                                                   };
+                    {
+                        dbCommandDefinitionMock.Object,
+                        dbCommandDefinitionMock.Object
+                    };
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, mappedCommandDefinitions)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
 
                 Assert.Equal(
@@ -333,19 +333,38 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbCommandDefinitionMock = new Mock<DbCommandDefinition>();
                 dbCommandDefinitionMock.Setup(m => m.CreateCommand()).Returns(dbCommandMock.Object);
                 var mappedCommandDefinitions = new List<DbCommandDefinition>
-                                                   {
-                                                       dbCommandDefinitionMock.Object
-                                                   };
+                    {
+                        dbCommandDefinitionMock.Object
+                    };
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, mappedCommandDefinitions)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
 
-                var result = entityCommandDefinitionMock.Object.ExecuteStoreCommands(entityCommand, CommandBehavior.Default);
+                var mockInterceptor = new Mock<DbInterceptor>
+                    {
+                        CallBase = true
+                    };
+                Interception.AddInterceptor(mockInterceptor.Object);
+
+                try
+                {
+                    Assert.Same(
+                        dbDataReader, entityCommandDefinitionMock.Object.ExecuteStoreCommands(entityCommand, CommandBehavior.Default));
+                }
+                finally
+                {
+                    Interception.RemoveInterceptor(mockInterceptor.Object);
+                }
 
                 dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), CommandBehavior.Default);
-                Assert.Same(dbDataReader, result);
+                mockInterceptor.Verify(
+                    m => m.ReaderExecuting(dbCommandMock.Object, CommandBehavior.Default, entityCommand.InterceptionContext));
+                mockInterceptor.Verify(
+                    m =>
+                    m.ReaderExecuted(
+                        dbCommandMock.Object, CommandBehavior.Default, It.IsAny<DbDataReader>(), entityCommand.InterceptionContext));
             }
 
             [Fact]
@@ -359,14 +378,14 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbCommandDefinitionMock = new Mock<DbCommandDefinition>();
                 dbCommandDefinitionMock.Setup(m => m.CreateCommand()).Returns(dbCommandMock.Object);
                 var mappedCommandDefinitions = new List<DbCommandDefinition>
-                                                   {
-                                                       dbCommandDefinitionMock.Object
-                                                   };
+                    {
+                        dbCommandDefinitionMock.Object
+                    };
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, mappedCommandDefinitions)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
 
                 entityCommandDefinition.ExecuteStoreCommands(entityCommand, CommandBehavior.SequentialAccess);
@@ -384,14 +403,14 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbCommandDefinitionMock = new Mock<DbCommandDefinition>();
                 dbCommandDefinitionMock.Setup(m => m.CreateCommand()).Returns(dbCommandMock.Object);
                 var mappedCommandDefinitions = new List<DbCommandDefinition>
-                                                   {
-                                                       dbCommandDefinitionMock.Object
-                                                   };
+                    {
+                        dbCommandDefinitionMock.Object
+                    };
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, mappedCommandDefinitions)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
 
                 Assert.Equal(
@@ -405,6 +424,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityCommandMock = new Mock<EntityCommand>();
                 entityCommandMock.Setup(m => m.ValidateAndGetEntityTransaction()).Returns(default(EntityTransaction));
                 entityCommandMock.SetupGet(m => m.Connection).Returns(new Mock<EntityConnection>().Object);
+                entityCommandMock.SetupGet(m => m.InterceptionContext).Returns(new DbInterceptionContext());
                 return entityCommandMock.Object;
             }
         }
@@ -420,15 +440,15 @@ namespace System.Data.Entity.Core.EntityClient
 
                 var dbCommandDefinitionMock = new Mock<DbCommandDefinition>();
                 var mappedCommandDefinitions = new List<DbCommandDefinition>
-                                                   {
-                                                       dbCommandDefinitionMock.Object,
-                                                       dbCommandDefinitionMock.Object
-                                                   };
+                    {
+                        dbCommandDefinitionMock.Object,
+                        dbCommandDefinitionMock.Object
+                    };
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, mappedCommandDefinitions)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
 
                 AssertThrowsInAsyncMethod<NotSupportedException>(
@@ -450,14 +470,14 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbCommandDefinitionMock = new Mock<DbCommandDefinition>();
                 dbCommandDefinitionMock.Setup(m => m.CreateCommand()).Returns(dbCommandMock.Object);
                 var mappedCommandDefinitions = new List<DbCommandDefinition>
-                                                   {
-                                                       dbCommandDefinitionMock.Object
-                                                   };
+                    {
+                        dbCommandDefinitionMock.Object
+                    };
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, mappedCommandDefinitions)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
 
                 var result =
@@ -482,14 +502,14 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbCommandDefinitionMock = new Mock<DbCommandDefinition>();
                 dbCommandDefinitionMock.Setup(m => m.CreateCommand()).Returns(dbCommandMock.Object);
                 var mappedCommandDefinitions = new List<DbCommandDefinition>
-                                                   {
-                                                       dbCommandDefinitionMock.Object
-                                                   };
+                    {
+                        dbCommandDefinitionMock.Object
+                    };
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, mappedCommandDefinitions)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
 
                 entityCommandDefinition.ExecuteStoreCommandsAsync(
@@ -511,14 +531,14 @@ namespace System.Data.Entity.Core.EntityClient
                 var dbCommandDefinitionMock = new Mock<DbCommandDefinition>();
                 dbCommandDefinitionMock.Setup(m => m.CreateCommand()).Returns(dbCommandMock.Object);
                 var mappedCommandDefinitions = new List<DbCommandDefinition>
-                                                   {
-                                                       dbCommandDefinitionMock.Object
-                                                   };
+                    {
+                        dbCommandDefinitionMock.Object
+                    };
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(null, null, mappedCommandDefinitions)
-                                                      {
-                                                          CallBase = true
-                                                      };
+                    {
+                        CallBase = true
+                    };
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
 
                 AssertThrowsInAsyncMethod<EntityCommandExecutionException>(
@@ -532,6 +552,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityCommandMock = new Mock<EntityCommand>();
                 entityCommandMock.Setup(m => m.ValidateAndGetEntityTransaction()).Returns(default(EntityTransaction));
                 entityCommandMock.SetupGet(m => m.Connection).Returns(new Mock<EntityConnection>().Object);
+                entityCommandMock.Setup(m => m.InterceptionContext).Returns(new DbInterceptionContext());
                 return entityCommandMock.Object;
             }
         }

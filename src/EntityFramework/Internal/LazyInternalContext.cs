@@ -97,9 +97,8 @@ namespace System.Data.Entity.Internal
             IInternalConnection internalConnection,
             DbCompiledModel model,
             IDbModelCacheKeyFactory cacheKeyFactory = null,
-            AttributeProvider attributeProvider = null,
-            Interception interception = null)
-            : base(owner, interception)
+            AttributeProvider attributeProvider = null)
+            : base(owner)
         {
             DebugCheck.NotNull(internalConnection);
 
@@ -426,6 +425,8 @@ namespace System.Data.Entity.Internal
                     _objectContext.CommandTimeout = _commandTimeout;
 
                     _objectContext.ContextOptions.UseConsistentNullReferenceBehavior = true;
+
+                    _objectContext.InterceptionContext = _objectContext.InterceptionContext.WithDbContext(Owner);
 
                     InitializeEntitySetMappings();
                 }

@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <summary>
         ///     Persists the changes made in the entity cache to the store.
         /// </summary>
-        Int32 Update(IEntityStateManager cache, bool throwOnClosedConnection = true);
+        Int32 Update(bool throwOnClosedConnection = true);
 
 #if !NET40
 
@@ -38,10 +38,9 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         ///     An asynchronous version of Update, which
         ///     persists modifications described in the given cache.
         /// </summary>
-        /// <param name="entityCache"> Entity cache containing changes to persist to the store. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns> A Task containing the number of cache entries affected by the update. </returns>
-        Task<int> UpdateAsync(IEntityStateManager entityCache, CancellationToken cancellationToken);
+        Task<int> UpdateAsync(CancellationToken cancellationToken);
 
 #endif
     }

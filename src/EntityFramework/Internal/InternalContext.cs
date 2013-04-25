@@ -90,8 +90,6 @@ namespace System.Data.Entity.Internal
         // The DbContext that owns this InternalContext instance
         private readonly DbContext _owner;
 
-        private readonly Interception _interception;
-
         // Cache of the types that are valid mapped types for this context, together with
         // the entity sets to which these types map and the CLR type that acts as the base
         // of the inheritance hierarchy for the given type.
@@ -127,12 +125,11 @@ namespace System.Data.Entity.Internal
         /// <param name="owner">
         ///     The owner <see cref="DbContext" /> .
         /// </param>
-        protected InternalContext(DbContext owner, Interception interception = null)
+        protected InternalContext(DbContext owner)
         {
             DebugCheck.NotNull(owner);
 
             _owner = owner;
-            _interception = interception ?? Interception.Instance;
 
             AutoDetectChangesEnabled = true;
             ValidateOnSaveEnabled = true;
@@ -399,9 +396,6 @@ namespace System.Data.Entity.Internal
         /// <returns> The number of objects written to the underlying database. </returns>
         public virtual int SaveChanges()
         {
-            // TODO: Async
-            _interception.SetActiveContext(_owner);
-
             try
             {
                 if (ValidateOnSaveEnabled)
@@ -423,10 +417,6 @@ namespace System.Data.Entity.Internal
             catch (UpdateException ex)
             {
                 throw WrapUpdateException(ex);
-            }
-            finally
-            {
-                _interception.SetActiveContext(null);
             }
         }
 

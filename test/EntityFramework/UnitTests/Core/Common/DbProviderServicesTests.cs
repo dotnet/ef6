@@ -24,12 +24,14 @@ namespace System.Data.Entity.Core.Common
             [Fact]
             public void Dispatches_to_interception()
             {
-                var mockInterception = new Mock<Interception>();
+                var dispatcher = new DbCommandTreeDispatcher();
+                var mockCommandTreeInterceptor = new Mock<IDbCommandTreeInterceptor>();
+                dispatcher.InternalDispatcher.Add(mockCommandTreeInterceptor.Object);
 
                 var providerServices
                     = new Mock<DbProviderServices>(
                         (Func<IDbDependencyResolver>)(() => new Mock<IDbDependencyResolver>().Object),
-                        mockInterception.Object)
+                        dispatcher)
                           {
                               CallBase = true
                           }.Object;
@@ -54,7 +56,7 @@ namespace System.Data.Entity.Core.Common
 
                 providerServices.CreateCommandDefinition(mockCommandTree.Object);
 
-                mockInterception.Verify(m => m.Dispatch(mockCommandTree.Object), Times.Once());
+                mockCommandTreeInterceptor.Verify(m => m.TreeCreated(mockCommandTree.Object, It.IsAny<DbInterceptionContext>()), Times.Once());
             }
         }
 

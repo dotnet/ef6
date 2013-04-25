@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // populate the main state entry for error reporting
             _stateEntries = stateEntries;
 
-            _dbCommand = new InterceptableDbCommand(dbCommand);
+            _dbCommand = new InterceptableDbCommand(dbCommand, translator.InterceptionContext);
         }
 
         #endregion

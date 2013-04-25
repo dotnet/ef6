@@ -3,6 +3,7 @@
 namespace System.Data.Entity.SqlServerCompact
 {
     using System.Data.Common;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.SqlServerCompact.Resources;
     using System.Data.SqlServerCe;
     using System.Diagnostics;
@@ -154,13 +155,15 @@ namespace System.Data.Entity.SqlServerCompact
         public new SqlCeDataReader ExecuteReader(CommandBehavior behavior)
         {
             var index = 0;
-            var cAffectedRecords = 0;
             Debug.Assert(CommandTexts.Length == 1 || CommandTexts.Length == 2);
             if (commandTexts.Length > 1)
             {
                 command.CommandText = commandTexts[index++];
-                cAffectedRecords = command.ExecuteNonQuery();
 
+                // Not dispatching to interceptors here because that was already done before calling ExecuteReader.
+                // This call is simply an implementation detail of how the SQL CE provider handles the command text.
+                var cAffectedRecords = command.ExecuteNonQuery();
+                   
                 // If first command doesn't affect any records, then second query should not return any rows
                 //
                 if (cAffectedRecords == 0)
@@ -212,12 +215,14 @@ namespace System.Data.Entity.SqlServerCompact
         public SqlCeResultSet ExecuteResultSet(ResultSetOptions options, SqlCeResultSet resultSet)
         {
             var index = 0;
-            var cAffectedRecords = 0;
             Debug.Assert(CommandTexts.Length == 1 || CommandTexts.Length == 2);
             if (commandTexts.Length > 1)
             {
                 command.CommandText = commandTexts[index++];
-                cAffectedRecords = command.ExecuteNonQuery();
+
+                // Not dispatching to interceptors here because that was already done before calling ExecuteReader.
+                // This call is simply an implementation detail of how the SQL CE provider handles the command text.
+                var cAffectedRecords = command.ExecuteNonQuery();
 
                 // If first command doesn't affect any records, then second query should not return any rows
                 //
@@ -265,12 +270,14 @@ namespace System.Data.Entity.SqlServerCompact
         public override int ExecuteNonQuery()
         {
             var index = 0;
-            var cAffectedRecords = 0;
             Debug.Assert(CommandTexts.Length == 1 || CommandTexts.Length == 2);
             if (commandTexts.Length > 1)
             {
                 command.CommandText = commandTexts[index++];
-                cAffectedRecords = command.ExecuteNonQuery();
+
+                // Not dispatching to interceptors here because that was already done before calling ExecuteReader.
+                // This call is simply an implementation detail of how the SQL CE provider handles the command text.
+                var cAffectedRecords = command.ExecuteNonQuery();
 
                 // If first command doesn't affect any records, then second query should not return any rows
                 //
@@ -289,6 +296,8 @@ namespace System.Data.Entity.SqlServerCompact
             }
             try
             {
+                // Not dispatching to interceptors here because that was already done before calling ExecuteReader.
+                // This call is simply an implementation detail of how the SQL CE provider handles the command text.
                 return command.ExecuteNonQuery();
             }
             catch (SqlCeException e)
@@ -318,12 +327,14 @@ namespace System.Data.Entity.SqlServerCompact
         public override object ExecuteScalar()
         {
             var index = 0;
-            var cAffectedRecords = 0;
             Debug.Assert(CommandTexts.Length == 1 || CommandTexts.Length == 2);
             if (commandTexts.Length > 1)
             {
                 command.CommandText = commandTexts[index++];
-                cAffectedRecords = command.ExecuteNonQuery();
+
+                // Not dispatching to interceptors here because that was already done before calling ExecuteReader.
+                // This call is simply an implementation detail of how the SQL CE provider handles the command text.
+                var cAffectedRecords = command.ExecuteNonQuery();
 
                 // If first command doesn't affect any records, then second query should not return any rows
                 //
@@ -342,6 +353,8 @@ namespace System.Data.Entity.SqlServerCompact
             }
             try
             {
+                // Not dispatching to interceptors here because that was already done before calling ExecuteReader.
+                // This call is simply an implementation detail of how the SQL CE provider handles the command text.
                 return command.ExecuteScalar();
             }
             catch (SqlCeException e)
