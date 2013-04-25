@@ -46,7 +46,7 @@ namespace System.Data.Entity.Edm
         {
             if (item != null)
             {
-                if (item.Annotations.Any())
+                if (item.Annotations.Count > 0)
                 {
                     VisitAnnotations(item, item.Annotations);
                 }
@@ -63,17 +63,17 @@ namespace System.Data.Entity.Edm
             VisitMetadataItem(item);
             if (item != null)
             {
-                if (item.EntitySets.Any())
+                if (item.EntitySets.Count > 0)
                 {
                     VisitEntitySets(item, item.EntitySets);
                 }
 
-                if (item.AssociationSets.Any())
+                if (item.AssociationSets.Count > 0)
                 {
                     VisitAssociationSets(item, item.AssociationSets);
                 }
 
-                if (item.FunctionImports.Any())
+                if (item.FunctionImports.Count > 0)
                 {
                     VisitFunctionImports(item, item.FunctionImports);
                 }
@@ -180,7 +180,7 @@ namespace System.Data.Entity.Edm
         protected virtual void VisitComplexType(ComplexType item)
         {
             VisitMetadataItem(item);
-            if (item.Properties.Any())
+            if (item.Properties.Count > 0)
             {
                 VisitCollection(item.Properties, VisitEdmProperty);
             }
@@ -258,7 +258,7 @@ namespace System.Data.Entity.Edm
         {
             VisitMetadataItem(rowType);
 
-            if (rowType.DeclaredProperties.Any())
+            if (rowType.DeclaredProperties.Count > 0)
             {
                 VisitCollection(rowType.DeclaredProperties, VisitEdmProperty);
             }
@@ -274,7 +274,7 @@ namespace System.Data.Entity.Edm
             VisitMetadataItem(item);
             if (item != null)
             {
-                if (item.Members.Any())
+                if (item.Members.Count > 0)
                 {
                     VisitEnumMembers(item, item.Members);
                 }
@@ -292,17 +292,17 @@ namespace System.Data.Entity.Edm
             if (item != null)
             {
                 if (item.BaseType == null
-                    && item.KeyProperties.Any())
+                    && item.KeyProperties.Count > 0)
                 {
                     VisitKeyProperties(item, item.KeyProperties);
                 }
 
-                if (item.DeclaredProperties.Any())
+                if (item.DeclaredProperties.Count > 0)
                 {
                     VisitDeclaredProperties(item, item.DeclaredProperties);
                 }
 
-                if (item.DeclaredNavigationProperties.Any())
+                if (item.DeclaredNavigationProperties.Count > 0)
                 {
                     VisitDeclaredNavigationProperties(item, item.DeclaredNavigationProperties);
                 }

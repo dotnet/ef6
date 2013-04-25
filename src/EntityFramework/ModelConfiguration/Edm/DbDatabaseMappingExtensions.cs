@@ -81,18 +81,18 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(entityType);
 
-            var mappings = databaseMapping.GetEntityTypeMappings(entityType).ToList();
+            var mappings = databaseMapping.GetEntityTypeMappings(entityType);
 
-            if (mappings.Count() <= 1)
+            if (mappings.Count <= 1)
             {
-                return mappings.SingleOrDefault();
+                return mappings.FirstOrDefault();
             }
 
             // Return the property mapping
             return mappings.SingleOrDefault(m => m.IsHierarchyMapping);
         }
 
-        public static IEnumerable<StorageEntityTypeMapping> GetEntityTypeMappings(
+        public static IReadOnlyList<StorageEntityTypeMapping> GetEntityTypeMappings(
             this DbDatabaseMapping databaseMapping, EntityType entityType)
         {
             DebugCheck.NotNull(databaseMapping);
@@ -115,10 +115,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         public static StorageEntityTypeMapping GetEntityTypeMapping(
-            this DbDatabaseMapping databaseMapping, Type entityType)
+            this DbDatabaseMapping databaseMapping, Type clrType)
         {
             DebugCheck.NotNull(databaseMapping);
-            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(clrType);
 
             // please don't convert this section of code to a Linq expression since
             // it is performance sensitive, especially for larger models.
@@ -127,7 +127,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             {
                 foreach (var etm in esm.EntityTypeMappings)
                 {
-                    if (etm.GetClrType() == entityType)
+                    if (etm.GetClrType() == clrType)
                     {
                         mappings.Add(etm);
                     }
