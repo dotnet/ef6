@@ -451,16 +451,7 @@ namespace System.Data.Entity.Core.Mapping
                         Strings.ViewGen_HashOnMappingClosure_Not_Matching(entityViewContainer.EdmEntityContainerName));
                 }
 
-                // third check, prior to the check, we collect all the views in the entity view container to the dictionary
-                // if the views are changed then we will throw exception out
-                if (VerifyViewsHaveNotChanged(workspace, entityViewContainer))
-                {
-                    SerializedAddGeneratedViews(workspace, entityViewContainer, extentMappingViews);
-                }
-                else
-                {
-                    throw new InvalidOperationException(Strings.Generated_Views_Changed);
-                }
+                SerializedAddGeneratedViews(workspace, entityViewContainer, extentMappingViews);
             }
 
             private static bool TryGetCorrespondingStorageEntityContainerMapping(
@@ -495,24 +486,6 @@ namespace System.Data.Entity.Core.Mapping
                     return true;
                 }
                 return false;
-            }
-
-            private static bool VerifyViewsHaveNotChanged(MetadataWorkspace workspace, EntityViewContainer viewContainer)
-            {
-                //Now check whether the hash of the generated views match the one
-                //we stored in the code file during design
-                //Produce the hash and add it to the code
-                var mappingCollection = (workspace.GetItemCollection(DataSpace.CSSpace) as StorageMappingItemCollection);
-                Debug.Assert(mappingCollection != null, "Must have Mapping Collection in the Metadataworkspace");
-
-                var viewHash = MetadataHelper.GenerateHashForAllExtentViewsContent(
-                    mappingCollection.MappingVersion, viewContainer.ExtentViews);
-                var storedViewHash = viewContainer.HashOverAllExtentViews;
-                if (viewHash != storedViewHash)
-                {
-                    return false;
-                }
-                return true;
             }
 
             //Collect the names of the entitysetbases and the generated views from

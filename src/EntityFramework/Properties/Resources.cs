@@ -5454,14 +5454,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The content of the views or the EntitySet base names have changed from the design time."
-        /// </summary>
-        internal static string Generated_Views_Changed
-        {
-            get { return EntityRes.GetString(EntityRes.Generated_Views_Changed); }
-        }
-
-        /// <summary>
         ///     A string like "The EntitySet '{0}' for which the view has been specified could not be found in the workspace."
         /// </summary>
         internal static string Generated_Views_Invalid_Extent(object p0)
@@ -15837,7 +15829,6 @@ namespace System.Data.Entity.Resources
         internal const string Mapping_EntitySetMismatchOnAssociationSetEnd_QueryView = "Mapping_EntitySetMismatchOnAssociationSetEnd_QueryView";
         internal const string Mapping_Invalid_Query_Views_MissingSetClosure = "Mapping_Invalid_Query_Views_MissingSetClosure";
         internal const string Generated_View_Type_Super_Class = "Generated_View_Type_Super_Class";
-        internal const string Generated_Views_Changed = "Generated_Views_Changed";
         internal const string Generated_Views_Invalid_Extent = "Generated_Views_Invalid_Extent";
         internal const string Mapping_ItemWithSameNameExistsBothInCSpaceAndSSpace = "Mapping_ItemWithSameNameExistsBothInCSpaceAndSSpace";
         internal const string Mapping_AbstractTypeMappingToNonAbstractType = "Mapping_AbstractTypeMappingToNonAbstractType";

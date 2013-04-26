@@ -793,25 +793,6 @@ namespace System.Data.Entity.Core.Common.Utils
             return true;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="dictionaryExtentViews"> </param>
-        /// <returns> </returns>
-        internal static string GenerateHashForAllExtentViewsContent(
-            double schemaVersion, IEnumerable<KeyValuePair<string, string>> extentViews)
-        {
-            using (var metadataHashAlgorithm = CreateMetadataHashAlgorithm(schemaVersion))
-            {
-                var builder = new CompressingHashBuilder(metadataHashAlgorithm);
-                foreach (var view in extentViews)
-                {
-                    builder.AppendLine(view.Key);
-                    builder.AppendLine(view.Value);
-                }
-                return builder.ComputeHash();
-            }
-        }
-
         [SuppressMessage("Microsoft.Cryptographic.Standard", "CA5350:Microsoft.Cryptographic.Standard",
             Justification =
                 "MD5CryptoServiceProvider is not used for cryptography/security purposes and we do it only for v1 and v1.1 for compatibility reasons."

@@ -45,11 +45,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <returns>Hash value.</returns>
         public string HashOverMappingClosure { get; set; }
 
-        /// <summary>Hash value of views.</summary>
-        /// <returns>Hash value.</returns>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "OverAll")]
-        public string HashOverAllExtentViews { get; set; }
-
         /// <summary>Gets or sets view count.</summary>
         /// <returns>View count.</returns>
         public int ViewCount { get; protected set; }

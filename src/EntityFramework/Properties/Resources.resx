@@ -2306,9 +2306,6 @@
   <data name="Generated_View_Type_Super_Class" xml:space="preserve">
     <value>The type that contains generated views '{0}' should derive from the System.Data.Mapping.EntityViewContainer type.</value>
   </data>
-  <data name="Generated_Views_Changed" xml:space="preserve">
-    <value>The content of the views or the EntitySet base names have changed from the design time.</value>
-  </data>
   <data name="Generated_Views_Invalid_Extent" xml:space="preserve">
     <value>The EntitySet '{0}' for which the view has been specified could not be found in the workspace.</value>
   </data>

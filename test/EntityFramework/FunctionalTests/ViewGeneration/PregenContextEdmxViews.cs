@@ -32,7 +32,6 @@ namespace System.Data.Entity.ViewGeneration
             this.EdmEntityContainerName = "PregenContextEdmx";
             this.StoreEntityContainerName = "CodeFirstDatabase";
             this.HashOverMappingClosure = "e204170d57ba6e546c20a5b14040470581534f5d2b996ab84f7b44fe13154168";
-            this.HashOverAllExtentViews = "2d11cdb8f2c0540b3f31881607c75a0a24ad19a25f0cb93d7796210b8c298e14";
             this.ViewCount = 2;
         }
 
