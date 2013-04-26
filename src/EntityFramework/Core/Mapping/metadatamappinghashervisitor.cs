@@ -21,7 +21,8 @@ namespace System.Data.Entity.Core.Mapping
         private double m_MappingVersion;
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        private MetadataMappingHasherVisitor(double mappingVersion)
+        private MetadataMappingHasherVisitor(double mappingVersion, bool sortSequence) 
+            : base(sortSequence)
         {
             m_MappingVersion = mappingVersion;
             m_hashSourceBuilder = new CompressingHashBuilder(MetadataHelper.CreateMetadataHashAlgorithm(m_MappingVersion));
@@ -256,10 +257,9 @@ namespace System.Data.Entity.Core.Mapping
 
             base.Visit(entitySet);
 
-            foreach (
-                var entityType in
-                    MetadataHelper.GetTypeAndSubtypesOf(entitySet.ElementType, m_EdmItemCollection, false).Where(
-                        type => type != entitySet.ElementType))
+            var sequence = MetadataHelper.GetTypeAndSubtypesOf(entitySet.ElementType, m_EdmItemCollection, false)
+                              .Where(type => type != entitySet.ElementType);
+            foreach (var entityType in GetSequence(sequence, it => it.Identity))
             {
                 Visit(entityType);
             }
@@ -830,11 +830,11 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        internal static string GetMappingClosureHash(double mappingVersion, StorageEntityContainerMapping storageEntityContainerMapping)
+        internal static string GetMappingClosureHash(double mappingVersion, StorageEntityContainerMapping storageEntityContainerMapping, bool sortSequence = true)
         {
             DebugCheck.NotNull(storageEntityContainerMapping);
 
-            var visitor = new MetadataMappingHasherVisitor(mappingVersion);
+            var visitor = new MetadataMappingHasherVisitor(mappingVersion, sortSequence);
             visitor.Visit(storageEntityContainerMapping);
             return visitor.HashValue;
         }

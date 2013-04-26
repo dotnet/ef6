@@ -2,18 +2,29 @@
 
 namespace System.Data.Entity.Core.Mapping
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Linq;
+    using System.Text;
 
     internal abstract class BaseMetadataMappingVisitor
     {
+        private readonly bool _sortSequence;
+
+        protected BaseMetadataMappingVisitor(bool sortSequence)
+        {
+            _sortSequence = sortSequence;
+        }
+
         protected virtual void Visit(StorageEntityContainerMapping storageEntityContainerMapping)
         {
             Visit(storageEntityContainerMapping.EdmEntityContainer);
             Visit(storageEntityContainerMapping.StorageEntityContainer);
-            foreach (var mapping in storageEntityContainerMapping.EntitySetMaps)
+
+            foreach (var mapping in GetSequence(storageEntityContainerMapping.EntitySetMaps, it => IdentityHelper.GetIdentity(it)))
             {
                 Visit(mapping);
             }
@@ -42,7 +53,7 @@ namespace System.Data.Entity.Core.Mapping
 
         protected virtual void Visit(StorageSetMapping storageSetMapping)
         {
-            foreach (var typeMapping in storageSetMapping.TypeMappings)
+            foreach (var typeMapping in GetSequence(storageSetMapping.TypeMappings, it => IdentityHelper.GetIdentity(it)))
             {
                 Visit(typeMapping);
             }
@@ -51,7 +62,7 @@ namespace System.Data.Entity.Core.Mapping
 
         protected virtual void Visit(EntityContainer entityContainer)
         {
-            foreach (var set in entityContainer.BaseEntitySets)
+            foreach (var set in GetSequence(entityContainer.BaseEntitySets, it => it.Identity))
             {
                 Visit(set);
             }
@@ -67,7 +78,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             Visit(associationSet.ElementType);
             Visit(associationSet.EntityContainer);
-            foreach (var end in associationSet.AssociationSetEnds)
+            foreach (var end in GetSequence(associationSet.AssociationSetEnds, it => it.Identity))
             {
                 Visit(end);
             }
@@ -75,22 +86,22 @@ namespace System.Data.Entity.Core.Mapping
 
         protected virtual void Visit(EntityType entityType)
         {
-            foreach (var kmember in entityType.KeyMembers)
+            foreach (var kmember in GetSequence(entityType.KeyMembers, it => it.Identity))
             {
                 Visit(kmember);
             }
 
-            foreach (var member in entityType.GetDeclaredOnlyMembers<EdmMember>())
+            foreach (var member in GetSequence(entityType.GetDeclaredOnlyMembers<EdmMember>(), it => it.Identity))
             {
                 Visit(member);
             }
 
-            foreach (var nproperty in entityType.NavigationProperties)
+            foreach (var nproperty in GetSequence(entityType.NavigationProperties, it => it.Identity))
             {
                 Visit(nproperty);
             }
 
-            foreach (var property in entityType.Properties)
+            foreach (var property in GetSequence(entityType.Properties, it => it.Identity))
             {
                 Visit(property);
             }
@@ -98,24 +109,24 @@ namespace System.Data.Entity.Core.Mapping
 
         protected virtual void Visit(AssociationType associationType)
         {
-            foreach (var endMember in associationType.AssociationEndMembers)
+            foreach (var endMember in GetSequence(associationType.AssociationEndMembers, it => it.Identity))
             {
                 Visit(endMember);
             }
             Visit(associationType.BaseType);
-            foreach (var keyMember in associationType.KeyMembers)
+            foreach (var keyMember in GetSequence(associationType.KeyMembers, it => it.Identity))
             {
                 Visit(keyMember);
             }
-            foreach (var member in associationType.GetDeclaredOnlyMembers<EdmMember>())
+            foreach (var member in GetSequence(associationType.GetDeclaredOnlyMembers<EdmMember>(), it => it.Identity))
             {
                 Visit(member);
             }
-            foreach (var item in associationType.ReferentialConstraints)
+            foreach (var item in GetSequence(associationType.ReferentialConstraints, it => it.Identity))
             {
                 Visit(item);
             }
-            foreach (var item in associationType.RelationshipEndMembers)
+            foreach (var item in GetSequence(associationType.RelationshipEndMembers, it => it.Identity))
             {
                 Visit(item);
             }
@@ -153,13 +164,13 @@ namespace System.Data.Entity.Core.Mapping
 
         protected virtual void Visit(ReferentialConstraint referentialConstraint)
         {
-            foreach (var property in referentialConstraint.FromProperties)
+            foreach (var property in GetSequence(referentialConstraint.FromProperties, it => it.Identity))
             {
                 Visit(property);
             }
             Visit(referentialConstraint.FromRole);
 
-            foreach (var property in referentialConstraint.ToProperties)
+            foreach (var property in GetSequence(referentialConstraint.ToProperties, it => it.Identity))
             {
                 Visit(property);
             }
@@ -174,7 +185,7 @@ namespace System.Data.Entity.Core.Mapping
         protected virtual void Visit(TypeUsage typeUsage)
         {
             Visit(typeUsage.EdmType);
-            foreach (var facet in typeUsage.Facets)
+            foreach (var facet in GetSequence(typeUsage.Facets, it => it.Identity))
             {
                 Visit(facet);
             }
@@ -258,18 +269,18 @@ namespace System.Data.Entity.Core.Mapping
         protected virtual void Visit(EdmFunction edmFunction)
         {
             Visit(edmFunction.BaseType);
-            foreach (var entitySet in edmFunction.EntitySets)
+            foreach (var entitySet in GetSequence(edmFunction.EntitySets, it => it.Identity))
             {
                 if (entitySet != null)
                 {
                     Visit(entitySet);
                 }
             }
-            foreach (var functionParameter in edmFunction.Parameters)
+            foreach (var functionParameter in GetSequence(edmFunction.Parameters, it => it.Identity))
             {
                 Visit(functionParameter);
             }
-            foreach (var returnParameter in edmFunction.ReturnParameters)
+            foreach (var returnParameter in GetSequence(edmFunction.ReturnParameters, it => it.Identity))
             {
                 Visit(returnParameter);
             }
@@ -282,11 +293,11 @@ namespace System.Data.Entity.Core.Mapping
         protected virtual void Visit(ComplexType complexType)
         {
             Visit(complexType.BaseType);
-            foreach (var member in complexType.Members)
+            foreach (var member in GetSequence(complexType.Members, it => it.Identity))
             {
                 Visit(member);
             }
-            foreach (var property in complexType.Properties)
+            foreach (var property in GetSequence(complexType.Properties, it => it.Identity))
             {
                 Visit(property);
             }
@@ -300,7 +311,7 @@ namespace System.Data.Entity.Core.Mapping
 
         protected virtual void Visit(EnumType enumType)
         {
-            foreach (var member in enumType.Members)
+            foreach (var member in GetSequence(enumType.Members, it => it.Identity))
             {
                 Visit(member);
             }
@@ -351,19 +362,19 @@ namespace System.Data.Entity.Core.Mapping
 
         protected virtual void Visit(StorageTypeMapping storageTypeMapping)
         {
-            foreach (var type in storageTypeMapping.IsOfTypes)
+            foreach (var type in GetSequence(storageTypeMapping.IsOfTypes, it => it.Identity))
             {
                 Visit(type);
             }
 
-            foreach (var fragment in storageTypeMapping.MappingFragments)
+            foreach (var fragment in GetSequence(storageTypeMapping.MappingFragments, it => IdentityHelper.GetIdentity(it)))
             {
                 Visit(fragment);
             }
 
             Visit(storageTypeMapping.SetMapping);
 
-            foreach (var type in storageTypeMapping.Types)
+            foreach (var type in GetSequence(storageTypeMapping.Types, it => it.Identity))
             {
                 Visit(type);
             }
@@ -371,7 +382,7 @@ namespace System.Data.Entity.Core.Mapping
 
         protected virtual void Visit(StorageMappingFragment storageMappingFragment)
         {
-            foreach (var property in storageMappingFragment.AllProperties)
+            foreach (var property in GetSequence(storageMappingFragment.AllProperties, it => IdentityHelper.GetIdentity(it)))
             {
                 Visit(property);
             }
@@ -410,7 +421,7 @@ namespace System.Data.Entity.Core.Mapping
         protected virtual void Visit(StorageComplexPropertyMapping storageComplexPropertyMapping)
         {
             Visit(storageComplexPropertyMapping.EdmProperty);
-            foreach (var mapping in storageComplexPropertyMapping.TypeMappings)
+            foreach (var mapping in GetSequence(storageComplexPropertyMapping.TypeMappings, it => IdentityHelper.GetIdentity(it)))
             {
                 Visit(mapping);
             }
@@ -430,19 +441,122 @@ namespace System.Data.Entity.Core.Mapping
 
         protected virtual void Visit(StorageComplexTypeMapping storageComplexTypeMapping)
         {
-            foreach (var property in storageComplexTypeMapping.AllProperties)
+            foreach (var property in GetSequence(storageComplexTypeMapping.AllProperties, it => IdentityHelper.GetIdentity(it)))
             {
                 Visit(property);
             }
 
-            foreach (var type in storageComplexTypeMapping.IsOfTypes)
+            foreach (var type in GetSequence(storageComplexTypeMapping.IsOfTypes, it => it.Identity))
             {
                 Visit(type);
             }
 
-            foreach (var type in storageComplexTypeMapping.Types)
+            foreach (var type in GetSequence(storageComplexTypeMapping.Types, it => it.Identity))
             {
                 Visit(type);
+            }
+        }
+
+        protected IEnumerable<T> GetSequence<T>(IEnumerable<T> sequence, Func<T, string> keySelector)
+        {
+            return _sortSequence ? sequence.OrderBy(keySelector, StringComparer.Ordinal) : sequence;
+        }
+
+        // Internal for testing
+        internal static class IdentityHelper
+        {
+            public static string GetIdentity(StorageSetMapping mapping)
+            {
+                return mapping.Set.Identity;
+            }
+
+            public static string GetIdentity(StorageTypeMapping mapping)
+            {
+                var entityTypeMapping = mapping as StorageEntityTypeMapping;
+                if (entityTypeMapping != null)
+                {
+                    return GetIdentity(entityTypeMapping);
+                }
+
+                var associationTypeMapping = (StorageAssociationTypeMapping)mapping;
+                return GetIdentity(associationTypeMapping);
+            }
+
+            public static string GetIdentity(StorageEntityTypeMapping mapping)
+            {
+                var types = mapping.Types.Select(it => it.Identity)
+                    .OrderBy(it => it, StringComparer.Ordinal);
+                var isOfTypes = mapping.IsOfTypes.Select(it => it.Identity)
+                    .OrderBy(it => it, StringComparer.Ordinal);
+                return string.Join(",", types.Concat(isOfTypes));
+            }
+
+            public static string GetIdentity(StorageAssociationTypeMapping mapping)
+            {
+                return mapping.AssociationType.Identity;
+            }
+
+            public static string GetIdentity(StorageComplexTypeMapping mapping)
+            {
+                var properties = mapping.AllProperties.Select(it => GetIdentity(it))
+                    .OrderBy(it => it, StringComparer.Ordinal);
+                var types = mapping.Types.Select(it => it.Identity)
+                    .OrderBy(it => it, StringComparer.Ordinal);
+                var isOfTypes = mapping.IsOfTypes.Select(it => it.Identity)
+                    .OrderBy(it => it, StringComparer.Ordinal);
+                return string.Join(",", properties.Concat(types).Concat(isOfTypes));
+            }
+
+            public static string GetIdentity(StorageMappingFragment mapping)
+            {
+                return mapping.TableSet.Identity;
+            }
+
+            public static string GetIdentity(StoragePropertyMapping mapping)
+            {
+                var scalarPropertyMapping = mapping as StorageScalarPropertyMapping;
+                if (scalarPropertyMapping != null)
+                {
+                    return GetIdentity(scalarPropertyMapping);
+                }
+
+                var complexPropertyMapping = mapping as StorageComplexPropertyMapping;
+                if (complexPropertyMapping != null)
+                {
+                    return GetIdentity(complexPropertyMapping);
+                }
+
+                var endPropertyMapping = mapping as StorageEndPropertyMapping;
+                if (endPropertyMapping != null)
+                {
+                    return GetIdentity(endPropertyMapping);
+                }
+
+                var conditionPropertyMapping = (StorageConditionPropertyMapping)mapping;
+                return GetIdentity(conditionPropertyMapping);
+            }
+
+            public static string GetIdentity(StorageScalarPropertyMapping mapping)
+            {
+                return "ScalarProperty(Identity=" + mapping.EdmProperty.Identity
+                    + ",ColumnIdentity=" + mapping.ColumnProperty.Identity + ")";
+            }
+
+            public static string GetIdentity(StorageComplexPropertyMapping mapping)
+            {
+                return "ComplexProperty(Identity=" + mapping.EdmProperty.Identity + ")";
+            }
+
+            public static string GetIdentity(StorageConditionPropertyMapping mapping)
+            {
+                return mapping.EdmProperty != null
+                    ? "ConditionProperty(Identity=" + mapping.EdmProperty.Identity + ")"
+                    : "ConditionProperty(ColumnIdentity=" + mapping.ColumnProperty.Identity + ")";
+            }
+
+            public static string GetIdentity(StorageEndPropertyMapping mapping)
+            {
+                return "EndProperty(Identity=" + mapping.EndMember.Identity + ")";
             }
         }
     }
