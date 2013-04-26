@@ -15,7 +15,9 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.SqlServerCompact;
     using System.Data.Entity.Utilities;
+    using System.Globalization;
     using System.Linq;
+    using System.Reflection;
     using Moq;
     using Xunit;
 
@@ -171,12 +173,17 @@ namespace System.Data.Entity.Config
         [Fact]
         public void GetService_registers_SQL_Server_as_a_fallback_if_it_is_not_already_registered()
         {
+            var providerTypeName = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer, Version={0}, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                    new AssemblyName(typeof(DbContext).Assembly.FullName).Version);
+
             var mockSqlProvider = new Mock<DbProviderServices>();
             mockSqlProvider.Setup(m => m.GetService(typeof(string), null)).Returns("System.Data.SqlClient");
 
             var mockSection = CreateMockSectionWithProviders();
             var mockFactory = CreateMockFactory(mockSection.Object);
-            mockFactory.Setup(m => m.TryGetInstance("System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer"))
+            mockFactory.Setup(m => m.TryGetInstance(providerTypeName))
                        .Returns(mockSqlProvider.Object);
 
             var appConfig = new AppConfig(new ConnectionStringSettingsCollection(), null, mockSection.Object, mockFactory.Object);

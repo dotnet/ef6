@@ -8,7 +8,9 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Utilities;
+    using System.Globalization;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     ///     Resolves dependencies from a config file.
@@ -136,8 +138,12 @@ namespace System.Data.Entity.Config
 
         private void RegisterSqlServerProvider()
         {
-            var provider = _providerServicesFactory
-                .TryGetInstance("System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer");
+            var providerTypeName = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer, Version={0}, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                    new AssemblyName(typeof(DbContext).Assembly.FullName).Version);
+
+            var provider = _providerServicesFactory.TryGetInstance(providerTypeName);
 
             if (provider != null)
             {
