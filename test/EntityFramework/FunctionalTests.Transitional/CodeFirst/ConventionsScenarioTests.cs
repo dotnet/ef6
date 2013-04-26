@@ -113,6 +113,80 @@ namespace FunctionalTests
         }
 
         [Fact]
+        public void Add_encapsulated_lightweight_convention()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<LightweightEntity>();
+
+            var lightweightTableConvention = new Convention();
+            lightweightTableConvention.Entities()
+            .Where(t => t == typeof(LightweightEntity))
+            .Configure(e => e.ToTable("TheTable"));
+            modelBuilder.Conventions.Add(lightweightTableConvention);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            Assert.True(databaseMapping.Database.GetEntitySets().All(t => t.Table == "TheTable"));
+        }
+
+        [Fact]
+        public void Remove_encapsulated_lightweight_convention()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<LightweightEntity>();
+
+            var lightweightTableConvention = new Convention();
+            lightweightTableConvention.Entities()
+            .Where(t => t == typeof(LightweightEntity))
+            .Configure(e => e.ToTable("TheTable"));
+            modelBuilder.Conventions.Add(lightweightTableConvention);
+            modelBuilder.Conventions.Remove(lightweightTableConvention);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            Assert.False(databaseMapping.Database.GetEntitySets().Any(t => t.Table == "TheTable"));
+        }
+
+        [Fact]
+        public void Add_derived_encapsulated_lightweight_convention()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<LightweightEntity>();
+            modelBuilder.Conventions.Add<LightweightTableConvention>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            Assert.True(databaseMapping.Database.GetEntitySets().All(t => t.Table == "TheTable"));
+        }
+
+        [Fact]
+        public void Remove_derived_encapsulated_lightweight_convention()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<LightweightEntity>();
+            modelBuilder.Conventions.Add<LightweightTableConvention>();
+            modelBuilder.Conventions.Remove<LightweightTableConvention>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            Assert.False(databaseMapping.Database.GetEntitySets().Any(t => t.Table == "TheTable"));
+        }
+
+        private sealed class LightweightTableConvention : Convention
+        {
+            public LightweightTableConvention()
+            {
+                Entities()
+                .Where(t => t == typeof(LightweightEntity))
+                .Configure(e => e.ToTable("TheTable"));
+            }
+        }
+
+        [Fact]
         public void Add_lightweight_convention()
         {
             var modelBuilder = new DbModelBuilder();

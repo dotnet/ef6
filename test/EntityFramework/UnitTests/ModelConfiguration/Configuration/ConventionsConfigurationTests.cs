@@ -30,6 +30,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
+        public void Generic_Add_should_append_convention_on_to_internal_list()
+        {
+            var mockConvention1 = new Mock<IConvention>();
+            var conventionsConfiguration = new ConventionsConfiguration(new[] { mockConvention1.Object });
+
+            conventionsConfiguration.Add<ConventionFixture>();
+
+            Assert.Equal(2, conventionsConfiguration.Conventions.Count());
+            Assert.Same(mockConvention1.Object, conventionsConfiguration.Conventions.First());
+            Assert.IsType<ConventionFixture>(conventionsConfiguration.Conventions.Last());
+        }
+
+        [Fact]
         public void AddAfter_should_add_after_existing_convention()
         {
             var mockConvention = new Mock<IConvention>();
@@ -83,6 +96,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
+        public void Remove_should_remove_the_conventions_from_the_internal_list()
+        {
+            var mockConvention1 = new Mock<IConvention>();
+            var mockConvention2 = new Mock<IConvention>();
+            var conventionsConfiguration = new ConventionsConfiguration(new[] { mockConvention1.Object, mockConvention2.Object });
+
+             conventionsConfiguration.Remove(new[] { mockConvention1.Object, mockConvention2.Object });
+
+            Assert.Equal(0, conventionsConfiguration.Conventions.Count());
+        }
+
+        [Fact]
+        public void Generic_Remove_should_remove_all_matching_conventions()
+        {
+            var conventionsConfiguration = new ConventionsConfiguration(new[] { new ConventionFixture(), new ConventionFixture()});
+
+            conventionsConfiguration.Remove<ConventionFixture>();
+            
+            Assert.Equal(0, conventionsConfiguration.Conventions.Count());
+        }
+
+        [Fact]
         public void ApplyModel_should_run_model_conventions()
         {
             var model = new EdmModel(DataSpace.CSpace);
@@ -91,7 +126,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             conventionsConfiguration.ApplyModel(model);
 
-            mockConvention.Verify(c => c.Apply(model), Times.AtMostOnce());
+            mockConvention.Verify(c => c.Apply(model), Times.Once());
+        }
+
+        [Fact]
+        public void ApplyMapping_should_run_mapping_conventions()
+        {
+            var mapping = new DbDatabaseMapping();
+            var mockConvention = new Mock<IDbMappingConvention>();
+            var conventionsConfiguration = new ConventionsConfiguration(new[] { mockConvention.Object });
+
+            conventionsConfiguration.ApplyMapping(mapping);
+
+            mockConvention.Verify(c => c.Apply(mapping), Times.Once());
         }
 
         [Fact]
@@ -103,7 +150,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             conventionsConfiguration.ApplyDatabase(database);
 
-            mockConvention.Verify(c => c.Apply(database), Times.AtMostOnce());
+            mockConvention.Verify(c => c.Apply(database), Times.Once());
         }
 
         [Fact]
@@ -120,7 +167,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             conventionsConfiguration.ApplyModel(model);
 
-            mockConvention.Verify(c => c.Apply(entityType, model), Times.AtMostOnce());
+            mockConvention.Verify(c => c.Apply(entityType, model), Times.Once());
         }
 
         [Fact]
@@ -137,7 +184,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             
             conventionsConfiguration.ApplyDatabase(database);
 
-            mockConvention.Verify(c => c.Apply(table, database), Times.AtMostOnce());
+            mockConvention.Verify(c => c.Apply(table, database), Times.Once());
         }
 
         [Fact]
@@ -153,6 +200,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
+        public void ApplyModelConfiguration_should_run_encapsulated_model_configuration_conventions()
+        {
+            var mockConvention = new Mock<Convention>();
+            var conventionsConfiguration = new ConventionsConfiguration(new[] { mockConvention.Object });
+            var modelConfiguration = new ModelConfiguration();
+
+            conventionsConfiguration.ApplyModelConfiguration(modelConfiguration);
+
+            mockConvention.Verify(c => c.ApplyModelConfiguration(modelConfiguration), Times.Once());
+        }
+
+        [Fact]
         public void ApplyModelConfiguration_should_run_type_model_configuration_conventions()
         {
             var mockConvention = new Mock<IConfigurationConvention<Type, ModelConfiguration>>();
@@ -161,7 +220,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             conventionsConfiguration.ApplyModelConfiguration(typeof(object), modelConfiguration);
 
-            mockConvention.Verify(c => c.Apply(typeof(object), It.IsAny<Func<ModelConfiguration>>()), Times.AtMostOnce());
+            mockConvention.Verify(c => c.Apply(typeof(object), It.IsAny<Func<ModelConfiguration>>()), Times.Once());
+        }
+
+        [Fact]
+        public void ApplyModelConfiguration_should_run_encapsulated_type_model_configuration_conventions()
+        {
+            var mockConvention = new Mock<Convention>();
+            var conventionsConfiguration = new ConventionsConfiguration(new[] { mockConvention.Object });
+            var modelConfiguration = new ModelConfiguration();
+
+            conventionsConfiguration.ApplyModelConfiguration(typeof(object), modelConfiguration);
+
+            mockConvention.Verify(c => c.ApplyModelConfiguration(typeof(object), It.IsAny<ModelConfiguration>()), Times.Once());
         }
 
         [Fact]
@@ -175,8 +246,34 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             conventionsConfiguration.ApplyTypeConfiguration(typeof(object), entityTypeConfiguration);
 
-            mockConvention1.Verify(c => c.Apply(typeof(object), entityTypeConfiguration), Times.AtMostOnce());
-            mockConvention2.Verify(c => c.Apply(typeof(object), entityTypeConfiguration), Times.AtMostOnce());
+            mockConvention1.Verify(c => c.Apply(typeof(object), entityTypeConfiguration), Times.Once());
+            mockConvention2.Verify(c => c.Apply(typeof(object), entityTypeConfiguration), Times.Once());
+        }
+
+        [Fact]
+        public void ApplyTypeConfiguration_should_run_encapsulated_type_configuration_conventions()
+        {
+            var mockConvention = new Mock<Convention>();
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new IConvention[] { mockConvention.Object});
+            var entityTypeConfiguration = new Func<EntityTypeConfiguration>(() => new EntityTypeConfiguration(typeof(object)));
+
+            conventionsConfiguration.ApplyTypeConfiguration(typeof(object), entityTypeConfiguration);
+
+            mockConvention.Verify(c => c.ApplyTypeConfiguration(typeof(object), entityTypeConfiguration), Times.Once());
+        }
+
+        [Fact]
+        public void ApplyPluralizingTableNameConvention_should_run_PluralizingTableName_conventions()
+        {
+            var model = new EdmModel(DataSpace.SSpace);
+            model.AddItem(new EntityType("foo", "bar", DataSpace.SSpace));
+            var mockConvention = new Mock<PluralizingTableNameConvention>();
+            var conventionsConfiguration = new ConventionsConfiguration(new[] { mockConvention.Object });
+
+            conventionsConfiguration.ApplyPluralizingTableNameConvention(model);
+
+            mockConvention.Verify(c => c.Apply(It.IsAny<EntityType>(),model), Times.Once());
         }
 
         [Fact]
@@ -188,7 +285,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             conventionsConfiguration.ApplyPropertyConfiguration(mockPropertyInfo, () => new Properties.Primitive.StringPropertyConfiguration());
 
-            mockConvention.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<Properties.Primitive.StringPropertyConfiguration>>()), Times.AtMostOnce());
+            mockConvention.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<Properties.Primitive.StringPropertyConfiguration>>()), Times.Once());
+        }
+
+        [Fact]
+        public void ApplyPropertyConfiguration_should_run_encapsulated_property_configuration_conventions()
+        {
+            var mockConvention = new Mock<Convention>();
+            var conventionsConfiguration = new ConventionsConfiguration(new[] { mockConvention.Object });
+            var mockPropertyInfo = new MockPropertyInfo(typeof(string), "S");
+
+            conventionsConfiguration.ApplyPropertyConfiguration(mockPropertyInfo, () => new Properties.Primitive.StringPropertyConfiguration());
+
+            mockConvention.Verify(c => c.ApplyPropertyConfiguration(mockPropertyInfo, It.IsAny<Func<PropertyConfiguration>>()), Times.Once());
         }
 
         [Fact]
@@ -204,8 +313,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 mockPropertyInfo,
                 () => new NavigationPropertyConfiguration(mockPropertyInfo));
 
-            mockConvention1.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<PropertyConfiguration>>()), Times.AtMostOnce());
-            mockConvention2.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<NavigationPropertyConfiguration>>()), Times.AtMostOnce());
+            mockConvention1.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<PropertyConfiguration>>()), Times.Once());
+            mockConvention2.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<NavigationPropertyConfiguration>>()), Times.Once());
         }
 
         [Fact]
@@ -219,7 +328,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             conventionsConfiguration.ApplyPropertyConfiguration(mockPropertyInfo, modelConfiguration);
 
-            mockConvention.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<ModelConfiguration>>()), Times.AtMostOnce());
+            mockConvention.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<ModelConfiguration>>()), Times.Once());
+        }
+
+        [Fact]
+        public void ApplyPropertyConfiguration_should_run_encapsulated_property_model_conventions()
+        {
+            var mockConvention = new Mock<Convention>();
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new IConvention[] { mockConvention.Object });
+            var mockPropertyInfo = new MockPropertyInfo(typeof(object), "N");
+            var modelConfiguration = new ModelConfiguration();
+
+            conventionsConfiguration.ApplyPropertyConfiguration(mockPropertyInfo, modelConfiguration);
+
+            mockConvention.Verify(c => c.ApplyPropertyConfiguration(mockPropertyInfo, It.IsAny<ModelConfiguration>()), Times.Once());
         }
 
         [Fact]
@@ -234,8 +357,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             conventionsConfiguration.ApplyPropertyConfiguration(mockPropertyInfo, () => new Properties.Primitive.StringPropertyConfiguration());
 
-            mockConvention1.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<Properties.Primitive.StringPropertyConfiguration>>()), Times.AtMostOnce());
-            mockConvention2.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<PropertyConfiguration>>()), Times.AtMostOnce());
+            mockConvention1.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<Properties.Primitive.StringPropertyConfiguration>>()), Times.Once());
+            mockConvention2.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<PropertyConfiguration>>()), Times.Once());
             mockConvention3.Verify(c => c.Apply(mockPropertyInfo, It.IsAny<Func<NavigationPropertyConfiguration>>()), Times.Never());
         }
 
@@ -251,8 +374,35 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             conventionsConfiguration.ApplyPropertyTypeConfiguration(mockPropertyInfo, complexTypeConfiguration);
 
-            mockConvention1.Verify(c => c.Apply(mockPropertyInfo, complexTypeConfiguration), Times.AtMostOnce());
-            mockConvention2.Verify(c => c.Apply(mockPropertyInfo, complexTypeConfiguration), Times.AtMostOnce());
+            mockConvention1.Verify(c => c.Apply(mockPropertyInfo, complexTypeConfiguration), Times.Once());
+            mockConvention2.Verify(c => c.Apply(mockPropertyInfo, complexTypeConfiguration), Times.Once());
+        }
+
+        [Fact]
+        public void ApplyPropertyTypeConfiguration_should_run_encapsulated_property_type_configuration_conventions()
+        {
+            var mockConvention = new Mock<Convention>();
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new IConvention[] { mockConvention.Object });
+            var complexTypeConfiguration = new Func<ComplexTypeConfiguration>(() => new ComplexTypeConfiguration(typeof(object)));
+            var mockPropertyInfo = new MockPropertyInfo();
+
+            conventionsConfiguration.ApplyPropertyTypeConfiguration(mockPropertyInfo, complexTypeConfiguration);
+
+            mockConvention.Verify(c => c.ApplyPropertyTypeConfiguration(mockPropertyInfo, complexTypeConfiguration), Times.Once());
+        }
+
+        [Fact]
+        public void Clone_returns_an_identical_object()
+        {
+            var mockConvention = new Mock<Convention>();
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new IConvention[] { mockConvention.Object });
+
+            var clone = conventionsConfiguration.Clone();
+
+            Assert.NotSame(conventionsConfiguration, clone);
+            Assert.Equal(conventionsConfiguration.Conventions, clone.Conventions);
         }
     }
 }

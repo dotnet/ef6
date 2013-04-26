@@ -259,6 +259,7 @@
     <Compile Include="Migrations\Model\ParameterModel.cs" />
     <Compile Include="Migrations\Model\DropProcedureOperation.cs" />
     <Compile Include="Migrations\Model\PropertyModel.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Convention.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\Api\PropertyMappingConfiguration.cs" />
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="TransactionalBehavior.cs" />
