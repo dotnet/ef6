@@ -94,13 +94,13 @@ END", DefaultDbName<SimpleModelContext>());
             }
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void DatabaseExists_returns_true_for_existing_attached_database_with_InitialCatalog_when_using_Database_obtained_from_context()
         {
             DatabaseExists_returns_true_for_existing_attached_database_when_using_Database_obtained_from_context(true);
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void DatabaseExists_returns_true_for_existing_attached_database_without_InitialCatalog_when_using_Database_obtained_from_context()
         {
             DatabaseExists_returns_true_for_existing_attached_database_when_using_Database_obtained_from_context(false);
@@ -248,7 +248,7 @@ END", DefaultDbName<SimpleModelContext>());
             }
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void DatabaseExists_returns_true_for_existing_database_when_no_master_permissions()
         {
             using (var context = new NoMasterPermissionContext(SimpleConnectionString<NoMasterPermissionContext>()))
@@ -285,7 +285,7 @@ END");
             }
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void DatabaseExists_returns_false_for_existing_database_when_no_master_nor_database_permissions()
         {
             using (var context = new NoMasterPermissionContext(SimpleConnectionString<NoMasterPermissionContext>()))
@@ -322,7 +322,7 @@ END");
             }
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void DatabaseExists_returns_false_for_non_existing_database_when_no_master_permissions()
         {
             var connectionString
@@ -334,7 +334,7 @@ END");
                 () => Database.Exists(connectionString));
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void DatabaseExists_returns_true_for_existing_attached_database_when_no_master_permissions()
         {
             var connectionString = SimpleAttachConnectionString<AttachedContext>();
@@ -379,13 +379,13 @@ END";
             }
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void DatabaseExists_returns_false_for_existing_attached_database_with_InitialCatalog_when_no_master_nor_database_permission()
         {
             DatabaseExists_returns_false_for_existing_attached_database_when_no_master_nor_database_permission(true);
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void DatabaseExists_returns_false_for_existing_attached_database_without_InitialCatalog_when_no_master_nor_database_permission()
         {
             DatabaseExists_returns_false_for_existing_attached_database_when_no_master_nor_database_permission(false);
@@ -419,13 +419,13 @@ END";
             }
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void DatabaseExists_returns_false_for_non_existing_attached_database_with_InitialCatalog_when_no_master_permission()
         {
             DatabaseExists_returns_false_for_non_existing_attached_database_when_no_master_permission(true);
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void DatabaseExists_returns_false_for_non_existing_attached_database_without_InitialCatalog_when_no_master_permission()
         {
             DatabaseExists_returns_false_for_non_existing_attached_database_when_no_master_permission(false);
@@ -536,13 +536,13 @@ END";
             }
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void Can_delete_attached_database_with_InitialCatalog_if_exists_using_Database_obtained_from_context()
         {
             Can_delete_attached_database_if_exists_using_Database_obtained_from_context(true);
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void Can_delete_attached_database_without_InitialCatalog_if_exists_using_Database_obtained_from_context()
         {
             Can_delete_attached_database_if_exists_using_Database_obtained_from_context(false);
@@ -646,7 +646,7 @@ END";
             }
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void DeleteDatabaseIfExists_does_nothing_if_attached_database_does_not_exist_using_Database_obtained_from_context()
         {
             AttachableDatabaseTest(
@@ -657,7 +657,7 @@ END";
                     });
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void DeleteDatabaseIfExists_does_nothing_if_attached_database_without_InitialCatalog_does_not_exist_using_Database_obtained_from_context()
         {
             AttachableDatabaseTest(
@@ -762,13 +762,13 @@ END";
             }
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void Can_create_attached_database_with_InitialCatalog_using_Database_obtained_from_context()
         {
             Can_create_attached_database_using_Database_obtained_from_context(true);
         }
 
-        // [Fact] See CodePlex 1076
+        [Fact]
         public void Can_create_attached_database_without_InitialCatalog_using_Database_obtained_from_context()
         {
             Can_create_attached_database_using_Database_obtained_from_context(true);
