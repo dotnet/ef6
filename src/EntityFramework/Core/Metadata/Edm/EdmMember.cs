@@ -36,6 +36,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _typeUsage = memberTypeUsage;
         }
 
+        string INamedDataModelItem.Identity
+        {
+            get { return Identity; }
+        }
+
         /// <summary>
         ///     Returns the identity of the member
         /// </summary>
@@ -68,7 +73,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             // Duplicate configured name, uniquify the identity so that
                             // a validation exception can be generated later on. For valid
                             // models, we sync it back up in SetReadOnly()
-                            _identity = _declaringType.Members.UniquifyName(Identity);
+                            _identity = _declaringType.Members.UniquifyIdentity(Identity);
                         }
 
                         _declaringType.NotifyItemIdentityChanged();

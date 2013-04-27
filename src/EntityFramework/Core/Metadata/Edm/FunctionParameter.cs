@@ -69,6 +69,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return GetParameterMode(); }
         }
 
+        string INamedDataModelItem.Identity
+        {
+            get { return Identity; }
+        }
+
         /// <summary>
         ///     Returns the identity of the member
         /// </summary>

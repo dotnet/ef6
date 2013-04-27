@@ -75,6 +75,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal string CacheIdentity { get; private set; }
 
+        string INamedDataModelItem.Identity
+        {
+            get { return Identity; }
+        }
+
         /// <summary>
         ///     Returns the identity of the edm type
         /// </summary>

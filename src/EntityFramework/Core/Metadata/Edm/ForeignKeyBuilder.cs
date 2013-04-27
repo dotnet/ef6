@@ -155,6 +155,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { throw new NotImplementedException(); }
         }
 
+        string INamedDataModelItem.Identity
+        {
+            get { return Identity; }
+        }
+
         internal override string Identity
         {
             get { throw new NotImplementedException(); }

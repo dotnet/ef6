@@ -1301,6 +1301,31 @@ namespace FunctionalTests
         public abstract class CoverBusiness
         {
             public int Id { get; set; }
+
+            // CodePlex 1063
+            // These are needed to push the property count over the limit where
+            // the MetadataWorkspace starts treating collections differently.
+            public int Something00 { get; set; }
+            public int Something01 { get; set; }
+            public int Something02 { get; set; }
+            public int Something03 { get; set; }
+            public int Something04 { get; set; }
+            public int Something05 { get; set; }
+            public int Something06 { get; set; }
+            public int Something07 { get; set; }
+            public int Something08 { get; set; }
+            public int Something09 { get; set; }
+            public int Something10 { get; set; }
+            public int Something11 { get; set; }
+            public int Something12 { get; set; }
+            public int Something13 { get; set; }
+            public int Something14 { get; set; }
+            public int Something15 { get; set; }
+            public int Something16 { get; set; }
+            public int Something17 { get; set; }
+            public int Something18 { get; set; }
+            public int Something19 { get; set; }
+            public int Something20 { get; set; }
         }
 
         public class CarWash : CoverBusiness
@@ -1310,6 +1335,18 @@ namespace FunctionalTests
         }
 
         public class FastFoodChain : CoverBusiness
+        {
+            [Column("Name")]
+            public string Name { get; set; }
+        }
+
+        public class HotDogStand : CoverBusiness
+        {
+            [Column("Name")]
+            public string Name { get; set; }
+        }
+
+        public class InABun : CoverBusiness
         {
             [Column("Name")]
             public string Name { get; set; }

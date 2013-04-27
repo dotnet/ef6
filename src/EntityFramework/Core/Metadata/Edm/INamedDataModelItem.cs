@@ -2,8 +2,9 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    public interface INamedDataModelItem : IMetadataItem
+    internal interface INamedDataModelItem : IMetadataItem
     {
         string Name { get; }
+        string Identity { get; }
     }
 }

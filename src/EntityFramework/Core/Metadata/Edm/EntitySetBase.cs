@@ -79,6 +79,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return BuiltInTypeKind.EntitySetBase; }
         }
 
+        string INamedDataModelItem.Identity
+        {
+            get { return Identity; }
+        }
+
         /// <summary>
         ///     Gets the identity for this item as a string
         /// </summary>
