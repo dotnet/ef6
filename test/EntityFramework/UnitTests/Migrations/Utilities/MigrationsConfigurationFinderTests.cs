@@ -205,8 +205,7 @@ namespace System.Data.Entity.Migrations.Utilities
                         null));
         }
 
-        [Fact]
-        public void FindMigrationsConfiguration_unwraps_and_preserves_stack_for_invocation_exceptions_thrown_when_constructing_object()
+        public void FindMigrationsConfiguration_unwraps_and_preserves_stack_on_net45_for_invocation_exceptions()
         {
             var exception =
                 Assert.Throws<MigrationsException>(
@@ -215,7 +214,9 @@ namespace System.Data.Entity.Migrations.Utilities
                               .FindMigrationsConfiguration(typeof(ContextWithBadConfig), null));
 
             Assert.Equal(Strings.DbMigrationsConfiguration_RootedPath(@"\Test"), exception.Message);
+#if !NET40
             Assert.Contains("set_MigrationsDirectory", exception.StackTrace);
+#endif
         }
 
         public class ContextWithBadConfig : DbContext

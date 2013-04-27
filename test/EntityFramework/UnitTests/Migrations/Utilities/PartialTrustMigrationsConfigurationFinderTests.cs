@@ -11,7 +11,7 @@ namespace System.Data.Entity.Migrations.Utilities
     public class PartialTrustMigrationsConfigurationFinderTests : TestBase
     {
         [Fact]
-        public void FindMigrationsConfiguration_handles_inability_to_preserve_stack_trace_in_partial_trust()
+        public void FindMigrationsConfiguration_preserve_stack_trace_on_net45_in_partial_trust()
         {
             var exception =
                 Assert.Throws<MigrationsException>(
@@ -20,7 +20,9 @@ namespace System.Data.Entity.Migrations.Utilities
                               .FindMigrationsConfiguration(typeof(ContextWithBadConfig), null));
 
             Assert.Equal(Strings.DbMigrationsConfiguration_RootedPath(@"\Test"), exception.Message);
-            Assert.DoesNotContain("set_MigrationsDirectory", exception.StackTrace);
+#if !NET40
+            Assert.Contains("set_MigrationsDirectory", exception.StackTrace);
+#endif
         }
 
         public class ContextWithBadConfig : DbContext

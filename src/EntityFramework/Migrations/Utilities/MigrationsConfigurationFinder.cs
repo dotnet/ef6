@@ -9,6 +9,9 @@ namespace System.Data.Entity.Migrations.Utilities
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
+#if !NET40
+    using System.Runtime.ExceptionServices;
+#endif
 
     internal class MigrationsConfigurationFinder
     {
@@ -54,20 +57,9 @@ namespace System.Data.Entity.Migrations.Utilities
             catch (TargetInvocationException ex)
             {
                 Debug.Assert(ex.InnerException != null);
-
-                try
-                {
-                    var stackField = typeof(Exception).GetField("_remoteStackTraceString", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (stackField != null)
-                    {
-                        stackField.SetValue(ex.InnerException, ex.InnerException.StackTrace);
-                    }
-                }
-                catch (FieldAccessException)
-                {
-                    // Accessing _remoteStackTraceString can fail in partial trust, so abort attempt.
-                }
-
+#if !NET40
+                ExceptionDispatchInfo.Capture(ex.InnerException).Throw(); 
+#endif
                 throw ex.InnerException;
             }
         }
