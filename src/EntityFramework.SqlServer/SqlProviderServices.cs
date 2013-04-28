@@ -27,7 +27,7 @@ namespace System.Data.Entity.SqlServer
     /// <remarks>
     ///     Note that instance of this type also resolve additional provider services for Microsoft SQL Server
     ///     when this type is registered as an EF provider either using an entry in the application's config file
-    ///     or through code-based registeration in <see cref="DbConfiguration" />.
+    ///     or through code-based registration in <see cref="DbConfiguration" />.
     ///     The services resolved are:
     ///     Requests for <see cref="IDbConnectionFactory" /> are resolved to a Singleton instance of
     ///     <see cref="SqlConnectionFactory" /> to create connections to SQL Express by default.
@@ -92,12 +92,31 @@ namespace System.Data.Entity.SqlServer
         /// </summary>
         private static readonly SqlProviderServices _providerInstance = new SqlProviderServices();
 
+        private static bool _truncateDecimalsToScale = true;
+
         /// <summary>
         ///     The Singleton instance of the SqlProviderServices type.
         /// </summary>
         public static SqlProviderServices Instance
         {
             get { return _providerInstance; }
+        }
+
+        /// <summary>
+        ///     Set this flag to false to prevent <see cref="decimal" /> values from being truncated to
+        ///     the scale (number of decimal places) defined for the column. The default value is true,
+        ///     indicating that decimal values will be truncated, in order to prevent breaking existing
+        ///     applications that depend on this behavior.
+        /// </summary>
+        /// <remarks>
+        ///     With this flag set to true <see cref="SqlParameter" /> objects are created with their Scale
+        ///     properties set. When this flag is set to false then the Scale properties are not set, meaning
+        ///     that the truncation behavior of SqlParameter is avoided.
+        /// </remarks>
+        public static bool TruncateDecimalsToScale
+        {
+            get { return _truncateDecimalsToScale; }
+            set { _truncateDecimalsToScale = value; }
         }
 
         /// <summary>
@@ -431,7 +450,7 @@ namespace System.Data.Entity.SqlServer
                 result.Precision = precision.Value;
             }
             if (scale.HasValue
-                && (isOutParam || result.Scale != scale.Value))
+                && (isOutParam || (result.Scale != scale.Value && _truncateDecimalsToScale)))
             {
                 result.Scale = scale.Value;
             }

@@ -188,6 +188,7 @@
     <Compile Include="TestModels\ArubaCeModel\ArubaCeContext.cs" />
     <Compile Include="TestModels\ArubaCeModel\ArubaCeInitializer.cs" />
     <Compile Include="TestModels\ArubaCeModel\ArubaAllCeTypes.cs" />
+    <Compile Include="Update\TruncationTests.cs" />
     <Compile Include="ViewGeneration\PregenContextEdmxViews.cs" />
     <Compile Include="ViewGeneration\PregenContextViews.cs" />
     <Compile Include="ViewGeneration\PregeneratedViewsTests.cs" />

@@ -5,10 +5,12 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
+    using System.Data.SqlClient;
     using System.Linq;
     using Moq;
     using Moq.Protected;
@@ -207,6 +209,47 @@ namespace System.Data.Entity.SqlServer
             public void GetService_returns_null_for_spatail_services_for_other_providers()
             {
                 Assert.Null(SqlProviderServices.Instance.GetService<DbSpatialServices>(new DbProviderInfo("System.Data.SqlServerCe.4.0", "")));
+            }
+        }
+
+        public class CreateSqlParameter : TestBase
+        {
+            [Fact]
+            public void CreateSqlParameter_does_not_set_scale_only_when_creating_input_parameter_with_truncate_flag_cleared()
+            {
+                var oldValue = SqlProviderServices.TruncateDecimalsToScale;
+                SqlProviderServices.TruncateDecimalsToScale = false;
+                try
+                {
+                    Assert.Equal(0, CreateDecimalParameter(10, 4, ParameterMode.In).Scale);
+                    Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.Out).Scale);
+                    Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.InOut).Scale);
+                    Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.ReturnValue).Scale);
+                }
+                finally
+                {
+                    SqlProviderServices.TruncateDecimalsToScale = oldValue;
+                }
+            }
+
+            [Fact]
+            public void CreateSqlParameter_sets_scale_when_creating_any_parameter_with_truncate_flag_set()
+            {
+                Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.In).Scale);
+                Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.Out).Scale);
+                Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.InOut).Scale);
+                Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.ReturnValue).Scale);
+            }
+
+            private static SqlParameter CreateDecimalParameter(byte precision, byte scale, ParameterMode parameterMode)
+            {
+                return SqlProviderServices.CreateSqlParameter(
+                    "Lily",
+                    TypeUsage.CreateDecimalTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal), precision, scale),
+                    parameterMode,
+                    9.88888888m,
+                    true,
+                    SqlVersion.Sql11);
             }
         }
     }
