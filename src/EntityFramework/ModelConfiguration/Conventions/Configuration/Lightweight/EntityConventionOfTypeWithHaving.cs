@@ -31,6 +31,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             get { return _entityConfigurationAction; }
         }
 
+        protected override void InvokeAction(Type memberInfo, ModelConfiguration modelConfiguration, TValue value)
+        {
+            DebugCheck.NotNull(memberInfo);
+            DebugCheck.NotNull(modelConfiguration);
+            DebugCheck.NotNull(value);
+
+            _entityConfigurationAction(new LightweightEntityConfiguration<T>(memberInfo, modelConfiguration), value);
+        }
+
         protected override void InvokeAction(
             Type memberInfo, Func<EntityTypeConfiguration> configuration, ModelConfiguration modelConfiguration, TValue value)
         {
@@ -39,7 +48,18 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(modelConfiguration);
             DebugCheck.NotNull(value);
 
-            _entityConfigurationAction(new LightweightEntityConfiguration<T>(memberInfo, configuration), value);
+            _entityConfigurationAction(new LightweightEntityConfiguration<T>(memberInfo, configuration, modelConfiguration), value);
+        }
+
+        protected override void InvokeAction(
+            Type memberInfo, Func<ComplexTypeConfiguration> configuration, ModelConfiguration modelConfiguration, TValue value)
+        {
+            DebugCheck.NotNull(memberInfo);
+            DebugCheck.NotNull(configuration);
+            DebugCheck.NotNull(modelConfiguration);
+            DebugCheck.NotNull(value);
+
+            _entityConfigurationAction(new LightweightEntityConfiguration<T>(memberInfo, configuration, modelConfiguration), value);
         }
     }
 }

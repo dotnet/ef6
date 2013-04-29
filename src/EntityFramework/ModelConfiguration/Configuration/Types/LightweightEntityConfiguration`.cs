@@ -4,8 +4,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
     using System.ComponentModel;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
@@ -20,24 +20,42 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     {
         private readonly LightweightEntityConfiguration _configuration;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="LightweightEntityConfiguration{T}" /> class.
-        /// </summary>
-        /// <param name="type">
-        ///     The <see cref="Type" /> of this entity type.
-        /// </param>
-        /// <param name="configuration"> The configuration object that this instance wraps. </param>
-        internal LightweightEntityConfiguration(Type type, Func<EntityTypeConfiguration> configuration)
+        internal LightweightEntityConfiguration(
+            Type type,
+            Func<EntityTypeConfiguration> entityTypeConfiguration,
+            ModelConfiguration modelConfiguration)
         {
-            Check.NotNull(type, "type");
-            Check.NotNull(configuration, "configuration");
+            VerifyType(type);
 
-            if (!typeof(T).IsAssignableFrom(type))
-            {
-                throw Error.LightweightEntityConfiguration_TypeMismatch(type, typeof(T));
-            }
+            _configuration = new LightweightEntityConfiguration(type, entityTypeConfiguration, modelConfiguration);
+        }
 
-            _configuration = new LightweightEntityConfiguration(type, configuration);
+        internal LightweightEntityConfiguration(
+            Type type,
+            Func<ComplexTypeConfiguration> complexTypeConfiguration,
+            ModelConfiguration modelConfiguration)
+        {
+            VerifyType(type);
+
+            _configuration = new LightweightEntityConfiguration(type, complexTypeConfiguration, modelConfiguration);
+        }
+
+        internal LightweightEntityConfiguration(
+            Type type,
+            ModelConfiguration modelConfiguration)
+        {
+            VerifyType(type);
+
+            _configuration = new LightweightEntityConfiguration(type, modelConfiguration);
+        }
+
+        [Conditional("DEBUG")]
+        private static void VerifyType(Type type)
+        {
+            DebugCheck.NotNull(type);
+            Debug.Assert(
+                typeof(T).IsAssignableFrom(type),
+                string.Format("The type '{0}' is invalid. The specified type must derive from '{1}'.", type, typeof(T)));
         }
 
         /// <summary>
@@ -62,6 +80,26 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         public LightweightEntityConfiguration<T> HasEntitySetName(string entitySetName)
         {
             _configuration.HasEntitySetName(entitySetName);
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Excludes this entity type from the model so that it will not be mapped to the database.
+        /// </summary>
+        public LightweightEntityConfiguration<T> Ignore()
+        {
+            _configuration.Ignore();
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Changes this entity type to a complex type.
+        /// </summary>
+        public LightweightEntityConfiguration<T> IsComplexType()
+        {
+            _configuration.IsComplexType();
 
             return this;
         }

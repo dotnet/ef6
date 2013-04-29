@@ -27,6 +27,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             get { return _entityConfigurationAction; }
         }
 
+        protected override void ApplyCore(Type memberInfo, ModelConfiguration modelConfiguration)
+        {
+            DebugCheck.NotNull(memberInfo);
+            DebugCheck.NotNull(modelConfiguration);
+
+            _entityConfigurationAction(new LightweightEntityConfiguration(memberInfo, modelConfiguration));
+        }
+
         protected override void ApplyCore(
             Type memberInfo, Func<EntityTypeConfiguration> configuration, ModelConfiguration modelConfiguration)
         {
@@ -34,7 +42,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(configuration);
             DebugCheck.NotNull(modelConfiguration);
 
-            _entityConfigurationAction(new LightweightEntityConfiguration(memberInfo, configuration));
+            _entityConfigurationAction(new LightweightEntityConfiguration(memberInfo, configuration, modelConfiguration));
+        }
+
+        protected override void ApplyCore(
+            Type memberInfo, Func<ComplexTypeConfiguration> configuration, ModelConfiguration modelConfiguration)
+        {
+            DebugCheck.NotNull(memberInfo);
+            DebugCheck.NotNull(configuration);
+            DebugCheck.NotNull(modelConfiguration);
+
+            _entityConfigurationAction(new LightweightEntityConfiguration(memberInfo, configuration, modelConfiguration));
         }
     }
 }

@@ -2309,7 +2309,23 @@ namespace FunctionalTests
             }
         }
 
-        public class Conventions : ConventionsScenarioTests
+        public class ConventionsConfiguration : ConventionsScenarioTests.ConventionsConfiguration
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+            }
+        }
+
+        public class LightweightEntityConventions : ConventionsScenarioTests.LightweightEntityConventions
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+            }
+        }
+
+        public class LightweightPropertyConventions : ConventionsScenarioTests.LightweightPropertyConventions
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {

@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -41,8 +42,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <param name="configuration"> The configuration object that this instance wraps. </param>
         internal LightweightPropertyConfiguration(PropertyInfo propertyInfo, Func<PrimitivePropertyConfiguration> configuration)
         {
-            Check.NotNull(propertyInfo, "propertyInfo");
-            Check.NotNull(configuration, "configuration");
+            DebugCheck.NotNull(propertyInfo);
+            DebugCheck.NotNull(configuration);
 
             _propertyInfo = propertyInfo;
             _configuration = configuration;
@@ -83,7 +84,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </remarks>
         public virtual LightweightPropertyConfiguration HasColumnName(string columnName)
         {
-            if (_configuration().ColumnName == null)
+            Check.NotEmpty(columnName, "columnName");
+
+            if (_configuration() != null
+                && _configuration().ColumnName == null)
             {
                 _configuration().ColumnName = columnName;
             }
@@ -93,7 +97,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
         public virtual LightweightPropertyConfiguration HasParameterName(string parameterName)
         {
-            if (_configuration().ParameterName == null)
+            Check.NotEmpty(parameterName, "parameterName");
+
+            if (_configuration() != null
+                && _configuration().ParameterName == null)
             {
                 _configuration().ParameterName = parameterName;
             }
@@ -119,7 +126,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 throw new ArgumentOutOfRangeException("columnOrder");
             }
 
-            if (_configuration().ColumnOrder == null)
+            if (_configuration() != null
+                && _configuration().ColumnOrder == null)
             {
                 _configuration().ColumnOrder = columnOrder;
             }
@@ -139,7 +147,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </remarks>
         public virtual LightweightPropertyConfiguration HasColumnType(string columnType)
         {
-            if (_configuration().ColumnType == null)
+            Check.NotEmpty(columnType, "columnType");
+
+            if (_configuration() != null
+                && _configuration().ColumnType == null)
             {
                 _configuration().ColumnType = columnType;
             }
@@ -173,7 +184,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </remarks>
         public virtual LightweightPropertyConfiguration IsConcurrencyToken(bool concurrencyToken)
         {
-            if (_configuration().ConcurrencyMode == null)
+            if (_configuration() != null
+                && _configuration().ConcurrencyMode == null)
             {
                 _configuration().ConcurrencyMode = concurrencyToken
                                                        ? ConcurrencyMode.Fixed
@@ -201,7 +213,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 throw new ArgumentOutOfRangeException("databaseGeneratedOption");
             }
 
-            if (_configuration().DatabaseGeneratedOption == null)
+            if (_configuration() != null
+                && _configuration().DatabaseGeneratedOption == null)
             {
                 _configuration().DatabaseGeneratedOption = databaseGeneratedOption;
             }
@@ -221,7 +234,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </remarks>
         public virtual LightweightPropertyConfiguration IsOptional()
         {
-            if (_configuration().IsNullable == null)
+            if (_configuration() != null
+                && _configuration().IsNullable == null)
             {
                 _configuration().IsNullable = true;
             }
@@ -241,7 +255,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </remarks>
         public virtual LightweightPropertyConfiguration IsRequired()
         {
-            if (_configuration().IsNullable == null)
+            if (_configuration() != null
+                && _configuration().IsNullable == null)
             {
                 _configuration().IsNullable = false;
             }
@@ -333,7 +348,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <summary>
         ///     Configures the property to have the specified maximum length.
         /// </summary>
-        /// <param name="value"> The maximum length for the property. </param>
+        /// <param name="maxLength"> The maximum length for the property. </param>
         /// <returns>
         ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
@@ -341,13 +356,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Calling this will have no effect once it has been configured or if the
         ///     property does not have length facets.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration HasMaxLength(int value)
+        public virtual LightweightPropertyConfiguration HasMaxLength(int maxLength)
         {
+            if (maxLength < 1)
+            {
+                throw new ArgumentOutOfRangeException("maxLength");
+            }
+
             if (_lengthConfiguration.Value != null
                 && _lengthConfiguration.Value.MaxLength == null
                 && _lengthConfiguration.Value.IsMaxLength == null)
             {
-                _lengthConfiguration.Value.MaxLength = value;
+                _lengthConfiguration.Value.MaxLength = maxLength;
 
                 if (_lengthConfiguration.Value.IsFixedLength == null)
                 {
@@ -467,11 +487,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </returns>
         public virtual LightweightPropertyConfiguration IsKey()
         {
-            var entityTypeConfig = _configuration().TypeConfiguration as EntityTypeConfiguration;
-
-            if (entityTypeConfig != null)
+            if (_configuration() != null)
             {
-                entityTypeConfig.Key(ClrPropertyInfo);
+                var entityTypeConfig = _configuration().TypeConfiguration as EntityTypeConfiguration;
+
+                if (entityTypeConfig != null)
+                {
+                    entityTypeConfig.Key(ClrPropertyInfo);
+                }
             }
 
             return this;

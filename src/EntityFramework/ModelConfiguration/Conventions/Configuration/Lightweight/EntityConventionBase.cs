@@ -8,7 +8,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Utilities;
     using System.Linq;
 
-    internal abstract class EntityConventionBase : IConfigurationConvention<Type, EntityTypeConfiguration>
+    internal abstract class EntityConventionBase : IConfigurationConvention<Type, EntityTypeConfiguration>,
+                                                   IConfigurationConvention<Type, ComplexTypeConfiguration>,
+                                                   IConfigurationConvention<Type>
     {
         private readonly IEnumerable<Func<Type, bool>> _predicates;
 
@@ -24,6 +26,19 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             get { return _predicates; }
         }
 
+        public void Apply(Type memberInfo, ModelConfiguration modelConfiguration)
+        {
+            DebugCheck.NotNull(memberInfo);
+            DebugCheck.NotNull(modelConfiguration);
+
+            if (_predicates.All(p => p(memberInfo)))
+            {
+                ApplyCore(memberInfo, modelConfiguration);
+            }
+        }
+
+        protected abstract void ApplyCore(Type memberInfo, ModelConfiguration modelConfiguration);
+
         public void Apply(Type memberInfo, Func<EntityTypeConfiguration> configuration, ModelConfiguration modelConfiguration)
         {
             DebugCheck.NotNull(memberInfo);
@@ -38,5 +53,20 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         protected abstract void ApplyCore(
             Type memberInfo, Func<EntityTypeConfiguration> configuration, ModelConfiguration modelConfiguration);
+
+        public void Apply(Type memberInfo, Func<ComplexTypeConfiguration> configuration, ModelConfiguration modelConfiguration)
+        {
+            DebugCheck.NotNull(memberInfo);
+            DebugCheck.NotNull(configuration);
+            DebugCheck.NotNull(modelConfiguration);
+
+            if (_predicates.All(p => p(memberInfo)))
+            {
+                ApplyCore(memberInfo, configuration, modelConfiguration);
+            }
+        }
+
+        protected abstract void ApplyCore(
+            Type memberInfo, Func<ComplexTypeConfiguration> configuration, ModelConfiguration modelConfiguration);
     }
 }

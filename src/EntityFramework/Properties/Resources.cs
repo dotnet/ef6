@@ -13438,6 +13438,22 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        ///     A string like "If a type is mapped as a Complex Type the only configuration that can be specified is the property mapping."
+        /// </summary>
+        internal static string LightweightEntityConfiguration_ConfigurationConflict_ComplexType
+        {
+            get { return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_ConfigurationConflict_ComplexType); }
+        }
+
+        /// <summary>
+        ///     A string like "If a type is 'Ignored' no other configuration can be specified."
+        /// </summary>
+        internal static string LightweightEntityConfiguration_ConfigurationConflict_IgnoreType
+        {
+            get { return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType); }
+        }
+
+        /// <summary>
         ///     A string like "Attempt to add member {0} to structural type {1} failed. Member has DataSpace {2}, structural type has DataSpace {3}. They must be the same."
         /// </summary>
         internal static string AttemptToAddEdmMemberFromWrongDataSpace(object p0, object p1, object p2, object p3)
@@ -16867,6 +16883,8 @@ namespace System.Data.Entity.Resources
         internal const string MetadataItemErrorsFoundDuringGeneration = "MetadataItemErrorsFoundDuringGeneration";
         internal const string AutomaticStaleFunctions = "AutomaticStaleFunctions";
         internal const string ScaffoldSprocInDownNotSupported = "ScaffoldSprocInDownNotSupported";
+        internal const string LightweightEntityConfiguration_ConfigurationConflict_ComplexType = "LightweightEntityConfiguration_ConfigurationConflict_ComplexType";
+        internal const string LightweightEntityConfiguration_ConfigurationConflict_IgnoreType = "LightweightEntityConfiguration_ConfigurationConflict_IgnoreType";
         internal const string AttemptToAddEdmMemberFromWrongDataSpace = "AttemptToAddEdmMemberFromWrongDataSpace";
         internal const string CommandLogFailed = "CommandLogFailed";
         internal const string CommandLogCanceled = "CommandLogCanceled";

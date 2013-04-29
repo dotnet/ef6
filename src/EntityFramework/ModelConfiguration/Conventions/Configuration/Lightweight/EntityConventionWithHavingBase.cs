@@ -28,6 +28,21 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             get { return _capturingPredicate; }
         }
 
+        protected override void ApplyCore(Type memberInfo, ModelConfiguration modelConfiguration)
+        {
+            DebugCheck.NotNull(memberInfo);
+            DebugCheck.NotNull(modelConfiguration);
+
+            var value = _capturingPredicate(memberInfo);
+
+            if (value != null)
+            {
+                InvokeAction(memberInfo, modelConfiguration, value);
+            }
+        }
+
+        protected abstract void InvokeAction(Type memberInfo, ModelConfiguration configuration, T value);
+
         protected override sealed void ApplyCore(
             Type memberInfo, Func<EntityTypeConfiguration> configuration, ModelConfiguration modelConfiguration)
         {
@@ -45,5 +60,23 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         protected abstract void InvokeAction(
             Type memberInfo, Func<EntityTypeConfiguration> configuration, ModelConfiguration modelConfiguration, T value);
+
+        protected override void ApplyCore(
+            Type memberInfo, Func<ComplexTypeConfiguration> configuration, ModelConfiguration modelConfiguration)
+        {
+            DebugCheck.NotNull(memberInfo);
+            DebugCheck.NotNull(configuration);
+            DebugCheck.NotNull(modelConfiguration);
+
+            var value = _capturingPredicate(memberInfo);
+
+            if (value != null)
+            {
+                InvokeAction(memberInfo, configuration, modelConfiguration, value);
+            }
+        }
+
+        protected abstract void InvokeAction(
+            Type memberInfo, Func<ComplexTypeConfiguration> configuration, ModelConfiguration modelConfiguration, T value);
     }
 }

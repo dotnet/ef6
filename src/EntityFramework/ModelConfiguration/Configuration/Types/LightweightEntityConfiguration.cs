@@ -19,22 +19,46 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     public class LightweightEntityConfiguration
     {
         private readonly Type _type;
-        private readonly Func<EntityTypeConfiguration> _configuration;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="LightweightEntityConfiguration" /> class.
-        /// </summary>
-        /// <param name="type">
-        ///     The <see cref="Type" /> of this entity type.
-        /// </param>
-        /// <param name="configuration"> The configuration object that this instance wraps. </param>
-        internal LightweightEntityConfiguration(Type type, Func<EntityTypeConfiguration> configuration)
+        internal LightweightEntityConfiguration(
+            Type type,
+            ModelConfiguration modelConfiguration)
+            : this(type, null, null, modelConfiguration)
         {
-            Check.NotNull(type, "type");
-            Check.NotNull(configuration, "configuration");
+            DebugCheck.NotNull(modelConfiguration);
+        }
+
+        internal LightweightEntityConfiguration(
+            Type type,
+            Func<EntityTypeConfiguration> entityTypeConfiguration,
+            ModelConfiguration modelConfiguration)
+            : this(type, entityTypeConfiguration, null, modelConfiguration)
+        {
+            DebugCheck.NotNull(entityTypeConfiguration);
+            DebugCheck.NotNull(modelConfiguration);
+        }
+
+        internal LightweightEntityConfiguration(
+            Type type,
+            Func<ComplexTypeConfiguration> complexTypeConfiguration,
+            ModelConfiguration modelConfiguration)
+            : this(type, null, complexTypeConfiguration, modelConfiguration)
+        {
+            DebugCheck.NotNull(complexTypeConfiguration);
+            DebugCheck.NotNull(modelConfiguration);
+        }
+
+        private LightweightEntityConfiguration(Type type,
+            Func<EntityTypeConfiguration> entityTypeConfiguration,
+            Func<ComplexTypeConfiguration> complexTypeConfiguration,
+            ModelConfiguration modelConfiguration)
+        {
+            DebugCheck.NotNull(type);
 
             _type = type;
-            _configuration = configuration;
+            _entityTypeConfiguration = entityTypeConfiguration;
+            _complexTypeConfiguration = complexTypeConfiguration;
+            _modelConfiguration = modelConfiguration;
         }
 
         /// <summary>
@@ -59,10 +83,44 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         public LightweightEntityConfiguration HasEntitySetName(string entitySetName)
         {
             Check.NotEmpty(entitySetName, "entitySetName");
+            ValidateConfiguration(ConfigurationAspect.EntitySetName);
 
-            if (_configuration().EntitySetName == null)
+            if (_entityTypeConfiguration != null
+                && _entityTypeConfiguration().EntitySetName == null)
             {
-                _configuration().EntitySetName = entitySetName;
+                _entityTypeConfiguration().EntitySetName = entitySetName;
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Excludes this entity type from the model so that it will not be mapped to the database.
+        /// </summary>
+        public LightweightEntityConfiguration Ignore()
+        {
+            ValidateConfiguration(ConfigurationAspect.IgnoreType);
+
+            if (_entityTypeConfiguration == null
+                && _complexTypeConfiguration == null)
+            {
+                _modelConfiguration.Ignore(_type);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Changes this entity type to a complex type.
+        /// </summary>
+        public LightweightEntityConfiguration IsComplexType()
+        {
+            ValidateConfiguration(ConfigurationAspect.ComplexType);
+
+            if (_entityTypeConfiguration == null
+                && _complexTypeConfiguration == null)
+            {
+                _modelConfiguration.ComplexType(_type);
             }
 
             return this;
@@ -93,9 +151,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </remarks>
         public LightweightEntityConfiguration Ignore(PropertyInfo propertyInfo)
         {
+            ValidateConfiguration(ConfigurationAspect.IgnoreProperty);
+
             if (propertyInfo != null)
             {
-                _configuration().Ignore(propertyInfo);
+                if (_entityTypeConfiguration != null)
+                {
+                    _entityTypeConfiguration().Ignore(propertyInfo);
+                }
+                if (_complexTypeConfiguration != null)
+                {
+                    _complexTypeConfiguration().Ignore(propertyInfo);
+                }
             }
 
             return this;
@@ -138,6 +205,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             DebugCheck.NotNull(propertyPath);
 
+            ValidateConfiguration(ConfigurationAspect.Property);
+
             var propertyInfo = propertyPath.Last();
 
             if (!propertyInfo.IsValidEdmScalarProperty()
@@ -147,7 +216,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
 
             var propertyConfiguration = new Lazy<PrimitivePropertyConfiguration>(
-                () => _configuration().Property(propertyPath, OverridableConfigurationParts.None));
+                () => _entityTypeConfiguration != null
+                          ? _entityTypeConfiguration().Property(propertyPath, OverridableConfigurationParts.None)
+                          : _complexTypeConfiguration != null
+                                ? _complexTypeConfiguration().Property(propertyPath, OverridableConfigurationParts.None)
+                                : null);
 
             return new LightweightPropertyConfiguration(propertyPath.Single(), () => propertyConfiguration.Value);
         }
@@ -222,12 +295,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         public LightweightEntityConfiguration HasKey(IEnumerable<PropertyInfo> keyProperties)
         {
             Check.NotNull(keyProperties, "keyProperties");
+            ValidateConfiguration(ConfigurationAspect.Key);
 
-            if (!_configuration().IsKeyConfigured
+            if (_entityTypeConfiguration != null
+                && !_entityTypeConfiguration().IsKeyConfigured
                 && keyProperties.Any()
                 && keyProperties.All(p => p != null))
             {
-                _configuration().Key(keyProperties);
+                _entityTypeConfiguration().Key(keyProperties);
             }
 
             return this;
@@ -243,12 +318,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         public LightweightEntityConfiguration ToTable(string tableName)
         {
             Check.NotEmpty(tableName, "tableName");
+            ValidateConfiguration(ConfigurationAspect.ToTable);
 
-            if (!_configuration().IsTableNameConfigured)
+            if (_entityTypeConfiguration != null
+                && !_entityTypeConfiguration().IsTableNameConfigured)
             {
                 var databaseName = DatabaseName.Parse(tableName);
 
-                _configuration().ToTable(databaseName.Name, databaseName.Schema);
+                _entityTypeConfiguration().ToTable(databaseName.Name, databaseName.Schema);
             }
 
             return this;
@@ -265,10 +342,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         public LightweightEntityConfiguration ToTable(string tableName, string schemaName)
         {
             Check.NotEmpty(tableName, "tableName");
+            ValidateConfiguration(ConfigurationAspect.ToTable);
 
-            if (!_configuration().IsTableNameConfigured)
+            if (_entityTypeConfiguration != null
+                && !_entityTypeConfiguration().IsTableNameConfigured)
             {
-                _configuration().ToTable(tableName, schemaName);
+                _entityTypeConfiguration().ToTable(tableName, schemaName);
             }
 
             return this;
@@ -276,7 +355,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
         public LightweightEntityConfiguration MapToStoredProcedures()
         {
-            _configuration().MapToStoredProcedures();
+            ValidateConfiguration(ConfigurationAspect.MapToStoredProcedures);
+
+            if (_entityTypeConfiguration != null)
+            {
+                _entityTypeConfiguration().MapToStoredProcedures();
+            }
 
             return this;
         }
@@ -285,6 +369,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             Action<LightweightModificationFunctionsConfiguration> modificationFunctionsConfigurationAction)
         {
             Check.NotNull(modificationFunctionsConfigurationAction, "modificationFunctionsConfigurationAction");
+            ValidateConfiguration(ConfigurationAspect.MapToStoredProcedures);
 
             var modificationFunctionMappingConfiguration = new LightweightModificationFunctionsConfiguration(_type);
 
@@ -299,7 +384,36 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             DebugCheck.NotNull(modificationFunctionsConfiguration);
 
-            _configuration().MapToStoredProcedures(modificationFunctionsConfiguration, allowOverride: false);
+            if (_entityTypeConfiguration != null)
+            {
+                _entityTypeConfiguration().MapToStoredProcedures(modificationFunctionsConfiguration, allowOverride: false);
+            }
+        }
+
+        private void ValidateConfiguration(ConfigurationAspect aspect)
+        {
+            _currentConfigurationAspect |= aspect;
+
+            if (_currentConfigurationAspect.HasFlag(ConfigurationAspect.IgnoreType)
+                && (_currentConfigurationAspect.HasFlag(ConfigurationAspect.ComplexType)
+                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.EntitySetName)
+                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.IgnoreProperty)
+                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.Key)
+                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.MapToStoredProcedures)
+                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.Property)
+                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.ToTable)))
+            {
+                throw new InvalidOperationException(Strings.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType);
+            }
+
+            if (_currentConfigurationAspect.HasFlag(ConfigurationAspect.ComplexType)
+                && (_currentConfigurationAspect.HasFlag(ConfigurationAspect.EntitySetName)
+                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.Key)
+                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.MapToStoredProcedures)
+                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.ToTable)))
+            {
+                throw new InvalidOperationException(Strings.LightweightEntityConfiguration_ConfigurationConflict_ComplexType);
+            }
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -325,6 +439,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         public new Type GetType()
         {
             return base.GetType();
+        }
+
+        [Flags]
+        private enum ConfigurationAspect : uint
+        {
+            None = 0,
+            EntitySetName = 1 << 0,
+            Key = 1 << 1,
+            IgnoreType = 1 << 2,
+            IgnoreProperty = 1 << 3,
+            ComplexType = 1 << 4,
+            MapToStoredProcedures = 1 << 5,
+            Property = 1 << 6,
+            ToTable = 1 << 7
         }
     }
 }

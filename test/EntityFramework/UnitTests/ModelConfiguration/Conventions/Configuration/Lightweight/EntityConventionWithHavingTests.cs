@@ -9,43 +9,130 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
     public class EntityConventionWithHavingTests
     {
-        [Fact]
-        public void Apply_invokes_action_with_value_when_not_null()
+        public class Apply_EntityTypeConfiguration
         {
-            var actionInvoked = false;
-            object capturedValue = null;
-            var value = new object();
-            var convention = new EntityConventionWithHaving<object>(
-                Enumerable.Empty<Func<Type, bool>>(),
-                t => value,
-                (c, v) =>
-                {
-                    actionInvoked = true;
-                    capturedValue = v;
-                });
-            var type = new MockType();
-            var configuration = new EntityTypeConfiguration(type);
+            [Fact]
+            public void Invokes_action_with_value_when_not_null()
+            {
+                var actionInvoked = false;
+                object capturedValue = null;
+                var value = new object();
+                var convention = new EntityConventionWithHaving<object>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    t => value,
+                    (c, v) =>
+                        {
+                            actionInvoked = true;
+                            capturedValue = v;
+                        });
+                var type = new MockType();
+                var configuration = new EntityTypeConfiguration(type);
 
-            convention.Apply(type, () => configuration, new ModelConfiguration());
+                convention.Apply(type, () => configuration, new ModelConfiguration());
 
-            Assert.True(actionInvoked);
-            Assert.Same(value, capturedValue);
+                Assert.True(actionInvoked);
+                Assert.Same(value, capturedValue);
+            }
+
+            [Fact]
+            public void Does_not_invoke_action_when_value_null()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionWithHaving<object>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    t => null,
+                    (c, v) => actionInvoked = true);
+                var type = new MockType();
+                var configuration = new EntityTypeConfiguration(type);
+
+                convention.Apply(type, () => configuration, new ModelConfiguration());
+
+                Assert.False(actionInvoked);
+            }
         }
 
-        [Fact]
-        public void Apply_does_not_invoke_action_when_value_null()
+        public class Apply_ComplexTypeConfiguration
         {
-            var actionInvoked = false;
-            var convention = new EntityConventionWithHaving<object>(
-                Enumerable.Empty<Func<Type, bool>>(),
-                t => null,
-                (c, v) => actionInvoked = true);
-            var type = new MockType();
-            var configuration = new EntityTypeConfiguration(type);
+            [Fact]
+            public void Invokes_action_with_value_when_not_null()
+            {
+                var actionInvoked = false;
+                object capturedValue = null;
+                var value = new object();
+                var convention = new EntityConventionWithHaving<object>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    t => value,
+                    (c, v) =>
+                        {
+                            actionInvoked = true;
+                            capturedValue = v;
+                        });
+                var type = new MockType();
+                var configuration = new ComplexTypeConfiguration(type);
 
-            convention.Apply(type, () => configuration, new ModelConfiguration());
+                convention.Apply(type, () => configuration, new ModelConfiguration());
 
-            Assert.False(actionInvoked);
+                Assert.True(actionInvoked);
+                Assert.Same(value, capturedValue);
+            }
+
+            [Fact]
+            public void Does_not_invoke_action_when_value_null()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionWithHaving<object>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    t => null,
+                    (c, v) => actionInvoked = true);
+                var type = new MockType();
+                var configuration = new ComplexTypeConfiguration(type);
+
+                convention.Apply(type, () => configuration, new ModelConfiguration());
+
+                Assert.False(actionInvoked);
+            }
+        }
+
+        public class Apply_ModelConfiguration
+        {
+            [Fact]
+            public void Invokes_action_with_value_when_not_null()
+            {
+                var actionInvoked = false;
+                object capturedValue = null;
+                var value = new object();
+                var convention = new EntityConventionWithHaving<object>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    t => value,
+                    (c, v) =>
+                        {
+                            actionInvoked = true;
+                            capturedValue = v;
+                        });
+                var type = new MockType();
+                var configuration = new ModelConfiguration();
+
+                convention.Apply(type, configuration);
+
+                Assert.True(actionInvoked);
+                Assert.Same(value, capturedValue);
+            }
+
+            [Fact]
+            public void Does_not_invoke_action_when_value_null()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionWithHaving<object>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    t => null,
+                    (c, v) => actionInvoked = true);
+                var type = new MockType();
+                var configuration = new ModelConfiguration();
+
+                convention.Apply(type, configuration);
+
+                Assert.False(actionInvoked);
+            }
         }
     }
 }

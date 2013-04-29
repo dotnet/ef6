@@ -9,96 +9,289 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
     public class EntityConventionOfTypeTests
     {
-        [Fact]
-        public void Apply_invokes_action_when_no_predicates_and_same_type()
+        public class Apply_EntityTypeConfiguration
         {
-            var actionInvoked = false;
-            var convention = new EntityConventionOfType<LocalType1>(
-                Enumerable.Empty<Func<Type, bool>>(),
-                c => actionInvoked = true);
-            var type = typeof(LocalType1);
-            var configuration = new EntityTypeConfiguration(type);
+            [Fact]
+            public void Invokes_action_when_no_predicates_and_same_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    c => actionInvoked = true);
+                var type = typeof(LocalType1);
+                var configuration = new EntityTypeConfiguration(type);
 
-            convention.Apply(type, () => configuration, new ModelConfiguration());
+                convention.Apply(type, () => configuration, new ModelConfiguration());
 
-            Assert.True(actionInvoked);
+                Assert.True(actionInvoked);
+            }
+
+            [Fact]
+            public void Invokes_action_when_no_predicates_and_derived_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    c => actionInvoked = true);
+                var type = typeof(LocalType2);
+                var configuration = new EntityTypeConfiguration(type);
+
+                convention.Apply(type, () => configuration, new ModelConfiguration());
+
+                Assert.True(actionInvoked);
+            }
+
+            [Fact]
+            public void Does_not_invoke_action_when_no_predicates_and_different_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    c => actionInvoked = true);
+                var type = typeof(object);
+                var configuration = new EntityTypeConfiguration(type);
+
+                convention.Apply(type, () => configuration, new ModelConfiguration());
+
+                Assert.False(actionInvoked);
+            }
+
+            [Fact]
+            public void Invokes_action_when_predicate_true_and_same_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    new Func<Type, bool>[] { t => true },
+                    c => actionInvoked = true);
+                var type = typeof(LocalType1);
+                var configuration = new EntityTypeConfiguration(type);
+
+                convention.Apply(type, () => configuration, new ModelConfiguration());
+
+                Assert.True(actionInvoked);
+            }
+
+            [Fact]
+            public void Does_not_invoke_action_and_short_circuts_when_different_type()
+            {
+                var predicateInvoked = false;
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    new Func<Type, bool>[] { t => predicateInvoked = true },
+                    c => actionInvoked = true);
+                var type = typeof(object);
+                var configuration = new EntityTypeConfiguration(type);
+
+                convention.Apply(type, () => configuration, new ModelConfiguration());
+
+                Assert.False(predicateInvoked);
+                Assert.False(actionInvoked);
+            }
+
+            [Fact]
+            public void Does_not_invoke_action_when_predicate_false_but_same_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    new Func<Type, bool>[] { t => false },
+                    c => actionInvoked = true);
+                var type = typeof(LocalType1);
+                var configuration = new EntityTypeConfiguration(type);
+
+                convention.Apply(type, () => configuration, new ModelConfiguration());
+
+                Assert.False(actionInvoked);
+            }
         }
 
-        [Fact]
-        public void Apply_invokes_action_when_no_predicates_and_derived_type()
+        public class Apply_ComplexTypeConfiguration
         {
-            var actionInvoked = false;
-            var convention = new EntityConventionOfType<LocalType1>(
-                Enumerable.Empty<Func<Type, bool>>(),
-                c => actionInvoked = true);
-            var type = typeof(LocalType2);
-            var configuration = new EntityTypeConfiguration(type);
+            [Fact]
+            public void Invokes_action_when_no_predicates_and_same_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    c => actionInvoked = true);
+                var type = typeof(LocalType1);
+                var configuration = new ComplexTypeConfiguration(type);
 
-            convention.Apply(type, () => configuration, new ModelConfiguration());
+                convention.Apply(type, () => configuration, new ModelConfiguration());
 
-            Assert.True(actionInvoked);
+                Assert.True(actionInvoked);
+            }
+
+            [Fact]
+            public void Invokes_action_when_no_predicates_and_derived_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    c => actionInvoked = true);
+                var type = typeof(LocalType2);
+                var configuration = new ComplexTypeConfiguration(type);
+
+                convention.Apply(type, () => configuration, new ModelConfiguration());
+
+                Assert.True(actionInvoked);
+            }
+
+            [Fact]
+            public void Does_not_invoke_action_when_no_predicates_and_different_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    c => actionInvoked = true);
+                var type = typeof(object);
+                var configuration = new ComplexTypeConfiguration(type);
+
+                convention.Apply(type, () => configuration, new ModelConfiguration());
+
+                Assert.False(actionInvoked);
+            }
+
+            [Fact]
+            public void Invokes_action_when_predicate_true_and_same_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    new Func<Type, bool>[] { t => true },
+                    c => actionInvoked = true);
+                var type = typeof(LocalType1);
+                var configuration = new ComplexTypeConfiguration(type);
+
+                convention.Apply(type, () => configuration, new ModelConfiguration());
+
+                Assert.True(actionInvoked);
+            }
+
+            [Fact]
+            public void Does_not_invoke_action_and_short_circuts_when_different_type()
+            {
+                var predicateInvoked = false;
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    new Func<Type, bool>[] { t => predicateInvoked = true },
+                    c => actionInvoked = true);
+                var type = typeof(object);
+                var configuration = new ComplexTypeConfiguration(type);
+
+                convention.Apply(type, () => configuration, new ModelConfiguration());
+
+                Assert.False(predicateInvoked);
+                Assert.False(actionInvoked);
+            }
+
+            [Fact]
+            public void Does_not_invoke_action_when_predicate_false_but_same_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    new Func<Type, bool>[] { t => false },
+                    c => actionInvoked = true);
+                var type = typeof(LocalType1);
+                var configuration = new ComplexTypeConfiguration(type);
+
+                convention.Apply(type, () => configuration, new ModelConfiguration());
+
+                Assert.False(actionInvoked);
+            }
         }
 
-        [Fact]
-        public void Apply_does_not_invoke_action_when_no_predicates_and_different_type()
+        public class Apply_ModelConfiguration
         {
-            var actionInvoked = false;
-            var convention = new EntityConventionOfType<LocalType1>(
-                Enumerable.Empty<Func<Type, bool>>(),
-                c => actionInvoked = true);
-            var type = typeof(object);
-            var configuration = new EntityTypeConfiguration(type);
+            [Fact]
+            public void Invokes_action_when_no_predicates_and_same_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    c => actionInvoked = true);
+                var type = typeof(LocalType1);
+                var configuration = new ModelConfiguration();
 
-            convention.Apply(type, () => configuration, new ModelConfiguration());
+                convention.Apply(type, configuration);
 
-            Assert.False(actionInvoked);
-        }
+                Assert.True(actionInvoked);
+            }
 
-        [Fact]
-        public void Apply_invokes_action_when_predicate_true_and_same_type()
-        {
-            var actionInvoked = false;
-            var convention = new EntityConventionOfType<LocalType1>(
-                new Func<Type, bool>[] { t => true },
-                c => actionInvoked = true);
-            var type = typeof(LocalType1);
-            var configuration = new EntityTypeConfiguration(type);
+            [Fact]
+            public void Invokes_action_when_no_predicates_and_derived_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    c => actionInvoked = true);
+                var type = typeof(LocalType2);
+                var configuration = new ModelConfiguration();
 
-            convention.Apply(type, () => configuration, new ModelConfiguration());
+                convention.Apply(type, configuration);
 
-            Assert.True(actionInvoked);
-        }
+                Assert.True(actionInvoked);
+            }
 
-        [Fact]
-        public void Apply_does_not_invoke_action_and_short_circuts_when_different_type()
-        {
-            var predicateInvoked = false;
-            var actionInvoked = false;
-            var convention = new EntityConventionOfType<LocalType1>(
-                new Func<Type, bool>[] { t => predicateInvoked = true },
-                c => actionInvoked = true);
-            var type = typeof(object);
-            var configuration = new EntityTypeConfiguration(type);
+            [Fact]
+            public void Does_not_invoke_action_when_no_predicates_and_different_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    Enumerable.Empty<Func<Type, bool>>(),
+                    c => actionInvoked = true);
+                var type = typeof(object);
+                var configuration = new ModelConfiguration();
 
-            convention.Apply(type, () => configuration, new ModelConfiguration());
+                convention.Apply(type, configuration);
 
-            Assert.False(predicateInvoked);
-            Assert.False(actionInvoked);
-        }
+                Assert.False(actionInvoked);
+            }
 
-        [Fact]
-        public void Apply_does_not_invoke_action_when_predicate_false_but_same_type()
-        {
-            var actionInvoked = false;
-            var convention = new EntityConventionOfType<LocalType1>(
-                new Func<Type, bool>[] { t => false },
-                c => actionInvoked = true);
-            var type = typeof(LocalType1);
-            var configuration = new EntityTypeConfiguration(type);
+            [Fact]
+            public void Invokes_action_when_predicate_true_and_same_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    new Func<Type, bool>[] { t => true },
+                    c => actionInvoked = true);
+                var type = typeof(LocalType1);
+                var configuration = new ModelConfiguration();
 
-            convention.Apply(type, () => configuration, new ModelConfiguration());
+                convention.Apply(type, configuration);
 
-            Assert.False(actionInvoked);
+                Assert.True(actionInvoked);
+            }
+
+            [Fact]
+            public void Does_not_invoke_action_and_short_circuts_when_different_type()
+            {
+                var predicateInvoked = false;
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    new Func<Type, bool>[] { t => predicateInvoked = true },
+                    c => actionInvoked = true);
+                var type = typeof(object);
+                var configuration = new ModelConfiguration();
+
+                convention.Apply(type, configuration);
+
+                Assert.False(predicateInvoked);
+                Assert.False(actionInvoked);
+            }
+
+            [Fact]
+            public void Does_not_invoke_action_when_predicate_false_but_same_type()
+            {
+                var actionInvoked = false;
+                var convention = new EntityConventionOfType<LocalType1>(
+                    new Func<Type, bool>[] { t => false },
+                    c => actionInvoked = true);
+                var type = typeof(LocalType1);
+                var configuration = new ModelConfiguration();
+
+                convention.Apply(type, configuration);
+
+                Assert.False(actionInvoked);
+            }
         }
 
         private class LocalType1

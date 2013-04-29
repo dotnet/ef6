@@ -34,6 +34,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             get { return _ofTypePredicate; }
         }
 
+        protected override void ApplyCore(Type memberInfo, ModelConfiguration modelConfiguration)
+        {
+            DebugCheck.NotNull(memberInfo);
+            DebugCheck.NotNull(modelConfiguration);
+
+            _entityConfigurationAction(new LightweightEntityConfiguration<T>(memberInfo, modelConfiguration));
+        }
+
         protected override void ApplyCore(
             Type memberInfo, Func<EntityTypeConfiguration> configuration, ModelConfiguration modelConfiguration)
         {
@@ -41,7 +49,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(configuration);
             DebugCheck.NotNull(modelConfiguration);
 
-            _entityConfigurationAction(new LightweightEntityConfiguration<T>(memberInfo, configuration));
+            _entityConfigurationAction(new LightweightEntityConfiguration<T>(memberInfo, configuration, modelConfiguration));
+        }
+
+        protected override void ApplyCore(
+            Type memberInfo, Func<ComplexTypeConfiguration> configuration, ModelConfiguration modelConfiguration)
+        {
+            DebugCheck.NotNull(memberInfo);
+            DebugCheck.NotNull(configuration);
+            DebugCheck.NotNull(modelConfiguration);
+
+            _entityConfigurationAction(new LightweightEntityConfiguration<T>(memberInfo, configuration, modelConfiguration));
         }
     }
 }

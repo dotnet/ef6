@@ -5,26 +5,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using Moq;
     using Xunit;
 
     public class LightweightPropertyConfigurationTests
     {
-        [Fact]
-        public void Ctor_evaluates_preconditions()
-        {
-            var ex = Assert.Throws<ArgumentNullException>(
-                () => new LightweightPropertyConfiguration(null, () => new PrimitivePropertyConfiguration()));
-
-            Assert.Equal("propertyInfo", ex.ParamName);
-
-            ex = Assert.Throws<ArgumentNullException>(
-                () => new LightweightPropertyConfiguration(new MockPropertyInfo(), null));
-
-            Assert.Equal("configuration", ex.ParamName);
-        }
-
         [Fact]
         public void Ctor_does_not_invoke_delegate()
         {
@@ -40,6 +27,30 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 });
 
             Assert.False(initialized);
+        }
+
+        [Fact]
+        public void Methods_dont_throw_if_configuration_is_null()
+        {
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => null);
+
+            config.HasColumnName("Column1");
+            config.HasColumnOrder(0);
+            config.HasColumnType("int");
+            config.HasParameterName("Parameter1");
+            config.HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            config.HasMaxLength(1);
+            config.HasPrecision(1);
+            config.HasPrecision(1, 1);
+            config.IsConcurrencyToken(false);
+            config.IsOptional();
+            config.IsRequired();
+            config.IsUnicode();
+            config.IsVariableLength();
+            config.IsFixedLength();
+            config.IsMaxLength();
+            config.IsRowVersion();
+            config.IsKey();
         }
 
         [Fact]
@@ -70,6 +81,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
+        public void HasColumnName_evaluates_preconditions()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var ex = Assert.Throws<ArgumentException>(
+                () => config.HasColumnName(""));
+
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("columnName"), ex.Message);
+        }
+
+        [Fact]
         public void HasParameterName_configures_when_unset()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
@@ -97,6 +120,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
+        public void HasParameterName_evaluates_preconditions()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var ex = Assert.Throws<ArgumentException>(
+                () => config.HasParameterName(""));
+
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("parameterName"), ex.Message);
+        }
+
+        [Fact]
         public void HasColumnOrder_configures_when_unset()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
@@ -106,6 +141,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             Assert.Equal(1, innerConfig.ColumnOrder);
             Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasColumnOrder_throws_on_negative_arguments()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            Assert.Equal(
+                "columnOrder",
+                Assert.Throws<ArgumentOutOfRangeException>(() => config.HasColumnOrder(-1)).ParamName);
         }
 
         [Fact]
@@ -148,6 +194,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             Assert.Equal("int", innerConfig.ColumnType);
             Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasColumnType_evaluates_preconditions()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var ex = Assert.Throws<ArgumentException>(
+                () => config.HasColumnType(""));
+
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("columnType"), ex.Message);
         }
 
         [Fact]
@@ -594,6 +652,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             var result = config.IsMaxLength();
 
             Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasMaxLength_evaluates_preconditions()
+        {
+            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
+            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(
+                () => config.HasMaxLength(0));
+
+            Assert.Equal("maxLength", ex.ParamName);
         }
 
         [Fact]
