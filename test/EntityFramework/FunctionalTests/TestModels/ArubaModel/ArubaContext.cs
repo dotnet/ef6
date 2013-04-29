@@ -76,6 +76,8 @@ namespace System.Data.Entity.TestModels.ArubaModel
                     m.Properties(p => new { p.Number, p.Resolution });
                     m.ToTable("Bugs2");
                 });
+
+            modelBuilder.Entity<ArubaOwner>().Property(o => o.FirstName).HasMaxLength(30);
         }
     }
 }
