@@ -904,47 +904,54 @@ namespace System.Data.Entity.Core.Mapping
                 if (entityContainerMapping != null)
                 {
                     // If there are no entity set maps, don't call the view generation process.
-                    if (!entityContainerMapping.HasViews)
-                    {
-                        return esqlViews;
-                    }
+                    if (!entityContainerMapping.HasViews) break;
 
-                    // If entityContainerMapping contains only query views, then add a warning to the errors and continue to next mapping.
-                    if (!entityContainerMapping.HasMappingFragments())
-                    {
-                        Debug.Assert(
-                            2088 == (int)StorageMappingErrorCode.MappingAllQueryViewAtCompileTime,
-                            "Please change the ERRORCODE_MAPPINGALLQUERYVIEWATCOMPILETIME value as well");
-                        errors.Add(
-                            new EdmSchemaError(
-                                Strings.Mapping_AllQueryViewAtCompileTime(entityContainerMapping.Identity),
-                                (int)StorageMappingErrorCode.MappingAllQueryViewAtCompileTime,
-                                EdmSchemaErrorSeverity.Warning));
-                    }
-                    else
-                    {
-                        var viewGenResults = ViewgenGatekeeper.GenerateViewsFromMapping(
-                            entityContainerMapping, new ConfigViewGenerator
-                                {
-                                    GenerateEsql = true
-                                });
-                        if (viewGenResults.HasErrors)
-                        {
-                            ((List<EdmSchemaError>)errors).AddRange(viewGenResults.Errors);
-                        }
-                        var extentMappingViews = viewGenResults.Views;
-                        foreach (var extentViewPair in extentMappingViews.KeyValuePairs)
-                        {
-                            var generatedViews = extentViewPair.Value;
-                            // Multiple Views are returned for an extent but the first view
-                            // is the only one that we will use for now. In the future,
-                            // we might start using the other views which are per type within an extent.
-                            esqlViews.Add(extentViewPair.Key, generatedViews[0].eSQL);
-                        }
-                    }
+                    GenerateEntitySetViews(entityContainerMapping, esqlViews, errors);
                 }
             }
             return esqlViews;
+        }
+
+        internal static void GenerateEntitySetViews(
+            StorageEntityContainerMapping entityContainerMapping, 
+            Dictionary<EntitySetBase, string> esqlViews,
+            IList<EdmSchemaError> errors)
+        {
+            Debug.Assert(entityContainerMapping.HasViews);
+
+            // If entityContainerMapping contains only query views, then add a warning to the errors and continue to next mapping.
+            if (!entityContainerMapping.HasMappingFragments())
+            {
+                Debug.Assert(
+                    2088 == (int)StorageMappingErrorCode.MappingAllQueryViewAtCompileTime,
+                    "Please change the ERRORCODE_MAPPINGALLQUERYVIEWATCOMPILETIME value as well");
+                errors.Add(
+                    new EdmSchemaError(
+                        Strings.Mapping_AllQueryViewAtCompileTime(entityContainerMapping.Identity),
+                        (int)StorageMappingErrorCode.MappingAllQueryViewAtCompileTime,
+                        EdmSchemaErrorSeverity.Warning));
+            }
+            else
+            {
+                var viewGenResults = ViewgenGatekeeper.GenerateViewsFromMapping(
+                    entityContainerMapping, new ConfigViewGenerator
+                    {
+                        GenerateEsql = true
+                    });
+                if (viewGenResults.HasErrors)
+                {
+                    ((List<EdmSchemaError>)errors).AddRange(viewGenResults.Errors);
+                }
+                var extentMappingViews = viewGenResults.Views;
+                foreach (var extentViewPair in extentMappingViews.KeyValuePairs)
+                {
+                    var generatedViews = extentViewPair.Value;
+                    // Multiple Views are returned for an extent but the first view
+                    // is the only one that we will use for now. In the future,
+                    // we might start using the other views which are per type within an extent.
+                    esqlViews.Add(extentViewPair.Key, generatedViews[0].eSQL);
+                }
+            }
         }
 
         /// <summary>
@@ -1501,6 +1508,33 @@ namespace System.Data.Entity.Core.Mapping
                 = new StorageMappingItemCollection(edmItemCollection, storeItemCollection, xmlReaders, filePaths, out errors);
 
             return errors != null && errors.Count > 0 ? null : storageMappingItemCollection;
+        }
+
+        /// <summary>
+        /// Generates a list of ContainerMappingViewGroup corresponding to each 
+        /// container mapping within this mapping collection.
+        /// </summary>
+        /// <param name="errors">A list of EdmSchemaError that accumulates potential 
+        /// errors and warnings encountered during generation.</param>
+        /// <returns>A list of ContainerMappingViewGroup generated from this mapping collection.</returns>
+        public IList<ContainerMappingViewGroup> Generate(IList<EdmSchemaError> errors)
+        {
+            var viewGroups = new List<ContainerMappingViewGroup>();
+
+            foreach (var item in GetItems<Map>())
+            {
+                var mapping = item as StorageEntityContainerMapping;
+                if (mapping != null)
+                {
+                    var group = mapping.Generate(errors);
+
+                    if (group == null) break;
+
+                    viewGroups.Add(group);
+                }
+            }
+
+            return viewGroups;
         }
     }
 }

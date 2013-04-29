@@ -228,6 +228,7 @@
     <Compile Include="Core\Common\CommandTrees\DbRefKeyExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbUnionAllExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbScanExpression.cs" />
+    <Compile Include="Core\Mapping\ViewGeneration\ContainerMappingViewGroup.cs" />
     <Compile Include="Edm\Serialization\MetadataItemHelper.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
     <Compile Include="Migrations\History\HistoryContextFactory.cs" />

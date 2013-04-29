@@ -244,27 +244,8 @@ namespace System.Data.Entity.Core.Mapping
 
         private static string GetMappingClosureHash(string ssdl, string csdl, string msl, bool sortSequence)
         {
-            StoreItemCollection storeCollection;
-            EdmItemCollection edmCollection;
-            StorageMappingItemCollection mappingCollection;
-
-            using (var stringReader = new StringReader(ssdl))
-            using (var xmlReader = XmlReader.Create(stringReader))
-            {
-                storeCollection = new StoreItemCollection(new[] { xmlReader });
-            }
-
-            using (var stringReader = new StringReader(csdl))
-            using (var xmlReader = XmlReader.Create(stringReader))
-            {
-                edmCollection = new EdmItemCollection(new[] { xmlReader });
-            }
-
-            using (var stringReader = new StringReader(msl))
-            using (var xmlReader = XmlReader.Create(stringReader))
-            {
-                mappingCollection = new StorageMappingItemCollection(edmCollection, storeCollection, new[] { xmlReader });
-            }
+            var mappingCollection = 
+                StorageMappingItemCollectionTests.CreateStorageMappingItemCollection(ssdl, csdl, msl);
 
             return MetadataMappingHasherVisitor.GetMappingClosureHash(
                 3.0, mappingCollection.GetItems<StorageEntityContainerMapping>().Single(), sortSequence);

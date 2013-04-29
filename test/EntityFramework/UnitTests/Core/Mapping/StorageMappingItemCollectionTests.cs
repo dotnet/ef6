@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Xml;
@@ -16,7 +17,7 @@ namespace System.Data.Entity.Core.Mapping
 
     public class StorageMappingItemCollectionTests
     {
-        private const string Ssdl =
+        internal const string Ssdl =
             "<Schema Namespace='AdventureWorksModel.Store' Provider='System.Data.SqlClient' ProviderManifestToken='2008' xmlns='http://schemas.microsoft.com/ado/2009/11/edm/ssdl'>" +
             "  <EntityContainer Name='AdventureWorksModelStoreContainer'>" +
             "    <EntitySet Name='Entities' EntityType='AdventureWorksModel.Store.Entities' Schema='dbo' />" +
@@ -30,7 +31,7 @@ namespace System.Data.Entity.Core.Mapping
             "  </EntityType>" +
             "</Schema>";
 
-        private const string Csdl =
+        internal const string Csdl =
             "<Schema Namespace='AdventureWorksModel' Alias='Self' p1:UseStrongSpatialTypes='false' xmlns:annotation='http://schemas.microsoft.com/ado/2009/02/edm/annotation' xmlns:p1='http://schemas.microsoft.com/ado/2009/02/edm/annotation' xmlns='http://schemas.microsoft.com/ado/2009/11/edm'>" +
             "   <EntityContainer Name='AdventureWorksEntities3' p1:LazyLoadingEnabled='true' >" +
             "       <EntitySet Name='Entities' EntityType='AdventureWorksModel.Entity' />" +
@@ -44,7 +45,7 @@ namespace System.Data.Entity.Core.Mapping
             "   </EntityType>" +
             "</Schema>";
 
-        private const string Msl =
+        internal const string Msl =
             "<Mapping Space='C-S' xmlns='http://schemas.microsoft.com/ado/2009/11/mapping/cs'>" +
             "  <EntityContainerMapping StorageEntityContainer='AdventureWorksModelStoreContainer' CdmEntityContainer='AdventureWorksEntities3'>" +
             "    <EntitySetMapping Name='Entities'>" +
@@ -225,6 +226,55 @@ namespace System.Data.Entity.Core.Mapping
 
             mockCache.Verify(m => m.Assemblies, Times.Exactly(2));
             mockCache.Verify(m => m.CheckAssembly(It.IsAny<Assembly>(), It.IsAny<bool>()), Times.Never());
+        }
+
+        internal static StorageMappingItemCollection CreateStorageMappingItemCollection(string ssdl, string csdl, string msl)
+        {
+            StoreItemCollection storeCollection;
+            EdmItemCollection edmCollection;
+            StorageMappingItemCollection mappingCollection;
+
+            using (var stringReader = new StringReader(ssdl))
+            using (var xmlReader = XmlReader.Create(stringReader))
+            {
+                storeCollection = new StoreItemCollection(new[] { xmlReader });
+            }
+
+            using (var stringReader = new StringReader(csdl))
+            using (var xmlReader = XmlReader.Create(stringReader))
+            {
+                edmCollection = new EdmItemCollection(new[] { xmlReader });
+            }
+
+            using (var stringReader = new StringReader(msl))
+            using (var xmlReader = XmlReader.Create(stringReader))
+            {
+                mappingCollection = new StorageMappingItemCollection(edmCollection, storeCollection, new[] { xmlReader });
+            }
+
+            return mappingCollection;
+        }
+
+        [Fact]
+        public static void Generate_creates_expected_result()
+        {
+            var mappingCollection =
+                StorageMappingItemCollectionTests.CreateStorageMappingItemCollection(
+                    StorageMappingItemCollectionTests.Ssdl,
+                    StorageMappingItemCollectionTests.Csdl,
+                    StorageMappingItemCollectionTests.Msl);
+
+            var errors = new List<EdmSchemaError>();
+            var viewGroups = mappingCollection.Generate(errors);
+
+            Assert.Equal(1, viewGroups.Count);
+
+            var group = viewGroups[0];
+
+            Assert.Equal("AdventureWorksModelStoreContainer", group.StoreContainerName);
+            Assert.Equal("AdventureWorksEntities3", group.ModelContainerName);
+            Assert.Equal("e6447993a1b3926723f95dce0a1caccc96ec5774b5ee78bbd28748745ad30db2", group.MappingHash);
+            Assert.Equal(2, group.Views.Count);
         }
     }
 }
