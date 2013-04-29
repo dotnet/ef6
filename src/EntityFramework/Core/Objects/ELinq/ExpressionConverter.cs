@@ -1096,6 +1096,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // Remove nullable
             var nonNullableType = TypeSystem.GetNonNullableType(linqType);
 
+            // Enum types are only supported for EDM V3 and higher, do not force loading
+            // enum types for previous versions of EDM
+            if (nonNullableType.IsEnum && this.EdmItemCollection.EdmVersion < XmlConstants.EdmVersionForV3)
+            {
+                nonNullableType = nonNullableType.GetEnumUnderlyingType();
+            }
+
             // See if this is a primitive type
             PrimitiveTypeKind primitiveTypeKind;
             if (ClrProviderManifest.TryGetPrimitiveTypeKind(nonNullableType, out primitiveTypeKind))
