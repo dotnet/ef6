@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
@@ -23,6 +24,8 @@ namespace System.Data.Entity.Core.Objects.Internal
     internal class EntityProxyFactory
     {
         private const string ProxyTypeNameFormat = "System.Data.Entity.DynamicProxies.{0}_{1}";
+        private const string SystemWebExtensionsAssemblyName = @"System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
+        private const string ScriptIgnoreAttributeTypeName = @"System.Web.Script.Serialization.ScriptIgnoreAttribute";
         internal const string ResetFKSetterFlagFieldName = "_resetFKSetterFlag";
         internal const string CompareByteArraysFieldName = "_compareByteArrays";
 
@@ -782,6 +785,28 @@ namespace System.Data.Entity.Core.Objects.Internal
             private static readonly ConstructorInfo _xmlIgnoreAttributeConstructor =
                 typeof(XmlIgnoreAttribute).GetConstructor(Type.EmptyTypes);
 
+            private static readonly ConstructorInfo _scriptIgnoreAttributeConstructor =
+                TryGetScriptIgnoreAttributeConstructor();
+
+            [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+            private static ConstructorInfo TryGetScriptIgnoreAttributeConstructor()
+            {
+                try
+                {
+                    var scriptIgnoreAttributeAssembly = Assembly.Load(SystemWebExtensionsAssemblyName);
+                    var scriptIgnoreAttributeType = scriptIgnoreAttributeAssembly.GetType(ScriptIgnoreAttributeTypeName);
+                    if (scriptIgnoreAttributeType != null)
+                    {
+                        return scriptIgnoreAttributeType.GetConstructor(Type.EmptyTypes);
+                    }
+                }
+                catch (Exception)
+                {
+                    // Intentionally ignore any failure to find the attribute
+                }
+                return null;
+            }
+
             private static void MarkAsNotSerializable(FieldBuilder field)
             {
                 var emptyArray = new object[0];
@@ -792,6 +817,11 @@ namespace System.Data.Entity.Core.Objects.Internal
                 {
                     field.SetCustomAttribute(new CustomAttributeBuilder(_ignoreDataMemberAttributeConstructor, emptyArray));
                     field.SetCustomAttribute(new CustomAttributeBuilder(_xmlIgnoreAttributeConstructor, emptyArray));
+
+                    if (_scriptIgnoreAttributeConstructor != null)
+                    {
+                        field.SetCustomAttribute(new CustomAttributeBuilder(_scriptIgnoreAttributeConstructor, emptyArray));
+                    }
                 }
             }
         }
