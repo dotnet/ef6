@@ -2,11 +2,13 @@
 
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
+    extern alias powershell;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using EnvDTE;
     using Moq;
+    using powershell::System.Data.Entity.ConnectionFactoryConfig;
     using VSLangProj;
     using Xunit;
 

@@ -11,7 +11,7 @@ namespace System.Data.Entity.Utilities
         {
             var bytes = new byte[] { 0x0, 0x1, 0x2 };
 
-            Assert.Equal("000102", bytes.ToHexString());
+            Assert.Equal("000102", ByteExtensions.ToHexString(bytes));
         }
     }
 }

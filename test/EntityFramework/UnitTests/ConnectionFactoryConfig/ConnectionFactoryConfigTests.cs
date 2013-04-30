@@ -2,11 +2,10 @@
 
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
+    extern alias powershell;
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Migrations.Extensions;
-    using System.Data.Entity.Migrations.Resources;
     using System.Data.Entity.TestHelpers;
     using System.Globalization;
     using System.IO;
@@ -17,6 +16,9 @@ namespace System.Data.Entity.ConnectionFactoryConfig
     using EnvDTE;
     using Microsoft.Win32;
     using Moq;
+    using powershell::System.Data.Entity.ConnectionFactoryConfig;
+    using powershell::System.Data.Entity.Migrations.Extensions;
+    using powershell::System.Data.Entity.Migrations.Resources;
     using Xunit;
 
     public class ConnectionFactoryConfigTests : TestBase
@@ -49,29 +51,29 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             // short-circuit evaluation.
             RunTestWithTempFilename(
                 tempFileName =>
-                    {
-                        var mockManipulator = new Mock<ConfigFileManipulator>();
+                {
+                    var mockManipulator = new Mock<ConfigFileManipulator>();
 
-                        mockManipulator
-                            .Setup(
-                                m =>
-                                m.AddConnectionFactoryToConfig(
-                                    It.IsAny<XDocument>(),
-                                    It.IsAny<ConnectionFactorySpecification>())).
-                             Returns(true);
+                    mockManipulator
+                        .Setup(
+                            m =>
+                            m.AddConnectionFactoryToConfig(
+                                It.IsAny<XDocument>(),
+                                It.IsAny<ConnectionFactorySpecification>())).
+                         Returns(true);
 
-                        mockManipulator
-                            .Setup(m => m.AddOrUpdateConfigSection(It.IsAny<XDocument>(), It.IsAny<Version>())).
-                             Returns(true);
+                    mockManipulator
+                        .Setup(m => m.AddOrUpdateConfigSection(It.IsAny<XDocument>(), It.IsAny<Version>())).
+                         Returns(true);
 
-                        new XDocument(new XElement("fake")).Save(tempFileName);
+                    new XDocument(new XElement("fake")).Save(tempFileName);
 
-                        var mockedItem = new Mock<ProjectItem>();
-                        mockedItem.Setup(p => p.get_FileNames(0)).Returns(tempFileName);
+                    var mockedItem = new Mock<ProjectItem>();
+                    mockedItem.Setup(p => p.get_FileNames(0)).Returns(tempFileName);
 
-                        new ConfigFileProcessor()
-                            .ProcessConfigFile(
-                                mockedItem.Object, new Func<XDocument, bool>[]
+                    new ConfigFileProcessor()
+                        .ProcessConfigFile(
+                            mockedItem.Object, new Func<XDocument, bool>[]
                                     {
                                         c =>
                                         mockManipulator.Object.AddOrUpdateConfigSection(c, _net45EntityFrameworkVersion),
@@ -81,13 +83,13 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                                             new ConnectionFactorySpecification("F"))
                                     });
 
-                        mockManipulator.Verify(
-                            m =>
-                            m.AddConnectionFactoryToConfig(
-                                It.IsAny<XDocument>(),
-                                It.IsAny<ConnectionFactorySpecification>()));
-                        mockManipulator.Verify(m => m.AddOrUpdateConfigSection(It.IsAny<XDocument>(), _net45EntityFrameworkVersion));
-                    });
+                    mockManipulator.Verify(
+                        m =>
+                        m.AddConnectionFactoryToConfig(
+                            It.IsAny<XDocument>(),
+                            It.IsAny<ConnectionFactorySpecification>()));
+                    mockManipulator.Verify(m => m.AddOrUpdateConfigSection(It.IsAny<XDocument>(), _net45EntityFrameworkVersion));
+                });
         }
 
         [Fact]
@@ -846,34 +848,34 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         {
             RunTestWithTempFilename(
                 tempFileName =>
+                {
+                    new XDocument(new XElement("fake")).Save(tempFileName);
+
+                    if (writeProtectFile)
                     {
-                        new XDocument(new XElement("fake")).Save(tempFileName);
+                        File.SetAttributes(tempFileName, File.GetAttributes(tempFileName) | FileAttributes.ReadOnly);
+                    }
 
-                        if (writeProtectFile)
-                        {
-                            File.SetAttributes(tempFileName, File.GetAttributes(tempFileName) | FileAttributes.ReadOnly);
-                        }
+                    var mockedItem = new Mock<ProjectItem>();
+                    mockedItem.Setup(p => p.get_FileNames(0)).Returns(tempFileName);
 
-                        var mockedItem = new Mock<ProjectItem>();
-                        mockedItem.Setup(p => p.get_FileNames(0)).Returns(tempFileName);
+                    var mockedManipulator = new Mock<ConfigFileManipulator>();
+                    mockedManipulator
+                        .Setup(
+                            m =>
+                            m.AddConnectionFactoryToConfig(
+                                It.IsAny<XDocument>(),
+                                It.IsAny<ConnectionFactorySpecification>()))
+                        .Callback(
+                            (XDocument config, ConnectionFactorySpecification _)
+                            => config.Element("fake").Add(new XElement("modified")))
+                        .Returns(shouldSave);
 
-                        var mockedManipulator = new Mock<ConfigFileManipulator>();
-                        mockedManipulator
-                            .Setup(
-                                m =>
-                                m.AddConnectionFactoryToConfig(
-                                    It.IsAny<XDocument>(),
-                                    It.IsAny<ConnectionFactorySpecification>()))
-                            .Callback(
-                                (XDocument config, ConnectionFactorySpecification _)
-                                => config.Element("fake").Add(new XElement("modified")))
-                            .Returns(shouldSave);
-
-                        Assert.ThrowsDelegate test =
-                            () => new ConfigFileProcessor()
-                                      .ProcessConfigFile(
-                                          mockedItem.Object,
-                                          new Func<XDocument, bool>[]
+                    Assert.ThrowsDelegate test =
+                        () => new ConfigFileProcessor()
+                                  .ProcessConfigFile(
+                                      mockedItem.Object,
+                                      new Func<XDocument, bool>[]
                                               {
                                                   c => mockedManipulator.Object.AddOrUpdateConfigSection(c, _net45EntityFrameworkVersion),
                                                   c =>
@@ -882,20 +884,20 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                                                       new ConnectionFactorySpecification("F"))
                                               });
 
-                        if (shouldSave && writeProtectFile)
-                        {
-                            Assert.Equal(
-                                Strings.SaveConnectionFactoryInConfigFailed(
-                                    tempFileName), Assert.Throws<IOException>(test).Message);
-                        }
-                        else
-                        {
-                            test();
-                        }
+                    if (shouldSave && writeProtectFile)
+                    {
+                        Assert.Equal(
+                            Strings.SaveConnectionFactoryInConfigFailed(
+                                tempFileName), Assert.Throws<IOException>(test).Message);
+                    }
+                    else
+                    {
+                        test();
+                    }
 
-                        var doc = XDocument.Load(tempFileName);
-                        Assert.Equal(shouldSave && !writeProtectFile, doc.Element("fake").Elements("modified").Any());
-                    });
+                    var doc = XDocument.Load(tempFileName);
+                    Assert.Equal(shouldSave && !writeProtectFile, doc.Element("fake").Elements("modified").Any());
+                });
         }
 
         #endregion
@@ -959,7 +961,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
 
         [Fact]
         public void SqlServerDetector_detects_the_highest_orderable_version_of_LocalDB_in_the_registry_when_multiple_versions_are_installed(
-            
+
             )
         {
             Assert.Equal(
@@ -1202,12 +1204,12 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         {
             Run_Project_test_if_Visual_Studio_is_running(
                 p =>
-                    {
-                        var dataRef = new ReferenceRemover(p).TryFindReference("System.Data", "b77a5c561934e089");
-                        Assert.Equal("System.Data", dataRef.Identity);
-                        Assert.Equal("b77a5c561934e089", dataRef.PublicKeyToken.ToLowerInvariant());
-                        Assert.True(dataRef.StrongName);
-                    });
+                {
+                    var dataRef = new ReferenceRemover(p).TryFindReference("System.Data", "b77a5c561934e089");
+                    Assert.Equal("System.Data", dataRef.Identity);
+                    Assert.Equal("b77a5c561934e089", dataRef.PublicKeyToken.ToLowerInvariant());
+                    Assert.True(dataRef.StrongName);
+                });
         }
 
         [Fact]
@@ -1217,31 +1219,31 @@ namespace System.Data.Entity.ConnectionFactoryConfig
 
             Run_Project_test_if_Visual_Studio_is_running(
                 p =>
-                    {
-                        new ConfigFileFinder().FindConfigFiles(
-                            p.ProjectItems, i =>
-                                {
-                                    configFilesFound.Add(i.Name);
+                {
+                    new ConfigFileFinder().FindConfigFiles(
+                        p.ProjectItems, i =>
+                            {
+                                configFilesFound.Add(i.Name);
 
-                                    var config = XDocument.Load(i.FileNames[0]);
+                                var config = XDocument.Load(i.FileNames[0]);
 
-                                    // Checked in app.config for unit tests has no connection factory, so one should be added
-                                    var modified = new ConfigFileManipulator().AddConnectionFactoryToConfig(
-                                        config,
-                                        new ConnectionFactorySpecification(
-                                            ConnectionFactorySpecification.SqlConnectionFactoryName,
-                                            "SomeConnectionString"));
+                                // Checked in app.config for unit tests has no connection factory, so one should be added
+                                var modified = new ConfigFileManipulator().AddConnectionFactoryToConfig(
+                                    config,
+                                    new ConnectionFactorySpecification(
+                                        ConnectionFactorySpecification.SqlConnectionFactoryName,
+                                        "SomeConnectionString"));
 
-                                    Assert.True(modified);
+                                Assert.True(modified);
 
-                                    Assert.Equal(
-                                        ConnectionFactorySpecification.SqlConnectionFactoryName, GetFactoryName(config));
-                                    Assert.Equal("SomeConnectionString", GetArgument(config));
-                                });
+                                Assert.Equal(
+                                    ConnectionFactorySpecification.SqlConnectionFactoryName, GetFactoryName(config));
+                                Assert.Equal("SomeConnectionString", GetArgument(config));
+                            });
 
-                        Assert.Equal(1, configFilesFound.Count);
-                        Assert.Equal("App.config", configFilesFound.Single());
-                    });
+                    Assert.Equal(1, configFilesFound.Count);
+                    Assert.Equal("App.config", configFilesFound.Single());
+                });
         }
 
         [Fact]
@@ -1249,10 +1251,10 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         {
             Run_Project_test_if_Visual_Studio_is_running(
                 p =>
-                    {
-                        var types = p.GetProjectTypes();
-                        Assert.Equal(new[] { "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" }, types);
-                    });
+                {
+                    var types = p.GetProjectTypes();
+                    Assert.Equal(new[] { "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" }, types);
+                });
         }
 
         private void Run_Project_test_if_Visual_Studio_is_running(Action<Project> test)

@@ -2,13 +2,15 @@
 
 namespace System.Data.Entity.Migrations
 {
+    extern alias powershell;
     using System.Collections.Generic;
     using System.Data.Entity.Migrations.Design;
-    using System.Data.Entity.Migrations.Resources;
     using System.Data.Entity.Migrations.Utilities;
     using System.Linq;
     using EnvDTE;
     using Moq;
+    using powershell::System.Data.Entity.Migrations;
+    using powershell::System.Data.Entity.Migrations.Resources;
     using Xunit;
 
     public class AddMigrationCommandTests
