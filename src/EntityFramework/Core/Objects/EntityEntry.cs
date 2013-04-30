@@ -3539,19 +3539,24 @@ namespace System.Data.Entity.Core.Objects
         ///     they reference, or adds the key and this entry to the index of foreign keys that reference
         ///     entities that we don't yet know about.
         /// </summary>
-        internal void FixupReferencesByForeignKeys(bool replaceAddedRefs)
+        internal void FixupReferencesByForeignKeys(bool replaceAddedRefs, EntitySetBase restrictTo = null)
         {
             Debug.Assert(_cache != null, "Attempt to fixup detached entity entry");
             _cache.TransactionManager.BeginGraphUpdate();
             var setIsLoaded = !(_cache.TransactionManager.IsAttachTracking || _cache.TransactionManager.IsAddTracking);
             try
             {
-                foreach (var dependent in ForeignKeyDependents)
+                foreach (var dependent in ForeignKeyDependents
+                    .Where(t => restrictTo == null
+                        || t.Item1.SourceSet.Identity == restrictTo.Identity
+                        || t.Item1.TargetSet.Identity == restrictTo.Identity))
                 {
                     var relatedEnd = WrappedEntity.RelationshipManager.GetRelatedEndInternal(
                         dependent.Item1.ElementType.FullName, dependent.Item2.FromRole.Name) as EntityReference;
+                    
                     Debug.Assert(relatedEnd != null, "Expected non-null EntityReference to principal.");
-                    // Prevent fixup using values that are effectivly null but aren't nullable.
+                    
+                    // Prevent fixup using values that are effectively null but aren't nullable.
                     if (!ForeignKeyFactory.IsConceptualNullKey(relatedEnd.CachedForeignKey))
                     {
                         FixupEntityReferenceToPrincipal(relatedEnd, null, setIsLoaded, replaceAddedRefs);

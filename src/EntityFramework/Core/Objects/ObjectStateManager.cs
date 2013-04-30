@@ -411,7 +411,7 @@ namespace System.Data.Entity.Core.Objects
             // foreign keys.  Perform fixup between the two entries.
             foreach (var foundEntry in GetNonFixedupEntriesContainingForeignKey(newEntry.EntityKey))
             {
-                foundEntry.FixupReferencesByForeignKeys(replaceAddedRefs: false);
+                foundEntry.FixupReferencesByForeignKeys(replaceAddedRefs: false, restrictTo: newEntry.EntitySet);
             }
             // Once we have done fixup for this entry we don't need the entries in the index anymore
             RemoveForeignKeyFromIndex(newEntry.EntityKey);

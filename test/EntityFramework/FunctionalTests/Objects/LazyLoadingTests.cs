@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Objects
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using ConcurrencyModel;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
@@ -109,6 +111,107 @@ namespace System.Data.Entity.Objects
         void ObjectStateManager_ObjectStateManagerChanged(object sender, ComponentModel.CollectionChangeEventArgs e)
         {
             Assert.True(((Team)e.Element).Drivers.Count == 0);
+        }
+
+        [Fact] // CodePlex 735
+        public void Changing_an_FK_does_not_cause_failure_to_load_an_unrelated_navigation_property()
+        {
+            using (var context = new Context735())
+            {
+                var child = context.Children.First();
+
+                var parentReference = context.Entry(child).Reference(e => e.Parent);
+                var otherReference = context.Entry(child).Reference(e => e.Other);
+
+                Assert.Null(child.ParentId);
+                Assert.Equal(1, child.OtherId);
+                Assert.True(parentReference.IsLoaded); // FK in database is null => nothing to load
+                Assert.False(otherReference.IsLoaded);
+
+                context.Configuration.LazyLoadingEnabled = false;
+                Assert.Null(child.Parent);
+                Assert.Null(child.Other);
+                context.Configuration.LazyLoadingEnabled = true;
+
+                child.ParentId = 1;
+
+                // Lazy load other
+                Assert.Equal(1, child.Other.Id);
+
+                Assert.True(parentReference.IsLoaded); // DetectChanges has not yet been called
+                Assert.True(otherReference.IsLoaded);
+
+                context.Configuration.LazyLoadingEnabled = false;
+                Assert.Null(child.Parent);
+                context.Configuration.LazyLoadingEnabled = true;
+
+                context.ChangeTracker.DetectChanges();
+
+                Assert.False(parentReference.IsLoaded); // FK has changed, so IsLoaded reset
+                Assert.True(otherReference.IsLoaded);
+
+                // Lazy load parent should now work
+                Assert.Equal(1, child.Parent.Id);
+
+                Assert.True(parentReference.IsLoaded);
+                Assert.True(otherReference.IsLoaded);
+            }
+        }
+
+        public class Context735 : DbContext
+        {
+            static Context735()
+            {
+                Database.SetInitializer(new Context735Initializer());
+            }
+
+            public DbSet<Parent> Parents { get; set; }
+            public DbSet<Child> Children { get; set; }
+            public DbSet<Other> Others { get; set; }
+        }
+
+        public class Context735Initializer : DropCreateDatabaseIfModelChanges<Context735>
+        {
+            protected override void Seed(Context735 context)
+            {
+                context.Others.Add(new Other { Id = 1, Name = "Other 1" });
+                context.Parents.Add(new Parent { Id = 1, Name = "Parent 1" });
+                context.Children.Add(new Child { Id = 1, OtherId = 1, Name = "Child 1" });
+            }
+        }
+
+        public class Parent
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public int Id { get; set; }
+
+            public string Name { get; set; }
+
+            public virtual ICollection<Child> Children { get; set; }
+        }
+
+        public class Child
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public int Id { get; set; }
+
+            public string Name { get; set; }
+
+            public int? ParentId { get; set; }
+            public virtual Parent Parent { get; set; }
+
+            public int OtherId { get; set; }
+            public virtual Other Other { get; set; }
+        }
+
+        public class Other
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public int Id { get; set; }
+
+            public string Name { get; set; }
+
+            public virtual ICollection<Child> Childs { get; set; }
         }
     }
 }
