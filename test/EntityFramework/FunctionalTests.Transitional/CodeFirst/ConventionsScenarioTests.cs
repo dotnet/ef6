@@ -18,7 +18,7 @@ namespace FunctionalTests
 
     public class ConventionsScenarioTests
     {
-        public class ConventionsConfiguration : TestBase
+        public class ConventionTests : TestBase
         {
             [Fact]
             public void Add_custom_model_convention()
@@ -245,7 +245,7 @@ namespace FunctionalTests
             }
 
             [Fact]
-            public void Can_ignore_types()
+            public void Ignore_can_ignore_types()
             {
                 var modelBuilder = new DbModelBuilder();
 
@@ -263,7 +263,7 @@ namespace FunctionalTests
             }
 
             [Fact]
-            public void Throws_on_conflicting_ignore_type_configuration()
+            public void Ignore_throws_on_conflicting_configuration()
             {
                 var modelBuilder = new DbModelBuilder();
 
@@ -282,7 +282,7 @@ namespace FunctionalTests
             }
 
             [Fact]
-            public void Can_configure_as_complex_types()
+            public void IsComplexType_can_configure_as_complex_types()
             {
                 var modelBuilder = new DbModelBuilder();
 
@@ -297,7 +297,7 @@ namespace FunctionalTests
             }
 
             [Fact]
-            public void Can_configure_entity_as_complex_type_and_its_properties()
+            public void IsComplexType_can_configure_complex_type_and_its_properties()
             {
                 var modelBuilder = new DbModelBuilder();
 
@@ -397,6 +397,47 @@ namespace FunctionalTests
                     Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
                         .Message, Strings.LightweightEntityConfiguration_ConfigurationConflict_ComplexType);
             }
+
+            [Fact]
+            public void NavigationProperty_throws_for_nonexisting_properties()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<RelatedLightweightEntity>();
+                modelBuilder.Types()
+                    .Where(t => t.Name == "LightweightEntity")
+                    .Configure(c => c.NavigationProperty("Foo"));
+
+                Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
+                    .ValidateMessage("NoSuchProperty", "Foo", typeof(LightweightEntity).FullName);
+            }
+
+            [Fact]
+            public void NavigationProperty_throws_for_scalar_properties()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<RelatedLightweightEntity>();
+                modelBuilder.Types<LightweightEntity>()
+                    .Configure(c => c.NavigationProperty(e => e.IntProperty));
+
+                Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
+                    .ValidateMessage("LightweightEntityConfiguration_InvalidNavigationProperty", "IntProperty");
+            }
+
+            [Fact]
+            public void Property_can_configure_internal_properties()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntity>();
+                modelBuilder.Types<LightweightEntity>()
+                    .Configure(e => e.Property(t => t.InternalNavigationPropertyId));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                Assert.NotNull(databaseMapping.Model.EntityTypes.Single().Properties.Single(p => p.Name == "InternalNavigationPropertyId"));
+            }
         }
 
         public class LightweightPropertyConventions : TestBase
@@ -430,7 +471,6 @@ namespace FunctionalTests
             public void Can_configure_complex_type_properties()
             {
                 var modelBuilder = new DbModelBuilder();
-
                 modelBuilder.Entity<LightweightEntity>();
                 modelBuilder.Properties<string>()
                     .Configure(p => p.HasMaxLength(256));
@@ -553,6 +593,9 @@ namespace FunctionalTests
         public int Id { get; set; }
         public int IntProperty { get; set; }
         public int IntProperty1 { get; set; }
+        internal int? InternalNavigationPropertyId { get; set; }
+        internal LightweightEntityWithKeyConfiguration InternalNavigationProperty { get; set; }
+        internal ICollection<LightweightEntity> InternalCollectionNavigationProperty { get; set; }
         public string StringProperty { get; set; }
         public LightweightComplexType ComplexProperty { get; set; }
     }
@@ -566,6 +609,7 @@ namespace FunctionalTests
         public int IntProperty { get; set; }
 
         public int IntProperty1 { get; set; }
+        internal ICollection<LightweightEntity> InternalCollectionNavigationProperty { get; set; }
         public LightweightComplexType ComplexProperty { get; set; }
     }
 

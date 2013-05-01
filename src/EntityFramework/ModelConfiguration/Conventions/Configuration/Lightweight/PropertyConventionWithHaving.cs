@@ -12,12 +12,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         where T : class
     {
         private readonly Func<PropertyInfo, T> _capturingPredicate;
-        private readonly Action<LightweightPropertyConfiguration, T> _propertyConfigurationAction;
+        private readonly Action<LightweightPrimitivePropertyConfiguration, T> _propertyConfigurationAction;
 
         public PropertyConventionWithHaving(
             IEnumerable<Func<PropertyInfo, bool>> predicates,
             Func<PropertyInfo, T> capturingPredicate,
-            Action<LightweightPropertyConfiguration, T> propertyConfigurationAction)
+            Action<LightweightPrimitivePropertyConfiguration, T> propertyConfigurationAction)
             : base(predicates)
         {
             DebugCheck.NotNull(predicates);
@@ -33,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             get { return _capturingPredicate; }
         }
 
-        internal Action<LightweightPropertyConfiguration, T> PropertyConfigurationAction
+        internal Action<LightweightPrimitivePropertyConfiguration, T> PropertyConfigurationAction
         {
             get { return _propertyConfigurationAction; }
         }
@@ -50,7 +50,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             if (value != null)
             {
                 _propertyConfigurationAction(
-                    new LightweightPropertyConfiguration(memberInfo, configuration),
+                    new LightweightPrimitivePropertyConfiguration(memberInfo, configuration),
                     value);
             }
         }

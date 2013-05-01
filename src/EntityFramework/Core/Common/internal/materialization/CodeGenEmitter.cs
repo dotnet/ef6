@@ -254,8 +254,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             DebugCheck.NotNull(type);
 
             // check if null can be assigned to the type
-            if (type.IsClass
-                || TypeSystem.IsNullableType(type))
+            if (type.IsNullable())
             {
                 // create the constant directly if it accepts null
                 nullConstant = Expression.Constant(null, type);

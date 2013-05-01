@@ -60,47 +60,13 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Given a type that represents a collection, determine if the type implements ICollection&lt;&gt;, and if
-        ///     so return the element type of the collection.  Currently, if the collection implements ICollection&lt;&gt;
-        ///     multiple times with different types, then we will return false since this is not supported.
-        /// </summary>
-        /// <param name="collectionType"> the collection type to examine </param>
-        /// <param name="elementType"> the type of element </param>
-        /// <returns> true if the collection implement ICollection&lt;&gt; false otherwise </returns>
-        internal static bool TryGetICollectionElementType(Type collectionType, out Type elementType)
-        {
-            elementType = null;
-            // We have to check if the type actually is the interface, or if it implements the interface:
-            try
-            {
-                var collectionInterface =
-                    (collectionType.IsGenericType && typeof(ICollection<>).IsAssignableFrom(collectionType.GetGenericTypeDefinition()))
-                        ? collectionType
-                        : collectionType.GetInterface(typeof(ICollection<>).FullName);
-
-                // We need to make sure the type is fully specified otherwise we won't be able to add element to it.
-                if (collectionInterface != null
-                    && !collectionInterface.ContainsGenericParameters)
-                {
-                    elementType = collectionInterface.GetGenericArguments()[0];
-                    return true;
-                }
-            }
-            catch (AmbiguousMatchException)
-            {
-                // Thrown if collection type implements ICollection<> more than once
-            }
-            return false;
-        }
-
-        /// <summary>
         ///     Helper method to determine the element type of the collection contained by the given property.
         ///     If an unambiguous element type cannot be found, then an InvalidOperationException is thrown.
         /// </summary>
         internal static Type GetCollectionElementType(Type propertyType)
         {
-            Type elementType;
-            if (!TryGetICollectionElementType(propertyType, out elementType))
+            var elementType = propertyType.TryGetElementType(typeof(ICollection<>));
+            if (elementType == null)
             {
                 throw new InvalidOperationException(
                     Strings.PocoEntityWrapper_UnexpectedTypeForNavigationProperty(

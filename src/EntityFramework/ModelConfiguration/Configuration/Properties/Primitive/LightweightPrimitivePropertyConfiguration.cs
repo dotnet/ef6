@@ -8,7 +8,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
 
@@ -16,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     ///     Used to configure a primitive property of an entity type or complex type.
     ///     This configuration functionality is available via lightweight conventions.
     /// </summary>
-    public class LightweightPropertyConfiguration
+    public class LightweightPrimitivePropertyConfiguration
     {
         private readonly PropertyInfo _propertyInfo;
         private readonly Func<PrimitivePropertyConfiguration> _configuration;
@@ -25,22 +24,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         private readonly Lazy<DecimalPropertyConfiguration> _decimalConfiguration;
         private readonly Lazy<LengthPropertyConfiguration> _lengthConfiguration;
         private readonly Lazy<StringPropertyConfiguration> _stringConfiguration;
-
-        internal LightweightPropertyConfiguration()
-        {
-            Debug.Assert(
-                this is MissingPropertyConfiguration,
-                "This constructor is only intended to be used by the LightweightMissingPropertyConfiguration class.");
-        }
-
+        
         /// <summary>
-        ///     Initializes a new instance of the <see cref="LightweightPropertyConfiguration" /> class.
+        ///     Initializes a new instance of the <see cref="LightweightPrimitivePropertyConfiguration" /> class.
         /// </summary>
         /// <param name="propertyInfo">
         ///     The <see cref="PropertyInfo" /> for this property
         /// </param>
         /// <param name="configuration"> The configuration object that this instance wraps. </param>
-        internal LightweightPropertyConfiguration(PropertyInfo propertyInfo, Func<PrimitivePropertyConfiguration> configuration)
+        internal LightweightPrimitivePropertyConfiguration(PropertyInfo propertyInfo, Func<PrimitivePropertyConfiguration> configuration)
         {
             DebugCheck.NotNull(propertyInfo);
             DebugCheck.NotNull(configuration);
@@ -77,12 +69,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </summary>
         /// <param name="columnName"> The name of the column. </param>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration HasColumnName(string columnName)
+        public virtual LightweightPrimitivePropertyConfiguration HasColumnName(string columnName)
         {
             Check.NotEmpty(columnName, "columnName");
 
@@ -95,7 +87,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             return this;
         }
 
-        public virtual LightweightPropertyConfiguration HasParameterName(string parameterName)
+        public virtual LightweightPrimitivePropertyConfiguration HasParameterName(string parameterName)
         {
             Check.NotEmpty(parameterName, "parameterName");
 
@@ -114,12 +106,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </summary>
         /// <param name="columnOrder"> The order that this column should appear in the database table. </param>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration HasColumnOrder(int columnOrder)
+        public virtual LightweightPrimitivePropertyConfiguration HasColumnOrder(int columnOrder)
         {
             if (columnOrder < 0)
             {
@@ -140,12 +132,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </summary>
         /// <param name="columnType"> Name of the database provider specific data type. </param>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration HasColumnType(string columnType)
+        public virtual LightweightPrimitivePropertyConfiguration HasColumnType(string columnType)
         {
             Check.NotEmpty(columnType, "columnType");
 
@@ -162,12 +154,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Configures the property to be used as an optimistic concurrency token.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration IsConcurrencyToken()
+        public virtual LightweightPrimitivePropertyConfiguration IsConcurrencyToken()
         {
             return IsConcurrencyToken(true);
         }
@@ -177,12 +169,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </summary>
         /// <param name="concurrencyToken"> Value indicating if the property is a concurrency token or not. </param>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration IsConcurrencyToken(bool concurrencyToken)
+        public virtual LightweightPrimitivePropertyConfiguration IsConcurrencyToken(bool concurrencyToken)
         {
             if (_configuration() != null
                 && _configuration().ConcurrencyMode == null)
@@ -200,12 +192,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </summary>
         /// <param name="databaseGeneratedOption"> The pattern used to generate values for the property in the database. </param>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration HasDatabaseGeneratedOption(
+        public virtual LightweightPrimitivePropertyConfiguration HasDatabaseGeneratedOption(
             DatabaseGeneratedOption databaseGeneratedOption)
         {
             if (!Enum.IsDefined(typeof(DatabaseGeneratedOption), databaseGeneratedOption))
@@ -227,16 +219,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     The database column used to store this property will be nullable.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration IsOptional()
+        public virtual LightweightPrimitivePropertyConfiguration IsOptional()
         {
             if (_configuration() != null
                 && _configuration().IsNullable == null)
             {
+                if (!_propertyInfo.PropertyType.IsNullable())
+                {
+                    throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonNullableProperty(
+                        _propertyInfo.DeclaringType + "." + _propertyInfo.Name,
+                        _propertyInfo.PropertyType));
+                }
+
                 _configuration().IsNullable = true;
             }
 
@@ -248,12 +247,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     The database column used to store this property will be non-nullable.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration IsRequired()
+        public virtual LightweightPrimitivePropertyConfiguration IsRequired()
         {
             if (_configuration() != null
                 && _configuration().IsNullable == null)
@@ -268,13 +267,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Configures the property to support Unicode string content.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if the
         ///     property is not a <see cref="String" />.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration IsUnicode()
+        public virtual LightweightPrimitivePropertyConfiguration IsUnicode()
         {
             return IsUnicode(true);
         }
@@ -284,13 +283,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </summary>
         /// <param name="unicode"> Value indicating if the property supports Unicode string content or not. </param>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if the
         ///     property is not a <see cref="String" />.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration IsUnicode(bool unicode)
+        public virtual LightweightPrimitivePropertyConfiguration IsUnicode(bool unicode)
         {
             if (_stringConfiguration.Value != null
                 && _stringConfiguration.Value.IsUnicode == null)
@@ -306,13 +305,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Use HasMaxLength to set the length that the property is fixed to.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if the
         ///     property does not have length facets.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration IsFixedLength()
+        public virtual LightweightPrimitivePropertyConfiguration IsFixedLength()
         {
             if (_lengthConfiguration.Value != null
                 && _lengthConfiguration.Value.IsFixedLength == null)
@@ -328,13 +327,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Properties are variable length by default.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if the
         ///     property does not have length facets.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration IsVariableLength()
+        public virtual LightweightPrimitivePropertyConfiguration IsVariableLength()
         {
             if (_lengthConfiguration.Value != null
                 && _lengthConfiguration.Value.IsFixedLength == null)
@@ -350,13 +349,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </summary>
         /// <param name="maxLength"> The maximum length for the property. </param>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if the
         ///     property does not have length facets.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration HasMaxLength(int maxLength)
+        public virtual LightweightPrimitivePropertyConfiguration HasMaxLength(int maxLength)
         {
             if (maxLength < 1)
             {
@@ -388,13 +387,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Configures the property to allow the maximum length supported by the database provider.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if the
         ///     property does not have length facets.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration IsMaxLength()
+        public virtual LightweightPrimitivePropertyConfiguration IsMaxLength()
         {
             if (_lengthConfiguration.Value != null
                 && _lengthConfiguration.Value.IsMaxLength == null
@@ -412,13 +411,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </summary>
         /// <param name="value"> Precision of the property. </param>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if the
         ///     property is not a <see cref="DateTime" />.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration HasPrecision(byte value)
+        public virtual LightweightPrimitivePropertyConfiguration HasPrecision(byte value)
         {
             if (_dateTimeConfiguration.Value != null
                 && _dateTimeConfiguration.Value.Precision == null)
@@ -435,13 +434,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// <param name="precision"> The precision of the property. </param>
         /// <param name="scale"> The scale of the property. </param>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if the
         ///     property is not a <see cref="Decimal" />.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration HasPrecision(byte precision, byte scale)
+        public virtual LightweightPrimitivePropertyConfiguration HasPrecision(byte precision, byte scale)
         {
             if (_decimalConfiguration.Value != null
                 && _decimalConfiguration.Value.Precision == null
@@ -461,13 +460,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     optimistic concurrency token.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if the
         ///     property is not a <see cref="T:Byte[]" />.
         /// </remarks>
-        public virtual LightweightPropertyConfiguration IsRowVersion()
+        public virtual LightweightPrimitivePropertyConfiguration IsRowVersion()
         {
             if (_binaryConfiguration.Value != null
                 && _binaryConfiguration.Value.IsRowVersion == null)
@@ -482,10 +481,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     Configures this property to be part of the entity type's primary key.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="LightweightPropertyConfiguration" /> instance so that
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that
         ///     multiple calls can be chained.
         /// </returns>
-        public virtual LightweightPropertyConfiguration IsKey()
+        public virtual LightweightPrimitivePropertyConfiguration IsKey()
         {
             if (_configuration() != null)
             {
@@ -500,24 +499,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             return this;
         }
 
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string ToString()
         {
             return base.ToString();
         }
 
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <inheritdoc/>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()

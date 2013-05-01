@@ -2,10 +2,12 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Linq;
+    using System.Reflection;
     using Xunit;
 
     public class LightweightTypeConfigurationTests
@@ -114,6 +116,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 () => config.Ignore((string)null));
 
             Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), ex.Message);
+
+            Assert.Equal(
+                "propertyInfo",
+                Assert.Throws<ArgumentNullException>(() => config.Ignore((PropertyInfo)null)).ParamName);
         }
 
         [Fact]
@@ -146,15 +152,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         [Fact]
-        public void Ignore_is_noop_when_not_exists()
+        public void Ignore_throws_when_property_not_found()
         {
-            var type = new MockType();
+            var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            config.Ignore("Property1");
-
-            Assert.Empty(innerConfig.IgnoredProperties);
+            Assert.Equal(
+                Strings.NoSuchProperty("foo", type.FullName),
+                Assert.Throws<InvalidOperationException>(() => config.Ignore("foo")).Message);
         }
 
         [Fact]
@@ -191,7 +197,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             Ignore_type_throws_with_any_other_configuration_implementation(
                 config => config.Property(config.ClrType.GetProperties().First()));
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.Property(new PropertyPath(config.ClrType.GetProperties().First())));
+                config => config.NavigationProperty("Property2"));
+            Ignore_type_throws_with_any_other_configuration_implementation(
+                config => config.NavigationProperty(config.ClrType.GetProperties().Last()));
             Ignore_type_throws_with_any_other_configuration_implementation(
                 config => config.ToTable("Table1"));
             Ignore_type_throws_with_any_other_configuration_implementation(
@@ -206,6 +214,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             type.Property<int>("Property1");
+            type.Property(type, "Property2");
 
             Ignore_type_throws_with_any_other_configuration_assert(
                 new LightweightTypeConfiguration(type, () => new EntityTypeConfiguration(type), new ModelConfiguration()),
@@ -268,6 +277,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 config => config.MapToStoredProcedures());
             IsComplexType_throws_with_conflicting_configuration_implementation(
                 config => config.MapToStoredProcedures(c => { }));
+            IsComplexType_throws_with_conflicting_configuration_implementation(
+                config => config.NavigationProperty("Property1"));
+            IsComplexType_throws_with_conflicting_configuration_implementation(
+                config => config.NavigationProperty(config.ClrType.GetProperties().First()));
         }
 
         private void IsComplexType_throws_with_conflicting_configuration_implementation(Action<LightweightTypeConfiguration> configAction)
@@ -313,7 +326,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var ex = Assert.Throws<ArgumentException>(
                 () => config.Property((string)null));
 
-            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("name"), ex.Message);
+            Assert.Equal(Strings.ArgumentIsNullOrWhitespace("propertyName"), ex.Message);
         }
 
         [Fact]
@@ -348,15 +361,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         [Fact]
-        public void Property_returns_MissingPropertyConfiguration_when_not_exists()
+        public void Property_throws_when_not_exists()
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            var result = config.Property("Property1");
+            Assert.Equal(
+                Strings.NoSuchProperty("Property1", type.Object.FullName),
+                Assert.Throws<InvalidOperationException>(() => config.Property("Property1")).Message);
 
-            Assert.IsType<MissingPropertyConfiguration>(result);
+            Assert.Equal(
+                "propertyInfo",
+                Assert.Throws<ArgumentNullException>(() => config.Property((PropertyInfo)null)).ParamName);
         }
 
         [Fact]
@@ -394,6 +411,74 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             Assert.Equal(typeof(decimal), result.ClrPropertyInfo.PropertyType);
             Assert.NotNull(result.Configuration);
             Assert.IsType<DecimalPropertyConfiguration>(result.Configuration());
+        }
+
+        [Fact]
+        public void NavigationProperty_evaluates_preconditions()
+        {
+            var type = typeof(LocalEntityType);
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("propertyName"),
+                Assert.Throws<ArgumentException>(
+                    () => config.NavigationProperty((string)null)).Message);
+
+            Assert.Equal(
+                Strings.LightweightEntityConfiguration_InvalidNavigationProperty("Property1"),
+                Assert.Throws<InvalidOperationException>(
+                    () => config.NavigationProperty(type.GetProperty("Property1"))).Message);
+        }
+
+        [Fact]
+        public void NavigationProperty_returns_configuration()
+        {
+            var type = typeof(LocalEntityType);
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+
+            var result = config.NavigationProperty(type.GetProperty("NavigationProperty"));
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.ClrPropertyInfo);
+            Assert.Equal("NavigationProperty", result.ClrPropertyInfo.Name);
+            Assert.Equal(typeof(LocalEntityType), result.ClrPropertyInfo.PropertyType);
+            Assert.NotNull(result.Configuration);
+            Assert.IsType<NavigationPropertyConfiguration>(result.Configuration);
+        }
+
+        [Fact]
+        public void NavigationProperty_returns_configuration_by_name()
+        {
+            var type = typeof(LocalEntityType);
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+
+            var result = config.NavigationProperty("NavigationProperty");
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.ClrPropertyInfo);
+            Assert.Equal("NavigationProperty", result.ClrPropertyInfo.Name);
+            Assert.Equal(typeof(LocalEntityType), result.ClrPropertyInfo.PropertyType);
+            Assert.NotNull(result.Configuration);
+            Assert.IsType<NavigationPropertyConfiguration>(result.Configuration);
+        }
+
+        [Fact]
+        public void NavigationProperty_throws_when_property_not_found()
+        {
+            var type = typeof(LocalEntityType);
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+
+            Assert.Equal(
+                Strings.NoSuchProperty("foo", type.FullName),
+                Assert.Throws<InvalidOperationException>(() => config.NavigationProperty("foo")).Message);
+
+            Assert.Equal(
+                "propertyInfo",
+                Assert.Throws<ArgumentNullException>(() => config.NavigationProperty((PropertyInfo)null)).ParamName);
         }
 
         [Fact]
@@ -548,17 +633,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         [Fact]
-        public void HasKey_is_noop_when_not_exists()
+        public void HasKey_throws_when_not_exists()
         {
-            var type = new MockType()
-                .Property<int>("Property1");
+            var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            var result = config.HasKey("Property2");
-
-            Assert.Empty(innerConfig.KeyProperties);
-            Assert.Same(config, result);
+            Assert.Equal(
+                Strings.NoSuchProperty("Property2", "T"),
+                Assert.Throws<InvalidOperationException>(() => config.HasKey("Property2")).Message);
         }
 
         [Fact]
@@ -572,6 +655,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 () => config.HasKey((string[])null));
 
             Assert.Equal("propertyNames", ex.ParamName);
+
+            Assert.Equal(Strings.CollectionEmpty("keyProperties", "HasKey"),
+                Assert.Throws<ArgumentException>(
+                () => config.HasKey(Enumerable.Empty<string>())).Message);
         }
 
         [Fact]
@@ -611,17 +698,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         [Fact]
-        public void HasKey_composite_is_noop_when_not_exists()
+        public void HasKey_composite_throws_when_not_exists()
         {
-            var type = new MockType()
-                .Property<int>("Property1");
+            var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            var result = config.HasKey(new[] { "Property1", "Property2" });
-
-            Assert.Empty(innerConfig.KeyProperties);
-            Assert.Same(config, result);
+            Assert.Equal(
+                Strings.NoSuchProperty("Property1", "T"),
+                Assert.Throws<InvalidOperationException>(() => config.HasKey(new[] { "Property1", "Property2" })).Message);
         }
 
         [Fact]
@@ -680,6 +765,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             {
                 get { return 0; }
             }
+
+            public decimal Property1 { get; set; }
+            public LocalEntityType NavigationProperty { get; set; }
         }
     }
 }

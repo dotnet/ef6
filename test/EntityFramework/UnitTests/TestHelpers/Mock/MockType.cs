@@ -37,7 +37,7 @@ namespace System.Data.Entity
                 .Setup<PropertyInfo>(
                     "GetPropertyImpl",
                     ItExpr.IsAny<string>(),
-                    BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public,
+                    ItExpr.IsAny<BindingFlags>(),
                     ItExpr.IsNull<Binder>(),
                     ItExpr.IsNull<Type>(),
                     ItExpr.IsNull<Type[]>(),

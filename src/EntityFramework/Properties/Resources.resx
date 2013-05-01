@@ -4089,7 +4089,7 @@
   <data name="Cqt_Factory_NewCollectionInvalidCommonType" xml:space="preserve">
     <value>The specified element expressions cannot be contained by the same collection because no common element type can be inferred from their ResultTypes.</value>
   </data>
-  <data name="Cqt_Factory_NoSuchProperty" xml:space="preserve">
+  <data name="NoSuchProperty" xml:space="preserve">
     <value>No property with the name '{0}' is declared by the type '{1}'.</value>
   </data>
   <data name="Cqt_Factory_NoSuchRelationEnd" xml:space="preserve">
@@ -5367,6 +5367,18 @@
   <data name="AttemptToAddEdmMemberFromWrongDataSpace" xml:space="preserve">
     <value>Attempt to add member {0} to structural type {1} failed. Member has DataSpace {2}, structural type has DataSpace {3}. They must be the same.</value>
   </data>
+  <data name="LightweightEntityConfiguration_InvalidNavigationProperty" xml:space="preserve">
+    <value>The property '{0}' cannot be configured as a navigation property. The property has to be of a valid entity type and the property should have non-abstract getter and setter. For collection properties the type must implement ICollection of T where T is a valid entity type.</value>
+  </data>
+  <data name="LightweightEntityConfiguration_InvalidInverseNavigationProperty" xml:space="preserve">
+    <value>The entity type '{0}' that the navigation property '{1}' is declared on is not the same as the type '{2}' referred by the inverse navigation property '{3}'.</value>
+  </data>
+  <data name="LightweightEntityConfiguration_MismatchedInverseNavigationProperty" xml:space="preserve">
+    <value>The entity type '{0}' that the navigation property '{1}' refers to is not the same as the type '{2}' on which the inverse navigation property '{3}' is declared.</value>
+  </data>
+  <data name="DuplicateParameterName" xml:space="preserve">
+    <value>Duplicate parameter name: {0}</value>
+  </data>
   <data name="CommandLogFailed" xml:space="preserve">
     <value>-- Failed in {0} ms with error: {1}{2}</value>
   </data>
@@ -5384,5 +5396,14 @@
   </data>
   <data name="ErrorGeneratingCommandTree" xml:space="preserve">
     <value>An error occurred while attempting to generate the body SQL of the stored procedure '{0}' for entity type '{1}'. This can happen if the entity type has both a self-referencing association and a store-generated key. See the inner exception for details.</value>
+  </data>
+  <data name="LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity" xml:space="preserve">
+    <value>Multiplicity '{0}' is not compatible with the property '{1}' of type '{2}'.</value>
+  </data>
+  <data name="LightweightNavigationPropertyConfiguration_InvalidMultiplicity" xml:space="preserve">
+    <value>Multiplicity '{0}' is not valid. Multiplicity must be: '*', '0..1', or '1'.</value>
+  </data>
+  <data name="LightweightPrimitivePropertyConfiguration_NonNullableProperty" xml:space="preserve">
+    <value>The property {0} of type {1} cannot be marked as optional because it can't be assigned a null value.</value>
   </data>
 </root>

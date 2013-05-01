@@ -2,7 +2,9 @@
 
 namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
@@ -100,8 +102,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                 if (multiplicity == RelationshipMultiplicity.Many)
                 {
-                    Type elementType;
-                    isCandidate = EntityUtil.TryGetICollectionElementType(propertyValueType, out elementType);
+                    isCandidate = propertyValueType.TryGetElementType(typeof(ICollection<>)) != null;
                 }
                 else if (multiplicity == RelationshipMultiplicity.One
                          || multiplicity == RelationshipMultiplicity.ZeroOrOne)

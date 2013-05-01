@@ -18,9 +18,6 @@ namespace System.Data.Entity.Internal
     {
         #region Fields and constructors
 
-        private const BindingFlags PropertyBindingFlags =
-            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
         private static readonly ConcurrentDictionary<Type, Func<object>> _nonEntityFactories =
             new ConcurrentDictionary<Type, Func<object>>();
 
@@ -118,7 +115,9 @@ namespace System.Data.Entity.Internal
             if (!_nonEntityFactories.TryGetValue(_type, out nonEntityFactory))
             {
                 var factoryExpression =
-                    Expression.New(_type.GetConstructor(PropertyBindingFlags, null, Type.EmptyTypes, null));
+                    Expression.New(
+                        _type.GetConstructor(
+                            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, Type.EmptyTypes, null));
                 nonEntityFactory = Expression.Lambda<Func<object>>(factoryExpression, null).Compile();
                 _nonEntityFactories.TryAdd(_type, nonEntityFactory);
             }

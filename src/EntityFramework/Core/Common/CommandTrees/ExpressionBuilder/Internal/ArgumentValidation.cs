@@ -962,8 +962,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             {
                 // Does the type declare a member with the given name?
                 if (structType.Members.TryGetValue(propertyName, ignoreCase, out foundMember)
-                    &&
-                    foundMember != null)
+                    && foundMember != null)
                 {
                     // If the member is a RelationshipEndMember, call the corresponding overload.
                     if (Helper.IsRelationshipEndMember(foundMember)
@@ -976,7 +975,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             }
 
             throw new ArgumentOutOfRangeException(
-                "propertyName", Strings.Cqt_Factory_NoSuchProperty(propertyName, instance.ResultType.ToString()));
+                "propertyName", Strings.NoSuchProperty(propertyName, instance.ResultType.ToString()));
         }
 
         #endregion

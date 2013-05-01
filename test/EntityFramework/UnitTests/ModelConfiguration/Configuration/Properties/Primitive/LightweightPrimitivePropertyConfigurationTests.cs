@@ -10,21 +10,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using Moq;
     using Xunit;
 
-    public class LightweightPropertyConfigurationTests
+    public class LightweightPrimitivePropertyConfigurationTests
     {
         [Fact]
         public void Ctor_does_not_invoke_delegate()
         {
             var initialized = false;
 
-            new LightweightPropertyConfiguration(
+            new LightweightPrimitivePropertyConfiguration(
                 new MockPropertyInfo(),
                 () =>
-                {
-                    initialized = true;
+                    {
+                        initialized = true;
 
-                    return null;
-                });
+                        return null;
+                    });
 
             Assert.False(initialized);
         }
@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         [Fact]
         public void Methods_dont_throw_if_configuration_is_null()
         {
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => null);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => null);
 
             config.HasColumnName("Column1");
             config.HasColumnOrder(0);
@@ -57,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasColumnName_configures_when_unset()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasColumnName("Column1");
 
@@ -69,10 +69,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasColumnName_is_noop_when_set()
         {
             var innerConfig = new PrimitivePropertyConfiguration
-                                  {
-                                      ColumnName = "Column1"
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    ColumnName = "Column1"
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasColumnName("Column2");
 
@@ -84,7 +84,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasColumnName_evaluates_preconditions()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var ex = Assert.Throws<ArgumentException>(
                 () => config.HasColumnName(""));
@@ -96,7 +96,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasParameterName_configures_when_unset()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasParameterName("Parameter1");
 
@@ -108,10 +108,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasParameterName_is_noop_when_set()
         {
             var innerConfig = new PrimitivePropertyConfiguration
-            {
-                ParameterName = "Parameter1"
-            };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    ParameterName = "Parameter1"
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasParameterName("Parameter2");
 
@@ -123,7 +123,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasParameterName_evaluates_preconditions()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var ex = Assert.Throws<ArgumentException>(
                 () => config.HasParameterName(""));
@@ -135,7 +135,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasColumnOrder_configures_when_unset()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasColumnOrder(1);
 
@@ -147,7 +147,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasColumnOrder_throws_on_negative_arguments()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal(
                 "columnOrder",
@@ -158,10 +158,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasColumnOrder_is_noop_when_set()
         {
             var innerConfig = new PrimitivePropertyConfiguration
-                                  {
-                                      ColumnOrder = 1
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    ColumnOrder = 1
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasColumnOrder(2);
 
@@ -173,7 +173,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasColumnType_configures_when_unset()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasColumnType("int");
 
@@ -185,10 +185,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasColumnType_is_noop_when_set()
         {
             var innerConfig = new PrimitivePropertyConfiguration
-                                  {
-                                      ColumnType = "int"
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    ColumnType = "int"
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasColumnType("long");
 
@@ -200,7 +200,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasColumnType_evaluates_preconditions()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var ex = Assert.Throws<ArgumentException>(
                 () => config.HasColumnType(""));
@@ -212,7 +212,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsConcurrencyToken_configures_when_unset()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsConcurrencyToken();
 
@@ -224,10 +224,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsConcurrencyToken_is_noop_when_set()
         {
             var innerConfig = new PrimitivePropertyConfiguration
-                                  {
-                                      ConcurrencyMode = ConcurrencyMode.None
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    ConcurrencyMode = ConcurrencyMode.None
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsConcurrencyToken();
 
@@ -239,7 +239,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsConcurrencyToken_with_parameter_configures_when_unset()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsConcurrencyToken(false);
 
@@ -251,10 +251,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsConcurrencyToken_with_parameter_is_noop_when_set()
         {
             var innerConfig = new PrimitivePropertyConfiguration
-                                  {
-                                      ConcurrencyMode = ConcurrencyMode.Fixed
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    ConcurrencyMode = ConcurrencyMode.Fixed
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsConcurrencyToken(false);
 
@@ -266,7 +266,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasDatabaseGeneratedOption_evaluates_preconditions()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var ex = Assert.Throws<ArgumentOutOfRangeException>(
                 () => config.HasDatabaseGeneratedOption((DatabaseGeneratedOption)(-1)));
@@ -278,7 +278,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasDatabaseGeneratedOption_configures_when_unset()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasDatabaseGeneratedOption(DatabaseGeneratedOption.Computed);
 
@@ -290,10 +290,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasDatabaseGeneratedOption_is_noop_when_set()
         {
             var innerConfig = new PrimitivePropertyConfiguration
-                                  {
-                                      DatabaseGeneratedOption = DatabaseGeneratedOption.Computed
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    DatabaseGeneratedOption = DatabaseGeneratedOption.Computed
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
@@ -305,7 +305,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsOptional_configures_when_unset()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsOptional();
 
@@ -317,10 +317,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsOptional_is_noop_when_set()
         {
             var innerConfig = new PrimitivePropertyConfiguration
-                                  {
-                                      IsNullable = false
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    IsNullable = false
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsOptional();
 
@@ -329,10 +329,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
+        public void IsOptional_throws_on_non_nullable_property()
+        {
+            var innerConfig = new PrimitivePropertyConfiguration();
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(typeof(int), "IntProperty"), () => innerConfig);
+
+            Assert.Equal(
+                Strings.LightweightPrimitivePropertyConfiguration_NonNullableProperty("System.Object.IntProperty", typeof(int).FullName),
+                Assert.Throws<InvalidOperationException>(() => config.IsOptional()).Message);
+        }
+
+        [Fact]
         public void IsRequired_configures_when_unset()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsRequired();
 
@@ -344,10 +355,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsRequired_is_noop_when_set()
         {
             var innerConfig = new PrimitivePropertyConfiguration
-                                  {
-                                      IsNullable = true
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    IsNullable = true
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsRequired();
 
@@ -359,7 +370,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsUnicode_configures_when_unset()
         {
             var innerConfig = new StringPropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsUnicode();
 
@@ -371,10 +382,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsUnicode_is_noop_when_set()
         {
             var innerConfig = new StringPropertyConfiguration
-                                  {
-                                      IsUnicode = false
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    IsUnicode = false
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsUnicode();
 
@@ -386,7 +397,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsUnicode_is_noop_when_not_string()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsUnicode();
 
@@ -397,7 +408,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsUnicode_with_parameter_configures_when_unset()
         {
             var innerConfig = new StringPropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsUnicode(false);
 
@@ -409,10 +420,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsUnicode_with_parameter_is_noop_when_set()
         {
             var innerConfig = new StringPropertyConfiguration
-                                  {
-                                      IsUnicode = true
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    IsUnicode = true
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsUnicode(false);
 
@@ -424,7 +435,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsUnicode_with_parameter_is_noop_when_not_string()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsUnicode(false);
 
@@ -435,7 +446,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsFixedLength_configures_when_unset()
         {
             var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsFixedLength();
 
@@ -449,7 +460,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
             innerConfig.IsFixedLength = false;
 
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsFixedLength();
 
@@ -461,7 +472,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsFixedLength_is_noop_when_not_length()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsFixedLength();
 
@@ -472,7 +483,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsVariableLength_configures_when_unset()
         {
             var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsVariableLength();
 
@@ -486,7 +497,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
             innerConfig.IsFixedLength = true;
 
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsVariableLength();
 
@@ -498,7 +509,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsVariableLength_is_noop_when_not_length()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsVariableLength();
 
@@ -509,7 +520,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasMaxLength_configures_when_unset()
         {
             var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasMaxLength(256);
 
@@ -522,7 +533,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasMaxLength_configures_IsUnicode_when_unset()
         {
             var innerConfig = new StringPropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasMaxLength(256);
 
@@ -538,7 +549,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
             innerConfig.IsFixedLength = true;
 
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasMaxLength(256);
 
@@ -551,10 +562,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasMaxLength_does_not_configure_IsUnicode_when_set()
         {
             var innerConfig = new StringPropertyConfiguration
-                                  {
-                                      IsUnicode = false
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    IsUnicode = false
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasMaxLength(256);
 
@@ -570,7 +581,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
             innerConfig.MaxLength = 256;
 
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasMaxLength(128);
 
@@ -584,7 +595,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
             innerConfig.IsMaxLength = true;
 
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasMaxLength(256);
 
@@ -596,7 +607,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasMaxLength_is_noop_when_not_length()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasMaxLength(256);
 
@@ -607,7 +618,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsMaxLength_configures_when_unset()
         {
             var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsMaxLength();
 
@@ -621,7 +632,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
             innerConfig.IsMaxLength = false;
 
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsMaxLength();
 
@@ -635,7 +646,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
             innerConfig.MaxLength = 256;
 
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsMaxLength();
 
@@ -647,7 +658,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsMaxLength_is_noop_when_not_length()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsMaxLength();
 
@@ -658,7 +669,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasMaxLength_evaluates_preconditions()
         {
             var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var ex = Assert.Throws<ArgumentOutOfRangeException>(
                 () => config.HasMaxLength(0));
@@ -670,7 +681,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasPrecision_configures_when_unset()
         {
             var innerConfig = new DateTimePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasPrecision(8);
 
@@ -682,10 +693,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasPrecision_is_noop_when_set()
         {
             var innerConfig = new DateTimePropertyConfiguration
-                                  {
-                                      Precision = 8
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    Precision = 8
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasPrecision(7);
 
@@ -697,7 +708,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasPrecision_is_noop_when_not_DateTime()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasPrecision(8);
 
@@ -708,7 +719,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasPrecision_with_scale_configures_when_unset()
         {
             var innerConfig = new DecimalPropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasPrecision(8, 2);
 
@@ -721,10 +732,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasPrecision_with_scale_is_noop_when_precision_set()
         {
             var innerConfig = new DecimalPropertyConfiguration
-                                  {
-                                      Precision = 8
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    Precision = 8
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasPrecision(7, 1);
 
@@ -737,10 +748,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasPrecision_with_scale_is_noop_when_scale_set()
         {
             var innerConfig = new DecimalPropertyConfiguration
-                                  {
-                                      Scale = 2
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    Scale = 2
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasPrecision(7, 1);
 
@@ -753,7 +764,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasPrecision_with_scale_is_noop_when_not_decimal()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.HasPrecision(8, 2);
 
@@ -764,7 +775,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsRowVersion_configures_when_unset()
         {
             var innerConfig = new BinaryPropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsRowVersion();
 
@@ -776,10 +787,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsRowVersion_is_noop_when_set()
         {
             var innerConfig = new BinaryPropertyConfiguration
-                                  {
-                                      IsRowVersion = false
-                                  };
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+                {
+                    IsRowVersion = false
+                };
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsRowVersion();
 
@@ -791,7 +802,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void IsRowVersion_is_noop_when_not_binary()
         {
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             var result = config.IsRowVersion();
 
@@ -805,11 +816,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 .Property<int>("Property1");
             var typeConfig = new EntityTypeConfiguration(type);
             var innerConfig = new PrimitivePropertyConfiguration
-                                  {
-                                      TypeConfiguration = typeConfig
-                                  };
+                {
+                    TypeConfiguration = typeConfig
+                };
             var propertyInfo = type.GetProperty("Property1");
-            var config = new LightweightPropertyConfiguration(propertyInfo, () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(propertyInfo, () => innerConfig);
 
             var result = config.IsKey();
 
@@ -827,11 +838,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             var typeConfig = new EntityTypeConfiguration(type);
             typeConfig.Key(new[] { type.GetProperty("Property1") });
             var innerConfig = new PrimitivePropertyConfiguration
-            {
-                TypeConfiguration = typeConfig
-            };
+                {
+                    TypeConfiguration = typeConfig
+                };
             var propertyInfo = type.GetProperty("Property2");
-            var config = new LightweightPropertyConfiguration(propertyInfo, () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(propertyInfo, () => innerConfig);
 
             var result = config.IsKey();
 
@@ -844,7 +855,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             var propertyInfo = new MockPropertyInfo();
             var innerConfig = new PrimitivePropertyConfiguration();
-            var config = new LightweightPropertyConfiguration(propertyInfo, () => innerConfig);
+            var config = new LightweightPrimitivePropertyConfiguration(propertyInfo, () => innerConfig);
 
             Assert.Same(propertyInfo.Object, config.ClrPropertyInfo);
         }

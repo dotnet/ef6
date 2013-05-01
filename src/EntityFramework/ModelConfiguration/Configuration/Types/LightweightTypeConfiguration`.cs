@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
     using System.ComponentModel;
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -126,11 +127,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public LightweightPropertyConfiguration Property<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
+        public LightweightPrimitivePropertyConfiguration Property<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
 
             return _configuration.Property(propertyExpression.GetComplexPropertyAccess());
+        }
+
+        /// <summary>
+        ///     Configures a property that is defined on this type as a navigation property.
+        /// </summary>
+        /// <typeparam name="TProperty"> The type of the property being configured. </typeparam>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public LightweightNavigationPropertyConfiguration NavigationProperty<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+
+            return _configuration.NavigationProperty(propertyExpression.GetComplexPropertyAccess());
         }
 
         /// <summary>
@@ -209,24 +224,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return this;
         }
 
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string ToString()
         {
             return base.ToString();
         }
 
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <inheritdoc/>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()

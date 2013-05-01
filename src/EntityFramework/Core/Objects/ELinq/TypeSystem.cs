@@ -27,9 +27,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             // null is always the default for non value types and Nullable<>
             if (!type.IsValueType
-                ||
-                (type.IsGenericType &&
-                 typeof(Nullable<>) == type.GetGenericTypeDefinition()))
+                || (type.IsGenericType &&
+                    typeof(Nullable<>) == type.GetGenericTypeDefinition()))
             {
                 return null;
             }
@@ -239,13 +238,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 return seqType;
             }
             return ienum.GetGenericArguments()[0];
-        }
-
-        internal static bool IsNullableType(Type type)
-        {
-            var nonNullableType = GetNonNullableType(type);
-
-            return nonNullableType != null && nonNullableType != type;
         }
 
         internal static Type GetNonNullableType(Type type)

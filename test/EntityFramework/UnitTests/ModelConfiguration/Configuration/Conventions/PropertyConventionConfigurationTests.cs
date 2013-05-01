@@ -54,7 +54,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void Configure_adds_convention()
         {
             Func<PropertyInfo, bool> predicate = p => true;
-            Action<LightweightPropertyConfiguration> configurationAction = c => { };
+            Action<LightweightPrimitivePropertyConfiguration> configurationAction = c => { };
             var conventions = new ConventionsConfiguration();
             var properties = new PropertyConventionConfiguration(conventions);
 

@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Conventions
         {
             Func<PropertyInfo, bool> predicate = p => true;
             Func<PropertyInfo, object> capturingPredicate = p => null;
-            Action<LightweightPropertyConfiguration, object> configurationAction = (c, o) => { };
+            Action<LightweightPrimitivePropertyConfiguration, object> configurationAction = (c, o) => { };
             var conventions = new ConventionsConfiguration();
             var properties = new PropertyConventionConfiguration(conventions);
 

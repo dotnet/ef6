@@ -2309,7 +2309,7 @@ namespace FunctionalTests
             }
         }
 
-        public class ConventionsConfiguration : ConventionsScenarioTests.ConventionsConfiguration
+        public class ConventionTests : ConventionsScenarioTests.ConventionTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {

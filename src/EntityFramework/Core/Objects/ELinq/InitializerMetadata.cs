@@ -537,8 +537,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 // POCO support requires that we allow ICollection<T> collections.  This allows a POCO collection
                 // to be projected in a LINQ query.
-                Type elementType;
-                if (!EntityUtil.TryGetICollectionElementType(ClrType, out elementType))
+                var elementType = ClrType.TryGetElementType(typeof(ICollection<>));
+                if (elementType == null)
                 {
                     throw new InvalidOperationException(
                         Strings.ELinq_UnexpectedTypeForNavigationProperty(

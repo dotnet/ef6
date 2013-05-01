@@ -6,6 +6,7 @@ namespace System.Data.Entity.Internal
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
@@ -312,9 +313,6 @@ namespace System.Data.Entity.Internal
 
         #region Compiled delegates for accessing property getters and setters
 
-        private const BindingFlags PropertyBindingFlags =
-            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
         private static readonly MethodInfo _convertAndSetMethod = typeof(DbHelpers).GetMethod(
             "ConvertAndSet", BindingFlags.Static | BindingFlags.NonPublic);
 
@@ -339,7 +337,7 @@ namespace System.Data.Entity.Internal
             IDictionary<string, Type> types;
             if (!_propertyTypes.TryGetValue(type, out types))
             {
-                var properties = type.GetProperties(PropertyBindingFlags).Where(p => p.GetIndexParameters().Length == 0);
+                var properties = type.GetProperties(PropertyFilter.DefaultBindingFlags).Where(p => p.GetIndexParameters().Length == 0);
                 types = new Dictionary<string, Type>(properties.Count());
                 foreach (var property in properties)
                 {
@@ -361,7 +359,7 @@ namespace System.Data.Entity.Internal
             IDictionary<string, Action<object, object>> setters;
             if (!_propertySetters.TryGetValue(type, out setters))
             {
-                var properties = type.GetProperties(PropertyBindingFlags).Where(p => p.GetIndexParameters().Length == 0);
+                var properties = type.GetProperties(PropertyFilter.DefaultBindingFlags).Where(p => p.GetIndexParameters().Length == 0);
                 setters = new Dictionary<string, Action<object, object>>(properties.Count());
                 foreach (var property in properties.Select(p => p.GetPropertyInfoForSet()))
                 {
@@ -427,7 +425,7 @@ namespace System.Data.Entity.Internal
             IDictionary<string, Func<object, object>> getters;
             if (!_propertyGetters.TryGetValue(type, out getters))
             {
-                var properties = type.GetProperties(PropertyBindingFlags).Where(p => p.GetIndexParameters().Length == 0);
+                var properties = type.GetProperties(PropertyFilter.DefaultBindingFlags).Where(p => p.GetIndexParameters().Length == 0);
                 getters = new Dictionary<string, Func<object, object>>(properties.Count());
                 foreach (var property in properties)
                 {

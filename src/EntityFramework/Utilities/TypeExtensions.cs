@@ -53,16 +53,28 @@ namespace System.Data.Entity.Utilities
             return true;
         }
 
+        /// <summary>
+        ///     Determine if the given type type implements the given generic interface or derives from the given generic type,
+        ///     and if so return the element type of the collection. If the type implements the generic interface several times
+        ///     <c>null</c> will be returned.
+        /// </summary>
+        /// <param name="type"> The type to examine. </param>
+        /// <param name="interfaceOrBaseType"> The generic type to be queried for. </param>
+        /// <returns> 
+        ///     <c>null</c> if <paramref name="interfaceOrBaseType"/> isn't implemented or implemented multiple times,
+        ///     otherwise the generic argument.
+        /// </returns>
         public static Type TryGetElementType(this Type type, Type interfaceOrBaseType)
         {
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(interfaceOrBaseType);
+            Debug.Assert(interfaceOrBaseType.GetGenericArguments().Count() == 1);
 
             if (!type.IsGenericTypeDefinition)
             {
                 var interfaceImpl = (interfaceOrBaseType.IsInterface ? type.GetInterfaces() : type.GetBaseTypes())
                     .Union(new[] { type })
-                    .FirstOrDefault(
+                    .SingleOrDefault(
                         t => t.IsGenericType
                              && t.GetGenericTypeDefinition() == interfaceOrBaseType);
 

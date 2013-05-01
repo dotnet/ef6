@@ -424,7 +424,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             if (m_parameterMap.ContainsKey(parameterName))
             {
-                throw new ArgumentException("duplicate parameter name: " + parameterName);
+                throw new ArgumentException(Strings.DuplicateParameterName(parameterName));
             }
             var v = new ParameterVar(NewVarId(), parameterType, parameterName);
             m_vars.Add(v);

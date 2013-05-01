@@ -91,10 +91,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyConfigurationAction">
         ///     An action that performs configuration against a
         ///     <see
-        ///         cref="LightweightPropertyConfiguration" />
+        ///         cref="LightweightPrimitivePropertyConfiguration" />
         ///     .
         /// </param>
-        public void Configure(Action<LightweightPropertyConfiguration> propertyConfigurationAction)
+        public void Configure(Action<LightweightPrimitivePropertyConfiguration> propertyConfigurationAction)
         {
             Check.NotNull(propertyConfigurationAction, "propertyConfigurationAction");
 

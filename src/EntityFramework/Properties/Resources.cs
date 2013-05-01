@@ -10144,9 +10144,9 @@ namespace System.Data.Entity.Resources
         /// <summary>
         ///     A string like "No property with the name '{0}' is declared by the type '{1}'."
         /// </summary>
-        internal static string Cqt_Factory_NoSuchProperty(object p0, object p1)
+        internal static string NoSuchProperty(object p0, object p1)
         {
-            return EntityRes.GetString(EntityRes.Cqt_Factory_NoSuchProperty, p0, p1);
+            return EntityRes.GetString(EntityRes.NoSuchProperty, p0, p1);
         }
 
         /// <summary>
@@ -13462,6 +13462,38 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        ///     A string like "The property '{0}' cannot be configured as a navigation property. The property has to be of a valid entity type and the property should have non-abstract getter and setter. For collection properties the type must implement ICollection of T where T is a valid entity type."
+        /// </summary>
+        internal static string LightweightEntityConfiguration_InvalidNavigationProperty(object p0)
+        {
+            return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_InvalidNavigationProperty, p0);
+        }
+
+        /// <summary>
+        ///     A string like "The entity type '{0}' that the navigation property '{1}' is declared on is not the same as the type '{2}' referred by the inverse navigation property '{3}'."
+        /// </summary>
+        internal static string LightweightEntityConfiguration_InvalidInverseNavigationProperty(object p0, object p1, object p2, object p3)
+        {
+            return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_InvalidInverseNavigationProperty, p0, p1, p2, p3);
+        }
+
+        /// <summary>
+        ///     A string like "The entity type '{0}' that the navigation property '{1}' refers to is not the same as the type '{2}' on which the inverse navigation property '{3}' is declared."
+        /// </summary>
+        internal static string LightweightEntityConfiguration_MismatchedInverseNavigationProperty(object p0, object p1, object p2, object p3)
+        {
+            return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_MismatchedInverseNavigationProperty, p0, p1, p2, p3);
+        }
+
+        /// <summary>
+        ///     A string like "Duplicate parameter name: {0}"
+        /// </summary>
+        internal static string DuplicateParameterName(object p0)
+        {
+            return EntityRes.GetString(EntityRes.DuplicateParameterName, p0);
+        }
+
+        /// <summary>
         ///     A string like "-- Failed in {0} ms with error: {1}{2}"
         /// </summary>
         internal static string CommandLogFailed(object p0, object p1, object p2)
@@ -13507,6 +13539,30 @@ namespace System.Data.Entity.Resources
         internal static string ErrorGeneratingCommandTree(object p0, object p1)
         {
             return EntityRes.GetString(EntityRes.ErrorGeneratingCommandTree, p0, p1);
+        }
+
+        /// <summary>
+        ///     A string like "Multiplicity '{0}' is not compatible with the property '{1}' of type '{2}'."
+        /// </summary>
+        internal static string LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity, p0, p1, p2);
+        }
+
+        /// <summary>
+        ///     A string like "Multiplicity '{0}' is not valid. Multiplicity must be: '*', '0..1', or '1'."
+        /// </summary>
+        internal static string LightweightNavigationPropertyConfiguration_InvalidMultiplicity(object p0)
+        {
+            return EntityRes.GetString(EntityRes.LightweightNavigationPropertyConfiguration_InvalidMultiplicity, p0);
+        }
+
+        /// <summary>
+        ///     A string like "The property {0} of type {1} cannot be marked as optional because it can't be assigned a null value."
+        /// </summary>
+        internal static string LightweightPrimitivePropertyConfiguration_NonNullableProperty(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.LightweightPrimitivePropertyConfiguration_NonNullableProperty, p0, p1);
         }
     }
 
@@ -16471,7 +16527,7 @@ namespace System.Data.Entity.Resources
         internal const string Cqt_Validator_InvalidOtherWorkspaceMetadata = "Cqt_Validator_InvalidOtherWorkspaceMetadata";
         internal const string Cqt_Validator_InvalidIncorrectDataSpaceMetadata = "Cqt_Validator_InvalidIncorrectDataSpaceMetadata";
         internal const string Cqt_Factory_NewCollectionInvalidCommonType = "Cqt_Factory_NewCollectionInvalidCommonType";
-        internal const string Cqt_Factory_NoSuchProperty = "Cqt_Factory_NoSuchProperty";
+        internal const string NoSuchProperty = "NoSuchProperty";
         internal const string Cqt_Factory_NoSuchRelationEnd = "Cqt_Factory_NoSuchRelationEnd";
         internal const string Cqt_Factory_IncompatibleRelationEnds = "Cqt_Factory_IncompatibleRelationEnds";
         internal const string Cqt_Factory_MethodResultTypeNotSupported = "Cqt_Factory_MethodResultTypeNotSupported";
@@ -16886,12 +16942,19 @@ namespace System.Data.Entity.Resources
         internal const string LightweightEntityConfiguration_ConfigurationConflict_ComplexType = "LightweightEntityConfiguration_ConfigurationConflict_ComplexType";
         internal const string LightweightEntityConfiguration_ConfigurationConflict_IgnoreType = "LightweightEntityConfiguration_ConfigurationConflict_IgnoreType";
         internal const string AttemptToAddEdmMemberFromWrongDataSpace = "AttemptToAddEdmMemberFromWrongDataSpace";
+        internal const string LightweightEntityConfiguration_InvalidNavigationProperty = "LightweightEntityConfiguration_InvalidNavigationProperty";
+        internal const string LightweightEntityConfiguration_InvalidInverseNavigationProperty = "LightweightEntityConfiguration_InvalidInverseNavigationProperty";
+        internal const string LightweightEntityConfiguration_MismatchedInverseNavigationProperty = "LightweightEntityConfiguration_MismatchedInverseNavigationProperty";
+        internal const string DuplicateParameterName = "DuplicateParameterName";
         internal const string CommandLogFailed = "CommandLogFailed";
         internal const string CommandLogCanceled = "CommandLogCanceled";
         internal const string CommandLogComplete = "CommandLogComplete";
         internal const string CommandLogAsync = "CommandLogAsync";
         internal const string CommandLogNonAsync = "CommandLogNonAsync";
         internal const string ErrorGeneratingCommandTree = "ErrorGeneratingCommandTree";
+        internal const string LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity = "LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity";
+        internal const string LightweightNavigationPropertyConfiguration_InvalidMultiplicity = "LightweightNavigationPropertyConfiguration_InvalidMultiplicity";
+        internal const string LightweightPrimitivePropertyConfiguration_NonNullableProperty = "LightweightPrimitivePropertyConfiguration_NonNullableProperty";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

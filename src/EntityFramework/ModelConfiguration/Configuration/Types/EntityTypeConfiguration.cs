@@ -548,6 +548,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return _entityMappingConfigurations.Any(emc => emc.MapsAnyInheritedProperties(entityType));
         }
 
+        internal bool IsNavigationPropertyConfigured(PropertyInfo propertyInfo)
+        {
+            return _navigationPropertyConfigurations.ContainsKey(propertyInfo);
+        }
+
         internal static void ConfigureUnconfiguredType(
             DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest, EntityType entityType)
         {

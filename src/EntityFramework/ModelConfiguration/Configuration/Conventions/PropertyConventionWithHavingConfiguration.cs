@@ -54,10 +54,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Allows configuration of the properties that this convention applies to.
         /// </summary>
         /// <param name="propertyConfigurationAction">
-        ///     An action that performs configuration against a <see cref="LightweightPropertyConfiguration" />
+        ///     An action that performs configuration against a <see cref="LightweightPrimitivePropertyConfiguration" />
         ///     using a captured value.
         /// </param>
-        public void Configure(Action<LightweightPropertyConfiguration, T> propertyConfigurationAction)
+        public void Configure(Action<LightweightPrimitivePropertyConfiguration, T> propertyConfigurationAction)
         {
             Check.NotNull(propertyConfigurationAction, "propertyConfigurationAction");
 

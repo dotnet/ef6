@@ -260,7 +260,7 @@ namespace FunctionalTests
             Database.SetInitializer<BasicTypeContext>(null);
             using (var ctx = new BasicTypeContext())
             {
-                var oc = ((IObjectContextAdapter)ctx).ObjectContext;
+                Assert.NotNull(((IObjectContextAdapter)ctx).ObjectContext);
             }
         }
 

@@ -199,7 +199,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         {
             DebugCheck.NotNull(reader);
             RelationshipMultiplicity multiplicity;
-            if (!TryParseMultiplicity(reader.Value, out multiplicity))
+            if (!RelationshipMultiplicityConverter.TryParseMultiplicity(reader.Value, out multiplicity))
             {
                 AddError(
                     ErrorCode.InvalidMultiplicity, EdmSchemaErrorSeverity.Error, reader,
@@ -245,31 +245,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         internal new IRelationship ParentElement
         {
             get { return (IRelationship)(base.ParentElement); }
-        }
-
-        /// <summary>
-        ///     Create a new Multiplicity object from a string
-        /// </summary>
-        /// <param name="value"> string containing Multiplicity definition </param>
-        /// <param name="multiplicity"> new multiplicity object (null if there were errors) </param>
-        /// <returns> try if the string was parsable, false otherwise </returns>
-        private static bool TryParseMultiplicity(string value, out RelationshipMultiplicity multiplicity)
-        {
-            switch (value)
-            {
-                case "0..1":
-                    multiplicity = RelationshipMultiplicity.ZeroOrOne;
-                    return true;
-                case "1":
-                    multiplicity = RelationshipMultiplicity.One;
-                    return true;
-                case "*":
-                    multiplicity = RelationshipMultiplicity.Many;
-                    return true;
-                default:
-                    multiplicity = (RelationshipMultiplicity)(-1);
-                    return false;
-            }
         }
     }
 }

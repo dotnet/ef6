@@ -10,6 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
@@ -30,6 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         internal NavigationPropertyConfiguration(PropertyInfo navigationProperty)
         {
             DebugCheck.NotNull(navigationProperty);
+            Debug.Assert(navigationProperty.IsValidEdmNavigationProperty());
 
             _navigationProperty = navigationProperty;
         }

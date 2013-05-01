@@ -1855,14 +1855,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         public void Property_non_existant_property_throws()
         {
             var message = Assert.Throws<ArgumentOutOfRangeException>(() => this.productsEntitySet.Scan().Element().Property("Foo")).Message;
-            Assert.True(message.Contains(Strings.Cqt_Factory_NoSuchProperty("Foo", "MyModel.Product")));
+            Assert.True(message.Contains(Strings.NoSuchProperty("Foo", "MyModel.Product")));
         }
 
         [Fact]
         public void Property_property_is_case_sensitive()
         {
             var message = Assert.Throws<ArgumentOutOfRangeException>(() => this.productsEntitySet.Scan().Element().Property("PRODUCTid")).Message;
-            Assert.True(message.Contains(Strings.Cqt_Factory_NoSuchProperty("PRODUCTid", "MyModel.Product")));
+            Assert.True(message.Contains(Strings.NoSuchProperty("PRODUCTid", "MyModel.Product")));
         }
 
         #endregion

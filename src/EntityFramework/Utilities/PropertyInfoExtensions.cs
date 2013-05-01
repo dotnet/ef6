@@ -4,6 +4,7 @@ namespace System.Data.Entity.Utilities
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
@@ -36,9 +37,16 @@ namespace System.Data.Entity.Utilities
         {
             DebugCheck.NotNull(propertyInfo);
 
+            return propertyInfo.IsValidInterfaceStructuralProperty()
+                   && !propertyInfo.GetGetMethod(true).IsAbstract;
+        }
+
+        public static bool IsValidInterfaceStructuralProperty(this PropertyInfo propertyInfo)
+        {
+            DebugCheck.NotNull(propertyInfo);
+
             return propertyInfo.CanRead
                    && (propertyInfo.CanWriteExtended() || propertyInfo.PropertyType.IsCollection())
-                   && !propertyInfo.GetGetMethod(true).IsAbstract
                    && propertyInfo.GetIndexParameters().Length == 0
                    && propertyInfo.PropertyType.IsValidStructuralPropertyType();
         }
@@ -47,7 +55,18 @@ namespace System.Data.Entity.Utilities
         {
             DebugCheck.NotNull(propertyInfo);
 
-            return propertyInfo.PropertyType.IsValidEdmScalarType();
+            return IsValidInterfaceStructuralProperty(propertyInfo)
+                && propertyInfo.PropertyType.IsValidEdmScalarType();
+        }
+
+        public static bool IsValidEdmNavigationProperty(this PropertyInfo propertyInfo)
+        {
+            DebugCheck.NotNull(propertyInfo);
+
+            Type elementType;
+            return IsValidInterfaceStructuralProperty(propertyInfo)
+                   && ((propertyInfo.PropertyType.IsCollection(out elementType) && elementType.IsValidStructuralType())
+                       || propertyInfo.PropertyType.IsValidStructuralType());
         }
 
         public static EdmProperty AsEdmPrimitiveProperty(this PropertyInfo propertyInfo)
@@ -92,7 +111,7 @@ namespace System.Data.Entity.Utilities
                        ? propertyInfo
                        : propertyInfo
                              .DeclaringType
-                             .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                             .GetProperties(PropertyFilter.DefaultBindingFlags)
                              .Single(
                                  p => p.Name == propertyInfo.Name
                                       && !p.GetIndexParameters().Any()

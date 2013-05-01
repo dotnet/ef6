@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
     internal sealed class PropertyFilter
     {
-        private const BindingFlags DefaultBindingFlags
+        internal const BindingFlags DefaultBindingFlags
             = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
         private readonly DbModelBuilderVersion _modelBuilderVersion;

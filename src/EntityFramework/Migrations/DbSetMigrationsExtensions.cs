@@ -4,22 +4,19 @@ namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
     using System.Data.Entity.Internal.Linq;
+    using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
 
     /// <summary>
     ///     A set of extension methods for <see cref="IDbSet{TEntity}" />
     /// </summary>
     public static class DbSetMigrationsExtensions
     {
-        private const BindingFlags KeyPropertyBindingFlags
-            = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
         /// <summary>
         ///     Adds or updates entities by key when SaveChanges is called. Equivalent to an "upsert" operation
         ///     from database terminology.
@@ -166,7 +163,7 @@ namespace System.Data.Entity.Migrations
             return internalSet.InternalContext
                               .GetEntitySetAndBaseTypeForType(typeof(TEntity))
                               .EntitySet.ElementType.KeyMembers
-                              .Select(km => new PropertyPath(entityType.GetProperty(km.Name, KeyPropertyBindingFlags)));
+                              .Select(km => new PropertyPath(entityType.GetProperty(km.Name, PropertyFilter.DefaultBindingFlags)));
         }
     }
 }

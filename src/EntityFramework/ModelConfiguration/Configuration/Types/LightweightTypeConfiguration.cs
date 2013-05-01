@@ -4,7 +4,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -29,7 +32,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             ModelConfiguration modelConfiguration)
             : this(type, null, null, modelConfiguration)
         {
-            DebugCheck.NotNull(modelConfiguration);
         }
 
         internal LightweightTypeConfiguration(
@@ -39,7 +41,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             : this(type, entityTypeConfiguration, null, modelConfiguration)
         {
             DebugCheck.NotNull(entityTypeConfiguration);
-            DebugCheck.NotNull(modelConfiguration);
         }
 
         internal LightweightTypeConfiguration(
@@ -49,7 +50,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             : this(type, null, complexTypeConfiguration, modelConfiguration)
         {
             DebugCheck.NotNull(complexTypeConfiguration);
-            DebugCheck.NotNull(modelConfiguration);
         }
 
         private LightweightTypeConfiguration(
@@ -59,6 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             ModelConfiguration modelConfiguration)
         {
             DebugCheck.NotNull(type);
+            DebugCheck.NotNull(modelConfiguration);
 
             _type = type;
             _entityTypeConfiguration = entityTypeConfiguration;
@@ -142,7 +143,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             Check.NotEmpty(propertyName, "propertyName");
 
-            Ignore(_type.GetProperty(propertyName));
+            var propertyInfo = _type.GetProperty(propertyName, PropertyFilter.DefaultBindingFlags);
+            if (propertyInfo == null)
+            {
+                throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.FullName));
+            }
+
+            Ignore(propertyInfo);
 
             return this;
         }
@@ -156,6 +163,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </remarks>
         public LightweightTypeConfiguration Ignore(PropertyInfo propertyInfo)
         {
+            Check.NotNull(propertyInfo, "propertyInfo");
             ValidateConfiguration(ConfigurationAspect.IgnoreProperty);
 
             if (propertyInfo != null)
@@ -176,16 +184,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <summary>
         ///     Configures a property that is defined on this type.
         /// </summary>
-        /// <param name="name"> The name of the property being configured. </param>
+        /// <param name="propertyName"> The name of the property being configured. </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
-        /// <remarks>
-        ///     If the property doesn't exist, any configuration will be silently ignored.
-        /// </remarks>
-        public LightweightPropertyConfiguration Property(string name)
+        public LightweightPrimitivePropertyConfiguration Property(string propertyName)
         {
-            Check.NotEmpty(name, "name");
+            Check.NotEmpty(propertyName, "propertyName");
 
-            return Property(_type.GetProperty(name));
+            var propertyInfo = _type.GetProperty(propertyName, PropertyFilter.DefaultBindingFlags);
+
+            if (propertyInfo == null)
+            {
+                throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.FullName));
+            }
+
+            return Property(propertyInfo);
         }
 
         /// <summary>
@@ -193,20 +205,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="propertyInfo"> The property being configured. </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
-        /// <remarks>
-        ///     If the property doesn't exist, any configuration will be silently ignored.
-        /// </remarks>
-        public LightweightPropertyConfiguration Property(PropertyInfo propertyInfo)
+        public LightweightPrimitivePropertyConfiguration Property(PropertyInfo propertyInfo)
         {
-            if (propertyInfo == null)
-            {
-                return new MissingPropertyConfiguration();
-            }
+            Check.NotNull(propertyInfo, "propertyInfo");
 
             return Property(new PropertyPath(propertyInfo));
         }
 
-        internal LightweightPropertyConfiguration Property(PropertyPath propertyPath)
+        internal LightweightPrimitivePropertyConfiguration Property(PropertyPath propertyPath)
         {
             DebugCheck.NotNull(propertyPath);
 
@@ -214,20 +220,68 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             var propertyInfo = propertyPath.Last();
 
-            if (!propertyInfo.IsValidEdmScalarProperty()
-                || propertyInfo.GetIndexParameters().Any())
+            if (!propertyInfo.IsValidEdmScalarProperty())
             {
                 throw Error.LightweightEntityConfiguration_NonScalarProperty(propertyPath);
             }
 
-            var propertyConfiguration = new Lazy<PrimitivePropertyConfiguration>(
-                () => _entityTypeConfiguration != null
-                          ? _entityTypeConfiguration().Property(propertyPath, OverridableConfigurationParts.None)
-                          : _complexTypeConfiguration != null
-                                ? _complexTypeConfiguration().Property(propertyPath, OverridableConfigurationParts.None)
-                                : null);
+            var propertyConfiguration = _entityTypeConfiguration != null
+                                            ? _entityTypeConfiguration().Property(propertyPath, OverridableConfigurationParts.None)
+                                            : _complexTypeConfiguration != null
+                                                  ? _complexTypeConfiguration().Property(propertyPath, OverridableConfigurationParts.None)
+                                                  : null;
 
-            return new LightweightPropertyConfiguration(propertyPath.Single(), () => propertyConfiguration.Value);
+            return new LightweightPrimitivePropertyConfiguration(propertyInfo, () => propertyConfiguration);
+        }
+
+        /// <summary>
+        ///     Configures a property that is defined on this type as a navigation property.
+        /// </summary>
+        /// <param name="propertyName"> The name of the property being configured. </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        public LightweightNavigationPropertyConfiguration NavigationProperty(string propertyName)
+        {
+            Check.NotEmpty(propertyName, "propertyName");
+
+            var propertyInfo = _type.GetProperty(propertyName, PropertyFilter.DefaultBindingFlags);
+            if (propertyInfo == null)
+            {
+                throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.FullName));
+            }
+
+            return NavigationProperty(propertyInfo);
+        }
+
+        /// <summary>
+        ///     Configures a property that is defined on this type as a navigation property.
+        /// </summary>
+        /// <param name="propertyInfo"> The property being configured. </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        public LightweightNavigationPropertyConfiguration NavigationProperty(PropertyInfo propertyInfo)
+        {
+            Check.NotNull(propertyInfo, "propertyInfo");
+
+            return NavigationProperty(new PropertyPath(propertyInfo));
+        }
+
+        internal LightweightNavigationPropertyConfiguration NavigationProperty(PropertyPath propertyPath)
+        {
+            DebugCheck.NotNull(propertyPath);
+
+            ValidateConfiguration(ConfigurationAspect.NavigationProperty);
+
+            var propertyInfo = propertyPath.Last();
+
+            if (!propertyInfo.IsValidEdmNavigationProperty())
+            {
+                throw new InvalidOperationException(Strings.LightweightEntityConfiguration_InvalidNavigationProperty(propertyPath));
+            }
+
+            var propertyConfiguration = _entityTypeConfiguration != null
+                                            ? _entityTypeConfiguration().Navigation(propertyInfo)
+                                            : null;
+
+            return new LightweightNavigationPropertyConfiguration(propertyConfiguration, _modelConfiguration);
         }
 
         /// <summary>
@@ -237,10 +291,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <returns>
         ///     The same <see cref="LightweightTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
-        /// <remarks>
-        ///     Calling this will have no effect once it has been configured of if the
-        ///     property does not exist.
-        /// </remarks>
         public LightweightTypeConfiguration HasKey(string propertyName)
         {
             Check.NotEmpty(propertyName, "propertyName");
@@ -255,12 +305,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <returns>
         ///     The same <see cref="LightweightTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
-        /// <remarks>
-        ///     Calling this will have no effect once it has been configured of if the
-        ///     property does not exist.
-        /// </remarks>
         public LightweightTypeConfiguration HasKey(PropertyInfo propertyInfo)
         {
+            Check.NotNull(propertyInfo, "propertyInfo");
+
             return HasKey(new[] { propertyInfo });
         }
 
@@ -271,16 +319,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <returns>
         ///     The same <see cref="LightweightTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
-        /// <remarks>
-        ///     Calling this will have no effect once it has been configured or if any
-        ///     property does not exist.
-        /// </remarks>
         public LightweightTypeConfiguration HasKey(IEnumerable<string> propertyNames)
         {
             Check.NotNull(propertyNames, "propertyNames");
 
             var propertyInfos = propertyNames
-                .Select(n => _type.GetProperty(n))
+                .Select(
+                    n =>
+                        {
+                            var propertyInfo = _type.GetProperty(n, PropertyFilter.DefaultBindingFlags);
+
+                            if (propertyInfo == null)
+                            {
+                                throw new InvalidOperationException(Strings.NoSuchProperty(n, _type.FullName));
+                            }
+                            return propertyInfo;
+                        })
                 .ToArray();
 
             return HasKey(propertyInfos);
@@ -300,12 +354,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         public LightweightTypeConfiguration HasKey(IEnumerable<PropertyInfo> keyProperties)
         {
             Check.NotNull(keyProperties, "keyProperties");
+            EntityUtil.CheckArgumentContainsNull(ref keyProperties, "keyProperties");
+            EntityUtil.CheckArgumentEmpty(ref keyProperties,
+                p => Strings.CollectionEmpty(p, "HasKey"), "keyProperties");
+
             ValidateConfiguration(ConfigurationAspect.Key);
 
             if (_entityTypeConfiguration != null
-                && !_entityTypeConfiguration().IsKeyConfigured
-                && keyProperties.Any()
-                && keyProperties.All(p => p != null))
+                && !_entityTypeConfiguration().IsKeyConfigured)
             {
                 _entityTypeConfiguration().Key(keyProperties);
             }
@@ -405,6 +461,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     || _currentConfigurationAspect.HasFlag(ConfigurationAspect.IgnoreProperty)
                     || _currentConfigurationAspect.HasFlag(ConfigurationAspect.Key)
                     || _currentConfigurationAspect.HasFlag(ConfigurationAspect.MapToStoredProcedures)
+                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.NavigationProperty)
                     || _currentConfigurationAspect.HasFlag(ConfigurationAspect.Property)
                     || _currentConfigurationAspect.HasFlag(ConfigurationAspect.ToTable)))
             {
@@ -415,30 +472,35 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 && (_currentConfigurationAspect.HasFlag(ConfigurationAspect.EntitySetName)
                     || _currentConfigurationAspect.HasFlag(ConfigurationAspect.Key)
                     || _currentConfigurationAspect.HasFlag(ConfigurationAspect.MapToStoredProcedures)
+                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.NavigationProperty)
                     || _currentConfigurationAspect.HasFlag(ConfigurationAspect.ToTable)))
             {
                 throw new InvalidOperationException(Strings.LightweightEntityConfiguration_ConfigurationConflict_ComplexType);
             }
         }
 
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string ToString()
         {
             return base.ToString();
         }
 
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <inheritdoc/>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
@@ -457,7 +519,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             ComplexType = 1 << 4,
             MapToStoredProcedures = 1 << 5,
             Property = 1 << 6,
-            ToTable = 1 << 7
+            NavigationProperty = 1 << 7,
+            ToTable = 1 << 8
         }
     }
 }

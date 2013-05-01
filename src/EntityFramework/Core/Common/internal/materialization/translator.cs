@@ -930,8 +930,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                     // When materializing specifically requested collection types, we need
                     // to transfer the results from the Enumerable to the requested collection.
-                    Type innerElementType;
-                    if (EntityUtil.TryGetICollectionElementType(arg.RequestedType, out innerElementType))
+                    var innerElementType = arg.RequestedType.TryGetElementType(typeof(ICollection<>));
+                    if (innerElementType != null)
                     {
                         // Given we have some type that implements ICollection<T>, we need to decide what concrete
                         // collection type to instantiate--See EntityUtil.DetermineCollectionType for details.

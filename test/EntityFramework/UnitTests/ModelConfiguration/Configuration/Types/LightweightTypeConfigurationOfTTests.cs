@@ -2,7 +2,9 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
 
@@ -116,6 +118,41 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             Assert.Equal(typeof(decimal), result.ClrPropertyInfo.PropertyType);
             Assert.NotNull(result.Configuration);
             Assert.IsType<DecimalPropertyConfiguration>(result.Configuration());
+        }
+
+        [Fact]
+        public void NavigationProperty_evaluates_preconditions()
+        {
+            var type = typeof(LocalEntityType);
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
+
+            Assert.Equal(
+                "propertyExpression",
+                Assert.Throws<ArgumentNullException>(
+                    () => config.NavigationProperty<object>(null)).ParamName);
+
+            Assert.Equal(
+                Strings.LightweightEntityConfiguration_InvalidNavigationProperty("Property1"),
+                Assert.Throws<InvalidOperationException>(
+                    () => config.NavigationProperty(e => e.Property1)).Message);
+        }
+
+        [Fact]
+        public void NavigationProperty_returns_configuration()
+        {
+            var type = typeof(LocalEntityType);
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
+
+            var result = config.NavigationProperty(e => e.NavigationProperty);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.ClrPropertyInfo);
+            Assert.Equal("NavigationProperty", result.ClrPropertyInfo.Name);
+            Assert.Equal(typeof(LocalEntityType), result.ClrPropertyInfo.PropertyType);
+            Assert.NotNull(result.Configuration);
+            Assert.IsType<NavigationPropertyConfiguration>(result.Configuration);
         }
 
         [Fact]
@@ -233,6 +270,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             public decimal Property1 { get; set; }
             public int Property2 { get; set; }
+            public LocalEntityType NavigationProperty { get; set; }
         }
     }
 }

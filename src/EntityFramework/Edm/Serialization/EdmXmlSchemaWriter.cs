@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Edm.Serialization
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -468,7 +469,7 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteAttributeString(
                 XmlConstants.TypeAttribute, GetQualifiedTypeName(XmlConstants.Self, typeName));
             _xmlWriter.WriteAttributeString(
-                XmlConstants.Multiplicity, GetXmlMultiplicity(associationEnd.RelationshipMultiplicity));
+                XmlConstants.Multiplicity, RelationshipMultiplicityConverter.MultiplicityToString(associationEnd.RelationshipMultiplicity));
         }
 
         internal void WriteOperationActionElement(string elementName, OperationAction operationAction)
@@ -709,22 +710,6 @@ namespace System.Data.Entity.Edm.Serialization
                 GetQualifiedTypeName(XmlConstants.Self, member.Association.Name));
             _xmlWriter.WriteAttributeString(XmlConstants.FromRole, member.GetFromEnd().Name);
             _xmlWriter.WriteAttributeString(XmlConstants.ToRole, member.ToEndMember.Name);
-        }
-
-        private static string GetXmlMultiplicity(RelationshipMultiplicity endKind)
-        {
-            switch (endKind)
-            {
-                case RelationshipMultiplicity.Many:
-                    return "*";
-                case RelationshipMultiplicity.One:
-                    return "1";
-                case RelationshipMultiplicity.ZeroOrOne:
-                    return "0..1";
-                default:
-                    Debug.Fail("Did you add a new EdmAssociationEndKind?");
-                    return string.Empty;
-            }
         }
 
         internal void WriteReferentialConstraintRoleElement(

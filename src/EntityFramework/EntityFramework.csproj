@@ -229,6 +229,7 @@
     <Compile Include="Core\Common\CommandTrees\DbUnionAllExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbScanExpression.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\ContainerMappingViewGroup.cs" />
+    <Compile Include="Core\Metadata\Edm\RelationshipMultiplicityConverter.cs" />
     <Compile Include="Edm\Serialization\MetadataItemHelper.cs" />
     <Compile Include="Infrastructure\DbCommandInterceptionContext.cs" />
     <Compile Include="Infrastructure\DbCommandInterceptionContext`.cs" />
@@ -259,6 +260,7 @@
     <Compile Include="Migrations\Model\ParameterModel.cs" />
     <Compile Include="Migrations\Model\DropProcedureOperation.cs" />
     <Compile Include="Migrations\Model\PropertyModel.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Navigation\LightweightNavigationPropertyConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\TypeConventionConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\TypeConventionOfTypeConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Conventions\TypeConventionOfTypeWithHavingConfiguration.cs" />
@@ -481,8 +483,7 @@
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionConfiguration`.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionsConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionsConfiguration`.cs" />
-    <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\MissingPropertyConfiguration.cs" />
-    <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\LightweightPropertyConfiguration.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\LightweightPrimitivePropertyConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\TphColumnFixer.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionBase.cs" />

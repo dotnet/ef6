@@ -33,6 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
             DebugCheck.NotNull(dependentProperties);
             Debug.Assert(dependentProperties.Any());
+            Debug.Assert(!dependentProperties.Any(p => p == null));
 
             _dependentProperties.AddRange(dependentProperties);
 
@@ -134,7 +135,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             {
                 var property
                     = dependentEnd.GetEntityType()
-                                  .GetDeclaredPrimitiveProperty(dependentProperty);
+                        .GetDeclaredPrimitiveProperty(dependentProperty);
 
                 if (property == null)
                 {
@@ -175,9 +176,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             }
 
             return other.ToProperties
-                        .SequenceEqual(
-                            ToProperties,
-                            new DynamicEqualityComparer<PropertyInfo>((p1, p2) => p1.IsSameAs(p2)));
+                .SequenceEqual(
+                    ToProperties,
+                    new DynamicEqualityComparer<PropertyInfo>((p1, p2) => p1.IsSameAs(p2)));
         }
 
         public override bool Equals(object obj)
