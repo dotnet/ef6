@@ -75,7 +75,9 @@ namespace System.Data.Entity.Interception
             Assert.True(commandTexts.Any(c => c.StartsWith("create")));
             Assert.True(commandTexts.Any(c => c.StartsWith("alter")));
             Assert.True(commandTexts.Any(c => c.StartsWith("insert")));
+#if !NET40
             Assert.True(commandTexts.Any(c => c.StartsWith("update")));
+#endif
 
             // Sanity check on results
             Assert.True(logger.Log.Where(l => l.Method == CommandMethod.NonQueryExecuted).All(l => l.Result != null));
@@ -160,7 +162,9 @@ namespace System.Data.Entity.Interception
                             var commandTexts = logger.Log.Select(l => l.CommandText.ToLowerInvariant());
                             Assert.True(commandTexts.Any(c => c.StartsWith("select")));
                             Assert.True(commandTexts.Any(c => c.StartsWith("insert")));
+#if !NET40
                             Assert.True(commandTexts.Any(c => c.StartsWith("update")));
+#endif
 
                             // Sanity check on results
                             Assert.True(logger.Log.Where(l => l.Method == CommandMethod.NonQueryExecuted).All(l => l.Result != null));

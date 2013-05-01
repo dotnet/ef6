@@ -41,6 +41,7 @@ namespace System.Data.Entity.Interception
             Assert.True(logger.Log.OfType<DbQueryCommandTree>().Any(t => t.DataSpace == DataSpace.CSpace));
             Assert.True(logger.Log.OfType<DbQueryCommandTree>().Any(t => t.DataSpace == DataSpace.SSpace));
             Assert.True(logger.Log.OfType<DbInsertCommandTree>().Any(t => t.DataSpace == DataSpace.SSpace));
+#if !NET40
             Assert.True(logger.Log.OfType<DbUpdateCommandTree>().Any(t => t.DataSpace == DataSpace.SSpace));
 
             Assert.True(
@@ -50,6 +51,7 @@ namespace System.Data.Entity.Interception
                                 .Any(
                                     c => ((DbPropertyExpression)c.Property).Property.Name == "Title"
                                          && (string)((DbConstantExpression)c.Value).Value == "I'm a logger and I'm okay...")));
+#endif
         }
 
         public class BlogContextLogAll : BlogContext
@@ -84,11 +86,17 @@ namespace System.Data.Entity.Interception
                     Interception.RemoveInterceptor(logger);
                 }
 
+#if NET40
+                Assert.Equal(4, logger.Log.Count);
+#else
                 Assert.Equal(5, logger.Log.Count);
+#endif
 
                 Assert.True(logger.Log.OfType<DbQueryCommandTree>().Any(t => t.DataSpace == DataSpace.CSpace));
                 Assert.True(logger.Log.OfType<DbInsertCommandTree>().Any(t => t.DataSpace == DataSpace.SSpace));
+#if !NET40
                 Assert.True(logger.Log.OfType<DbUpdateCommandTree>().Any(t => t.DataSpace == DataSpace.SSpace));
+#endif
             }
 
             // Now run again multiple times concurrently--only update trees logged
@@ -119,11 +127,17 @@ namespace System.Data.Entity.Interception
 
             foreach (var logger in loggers)
             {
+#if NET40
+                Assert.Equal(1, logger.Log.Count);
+#else
                 Assert.Equal(2, logger.Log.Count);
+#endif
 
                 Assert.False(logger.Log.OfType<DbQueryCommandTree>().Any(t => t.DataSpace == DataSpace.CSpace));
                 Assert.True(logger.Log.OfType<DbInsertCommandTree>().Any(t => t.DataSpace == DataSpace.SSpace));
+#if !NET40
                 Assert.True(logger.Log.OfType<DbUpdateCommandTree>().Any(t => t.DataSpace == DataSpace.SSpace));
+#endif
             }
         }
 
