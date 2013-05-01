@@ -13,6 +13,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;    
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.SqlServer;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.SqlGen;
     using System.Data.Entity.SqlServer.Utilities;
@@ -40,13 +41,9 @@ namespace System.Data.Entity.SqlServer
         private const byte DefaultTimePrecision = 7;
         private const byte DefaultScale = 0;
 
-        private static readonly Regex _sqlKeywordUpcaser
-            = new Regex(
-                @"^(insert|values|delete|where|update|declare|select|from|output|from|join|set|default\svalues|and)",
-                RegexOptions.Multiline | RegexOptions.Compiled);
-
-        private DbProviderServices _providerServices;
         private DbProviderManifest _providerManifest;
+        private SqlGenerator _sqlGenerator;
+
         private string _providerManifestToken;
 
         private List<MigrationStatement> _statements;
@@ -92,7 +89,7 @@ namespace System.Data.Entity.SqlServer
 
             InitializeProviderServices(providerManifestToken);
 
-            return UpperCaseKeywords(GenerateFunctionSql(commandTrees, rowsAffectedParameter));
+            return GenerateFunctionSql(commandTrees, rowsAffectedParameter);
         }
 
         private void InitializeProviderServices(string providerManifestToken)
@@ -101,8 +98,12 @@ namespace System.Data.Entity.SqlServer
 
             using (var connection = CreateConnection())
             {
-                _providerServices = DbProviderServices.GetProviderServices(connection);
-                _providerManifest = _providerServices.GetProviderManifest(providerManifestToken);
+                _providerManifest
+                    = DbProviderServices
+                        .GetProviderServices(connection)
+                        .GetProviderManifest(providerManifestToken);
+
+                _sqlGenerator = new SqlGenerator(SqlVersionUtils.GetSqlVersion(providerManifestToken));
             }
         }
 
@@ -111,8 +112,7 @@ namespace System.Data.Entity.SqlServer
             DebugCheck.NotNull(commandTrees);
             Debug.Assert(commandTrees.Any());
 
-            var functionSqlGenerator
-                = new DmlFunctionSqlGenerator(_providerServices.GetProviderManifest(_providerManifestToken));
+            var functionSqlGenerator = new DmlFunctionSqlGenerator(_sqlGenerator);
 
             switch (commandTrees.First().CommandTreeKind)
             {
@@ -849,7 +849,13 @@ namespace System.Data.Entity.SqlServer
         /// <value>Either newsequentialid() or newid() as described above.</value>
         protected virtual string GuidColumnDefault
         {
-            get { return _providerManifestToken != "2012.Azure" && _providerManifestToken != "2000" ? "newsequentialid()" : "newid()"; }
+            get
+            {
+                return (_providerManifestToken != "2012.Azure"
+                        && _providerManifestToken != "2000")
+                           ? "newsequentialid()"
+                           : "newid()";
+            }
         }
 
         /// <summary>
@@ -863,28 +869,41 @@ namespace System.Data.Entity.SqlServer
 
             using (var writer = Writer())
             {
-                historyOperation.Commands.Each(
-                    c =>
+                historyOperation.CommandTrees.Each(
+                    commandTree =>
                         {
-                            var sql = UpperCaseKeywords(c.CommandText);
+                            List<SqlParameter> _;
 
-                            // inline params
-                            c.Parameters
-                             .Cast<DbParameter>()
-                             .Each(p => sql = sql.Replace(p.ParameterName, Generate((dynamic)p.Value)));
+                            switch (commandTree.CommandTreeKind)
+                            {
+                                case DbCommandTreeKind.Insert:
 
-                            writer.Write(sql);
+                                    writer.Write(
+                                        DmlSqlGenerator
+                                            .GenerateInsertSql(
+                                                (DbInsertCommandTree)commandTree,
+                                                _sqlGenerator,
+                                                out _,
+                                                generateReturningSql: false,
+                                                upperCaseKeywords: true,
+                                                createParameters: false));
+                                    break;
+
+                                case DbCommandTreeKind.Delete:
+                                    writer.Write(
+                                        DmlSqlGenerator
+                                            .GenerateDeleteSql(
+                                                (DbDeleteCommandTree)commandTree,
+                                                _sqlGenerator,
+                                                out _,
+                                                upperCaseKeywords: true,
+                                                createParameters: false));
+                                    break;
+                            }
                         });
 
                 Statement(writer);
             }
-        }
-
-        private static string UpperCaseKeywords(string commandText)
-        {
-            DebugCheck.NotEmpty(commandText);
-
-            return _sqlKeywordUpcaser.Replace(commandText, m => m.Groups[1].Value.ToUpperInvariant());
         }
 
         /// <summary>

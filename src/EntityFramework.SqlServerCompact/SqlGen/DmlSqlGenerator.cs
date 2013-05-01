@@ -9,16 +9,15 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     using System.Data.Entity.SqlServerCompact.Resources;
     using System.Data.Entity.SqlServerCompact.Utilities;
     using System.Diagnostics;
-    using System.Text;
 
     /// <summary>
     ///     Class generating SQL for a DML command tree.
     /// </summary>
     internal static class DmlSqlGenerator
     {
-        private const int s_commandTextBuilderInitialCapacity = 256;
-        private static string storeGeneratedPatternString = "StoreGeneratedPattern";
-        private static string rowversionString = "rowversion";
+        private const int CommandTextBuilderInitialCapacity = 256;
+        private const string StoreGeneratedPatternString = "StoreGeneratedPattern";
+        private const string RowversionString = "rowversion";
 
         /// <summary>
         ///     This method is added as a part of the fix for bug 13533
@@ -37,16 +36,16 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                     // continue if it is a primary key
                     continue;
                 }
-                if (rowversionString == edmProperty.TypeUsage.EdmType.Name)
+                if (RowversionString == edmProperty.TypeUsage.EdmType.Name)
                 {
                     // if the property is of type rowversion then we continue checking the next item in the list
                     continue;
                 }
 
                 // check whether the property is a identity type
-                if (edmProperty.TypeUsage.Facets.Contains(storeGeneratedPatternString))
+                if (edmProperty.TypeUsage.Facets.Contains(StoreGeneratedPatternString))
                 {
-                    var fct = edmProperty.TypeUsage.Facets.GetValue(storeGeneratedPatternString, false);
+                    var fct = edmProperty.TypeUsage.Facets.GetValue(StoreGeneratedPatternString, false);
                     if (StoreGeneratedPattern.Identity
                         == (StoreGeneratedPattern)fct.Value)
                     {
@@ -63,20 +62,30 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return result;
         }
 
-        internal static string[] GenerateUpdateSql(DbUpdateCommandTree tree, out List<DbParameter> parameters, bool isLocalProvider)
+        internal static string[] GenerateUpdateSql(
+            DbUpdateCommandTree tree,
+            out List<DbParameter> parameters,
+            bool isLocalProvider,
+            bool upperCaseKeywords = false)
         {
             var commandTexts = new List<String>();
-            var commandText = new StringBuilder(s_commandTextBuilderInitialCapacity);
+
+            var commandText
+                = new SqlStringBuilder(CommandTextBuilderInitialCapacity)
+                      {
+                          UpperCaseKeywords = upperCaseKeywords
+                      };
+
             var translator = new ExpressionTranslator(commandText, tree, null != tree.Returning, isLocalProvider);
 
             // update [schemaName].[tableName]
-            commandText.Append("update ");
+            commandText.AppendKeyWord("update ");
             tree.Target.Expression.Accept(translator);
             commandText.AppendLine();
 
             // set c1 = ..., c2 = ..., ...
             var first = true;
-            commandText.Append("set ");
+            commandText.AppendKeyWord("set ");
             foreach (DbSetClause setClause in tree.SetClauses)
             {
                 if (first)
@@ -128,7 +137,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             commandText.AppendLine();
 
             // where c1 = ..., c2 = ...
-            commandText.Append("where ");
+            commandText.AppendKeyWord("where ");
             tree.Predicate.Accept(translator);
             commandText.AppendLine();
 
@@ -148,19 +157,36 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return commandTexts.ToArray();
         }
 
-        internal static string[] GenerateDeleteSql(DbDeleteCommandTree tree, out List<DbParameter> parameters, bool isLocalProvider)
+        internal static string[] GenerateDeleteSql(
+            DbDeleteCommandTree tree,
+            out List<DbParameter> parameters,
+            bool isLocalProvider,
+            bool upperCaseKeywords = false,
+            bool createParameters = true)
         {
             var commandTexts = new List<String>();
-            var commandText = new StringBuilder(s_commandTextBuilderInitialCapacity);
-            var translator = new ExpressionTranslator(commandText, tree, false, isLocalProvider);
+
+            var commandText
+                = new SqlStringBuilder(CommandTextBuilderInitialCapacity)
+                      {
+                          UpperCaseKeywords = upperCaseKeywords
+                      };
+
+            var translator 
+                = new ExpressionTranslator(
+                    commandText, 
+                    tree, 
+                    false, 
+                    isLocalProvider,
+                    createParameters);
 
             // delete [schemaName].[tableName]
-            commandText.Append("delete ");
+            commandText.AppendKeyWord("delete ");
             tree.Target.Expression.Accept(translator);
             commandText.AppendLine();
 
             // where c1 = ... AND c2 = ...
-            commandText.Append("where ");
+            commandText.AppendKeyWord("where ");
             tree.Predicate.Accept(translator);
 
             commandTexts.Add(commandText.ToString());
@@ -170,16 +196,31 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return commandTexts.ToArray();
         }
 
-        internal static string[] GenerateInsertSql(DbInsertCommandTree tree, out List<DbParameter> parameters, bool isLocalProvider)
+        internal static string[] GenerateInsertSql(
+            DbInsertCommandTree tree,
+            out List<DbParameter> parameters,
+            bool isLocalProvider,
+            bool upperCaseKeywords = false,
+            bool createParameters = true)
         {
             var commandTexts = new List<String>();
-            var commandText = new StringBuilder(s_commandTextBuilderInitialCapacity);
-            var translator = new ExpressionTranslator(
-                commandText, tree,
-                null != tree.Returning, isLocalProvider);
+
+            var commandText
+                = new SqlStringBuilder(CommandTextBuilderInitialCapacity)
+                      {
+                          UpperCaseKeywords = upperCaseKeywords
+                      };
+
+            var translator 
+                = new ExpressionTranslator(
+                    commandText, 
+                    tree, 
+                    null != tree.Returning, 
+                    isLocalProvider,
+                    createParameters);
 
             // insert [schemaName].[tableName]
-            commandText.Append("insert ");
+            commandText.AppendKeyWord("insert ");
             tree.Target.Expression.Accept(translator);
 
             if (0 < tree.SetClauses.Count)
@@ -203,7 +244,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
                 // values c1, c2, ...
                 first = true;
-                commandText.Append("values (");
+                commandText.AppendKeyWord("values (");
                 foreach (DbSetClause setClause in tree.SetClauses)
                 {
                     if (first)
@@ -249,7 +290,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             // Don't check for cached sql belonging to this member
             // as methods are internal.
             //
-            var entityType = (EntityType)member.DeclaringType;
             return SqlGenerator.QuoteIdentifier(member.Name);
         }
 
@@ -270,18 +310,20 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <param name="translator"> Translator used to produce DML SQL statement for the tree </param>
         /// <param name="returning"> Returning expression. If null, the method returns immediately without producing a SELECT statement. </param>
         private static void GenerateReturningSql(
-            StringBuilder commandText, DbModificationCommandTree tree,
-            ExpressionTranslator translator, DbExpression returning)
+            SqlStringBuilder commandText,
+            DbModificationCommandTree tree,
+            ExpressionTranslator translator,
+            DbExpression returning)
         {
             if (returning != null)
             {
-                commandText.Append("select ");
+                commandText.AppendKeyWord("select ");
                 returning.Accept(translator);
                 commandText.AppendLine();
-                commandText.Append("from ");
+                commandText.AppendKeyWord("from ");
                 tree.Target.Expression.Accept(translator);
                 commandText.AppendLine();
-                commandText.Append("where ");
+                commandText.AppendKeyWord("where ");
                 var target = ((DbScanExpression)tree.Target.Expression).Target;
                 var flag = false;
                 var isFirst = true;
@@ -289,7 +331,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 {
                     if (!isFirst)
                     {
-                        commandText.Append(" and ");
+                        commandText.AppendKeyWord(" and ");
                     }
                     else
                     {
@@ -304,7 +346,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         internal static bool HandleIdentity(
-            StringBuilder commandText, ExpressionTranslator translator, EdmMember member, bool flag, EntitySetBase target)
+            SqlStringBuilder commandText, ExpressionTranslator translator, EdmMember member, bool flag, EntitySetBase target)
         {
             DebugCheck.NotNull(commandText);
             DebugCheck.NotNull(translator);
@@ -364,8 +406,19 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// </summary>
         internal class ExpressionTranslator : BasicExpressionVisitor
         {
+            private static readonly AliasGenerator _parameterNames = new AliasGenerator("@", 1000);
+
+            private readonly SqlStringBuilder _commandText;
+            private readonly DbModificationCommandTree _commandTree;
+            private readonly List<DbParameter> _parameters;
+            private readonly Dictionary<EdmMember, DbParameter> _memberValues;
+            private readonly SqlGenerator _sqlGenerator;
+
+            private readonly bool _isLocalProvider;
+            private readonly bool _createParameters;
+
             /// <summary>
-            /// For testing.
+            ///     For testing.
             /// </summary>
             internal ExpressionTranslator()
             {
@@ -379,26 +432,28 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             /// <param name="commandTree"> Command tree generating SQL </param>
             /// <param name="preserveMemberValues"> Indicates whether the translator should preserve member values while compiling t-SQL (only needed for server generation) </param>
             internal ExpressionTranslator(
-                StringBuilder commandText, DbModificationCommandTree commandTree,
-                bool preserveMemberValues, bool isLocalProvider)
+                SqlStringBuilder commandText, 
+                DbModificationCommandTree commandTree,
+                bool preserveMemberValues,
+                bool isLocalProvider,
+                bool createParameters = true)
             {
                 DebugCheck.NotNull(commandText);
                 DebugCheck.NotNull(commandTree);
+
                 _commandText = commandText;
                 _commandTree = commandTree;
                 _parameters = new List<DbParameter>();
-                _memberValues = preserveMemberValues
-                                    ? new Dictionary<EdmMember, DbParameter>()
-                                    : null;
-                _isLocalProvider = isLocalProvider;
-            }
+                _sqlGenerator = new SqlGenerator();
 
-            private readonly StringBuilder _commandText;
-            private readonly DbModificationCommandTree _commandTree;
-            private readonly List<DbParameter> _parameters;
-            private readonly Dictionary<EdmMember, DbParameter> _memberValues;
-            private static readonly AliasGenerator _parameterNames = new AliasGenerator("@", 1000);
-            private readonly bool _isLocalProvider;
+                _memberValues
+                    = preserveMemberValues
+                          ? new Dictionary<EdmMember, DbParameter>()
+                          : null;
+
+                _isLocalProvider = isLocalProvider;
+                _createParameters = createParameters;
+            }
 
             internal List<DbParameter> Parameters
             {
@@ -487,14 +542,14 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 Check.NotNull(expression, "expression");
 
                 expression.Argument.Accept(this);
-                _commandText.Append(" is null");
+                _commandText.AppendKeyWord(" is null");
             }
 
             public override void Visit(DbNotExpression expression)
             {
                 Check.NotNull(expression, "expression");
 
-                _commandText.Append("not (");
+                _commandText.AppendKeyWord("not (");
                 expression.Accept(this);
                 _commandText.Append(")");
             }
@@ -503,8 +558,16 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             {
                 Check.NotNull(expression, "expression");
 
-                var parameter = CreateParameter(expression.Value, expression.ResultType);
-                _commandText.Append(parameter.ParameterName);
+                if (_createParameters)
+                {
+                    var parameter = CreateParameter(expression.Value, expression.ResultType);
+
+                    _commandText.Append(parameter.ParameterName);
+                }
+                else
+                {
+                    _commandText.Append(_sqlGenerator.WriteSql(expression.Accept(_sqlGenerator)));
+                }
             }
 
             public override void Visit(DbScanExpression expression)
@@ -566,7 +629,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             {
                 Check.NotNull(expression, "expression");
 
-                _commandText.Append("null");
+                _commandText.AppendKeyWord("null");
             }
 
             public override void Visit(DbNewInstanceExpression expression)
@@ -594,7 +657,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             {
                 _commandText.Append("(");
                 expression.Left.Accept(this);
-                _commandText.Append(separator);
+                _commandText.AppendKeyWord(separator);
                 expression.Right.Accept(this);
                 _commandText.Append(")");
             }

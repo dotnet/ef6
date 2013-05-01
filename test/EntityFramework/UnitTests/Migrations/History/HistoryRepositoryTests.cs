@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations.History
 {
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Infrastructure;
@@ -710,8 +711,8 @@ namespace System.Data.Entity.Migrations.History
             var historyOperation
                 = (HistoryOperation)historyRepository.CreateInsertOperation("Migration1", modelDocument);
 
-            Assert.NotEmpty(historyOperation.Commands);
-            Assert.Equal(4, historyOperation.Commands.Single().Parameters.Count);
+            Assert.NotEmpty(historyOperation.CommandTrees);
+            Assert.Equal(DbCommandTreeKind.Insert, historyOperation.CommandTrees.Single().CommandTreeKind);
         }
 
         [MigrationsTheory]
@@ -735,8 +736,8 @@ namespace System.Data.Entity.Migrations.History
             var historyOperation
                 = (HistoryOperation)historyRepository.CreateDeleteOperation("Migration1");
 
-            Assert.NotEmpty(historyOperation.Commands);
-            Assert.Equal(2, historyOperation.Commands.Single().Parameters.Count);
+            Assert.NotEmpty(historyOperation.CommandTrees);
+            Assert.Equal(DbCommandTreeKind.Delete, historyOperation.CommandTrees.Single().CommandTreeKind);
         }
 
         [MigrationsTheory]

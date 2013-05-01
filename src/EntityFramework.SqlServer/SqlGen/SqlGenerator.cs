@@ -212,7 +212,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             // There might be no entry on the stack if a Join node has never
             // been seen, so we return false in that case.
-            get { return isParentAJoinStack.Count == 0 ? false : isParentAJoinStack.Peek(); }
+            get { return isParentAJoinStack.Count != 0 && isParentAJoinStack.Peek(); }
         }
 
         #endregion
@@ -305,11 +305,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     The current SQL Server version
         /// </summary>
-        private readonly SqlVersion sqlVersion;
+        private readonly SqlVersion _sqlVersion;
 
         internal SqlVersion SqlVersion
         {
-            get { return sqlVersion; }
+            get { return _sqlVersion; }
         }
 
         internal bool IsPreKatmai
@@ -323,13 +323,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             get
             {
-                if (_integerType == null)
-                {
-                    _integerType =
-                        TypeUsage.CreateDefaultTypeUsage(
-                            StoreItemCollection.GetPrimitiveTypes().First(t => t.PrimitiveTypeKind == PrimitiveTypeKind.Int64));
-                }
-                return _integerType;
+                return _integerType
+                       ?? (_integerType = TypeUsage.CreateDefaultTypeUsage(
+                           StoreItemCollection.GetPrimitiveTypes().First(t => t.PrimitiveTypeKind == PrimitiveTypeKind.Int64)));
             }
         }
 
@@ -346,6 +342,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
         internal SqlGenerator()
         {
+            // Testing only
+
+            _sqlVersion = SqlVersion.Sql11;
         }
 
         /// <summary>
@@ -354,7 +353,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="sqlVersion"> server version </param>
         internal SqlGenerator(SqlVersion sqlVersion)
         {
-            this.sqlVersion = sqlVersion;
+            _sqlVersion = sqlVersion;
         }
 
         #endregion
@@ -1791,12 +1790,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 "DbLimitExpression.Limit is DbParameterReferenceExpression for SQL Server 2000.");
 
             var result = VisitExpressionEnsureSqlStatement(e.Argument, false, false);
-            Symbol fromSymbol;
 
             if (!IsCompatible(result, e.ExpressionKind))
             {
                 var inputType = e.Argument.ResultType.GetElementTypeUsage();
 
+                Symbol fromSymbol;
                 result = CreateNewSelectStatement(result, "top", inputType, out fromSymbol);
                 AddFromSymbol(result, "top", fromSymbol, false);
             }
@@ -1981,7 +1980,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Visits a DbInExpression and generates the corresponding SQL fragment.
         /// </summary>
-        /// <param name="e"> A <see cref="DbInExpression" /> that specifies the expression to be visited. </param>
+        /// <param name="e">
+        ///     A <see cref="DbInExpression" /> that specifies the expression to be visited.
+        /// </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" /> that specifies the generated SQL fragment.
         /// </returns>
@@ -2076,7 +2077,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 {
                     forceNonUnicodeOnQualifyingValues = MatchSourcePatternForForcingNonUnicode(key);
                     forceNonUnicodeOnKey = !forceNonUnicodeOnQualifyingValues && MatchTargetPatternForForcingNonUnicode(key)
-                                           && realValues.All(v => MatchSourcePatternForForcingNonUnicode(v));
+                                           && realValues.All(MatchSourcePatternForForcingNonUnicode);
                 }
 
                 if (realValueCount == 1)
@@ -3999,7 +4000,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             Debug.Assert(type.EdmType.GetMetadataPropertyValue<DataSpace>("DataSpace") == DataSpace.CSpace);
 
             var storeTypeUsage = _storeItemCollection.StoreProviderManifest.GetStoreType(type);
-            return GenerateSqlForStoreType(sqlVersion, storeTypeUsage);
+            return GenerateSqlForStoreType(_sqlVersion, storeTypeUsage);
         }
 
         internal static string GenerateSqlForStoreType(SqlVersion sqlVersion, TypeUsage storeTypeUsage)
@@ -4539,7 +4540,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="primitiveTypeKind"> </param>
         private void AssertKatmaiOrNewer(PrimitiveTypeKind primitiveTypeKind)
         {
-            AssertKatmaiOrNewer(sqlVersion, primitiveTypeKind);
+            AssertKatmaiOrNewer(_sqlVersion, primitiveTypeKind);
         }
 
         private static void AssertKatmaiOrNewer(SqlVersion sqlVersion, PrimitiveTypeKind primitiveTypeKind)

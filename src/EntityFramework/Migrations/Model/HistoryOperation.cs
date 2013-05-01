@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Migrations.Model
 {
     using System.Collections.Generic;
-    using System.Data.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -15,33 +15,33 @@ namespace System.Data.Entity.Migrations.Model
     /// </summary>
     public class HistoryOperation : MigrationOperation
     {
-        private readonly IEnumerable<DbCommand> _commands;
+        private readonly IEnumerable<DbModificationCommandTree> _commandTrees;
 
         /// <summary>
         ///     Initializes a new instance of the HistoryOperation class.
         /// </summary>
-        /// <param name="commands"> A sequence of commands representing the operations being applied to the history table. </param>
+        /// <param name="commandTrees"> A sequence of command trees representing the operations being applied to the history table. </param>
         /// <param name="anonymousArguments"> Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public HistoryOperation(IEnumerable<DbCommand> commands, object anonymousArguments = null)
+        public HistoryOperation(IEnumerable<DbModificationCommandTree> commandTrees, object anonymousArguments = null)
             : base(anonymousArguments)
         {
-            Check.NotNull(commands, "commands");
+            Check.NotNull(commandTrees, "commandTrees");
 
-            if (!commands.Any())
+            if (!commandTrees.Any())
             {
-                throw new ArgumentException(Strings.CollectionEmpty("commands", "HistoryOperation"));
+                throw new ArgumentException(Strings.CollectionEmpty("commandTrees", "HistoryOperation"));
             }
 
-            _commands = commands;
+            _commandTrees = commandTrees;
         }
 
         /// <summary>
         ///     A sequence of commands representing the operations being applied to the history table.
         /// </summary>
-        public IEnumerable<DbCommand> Commands
+        public IEnumerable<DbModificationCommandTree> CommandTrees
         {
-            get { return _commands; }
+            get { return _commandTrees; }
         }
 
         /// <inheritdoc />

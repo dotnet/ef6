@@ -521,7 +521,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// </summary>
         /// <param name="sqlStatement"> </param>
         /// <returns> A string representing the SQL to be executed. </returns>
-        private string WriteSql(ISqlFragment sqlStatement)
+        public string WriteSql(ISqlFragment sqlStatement)
         {
             var builder = new StringBuilder(1024);
             using (var writer = new SqlWriter(builder))

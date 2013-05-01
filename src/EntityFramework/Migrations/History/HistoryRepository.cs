@@ -6,6 +6,7 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
@@ -96,10 +97,10 @@ namespace System.Data.Entity.Migrations.History
                                 .OrderByDescending(h => h.MigrationId)
                                 .Select(
                                     s => new
-                                    {
-                                        s.MigrationId,
-                                        s.Model
-                                    })
+                                             {
+                                                 s.MigrationId,
+                                                 s.Model
+                                             })
                                 .FirstOrDefault();
 
                         if (lastModel == null)
@@ -407,12 +408,12 @@ namespace System.Data.Entity.Migrations.History
                         yield return new AddColumnOperation(
                             tableName,
                             new ColumnModel(PrimitiveTypeKind.String)
-                            {
-                                MaxLength = 32,
-                                Name = "ProductVersion",
-                                IsNullable = false,
-                                DefaultValue = "0.7.0.0"
-                            });
+                                {
+                                    MaxLength = 32,
+                                    Name = "ProductVersion",
+                                    IsNullable = false,
+                                    DefaultValue = "0.7.0.0"
+                                });
                     }
 
                     if (!_contextKeyColumnExists)
@@ -420,18 +421,18 @@ namespace System.Data.Entity.Migrations.History
                         yield return new AddColumnOperation(
                             tableName,
                             new ColumnModel(PrimitiveTypeKind.String)
-                            {
-                                MaxLength = 512,
-                                Name = "ContextKey",
-                                IsNullable = false,
-                                DefaultValue = _contextKey
-                            });
+                                {
+                                    MaxLength = 512,
+                                    Name = "ContextKey",
+                                    IsNullable = false,
+                                    DefaultValue = _contextKey
+                                });
 
                         var dropPrimaryKeyOperation
                             = new DropPrimaryKeyOperation
-                            {
-                                Table = tableName
-                            };
+                                  {
+                                      Table = tableName
+                                  };
 
                         dropPrimaryKeyOperation.Columns.Add("MigrationId");
 
@@ -439,9 +440,9 @@ namespace System.Data.Entity.Migrations.History
 
                         var addPrimaryKeyOperation
                             = new AddPrimaryKeyOperation
-                            {
-                                Table = tableName
-                            };
+                                  {
+                                      Table = tableName
+                                  };
 
                         addPrimaryKeyOperation.Columns.Add("MigrationId");
                         addPrimaryKeyOperation.Columns.Add("ContextKey");
@@ -488,18 +489,19 @@ namespace System.Data.Entity.Migrations.History
                 {
                     context.History.Add(
                         new HistoryRow
-                        {
-                            MigrationId = migrationId,
-                            ContextKey = _contextKey,
-                            Model = new ModelCompressor().Compress(model),
-                            ProductVersion = _productVersion
-                        });
+                            {
+                                MigrationId = migrationId,
+                                ContextKey = _contextKey,
+                                Model = new ModelCompressor().Compress(model),
+                                ProductVersion = _productVersion
+                            });
 
                     using (var commandTracer = new CommandTracer(context))
                     {
                         context.SaveChanges();
 
-                        return new HistoryOperation(commandTracer.DbCommands);
+                        return new HistoryOperation(
+                            commandTracer.CommandTrees.OfType<DbModificationCommandTree>());
                     }
                 }
             }
@@ -515,10 +517,10 @@ namespace System.Data.Entity.Migrations.History
                 {
                     var historyRow
                         = new HistoryRow
-                        {
-                            MigrationId = migrationId,
-                            ContextKey = _contextKey
-                        };
+                              {
+                                  MigrationId = migrationId,
+                                  ContextKey = _contextKey
+                              };
 
                     context.History.Attach(historyRow);
                     context.History.Remove(historyRow);
@@ -527,7 +529,8 @@ namespace System.Data.Entity.Migrations.History
                     {
                         context.SaveChanges();
 
-                        return new HistoryOperation(commandTracer.DbCommands);
+                        return new HistoryOperation(
+                            commandTracer.CommandTrees.OfType<DbModificationCommandTree>());
                     }
                 }
             }
@@ -546,12 +549,12 @@ namespace System.Data.Entity.Migrations.History
 
                     context.History.Add(
                         new HistoryRow
-                        {
-                            MigrationId = MigrationAssembly.CreateMigrationId(Strings.InitialCreate),
-                            ContextKey = _contextKey,
-                            Model = new ModelCompressor().Compress(model),
-                            ProductVersion = Assembly.GetExecutingAssembly().GetInformationalVersion()
-                        });
+                            {
+                                MigrationId = MigrationAssembly.CreateMigrationId(Strings.InitialCreate),
+                                ContextKey = _contextKey,
+                                Model = new ModelCompressor().Compress(model),
+                                ProductVersion = Assembly.GetExecutingAssembly().GetInformationalVersion()
+                            });
 
                     context.SaveChanges();
                 }
@@ -565,7 +568,7 @@ namespace System.Data.Entity.Migrations.History
             var context = _historyContextFactory(connection, schema ?? CurrentSchema);
 
             context.Database.CommandTimeout = _commandTimeout;
-            
+
             return context;
         }
     }

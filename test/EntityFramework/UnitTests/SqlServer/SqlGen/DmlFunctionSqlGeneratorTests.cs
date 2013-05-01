@@ -26,20 +26,20 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     .ToList();
 
             var functionSqlGenerator
-                = new DmlFunctionSqlGenerator(ProviderRegistry.Sql2008_ProviderManifest);
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
 
             Assert.Equal(
-                @"insert [dbo].[Customers]([Name])
-values (@Name)
+                @"INSERT [dbo].[Customers]([Name])
+VALUES (@Name)
 
-declare @CustomerId int
-select @CustomerId = [CustomerId]
-from [dbo].[Customers]
-where @@ROWCOUNT > 0 and [CustomerId] = scope_identity()
+DECLARE @CustomerId int
+SELECT @CustomerId = [CustomerId]
+FROM [dbo].[Customers]
+WHERE @@ROWCOUNT > 0 AND [CustomerId] = scope_identity()
 
-select t0.[CustomerId]
-from [dbo].[Customers] as t0
-where @@ROWCOUNT > 0 and t0.[CustomerId] = @CustomerId",
+SELECT t0.[CustomerId]
+FROM [dbo].[Customers] AS t0
+WHERE @@ROWCOUNT > 0 AND t0.[CustomerId] = @CustomerId",
                 functionSqlGenerator.GenerateInsert(convertedTrees));
         }
 
@@ -60,30 +60,30 @@ where @@ROWCOUNT > 0 and t0.[CustomerId] = @CustomerId",
                     .ToList();
 
             var functionSqlGenerator
-                = new DmlFunctionSqlGenerator(ProviderRegistry.Sql2008_ProviderManifest);
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
 
             Assert.Equal(
-                @"declare @generated_keys table([order_id] int, [Key] uniqueidentifier, [Code] nvarchar(128), [Signature] varbinary(128))
-insert [dbo].[Orders]([Code], [Signature], [Name], [Address_Street], [Address_City], [Address_Country_Name], [OrderGroupId], [Customer_CustomerId])
-output inserted.[order_id], inserted.[Key], inserted.[Code], inserted.[Signature] into @generated_keys
-values (@teh_codez, @Signature, @the_name, @Address_Street, @Address_City, @Address_Country_Name, @OrderGroupId, @Customer_CustomerId)
+                @"DECLARE @generated_keys table([order_id] int, [Key] uniqueidentifier, [Code] nvarchar(128), [Signature] varbinary(128))
+INSERT [dbo].[Orders]([Code], [Signature], [Name], [Address_Street], [Address_City], [Address_Country_Name], [OrderGroupId], [Customer_CustomerId])
+OUTPUT inserted.[order_id], inserted.[Key], inserted.[Code], inserted.[Signature] INTO @generated_keys
+VALUES (@teh_codez, @Signature, @the_name, @Address_Street, @Address_City, @Address_Country_Name, @OrderGroupId, @Customer_CustomerId)
 
-declare @order_id int, @Key uniqueidentifier
-select @order_id = t.[order_id], @Key = t.[Key]
-from @generated_keys as g join [dbo].[Orders] as t on g.[order_id] = t.[order_id] and g.[Key] = t.[Key] and g.[Code] = t.[Code] and g.[Signature] = t.[Signature]
-where @@ROWCOUNT > 0
+DECLARE @order_id int, @Key uniqueidentifier
+SELECT @order_id = t.[order_id], @Key = t.[Key]
+FROM @generated_keys AS g JOIN [dbo].[Orders] AS t ON g.[order_id] = t.[order_id] AND g.[Key] = t.[Key] AND g.[Code] = t.[Code] AND g.[Signature] = t.[Signature]
+WHERE @@ROWCOUNT > 0
 
-insert [dbo].[special_orders]([order_id], [so_key], [Code], [Signature], [OtherCustomer_CustomerId], [OtherAddress_Street], [OtherAddress_City], [OtherAddress_Country_Name])
-values (@order_id, @Key, @teh_codez, @Signature, @OtherCustomer_CustomerId, @OtherAddress_Street, @OtherAddress_City, @OtherAddress_Country_Name)
+INSERT [dbo].[special_orders]([order_id], [so_key], [Code], [Signature], [OtherCustomer_CustomerId], [OtherAddress_Street], [OtherAddress_City], [OtherAddress_Country_Name])
+VALUES (@order_id, @Key, @teh_codez, @Signature, @OtherCustomer_CustomerId, @OtherAddress_Street, @OtherAddress_City, @OtherAddress_Country_Name)
 
-insert [dbo].[xspecial_orders]([xid], [so_key], [Code], [Signature], [TheSpecialist])
-values (@order_id, @Key, @teh_codez, @Signature, @TheSpecialist)
+INSERT [dbo].[xspecial_orders]([xid], [so_key], [Code], [Signature], [TheSpecialist])
+VALUES (@order_id, @Key, @teh_codez, @Signature, @TheSpecialist)
 
-select t0.[order_id] as xid, t0.[Key] as key_result, t0.[OrderNo], t0.[RowVersion], t1.[MagicOrderToken], t2.[FairyDust]
-from [dbo].[Orders] as t0
-join [dbo].[special_orders] as t1 on t1.[order_id] = t0.[order_id] and t1.[so_key] = t0.[Key] and t1.[Code] = t0.[Code] and t1.[Signature] = t0.[Signature]
-join [dbo].[xspecial_orders] as t2 on t2.[xid] = t0.[order_id] and t2.[so_key] = t0.[Key] and t2.[Code] = t0.[Code] and t2.[Signature] = t0.[Signature]
-where @@ROWCOUNT > 0 and t0.[order_id] = @order_id and t0.[Key] = @Key and t0.[Code] = @teh_codez and t0.[Signature] = @Signature",
+SELECT t0.[order_id] AS xid, t0.[Key] AS key_result, t0.[OrderNo], t0.[RowVersion], t1.[MagicOrderToken], t2.[FairyDust]
+FROM [dbo].[Orders] AS t0
+JOIN [dbo].[special_orders] AS t1 ON t1.[order_id] = t0.[order_id] AND t1.[so_key] = t0.[Key] AND t1.[Code] = t0.[Code] AND t1.[Signature] = t0.[Signature]
+JOIN [dbo].[xspecial_orders] AS t2 ON t2.[xid] = t0.[order_id] AND t2.[so_key] = t0.[Key] AND t2.[Code] = t0.[Code] AND t2.[Signature] = t0.[Signature]
+WHERE @@ROWCOUNT > 0 AND t0.[order_id] = @order_id AND t0.[Key] = @Key AND t0.[Code] = @teh_codez AND t0.[Signature] = @Signature",
                 functionSqlGenerator.GenerateInsert(convertedTrees));
         }
 
@@ -104,12 +104,12 @@ where @@ROWCOUNT > 0 and t0.[order_id] = @order_id and t0.[Key] = @Key and t0.[C
                     .ToList();
 
             var functionSqlGenerator
-                = new DmlFunctionSqlGenerator(ProviderRegistry.Sql2008_ProviderManifest);
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
 
             Assert.Equal(
-                @"update [dbo].[Customers]
-set [Name] = @Name
-where ([CustomerId] = @CustomerId)",
+                @"UPDATE [dbo].[Customers]
+SET [Name] = @Name
+WHERE ([CustomerId] = @CustomerId)",
                 functionSqlGenerator.GenerateUpdate(convertedTrees, null));
         }
 
@@ -130,30 +130,30 @@ where ([CustomerId] = @CustomerId)",
                     .ToList();
 
             var functionSqlGenerator
-                = new DmlFunctionSqlGenerator(ProviderRegistry.Sql2008_ProviderManifest);
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
 
             Assert.Equal(
-                @"update [dbo].[Orders]
-set [Name] = @Name, [Address_Street] = @Address_Street, [Address_City] = @Address_City, [Address_Country_Name] = @Address_Country_Name, [OrderGroupId] = @OrderGroupId, [Customer_CustomerId] = @Customer_CustomerId
-where ((((((([order_id] = @xid) and ([Key] = @key_for_update)) and ([Code] = @Code)) and ([Signature] = @Signature)) and (([Name] = @Name_Original) or ([Name] is null and @Name_Original is null))) and (([RowVersion] = @RowVersion_Original) or ([RowVersion] is null and @RowVersion_Original is null))) and (([Customer_CustomerId] = @Customer_CustomerId) or ([Customer_CustomerId] is null and @Customer_CustomerId is null)))
+                @"UPDATE [dbo].[Orders]
+SET [Name] = @Name, [Address_Street] = @Address_Street, [Address_City] = @Address_City, [Address_Country_Name] = @Address_Country_Name, [OrderGroupId] = @OrderGroupId, [Customer_CustomerId] = @Customer_CustomerId
+WHERE ((((((([order_id] = @xid) AND ([Key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([Name] = @Name_Original) OR ([Name] IS NULL AND @Name_Original IS NULL))) AND (([RowVersion] = @RowVersion_Original) OR ([RowVersion] IS NULL AND @RowVersion_Original IS NULL))) AND (([Customer_CustomerId] = @Customer_CustomerId) OR ([Customer_CustomerId] IS NULL AND @Customer_CustomerId IS NULL)))
 
-update [dbo].[special_orders]
-set [OtherCustomer_CustomerId] = @OtherCustomer_CustomerId, [OtherAddress_Street] = @OtherAddress_Street, [OtherAddress_City] = @OtherAddress_City, [OtherAddress_Country_Name] = @OtherAddress_Country_Name
-where ((((([order_id] = @xid) and ([so_key] = @key_for_update)) and ([Code] = @Code)) and ([Signature] = @Signature)) and (([OtherCustomer_CustomerId] = @OtherCustomer_CustomerId) or ([OtherCustomer_CustomerId] is null and @OtherCustomer_CustomerId is null)))
-and @@ROWCOUNT > 0
+UPDATE [dbo].[special_orders]
+SET [OtherCustomer_CustomerId] = @OtherCustomer_CustomerId, [OtherAddress_Street] = @OtherAddress_Street, [OtherAddress_City] = @OtherAddress_City, [OtherAddress_Country_Name] = @OtherAddress_Country_Name
+WHERE ((((([order_id] = @xid) AND ([so_key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([OtherCustomer_CustomerId] = @OtherCustomer_CustomerId) OR ([OtherCustomer_CustomerId] IS NULL AND @OtherCustomer_CustomerId IS NULL)))
+AND @@ROWCOUNT > 0
 
-update [dbo].[xspecial_orders]
-set [TheSpecialist] = @TheSpecialist
-where (((([xid] = @xid) and ([so_key] = @key_for_update)) and ([Code] = @Code)) and ([Signature] = @Signature))
-and @@ROWCOUNT > 0
+UPDATE [dbo].[xspecial_orders]
+SET [TheSpecialist] = @TheSpecialist
+WHERE (((([xid] = @xid) AND ([so_key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature))
+AND @@ROWCOUNT > 0
 
-select t0.[OrderNo] as order_fu, t0.[RowVersion], t1.[MagicOrderToken], t2.[FairyDust]
-from [dbo].[Orders] as t0
-join [dbo].[special_orders] as t1 on t1.[order_id] = t0.[order_id] and t1.[so_key] = t0.[Key] and t1.[Code] = t0.[Code] and t1.[Signature] = t0.[Signature]
-join [dbo].[xspecial_orders] as t2 on t2.[xid] = t0.[order_id] and t2.[so_key] = t0.[Key] and t2.[Code] = t0.[Code] and t2.[Signature] = t0.[Signature]
-where @@ROWCOUNT > 0 and t0.[order_id] = @xid and t0.[Key] = @key_for_update and t0.[Code] = @Code and t0.[Signature] = @Signature
+SELECT t0.[OrderNo] AS order_fu, t0.[RowVersion], t1.[MagicOrderToken], t2.[FairyDust]
+FROM [dbo].[Orders] AS t0
+JOIN [dbo].[special_orders] AS t1 ON t1.[order_id] = t0.[order_id] AND t1.[so_key] = t0.[Key] AND t1.[Code] = t0.[Code] AND t1.[Signature] = t0.[Signature]
+JOIN [dbo].[xspecial_orders] AS t2 ON t2.[xid] = t0.[order_id] AND t2.[so_key] = t0.[Key] AND t2.[Code] = t0.[Code] AND t2.[Signature] = t0.[Signature]
+WHERE @@ROWCOUNT > 0 AND t0.[order_id] = @xid AND t0.[Key] = @key_for_update AND t0.[Code] = @Code AND t0.[Signature] = @Signature
 
-set @rows_affected = @@ROWCOUNT",
+SET @rows_affected = @@ROWCOUNT",
                 functionSqlGenerator.GenerateUpdate(convertedTrees, "rows_affected"));
         }
 
@@ -174,11 +174,11 @@ set @rows_affected = @@ROWCOUNT",
                     .ToList();
 
             var functionSqlGenerator
-                = new DmlFunctionSqlGenerator(ProviderRegistry.Sql2008_ProviderManifest);
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
 
             Assert.Equal(
-                @"delete [dbo].[Customers]
-where ([CustomerId] = @CustomerId)",
+                @"DELETE [dbo].[Customers]
+WHERE ([CustomerId] = @CustomerId)",
                 functionSqlGenerator.GenerateDelete(convertedTrees, null));
         }
 
@@ -199,21 +199,21 @@ where ([CustomerId] = @CustomerId)",
                     .ToList();
 
             var functionSqlGenerator
-                = new DmlFunctionSqlGenerator(ProviderRegistry.Sql2008_ProviderManifest);
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
 
             Assert.Equal(
-                @"delete [dbo].[xspecial_orders]
-where (((([xid] = @xid) and ([so_key] = @key_for_delete)) and ([Code] = @Code)) and ([Signature] = @Signature))
+                @"DELETE [dbo].[xspecial_orders]
+WHERE (((([xid] = @xid) AND ([so_key] = @key_for_delete)) AND ([Code] = @Code)) AND ([Signature] = @Signature))
 
-delete [dbo].[special_orders]
-where ((((([order_id] = @xid) and ([so_key] = @key_for_delete)) and ([Code] = @Code)) and ([Signature] = @Signature)) and (([OtherCustomer_CustomerId] = @OtherCustomer_CustomerId) or ([OtherCustomer_CustomerId] is null and @OtherCustomer_CustomerId is null)))
-and @@ROWCOUNT > 0
+DELETE [dbo].[special_orders]
+WHERE ((((([order_id] = @xid) AND ([so_key] = @key_for_delete)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([OtherCustomer_CustomerId] = @OtherCustomer_CustomerId) OR ([OtherCustomer_CustomerId] IS NULL AND @OtherCustomer_CustomerId IS NULL)))
+AND @@ROWCOUNT > 0
 
-delete [dbo].[Orders]
-where ((((((([order_id] = @xid) and ([Key] = @key_for_delete)) and ([Code] = @Code)) and ([Signature] = @Signature)) and (([Name] = @Name_Original) or ([Name] is null and @Name_Original is null))) and (([RowVersion] = @RowVersion_Original) or ([RowVersion] is null and @RowVersion_Original is null))) and (([Customer_CustomerId] = @Customer_CustomerId) or ([Customer_CustomerId] is null and @Customer_CustomerId is null)))
-and @@ROWCOUNT > 0
+DELETE [dbo].[Orders]
+WHERE ((((((([order_id] = @xid) AND ([Key] = @key_for_delete)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([Name] = @Name_Original) OR ([Name] IS NULL AND @Name_Original IS NULL))) AND (([RowVersion] = @RowVersion_Original) OR ([RowVersion] IS NULL AND @RowVersion_Original IS NULL))) AND (([Customer_CustomerId] = @Customer_CustomerId) OR ([Customer_CustomerId] IS NULL AND @Customer_CustomerId IS NULL)))
+AND @@ROWCOUNT > 0
 
-set @rows_affected = @@ROWCOUNT",
+SET @rows_affected = @@ROWCOUNT",
                 functionSqlGenerator.GenerateDelete(convertedTrees, "rows_affected"));
         }
     }

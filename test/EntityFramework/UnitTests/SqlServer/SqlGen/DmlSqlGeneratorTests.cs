@@ -6,7 +6,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServer.Resources;
-    using System.Text;
     using Moq;
     using Xunit;
 
@@ -47,20 +46,22 @@ namespace System.Data.Entity.SqlServer.SqlGen
             DbScanExpressionThrowsTest("InsertFunction", new Mock<DbInsertCommandTree>().Object);
         }
 
-        private void DbScanExpressionThrowsTest(string functionName, DbModificationCommandTree commandTree)
+        private static void DbScanExpressionThrowsTest(string functionName, DbModificationCommandTree commandTree)
         {
             Assert.Equal(
                 Strings.Update_SqlEntitySetWithoutDmlFunctions("Binky", functionName, "ModificationFunctionMapping"),
                 Assert.Throws<UpdateException>(
-                    () => new DmlSqlGenerator.ExpressionTranslator(new StringBuilder(), commandTree, true, new SqlGenerator(SqlVersion.Sql10))
-                              .Visit(CreateMockScanExpression("I am defined.").Object)).Message);
+                    () =>
+                    new DmlSqlGenerator.ExpressionTranslator(new SqlStringBuilder(), commandTree, true, new SqlGenerator(SqlVersion.Sql10))
+                        .Visit(CreateMockScanExpression("I am defined.").Object)).Message);
         }
 
         [Fact]
         public void Visit_DbScanExpression_appends_SQL_if_defining_query_is_not_set()
         {
-            var builder = new StringBuilder();
-            new DmlSqlGenerator.ExpressionTranslator(builder, new Mock<DbInsertCommandTree>().Object, true, new SqlGenerator(SqlVersion.Sql10))
+            var builder = new SqlStringBuilder();
+            new DmlSqlGenerator.ExpressionTranslator(
+                builder, new Mock<DbInsertCommandTree>().Object, true, new SqlGenerator(SqlVersion.Sql10))
                 .Visit(CreateMockScanExpression(null).Object);
 
             Assert.Equal("[Kontainer].[Binky]", builder.ToString());

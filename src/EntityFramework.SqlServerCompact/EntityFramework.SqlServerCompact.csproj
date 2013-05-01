@@ -142,6 +142,7 @@
     <Compile Include="SqlGen\SqlBuilder.cs" />
     <Compile Include="SqlGen\SqlGenerator.cs" />
     <Compile Include="SqlGen\SqlSelectStatement.cs" />
+    <Compile Include="SqlGen\SqlStringBuilder.cs" />
     <Compile Include="SqlGen\SqlWriter.cs" />
     <Compile Include="SqlGen\Symbol.cs" />
     <Compile Include="SqlGen\SymbolPair.cs" />

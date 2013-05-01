@@ -6,6 +6,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Model;
@@ -13,6 +14,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServerCompact.Resources;
+    using System.Data.Entity.SqlServerCompact.SqlGen;
     using System.Data.Entity.SqlServerCompact.Utilities;
     using System.Data.SqlClient;
     using System.Diagnostics;
@@ -20,7 +22,6 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     ///     Provider to convert provider agnostic migration operations into SQL commands
@@ -30,7 +31,6 @@ namespace System.Data.Entity.SqlServerCompact
     [DbProviderName("System.Data.SqlServerCe.4.0")]
     public class SqlCeMigrationSqlGenerator : MigrationSqlGenerator
     {
-        internal const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffK";
         internal const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ss.fffzzz";
 
         private const int DefaultMaxLength = 128;
@@ -38,14 +38,7 @@ namespace System.Data.Entity.SqlServerCompact
         private const byte DefaultTimePrecision = 7;
         private const byte DefaultScale = 0;
 
-        private static readonly Regex _sqlKeywordUpcaser
-            = new Regex(
-                @"^(insert|values|delete|where|update|declare|select|from|output|from|join|set|default\svalues|and)",
-                RegexOptions.Multiline | RegexOptions.Compiled);
-
-        private DbProviderServices _providerServices;
         private DbProviderManifest _providerManifest;
-
         private List<MigrationStatement> _statements;
         private HashSet<string> _generatedSchemas;
 
@@ -75,8 +68,10 @@ namespace System.Data.Entity.SqlServerCompact
         {
             using (var connection = CreateConnection())
             {
-                _providerServices = DbProviderServices.GetProviderServices(connection);
-                _providerManifest = _providerServices.GetProviderManifest(providerManifestToken);
+                _providerManifest
+                    = DbProviderServices
+                        .GetProviderServices(connection)
+                        .GetProviderManifest(providerManifestToken);
             }
         }
 
@@ -597,28 +592,42 @@ namespace System.Data.Entity.SqlServerCompact
 
             using (var writer = Writer())
             {
-                historyOperation.Commands.Each(
-                    c =>
+                historyOperation.CommandTrees.Each(
+                    commandTree =>
                         {
-                            var sql = UpperCaseKeywords(c.CommandText);
+                            List<DbParameter> _;
 
-                            // inline params
-                            c.Parameters
-                             .Cast<DbParameter>()
-                             .Each(p => sql = sql.Replace(p.ParameterName, Generate((dynamic)p.Value)));
+                            switch (commandTree.CommandTreeKind)
+                            {
+                                case DbCommandTreeKind.Insert:
 
-                            writer.Write(sql);
+                                    writer.Write(
+                                        string.Join(
+                                            Environment.NewLine,
+                                            DmlSqlGenerator.GenerateInsertSql(
+                                                (DbInsertCommandTree)commandTree,
+                                                out _,
+                                                isLocalProvider: true,
+                                                upperCaseKeywords: true,
+                                                createParameters: false)));
+                                    break;
+
+                                case DbCommandTreeKind.Delete:
+                                    writer.Write(
+                                        string.Join(
+                                            Environment.NewLine,
+                                            DmlSqlGenerator.GenerateDeleteSql(
+                                                (DbDeleteCommandTree)commandTree,
+                                                out _,
+                                                isLocalProvider: true,
+                                                upperCaseKeywords: true,
+                                                createParameters: false)));
+                                    break;
+                            }
                         });
 
                 Statement(writer);
             }
-        }
-
-        private static string UpperCaseKeywords(string commandText)
-        {
-            DebugCheck.NotEmpty(commandText);
-
-            return _sqlKeywordUpcaser.Replace(commandText, m => m.Groups[1].Value.ToUpperInvariant());
         }
 
         /// <summary>

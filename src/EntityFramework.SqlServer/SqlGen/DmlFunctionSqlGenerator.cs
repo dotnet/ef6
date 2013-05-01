@@ -3,11 +3,9 @@
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.Utilities;
     using System.Data.SqlClient;
     using System.Linq;
@@ -17,18 +15,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
     {
         private readonly SqlGenerator _sqlGenerator;
 
-        public DmlFunctionSqlGenerator(DbProviderManifest providerManifest)
+        public DmlFunctionSqlGenerator(SqlGenerator sqlGenerator)
         {
-            DebugCheck.NotNull(providerManifest);
+            DebugCheck.NotNull(sqlGenerator);
 
-            var sqlManifest = providerManifest as SqlProviderManifest;
-
-            if (sqlManifest == null)
-            {
-                throw new ArgumentException(Strings.Mapping_Provider_WrongManifestType(typeof(SqlProviderManifest)));
-            }
-
-            _sqlGenerator = new SqlGenerator(sqlManifest.SqlVersion);
+            _sqlGenerator = sqlGenerator;
         }
 
         public string GenerateInsert(ICollection<DbInsertCommandTree> commandTrees)
@@ -43,7 +34,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             sql.Append(
                 DmlSqlGenerator.GenerateInsertSql(
-                    firstCommandTree, _sqlGenerator, out _, generateReturningSql: false));
+                    firstCommandTree,
+                    _sqlGenerator,
+                    out _,
+                    generateReturningSql: false,
+                    upperCaseKeywords: true));
+
             sql.AppendLine();
 
             var firstTable
@@ -55,7 +51,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 sql.Append(
                     DmlSqlGenerator.GenerateInsertSql(
-                        commandTree, _sqlGenerator, out _, generateReturningSql: false));
+                        commandTree,
+                        _sqlGenerator,
+                        out _, generateReturningSql: false,
+                        upperCaseKeywords: true));
+
                 sql.AppendLine();
             }
 
@@ -110,13 +110,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     .Where(p => p.IsStoreGeneratedIdentity)
                     .ToList();
 
-            var sql = new StringBuilder();
+            var sql = new SqlStringBuilder { UpperCaseKeywords = true };
 
             if (storeGeneratedKeys.Any())
             {
                 foreach (var keyProperty in storeGeneratedKeys)
                 {
-                    sql.Append(sql.Length == 0 ? "declare " : ", ");
+                    sql.Append(sql.Length == 0 ? "DECLARE " : ", ");
                     sql.Append("@");
                     sql.Append(keyProperty.Name);
                     sql.Append(" ");
@@ -158,14 +158,23 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             sql.AppendLine(
                 DmlSqlGenerator.GenerateUpdateSql(
-                    commandTrees.First(), _sqlGenerator, out _, generateReturningSql: false));
+                    commandTrees.First(),
+                    _sqlGenerator,
+                    out _,
+                    generateReturningSql: false,
+                    upperCaseKeywords: true));
 
             foreach (var commandTree in commandTrees.Skip(1))
             {
                 sql.Append(
                     DmlSqlGenerator.GenerateUpdateSql(
-                        commandTree, _sqlGenerator, out _, generateReturningSql: false));
-                sql.AppendLine("and @@ROWCOUNT > 0");
+                        commandTree,
+                        _sqlGenerator,
+                        out _,
+                        generateReturningSql: false,
+                        upperCaseKeywords: true));
+
+                sql.AppendLine("AND @@ROWCOUNT > 0");
                 sql.AppendLine();
             }
 
@@ -202,13 +211,25 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             var sql = new StringBuilder();
 
-            sql.AppendLine(DmlSqlGenerator.GenerateDeleteSql(commandTrees.First(), _sqlGenerator, out _));
+            sql.AppendLine(
+                DmlSqlGenerator.GenerateDeleteSql(
+                    commandTrees.First(),
+                    _sqlGenerator,
+                    out _,
+                    upperCaseKeywords: true));
+
             sql.AppendLine();
 
             foreach (var commandTree in commandTrees.Skip(1))
             {
-                sql.AppendLine(DmlSqlGenerator.GenerateDeleteSql(commandTree, _sqlGenerator, out _));
-                sql.AppendLine("and @@ROWCOUNT > 0");
+                sql.AppendLine(
+                    DmlSqlGenerator.GenerateDeleteSql(
+                        commandTree,
+                        _sqlGenerator,
+                        out _,
+                        upperCaseKeywords: true));
+
+                sql.AppendLine("AND @@ROWCOUNT > 0");
                 sql.AppendLine();
             }
 
@@ -223,7 +244,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             if (!string.IsNullOrWhiteSpace(rowsAffectedParameter))
             {
-                sql.Append("set @");
+                sql.Append("SET @");
                 sql.Append(rowsAffectedParameter);
                 sql.AppendLine(" = @@ROWCOUNT");
                 sql.AppendLine();
@@ -249,7 +270,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                     sql.AppendLine(_select.ToString());
                     sql.AppendLine(_from.ToString());
-                    sql.Append("where @@ROWCOUNT > 0");
+                    sql.Append("WHERE @@ROWCOUNT > 0");
                     sql.Append(_where);
 
                     return sql.ToString();
@@ -264,7 +285,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 for (var i = 0; i < properties.Count; i++)
                 {
-                    _select.Append(_select.Length == 0 ? "select " : ", ");
+                    _select.Append(_select.Length == 0 ? "SELECT " : ", ");
 
                     _nextPropertyAlias = properties[i].Name;
 
@@ -280,7 +301,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 var tableSql
                     = SqlGenerator.GetTargetTSql(scanExpression.Target)
-                      + " as "
+                      + " AS "
                       + (_currentTableAlias = "t" + _aliasCount++);
 
                 var table = scanExpression.Target.ElementType;
@@ -289,21 +310,21 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 {
                     _baseTable = (EntityType)table;
 
-                    _from.Append("from ");
+                    _from.Append("FROM ");
                     _from.Append(tableSql);
                 }
                 else
                 {
                     _from.AppendLine();
-                    _from.Append("join ");
+                    _from.Append("JOIN ");
                     _from.Append(tableSql);
-                    _from.Append(" on ");
+                    _from.Append(" ON ");
 
                     for (var i = 0; i < table.KeyMembers.Count; i++)
                     {
                         if (i > 0)
                         {
-                            _from.Append(" and ");
+                            _from.Append(" AND ");
                         }
 
                         _from.Append(_currentTableAlias + ".");
@@ -325,7 +346,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 if (!string.IsNullOrWhiteSpace(_nextPropertyAlias)
                     && !string.Equals(_nextPropertyAlias, propertyExpression.Property.Name, StringComparison.Ordinal))
                 {
-                    _select.Append(" as ");
+                    _select.Append(" AS ");
                     _select.Append(_nextPropertyAlias);
                 }
             }
@@ -351,7 +372,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 if (_baseTable.KeyMembers.Contains(property))
                 {
-                    _where.Append(" and t0.");
+                    _where.Append(" AND t0.");
                     _where.Append(SqlGenerator.QuoteIdentifier(property.Name));
                     _where.Append(" = ");
 

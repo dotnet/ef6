@@ -5,7 +5,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Text;
     using Moq;
     using Xunit;
 
@@ -23,7 +22,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             Assert.Equal("CAST (@@IDENTITY AS bigint)", HandlIdentity_adds_cast_for_identity_columns(PrimitiveTypeKind.Int64));
         }
 
-        private string HandlIdentity_adds_cast_for_identity_columns(PrimitiveTypeKind primitiveTypeKind)
+        private static string HandlIdentity_adds_cast_for_identity_columns(PrimitiveTypeKind primitiveTypeKind)
         {
             var typeUsage = ProviderRegistry.SqlCe4_ProviderManifest.GetStoreType(
                 TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(primitiveTypeKind)));
@@ -34,7 +33,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             var mockTransalator = new Mock<DmlSqlGenerator.ExpressionTranslator>();
             mockTransalator.Setup(m => m.MemberValues).Returns(new Dictionary<EdmMember, DbParameter>());
 
-            var builder = new StringBuilder();
+            var builder = new SqlStringBuilder();
             DmlSqlGenerator.HandleIdentity(builder, mockTransalator.Object, mockMember.Object, false, new Mock<EntitySetBase>().Object);
 
             return builder.ToString();
@@ -54,13 +53,13 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
             var mockTransalator = new Mock<DmlSqlGenerator.ExpressionTranslator>();
             var members = new Dictionary<EdmMember, DbParameter>
-                {
-                    { mockMember.Object, mockParameter.Object }
-                };
+                              {
+                                  { mockMember.Object, mockParameter.Object }
+                              };
 
             mockTransalator.Setup(m => m.MemberValues).Returns(members);
 
-            var builder = new StringBuilder();
+            var builder = new SqlStringBuilder();
             DmlSqlGenerator.HandleIdentity(builder, mockTransalator.Object, mockMember.Object, false, new Mock<EntitySetBase>().Object);
 
             Assert.Equal("A Compact Unicorn", builder.ToString());
@@ -79,7 +78,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             var mockTransalator = new Mock<DmlSqlGenerator.ExpressionTranslator>();
             mockTransalator.Setup(m => m.MemberValues).Returns(new Dictionary<EdmMember, DbParameter>());
 
-            var builder = new StringBuilder();
+            var builder = new SqlStringBuilder();
 
             Assert.Equal(
                 ADP1.Update_NotSupportedIdentityType("Cheese", "SqlServerCe.uniqueidentifier"),
@@ -100,7 +99,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             var mockTransalator = new Mock<DmlSqlGenerator.ExpressionTranslator>();
             mockTransalator.Setup(m => m.MemberValues).Returns(new Dictionary<EdmMember, DbParameter>());
 
-            var builder = new StringBuilder();
+            var builder = new SqlStringBuilder();
 
             var mockSet = new Mock<EntitySetBase>();
             mockSet.Setup(m => m.Name).Returns("Pickle");

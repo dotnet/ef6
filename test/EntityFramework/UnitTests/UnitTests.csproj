@@ -383,11 +383,13 @@
     <Compile Include="SqlServerCompact\SqlCeProviderServicesTests.cs" />
     <Compile Include="SqlServerCompact\SqlGen\DmlSqlGeneratorTests.cs" />
     <Compile Include="SqlServerCompact\SqlGen\SqlGeneratorTests.cs" />
+    <Compile Include="SqlServerCompact\SqlGen\SqlStringBuilderTests.cs" />
     <Compile Include="SqlServer\DefaultSqlExecutionStrategyTests.cs" />
     <Compile Include="SqlServer\SqlAzureExecutionStrategyTests.cs" />
     <Compile Include="Config\ExecutionStrategyResolverTests.cs" />
     <Compile Include="SqlServer\SqlAzureRetriableExceptionDetectorTests.cs" />
     <Compile Include="SqlServer\SqlGen\DmlFunctionSqlGeneratorTests.cs" />
+    <Compile Include="SqlServer\SqlGen\SqlStringBuilderTests.cs" />
     <Compile Include="SqlServer\SqlProviderServicesTests.cs" />
     <Compile Include="TestHelpers\Fake\DerivedFakeWithProps.cs" />
     <Compile Include="TestHelpers\Fake\FakeWithProps.cs" />

@@ -2,15 +2,17 @@
 
 namespace System.Data.Entity.SqlServer
 {
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Internal;
+    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
-    using System.Data.SqlClient;
     using System.Globalization;
     using System.Linq;
     using System.Threading;
@@ -253,23 +255,23 @@ AS
 BEGIN
     UPDATE [dbo].[Orders]
     SET [Name] = @Name, [Address_Street] = @Address_Street, [Address_City] = @Address_City, [Address_Country_Name] = @Address_Country_Name, [OrderGroupId] = @OrderGroupId, [Customer_CustomerId] = @Customer_CustomerId
-    WHERE ((((((([order_id] = @xid) and ([Key] = @key_for_update)) and ([Code] = @Code)) and ([Signature] = @Signature)) and (([Name] = @Name_Original) or ([Name] is null and @Name_Original is null))) and (([RowVersion] = @RowVersion_Original) or ([RowVersion] is null and @RowVersion_Original is null))) and (([Customer_CustomerId] = @Customer_CustomerId) or ([Customer_CustomerId] is null and @Customer_CustomerId is null)))
+    WHERE ((((((([order_id] = @xid) AND ([Key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([Name] = @Name_Original) OR ([Name] IS NULL AND @Name_Original IS NULL))) AND (([RowVersion] = @RowVersion_Original) OR ([RowVersion] IS NULL AND @RowVersion_Original IS NULL))) AND (([Customer_CustomerId] = @Customer_CustomerId) OR ([Customer_CustomerId] IS NULL AND @Customer_CustomerId IS NULL)))
     
     UPDATE [dbo].[special_orders]
     SET [OtherCustomer_CustomerId] = @OtherCustomer_CustomerId, [OtherAddress_Street] = @OtherAddress_Street, [OtherAddress_City] = @OtherAddress_City, [OtherAddress_Country_Name] = @OtherAddress_Country_Name
-    WHERE ((((([order_id] = @xid) and ([so_key] = @key_for_update)) and ([Code] = @Code)) and ([Signature] = @Signature)) and (([OtherCustomer_CustomerId] = @OtherCustomer_CustomerId) or ([OtherCustomer_CustomerId] is null and @OtherCustomer_CustomerId is null)))
+    WHERE ((((([order_id] = @xid) AND ([so_key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([OtherCustomer_CustomerId] = @OtherCustomer_CustomerId) OR ([OtherCustomer_CustomerId] IS NULL AND @OtherCustomer_CustomerId IS NULL)))
     AND @@ROWCOUNT > 0
     
     UPDATE [dbo].[xspecial_orders]
     SET [TheSpecialist] = @TheSpecialist
-    WHERE (((([xid] = @xid) and ([so_key] = @key_for_update)) and ([Code] = @Code)) and ([Signature] = @Signature))
+    WHERE (((([xid] = @xid) AND ([so_key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature))
     AND @@ROWCOUNT > 0
     
-    SELECT t0.[OrderNo] as order_fu, t0.[RowVersion], t1.[MagicOrderToken], t2.[FairyDust]
-    FROM [dbo].[Orders] as t0
-    JOIN [dbo].[special_orders] as t1 on t1.[order_id] = t0.[order_id] and t1.[so_key] = t0.[Key] and t1.[Code] = t0.[Code] and t1.[Signature] = t0.[Signature]
-    JOIN [dbo].[xspecial_orders] as t2 on t2.[xid] = t0.[order_id] and t2.[so_key] = t0.[Key] and t2.[Code] = t0.[Code] and t2.[Signature] = t0.[Signature]
-    WHERE @@ROWCOUNT > 0 and t0.[order_id] = @xid and t0.[Key] = @key_for_update and t0.[Code] = @Code and t0.[Signature] = @Signature
+    SELECT t0.[OrderNo] AS order_fu, t0.[RowVersion], t1.[MagicOrderToken], t2.[FairyDust]
+    FROM [dbo].[Orders] AS t0
+    JOIN [dbo].[special_orders] AS t1 ON t1.[order_id] = t0.[order_id] AND t1.[so_key] = t0.[Key] AND t1.[Code] = t0.[Code] AND t1.[Signature] = t0.[Signature]
+    JOIN [dbo].[xspecial_orders] AS t2 ON t2.[xid] = t0.[order_id] AND t2.[so_key] = t0.[Key] AND t2.[Code] = t0.[Code] AND t2.[Signature] = t0.[Signature]
+    WHERE @@ROWCOUNT > 0 AND t0.[order_id] = @xid AND t0.[Key] = @key_for_update AND t0.[Code] = @Code AND t0.[Signature] = @Signature
     
     SET @RowsAffected = @@ROWCOUNT
 END", sql);
@@ -376,25 +378,25 @@ CREATE TABLE [foo].[Customers] (
 
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Int32)
-                {
-                    Name = "Id",
-                    IsNullable = false
-                });
+                    {
+                        Name = "Id",
+                        IsNullable = false
+                    });
 
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.String)
-                {
-                    Name = "Name",
-                    IsNullable = false
-                });
+                    {
+                        Name = "Name",
+                        IsNullable = false
+                    });
 
             var moveTableOperation
                 = new MoveTableOperation("dbo.History", "foo")
-                {
-                    IsSystem = true,
-                    ContextKey = "MyKey",
-                    CreateTableOperation = createTableOperation
-                };
+                      {
+                          IsSystem = true,
+                          ContextKey = "MyKey",
+                          CreateTableOperation = createTableOperation
+                      };
 
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
@@ -540,22 +542,33 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
         {
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
-            var sqlCommand = new SqlCommand("insert Foo (Bar)\r\nvalues (p1)");
-            sqlCommand.Parameters.Add(new SqlParameter("p1", "Baz"));
-
-            var insertHistoryOperation
-                = new HistoryOperation(
-                    new[]
+            using (var historyContext = new HistoryContext())
+            {
+                historyContext.History.Add(
+                    new HistoryRow
                         {
-                            sqlCommand
+                            MigrationId = "House Lannister",
+                            ContextKey = "The pointy end",
+                            Model = new byte[0],
+                            ProductVersion = "Awesomeness"
                         });
 
-            var sql =
-                migrationSqlGenerator.Generate(
-                    new[] { insertHistoryOperation },
-                    "2008").Join(s => s.Sql, Environment.NewLine);
+                using (var commandTracer = new CommandTracer(historyContext))
+                {
+                    historyContext.SaveChanges();
 
-            Assert.Contains("INSERT Foo (Bar)\r\nVALUES ('Baz')", sql);
+                    var insertHistoryOperation
+                        = new HistoryOperation(commandTracer.CommandTrees.OfType<DbModificationCommandTree>());
+
+                    var sql
+                        = migrationSqlGenerator
+                            .Generate(new[] { insertHistoryOperation }, "2008")
+                            .Single();
+
+                    Assert.Equal(@"INSERT [dbo].[__MigrationHistory]([MigrationId], [ContextKey], [Model], [ProductVersion])
+VALUES (N'House Lannister', N'The pointy end',  0x , N'Awesomeness')", sql.Sql.Trim());
+                }
+            }
         }
 
         [Fact]
@@ -563,22 +576,34 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
         {
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
-            var sqlCommand = new SqlCommand("delete Foo\r\nwhere Bar = p1");
-            sqlCommand.Parameters.Add(new SqlParameter("p1", "Baz"));
+            using (var historyContext = new HistoryContext())
+            {
+                var historyRow
+                    = new HistoryRow
+                          {
+                              MigrationId = "House Lannister",
+                              ContextKey = "The pointy end"
+                          };
 
-            var insertHistoryOperation
-                = new HistoryOperation(
-                    new[]
-                        {
-                            sqlCommand
-                        });
+                historyContext.History.Attach(historyRow);
+                historyContext.History.Remove(historyRow);
 
-            var sql =
-                migrationSqlGenerator.Generate(
-                    new[] { insertHistoryOperation },
-                    "2008").Join(s => s.Sql, Environment.NewLine);
+                using (var commandTracer = new CommandTracer(historyContext))
+                {
+                    historyContext.SaveChanges();
 
-            Assert.Contains("DELETE Foo\r\nWHERE Bar = 'Baz'", sql);
+                    var deleteHistoryOperation
+                        = new HistoryOperation(commandTracer.CommandTrees.OfType<DbModificationCommandTree>());
+
+                    var sql
+                        = migrationSqlGenerator
+                            .Generate(new[] { deleteHistoryOperation }, "2008")
+                            .Single();
+
+                    Assert.Equal(@"DELETE [dbo].[__MigrationHistory]
+WHERE (([MigrationId] = N'House Lannister') AND ([ContextKey] = N'The pointy end'))", sql.Sql.Trim());
+                }
+            }
         }
 
         [Fact]

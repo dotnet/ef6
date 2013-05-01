@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations.Model
 {
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.SqlClient;
     using Xunit;
 
@@ -10,16 +11,16 @@ namespace System.Data.Entity.Migrations.Model
         [Fact]
         public void Can_get_and_set_properties()
         {
-            var historyOperation = new HistoryOperation(new[] { new SqlCommand() });
+            var historyOperation = new HistoryOperation(new[] { new DbInsertCommandTree() });
 
-            Assert.NotEmpty(historyOperation.Commands);
+            Assert.NotEmpty(historyOperation.CommandTrees);
         }
 
         [Fact]
         public void Ctor_should_validate_preconditions()
         {
             Assert.Equal(
-                new ArgumentNullException("commands").Message,
+                new ArgumentNullException("commandTrees").Message,
                 Assert.Throws<ArgumentNullException>(() => new HistoryOperation(null)).Message);
         }
     }
