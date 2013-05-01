@@ -431,7 +431,7 @@ namespace System.Data.Entity.SqlServer
         public class CreateSqlParameter : TestBase
         {
             [Fact]
-            public void CreateSqlParameter_does_not_set_scale_only_when_creating_input_parameter_with_truncate_flag_cleared()
+            public void CreateSqlParameter_does_not_set_scale_or_precision_only_when_creating_input_parameter_with_truncate_flag_cleared()
             {
                 var oldValue = SqlProviderServices.TruncateDecimalsToScale;
                 SqlProviderServices.TruncateDecimalsToScale = false;
@@ -441,6 +441,11 @@ namespace System.Data.Entity.SqlServer
                     Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.Out).Scale);
                     Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.InOut).Scale);
                     Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.ReturnValue).Scale);
+
+                    Assert.Equal(0, CreateDecimalParameter(10, 4, ParameterMode.In).Precision);
+                    Assert.Equal(10, CreateDecimalParameter(10, 4, ParameterMode.Out).Precision);
+                    Assert.Equal(10, CreateDecimalParameter(10, 4, ParameterMode.InOut).Precision);
+                    Assert.Equal(10, CreateDecimalParameter(10, 4, ParameterMode.ReturnValue).Precision);
                 }
                 finally
                 {
@@ -449,12 +454,17 @@ namespace System.Data.Entity.SqlServer
             }
 
             [Fact]
-            public void CreateSqlParameter_sets_scale_when_creating_any_parameter_with_truncate_flag_set()
+            public void CreateSqlParameter_sets_scale_and_precision_when_creating_any_parameter_with_truncate_flag_set()
             {
                 Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.In).Scale);
                 Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.Out).Scale);
                 Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.InOut).Scale);
                 Assert.Equal(4, CreateDecimalParameter(10, 4, ParameterMode.ReturnValue).Scale);
+
+                Assert.Equal(10, CreateDecimalParameter(10, 4, ParameterMode.In).Precision);
+                Assert.Equal(10, CreateDecimalParameter(10, 4, ParameterMode.Out).Precision);
+                Assert.Equal(10, CreateDecimalParameter(10, 4, ParameterMode.InOut).Precision);
+                Assert.Equal(10, CreateDecimalParameter(10, 4, ParameterMode.ReturnValue).Precision);
             }
 
             private static SqlParameter CreateDecimalParameter(byte precision, byte scale, ParameterMode parameterMode)
@@ -463,7 +473,7 @@ namespace System.Data.Entity.SqlServer
                     "Lily",
                     TypeUsage.CreateDecimalTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal), precision, scale),
                     parameterMode,
-                    9.88888888m,
+                    99999999.88888888m,
                     true,
                     SqlVersion.Sql11);
             }

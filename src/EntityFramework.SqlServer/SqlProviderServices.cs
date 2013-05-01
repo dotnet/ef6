@@ -445,7 +445,7 @@ namespace System.Data.Entity.SqlServer
                 }
             }
             if (precision.HasValue
-                && (isOutParam || result.Precision != precision.Value))
+                && (isOutParam || (result.Precision != precision.Value && _truncateDecimalsToScale)))
             {
                 result.Precision = precision.Value;
             }

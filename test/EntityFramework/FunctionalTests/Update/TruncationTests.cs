@@ -24,8 +24,8 @@ namespace System.Data.Entity.Update
         public void Legacy_code_that_relies_on_old_behavior_to_truncate_continues_to_work_by_default()
         {
             InsertAndUpdateWithDecimals(
-                9.88888888m, 9.8888m,
-                11.88888888m, 11.8888m);
+                9.88888888888888888888888888888888m, 9.8888m,
+                11.88888888888888888888888888888888m, 11.8888m);
         }
 
         [Fact]
@@ -34,8 +34,8 @@ namespace System.Data.Entity.Update
         {
             RunWithTruncateFlag(
                 () => InsertAndUpdateWithDecimals(
-                    9.88888888m, 9.8889m,
-                    11.88888888m, 11.8889m));
+                    9.88888888888888888888888888888888m, 9.8889m,
+                    11.88888888888888888888888888888888m, 11.8889m));
         }
 
         [Fact]
@@ -43,8 +43,8 @@ namespace System.Data.Entity.Update
         public void Legacy_code_that_relies_on_old_behavior_to_round_continues_to_work_by_default()
         {
             InsertAndUpdateWithDecimals(
-                9.11111111m + 0.00005m, 9.1111m,
-                11.11111111m + 0.00005m, 11.1111m);
+                9.11111111111111111111111111111111m + 0.00005m, 9.1111m,
+                11.11111111111111111111111111111111m + 0.00005m, 11.1111m);
         }
 
         [Fact]
@@ -53,8 +53,8 @@ namespace System.Data.Entity.Update
         {
             RunWithTruncateFlag(
                 () => InsertAndUpdateWithDecimals(
-                    9.11111111m + 0.00005m, 9.1112m,
-                    11.11111111m + 0.00005m, 11.1112m));
+                    9.11111111111111111111111111111111m + 0.00005m, 9.1112m,
+                    11.11111111111111111111111111111111m + 0.00005m, 11.1112m));
         }
 
         [Fact]
@@ -62,8 +62,8 @@ namespace System.Data.Entity.Update
         public void Legacy_code_that_explicitly_rounds_continues_to_work_by_default()
         {
             InsertAndUpdateWithDecimals(
-                Math.Round(9.88888888m, 4), 9.8889m,
-                Math.Round(11.88888888m, 4), 11.8889m);
+                Math.Round(9.88888888888888888888888888888888m, 4), 9.8889m,
+                Math.Round(11.88888888888888888888888888888888m, 4), 11.8889m);
         }
 
         [Fact]
@@ -72,8 +72,8 @@ namespace System.Data.Entity.Update
         {
             RunWithTruncateFlag(
                 () => InsertAndUpdateWithDecimals(
-                    Math.Round(9.88888888m, 4), 9.8889m,
-                    Math.Round(11.88888888m, 4), 11.8889m));
+                    Math.Round(9.88888888888888888888888888888888m, 4), 9.8889m,
+                    Math.Round(11.88888888888888888888888888888888m, 4), 11.8889m));
         }
 
         [Fact]
@@ -81,8 +81,8 @@ namespace System.Data.Entity.Update
         public void Legacy_code_that_explicitly_truncates_continues_to_work_by_default()
         {
             InsertAndUpdateWithDecimals(
-                Math.Truncate(9.88888888m * 10000) / 10000, 9.8888m,
-                Math.Truncate(11.88888888m * 10000) / 10000, 11.8888m);
+                Math.Truncate(9.88888888888888888888888888888888m * 10000) / 10000, 9.8888m,
+                Math.Truncate(11.88888888888888888888888888888888m * 10000) / 10000, 11.8888m);
         }
 
         [Fact]
@@ -91,8 +91,8 @@ namespace System.Data.Entity.Update
         {
             RunWithTruncateFlag(
                 () => InsertAndUpdateWithDecimals(
-                    Math.Truncate(9.88888888m * 10000) / 10000, 9.8888m,
-                    Math.Truncate(11.88888888m * 10000) / 10000, 11.8888m));
+                    Math.Truncate(9.88888888888888888888888888888888m * 10000) / 10000, 9.8888m,
+                    Math.Truncate(11.88888888888888888888888888888888m * 10000) / 10000, 11.8888m));
         }
 
         private static void RunWithTruncateFlag(Action test)
@@ -172,8 +172,8 @@ namespace System.Data.Entity.Update
                     var allTypes = context.AllTypes.Add(
                         new ArubaAllCeTypes
                             {
-                                c7_decimal_28_4 = 9.88888888m,
-                                c8_numeric_28_4 = 9.88888888m,
+                                c7_decimal_28_4 = 9.88888888888888888888888888888888m,
+                                c8_numeric_28_4 = 9.88888888888888888888888888888888m,
                                 c5_datetime = DateTime.Now,
                             });
                     context.SaveChanges();
@@ -181,8 +181,8 @@ namespace System.Data.Entity.Update
                     ValidateSavedValues(context, allTypes, 9.8889m);
 
                     // Update
-                    allTypes.c7_decimal_28_4 = 11.88888888m;
-                    allTypes.c8_numeric_28_4 = 11.88888888m;
+                    allTypes.c7_decimal_28_4 = 11.88888888888888888888888888888888m;
+                    allTypes.c8_numeric_28_4 = 11.88888888888888888888888888888888m;
                     context.SaveChanges();
 
                     ValidateSavedValues(context, allTypes, 11.8889m);
@@ -211,7 +211,7 @@ namespace System.Data.Entity.Update
                     var allTypes = context.AllTypes.Add(
                         new ArubaAllCeTypes
                             {
-                                c11_money = 9.88888888m,
+                                c11_money = 9.88888888888888888888888888888888m,
                                 c5_datetime = DateTime.Now,
                             });
                     context.SaveChanges();
@@ -219,7 +219,7 @@ namespace System.Data.Entity.Update
                     Assert.Equal(9.8888m, context.AllTypes.AsNoTracking().Single(t => t.c1_int == allTypes.c1_int).c11_money);
 
                     // Update
-                    allTypes.c11_money = 11.88888888m;
+                    allTypes.c11_money = 11.88888888888888888888888888888888m;
                     context.SaveChanges();
 
                     Assert.Equal(11.8888m, context.AllTypes.AsNoTracking().Single(t => t.c1_int == allTypes.c1_int).c11_money);
