@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
 
     /// <summary>
     ///     Represents the Structural Type
@@ -108,12 +108,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Util.ThrowIfReadOnly(this);
             }
 
-            Debug.Assert(
-                DataSpace == member.TypeUsage.EdmType.DataSpace || BuiltInTypeKind == BuiltInTypeKind.RowType,
-                "Wrong member type getting added in structural type");
+            if (DataSpace != member.TypeUsage.EdmType.DataSpace
+                && BuiltInTypeKind != BuiltInTypeKind.RowType)
+            {
+                throw new ArgumentException(
+                    Strings.AttemptToAddEdmMemberFromWrongDataSpace(
+                        member.Name,
+                        this.Name,
+                        member.TypeUsage.EdmType.DataSpace,
+                        this.DataSpace),
+                    "member");
+            }
 
-            //Since we set the DataSpace of the RowType to be -1 in the constructor, we need to initialize it
-            //as and when we add members to it
+            // Since we set the DataSpace of the RowType to be -1 in the constructor, we need to initialize it
+            // as and when we add members to it
             if (BuiltInTypeKind.RowType == BuiltInTypeKind)
             {
                 // Do this only when you are adding the first member

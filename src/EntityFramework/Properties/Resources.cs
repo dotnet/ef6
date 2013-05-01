@@ -13436,6 +13436,14 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.ScaffoldSprocInDownNotSupported); }
         }
+
+        /// <summary>
+        ///     A string like "Attempt to add member {0} to structural type {1} failed. Member has DataSpace {2}, structural type has DataSpace {3}. They must be the same."
+        /// </summary>
+        internal static string AttemptToAddEdmMemberFromWrongDataSpace(object p0, object p1, object p2, object p3)
+        {
+            return EntityRes.GetString(EntityRes.AttemptToAddEdmMemberFromWrongDataSpace, p0, p1, p2, p3);
+        }
     }
 
     /// <summary>
@@ -16811,6 +16819,7 @@ namespace System.Data.Entity.Resources
         internal const string MetadataItemErrorsFoundDuringGeneration = "MetadataItemErrorsFoundDuringGeneration";
         internal const string AutomaticStaleFunctions = "AutomaticStaleFunctions";
         internal const string ScaffoldSprocInDownNotSupported = "ScaffoldSprocInDownNotSupported";
+        internal const string AttemptToAddEdmMemberFromWrongDataSpace = "AttemptToAddEdmMemberFromWrongDataSpace";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

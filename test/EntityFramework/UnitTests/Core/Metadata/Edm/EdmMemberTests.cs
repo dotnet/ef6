@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using Moq;
     using Xunit;
+    using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
 
     public class EdmMemberTests
     {
@@ -33,6 +34,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
             property.Name = "Foo";
 
             entityTypeMock.Verify(e => e.NotifyItemIdentityChanged(), Times.Once());
+        }
+
+        [Fact]
+        public void Attempt_to_add_member_of_wrong_DataSpace_to_StructuralType_throws_ArgumentException()
+        {
+            var ex1 = Assert.Throws<ArgumentException>(
+                () => new ComplexType("CT", "NS1", DataSpace.SSpace)
+                .AddMember(
+                    new EdmProperty(
+                        "p",
+                        TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Byte)))));
+            Assert.Equal(
+                Resources.Strings.AttemptToAddEdmMemberFromWrongDataSpace(
+                    "p", "CT", DataSpace.CSpace, DataSpace.SSpace) +
+                    "\r\nParameter name: member",
+                ex1.Message);
+            Assert.Equal("member", ex1.ParamName);
         }
 
         [Fact]
