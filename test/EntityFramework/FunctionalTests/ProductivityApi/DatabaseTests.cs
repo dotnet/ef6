@@ -5,7 +5,6 @@ namespace ProductivityApiTests
     using System;
     using System.Data;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
     using System.IO;
     using SimpleModel;
@@ -334,7 +333,8 @@ END");
                 () => Database.Exists(connectionString));
         }
 
-        [Fact]
+        //[Fact]
+        // See issue 1091
         public void DatabaseExists_returns_true_for_existing_attached_database_when_no_master_permissions()
         {
             var connectionString = SimpleAttachConnectionString<AttachedContext>();
