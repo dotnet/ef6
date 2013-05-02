@@ -271,6 +271,11 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteAttributeString(XmlConstants.ParameterTypeSemantics, function.ParameterTypeSemanticsAttribute.ToString());
             _xmlWriter.WriteAttributeString(XmlConstants.Schema, function.Schema);
 
+            if (function.StoreFunctionNameAttribute != null && function.StoreFunctionNameAttribute != function.Name)
+            {
+                _xmlWriter.WriteAttributeString(XmlConstants.StoreFunctionName, function.StoreFunctionNameAttribute);
+            }
+
             if (function.ReturnParameters != null && function.ReturnParameters.Any())
             {
                 Debug.Assert(function.ReturnParameters.Count < 2, "functions with multiple return types currently not supported");

@@ -92,6 +92,50 @@ namespace System.Data.Entity.Edm.Serialization
         }
 
         [Fact]
+        public void WriteFunctionElementHeader_should_write_store_function_name_if_specified()
+        {
+            var fixture = new Fixture();
+
+            var function = new EdmFunction(
+                "Foo",
+                "Bar",
+                DataSpace.SSpace,
+                new EdmFunctionPayload
+                {
+                    Schema = "dbo",
+                    StoreFunctionName = "Not Foo"
+                });
+
+            fixture.Writer.WriteFunctionElementHeader(function);
+
+            Assert.Equal(
+                "<Function Name=\"Foo\" Aggregate=\"false\" BuiltIn=\"false\" NiladicFunction=\"false\" IsComposable=\"true\" ParameterTypeSemantics=\"AllowImplicitConversion\" Schema=\"dbo\" StoreFunctionName=\"Not Foo\"",
+                fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteFunctionElementHeader_should_not_write_store_function_name_if_equal_to_edm_function_name()
+        {
+            var fixture = new Fixture();
+
+            var function = new EdmFunction(
+                "Foo",
+                "Bar",
+                DataSpace.SSpace,
+                new EdmFunctionPayload
+                {
+                    Schema = "dbo",
+                    StoreFunctionName = "Foo"
+                });
+
+            fixture.Writer.WriteFunctionElementHeader(function);
+
+            Assert.Equal(
+                "<Function Name=\"Foo\" Aggregate=\"false\" BuiltIn=\"false\" NiladicFunction=\"false\" IsComposable=\"true\" ParameterTypeSemantics=\"AllowImplicitConversion\" Schema=\"dbo\"",
+                fixture.ToString());
+        }
+
+        [Fact]
         public void WriteFunctionParameterHeader_should_write_element_and_attributes()
         {
             var fixture = new Fixture();
