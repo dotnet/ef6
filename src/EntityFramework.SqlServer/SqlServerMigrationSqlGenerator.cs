@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Migrations.Sql
+namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
     using System.Data.Common;
@@ -10,7 +10,8 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Migrations.Utilities;
+    using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Migrations.Utilities;    
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.SqlGen;
@@ -21,7 +22,7 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Text.RegularExpressions;
+    using System.Text.RegularExpressions;    
 
     /// <summary>
     ///     Provider to convert provider agnostic migration operations into SQL commands

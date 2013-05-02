@@ -12,9 +12,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.UserRoles_v1;
     using System.Data.Entity.Migrations.UserRoles_v2;
+    using System.Data.Entity.SqlServer;
     using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Xml.Linq;

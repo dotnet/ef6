@@ -4,6 +4,8 @@ namespace System.Data.Entity.Migrations
 {
     using System.Data.Common;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.SqlServer;
+    using System.Data.Entity.SqlServerCompact;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.Data.SqlServerCe;

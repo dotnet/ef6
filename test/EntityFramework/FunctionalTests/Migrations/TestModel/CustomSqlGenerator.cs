@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Model;
-    using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.SqlServer;
 
     internal class CustomSqlGenerator : SqlServerMigrationSqlGenerator
     {

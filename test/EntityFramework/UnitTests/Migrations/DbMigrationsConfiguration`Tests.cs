@@ -5,6 +5,8 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Config;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.SqlServer;
+    using System.Data.Entity.SqlServerCompact;
     using DaFunc;
     using Moq;
     using Xunit;

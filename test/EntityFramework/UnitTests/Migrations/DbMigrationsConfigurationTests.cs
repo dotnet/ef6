@@ -5,8 +5,8 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
-    using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.SqlServer;
     using Moq;
     using Xunit;
 
