@@ -1285,7 +1285,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         ///     The clr enum type matches the edm enum type if:
         ///     - type names are the same
         ///     - both types have the same underlying type (note that this prevents from over- and underflows)
-        ///     - both types have the same number of members
+        ///     - the edm enum type does not have more members than the clr enum type
         ///     - members have the same names
         ///     - members have the same values
         /// </remarks>
@@ -1295,9 +1295,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             DebugCheck.NotNull(clrEnumType);
             Debug.Assert(clrEnumType.IsEnum, "non enum clr type.");
 
-            // check that type names are the same and both types have the same number of members
+            // check that type names are the same and the edm type does not have more members than the clr type.
             if (clrEnumType.Name != edmEnumType.Name
-                || clrEnumType.GetEnumNames().Length != edmEnumType.Members.Count)
+                || clrEnumType.GetEnumNames().Length < edmEnumType.Members.Count)
             {
                 return false;
             }

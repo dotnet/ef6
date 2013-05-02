@@ -569,10 +569,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         [Fact]
-        public void Constant_clr_enum_with_additional_value_throws()
+        public void Constant_clr_enum_with_additional_value_does_not_throw()
         {
-            var message = Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Constant(this.enumTypeUsage, Enums.AdditionalMember.CardSuite.Diamonds)).Message;
-            Assert.True(message.Contains(Strings.Cqt_Constant_ClrEnumTypeDoesNotMatchEdmEnumType("CardSuite", "CardSuite", "Byte")));
+            Assert.DoesNotThrow(() => DbExpressionBuilder.Constant(this.enumTypeUsage, Enums.AdditionalMember.CardSuite.Diamonds));
         }
 
         [Fact]
