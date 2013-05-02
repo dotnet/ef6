@@ -66,13 +66,13 @@ namespace System.Data.Entity.Interception
         public void Multiple_contexts_running_concurrently_can_log_command_trees_except_trees_for_cached_queries()
         {
             // Make sure no logs get initialization trees
-            using (var context = new BlogContextNoInit())
+            using (var context = new BlogContextAllTrees())
             {
                 context.Database.Initialize(force: false);
             }
 
             // Run the test code once to log both update and query trees
-            using (var context = new BlogContextNoInit())
+            using (var context = new BlogContextAllTrees())
             {
                 var logger = new CommandTreeLogger(context);
                 Interception.AddInterceptor(logger);
@@ -106,7 +106,7 @@ namespace System.Data.Entity.Interception
             ExecuteInParallel(
                 () =>
                     {
-                        using (var context = new BlogContextNoInit())
+                        using (var context = new BlogContextAllTrees())
                         {
                             var logger = new CommandTreeLogger(context);
                             Interception.AddInterceptor(logger);
@@ -141,11 +141,11 @@ namespace System.Data.Entity.Interception
             }
         }
 
-        public class BlogContextNoInit : BlogContext
+        public class BlogContextAllTrees : BlogContext
         {
-            static BlogContextNoInit()
+            static BlogContextAllTrees()
             {
-                Database.SetInitializer<BlogContextNoInit>(new BlogInitializer());
+                Database.SetInitializer<BlogContextAllTrees>(new BlogInitializer());
             }
         }
 

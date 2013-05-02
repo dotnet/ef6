@@ -51,6 +51,7 @@ namespace System.Data.Entity.Config
             _resolvers.Add(new SingletonDependencyResolver<IPluralizationService>(new EnglishPluralizationService()));
             _resolvers.Add(new SingletonDependencyResolver<IViewAssemblyCache>(new ViewAssemblyCache()));
             _resolvers.Add(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
+            _resolvers.Add(new SingletonDependencyResolver<DbCommandLoggerFactory>((c, w) => new DbCommandLogger(c, w)));
 
 #if NET40
             _resolvers.Add(new SingletonDependencyResolver<IDbProviderFactoryService>(new Net40DefaultDbProviderFactoryService()));

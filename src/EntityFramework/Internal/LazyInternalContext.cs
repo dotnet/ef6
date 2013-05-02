@@ -97,8 +97,9 @@ namespace System.Data.Entity.Internal
             IInternalConnection internalConnection,
             DbCompiledModel model,
             IDbModelCacheKeyFactory cacheKeyFactory = null,
-            AttributeProvider attributeProvider = null)
-            : base(owner)
+            AttributeProvider attributeProvider = null,
+            Dispatchers dispatchers = null)
+            : base(owner, dispatchers)
         {
             DebugCheck.NotNull(internalConnection);
 

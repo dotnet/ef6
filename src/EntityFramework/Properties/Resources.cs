@@ -13444,6 +13444,38 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.AttemptToAddEdmMemberFromWrongDataSpace, p0, p1, p2, p3);
         }
+
+        /// <summary>
+        ///     A string like "-- Failed: {0}"
+        /// </summary>
+        internal static string CommandLogFailed(object p0)
+        {
+            return EntityRes.GetString(EntityRes.CommandLogFailed, p0);
+        }
+
+        /// <summary>
+        ///     A string like "-- Canceled"
+        /// </summary>
+        internal static string CommandLogCanceled
+        {
+            get { return EntityRes.GetString(EntityRes.CommandLogCanceled); }
+        }
+
+        /// <summary>
+        ///     A string like "-- Completed with result: {0}"
+        /// </summary>
+        internal static string CommandLogComplete(object p0)
+        {
+            return EntityRes.GetString(EntityRes.CommandLogComplete, p0);
+        }
+
+        /// <summary>
+        ///     A string like "-- Executing asynchronously"
+        /// </summary>
+        internal static string CommandLogAsync
+        {
+            get { return EntityRes.GetString(EntityRes.CommandLogAsync); }
+        }
     }
 
     /// <summary>
@@ -16820,6 +16852,10 @@ namespace System.Data.Entity.Resources
         internal const string AutomaticStaleFunctions = "AutomaticStaleFunctions";
         internal const string ScaffoldSprocInDownNotSupported = "ScaffoldSprocInDownNotSupported";
         internal const string AttemptToAddEdmMemberFromWrongDataSpace = "AttemptToAddEdmMemberFromWrongDataSpace";
+        internal const string CommandLogFailed = "CommandLogFailed";
+        internal const string CommandLogCanceled = "CommandLogCanceled";
+        internal const string CommandLogComplete = "CommandLogComplete";
+        internal const string CommandLogAsync = "CommandLogAsync";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

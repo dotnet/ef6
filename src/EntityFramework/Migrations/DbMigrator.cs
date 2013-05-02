@@ -152,6 +152,7 @@ namespace System.Data.Entity.Migrations
                         _configuration.ContextKey,
                         _configuration.CommandTimeout,
                         new[] { _defaultSchema }.Concat(GetHistorySchemas()),
+                        _contextForInterception,
                         _configuration.HistoryContextFactory);
 
                 _providerManifestToken

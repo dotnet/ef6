@@ -25,8 +25,8 @@ namespace System.Data.Entity.Internal
             dispatchers.AddInterceptor(mockCancelable.Object);
             dispatchers.AddInterceptor(mockPublicInterceptor.Object);
 
-            var interceptionContext = new DbInterceptionContext();
-            var interceptableDbCommand = new InterceptableDbCommand(mockCommand.Object, interceptionContext, dispatchers);
+            var interceptableDbCommand = new InterceptableDbCommand(mockCommand.Object, new DbInterceptionContext(), dispatchers);
+            var interceptionContext = interceptableDbCommand.InterceptionContext;
 
             mockCancelable.Setup(m => m.CommandExecuting(mockCommand.Object, interceptionContext)).Returns(false);
 
@@ -37,10 +37,10 @@ namespace System.Data.Entity.Internal
             mockCancelable.Verify(m => m.CommandExecuting(mockCommand.Object, interceptionContext), Times.Once());
 
             mockPublicInterceptor.Verify(
-                m => m.NonQueryExecuting(It.IsAny<DbCommand>(), It.IsAny<DbInterceptionContext>()), Times.Never());
+                m => m.NonQueryExecuting(It.IsAny<DbCommand>(), It.IsAny<DbCommandInterceptionContext>()), Times.Never());
 
             mockPublicInterceptor.Verify(
-                m => m.NonQueryExecuted(It.IsAny<DbCommand>(), It.IsAny<int>(), It.IsAny<DbInterceptionContext>()), Times.Never());
+                m => m.NonQueryExecuted(It.IsAny<DbCommand>(), It.IsAny<int>(), It.IsAny<DbCommandInterceptionContext>()), Times.Never());
 
             mockCancelable.Setup(m => m.CommandExecuting(mockCommand.Object, interceptionContext)).Returns(true);
 
@@ -70,8 +70,8 @@ namespace System.Data.Entity.Internal
             dispatchers.AddInterceptor(mockCancelable.Object);
             dispatchers.AddInterceptor(mockPublicInterceptor.Object);
 
-            var interceptionContext = new DbInterceptionContext();
-            var interceptableDbCommand = new InterceptableDbCommand(mockCommand.Object, interceptionContext, dispatchers);
+            var interceptableDbCommand = new InterceptableDbCommand(mockCommand.Object, new DbInterceptionContext(), dispatchers);
+            var interceptionContext = interceptableDbCommand.InterceptionContext;
 
             mockCancelable.Setup(m => m.CommandExecuting(mockCommand.Object, interceptionContext)).Returns(false);
 
@@ -82,10 +82,10 @@ namespace System.Data.Entity.Internal
             mockCancelable.Verify(m => m.CommandExecuting(mockCommand.Object, interceptionContext), Times.Once());
 
             mockPublicInterceptor.Verify(
-                m => m.ScalarExecuting(It.IsAny<DbCommand>(), It.IsAny<DbInterceptionContext>()), Times.Never());
+                m => m.ScalarExecuting(It.IsAny<DbCommand>(), It.IsAny<DbCommandInterceptionContext>()), Times.Never());
 
             mockPublicInterceptor.Verify(
-                m => m.ScalarExecuted(It.IsAny<DbCommand>(), It.IsAny<int>(), It.IsAny<DbInterceptionContext>()), Times.Never());
+                m => m.ScalarExecuted(It.IsAny<DbCommand>(), It.IsAny<int>(), It.IsAny<DbCommandInterceptionContext>()), Times.Never());
 
             mockCancelable.Setup(m => m.CommandExecuting(mockCommand.Object, interceptionContext)).Returns(true);
 
@@ -119,8 +119,8 @@ namespace System.Data.Entity.Internal
             dispatchers.AddInterceptor(mockCancelable.Object);
             dispatchers.AddInterceptor(mockPublicInterceptor.Object);
 
-            var interceptionContext = new DbInterceptionContext();
-            var interceptableDbCommand = new InterceptableDbCommand(mockCommand.Object, interceptionContext, dispatchers);
+            var interceptableDbCommand = new InterceptableDbCommand(mockCommand.Object, new DbInterceptionContext(), dispatchers);
+            var interceptionContext = interceptableDbCommand.InterceptionContext;
 
             mockCancelable.Setup(m => m.CommandExecuting(mockCommand.Object, interceptionContext)).Returns(false);
 
@@ -137,15 +137,13 @@ namespace System.Data.Entity.Internal
             mockPublicInterceptor.Verify(
                 m => m.ReaderExecuting(
                     It.IsAny<DbCommand>(),
-                    It.IsAny<CommandBehavior>(),
-                    It.IsAny<DbInterceptionContext>()), Times.Never());
+                    It.IsAny<DbCommandInterceptionContext>()), Times.Never());
 
             mockPublicInterceptor.Verify(
                 m => m.ReaderExecuted(
                     It.IsAny<DbCommand>(),
-                    It.IsAny<CommandBehavior>(),
                     It.IsAny<DbDataReader>(),
-                    It.IsAny<DbInterceptionContext>()), Times.Never());
+                    It.IsAny<DbCommandInterceptionContext>()), Times.Never());
 
             mockCancelable.Setup(m => m.CommandExecuting(mockCommand.Object, interceptionContext)).Returns(true);
 
@@ -158,10 +156,15 @@ namespace System.Data.Entity.Internal
             mockCancelable.Verify(m => m.CommandExecuting(mockCommand.Object, interceptionContext), Times.Exactly(2));
 
             mockPublicInterceptor.Verify(
-                m => m.ReaderExecuting(mockCommand.Object, CommandBehavior.SingleRow, interceptionContext), Times.Once());
+                m => m.ReaderExecuting(
+                    mockCommand.Object,
+                    It.Is<DbCommandInterceptionContext>(c => c.CommandBehavior == CommandBehavior.SingleRow)), Times.Once());
 
             mockPublicInterceptor.Verify(
-                m => m.ReaderExecuted(mockCommand.Object, CommandBehavior.SingleRow, mockReader.Object, interceptionContext), Times.Once());
+                m => m.ReaderExecuted(
+                    mockCommand.Object,
+                    mockReader.Object,
+                    It.Is<DbCommandInterceptionContext>(c => c.CommandBehavior == CommandBehavior.SingleRow)), Times.Once());
         }
 
 #if !NET40
@@ -169,7 +172,7 @@ namespace System.Data.Entity.Internal
         public void ExecuteNonQueryAsync_should_dispatch_to_interceptor_and_optionally_execute()
         {
             var mockCommand = new Mock<DbCommand>();
-            var result = new Task<int>(() => 11);
+            var result = Task.FromResult(11);
             mockCommand.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(result);
 
             var mockCancelable = new Mock<ICancelableDbCommandInterceptor>();
@@ -179,8 +182,8 @@ namespace System.Data.Entity.Internal
             dispatchers.AddInterceptor(mockCancelable.Object);
             dispatchers.AddInterceptor(mockPublicInterceptor.Object);
 
-            var interceptionContext = new DbInterceptionContext();
-            var interceptableDbCommand = new InterceptableDbCommand(mockCommand.Object, interceptionContext, dispatchers);
+            var interceptableDbCommand = new InterceptableDbCommand(mockCommand.Object, new DbInterceptionContext(), dispatchers);
+            var interceptionContext = interceptableDbCommand.InterceptionContext;
 
             mockCancelable.Setup(m => m.CommandExecuting(mockCommand.Object, interceptionContext)).Returns(false);
 
@@ -191,31 +194,35 @@ namespace System.Data.Entity.Internal
             mockCancelable.Verify(m => m.CommandExecuting(mockCommand.Object, interceptionContext), Times.Once());
 
             mockPublicInterceptor.Verify(
-                m => m.AsyncNonQueryExecuting(It.IsAny<DbCommand>(), It.IsAny<DbInterceptionContext>()), Times.Never());
+                m => m.NonQueryExecuting(It.IsAny<DbCommand>(), It.IsAny<DbCommandInterceptionContext>()), Times.Never());
 
             mockPublicInterceptor.Verify(
-                m => m.AsyncNonQueryExecuted(It.IsAny<DbCommand>(), It.IsAny<Task<int>>(), It.IsAny<DbInterceptionContext>()), Times.Never());
+                m => m.NonQueryExecuted(It.IsAny<DbCommand>(), It.IsAny<int>(), It.IsAny<DbCommandInterceptionContext>()), Times.Never());
 
             mockCancelable.Setup(m => m.CommandExecuting(mockCommand.Object, interceptionContext)).Returns(true);
 
-            Assert.Same(result, interceptableDbCommand.ExecuteNonQueryAsync());
+            var interceptResult = interceptableDbCommand.ExecuteNonQueryAsync();
+            interceptResult.Wait();
+            Assert.Equal(11, interceptResult.Result);
 
             mockCommand.Verify(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>()), Times.Once());
 
             mockCancelable.Verify(m => m.CommandExecuting(mockCommand.Object, interceptionContext), Times.Exactly(2));
 
             mockPublicInterceptor.Verify(
-                m => m.AsyncNonQueryExecuting(mockCommand.Object, interceptionContext), Times.Once());
+                m => m.NonQueryExecuting(
+                    mockCommand.Object, It.Is<DbCommandInterceptionContext>(c => c.IsAsync)), Times.Once());
 
             mockPublicInterceptor.Verify(
-                m => m.AsyncNonQueryExecuted(mockCommand.Object, result, interceptionContext), Times.Once());
+                m => m.NonQueryExecuted(
+                    mockCommand.Object, 11, It.Is<DbCommandInterceptionContext>(c => c.IsAsync)), Times.Once());
         }
 
         [Fact]
         public void ExecuteScalarAsync_should_dispatch_to_interceptor_and_optionally_execute()
         {
             var mockCommand = new Mock<DbCommand>();
-            var result = new Task<object>(() => 11);
+            var result = Task.FromResult<object>(11);
             mockCommand.Setup(m => m.ExecuteScalarAsync(It.IsAny<CancellationToken>())).Returns(result);
 
             var mockCancelable = new Mock<ICancelableDbCommandInterceptor>();
@@ -225,8 +232,8 @@ namespace System.Data.Entity.Internal
             dispatchers.AddInterceptor(mockCancelable.Object);
             dispatchers.AddInterceptor(mockPublicInterceptor.Object);
 
-            var interceptionContext = new DbInterceptionContext();
-            var interceptableDbCommand = new InterceptableDbCommand(mockCommand.Object, interceptionContext, dispatchers);
+            var interceptableDbCommand = new InterceptableDbCommand(mockCommand.Object, new DbInterceptionContext(), dispatchers);
+            var interceptionContext = interceptableDbCommand.InterceptionContext;
 
             mockCancelable.Setup(m => m.CommandExecuting(mockCommand.Object, interceptionContext)).Returns(false);
 
@@ -237,31 +244,33 @@ namespace System.Data.Entity.Internal
             mockCancelable.Verify(m => m.CommandExecuting(mockCommand.Object, interceptionContext), Times.Once());
 
             mockPublicInterceptor.Verify(
-                m => m.AsyncScalarExecuting(It.IsAny<DbCommand>(), It.IsAny<DbInterceptionContext>()), Times.Never());
+                m => m.ScalarExecuting(It.IsAny<DbCommand>(), It.IsAny<DbCommandInterceptionContext>()), Times.Never());
 
             mockPublicInterceptor.Verify(
-                m => m.AsyncScalarExecuted(It.IsAny<DbCommand>(), It.IsAny<Task<object>>(), It.IsAny<DbInterceptionContext>()),
+                m => m.ScalarExecuted(It.IsAny<DbCommand>(), It.IsAny<Task<object>>(), It.IsAny<DbCommandInterceptionContext>()),
                 Times.Never());
 
             mockCancelable.Setup(m => m.CommandExecuting(mockCommand.Object, interceptionContext)).Returns(true);
 
-            Assert.Same(result, interceptableDbCommand.ExecuteScalarAsync());
+            var interceptResult = interceptableDbCommand.ExecuteScalarAsync();
+            interceptResult.Wait();
+            Assert.Equal(11, interceptResult.Result);
 
             mockCommand.Verify(m => m.ExecuteScalarAsync(It.IsAny<CancellationToken>()), Times.Once());
 
             mockCancelable.Verify(m => m.CommandExecuting(mockCommand.Object, interceptionContext), Times.Exactly(2));
 
             mockPublicInterceptor.Verify(
-                m => m.AsyncScalarExecuting(mockCommand.Object, interceptionContext), Times.Once());
+                m => m.ScalarExecuting(mockCommand.Object, It.Is<DbCommandInterceptionContext>(c => c.IsAsync)), Times.Once());
 
             mockPublicInterceptor.Verify(
-                m => m.AsyncScalarExecuted(mockCommand.Object, result, interceptionContext), Times.Once());
+                m => m.ScalarExecuted(mockCommand.Object, 11, It.Is<DbCommandInterceptionContext>(c => c.IsAsync)), Times.Once());
         }
 
         [Fact]
         public void ExecuteReaderAsync_should_dispatch_to_interceptor_and_optionally_execute()
         {
-            var result = new Task<DbDataReader>(() => new Mock<DbDataReader>().Object);
+            var result = Task.FromResult(new Mock<DbDataReader>().Object);
 
             var mockCommand = new Mock<DbCommand>();
             mockCommand.Protected()
@@ -276,8 +285,8 @@ namespace System.Data.Entity.Internal
             dispatchers.AddInterceptor(mockCancelable.Object);
             dispatchers.AddInterceptor(mockPublicInterceptor.Object);
 
-            var interceptionContext = new DbInterceptionContext();
-            var interceptableDbCommand = new InterceptableDbCommand(mockCommand.Object, interceptionContext, dispatchers);
+            var interceptableDbCommand = new InterceptableDbCommand(mockCommand.Object, new DbInterceptionContext(), dispatchers);
+            var interceptionContext = interceptableDbCommand.InterceptionContext;
 
             mockCancelable.Setup(m => m.CommandExecuting(mockCommand.Object, interceptionContext)).Returns(false);
 
@@ -289,21 +298,21 @@ namespace System.Data.Entity.Internal
             mockCancelable.Verify(m => m.CommandExecuting(mockCommand.Object, interceptionContext), Times.Once());
 
             mockPublicInterceptor.Verify(
-                m => m.AsyncReaderExecuting(
+                m => m.ReaderExecuting(
                     It.IsAny<DbCommand>(),
-                    It.IsAny<CommandBehavior>(),
-                    It.IsAny<DbInterceptionContext>()), Times.Never());
+                    It.IsAny<DbCommandInterceptionContext>()), Times.Never());
 
             mockPublicInterceptor.Verify(
-                m => m.AsyncReaderExecuted(
+                m => m.ReaderExecuted(
                     It.IsAny<DbCommand>(),
-                    It.IsAny<CommandBehavior>(),
-                    It.IsAny<Task<DbDataReader>>(),
-                    It.IsAny<DbInterceptionContext>()), Times.Never());
+                    It.IsAny<DbDataReader>(),
+                    It.IsAny<DbCommandInterceptionContext>()), Times.Never());
 
             mockCancelable.Setup(m => m.CommandExecuting(mockCommand.Object, interceptionContext)).Returns(true);
 
-            Assert.Same(result, interceptableDbCommand.ExecuteReaderAsync(CommandBehavior.SingleRow));
+            var interceptResult = interceptableDbCommand.ExecuteReaderAsync(CommandBehavior.SingleRow);
+            interceptResult.Wait();
+            Assert.Same(result.Result, interceptResult.Result);
 
             mockCommand.Protected().Verify(
                 "ExecuteDbDataReaderAsync", Times.Once(), CommandBehavior.SingleRow, ItExpr.IsAny<CancellationToken>());
@@ -311,10 +320,15 @@ namespace System.Data.Entity.Internal
             mockCancelable.Verify(m => m.CommandExecuting(mockCommand.Object, interceptionContext), Times.Exactly(2));
 
             mockPublicInterceptor.Verify(
-                m => m.AsyncReaderExecuting(mockCommand.Object, CommandBehavior.SingleRow, interceptionContext), Times.Once());
+                m => m.ReaderExecuting(
+                    mockCommand.Object,
+                    It.Is<DbCommandInterceptionContext>(c => c.IsAsync && c.CommandBehavior == CommandBehavior.SingleRow)), Times.Once());
 
             mockPublicInterceptor.Verify(
-                m => m.AsyncReaderExecuted(mockCommand.Object, CommandBehavior.SingleRow, result, interceptionContext), Times.Once());
+                m => m.ReaderExecuted(
+                    mockCommand.Object, 
+                    result.Result,
+                    It.Is<DbCommandInterceptionContext>(c => c.IsAsync && c.CommandBehavior == CommandBehavior.SingleRow)), Times.Once());
         }
 #endif
     }

@@ -17,6 +17,34 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.Empty(interceptionContext.ObjectContexts);
             Assert.Empty(interceptionContext.DbContexts);
+            Assert.Null(interceptionContext.Exception);
+        }
+
+        [Fact]
+        public void Interception_context_can_be_associated_with_an_exception_and_other_state_is_preserved()
+        {
+            var objectContext = new ObjectContext();
+            var dbContext = CreateDbContext(objectContext);
+            var exception = new Exception();
+
+            var interceptionContext = new DbInterceptionContext()
+                .WithDbContext(dbContext)
+                .WithObjectContext(objectContext)
+                .WithException(exception);
+
+            Assert.Equal(new[] { objectContext }, interceptionContext.ObjectContexts);
+            Assert.Equal(new[] { dbContext }, interceptionContext.DbContexts);
+            Assert.Same(exception, interceptionContext.Exception);
+        }
+
+        [Fact]
+        public void Interception_context_associated_exception_can_be_cleared()
+        {
+            var interceptionContext = new DbInterceptionContext()
+                .WithException(new Exception())
+                .WithException(null);
+
+            Assert.Null(interceptionContext.Exception);
         }
 
         [Fact]
@@ -105,14 +133,6 @@ namespace System.Data.Entity.Infrastructure
             Assert.Contains(context2, combined.DbContexts);
             Assert.Contains(objectContext1, combined.ObjectContexts);
             Assert.Contains(objectContext2, combined.ObjectContexts);
-        }
-
-        [Fact]
-        public void Combine_throws_for_null_arg()
-        {
-            Assert.Equal(
-                "interceptionContexts",
-                Assert.Throws<ArgumentNullException>(() => DbInterceptionContext.Combine(null)).ParamName);
         }
 
         private static DbContext CreateDbContext(ObjectContext objectContext)

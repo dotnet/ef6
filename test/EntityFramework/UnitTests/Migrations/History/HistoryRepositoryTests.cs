@@ -15,6 +15,7 @@ namespace System.Data.Entity.Migrations.History
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
+    using Moq;
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
@@ -815,6 +816,25 @@ namespace System.Data.Entity.Migrations.History
                 using (var context = historyRepository.CreateContext(connection))
                 {
                     Assert.Equal(77, context.Database.CommandTimeout);
+                }
+            }
+        }
+
+        [MigrationsTheory]
+        public void HistoryRepository_updates_interception_context()
+        {
+            var owner = new Mock<DbContext>().Object;
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, null, owner);
+
+            using (var connection = ProviderFactory.CreateConnection())
+            {
+                connection.ConnectionString = ConnectionString;
+
+                using (var context = historyRepository.CreateContext(connection))
+                {
+                    var interceptionContext = context.InternalContext.ObjectContext.InterceptionContext;
+                    Assert.Contains(context, interceptionContext.DbContexts);
+                    Assert.Contains(owner, interceptionContext.DbContexts);
                 }
             }
         }

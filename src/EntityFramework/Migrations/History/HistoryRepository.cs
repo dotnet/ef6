@@ -31,6 +31,7 @@ namespace System.Data.Entity.Migrations.History
         private readonly int? _commandTimeout;
         private readonly IEnumerable<string> _schemas;
         private readonly HistoryContextFactory _historyContextFactory;
+        private readonly DbContext _contextForInterception;
 
         private string _currentSchema;
         private bool? _exists;
@@ -42,6 +43,7 @@ namespace System.Data.Entity.Migrations.History
             string contextKey,
             int? commandTimeout,
             IEnumerable<string> schemas = null,
+            DbContext contextForInterception = null,
             HistoryContextFactory historyContextFactory = null)
             : base(connectionString, providerFactory)
         {
@@ -54,6 +56,8 @@ namespace System.Data.Entity.Migrations.History
                 = new[] { EdmModelExtensions.DefaultSchema }
                     .Concat(schemas ?? Enumerable.Empty<string>())
                     .Distinct();
+
+            _contextForInterception = contextForInterception;
 
             _historyContextFactory
                 = historyContextFactory
@@ -457,6 +461,8 @@ namespace System.Data.Entity.Migrations.History
 
                     try
                     {
+                        InjectInterceptionContext(context); 
+                        
                         using (new TransactionScope(TransactionScopeOption.Suppress))
                         {
                             context.History
@@ -569,7 +575,18 @@ namespace System.Data.Entity.Migrations.History
 
             context.Database.CommandTimeout = _commandTimeout;
 
+            InjectInterceptionContext(context);
+
             return context;
+        }
+
+        private void InjectInterceptionContext(DbContext context)
+        {
+            if (_contextForInterception != null)
+            {
+                var objectContext = context.InternalContext.ObjectContext;
+                objectContext.InterceptionContext = objectContext.InterceptionContext.WithDbContext(_contextForInterception);
+            }
         }
     }
 }

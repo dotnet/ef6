@@ -54,33 +54,17 @@ namespace System.Data.Entity.Infrastructure
         {
             public abstract void CallMe();
 
-            public abstract void NonQueryExecuting(DbCommand command, DbInterceptionContext interceptionContext);
+            public abstract void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext);
 
-            public abstract int NonQueryExecuted(DbCommand command, int result, DbInterceptionContext interceptionContext);
+            public abstract int NonQueryExecuted(DbCommand command, int result, DbCommandInterceptionContext interceptionContext);
 
-            public abstract void ReaderExecuting(DbCommand command, CommandBehavior behavior, DbInterceptionContext interceptionContext);
+            public abstract void ReaderExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext);
 
-            public abstract DbDataReader ReaderExecuted(
-                DbCommand command, CommandBehavior behavior, DbDataReader result, DbInterceptionContext interceptionContext);
+            public abstract DbDataReader ReaderExecuted(DbCommand command, DbDataReader result, DbCommandInterceptionContext interceptionContext);
 
-            public abstract void ScalarExecuting(DbCommand command, DbInterceptionContext interceptionContext);
+            public abstract void ScalarExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext);
 
-            public abstract object ScalarExecuted(DbCommand command, object result, DbInterceptionContext interceptionContext);
-
-            public abstract void AsyncNonQueryExecuting(DbCommand command, DbInterceptionContext interceptionContext);
-
-            public abstract Task<int> AsyncNonQueryExecuted(DbCommand command, Task<int> result, DbInterceptionContext interceptionContext);
-
-            public abstract void AsyncReaderExecuting(
-                DbCommand command, CommandBehavior behavior, DbInterceptionContext interceptionContext);
-
-            public abstract Task<DbDataReader> AsyncReaderExecuted(
-                DbCommand command, CommandBehavior behavior, Task<DbDataReader> result, DbInterceptionContext interceptionContext);
-
-            public abstract void AsyncScalarExecuting(DbCommand command, DbInterceptionContext interceptionContext);
-
-            public abstract Task<object> AsyncScalarExecuted(
-                DbCommand command, Task<object> result, DbInterceptionContext interceptionContext);
+            public abstract object ScalarExecuted(DbCommand command, object result, DbCommandInterceptionContext interceptionContext);
 
             public abstract DbCommandTree TreeCreated(DbCommandTree commandTree, DbInterceptionContext interceptionContext);
 

@@ -7,7 +7,6 @@ namespace System.Data.Entity
     using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity.Config;
-    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
@@ -29,84 +28,7 @@ namespace System.Data.Entity
             DbConfiguration.SetConfiguration(new FunctionalTestsConfiguration());
 
             // Uncomment below to log all test generated SQL to the console.
-            //Interception.AddInterceptor(new LoggingInterceptor());
-        }
-
-        public class LoggingInterceptor : IDbCommandInterceptor
-        {
-            public void NonQueryExecuting(DbCommand command, DbInterceptionContext interceptionContext)
-            {
-                CommandExecuting(command);
-            }
-
-            public int NonQueryExecuted(DbCommand command, int result, DbInterceptionContext interceptionContext)
-            {
-                return result;
-            }
-
-            public void ReaderExecuting(DbCommand command, CommandBehavior behavior, DbInterceptionContext interceptionContext)
-            {
-                CommandExecuting(command);
-            }
-
-            public DbDataReader ReaderExecuted(DbCommand command, CommandBehavior behavior, DbDataReader result, DbInterceptionContext interceptionContext)
-            {
-                return result;
-            }
-
-            public void ScalarExecuting(DbCommand command, DbInterceptionContext interceptionContext)
-            {
-                CommandExecuting(command);
-            }
-
-            public object ScalarExecuted(DbCommand command, object result, DbInterceptionContext interceptionContext)
-            {
-                return result;
-            }
-
-            public void AsyncNonQueryExecuting(DbCommand command, DbInterceptionContext interceptionContext)
-            {
-                CommandExecuting(command);
-            }
-
-            public Task<int> AsyncNonQueryExecuted(DbCommand command, Task<int> result, DbInterceptionContext interceptionContext)
-            {
-                return result;
-            }
-
-            public void AsyncReaderExecuting(DbCommand command, CommandBehavior behavior, DbInterceptionContext interceptionContext)
-            {
-                CommandExecuting(command);
-            }
-
-            public Task<DbDataReader> AsyncReaderExecuted(DbCommand command, CommandBehavior behavior, Task<DbDataReader> result, DbInterceptionContext interceptionContext)
-            {
-                return result;
-            }
-
-            public void AsyncScalarExecuting(DbCommand command, DbInterceptionContext interceptionContext)
-            {
-                CommandExecuting(command);
-            }
-
-            public Task<object> AsyncScalarExecuted(DbCommand command, Task<object> result, DbInterceptionContext interceptionContext)
-            {
-                return result;
-            }
-
-            private void CommandExecuting(DbCommand command)
-            {
-                Console.WriteLine(command.CommandText);
-
-                foreach (DbParameter parameter in command.Parameters)
-                {
-                    Console.WriteLine(
-                        "  " + parameter.ParameterName + ": "
-                        + (parameter.Value == DBNull.Value ? "NULL" : parameter.Value));
-                }
-
-                Console.WriteLine();
-            }
+            // Interception.AddInterceptor(new DbCommandLogger(Console.Out));
         }
 
         internal DbDatabaseMapping BuildMapping(DbModelBuilder modelBuilder)

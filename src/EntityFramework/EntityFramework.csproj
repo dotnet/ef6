@@ -230,6 +230,9 @@
     <Compile Include="Core\Common\CommandTrees\DbScanExpression.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\ContainerMappingViewGroup.cs" />
     <Compile Include="Edm\Serialization\MetadataItemHelper.cs" />
+    <Compile Include="Infrastructure\DbCommandInterceptionContext.cs" />
+    <Compile Include="Infrastructure\DbCommandLogger.cs" />
+    <Compile Include="Infrastructure\DbCommandLoggerFactory.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
     <Compile Include="Infrastructure\CancelableDbCommandDispatcher.cs" />
     <Compile Include="Infrastructure\DbCommandTreeDispatcher.cs" />

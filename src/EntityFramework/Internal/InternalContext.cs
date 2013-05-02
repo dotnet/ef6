@@ -26,6 +26,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Validation;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -114,22 +115,19 @@ namespace System.Data.Entity.Internal
             null, DbConfiguration.GetService<AttributeProvider>());
 
         private bool _oSpaceLoadingForced;
-
         private DbProviderFactory _providerFactory;
+        private readonly Dispatchers _dispatchers;
 
         public event EventHandler<EventArgs> OnDisposing;
 
-        /// <summary>
-        ///     Initializes the <see cref="InternalContext" /> object with its <see cref="DbContext" /> owner.
-        /// </summary>
-        /// <param name="owner">
-        ///     The owner <see cref="DbContext" /> .
-        /// </param>
-        protected InternalContext(DbContext owner)
+        private DbCommandLogger _commandLogger;
+
+        protected InternalContext(DbContext owner, Dispatchers dispatchers = null)
         {
             DebugCheck.NotNull(owner);
 
             _owner = owner;
+            _dispatchers = dispatchers ?? Interception.Dispatch;
 
             AutoDetectChangesEnabled = true;
             ValidateOnSaveEnabled = true;
@@ -319,7 +317,8 @@ namespace System.Data.Entity.Internal
                 ProviderFactory,
                 ContextKey,
                 CommandTimeout,
-                new [] { DefaultSchema });
+                new [] { DefaultSchema },
+                Owner);
         }
 
         /// <summary>
@@ -1439,6 +1438,28 @@ namespace System.Data.Entity.Internal
         internal virtual string OwnerShortTypeName
         {
             get { return Owner.GetType().ToString(); }
+        }
+
+        public virtual TextWriter Log
+        {
+            get { return _commandLogger != null ? _commandLogger.Writer : null; }
+            set
+            {
+                if (_commandLogger == null || _commandLogger.Writer != value)
+                {
+                    if (_commandLogger != null)
+                    {
+                        _dispatchers.RemoveInterceptor(_commandLogger);
+                        _commandLogger = null;
+                    }
+
+                    if (value != null)
+                    {
+                        _commandLogger = DbConfiguration.GetService<DbCommandLoggerFactory>()(Owner, value);
+                        _dispatchers.AddInterceptor(_commandLogger);
+                    }
+                }
+            }
         }
     }
 }

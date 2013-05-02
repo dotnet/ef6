@@ -507,8 +507,8 @@ namespace System.Data.Entity.Migrations
                 Interception.RemoveInterceptor(mockInterceptor.Object);
             }
 
-            mockInterceptor.Verify(m => m.NonQueryExecuting(mockCommand.Object, It.IsAny<DbInterceptionContext>()));
-            mockInterceptor.Verify(m => m.NonQueryExecuted(mockCommand.Object, 2013, It.IsAny<DbInterceptionContext>()));
+            mockInterceptor.Verify(m => m.NonQueryExecuting(mockCommand.Object, It.IsAny<DbCommandInterceptionContext>()));
+            mockInterceptor.Verify(m => m.NonQueryExecuted(mockCommand.Object, 2013, It.IsAny<DbCommandInterceptionContext>()));
         }
 
         [Fact]
@@ -552,13 +552,13 @@ namespace System.Data.Entity.Migrations
             }
 
             mockInterceptor.Verify(m => m.NonQueryExecuting(
-                mockCommand.Object, 
-                It.Is<DbInterceptionContext>(c => c.DbContexts.Contains(context))));
+                mockCommand.Object,
+                It.Is<DbCommandInterceptionContext>(c => c.DbContexts.Contains(context))));
             
             mockInterceptor.Verify(m => m.NonQueryExecuted(
                 mockCommand.Object, 
                 2013,
-                It.Is<DbInterceptionContext>(c => c.DbContexts.Contains(context))));
+                It.Is<DbCommandInterceptionContext>(c => c.DbContexts.Contains(context))));
         }
     }
 }

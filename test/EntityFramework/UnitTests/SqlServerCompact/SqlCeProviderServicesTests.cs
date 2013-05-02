@@ -110,7 +110,7 @@ namespace System.Data.Entity.SqlServerCompact
             {
                 public readonly List<string> CommandTexts = new List<string>();
 
-                public override void NonQueryExecuting(DbCommand command, DbInterceptionContext interceptionContext)
+                public override void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
                 {
                     CommandTexts.Add(command.CommandText);
 

@@ -53,8 +53,7 @@ namespace System.Data.Entity.SqlServer
                 command.CommandText = "select serverproperty('EngineEdition')";
 
                 using (
-                    var reader = Interception.Dispatch.Command.Reader(
-                        command, CommandBehavior.Default, new DbInterceptionContext()))
+                    var reader = Interception.Dispatch.Command.Reader(command, new DbCommandInterceptionContext()))
                 {
                     reader.Read();
 

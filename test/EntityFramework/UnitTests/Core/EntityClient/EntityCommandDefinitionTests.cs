@@ -360,11 +360,11 @@ namespace System.Data.Entity.Core.EntityClient
 
                 dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), CommandBehavior.Default);
                 mockInterceptor.Verify(
-                    m => m.ReaderExecuting(dbCommandMock.Object, CommandBehavior.Default, entityCommand.InterceptionContext));
+                    m => m.ReaderExecuting(dbCommandMock.Object, It.IsAny<DbCommandInterceptionContext>()));
                 mockInterceptor.Verify(
                     m =>
                     m.ReaderExecuted(
-                        dbCommandMock.Object, CommandBehavior.Default, It.IsAny<DbDataReader>(), entityCommand.InterceptionContext));
+                        dbCommandMock.Object, It.IsAny<DbDataReader>(), It.IsAny<DbCommandInterceptionContext>()));
             }
 
             [Fact]

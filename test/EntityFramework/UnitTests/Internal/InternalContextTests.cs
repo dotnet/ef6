@@ -3,7 +3,9 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.History;
+    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
     using DaFunc;
@@ -276,5 +278,94 @@ namespace System.Data.Entity.Internal
                 Times.Once());
         }
 #endif
+
+        [Fact]
+        public void Log_can_be_set_to_log_to_a_new_writer()
+        {
+            var mockDispatchers = new Mock<Dispatchers>();
+
+            var context = new Mock<DbContext>().Object;
+            var internalContext = new LazyInternalContext(
+                context, new Mock<IInternalConnection>().Object, null, null, null, mockDispatchers.Object);
+
+            var writer = new Mock<TextWriter>().Object;
+            internalContext.Log = writer;
+
+            mockDispatchers.Verify(
+                m => m.AddInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Writer == writer)),
+                Times.Once());
+
+            // Setting same writer again is a no-op
+            internalContext.Log = writer;
+
+            mockDispatchers.Verify(
+                m => m.AddInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Writer == writer)),
+                Times.Once());
+        }
+
+        [Fact]
+        public void Setting_log_again_reoplaces_the_existing_writer()
+        {
+            var mockDispatchers = new Mock<Dispatchers>();
+
+            var context = new Mock<DbContext>().Object;
+            var internalContext = new LazyInternalContext(
+                context, new Mock<IInternalConnection>().Object, null, null, null, mockDispatchers.Object);
+
+            var writer = new Mock<TextWriter>().Object;
+            internalContext.Log = writer;
+
+            var newWriter = new Mock<TextWriter>().Object;
+            internalContext.Log = newWriter;
+
+            mockDispatchers.Verify(
+                m => m.RemoveInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Writer == writer)),
+                Times.Once());
+            
+            mockDispatchers.Verify(
+                m => m.AddInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Writer == newWriter)),
+                Times.Once());
+            
+            mockDispatchers.Verify(
+                m => m.AddInterceptor(It.Is<DbCommandLogger>(l => l.Context == context)),
+                Times.Exactly(2));
+        }
+
+        [Fact]
+        public void Log_can_be_cleared_by_setting_it_to_null()
+        {
+            var mockDispatchers = new Mock<Dispatchers>();
+
+            var context = new Mock<DbContext>().Object;
+            var internalContext = new LazyInternalContext(
+                context, new Mock<IInternalConnection>().Object, null, null, null, mockDispatchers.Object);
+
+            var writer = new Mock<TextWriter>().Object;
+            internalContext.Log = writer;
+            internalContext.Log = null;
+
+            mockDispatchers.Verify(
+                m => m.RemoveInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Writer == writer)),
+                Times.Once());
+        }
+
+        [Fact]
+        public void Log_returns_the_current_writer_in_use_or_null()
+        {
+            var mockDispatchers = new Mock<Dispatchers>();
+
+            var context = new Mock<DbContext>().Object;
+            var internalContext = new LazyInternalContext(
+                context, new Mock<IInternalConnection>().Object, null, null, null, mockDispatchers.Object);
+
+            Assert.Null(internalContext.Log);
+            
+            var writer = new Mock<TextWriter>().Object;
+            internalContext.Log = writer;
+            Assert.Same(writer, internalContext.Log);
+
+            internalContext.Log = null;
+            Assert.Null(internalContext.Log);
+        }
     }
 }

@@ -245,7 +245,7 @@ namespace System.Data.Entity.SqlServerCompact
                 foreach (var text in commandTextCollection)
                 {
                     command.CommandText = text;
-                    Interception.Dispatch.Command.NonQuery(command, new DbInterceptionContext());
+                    Interception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext());
                 }
 
                 // Commit the transaction.

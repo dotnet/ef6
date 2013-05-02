@@ -393,7 +393,7 @@ namespace System.Data.Entity.SqlServer
         {
             public readonly List<DbCommand> Commands = new List<DbCommand>();
 
-            public override void NonQueryExecuting(DbCommand command, DbInterceptionContext interceptionContext)
+            public override void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
             {
                 Commands.Add(command);
 
@@ -406,7 +406,7 @@ namespace System.Data.Entity.SqlServer
         {
             public readonly List<DbCommand> Commands = new List<DbCommand>();
 
-            public override void ScalarExecuting(DbCommand command, DbInterceptionContext interceptionContext)
+            public override void ScalarExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
             {
                 Commands.Add(command);
 
@@ -419,7 +419,7 @@ namespace System.Data.Entity.SqlServer
         {
             public readonly List<DbCommand> Commands = new List<DbCommand>();
 
-            public override void ReaderExecuting(DbCommand command, CommandBehavior behavior, DbInterceptionContext interceptionContext)
+            public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
             {
                 Commands.Add(command);
 

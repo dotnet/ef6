@@ -13,6 +13,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
 
     /// <summary>
     ///     A class derived from this class can be placed in the same assembly as a class derived from
@@ -665,6 +666,30 @@ namespace System.Data.Entity.Config
 
             _internalConfiguration.CheckNotLocked("SetViewAssemblyCache");
             _internalConfiguration.RegisterSingleton(cache);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
+        ///     a factory for the type of <see cref="DbCommandLogger" /> to use with <see cref="Database.Log" />.
+        /// </summary>
+        /// <remarks>
+        ///     Note that setting the type of logger to use with this method does change the way command are
+        ///     logged when <see cref="Database.Log" />is used. It is still necessary to set a <see cref="TextWriter" />
+        ///     instance onto <see cref="Database.Log" /> before any commands will be logged.
+        ///     For more low-level control over logging/interception see <see cref="IDbCommandInterceptor" /> and
+        ///     <see cref="Interception" />.
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="Func{DbCommandLogger}" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="commandLoggerFactory">A delegate that will create logger instances.</param>
+        protected internal void SetCommandLogger(DbCommandLoggerFactory commandLoggerFactory)
+        {
+            Check.NotNull(commandLoggerFactory, "commandLoggerFactory");
+
+            _internalConfiguration.CheckNotLocked("SetCommandLogger");
+            _internalConfiguration.RegisterSingleton(commandLoggerFactory);
         }
 
         internal virtual InternalConfiguration InternalConfiguration

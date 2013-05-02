@@ -883,6 +883,40 @@ namespace System.Data.Entity.Config
             }
         }
 
+        public class SetCommandLogger
+        {
+            [Fact]
+            public void Throws_if_given_a_null_factory()
+            {
+                Assert.Equal(
+                    "commandLoggerFactory",
+                    Assert.Throws<ArgumentNullException>(
+                        () => new DbConfiguration().SetCommandLogger(null)).ParamName);
+            }
+
+            [Fact]
+            public void Throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetCommandLogger"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetCommandLogger((_, __) => null)).Message);
+            }
+
+            [Fact]
+            public void Delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                DbCommandLoggerFactory factory = (_, __) => null;
+
+                new DbConfiguration(mockInternalConfiguration.Object).SetCommandLogger(factory);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(factory));
+            }
+        }
+
         private static DbConfiguration CreatedLockedConfiguration()
         {
             var configuration = new DbConfiguration();

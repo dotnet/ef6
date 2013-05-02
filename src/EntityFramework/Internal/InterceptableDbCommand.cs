@@ -13,7 +13,7 @@ namespace System.Data.Entity.Internal
     internal sealed class InterceptableDbCommand : DbCommand
     {
         private readonly DbCommand _command;
-        private readonly DbInterceptionContext _context;
+        private readonly DbCommandInterceptionContext _interceptionContext;
         private readonly Dispatchers _dispatchers;
 
         public InterceptableDbCommand(DbCommand command, DbInterceptionContext context, Dispatchers dispatchers = null)
@@ -23,9 +23,14 @@ namespace System.Data.Entity.Internal
 
             _command = command;
 
-            _context = context;
+            _interceptionContext = new DbCommandInterceptionContext(context);
 
             _dispatchers = dispatchers ?? Interception.Dispatch;
+        }
+
+        public DbCommandInterceptionContext InterceptionContext
+        {
+            get { return _interceptionContext; }
         }
 
         public override void Prepare()
@@ -93,63 +98,71 @@ namespace System.Data.Entity.Internal
 
         public override int ExecuteNonQuery()
         {
-            if (!_dispatchers.CancelableCommand.Executing(_command, _context))
+            if (!_dispatchers.CancelableCommand.Executing(_command, _interceptionContext))
             {
                 return 1;
             }
 
-            return _dispatchers.Command.NonQuery(_command, _context);
+            return _dispatchers.Command.NonQuery(_command, _interceptionContext);
         }
 
         public override object ExecuteScalar()
         {
-            if (!_dispatchers.CancelableCommand.Executing(_command, _context))
+            if (!_dispatchers.CancelableCommand.Executing(_command, _interceptionContext))
             {
                 return null;
             }
 
-            return _dispatchers.Command.Scalar(_command, _context);
+            return _dispatchers.Command.Scalar(_command, _interceptionContext);
         }
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
-            if (!_dispatchers.CancelableCommand.Executing(_command, _context))
+            if (!_dispatchers.CancelableCommand.Executing(_command, _interceptionContext))
             {
                 return new NullDataReader();
             }
 
-            return _dispatchers.Command.Reader(_command, behavior, _context);
+            var interceptionContext = behavior == CommandBehavior.Default 
+                ? _interceptionContext 
+                : _interceptionContext.WithCommandBehavior(behavior);
+
+            return _dispatchers.Command.Reader(_command, interceptionContext);
         }
 
 #if !NET40
         public override Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
         {
-            if (!_dispatchers.CancelableCommand.Executing(_command, _context))
+            if (!_dispatchers.CancelableCommand.Executing(_command, _interceptionContext))
             {
                 return new Task<int>(() => 1);
             }
 
-            return _dispatchers.Command.AsyncNonQuery(_command, cancellationToken, _context);
+            return _dispatchers.Command.AsyncNonQuery(_command, cancellationToken, _interceptionContext);
         }
 
         public override Task<object> ExecuteScalarAsync(CancellationToken cancellationToken)
         {
-            if (!_dispatchers.CancelableCommand.Executing(_command, _context))
+            if (!_dispatchers.CancelableCommand.Executing(_command, _interceptionContext))
             {
                 return new Task<object>(() => null);
             }
 
-            return _dispatchers.Command.AsyncScalar(_command, cancellationToken, _context);
+            return _dispatchers.Command.AsyncScalar(_command, cancellationToken, _interceptionContext);
         }
 
         protected override Task<DbDataReader> ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
         {
-            if (!_dispatchers.CancelableCommand.Executing(_command, _context))
+            if (!_dispatchers.CancelableCommand.Executing(_command, _interceptionContext))
             {
                 return new Task<DbDataReader>(() => new NullDataReader());
             }
 
-            return _dispatchers.Command.AsyncReader(_command, behavior, cancellationToken, _context);
+            var interceptionContext = behavior == CommandBehavior.Default
+                ? _interceptionContext
+                : _interceptionContext.WithCommandBehavior(behavior);
+
+            return _dispatchers.Command.AsyncReader(_command, cancellationToken, interceptionContext);
         }
 #endif
 

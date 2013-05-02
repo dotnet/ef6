@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Migrations.History
 {
+    using System.Data.Entity.Config;
+    using System.Data.Entity.Migrations;
     using System.Data.Common;
 
     /// <summary>
@@ -13,7 +15,7 @@ namespace System.Data.Entity.Migrations.History
     ///     To customize the definition of the migrations history table you can derive from
     ///     <see cref="HistoryContext" /> and override OnModelCreating. Derived instances can either be registered
     ///     on a per migrations configuration basis using <see cref="DbMigrationsConfiguration.HistoryContextFactory" />,
-    ///     or globally using <see cref="System.Data.Entity.Config.DbConfiguration" />.
+    ///     or globally using <see cref="DbConfiguration.SetHistoryContextFactory{TMigrationsConfiguration}" />.
     /// </remarks>
     /// <param name="existingConnection">
     ///     An existing connection to use for the new context.

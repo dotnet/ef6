@@ -283,6 +283,8 @@
     <Compile Include="Edm\Validation\DataModelValidatorTests.cs" />
     <Compile Include="Infrastructure\CancelableDbCommandDispatcherTests.cs" />
     <Compile Include="Infrastructure\DbCommandDispatcherTests.cs" />
+    <Compile Include="Infrastructure\DbCommandInterceptionContextTests.cs" />
+    <Compile Include="Infrastructure\DbCommandLoggerTests.cs" />
     <Compile Include="Infrastructure\DbCommandTreeDispatcherTests.cs" />
     <Compile Include="Infrastructure\DbInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\DbInterceptorTests.cs" />

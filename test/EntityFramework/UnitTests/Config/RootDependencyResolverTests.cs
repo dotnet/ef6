@@ -12,6 +12,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.SqlClient;
+    using System.IO;
     using System.Linq;
     using Moq;
     using Xunit;
@@ -217,6 +218,25 @@ namespace System.Data.Entity.Config
 
         public class FakeContext : DbContext
         {
+        }
+
+        [Fact]
+        public void The_root_resolver_returns_the_default_DbCommandLoggerFactory()
+        {
+            var factory =
+                new RootDependencyResolver(new DefaultProviderServicesResolver(), new DatabaseInitializerResolver())
+                    .GetService<DbCommandLoggerFactory>();
+
+            Assert.IsType<DbCommandLoggerFactory>(factory);
+
+            var context = new Mock<DbContext>().Object;
+            var writer = new Mock<TextWriter>().Object;
+
+            var logger = factory(context, writer);
+
+            Assert.IsType<DbCommandLogger>(logger);
+            Assert.Same(context, logger.Context);
+            Assert.Same(writer, logger.Writer);
         }
     }
 }

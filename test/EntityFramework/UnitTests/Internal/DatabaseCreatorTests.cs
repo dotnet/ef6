@@ -205,7 +205,7 @@ namespace System.Data.Entity.Internal
             [Fact]
             public void GetMigrationsConfiguration_creates_a_new_configuration()
             {
-                var mockContext = new Mock<InternalContext>(new FakeContext());
+                var mockContext = new Mock<InternalContext>(new FakeContext(), null);
                 mockContext.Setup(m => m.OwnerShortTypeName).Returns("Key");
                 mockContext.Setup(m => m.OriginalConnectionString).Returns("Database=Foo");
                 mockContext.Setup(m => m.ProviderName).Returns("Some.Provider");

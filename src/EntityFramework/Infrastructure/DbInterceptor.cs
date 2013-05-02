@@ -4,7 +4,6 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Threading.Tasks;
 
     /// <summary>
     ///     Base class that implements all public <see cref="IDbInterceptor" /> interfaces. Application classes can
@@ -24,69 +23,35 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <inheritdoc />
-        public virtual void NonQueryExecuting(DbCommand command, DbInterceptionContext interceptionContext)
+        public virtual void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
         {
         }
 
         /// <inheritdoc />
-        public virtual int NonQueryExecuted(DbCommand command, int result, DbInterceptionContext interceptionContext)
+        public virtual int NonQueryExecuted(DbCommand command, int result, DbCommandInterceptionContext interceptionContext)
         {
             return result;
         }
 
         /// <inheritdoc />
-        public virtual void ReaderExecuting(DbCommand command, CommandBehavior behavior, DbInterceptionContext interceptionContext)
+        public virtual void ReaderExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
         {
         }
 
         /// <inheritdoc />
         public virtual DbDataReader ReaderExecuted(
-            DbCommand command, CommandBehavior behavior, DbDataReader result, DbInterceptionContext interceptionContext)
+            DbCommand command, DbDataReader result, DbCommandInterceptionContext interceptionContext)
         {
             return result;
         }
 
         /// <inheritdoc />
-        public virtual void ScalarExecuting(DbCommand command, DbInterceptionContext interceptionContext)
+        public virtual void ScalarExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
         {
         }
 
         /// <inheritdoc />
-        public virtual object ScalarExecuted(DbCommand command, object result, DbInterceptionContext interceptionContext)
-        {
-            return result;
-        }
-
-        /// <inheritdoc />
-        public virtual void AsyncNonQueryExecuting(DbCommand command, DbInterceptionContext interceptionContext)
-        {
-        }
-
-        /// <inheritdoc />
-        public virtual Task<int> AsyncNonQueryExecuted(DbCommand command, Task<int> result, DbInterceptionContext interceptionContext)
-        {
-            return result;
-        }
-
-        /// <inheritdoc />
-        public virtual void AsyncReaderExecuting(DbCommand command, CommandBehavior behavior, DbInterceptionContext interceptionContext)
-        {
-        }
-
-        /// <inheritdoc />
-        public virtual Task<DbDataReader> AsyncReaderExecuted(
-            DbCommand command, CommandBehavior behavior, Task<DbDataReader> result, DbInterceptionContext interceptionContext)
-        {
-            return result;
-        }
-
-        /// <inheritdoc />
-        public virtual void AsyncScalarExecuting(DbCommand command, DbInterceptionContext interceptionContext)
-        {
-        }
-
-        /// <inheritdoc />
-        public virtual Task<object> AsyncScalarExecuted(DbCommand command, Task<object> result, DbInterceptionContext interceptionContext)
+        public virtual object ScalarExecuted(DbCommand command, object result, DbCommandInterceptionContext interceptionContext)
         {
             return result;
         }

@@ -6,12 +6,22 @@ namespace System.Data.Entity.Interception
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.SqlClient;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Xunit;
 
     public class CommandInterceptionTests : FunctionalTestBase
     {
+        public CommandInterceptionTests()
+        {
+            using (var context = new BlogContextNoInit())
+            {
+                context.Database.Initialize(force: false);
+            }
+        }
+
         [Fact]
         public void Initialization_and_simple_query_and_update_commands_can_be_logged()
         {
@@ -32,16 +42,15 @@ namespace System.Data.Entity.Interception
 
             var commandsUsed = new bool[Enum.GetValues(typeof(CommandMethod)).Length];
 
-            // Check that every "executed" call is preceded by an "executing" call.
-            // (The reverse is not true since "executed" is not called for operations that throw.)
             for (var i = 0; i < logger.Log.Count; i++)
             {
                 var method = logger.Log[i].Method;
                 commandsUsed[(int)method] = true;
 
-                if (method.ToString().EndsWith("Executed"))
+                if (method.ToString().EndsWith("Executing"))
                 {
-                    Assert.Equal(method - 1, logger.Log[i - 1].Method);
+                    Assert.Equal(method + 1, logger.Log[i + 1].Method);
+                    Assert.Same(logger.Log[i].Command, logger.Log[i + 1].Command);
                 }
             }
 
@@ -53,42 +62,12 @@ namespace System.Data.Entity.Interception
             Assert.True(commandsUsed[(int)CommandMethod.ScalarExecuting]);
             Assert.True(commandsUsed[(int)CommandMethod.ScalarExecuted]);
 
-#if NET40
-            Assert.False(commandsUsed[(int)CommandMethod.AsyncNonQueryExecuting]);
-            Assert.False(commandsUsed[(int)CommandMethod.AsyncNonQueryExecuted]);
-            Assert.False(commandsUsed[(int)CommandMethod.AsyncReaderExecuting]);
-            Assert.False(commandsUsed[(int)CommandMethod.AsyncReaderExecuted]);
-#else
-            Assert.True(commandsUsed[(int)CommandMethod.AsyncNonQueryExecuting]);
-            Assert.True(commandsUsed[(int)CommandMethod.AsyncNonQueryExecuted]);
-            Assert.True(commandsUsed[(int)CommandMethod.AsyncReaderExecuting]);
-            Assert.True(commandsUsed[(int)CommandMethod.AsyncReaderExecuted]);
-#endif
-
-            // EF and SQL provider never send ExecuteScalarAsync
-            Assert.False(commandsUsed[(int)CommandMethod.AsyncScalarExecuting]);
-            Assert.False(commandsUsed[(int)CommandMethod.AsyncScalarExecuted]);
-
             // Sanity check on command text
             var commandTexts = logger.Log.Select(l => l.CommandText.ToLowerInvariant());
             Assert.True(commandTexts.Any(c => c.StartsWith("select")));
             Assert.True(commandTexts.Any(c => c.StartsWith("create")));
             Assert.True(commandTexts.Any(c => c.StartsWith("alter")));
             Assert.True(commandTexts.Any(c => c.StartsWith("insert")));
-#if !NET40
-            Assert.True(commandTexts.Any(c => c.StartsWith("update")));
-#endif
-
-            // Sanity check on results
-            Assert.True(logger.Log.Where(l => l.Method == CommandMethod.NonQueryExecuted).All(l => l.Result != null));
-            Assert.True(logger.Log.Where(l => l.Method == CommandMethod.ReaderExecuted).All(l => l.Result != null));
-
-#if !NET40
-            Assert.True(
-                logger.Log.Where(
-                    l => l.Method.ToString().StartsWith("Async")
-                         && l.Method.ToString().EndsWith("Executed")).All(l => l.Result != null));
-#endif
         }
 
         public class BlogContextLogAll : BlogContext
@@ -100,13 +79,127 @@ namespace System.Data.Entity.Interception
         }
 
         [Fact]
-        public void Multiple_contexts_running_concurrently_can_use_interception()
+        public void Commands_that_result_in_exceptions_are_still_intercepted()
         {
-            using (var context = new BlogContextNoInit())
+            var logger = new CommandLogger();
+            Interception.AddInterceptor(logger);
+
+            Exception exception;
+            try
             {
-                context.Database.Initialize(force: false);
+                using (var context = new BlogContextNoInit())
+                {
+                    exception = Assert.Throws<SqlException>(() => context.Blogs.SqlQuery("select * from No.Chance").ToList());
+                }
+            }
+            finally
+            {
+                Interception.RemoveInterceptor(logger);
             }
 
+            Assert.Equal(2, logger.Log.Count);
+
+            var executingLog = logger.Log[0];
+            Assert.Equal(CommandMethod.ReaderExecuting, executingLog.Method);
+            Assert.False(executingLog.InterceptionContext.IsAsync);
+            Assert.Null(executingLog.Result);
+            Assert.Null(executingLog.InterceptionContext.Exception);
+
+            var executedLog = logger.Log[1];
+            Assert.Equal(CommandMethod.ReaderExecuted, executedLog.Method);
+            Assert.False(executedLog.InterceptionContext.IsAsync);
+            Assert.Null(executedLog.Result);
+            Assert.Same(exception, executedLog.InterceptionContext.Exception);
+        }
+
+#if !NET40
+        [Fact]
+        public void Async_commands_that_result_in_exceptions_are_still_intercepted()
+        {
+            var logger = new CommandLogger();
+            Interception.AddInterceptor(logger);
+
+            try
+            {
+                using (var context = new BlogContextNoInit())
+                {
+                    var query = context.Blogs.SqlQuery("select * from No.Chance").ToListAsync();
+                    
+                    Assert.Throws<AggregateException>(() => query.Wait());
+
+                    Assert.True(query.IsFaulted);
+                }
+            }
+            finally
+            {
+                Interception.RemoveInterceptor(logger);
+            }
+
+            Assert.Equal(2, logger.Log.Count);
+
+            var executingLog = logger.Log[0];
+            Assert.Equal(CommandMethod.ReaderExecuting, executingLog.Method);
+            Assert.True(executingLog.InterceptionContext.IsAsync);
+            Assert.Null(executingLog.Result);
+            Assert.Null(executingLog.InterceptionContext.Exception);
+
+            var executedLog = logger.Log[1];
+            Assert.Equal(CommandMethod.ReaderExecuted, executedLog.Method);
+            Assert.True(executedLog.InterceptionContext.IsAsync);
+            Assert.Null(executedLog.Result);
+            Assert.IsType<SqlException>(executedLog.InterceptionContext.Exception);
+            Assert.True(executedLog.InterceptionContext.TaskStatus.HasFlag(TaskStatus.Faulted));
+        }
+
+        [Fact]
+        public void Async_commands_that_are_canceled_are_still_intercepted()
+        {
+            var logger = new CommandLogger();
+            Interception.AddInterceptor(logger);
+
+            var cancellation = new CancellationTokenSource();
+            var cancellationToken = cancellation.Token;
+
+            try
+            {
+                using (var context = new BlogContextNoInit())
+                {
+                    context.Database.Connection.Open();
+
+                    cancellation.Cancel();
+                    var command = context.Database.ExecuteSqlCommandAsync("update Blogs set Title = 'No' where Id = -1", cancellationToken);
+
+                    Assert.Throws<AggregateException>(() => command.Wait());
+                    Assert.True(command.IsCanceled);
+
+                    context.Database.Connection.Close();
+                }
+            }
+            finally
+            {
+                Interception.RemoveInterceptor(logger);
+            }
+
+            Assert.Equal(2, logger.Log.Count);
+
+            var executingLog = logger.Log[0];
+            Assert.Equal(CommandMethod.NonQueryExecuting, executingLog.Method);
+            Assert.True(executingLog.InterceptionContext.IsAsync);
+            Assert.Null(executingLog.Result);
+            Assert.Null(executingLog.InterceptionContext.Exception);
+
+            var executedLog = logger.Log[1];
+            Assert.Equal(CommandMethod.NonQueryExecuted, executedLog.Method);
+            Assert.True(executedLog.InterceptionContext.IsAsync);
+            Assert.Equal(0, executedLog.Result);
+            Assert.Null(executingLog.InterceptionContext.Exception);
+            Assert.True(executedLog.InterceptionContext.TaskStatus.HasFlag(TaskStatus.Canceled));
+        }
+#endif
+
+        [Fact]
+        public void Multiple_contexts_running_concurrently_can_use_interception()
+        {
             var loggers = new ConcurrentBag<CommandLogger>();
 
             const int executionCount = 5;
@@ -130,32 +223,26 @@ namespace System.Data.Entity.Interception
 
                             var commandsUsed = new bool[Enum.GetValues(typeof(CommandMethod)).Length];
 
-                            // Check that every "executed" call is precedded by an "executing" call.
-                            // (The reverse is not true since "executed" is not called for operations that throw.)
                             for (var i = 0; i < logger.Log.Count; i++)
                             {
                                 var method = logger.Log[i].Method;
                                 commandsUsed[(int)method] = true;
 
-                                if (method.ToString().EndsWith("Executed"))
+                                if (method.ToString().EndsWith("Executing"))
                                 {
-                                    Assert.Equal(method - 1, logger.Log[i - 1].Method);
+                                    Assert.Equal(method + 1, logger.Log[i + 1].Method);
+                                    Assert.Same(logger.Log[i].Command, logger.Log[i + 1].Command);
                                 }
                             }
 
                             // Check that expected command have log entries
                             Assert.True(commandsUsed[(int)CommandMethod.ReaderExecuting]);
                             Assert.True(commandsUsed[(int)CommandMethod.ReaderExecuted]);
-#if NET40
-                            Assert.False(commandsUsed[(int)CommandMethod.AsyncNonQueryExecuting]);
-                            Assert.False(commandsUsed[(int)CommandMethod.AsyncNonQueryExecuted]);
-                            Assert.False(commandsUsed[(int)CommandMethod.AsyncReaderExecuting]);
-                            Assert.False(commandsUsed[(int)CommandMethod.AsyncReaderExecuted]);
-#else
-                            Assert.True(commandsUsed[(int)CommandMethod.AsyncNonQueryExecuting]);
-                            Assert.True(commandsUsed[(int)CommandMethod.AsyncNonQueryExecuted]);
-                            Assert.True(commandsUsed[(int)CommandMethod.AsyncReaderExecuting]);
-                            Assert.True(commandsUsed[(int)CommandMethod.AsyncReaderExecuted]);
+                            Assert.True(commandsUsed[(int)CommandMethod.ReaderExecuting]);
+                            Assert.True(commandsUsed[(int)CommandMethod.ReaderExecuted]);
+#if !NET40
+                            Assert.True(commandsUsed[(int)CommandMethod.NonQueryExecuting]);
+                            Assert.True(commandsUsed[(int)CommandMethod.NonQueryExecuted]);
 #endif
 
                             // Sanity check on command text
@@ -169,16 +256,10 @@ namespace System.Data.Entity.Interception
                             // Sanity check on results
                             Assert.True(logger.Log.Where(l => l.Method == CommandMethod.NonQueryExecuted).All(l => l.Result != null));
                             Assert.True(logger.Log.Where(l => l.Method == CommandMethod.ReaderExecuted).All(l => l.Result != null));
-#if !NET40
-                            Assert.True(
-                                logger.Log.Where(
-                                    l => l.Method.ToString().StartsWith("Async")
-                                         && l.Method.ToString().EndsWith("Executed")).All(l => l.Result != null));
-#endif
                         }
                     }, executionCount);
 
-            // Check that each execution logged exectly the same commands.
+            // Check that each execution logged exactly the same commands.
 
             Assert.Equal(executionCount, loggers.Count);
 
@@ -204,14 +285,6 @@ namespace System.Data.Entity.Interception
             }
         }
 
-        public class BlogContextNoInit : BlogContext
-        {
-            static BlogContextNoInit()
-            {
-                Database.SetInitializer<BlogContextNoInit>(new BlogInitializer());
-            }
-        }
-
         public enum CommandMethod
         {
             NonQueryExecuting = 0,
@@ -219,13 +292,7 @@ namespace System.Data.Entity.Interception
             ReaderExecuting,
             ReaderExecuted,
             ScalarExecuting,
-            ScalarExecuted,
-            AsyncNonQueryExecuting,
-            AsyncNonQueryExecuted,
-            AsyncReaderExecuting,
-            AsyncReaderExecuted,
-            AsyncScalarExecuting,
-            AsyncScalarExecuted,
+            ScalarExecuted
         }
 
         public class CommandLogger : IDbCommandInterceptor
@@ -243,110 +310,55 @@ namespace System.Data.Entity.Interception
                 get { return _log; }
             }
 
-            public void NonQueryExecuting(DbCommand command, DbInterceptionContext interceptionContext)
+            public void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.NonQueryExecuting, command));
+                    _log.Add(new CommandLogItem(CommandMethod.NonQueryExecuting, command, interceptionContext));
                 }
             }
 
-            public int NonQueryExecuted(DbCommand command, int result, DbInterceptionContext interceptionContext)
+            public int NonQueryExecuted(DbCommand command, int result, DbCommandInterceptionContext interceptionContext)
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.NonQueryExecuted, command, result));
+                    _log.Add(new CommandLogItem(CommandMethod.NonQueryExecuted, command, interceptionContext, result));
                 }
                 return result;
             }
 
-            public void ReaderExecuting(DbCommand command, CommandBehavior behavior, DbInterceptionContext interceptionContext)
+            public void ReaderExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.ReaderExecuting, command));
+                    _log.Add(new CommandLogItem(CommandMethod.ReaderExecuting, command, interceptionContext));
                 }
             }
 
             public DbDataReader ReaderExecuted(
-                DbCommand command, CommandBehavior behavior, DbDataReader result, DbInterceptionContext interceptionContext)
+                DbCommand command, DbDataReader result, DbCommandInterceptionContext interceptionContext)
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.ReaderExecuted, command, result));
+                    _log.Add(new CommandLogItem(CommandMethod.ReaderExecuted, command, interceptionContext, result));
                 }
 
                 return result;
             }
 
-            public void ScalarExecuting(DbCommand command, DbInterceptionContext interceptionContext)
+            public void ScalarExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.ScalarExecuting, command));
+                    _log.Add(new CommandLogItem(CommandMethod.ScalarExecuting, command, interceptionContext));
                 }
             }
 
-            public object ScalarExecuted(DbCommand command, object result, DbInterceptionContext interceptionContext)
+            public object ScalarExecuted(DbCommand command, object result, DbCommandInterceptionContext interceptionContext)
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.ScalarExecuted, command, result));
-                }
-
-                return result;
-            }
-
-            public void AsyncNonQueryExecuting(DbCommand command, DbInterceptionContext interceptionContext)
-            {
-                if (ShouldLog(interceptionContext))
-                {
-                    _log.Add(new CommandLogItem(CommandMethod.AsyncNonQueryExecuting, command));
-                }
-            }
-
-            public Task<int> AsyncNonQueryExecuted(DbCommand command, Task<int> result, DbInterceptionContext interceptionContext)
-            {
-                if (ShouldLog(interceptionContext))
-                {
-                    _log.Add(new CommandLogItem(CommandMethod.AsyncNonQueryExecuted, command, result));
-                }
-
-                return result;
-            }
-
-            public void AsyncReaderExecuting(DbCommand command, CommandBehavior behavior, DbInterceptionContext interceptionContext)
-            {
-                if (ShouldLog(interceptionContext))
-                {
-                    _log.Add(new CommandLogItem(CommandMethod.AsyncReaderExecuting, command));
-                }
-            }
-
-            public Task<DbDataReader> AsyncReaderExecuted(
-                DbCommand command, CommandBehavior behavior, Task<DbDataReader> result, DbInterceptionContext interceptionContext)
-            {
-                if (ShouldLog(interceptionContext))
-                {
-                    _log.Add(new CommandLogItem(CommandMethod.AsyncReaderExecuted, command, result));
-                }
-
-                return result;
-            }
-
-            public void AsyncScalarExecuting(DbCommand command, DbInterceptionContext interceptionContext)
-            {
-                if (ShouldLog(interceptionContext))
-                {
-                    _log.Add(new CommandLogItem(CommandMethod.AsyncScalarExecuting, command));
-                }
-            }
-
-            public Task<object> AsyncScalarExecuted(DbCommand command, Task<object> result, DbInterceptionContext interceptionContext)
-            {
-                if (ShouldLog(interceptionContext))
-                {
-                    _log.Add(new CommandLogItem(CommandMethod.AsyncScalarExecuted, command, result));
+                    _log.Add(new CommandLogItem(CommandMethod.ScalarExecuted, command, interceptionContext, result));
                 }
 
                 return result;
@@ -360,15 +372,23 @@ namespace System.Data.Entity.Interception
 
         public class CommandLogItem
         {
-            public CommandLogItem(CommandMethod method, DbCommand command, object result = null)
+            public CommandLogItem(
+                CommandMethod method, 
+                DbCommand command, 
+                DbCommandInterceptionContext interceptionContext, 
+                object result = null)
             {
                 Method = method;
                 CommandText = command.CommandText;
+                Command = command;
+                InterceptionContext = interceptionContext;
                 Result = result;
             }
 
             public CommandMethod Method { get; set; }
             public string CommandText { get; set; }
+            public DbCommand Command { get; set; }
+            public DbCommandInterceptionContext InterceptionContext { get; set; }
             public object Result { get; set; }
         }
     }

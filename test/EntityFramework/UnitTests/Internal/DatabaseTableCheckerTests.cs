@@ -100,8 +100,8 @@ namespace System.Data.Entity.Internal
 
             interceptorMock.Verify(
                 m => m.ReaderExecuting(
-                    dbCommandMock.Object, CommandBehavior.Default,
-                    It.Is<DbInterceptionContext>(c => c.ObjectContexts.Contains(internalContextMock.Object.ObjectContext))));
+                    dbCommandMock.Object,
+                    It.Is<DbCommandInterceptionContext>(c => c.ObjectContexts.Contains(internalContextMock.Object.ObjectContext))));
         }
 
         private static void SetupMocksForTableChecking(

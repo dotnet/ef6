@@ -7,6 +7,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.IO;
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace System.Data.Entity
 
     public class DatabaseTests : TestBase
     {
-        public class Exists
+        public class Exists : TestBase
         {
             [Fact]
             public void With_null_nameOrConnectionString_throws()
@@ -49,7 +50,7 @@ namespace System.Data.Entity
             }
         }
 
-        public class Delete
+        public class Delete : TestBase
         {
             [Fact]
             public void With_null_nameOrConnectionString_throws()
@@ -83,7 +84,7 @@ namespace System.Data.Entity
             }
         }
 
-        public class ExecuteSqlCommand
+        public class ExecuteSqlCommand : TestBase
         {
             [Fact]
             public void With_null_SQL_throws()
@@ -141,7 +142,7 @@ namespace System.Data.Entity
 
 #if !NET40
 
-        public class ExecuteSqlCommandAsync
+        public class ExecuteSqlCommandAsync : TestBase
         {
             [Fact]
             public void With_null_SQL_throws()
@@ -215,7 +216,7 @@ namespace System.Data.Entity
 
 #endif
 
-        public class DefaultConnectionFactory
+        public class DefaultConnectionFactory : TestBase
         {
             [Fact]
             public void Default_is_SqlServerConnectionFactory()
@@ -264,7 +265,7 @@ namespace System.Data.Entity
             }
         }
 
-        public class SqlQuery_Generic
+        public class SqlQuery_Generic : TestBase
         {
             [Fact]
             public void With_null_SQL_throws()
@@ -318,7 +319,7 @@ namespace System.Data.Entity
             }
         }
 
-        public class SqlQuery_NonGeneric
+        public class SqlQuery_NonGeneric : TestBase
         {
             [Fact]
             public void With_null_SQL_throws()
@@ -382,7 +383,7 @@ namespace System.Data.Entity
             }
         }
 
-        public class CommandTimeout
+        public class CommandTimeout : TestBase
         {
             [Fact]
             public void Default_value_for_CommandTimeout_is_null_and_can_be_changed_including_setting_to_null()
@@ -442,6 +443,37 @@ namespace System.Data.Entity
                 {
                     Database.CommandTimeout = commandTimeout;
                 }
+            }
+        }
+
+        public class Log : TestBase
+        {
+            public class LogContext : DbContext
+            {
+                static LogContext()
+                {
+                    Database.SetInitializer<LogContext>(null);
+                }
+            }
+
+            [Fact]
+            public void Log_is_null_by_default()
+            {
+                Assert.Null(new LogContext().Database.Log);
+            }
+
+            [Fact]
+            public void Getting_and_setting_Log_delegates_to_Log_on_InternalContext()
+            {
+                var mockContext = new Mock<InternalContextForMock>();
+                var database = new Database(mockContext.Object);
+                
+                var writer = new Mock<TextWriter>().Object;
+                database.Log = writer;
+                mockContext.VerifySet(m => m.Log = writer);
+
+                var _ = database.Log;
+                mockContext.VerifyGet(m => m.Log);
             }
         }
     }
