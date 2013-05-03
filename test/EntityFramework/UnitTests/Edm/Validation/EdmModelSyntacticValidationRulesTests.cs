@@ -55,5 +55,39 @@ namespace System.Data.Entity.Edm.Validation
                 Assert.Null(errorEventArgs);
             }
         }
+
+        [Fact]
+        public void EdmModel_NameIsNotAllowed_not_triggered_for_store_property_with_period()
+        {
+            var property = EdmProperty.Primitive("Property.With.Dots", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+
+            var validationContext
+                = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            EdmModelSyntacticValidationRules
+                .EdmModel_NameIsNotAllowed
+                .Evaluate(validationContext, property);
+
+            Assert.Null(errorEventArgs);
+        }
+
+        [Fact]
+        public void EdmModel_NameIsNotAllowed_triggered_for_conceptual_property_with_period()
+        {
+            var property = EdmProperty.Primitive("Property.With.Dots", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+
+            var validationContext
+                = new EdmModelValidationContext(new EdmModel(DataSpace.CSpace), true);
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            EdmModelSyntacticValidationRules
+                .EdmModel_NameIsNotAllowed
+                .Evaluate(validationContext, property);
+
+            Assert.NotNull(errorEventArgs);
+        }
     }
 }

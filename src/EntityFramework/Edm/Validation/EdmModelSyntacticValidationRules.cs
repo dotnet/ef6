@@ -44,8 +44,8 @@ namespace System.Data.Entity.Edm.Validation
                 (context, item) =>
                     {
                         if (!string.IsNullOrWhiteSpace(item.Name)
-                            && (context.IsCSpace && !item.Name.IsValidUndottedName())
-                            || (item.Name.Contains(".") && !(item is RowType) && !(item is CollectionType)))
+                            && !item.Name.IsValidUndottedName()
+                            && (context.IsCSpace || (!(item is RowType) && !(item is CollectionType) && !(item is EdmProperty))))
                         {
                             context.AddError(
                                 (MetadataItem)item,
