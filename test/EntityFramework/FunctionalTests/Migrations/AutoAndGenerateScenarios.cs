@@ -5,6 +5,7 @@ namespace System.Data.Entity.Migrations
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Linq;
@@ -43,7 +44,7 @@ namespace System.Data.Entity.Migrations
     {
         public AutoAndGenerateScenarios_AddTable()
         {
-            DownDataLoss = true;
+            IsDownDataLoss = true;
         }
 
         public class V1 : AutoAndGenerateContext_v1
@@ -120,7 +121,7 @@ namespace System.Data.Entity.Migrations
     {
         public AutoAndGenerateScenarios_AddTableWithGuidKey()
         {
-            DownDataLoss = true;
+            IsDownDataLoss = true;
         }
 
         public class V1 : AutoAndGenerateContext_v1
@@ -408,7 +409,7 @@ namespace System.Data.Entity.Migrations
     {
         public AutoAndGenerateScenarios_AddPromotedForeignKey()
         {
-            DownDataLoss = true;
+            IsDownDataLoss = true;
         }
 
         public class V1 : AutoAndGenerateContext_v1
@@ -425,7 +426,7 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<Order>().ToTable("Orders");
                 modelBuilder.Entity<Order>().HasMany(o => o.OrderLines).WithRequired().HasForeignKey(ol => ol.OrderId).
-                             WillCascadeOnDelete(false);
+                    WillCascadeOnDelete(false);
                 modelBuilder.Entity<OrderLine>().ToTable("OrderLines");
             }
         }
@@ -552,7 +553,7 @@ namespace System.Data.Entity.Migrations
             {
                 modelBuilder.Entity<Order>().ToTable("Orders");
                 modelBuilder.Entity<Order>().HasMany(o => o.OrderLines).WithRequired().HasForeignKey(ol => ol.OrderId).
-                             WillCascadeOnDelete(false);
+                    WillCascadeOnDelete(false);
                 modelBuilder.Entity<OrderLine>().ToTable("OrderLines");
             }
         }
@@ -629,7 +630,7 @@ namespace System.Data.Entity.Migrations
     {
         public AutoAndGenerateScenarios_AddColumn()
         {
-            DownDataLoss = true;
+            IsDownDataLoss = true;
         }
 
         public class V1 : AutoAndGenerateContext_v1
@@ -806,14 +807,14 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(
                 "Locomotion",
                 migrationOperations.OfType<RenameColumnOperation>()
-                                   .Single(o => o.Table == "dbo.MigrationsStores" && o.Name == "Location")
-                                   .NewName);
+                    .Single(o => o.Table == "dbo.MigrationsStores" && o.Name == "Location")
+                    .NewName);
 
             Assert.Equal(
                 "PoorPlan",
                 migrationOperations.OfType<RenameColumnOperation>()
-                                   .Single(o => o.Table == "dbo.MigrationsStores" && o.Name == "FloorPlan")
-                                   .NewName);
+                    .Single(o => o.Table == "dbo.MigrationsStores" && o.Name == "FloorPlan")
+                    .NewName);
         }
 
         protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
@@ -823,14 +824,14 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(
                 "Location",
                 migrationOperations.OfType<RenameColumnOperation>()
-                                   .Single(o => o.Table == "dbo.MigrationsStores" && o.Name == "Locomotion")
-                                   .NewName);
+                    .Single(o => o.Table == "dbo.MigrationsStores" && o.Name == "Locomotion")
+                    .NewName);
 
             Assert.Equal(
                 "FloorPlan",
                 migrationOperations.OfType<RenameColumnOperation>()
-                                   .Single(o => o.Table == "dbo.MigrationsStores" && o.Name == "PoorPlan")
-                                   .NewName);
+                    .Single(o => o.Table == "dbo.MigrationsStores" && o.Name == "PoorPlan")
+                    .NewName);
         }
     }
 
@@ -845,7 +846,7 @@ namespace System.Data.Entity.Migrations
         {
             _columnName = columnName;
 
-            DownDataLoss = true;
+            IsDownDataLoss = true;
         }
 
         public abstract class BaseV1 : AutoAndGenerateContext_v1
@@ -961,7 +962,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        private bool IsDecimal(ref string typeName, out byte precision)
+        private static bool IsDecimal(ref string typeName, out byte precision)
         {
             if (!typeName.StartsWith("Decimal"))
             {
@@ -1363,7 +1364,7 @@ namespace System.Data.Entity.Migrations
         {
             _newMaxLength = newMaxLength;
 
-            DownDataLoss = true;
+            IsDownDataLoss = true;
         }
 
         protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
@@ -1523,7 +1524,7 @@ namespace System.Data.Entity.Migrations
     {
         public AutoAndGenerateScenarios_AlterColumnPrecision()
         {
-            DownDataLoss = true;
+            IsDownDataLoss = true;
         }
 
         public class V1 : AutoAndGenerateContext_v1
@@ -1572,7 +1573,7 @@ namespace System.Data.Entity.Migrations
     {
         public AutoAndGenerateScenarios_AlterColumnScale()
         {
-            DownDataLoss = true;
+            IsDownDataLoss = true;
         }
 
         public class V1 : AutoAndGenerateContext_v1
@@ -1621,7 +1622,7 @@ namespace System.Data.Entity.Migrations
     {
         public AutoAndGenerateScenarios_AlterColumnUnicode()
         {
-            DownDataLoss = true;
+            IsDownDataLoss = true;
             UpDataLoss = true;
         }
 
@@ -1667,6 +1668,198 @@ namespace System.Data.Entity.Migrations
             Assert.NotNull(alterColumnOperation);
 
             Assert.Null(alterColumnOperation.Column.IsUnicode);
+        }
+    }
+
+    #endregion
+
+    #region Modification Functions
+
+    public class AutoAndGenerateScenarios_RenameProcedure :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_RenameProcedure.V1, AutoAndGenerateScenarios_RenameProcedure.V2>
+    {
+        public AutoAndGenerateScenarios_RenameProcedure()
+        {
+            IsDownDataLoss = false;
+        }
+
+        public class V1 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<MigrationsCustomer>()
+                    .MapToStoredProcedures();
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<MigrationsCustomer>()
+                    .MapToStoredProcedures(
+                        m =>
+                            {
+                                m.Insert(c => c.HasName("ins_customer"));
+                                m.Update(c => c.HasName("upd_customer"));
+                                m.Delete(c => c.HasName("del_customer"));
+                            });
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(3, migrationOperations.Count(o => o is RenameProcedureOperation));
+
+            var renameProcedureOperation
+                = migrationOperations
+                    .OfType<RenameProcedureOperation>()
+                    .Single(o => o.Name == "dbo.MigrationsCustomer_Insert");
+
+            Assert.Equal("ins_customer", renameProcedureOperation.NewName);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(3, migrationOperations.Count(o => o is RenameProcedureOperation));
+
+            var renameProcedureOperation
+                = migrationOperations
+                    .OfType<RenameProcedureOperation>()
+                    .Single(o => o.Name == "dbo.ins_customer");
+
+            Assert.Equal("MigrationsCustomer_Insert", renameProcedureOperation.NewName);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_AlterProcedure :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_AlterProcedure.V1, AutoAndGenerateScenarios_AlterProcedure.V2>
+    {
+        public AutoAndGenerateScenarios_AlterProcedure()
+        {
+            IsDownNotSupported = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<MigrationsCustomer>()
+                    .MapToStoredProcedures();
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<MigrationsCustomer>()
+                    .MapToStoredProcedures(
+                        m =>
+                            {
+                                m.Insert(c => c.Parameter(mc => mc.Age, "old"));
+                                m.Update(c => c.Parameter(mc => mc.HomeAddress.City, "addr_city"));
+                                m.Delete(c => c.Parameter(mc => mc.Id, "key"));
+                            });
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        protected override void VerifyMigrationsException(MigrationsException migrationsException)
+        {
+            migrationsException.ValidateMessage("AutomaticStaleFunctions");
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(3, migrationOperations.Count(o => o is AlterProcedureOperation));
+
+            var alterProcedureOperation
+                = migrationOperations
+                    .OfType<AlterProcedureOperation>()
+                    .Single(o => o.Name == "dbo.MigrationsCustomer_Insert");
+
+            Assert.True(alterProcedureOperation.Parameters.Any(p => p.Name == "old"));
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(0, migrationOperations.Count(o => o is AlterProcedureOperation));
+        }
+    }
+
+    public class AutoAndGenerateScenarios_MoveProcedure :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_MoveProcedure.V1, AutoAndGenerateScenarios_MoveProcedure.V2>
+    {
+        public AutoAndGenerateScenarios_MoveProcedure()
+        {
+            IsDownDataLoss = false;
+        }
+
+        public class V1 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<MigrationsCustomer>()
+                    .MapToStoredProcedures();
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<MigrationsCustomer>()
+                    .MapToStoredProcedures(
+                        m =>
+                            {
+                                m.Insert(c => c.HasName("MigrationsCustomer_Insert", "foo"));
+                                m.Update(c => c.HasName("upd_customer", "bar"));
+                            });
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count(o => o is MoveProcedureOperation));
+            Assert.Equal(1, migrationOperations.Count(o => o is RenameProcedureOperation));
+
+            var moveProcedureOperation
+                = migrationOperations
+                    .OfType<MoveProcedureOperation>()
+                    .Single(o => o.Name == "dbo.MigrationsCustomer_Update");
+
+            Assert.Equal("bar", moveProcedureOperation.NewSchema);
+
+            var renameProcedureOperation
+                = migrationOperations
+                    .OfType<RenameProcedureOperation>()
+                    .Single(o => o.Name == "bar.MigrationsCustomer_Update");
+
+            Assert.Equal("upd_customer", renameProcedureOperation.NewName);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count(o => o is MoveProcedureOperation));
+            Assert.Equal(1, migrationOperations.Count(o => o is RenameProcedureOperation));
         }
     }
 

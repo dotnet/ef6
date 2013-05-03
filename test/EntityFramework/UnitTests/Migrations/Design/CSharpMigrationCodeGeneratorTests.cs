@@ -76,6 +76,110 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         [Fact]
+        public void Generate_can_output_alter_procedure_operations()
+        {
+            var alterProcedureOperation
+                = new AlterProcedureOperation("Foo", "SELECT ShinyHead\r\nFROM Pilkingtons");
+
+            alterProcedureOperation.Parameters.Add(
+                new ParameterModel(PrimitiveTypeKind.String)
+                {
+                    Name = "P'",
+                    DefaultValue = "Bar",
+                    IsOutParameter = true
+                });
+
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            alterProcedureOperation
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            AlterStoredProcedure(
+                ""Foo"",
+                p => new
+                    {
+                        P = p.String(name: ""P'"", defaultValue: ""Bar"", outParameter: true),
+                    },
+                body:
+                    @""SELECT ShinyHead
+                      FROM Pilkingtons""
+            );
+            
+        }
+        
+        public override void Down()
+        {
+            throw new NotSupportedException(""" + Strings.ScaffoldSprocInDownNotSupported + @""");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_rename_procedure_operation()
+        {
+            var renameProcedureOperation
+                = new RenameProcedureOperation("Foo", "Bar");
+
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            renameProcedureOperation
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            RenameStoredProcedure(name: ""Foo"", newName: ""Bar"");
+        }
+        
+        public override void Down()
+        {
+            RenameStoredProcedure(name: ""Bar"", newName: ""Foo"");
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
         public void Generate_can_output_drop_procedure_operations()
         {
             var codeGenerator = new CSharpMigrationCodeGenerator();
@@ -779,6 +883,43 @@ namespace Foo
         
         public override void Down()
         {
+        }
+    }
+}
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_move_procedure_statement()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new[] { new MoveProcedureOperation("Insert_Customers", "foo") },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"namespace Foo
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Bar : DbMigration
+    {
+        public override void Up()
+        {
+            MoveStoredProcedure(name: ""Insert_Customers"", newSchema: ""foo"");
+        }
+        
+        public override void Down()
+        {
+            MoveStoredProcedure(name: ""foo.Insert_Customers"", newSchema: null);
         }
     }
 }

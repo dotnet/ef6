@@ -102,6 +102,10 @@ namespace System.Data.Entity.SqlServerCompact
         {
         }
 
+        protected virtual void Generate(AlterProcedureOperation alterProcedureOperation)
+        {
+        }
+
         protected virtual void Generate(DropProcedureOperation dropProcedureOperation)
         {
         }
@@ -292,6 +296,8 @@ namespace System.Data.Entity.SqlServerCompact
         /// <param name="dropIndexOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropIndexOperation dropIndexOperation)
         {
+            Check.NotNull(dropIndexOperation, "dropIndexOperation");
+
             using (var writer = Writer())
             {
                 writer.Write("DROP INDEX ");
@@ -404,6 +410,8 @@ namespace System.Data.Entity.SqlServerCompact
         /// <param name="dropColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropColumnOperation dropColumnOperation)
         {
+            Check.NotNull(dropColumnOperation, "dropColumnOperation");
+
             using (var writer = Writer())
             {
                 writer.Write("ALTER TABLE ");
@@ -422,6 +430,8 @@ namespace System.Data.Entity.SqlServerCompact
         /// <param name="alterColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AlterColumnOperation alterColumnOperation)
         {
+            Check.NotNull(alterColumnOperation, "alterColumnOperation");
+
             var column = alterColumnOperation.Column;
 
             using (var writer = Writer())
@@ -510,6 +520,8 @@ namespace System.Data.Entity.SqlServerCompact
         /// <param name="renameTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(RenameTableOperation renameTableOperation)
         {
+            Check.NotNull(renameTableOperation, "renameTableOperation");
+
             using (var writer = Writer())
             {
                 writer.Write("EXECUTE sp_rename @objname = N'");
@@ -520,6 +532,14 @@ namespace System.Data.Entity.SqlServerCompact
 
                 Statement(writer);
             }
+        }
+
+        protected virtual void Generate(RenameProcedureOperation renameProcedureOperation)
+        {
+        }
+
+        protected virtual void Generate(MoveProcedureOperation moveProcedureOperation)
+        {
         }
 
         /// <summary>
@@ -824,6 +844,8 @@ namespace System.Data.Entity.SqlServerCompact
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
         protected virtual string Name(string name)
         {
+            Check.NotEmpty(name, "name");
+
             return Quote(name.ToDatabaseName().Name);
         }
 
@@ -834,6 +856,8 @@ namespace System.Data.Entity.SqlServerCompact
         /// <returns> The quoted identifier. </returns>
         protected virtual string Quote(string identifier)
         {
+            Check.NotEmpty(identifier, "identifier");
+
             return "[" + identifier + "]";
         }
 

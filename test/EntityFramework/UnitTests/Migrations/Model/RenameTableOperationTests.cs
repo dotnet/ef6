@@ -29,7 +29,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         [Fact]
-        public void Inverse_should_produce_rename_column_operation()
+        public void Inverse_should_produce_rename_table_operation()
         {
             var renameTableOperation
                 = new RenameTableOperation("dbo.Foo", "dbo.Bar");

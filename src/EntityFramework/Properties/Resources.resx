@@ -5356,7 +5356,7 @@
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
   </data>
   <data name="ScaffoldSprocInDownNotSupported" xml:space="preserve">
-    <value>Scaffolding create procedure operations is not supported in down methods.</value>
+    <value>Scaffolding create or alter procedure operations is not supported in down methods.</value>
   </data>
   <data name="AttemptToAddEdmMemberFromWrongDataSpace" xml:space="preserve">
     <value>Attempt to add member {0} to structural type {1} failed. Member has DataSpace {2}, structural type has DataSpace {3}. They must be the same.</value>

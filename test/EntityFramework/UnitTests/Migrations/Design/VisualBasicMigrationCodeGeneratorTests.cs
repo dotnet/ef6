@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Design
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Globalization;
@@ -74,6 +75,108 @@ End Namespace
         }
 
         [Fact]
+        public void Generate_can_output_alter_procedure_operations()
+        {
+            var alterProcedureOperation
+                = new AlterProcedureOperation("Foo", "SELECT ShinyHead\r\nFROM Pilkingtons");
+
+            alterProcedureOperation.Parameters.Add(
+                new ParameterModel(PrimitiveTypeKind.String)
+                {
+                    Name = "P'",
+                    DefaultValue = "Bar",
+                    IsOutParameter = true
+                });
+
+            var codeGenerator = new VisualBasicMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            alterProcedureOperation
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"Imports System
+Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
+
+Namespace Foo
+    Public Partial Class Bar
+        Inherits DbMigration
+    
+        Public Overrides Sub Up()
+            AlterStoredProcedure(
+                ""Foo"",
+                Function(p) New With
+                    {
+                        .P = p.String(name := ""P'"", defaultValue := ""Bar"", outParameter := True)
+                    },
+                body :=
+                    ""SELECT ShinyHead"" & vbCrLf & _
+                    ""FROM Pilkingtons""
+            )
+            
+        End Sub
+        
+        Public Overrides Sub Down()
+            Throw New NotSupportedException(""" + Strings.ScaffoldSprocInDownNotSupported + @""")
+        End Sub
+    End Class
+End Namespace
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
+        public void Generate_can_output_rename_procedure_operation()
+        {
+            var renameProcedureOperation
+                = new RenameProcedureOperation("Foo", "Bar");
+
+            var codeGenerator = new VisualBasicMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new MigrationOperation[]
+                        {
+                            renameProcedureOperation
+                        },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"Imports System
+Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
+
+Namespace Foo
+    Public Partial Class Bar
+        Inherits DbMigration
+    
+        Public Overrides Sub Up()
+            RenameStoredProcedure(name := ""Foo"", newName := ""Bar"")
+        End Sub
+        
+        Public Overrides Sub Down()
+            RenameStoredProcedure(name := ""Bar"", newName := ""Foo"")
+        End Sub
+    End Class
+End Namespace
+",
+                generatedMigration.UserCode);
+        }
+
+        [Fact]
         public void Generate_can_output_drop_procedure_operations()
         {
             var codeGenerator = new VisualBasicMigrationCodeGenerator();
@@ -112,7 +215,7 @@ Namespace Foo
                     {
                     })
             
-            Throw New NotSupportedException(""Scaffolding create procedure operations is not supported in down methods."")
+            Throw New NotSupportedException(""" + Strings.ScaffoldSprocInDownNotSupported + @""")
         End Sub
     End Class
 End Namespace
@@ -767,6 +870,43 @@ Namespace Foo
         End Sub
         
         Public Overrides Sub Down()
+        End Sub
+    End Class
+End Namespace
+",
+                generatedMigration.UserCode);
+        }
+
+
+        [Fact]
+        public void Generate_can_output_move_procedure_statement()
+        {
+            var codeGenerator = new VisualBasicMigrationCodeGenerator();
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "Migration",
+                    new[] { new MoveProcedureOperation("Insert_Customers", "foo") },
+                    "Source",
+                    "Target",
+                    "Foo",
+                    "Bar");
+
+            Assert.Equal(
+                @"Imports System
+Imports System.Data.Entity.Migrations
+Imports Microsoft.VisualBasic
+
+Namespace Foo
+    Public Partial Class Bar
+        Inherits DbMigration
+    
+        Public Overrides Sub Up()
+            MoveStoredProcedure(name := ""Insert_Customers"", newSchema := ""foo"")
+        End Sub
+        
+        Public Overrides Sub Down()
+            MoveStoredProcedure(name := ""foo.Insert_Customers"", newSchema := Nothing)
         End Sub
     End Class
 End Namespace

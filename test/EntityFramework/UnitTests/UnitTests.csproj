@@ -109,7 +109,9 @@
       <HintPath>..\..\..\packages\xunit.extensions.1.9.1\lib\net20\xunit.extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Migrations\Sql\" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.csdl" />
     <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.msl" />
@@ -332,6 +334,9 @@
     <Compile Include="Migrations\Infrastructure\DynamicToFunctionModificationCommandConverterTests.cs" />
     <Compile Include="Migrations\Infrastructure\FunctionsModel.cs" />
     <Compile Include="Migrations\Infrastructure\ModificationCommandTreeGeneratorTests.cs" />
+    <Compile Include="Migrations\Model\AlterProcedureOperationTests.cs" />
+    <Compile Include="Migrations\Model\MoveProcedureOperationTests.cs" />
+    <Compile Include="Migrations\Model\RenameProcedureOperationTests.cs" />
     <Compile Include="Migrations\Model\ParameterModelTests.cs" />
     <Compile Include="Migrations\Model\DropProcedureOperationTests.cs" />
     <Compile Include="Migrations\Model\CreateProcedureOperationTests.cs" />
@@ -497,8 +502,8 @@
     <Compile Include="Migrations\Model\RenameColumnOperationTests.cs" />
     <Compile Include="Migrations\Model\RenameTableOperationTests.cs" />
     <Compile Include="Migrations\Model\SqlOperationTests.cs" />
-    <Compile Include="Migrations\Sql\SqlCeMigrationSqlGeneratorTests.cs" />
-    <Compile Include="Migrations\Sql\SqlServerMigrationSqlGeneratorTests.cs" />
+    <Compile Include="SqlServerCompact\SqlCeMigrationSqlGeneratorTests.cs" />
+    <Compile Include="SqlServer\SqlServerMigrationSqlGeneratorTests.cs" />
     <Compile Include="Migrations\Utilities\ConfigurationFileUpdaterTests.cs" />
     <Compile Include="Migrations\Utilities\DatabaseCreatorTests.cs" />
     <Compile Include="Spatial\DbGeographyTests.cs" />

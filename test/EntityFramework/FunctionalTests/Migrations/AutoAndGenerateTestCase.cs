@@ -22,7 +22,8 @@ namespace System.Data.Entity.Migrations
         private ScaffoldedMigration _generatedMigration_v1;
 
         protected bool UpDataLoss { get; set; }
-        protected bool DownDataLoss { get; set; }
+        protected bool IsDownDataLoss { get; set; }
+        protected bool IsDownNotSupported { get; set; }
 
         public override void Init(DatabaseProvider provider, ProgrammingLanguage language)
         {
@@ -38,12 +39,15 @@ namespace System.Data.Entity.Migrations
             ResetDatabaseToV1();
 
             DbMigrationsConfiguration migrationsConfiguration;
+
             try
             {
-                migrationsConfiguration =
-                    CreateMigrationsConfiguration<TContextV2>(scaffoldedMigrations: _generatedMigration_v1);
+                migrationsConfiguration
+                    = CreateMigrationsConfiguration<TContextV2>(scaffoldedMigrations: _generatedMigration_v1);
+
                 migrationsConfiguration.SetSqlGenerator(DbProviders.Sql, _upVerifier);
                 migrationsConfiguration.SetSqlGenerator(DbProviders.SqlCe, _upVerifier);
+
                 new DbMigrator(migrationsConfiguration).Update();
 
                 Assert.False(UpDataLoss);
@@ -52,10 +56,14 @@ namespace System.Data.Entity.Migrations
             {
                 Assert.True(UpDataLoss);
 
-                migrationsConfiguration = CreateMigrationsConfiguration<TContextV2>(
-                    automaticDataLossEnabled: true, scaffoldedMigrations: _generatedMigration_v1);
+                migrationsConfiguration
+                    = CreateMigrationsConfiguration<TContextV2>(
+                        automaticDataLossEnabled: true,
+                        scaffoldedMigrations: _generatedMigration_v1);
+
                 migrationsConfiguration.SetSqlGenerator(DbProviders.Sql, _upVerifier);
                 migrationsConfiguration.SetSqlGenerator(DbProviders.SqlCe, _upVerifier);
+
                 new DbMigrator(migrationsConfiguration).Update();
             }
 
@@ -65,26 +73,43 @@ namespace System.Data.Entity.Migrations
                 VerifyUpOperations(Enumerable.Empty<MigrationOperation>());
             }
 
-            // Bring up via automatic            
-            CreateMigrator<TContextV2>(automaticDataLossEnabled: true, scaffoldedMigrations: _generatedMigration_v1).Update();
+            // Bring up via automatic
+            CreateMigrator<TContextV2>(
+                automaticDataLossEnabled: true,
+                scaffoldedMigrations: _generatedMigration_v1)
+                .Update();
 
             try
             {
-                migrationsConfiguration =
-                    CreateMigrationsConfiguration<TContextV2>(scaffoldedMigrations: _generatedMigration_v1);
+                migrationsConfiguration
+                    = CreateMigrationsConfiguration<TContextV2>(scaffoldedMigrations: _generatedMigration_v1);
+
                 migrationsConfiguration.SetSqlGenerator(DbProviders.Sql, _downVerifier);
                 migrationsConfiguration.SetSqlGenerator(DbProviders.SqlCe, _downVerifier);
-                new DbMigrator(migrationsConfiguration).Update(_generatedMigration_v1.MigrationId);
-                Assert.False(DownDataLoss);
+
+                new DbMigrator(migrationsConfiguration)
+                    .Update(_generatedMigration_v1.MigrationId);
+
+                Assert.False(IsDownDataLoss);
             }
             catch (AutomaticDataLossException)
             {
-                Assert.True(DownDataLoss);
-                migrationsConfiguration = CreateMigrationsConfiguration<TContextV2>(
-                    automaticDataLossEnabled: true, scaffoldedMigrations: _generatedMigration_v1);
+                Assert.True(IsDownDataLoss);
+
+                migrationsConfiguration
+                    = CreateMigrationsConfiguration<TContextV2>(
+                        automaticDataLossEnabled: true,
+                        scaffoldedMigrations: _generatedMigration_v1);
+
                 migrationsConfiguration.SetSqlGenerator(DbProviders.Sql, _downVerifier);
                 migrationsConfiguration.SetSqlGenerator(DbProviders.SqlCe, _downVerifier);
-                new DbMigrator(migrationsConfiguration).Update(_generatedMigration_v1.MigrationId);
+
+                new DbMigrator(migrationsConfiguration)
+                    .Update(_generatedMigration_v1.MigrationId);
+            }
+            catch (MigrationsException e)
+            {
+                VerifyMigrationsException(e);
             }
 
             if (!_downVerifier.WasCalled())
@@ -93,20 +118,28 @@ namespace System.Data.Entity.Migrations
             }
         }
 
+        protected virtual void VerifyMigrationsException(MigrationsException migrationsException)
+        {
+        }
+
         [MigrationsTheory(SlowGroup = TestGroup.MigrationsTests)]
         public void Generated()
         {
             ResetDatabaseToV1();
 
-            var migrator = CreateMigrator<TContextV2>(scaffoldedMigrations: _generatedMigration_v1);
+            var migrator
+                = CreateMigrator<TContextV2>(scaffoldedMigrations: _generatedMigration_v1);
 
-            var generatedMigration_v2 = new MigrationScaffolder(migrator.Configuration).Scaffold("V2");
+            var generatedMigration_v2
+                = new MigrationScaffolder(migrator.Configuration).Scaffold("V2");
 
-            var migrationsConfiguration =
-                CreateMigrationsConfiguration<TContextV2>(
+            var migrationsConfiguration
+                = CreateMigrationsConfiguration<TContextV2>(
                     scaffoldedMigrations: new[] { _generatedMigration_v1, generatedMigration_v2 });
+
             migrationsConfiguration.SetSqlGenerator(DbProviders.Sql, _upVerifier);
             migrationsConfiguration.SetSqlGenerator(DbProviders.SqlCe, _upVerifier);
+
             new DbMigrator(migrationsConfiguration).Update();
 
             // Bring up via generated
@@ -114,12 +147,22 @@ namespace System.Data.Entity.Migrations
                 scaffoldedMigrations: new[] { _generatedMigration_v1, generatedMigration_v2 })
                 .Update();
 
-            migrationsConfiguration =
-                CreateMigrationsConfiguration<TContextV2>(
+            migrationsConfiguration
+                = CreateMigrationsConfiguration<TContextV2>(
                     scaffoldedMigrations: new[] { _generatedMigration_v1, generatedMigration_v2 });
+
             migrationsConfiguration.SetSqlGenerator(DbProviders.Sql, _downVerifier);
             migrationsConfiguration.SetSqlGenerator(DbProviders.SqlCe, _downVerifier);
-            new DbMigrator(migrationsConfiguration).Update(_generatedMigration_v1.MigrationId);
+
+            try
+            {
+                new DbMigrator(migrationsConfiguration)
+                    .Update(_generatedMigration_v1.MigrationId);
+            }
+            catch (NotSupportedException)
+            {
+                Assert.True(IsDownNotSupported);
+            }
         }
 
         private void ResetDatabaseToV1()
@@ -172,8 +215,6 @@ namespace System.Data.Entity.Migrations
         }
     }
 
-    #region Model stubs
-
     public class AutoAndGenerateContext_v1 : DbContext
     {
         public AutoAndGenerateContext_v1()
@@ -189,6 +230,4 @@ namespace System.Data.Entity.Migrations
         {
         }
     }
-
-    #endregion
 }

@@ -9,7 +9,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.UserRoles_v1;
@@ -197,13 +196,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<OrderLine>()
-                        .HasKey(
-                            ol => new
-                                      {
-                                          ol.Id,
-                                          ol.OrderId
-                                      })
-                        .ToTable("tbl_OrderLines");
+                .HasKey(
+                    ol => new
+                              {
+                                  ol.Id,
+                                  ol.OrderId
+                              })
+                .ToTable("tbl_OrderLines");
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -397,9 +396,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Elements().Single(e => e.Name.LocalName == "EntityType" && e.Attributes("Name").Any(a => a.Value == "MigrationsCustomer"));
 
             customerEntity.Elements().Single(e => e.Name.LocalName == "Property" && e.Attributes("Name").Any(a => a.Value == "FullName"))
-                          .Add(new XAttribute("MaxLength", "Max"));
+                .Add(new XAttribute("MaxLength", "Max"));
             customerEntity.Elements().Single(e => e.Name.LocalName == "Property" && e.Attributes("Name").Any(a => a.Value == "Photo"))
-                          .Add(new XAttribute("MaxLength", "MAX"));
+                .Add(new XAttribute("MaxLength", "MAX"));
 
             DbProviderInfo providerInfo;
             var storageMappingItemCollection = sourceModel.GetStorageMappingItemCollection(out providerInfo);
@@ -440,8 +439,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private static DbProviderManifest GetProviderManifest(DbProviderInfo providerInfo)
         {
             return DbConfiguration.GetService<DbProviderFactory>(providerInfo.ProviderInvariantName)
-                                  .GetProviderServices()
-                                  .GetProviderManifest(providerInfo.ProviderManifestToken);
+                .GetProviderServices()
+                .GetProviderManifest(providerInfo.ProviderManifestToken);
         }
 
         [MigrationsTheory]
@@ -508,9 +507,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var createProcedureOperations
                 = new EdmModelDiffer()
                     .Diff(
-                        model1.GetModel(), 
-                        model2.GetModel(), 
-                        commandTreeGenerator, 
+                        model1.GetModel(),
+                        model2.GetModel(),
+                        commandTreeGenerator,
                         new SqlServerMigrationSqlGenerator())
                     .OfType<CreateProcedureOperation>()
                     .ToList();
@@ -518,6 +517,83 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal(14, createProcedureOperations.Count);
             Assert.True(createProcedureOperations.All(c => c.Name.Any()));
             Assert.True(createProcedureOperations.All(c => c.BodySql.Any()));
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_changed_modification_functions()
+        {
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel());
+
+            var targetModel = new TestContext_v2().GetModel();
+
+            var alterProcedureOperations
+                = new EdmModelDiffer()
+                    .Diff(
+                        new TestContext().GetModel(),
+                        targetModel,
+                        commandTreeGenerator,
+                        new SqlServerMigrationSqlGenerator())
+                    .OfType<AlterProcedureOperation>()
+                    .ToList();
+
+            Assert.Equal(3, alterProcedureOperations.Count);
+            Assert.True(alterProcedureOperations.All(c => c.BodySql.Any()));
+            Assert.Equal(1, alterProcedureOperations.Count(c => c.Parameters.Any(p => p.Name == "key_for_update2")));
+            Assert.Equal(1, alterProcedureOperations.Count(c => c.Parameters.Any(p => p.Name == "affected_rows")));
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_moved_modification_functions()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<MigrationsCustomer>().MapToStoredProcedures();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder
+                .Entity<MigrationsCustomer>()
+                .MapToStoredProcedures(
+                    m =>
+                        {
+                            m.Insert(c => c.HasName("MigrationsCustomer_Insert", "foo"));
+                            m.Update(c => c.HasName("delete_it", "foo"));
+                        });
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(3, operations.Count());
+
+            var moveProcedureOperations
+                = operations.OfType<MoveProcedureOperation>();
+
+            Assert.True(moveProcedureOperations.All(mpo => mpo.NewSchema == "foo"));
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_renamed_modification_functions()
+        {
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel());
+
+            var targetModel = new TestContext_v2().GetModel();
+
+            var renameProcedureOperations
+                = new EdmModelDiffer()
+                    .Diff(
+                        new TestContext().GetModel(),
+                        targetModel,
+                        commandTreeGenerator,
+                        new SqlServerMigrationSqlGenerator())
+                    .OfType<RenameProcedureOperation>()
+                    .ToList();
+
+            Assert.Equal(1, renameProcedureOperations.Count);
+            Assert.Equal(1, renameProcedureOperations.Count(c => c.NewName == "sproc_A"));
         }
 
         [MigrationsTheory]
@@ -533,8 +609,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var dropProcedureOperations
                 = new EdmModelDiffer().Diff(model2.GetModel(), model1.GetModel())
-                                      .OfType<DropProcedureOperation>()
-                                      .ToList();
+                    .OfType<DropProcedureOperation>()
+                    .ToList();
 
             Assert.Equal(14, dropProcedureOperations.Count);
             Assert.True(dropProcedureOperations.All(c => c.Name.Any()));
@@ -849,29 +925,29 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<MigrationsCustomer>()
-                        .Map(
-                            mc =>
-                                {
-                                    mc.Properties(
-                                        c => new
-                                                 {
-                                                     c.Id,
-                                                     c.FullName,
-                                                     c.HomeAddress,
-                                                     c.WorkAddress
-                                                 });
-                                    mc.ToTable("MigrationsCustomers");
-                                })
-                        .Map(
-                            mc =>
-                                {
-                                    mc.Properties(
-                                        c => new
-                                                 {
-                                                     c.Name
-                                                 });
-                                    mc.ToTable("Customers_Split");
-                                });
+                .Map(
+                    mc =>
+                        {
+                            mc.Properties(
+                                c => new
+                                         {
+                                             c.Id,
+                                             c.FullName,
+                                             c.HomeAddress,
+                                             c.WorkAddress
+                                         });
+                            mc.ToTable("MigrationsCustomers");
+                        })
+                .Map(
+                    mc =>
+                        {
+                            mc.Properties(
+                                c => new
+                                         {
+                                             c.Name
+                                         });
+                            mc.ToTable("Customers_Split");
+                        });
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -939,9 +1015,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var model1 = modelBuilder.Build(ProviderInfo);
 
             modelBuilder.Entity<MigrationsCustomer>()
-                        .HasMany(p => p.Orders)
-                        .WithOptional()
-                        .Map(c => c.MapKey("CustomerId", "CustomerName"));
+                .HasMany(p => p.Orders)
+                .WithOptional()
+                .Map(c => c.MapKey("CustomerId", "CustomerName"));
 
             var model2 = modelBuilder.Build(ProviderInfo);
 

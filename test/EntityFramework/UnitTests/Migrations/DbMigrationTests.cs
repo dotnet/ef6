@@ -256,6 +256,69 @@ namespace System.Data.Entity.Migrations
         }
 
         [Fact]
+        public void AlterStoredProcedure_can_build_procedure_with_parameters()
+        {
+            var migration = new TestMigration();
+
+            migration.AlterStoredProcedure(
+                "Customers_Insert",
+                p => new
+                {
+                    Id = p.Int(),
+                    Name = p.String()
+                },
+                "insert into customers...");
+
+            var alterProcedureOperation
+                = migration.Operations.Cast<AlterProcedureOperation>().Single();
+
+            Assert.Equal("Customers_Insert", alterProcedureOperation.Name);
+            Assert.Equal("insert into customers...", alterProcedureOperation.BodySql);
+            Assert.Equal(2, alterProcedureOperation.Parameters.Count());
+
+            var parameterModel = alterProcedureOperation.Parameters.First();
+
+            Assert.Equal("Id", parameterModel.Name);
+            Assert.Equal(PrimitiveTypeKind.Int32, parameterModel.Type);
+
+            parameterModel = alterProcedureOperation.Parameters.Last();
+
+            Assert.Equal("Name", parameterModel.Name);
+            Assert.Equal(PrimitiveTypeKind.String, parameterModel.Type);
+        }
+
+        [Fact]
+        public void AlterStoredProcedure_can_build_procedure_without_parameters()
+        {
+            var migration = new TestMigration();
+
+            migration.AlterStoredProcedure(
+                "Customers_Insert",
+                "insert into customers...");
+
+            var alterProcedureOperation
+                = migration.Operations.Cast<AlterProcedureOperation>().Single();
+
+            Assert.Equal("Customers_Insert", alterProcedureOperation.Name);
+            Assert.Equal("insert into customers...", alterProcedureOperation.BodySql);
+            Assert.Equal(0, alterProcedureOperation.Parameters.Count());
+        }
+
+        [Fact]
+        public void RenameStoredProcedure_should_add_rename_procedure_operation()
+        {
+            var migration = new TestMigration();
+
+            migration.RenameStoredProcedure("old", "new");
+
+            var renameProcedureOperation = migration.Operations.Cast<RenameProcedureOperation>().Single();
+
+            Assert.NotNull(renameProcedureOperation);
+            Assert.Equal("old", renameProcedureOperation.Name);
+            Assert.Equal("new", renameProcedureOperation.NewName);
+        }
+
+        [Fact]
         public void DropStoredProcedure_should_add_drop_procedure_operation()
         {
             var migration = new TestMigration();
@@ -355,6 +418,20 @@ namespace System.Data.Entity.Migrations
 
             Assert.NotNull(dropTableOperation);
             Assert.Equal("Customers", dropTableOperation.Name);
+        }
+
+        [Fact]
+        public void MoveStoredProcedure_should_add_move_procedure_operation()
+        {
+            var migration = new TestMigration();
+
+            migration.MoveStoredProcedure("old", "new");
+
+            var moveProcedureOperation = migration.Operations.Cast<MoveProcedureOperation>().Single();
+
+            Assert.NotNull(moveProcedureOperation);
+            Assert.Equal("old", moveProcedureOperation.Name);
+            Assert.Equal("new", moveProcedureOperation.NewSchema);
         }
 
         [Fact]

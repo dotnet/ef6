@@ -58,21 +58,65 @@ namespace System.Data.Entity.Migrations
             var parameters = parametersAction(new ParameterBuilder());
 
             parameters.GetType().GetProperties()
-                      .Each(
-                          (p, i) =>
-                              {
-                                  var parameterModel = p.GetValue(parameters, null) as ParameterModel;
+                .Each(
+                    (p, i) =>
+                        {
+                            var parameterModel = p.GetValue(parameters, null) as ParameterModel;
 
-                                  if (parameterModel != null)
-                                  {
-                                      if (string.IsNullOrWhiteSpace(parameterModel.Name))
-                                      {
-                                          parameterModel.Name = p.Name;
-                                      }
+                            if (parameterModel != null)
+                            {
+                                if (string.IsNullOrWhiteSpace(parameterModel.Name))
+                                {
+                                    parameterModel.Name = p.Name;
+                                }
 
-                                      createProcedureOperation.Parameters.Add(parameterModel);
-                                  }
-                              });
+                                createProcedureOperation.Parameters.Add(parameterModel);
+                            }
+                        });
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        public void AlterStoredProcedure(string name, string body, object anonymousArguments = null)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(body, "body");
+
+            AlterStoredProcedure<object>(name, _ => new { }, body, anonymousArguments);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        public void AlterStoredProcedure<TParameters>(
+            string name,
+            Func<ParameterBuilder, TParameters> parametersAction,
+            string body,
+            object anonymousArguments = null)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotNull(parametersAction, "parametersAction");
+            Check.NotEmpty(body, "body");
+
+            var alterProcedureOperation = new AlterProcedureOperation(name, body, anonymousArguments);
+
+            AddOperation(alterProcedureOperation);
+
+            var parameters = parametersAction(new ParameterBuilder());
+
+            parameters.GetType().GetProperties()
+                .Each(
+                    (p, i) =>
+                        {
+                            var parameterModel = p.GetValue(parameters, null) as ParameterModel;
+
+                            if (parameterModel != null)
+                            {
+                                if (string.IsNullOrWhiteSpace(parameterModel.Name))
+                                {
+                                    parameterModel.Name = p.Name;
+                                }
+
+                                alterProcedureOperation.Parameters.Add(parameterModel);
+                            }
+                        });
         }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
@@ -107,21 +151,21 @@ namespace System.Data.Entity.Migrations
             var columns = columnsAction(new ColumnBuilder());
 
             columns.GetType().GetProperties()
-                   .Each(
-                       (p, i) =>
-                           {
-                               var columnModel = p.GetValue(columns, null) as ColumnModel;
+                .Each(
+                    (p, i) =>
+                        {
+                            var columnModel = p.GetValue(columns, null) as ColumnModel;
 
-                               if (columnModel != null)
-                               {
-                                   if (string.IsNullOrWhiteSpace(columnModel.Name))
-                                   {
-                                       columnModel.Name = p.Name;
-                                   }
+                            if (columnModel != null)
+                            {
+                                if (string.IsNullOrWhiteSpace(columnModel.Name))
+                                {
+                                    columnModel.Name = p.Name;
+                                }
 
-                                   createTableOperation.Columns.Add(columnModel);
-                               }
-                           });
+                                createTableOperation.Columns.Add(columnModel);
+                            }
+                        });
 
             return new TableBuilder<TColumns>(createTableOperation, this);
         }
@@ -319,6 +363,14 @@ namespace System.Data.Entity.Migrations
             AddOperation(new MoveTableOperation(name, newSchema, anonymousArguments));
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        protected internal void MoveStoredProcedure(string name, string newSchema, object anonymousArguments = null)
+        {
+            Check.NotEmpty(name, "name");
+
+            AddOperation(new MoveProcedureOperation(name, newSchema, anonymousArguments));
+        }
+
         /// <summary>
         ///     Adds an operation to rename a table. To change the schema of a table use MoveTable
         /// </summary>
@@ -332,6 +384,15 @@ namespace System.Data.Entity.Migrations
             Check.NotEmpty(newName, "newName");
 
             AddOperation(new RenameTableOperation(name, newName, anonymousArguments));
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
+        protected internal void RenameStoredProcedure(string name, string newName, object anonymousArguments = null)
+        {
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(newName, "newName");
+
+            AddOperation(new RenameProcedureOperation(name, newName, anonymousArguments));
         }
 
         /// <summary>

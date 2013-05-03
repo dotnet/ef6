@@ -211,37 +211,62 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
                         }
                 );
 
-            modelBuilder.Entity<SpecialOrder>()
-                        .ToTable("special_orders")
-                        .Property(so => so.Key)
-                        .HasColumnName("so_key");
+            modelBuilder
+                .Entity<SpecialOrder>()
+                .ToTable("special_orders")
+                .Property(so => so.Key)
+                .HasColumnName("so_key");
 
-            modelBuilder.Entity<ExtraSpecialOrder>()
-                        .ToTable("xspecial_orders")
-                        .MapToStoredProcedures(
-                            m =>
-                                {
-                                    m.Insert(
-                                        c =>
-                                            {
-                                                c.Parameter(o => o.Name, "the_name");
-                                                c.Parameter(o => o.Code, "teh_codez");
-                                                c.Result(o => o.Key, "key_result");
-                                            });
-                                    m.Update(
-                                        c =>
-                                            {
-                                                c.Parameter(o => o.Key, "key_for_update");
-                                                c.Result(o => o.OrderNo, "order_fu");
-                                            });
-                                    m.Delete(c => { c.Parameter(o => o.Key, "key_for_delete"); });
-                                })
-                        .Property(so => so.Id)
-                        .HasColumnName("xid");
+            modelBuilder
+                .Entity<ExtraSpecialOrder>()
+                .ToTable("xspecial_orders")
+                .MapToStoredProcedures(
+                    m =>
+                        {
+                            m.Insert(
+                                c =>
+                                    {
+                                        c.Parameter(o => o.Name, "the_name");
+                                        c.Parameter(o => o.Code, "teh_codez");
+                                        c.Result(o => o.Key, "key_result");
+                                    });
+                            m.Update(
+                                c =>
+                                    {
+                                        c.Parameter(o => o.Key, "key_for_update");
+                                        c.Result(o => o.OrderNo, "order_fu");
+                                    });
+                            m.Delete(c => { c.Parameter(o => o.Key, "key_for_delete"); });
+                        })
+                .Property(so => so.Id)
+                .HasColumnName("xid");
 
             modelBuilder
                 .Entity<Customer>()
                 .MapToStoredProcedures();
+        }
+    }
+
+    internal class TestContext_v2 : TestContext
+    {
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder
+                .Entity<Order>()
+                .MapToStoredProcedures(
+                    m =>
+                        {
+                            m.Insert(c => c.HasName("sproc_A"));
+                            m.Update(c => c.Parameter(o => o.Key, "key_for_update2"));
+                            m.Delete(c => c.RowsAffectedParameter("affected_rows"));
+                        });
+
+            modelBuilder
+                .Entity<SpecialOrder>()
+                .MapToStoredProcedures(
+                    m => { m.Insert(c => c.Result(o => o.OrderNo, "order_fu2")); });
         }
     }
 }

@@ -10,7 +10,6 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Linq;
@@ -30,7 +29,7 @@ namespace System.Data.Entity.SqlServerCompact
             Assert.Equal(
                 Strings.SqlCeColumnRenameNotSupported,
                 Assert.Throws<MigrationsException>(() => migrationProvider.Generate(new[] { renameColumnOperation }, "4.0").ToList()).
-                       Message);
+                    Message);
         }
 
         [Fact]
@@ -328,7 +327,7 @@ namespace System.Data.Entity.SqlServerCompact
     CONSTRAINT [PK_foo.Customers] PRIMARY KEY NONCLUSTERED ([Id])
 )", sql);
         }
-        
+
         [Fact]
         public void Generate_can_output_create_index_statement()
         {
@@ -528,7 +527,7 @@ WHERE (([MigrationId] = N'House Lannister') AND ([ContextKey] = N'The pointy end
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
             var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "4.0")
-                                           .Join(s => s.Sql, Environment.NewLine);
+                .Join(s => s.Sql, Environment.NewLine);
 
             Assert.Contains(string.Format("ALTER TABLE [Foo] ADD [Bar] [uniqueidentifier] DEFAULT {0}", "newid()"), sql);
         }

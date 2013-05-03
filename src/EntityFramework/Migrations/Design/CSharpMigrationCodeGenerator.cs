@@ -348,19 +348,37 @@ namespace System.Data.Entity.Migrations.Design
             Check.NotNull(createProcedureOperation, "createProcedureOperation");
             Check.NotNull(writer, "writer");
 
-            writer.WriteLine("CreateStoredProcedure(");
+            Generate(createProcedureOperation, "CreateStoredProcedure", writer);
+        }
+
+        protected virtual void Generate(AlterProcedureOperation alterProcedureOperation, IndentedTextWriter writer)
+        {
+            Check.NotNull(alterProcedureOperation, "alterProcedureOperation");
+            Check.NotNull(writer, "writer");
+
+            Generate(alterProcedureOperation, "AlterStoredProcedure", writer);
+        }
+
+        private void Generate(ProcedureOperation procedureOperation, string methodName, IndentedTextWriter writer)
+        {
+            DebugCheck.NotNull(procedureOperation);
+            DebugCheck.NotEmpty(methodName);
+            DebugCheck.NotNull(writer);
+
+            writer.Write(methodName);
+            writer.WriteLine("(");
             writer.Indent++;
-            writer.Write(Quote(createProcedureOperation.Name));
+            writer.Write(Quote(procedureOperation.Name));
             writer.WriteLine(",");
 
-            if (createProcedureOperation.Parameters.Any())
+            if (procedureOperation.Parameters.Any())
             {
                 writer.WriteLine("p => new");
                 writer.Indent++;
                 writer.WriteLine("{");
                 writer.Indent++;
 
-                createProcedureOperation.Parameters.Each(
+                procedureOperation.Parameters.Each(
                     p =>
                         {
                             var scrubbedName = ScrubName(p.Name);
@@ -378,7 +396,7 @@ namespace System.Data.Entity.Migrations.Design
 
             writer.Write("body:");
 
-            if (!string.IsNullOrWhiteSpace(createProcedureOperation.BodySql))
+            if (!string.IsNullOrWhiteSpace(procedureOperation.BodySql))
             {
                 writer.WriteLine();
                 writer.Indent++;
@@ -390,7 +408,7 @@ namespace System.Data.Entity.Migrations.Design
                 writer.Write("@");
                 writer.WriteLine(
                     Generate(
-                        createProcedureOperation
+                        procedureOperation
                             .BodySql
                             .Replace(Environment.NewLine, indentString)));
 
@@ -1096,6 +1114,19 @@ namespace System.Data.Entity.Migrations.Design
             writer.WriteLine(");");
         }
 
+        protected virtual void Generate(MoveProcedureOperation moveProcedureOperation, IndentedTextWriter writer)
+        {
+            Check.NotNull(moveProcedureOperation, "moveProcedureOperation");
+            Check.NotNull(writer, "writer");
+
+            writer.Write("MoveStoredProcedure(name: ");
+            writer.Write(Quote(moveProcedureOperation.Name));
+            writer.Write(", newSchema: ");
+            writer.Write(
+                string.IsNullOrWhiteSpace(moveProcedureOperation.NewSchema) ? "null" : Quote(moveProcedureOperation.NewSchema));
+            writer.WriteLine(");");
+        }
+
         /// <summary>
         ///     Generates code to perform a <see cref="RenameTableOperation" />.
         /// </summary>
@@ -1110,6 +1141,18 @@ namespace System.Data.Entity.Migrations.Design
             writer.Write(Quote(renameTableOperation.Name));
             writer.Write(", newName: ");
             writer.Write(Quote(renameTableOperation.NewName));
+            writer.WriteLine(");");
+        }
+
+        protected virtual void Generate(RenameProcedureOperation renameProcedureOperation, IndentedTextWriter writer)
+        {
+            Check.NotNull(renameProcedureOperation, "renameProcedureOperation");
+            Check.NotNull(writer, "writer");
+
+            writer.Write("RenameStoredProcedure(name: ");
+            writer.Write(Quote(renameProcedureOperation.Name));
+            writer.Write(", newName: ");
+            writer.Write(Quote(renameProcedureOperation.NewName));
             writer.WriteLine(");");
         }
 
@@ -1161,6 +1204,8 @@ namespace System.Data.Entity.Migrations.Design
         [SuppressMessage("Microsoft.Security", "CA2141:TransparentMethodsMustNotSatisfyLinkDemandsFxCopRule")]
         protected virtual string ScrubName(string name)
         {
+            Check.NotEmpty(name, "name");
+
             var invalidChars
                 = new Regex(@"[^\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Nl}\p{Mn}\p{Mc}\p{Cf}\p{Pc}\p{Lm}]");
 
@@ -1168,7 +1213,7 @@ namespace System.Data.Entity.Migrations.Design
 
             using (var codeProvider = new CSharpCodeProvider())
             {
-                if (!char.IsLetter(name[0])
+                if ((!char.IsLetter(name[0]) && name[0] != '_')
                     || !codeProvider.IsValidIdentifier(name))
                 {
                     name = "_" + name;

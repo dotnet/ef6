@@ -13430,7 +13430,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "Scaffolding create procedure operations is not supported in down methods."
+        ///     A string like "Scaffolding create or alter procedure operations is not supported in down methods."
         /// </summary>
         internal static string ScaffoldSprocInDownNotSupported
         {

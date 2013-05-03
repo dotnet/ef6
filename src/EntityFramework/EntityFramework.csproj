@@ -245,6 +245,10 @@
     <Compile Include="Infrastructure\IDbCommandTreeInterceptor.cs" />
     <Compile Include="Infrastructure\IEntityConnectionInterceptor.cs" />
     <Compile Include="Migrations\History\HistoryContextFactory.cs" />
+    <Compile Include="Migrations\Model\AlterProcedureOperation.cs" />
+    <Compile Include="Migrations\Model\MoveProcedureOperation.cs" />
+    <Compile Include="Migrations\Model\RenameProcedureOperation.cs" />
+    <Compile Include="Migrations\Model\ProcedureOperation.cs" />
     <Compile Include="Migrations\Model\NotSupportedOperation.cs" />
     <Compile Include="Migrations\Model\ParameterModel.cs" />
     <Compile Include="Migrations\Model\DropProcedureOperation.cs" />

@@ -11,9 +11,8 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
-    using System.Data.Entity.Migrations.Utilities;    
+    using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Spatial;
-    using System.Data.Entity.SqlServer;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.SqlGen;
     using System.Data.Entity.SqlServer.Utilities;
@@ -23,7 +22,7 @@ namespace System.Data.Entity.SqlServer
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Text.RegularExpressions;    
+    using System.Text.RegularExpressions;
 
     /// <summary>
     ///     Provider to convert provider agnostic migration operations into SQL commands
@@ -154,17 +153,33 @@ namespace System.Data.Entity.SqlServer
         {
             Check.NotNull(createProcedureOperation, "createProcedureOperation");
 
+            Generate(createProcedureOperation, "CREATE");
+        }
+
+        protected virtual void Generate(AlterProcedureOperation alterProcedureOperation)
+        {
+            Check.NotNull(alterProcedureOperation, "alterProcedureOperation");
+
+            Generate(alterProcedureOperation, "ALTER");
+        }
+
+        private void Generate(ProcedureOperation procedureOperation, string modifier)
+        {
+            DebugCheck.NotNull(procedureOperation);
+            DebugCheck.NotEmpty(modifier);
+
             using (var writer = Writer())
             {
-                writer.WriteLine("CREATE PROCEDURE " + Name(createProcedureOperation.Name));
+                writer.Write(modifier);
+                writer.WriteLine(" PROCEDURE " + Name(procedureOperation.Name));
                 writer.Indent++;
 
-                createProcedureOperation.Parameters.Each(
+                procedureOperation.Parameters.Each(
                     (p, i) =>
                         {
                             Generate(p, writer);
 
-                            if (i < createProcedureOperation.Parameters.Count - 1)
+                            if (i < procedureOperation.Parameters.Count - 1)
                             {
                                 writer.WriteLine(",");
                             }
@@ -176,7 +191,7 @@ namespace System.Data.Entity.SqlServer
                 writer.WriteLine("BEGIN");
                 writer.Indent++;
 
-                if (!string.IsNullOrWhiteSpace(createProcedureOperation.BodySql))
+                if (!string.IsNullOrWhiteSpace(procedureOperation.BodySql))
                 {
                     var indentString
                         = writer.NewLine
@@ -184,7 +199,7 @@ namespace System.Data.Entity.SqlServer
 
                     var indentReplacer = new Regex(@"\r?\n *");
 
-                    writer.WriteLine(indentReplacer.Replace(createProcedureOperation.BodySql, indentString));
+                    writer.WriteLine(indentReplacer.Replace(procedureOperation.BodySql, indentString));
                 }
                 else
                 {
@@ -729,6 +744,47 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
+        protected virtual void Generate(RenameProcedureOperation renameProcedureOperation)
+        {
+            Check.NotNull(renameProcedureOperation, "renameProcedureOperation");
+
+            using (var writer = Writer())
+            {
+                writer.Write("EXECUTE sp_rename @objname = N'");
+                writer.Write(renameProcedureOperation.Name);
+                writer.Write("', @newname = N'");
+                writer.Write(renameProcedureOperation.NewName);
+                writer.Write("', @objtype = N'OBJECT'");
+
+                Statement(writer);
+            }
+        }
+
+        protected virtual void Generate(MoveProcedureOperation moveProcedureOperation)
+        {
+            Check.NotNull(moveProcedureOperation, "moveProcedureOperation");
+
+            var newSchema = moveProcedureOperation.NewSchema ?? "dbo";
+
+            if (!newSchema.EqualsIgnoreCase("dbo")
+                && !_generatedSchemas.Contains(newSchema))
+            {
+                GenerateCreateSchema(newSchema);
+
+                _generatedSchemas.Add(newSchema);
+            }
+
+            using (var writer = Writer())
+            {
+                writer.Write("ALTER SCHEMA ");
+                writer.Write(Quote(newSchema));
+                writer.Write(" TRANSFER ");
+                writer.Write(Name(moveProcedureOperation.Name));
+
+                Statement(writer);
+            }
+        }
+
         /// <summary>
         ///     Generates SQL for a <see cref="MoveTableOperation" />.
         ///     Generated SQL should be added using the Statement method.
@@ -1114,6 +1170,8 @@ namespace System.Data.Entity.SqlServer
         /// <returns> The quoted identifier. </returns>
         protected virtual string Quote(string identifier)
         {
+            Check.NotEmpty(identifier, "identifier");
+
             return "[" + identifier + "]";
         }
 

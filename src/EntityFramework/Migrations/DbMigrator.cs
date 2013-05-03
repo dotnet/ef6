@@ -800,7 +800,7 @@ namespace System.Data.Entity.Migrations
             }
 
             if ((targetModel != _currentModel)
-                && (operations.Any(o => o is CreateProcedureOperation)))
+                && (operations.Any(o => o is ProcedureOperation)))
             {
                 throw Error.AutomaticStaleFunctions(migrationId);
             }
@@ -972,7 +972,7 @@ namespace System.Data.Entity.Migrations
                 var principalTable = GetStandardizedTableName(foreignKeyOperation.PrincipalTable);
                 var entitySetName
                     = (from es in targetModel.Descendants(EdmXNames.Ssdl.EntitySetNames)
-                       where _modelDiffer.GetQualifiedTableName(es.TableAttribute(), es.SchemaAttribute())
+                       where _modelDiffer.GetSchemaQualifiedName(es.TableAttribute(), es.SchemaAttribute())
                                          .EqualsIgnoreCase(principalTable)
                        select es.NameAttribute()).SingleOrDefault();
 

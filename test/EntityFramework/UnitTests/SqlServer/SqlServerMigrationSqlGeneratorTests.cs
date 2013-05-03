@@ -225,14 +225,14 @@ namespace System.Data.Entity.SqlServer
                         commandTreeGenerator,
                         new SqlServerMigrationSqlGenerator())
                     .OfType<CreateProcedureOperation>()
-                    .Single(c => c.Name == "ExtraSpecialOrder_Update");
+                    .Single(c => c.Name == "dbo.ExtraSpecialOrder_Update");
 
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var sql = migrationSqlGenerator.Generate(new[] { createProcedureOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
 
             Assert.Equal(
-                @"CREATE PROCEDURE [ExtraSpecialOrder_Update]
+                @"CREATE PROCEDURE [dbo].[ExtraSpecialOrder_Update]
     @xid [int],
     @key_for_update [uniqueidentifier],
     @Code [nvarchar](128),
@@ -275,6 +275,84 @@ BEGIN
     
     SET @RowsAffected = @@ROWCOUNT
 END", sql);
+        }
+
+        [Fact]
+        public void Generate_can_output_alter_procedure_statements()
+        {
+            var model1 = new TestContext();
+            var model2 = new TestContext_v2();
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel());
+
+            var alterProcedureOperation
+                = new EdmModelDiffer()
+                    .Diff(
+                        model1.GetModel(),
+                        model2.GetModel(),
+                        commandTreeGenerator,
+                        new SqlServerMigrationSqlGenerator())
+                    .OfType<AlterProcedureOperation>()
+                    .Single(c => c.Name == "dbo.Order_Update");
+
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var sql = migrationSqlGenerator.Generate(new[] { alterProcedureOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Equal(
+                @"ALTER PROCEDURE [dbo].[Order_Update]
+    @order_id [int],
+    @key_for_update2 [uniqueidentifier],
+    @Code [nvarchar](128),
+    @Signature [varbinary](128),
+    @Name [nvarchar](max),
+    @Name_Original [nvarchar](max),
+    @Address_Street [nvarchar](max),
+    @Address_City [nvarchar](max),
+    @Address_Country_Name [nvarchar](max),
+    @OrderGroupId [int],
+    @RowVersion_Original [rowversion],
+    @Customer_CustomerId [int],
+    @RowsAffected [int] OUT
+AS
+BEGIN
+    UPDATE [dbo].[Orders]
+    SET [Name] = @Name, [Address_Street] = @Address_Street, [Address_City] = @Address_City, [Address_Country_Name] = @Address_Country_Name, [OrderGroupId] = @OrderGroupId, [Customer_CustomerId] = @Customer_CustomerId
+    WHERE ((((((([order_id] = @order_id) AND ([Key] = @key_for_update2)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([Name] = @Name_Original) OR ([Name] IS NULL AND @Name_Original IS NULL))) AND (([RowVersion] = @RowVersion_Original) OR ([RowVersion] IS NULL AND @RowVersion_Original IS NULL))) AND (([Customer_CustomerId] = @Customer_CustomerId) OR ([Customer_CustomerId] IS NULL AND @Customer_CustomerId IS NULL)))
+    
+    SELECT t0.[OrderNo], t0.[RowVersion]
+    FROM [dbo].[Orders] AS t0
+    WHERE @@ROWCOUNT > 0 AND t0.[order_id] = @order_id AND t0.[Key] = @key_for_update2 AND t0.[Code] = @Code AND t0.[Signature] = @Signature
+    
+    SET @RowsAffected = @@ROWCOUNT
+END", sql);
+        }
+
+        [Fact]
+        public void Generate_can_output_rename_procedure_statements()
+        {
+            var model1 = new TestContext();
+            var model2 = new TestContext_v2();
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel());
+
+            var renameProcedureOperation
+                = new EdmModelDiffer()
+                    .Diff(
+                        model1.GetModel(),
+                        model2.GetModel(),
+                        commandTreeGenerator,
+                        new SqlServerMigrationSqlGenerator())
+                    .OfType<RenameProcedureOperation>()
+                    .Single();
+
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var sql = migrationSqlGenerator.Generate(new[] { renameProcedureOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Equal(@"EXECUTE sp_rename @objname = N'dbo.Order_Insert', @newname = N'sproc_A', @objtype = N'OBJECT'", sql);
         }
 
         [Fact]
@@ -368,6 +446,22 @@ CREATE TABLE [foo].[Customers] (
     [Name] [nvarchar](max) NOT NULL,
     CONSTRAINT [PK_foo.Customers] PRIMARY KEY NONCLUSTERED ([Id])
 )", sql);
+        }
+
+        [Fact]
+        public void Generate_can_output_move_procedure_statement()
+        {
+            var moveProcedureOperation
+                = new MoveProcedureOperation("dbo.History", "foo");
+
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var sql = migrationSqlGenerator.Generate(new[] { moveProcedureOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Contains(
+                @"IF schema_id('foo') IS NULL
+    EXECUTE('CREATE SCHEMA [foo]')
+ALTER SCHEMA [foo] TRANSFER [dbo].[History]", sql);
         }
 
         [Fact]

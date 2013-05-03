@@ -32,15 +32,19 @@ namespace System.Data.Entity.Core.Mapping
 
             _function = function;
             _rowsAffectedParameter = rowsAffectedParameter;
+
             ParameterBindings = parameterBindings.ToList().AsReadOnly();
+
             if (null != resultBindings)
             {
                 var bindings = resultBindings.ToList();
+
                 if (0 < bindings.Count)
                 {
                     ResultBindings = bindings.AsReadOnly();
                 }
             }
+
             CollocatedAssociationSetEnds =
                 GetReferencedAssociationSetEnds(entitySet as EntitySet, entityType as EntityType, parameterBindings)
                     .ToList()

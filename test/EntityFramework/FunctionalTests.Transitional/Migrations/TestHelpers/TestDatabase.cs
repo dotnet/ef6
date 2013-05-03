@@ -106,7 +106,7 @@ namespace System.Data.Entity.Migrations
                   WHILE @@FETCH_STATUS = 0
                   BEGIN
                       EXEC sp_executesql @sql;
-                      FETCH NEXT FROM history_cursor INTO  @sql;
+                      FETCH NEXT FROM history_cursor INTO @sql;
                   END
                   CLOSE history_cursor;
                   DEALLOCATE history_cursor;
@@ -134,19 +134,18 @@ namespace System.Data.Entity.Migrations
 
                   EXEC sp_MSforeachtable 'DROP TABLE ?';
 
-                  DECLARE @proc_name SYSNAME;
-                  
                   DECLARE sproc_cursor CURSOR FOR
-                  SELECT name FROM sysobjects WHERE TYPE = 'P';
+                  SELECT 'DROP PROCEDURE ' + SCHEMA_NAME(schema_id) + '.' + object_name(object_id) + ';'
+                  FROM sys.objects
+                  WHERE TYPE = 'P'
                   
                   OPEN sproc_cursor;
-                  FETCH NEXT FROM sproc_cursor INTO @proc_name;
+                  FETCH NEXT FROM sproc_cursor INTO @sql;
                   WHILE @@FETCH_STATUS = 0
                   BEGIN
-                      EXEC('drop proc ' + @proc_name);
-                      FETCH NEXT FROM sproc_cursor INTO @proc_name;
+                      EXEC sp_executesql @sql;
+                      FETCH NEXT FROM sproc_cursor INTO @sql;
                   END
-                  
                   CLOSE sproc_cursor;
                   DEALLOCATE sproc_cursor;");
         }

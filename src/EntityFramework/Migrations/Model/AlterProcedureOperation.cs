@@ -4,17 +4,17 @@ namespace System.Data.Entity.Migrations.Model
 {
     using System.Diagnostics.CodeAnalysis;
 
-    public class CreateProcedureOperation : ProcedureOperation
+    public class AlterProcedureOperation : ProcedureOperation
     {
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public CreateProcedureOperation(string name, string bodySql, object anonymousArguments = null)
+        public AlterProcedureOperation(string name, string bodySql, object anonymousArguments = null)
             : base(name, bodySql, anonymousArguments)
         {
         }
 
         public override MigrationOperation Inverse
         {
-            get { return new DropProcedureOperation(Name); }
+            get { return NotSupportedOperation.Instance; }
         }
     }
 }
