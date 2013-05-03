@@ -266,5 +266,45 @@ namespace System.Data.Entity.Edm.Validation
 
             return errorEventArgs;
         }
+
+        [Fact]
+        public void EdmEntityType_InvalidMemberNameMatchesTypeName_passes_if_name_matches_type_name_in_s_space()
+        {
+            var validationContext
+                = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
+
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            var entity = new EntityType("SameName", "N", DataSpace.CSpace, null,
+                new EdmMember[] { new EdmProperty("SameName") });
+
+            EdmModelSemanticValidationRules
+                .EdmEntityType_InvalidMemberNameMatchesTypeName
+                .Evaluate(validationContext, entity);
+
+            Assert.Null(errorEventArgs);
+            Assert.True(entity.Properties.Any(p => p.Name == entity.Name));
+        }
+
+        [Fact]
+        public void EdmEntityType_InvalidMemberNameMatchesTypeName_calls_on_error_if_name_matches_type_name_in_c_space()
+        {
+            var validationContext
+                = new EdmModelValidationContext(new EdmModel(DataSpace.CSpace), true);
+
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            var entity = new EntityType("SameName", "N", DataSpace.CSpace, null,
+                new EdmMember[] { new EdmProperty("SameName") });
+
+            EdmModelSemanticValidationRules
+                .EdmEntityType_InvalidMemberNameMatchesTypeName
+                .Evaluate(validationContext, entity);
+
+            Assert.NotNull(errorEventArgs);
+            Assert.True(entity.Properties.Any(p => p.Name == entity.Name));
+        }
     }
 }

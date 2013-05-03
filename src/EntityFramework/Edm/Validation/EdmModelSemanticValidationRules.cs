@@ -389,7 +389,7 @@ namespace System.Data.Entity.Edm.Validation
                             {
                                 if (property != null)
                                 {
-                                    if (property.Name.EqualsOrdinal(edmEntityType.Name))
+                                    if (context.IsCSpace && property.Name.EqualsOrdinal(edmEntityType.Name))
                                     {
                                         context.AddError(
                                             property,
