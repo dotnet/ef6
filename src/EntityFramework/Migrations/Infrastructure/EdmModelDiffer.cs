@@ -203,16 +203,26 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return columnNormalizedSourceModel;
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private IEnumerable<MoveProcedureOperation> FindMovedModificationFunctions()
         {
             return
-                from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
-                from mfm1 in esm1.ModificationFunctionMappings
-                from esm2 in _target.StorageEntityContainerMapping.EntitySetMappings
-                from mfm2 in esm2.ModificationFunctionMappings
-                where mfm1.EntityType.Identity == mfm2.EntityType.Identity
-                from o in DiffModificationFunctionSchemas(mfm1, mfm2)
-                select o;
+                (from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
+                 from mfm1 in esm1.ModificationFunctionMappings
+                 from esm2 in _target.StorageEntityContainerMapping.EntitySetMappings
+                 from mfm2 in esm2.ModificationFunctionMappings
+                 where mfm1.EntityType.Identity == mfm2.EntityType.Identity
+                 from o in DiffModificationFunctionSchemas(mfm1, mfm2)
+                 select o)
+                    .Concat(
+                        from asm1 in _source.StorageEntityContainerMapping.AssociationSetMappings
+                        where asm1.ModificationFunctionMapping != null
+                        from asm2 in _target.StorageEntityContainerMapping.AssociationSetMappings
+                        where asm2.ModificationFunctionMapping != null
+                              && asm1.ModificationFunctionMapping.AssociationSet.Identity
+                              == asm2.ModificationFunctionMapping.AssociationSet.Identity
+                        from o in DiffModificationFunctionSchemas(asm1.ModificationFunctionMapping, asm2.ModificationFunctionMapping)
+                        select o);
         }
 
         private IEnumerable<MoveProcedureOperation> DiffModificationFunctionSchemas(
@@ -240,6 +250,34 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         sourceModificationFunctionMapping.UpdateFunctionMapping.Function.Name,
                         sourceModificationFunctionMapping.UpdateFunctionMapping.Function.Schema),
                     targetModificationFunctionMapping.UpdateFunctionMapping.Function.Schema);
+            }
+
+            if (!sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Schema
+                     .EqualsOrdinal(targetModificationFunctionMapping.DeleteFunctionMapping.Function.Schema))
+            {
+                yield return new MoveProcedureOperation(
+                    GetSchemaQualifiedName(
+                        sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Name,
+                        sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Schema),
+                    targetModificationFunctionMapping.DeleteFunctionMapping.Function.Schema);
+            }
+        }
+
+        private IEnumerable<MoveProcedureOperation> DiffModificationFunctionSchemas(
+            StorageAssociationSetModificationFunctionMapping sourceModificationFunctionMapping,
+            StorageAssociationSetModificationFunctionMapping targetModificationFunctionMapping)
+        {
+            DebugCheck.NotNull(sourceModificationFunctionMapping);
+            DebugCheck.NotNull(targetModificationFunctionMapping);
+
+            if (!sourceModificationFunctionMapping.InsertFunctionMapping.Function.Schema
+                     .EqualsOrdinal(targetModificationFunctionMapping.InsertFunctionMapping.Function.Schema))
+            {
+                yield return new MoveProcedureOperation(
+                    GetSchemaQualifiedName(
+                        sourceModificationFunctionMapping.InsertFunctionMapping.Function.Name,
+                        sourceModificationFunctionMapping.InsertFunctionMapping.Function.Schema),
+                    targetModificationFunctionMapping.InsertFunctionMapping.Function.Schema);
             }
 
             if (!sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Schema
@@ -283,16 +321,54 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         select o);
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private IEnumerable<RenameProcedureOperation> FindRenamedModificationFunctions()
         {
             return
-                from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
-                from mfm1 in esm1.ModificationFunctionMappings
-                from esm2 in _target.StorageEntityContainerMapping.EntitySetMappings
-                from mfm2 in esm2.ModificationFunctionMappings
-                where mfm1.EntityType.Identity == mfm2.EntityType.Identity
-                from o in DiffModificationFunctionNames(mfm1, mfm2)
-                select o;
+                (from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
+                 from mfm1 in esm1.ModificationFunctionMappings
+                 from esm2 in _target.StorageEntityContainerMapping.EntitySetMappings
+                 from mfm2 in esm2.ModificationFunctionMappings
+                 where mfm1.EntityType.Identity == mfm2.EntityType.Identity
+                 from o in DiffModificationFunctionNames(mfm1, mfm2)
+                 select o)
+                    .Concat(
+                        from asm1 in _source.StorageEntityContainerMapping.AssociationSetMappings
+                        where asm1.ModificationFunctionMapping != null
+                        from asm2 in _target.StorageEntityContainerMapping.AssociationSetMappings
+                        where asm2.ModificationFunctionMapping != null
+                              && asm1.ModificationFunctionMapping.AssociationSet.Identity
+                              == asm2.ModificationFunctionMapping.AssociationSet.Identity
+                        from o in DiffModificationFunctionNames(asm1.ModificationFunctionMapping, asm2.ModificationFunctionMapping)
+                        select o);
+        }
+
+        private IEnumerable<RenameProcedureOperation> DiffModificationFunctionNames(
+            StorageAssociationSetModificationFunctionMapping sourceModificationFunctionMapping,
+            StorageAssociationSetModificationFunctionMapping targetModificationFunctionMapping)
+        {
+            DebugCheck.NotNull(sourceModificationFunctionMapping);
+            DebugCheck.NotNull(targetModificationFunctionMapping);
+
+            if (!sourceModificationFunctionMapping.InsertFunctionMapping.Function.Name
+                     .EqualsOrdinal(targetModificationFunctionMapping.InsertFunctionMapping.Function.Name))
+            {
+                yield return new RenameProcedureOperation(
+                    GetSchemaQualifiedName(
+                        sourceModificationFunctionMapping.InsertFunctionMapping.Function.Name,
+                        targetModificationFunctionMapping.InsertFunctionMapping.Function.Schema),
+                    targetModificationFunctionMapping.InsertFunctionMapping.Function.Name);
+            }
+
+            if (!sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Name
+                     .EqualsOrdinal(targetModificationFunctionMapping.DeleteFunctionMapping.Function.Name))
+            {
+                yield return new RenameProcedureOperation(
+                    GetSchemaQualifiedName(
+                        sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Name,
+                        targetModificationFunctionMapping.DeleteFunctionMapping.Function.Schema),
+                    targetModificationFunctionMapping.DeleteFunctionMapping.Function.Name);
+            }
         }
 
         private IEnumerable<RenameProcedureOperation> DiffModificationFunctionNames(
@@ -333,17 +409,65 @@ namespace System.Data.Entity.Migrations.Infrastructure
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private IEnumerable<AlterProcedureOperation> FindChangedModificationFunctions(
             ModificationCommandTreeGenerator modificationCommandTreeGenerator, MigrationSqlGenerator migrationSqlGenerator)
         {
             return
-                from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
-                from mfm1 in esm1.ModificationFunctionMappings
-                from esm2 in _target.StorageEntityContainerMapping.EntitySetMappings
-                from mfm2 in esm2.ModificationFunctionMappings
-                where mfm1.EntityType.Identity == mfm2.EntityType.Identity
-                from o in DiffModificationFunctions(mfm1, mfm2, modificationCommandTreeGenerator, migrationSqlGenerator)
-                select o;
+                (from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
+                 from mfm1 in esm1.ModificationFunctionMappings
+                 from esm2 in _target.StorageEntityContainerMapping.EntitySetMappings
+                 from mfm2 in esm2.ModificationFunctionMappings
+                 where mfm1.EntityType.Identity == mfm2.EntityType.Identity
+                 from o in DiffModificationFunctions(mfm1, mfm2, modificationCommandTreeGenerator, migrationSqlGenerator)
+                 select o)
+                    .Concat(
+                        from asm1 in _source.StorageEntityContainerMapping.AssociationSetMappings
+                        where asm1.ModificationFunctionMapping != null
+                        from asm2 in _target.StorageEntityContainerMapping.AssociationSetMappings
+                        where asm2.ModificationFunctionMapping != null
+                              && asm1.ModificationFunctionMapping.AssociationSet.Identity
+                              == asm2.ModificationFunctionMapping.AssociationSet.Identity
+                        from o in DiffModificationFunctions(
+                            asm1.ModificationFunctionMapping,
+                            asm2.ModificationFunctionMapping,
+                            modificationCommandTreeGenerator,
+                            migrationSqlGenerator)
+                        select o);
+        }
+
+        private IEnumerable<AlterProcedureOperation> DiffModificationFunctions(
+            StorageAssociationSetModificationFunctionMapping sourceModificationFunctionMapping,
+            StorageAssociationSetModificationFunctionMapping targetModificationFunctionMapping,
+            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            MigrationSqlGenerator migrationSqlGenerator)
+        {
+            DebugCheck.NotNull(sourceModificationFunctionMapping);
+            DebugCheck.NotNull(targetModificationFunctionMapping);
+
+            if (!DiffModificationFunction(
+                sourceModificationFunctionMapping.InsertFunctionMapping,
+                targetModificationFunctionMapping.InsertFunctionMapping))
+            {
+                yield return BuildAlterProcedureOperation(
+                    targetModificationFunctionMapping.InsertFunctionMapping.Function,
+                    GenerateInsertFunctionBody(
+                        targetModificationFunctionMapping,
+                        modificationCommandTreeGenerator,
+                        migrationSqlGenerator));
+            }
+
+            if (!DiffModificationFunction(
+                sourceModificationFunctionMapping.DeleteFunctionMapping,
+                targetModificationFunctionMapping.DeleteFunctionMapping))
+            {
+                yield return BuildAlterProcedureOperation(
+                    targetModificationFunctionMapping.DeleteFunctionMapping.Function,
+                    GenerateDeleteFunctionBody(
+                        targetModificationFunctionMapping,
+                        modificationCommandTreeGenerator,
+                        migrationSqlGenerator));
+            }
         }
 
         private IEnumerable<AlterProcedureOperation> DiffModificationFunctions(
@@ -407,6 +531,21 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 rowsAffectedParameterName: null);
         }
 
+        private string GenerateInsertFunctionBody(
+            StorageAssociationSetModificationFunctionMapping modificationFunctionMapping,
+            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            MigrationSqlGenerator migrationSqlGenerator)
+        {
+            DebugCheck.NotNull(modificationFunctionMapping);
+
+            return GenerateFunctionBody(
+                modificationFunctionMapping,
+                (m, s) => m.GenerateAssociationInsert(s),
+                modificationCommandTreeGenerator,
+                migrationSqlGenerator,
+                rowsAffectedParameterName: null);
+        }
+
         private string GenerateUpdateFunctionBody(
             StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
             ModificationCommandTreeGenerator modificationCommandTreeGenerator,
@@ -432,6 +571,21 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return GenerateFunctionBody(
                 modificationFunctionMapping,
                 (m, s) => m.GenerateDelete(s),
+                modificationCommandTreeGenerator,
+                migrationSqlGenerator,
+                rowsAffectedParameterName: modificationFunctionMapping.DeleteFunctionMapping.RowsAffectedParameterName);
+        }
+
+        private string GenerateDeleteFunctionBody(
+            StorageAssociationSetModificationFunctionMapping modificationFunctionMapping,
+            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            MigrationSqlGenerator migrationSqlGenerator)
+        {
+            DebugCheck.NotNull(modificationFunctionMapping);
+
+            return GenerateFunctionBody(
+                modificationFunctionMapping,
+                (m, s) => m.GenerateAssociationDelete(s),
                 modificationCommandTreeGenerator,
                 migrationSqlGenerator,
                 rowsAffectedParameterName: modificationFunctionMapping.DeleteFunctionMapping.RowsAffectedParameterName);
@@ -463,19 +617,56 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         .ToArray();
             }
 
-            string bodySql = null;
+            return GenerateFunctionBody(migrationSqlGenerator, rowsAffectedParameterName, commandTrees);
+        }
 
-            if (migrationSqlGenerator != null)
+        private string GenerateFunctionBody<TCommandTree>(
+            StorageAssociationSetModificationFunctionMapping modificationFunctionMapping,
+            Func<ModificationCommandTreeGenerator, string, IEnumerable<TCommandTree>> treeGenerator,
+            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            MigrationSqlGenerator migrationSqlGenerator,
+            string rowsAffectedParameterName)
+            where TCommandTree : DbModificationCommandTree
+        {
+            DebugCheck.NotNull(modificationFunctionMapping);
+            DebugCheck.NotNull(treeGenerator);
+
+            var commandTrees = new TCommandTree[0];
+
+            if (modificationCommandTreeGenerator != null)
             {
-                var providerManifestToken
-                    = _target.ProviderInfo.ProviderManifestToken;
+                var dynamicToFunctionModificationCommandConverter
+                    = new DynamicToFunctionModificationCommandConverter(
+                        modificationFunctionMapping,
+                        _target.StorageEntityContainerMapping);
 
-                bodySql
-                    = migrationSqlGenerator
-                        .GenerateProcedureBody(commandTrees, rowsAffectedParameterName, providerManifestToken);
+                commandTrees
+                    = dynamicToFunctionModificationCommandConverter
+                        .Convert(
+                            treeGenerator(
+                                modificationCommandTreeGenerator,
+                                modificationFunctionMapping.AssociationSet.ElementType.Identity))
+                        .ToArray();
             }
 
-            return bodySql;
+            return GenerateFunctionBody(migrationSqlGenerator, rowsAffectedParameterName, commandTrees);
+        }
+
+        private string GenerateFunctionBody<TCommandTree>(
+            MigrationSqlGenerator migrationSqlGenerator,
+            string rowsAffectedParameterName,
+            TCommandTree[] commandTrees)
+            where TCommandTree : DbModificationCommandTree
+        {
+            if (migrationSqlGenerator == null)
+            {
+                return null;
+            }
+
+            var providerManifestToken = _target.ProviderInfo.ProviderManifestToken;
+
+            return migrationSqlGenerator
+                .GenerateProcedureBody(commandTrees, rowsAffectedParameterName, providerManifestToken);
         }
 
         private static bool DiffModificationFunction(
@@ -587,56 +778,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             DebugCheck.NotNull(modificationFunctionMapping);
 
-            var insertCommandTrees = new DbInsertCommandTree[0];
-            var deleteCommandTrees = new DbDeleteCommandTree[0];
-
-            if (modificationCommandTreeGenerator != null)
-            {
-                var dynamicToFunctionModificationCommandConverter
-                    = new DynamicToFunctionModificationCommandConverter(
-                        modificationFunctionMapping,
-                        _target.StorageEntityContainerMapping);
-
-                insertCommandTrees
-                    = dynamicToFunctionModificationCommandConverter
-                        .Convert(
-                            modificationCommandTreeGenerator
-                                .GenerateAssociationInsert(modificationFunctionMapping.AssociationSet.ElementType.Identity))
-                        .ToArray();
-
-                deleteCommandTrees
-                    = dynamicToFunctionModificationCommandConverter
-                        .Convert(
-                            modificationCommandTreeGenerator
-                                .GenerateAssociationDelete(modificationFunctionMapping.AssociationSet.ElementType.Identity))
-                        .ToArray();
-            }
-
-            string insertBodySql = null, deleteBodySql = null;
-
-            if (migrationSqlGenerator != null)
-            {
-                var providerManifestToken
-                    = _target.ProviderInfo.ProviderManifestToken;
-
-                insertBodySql
-                    = migrationSqlGenerator
-                        .GenerateProcedureBody(insertCommandTrees, null, providerManifestToken);
-
-                deleteBodySql
-                    = migrationSqlGenerator.GenerateProcedureBody(
-                        deleteCommandTrees,
-                        modificationFunctionMapping.DeleteFunctionMapping.RowsAffectedParameterName,
-                        providerManifestToken);
-            }
-
             yield return BuildCreateProcedureOperation(
                 modificationFunctionMapping.InsertFunctionMapping.Function,
-                insertBodySql);
+                GenerateInsertFunctionBody(modificationFunctionMapping, modificationCommandTreeGenerator, migrationSqlGenerator));
 
             yield return BuildCreateProcedureOperation(
                 modificationFunctionMapping.DeleteFunctionMapping.Function,
-                deleteBodySql);
+                GenerateDeleteFunctionBody(modificationFunctionMapping, modificationCommandTreeGenerator, migrationSqlGenerator));
         }
 
         private CreateProcedureOperation BuildCreateProcedureOperation(EdmFunction function, string bodySql)

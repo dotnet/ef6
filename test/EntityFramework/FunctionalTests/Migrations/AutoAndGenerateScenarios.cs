@@ -1863,5 +1863,208 @@ namespace System.Data.Entity.Migrations
         }
     }
 
+    public class AutoAndGenerateScenarios_MoveProcedure_ManyToMany :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_MoveProcedure_ManyToMany.V1, AutoAndGenerateScenarios_MoveProcedure_ManyToMany.V2>
+    {
+        public AutoAndGenerateScenarios_MoveProcedure_ManyToMany()
+        {
+            IsDownDataLoss = false;
+        }
+
+        public class V1 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<Order>()
+                    .HasMany(o => o.OrderLines)
+                    .WithMany()
+                    .MapToStoredProcedures();
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<Order>()
+                    .HasMany(o => o.OrderLines)
+                    .WithMany()
+                    .MapToStoredProcedures(
+                        m =>
+                            {
+                                m.Insert(c => c.HasName("Order_OrderLines_Insert", "foo"));
+                                m.Delete(c => c.HasName("del_order_orderlines", "bar"));
+                            });
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count(o => o is MoveProcedureOperation));
+            Assert.Equal(1, migrationOperations.Count(o => o is RenameProcedureOperation));
+
+            var moveProcedureOperation
+                = migrationOperations
+                    .OfType<MoveProcedureOperation>()
+                    .Single(o => o.Name == "dbo.Order_OrderLines_Delete");
+
+            Assert.Equal("bar", moveProcedureOperation.NewSchema);
+
+            var renameProcedureOperation
+                = migrationOperations
+                    .OfType<RenameProcedureOperation>()
+                    .Single(o => o.Name == "bar.Order_OrderLines_Delete");
+
+            Assert.Equal("del_order_orderlines", renameProcedureOperation.NewName);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count(o => o is MoveProcedureOperation));
+            Assert.Equal(1, migrationOperations.Count(o => o is RenameProcedureOperation));
+        }
+    }
+
+    public class AutoAndGenerateScenarios_RenameProcedure_ManyToMany :
+        AutoAndGenerateTestCase
+            <AutoAndGenerateScenarios_RenameProcedure_ManyToMany.V1, AutoAndGenerateScenarios_RenameProcedure_ManyToMany.V2>
+    {
+        public AutoAndGenerateScenarios_RenameProcedure_ManyToMany()
+        {
+            IsDownDataLoss = false;
+        }
+
+        public class V1 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<Order>()
+                    .HasMany(o => o.OrderLines)
+                    .WithMany()
+                    .MapToStoredProcedures();
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<Order>()
+                    .HasMany(o => o.OrderLines)
+                    .WithMany()
+                    .MapToStoredProcedures(
+                        m =>
+                            {
+                                m.Insert(c => c.HasName("ins_order_orderlines"));
+                                m.Delete(c => c.HasName("del_order_orderlines"));
+                            });
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count(o => o is RenameProcedureOperation));
+
+            var renameProcedureOperationInsert
+                = migrationOperations
+                    .OfType<RenameProcedureOperation>()
+                    .Single(o => o.Name == "dbo.Order_OrderLines_Insert");
+
+            Assert.Equal("ins_order_orderlines", renameProcedureOperationInsert.NewName);
+
+            var renameProcedureOperationDelete
+                = migrationOperations
+                    .OfType<RenameProcedureOperation>()
+                    .Single(o => o.Name == "dbo.Order_OrderLines_Delete");
+
+            Assert.Equal("del_order_orderlines", renameProcedureOperationDelete.NewName);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count(o => o is RenameProcedureOperation));
+        }
+    }
+
+    public class AutoAndGenerateScenarios_AlterProcedure_ManyToMany :
+        AutoAndGenerateTestCase
+            <AutoAndGenerateScenarios_AlterProcedure_ManyToMany.V1, AutoAndGenerateScenarios_AlterProcedure_ManyToMany.V2>
+    {
+        public AutoAndGenerateScenarios_AlterProcedure_ManyToMany()
+        {
+            IsDownDataLoss = false;
+            IsDownNotSupported = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<Order>()
+                    .HasMany(o => o.OrderLines)
+                    .WithMany()
+                    .MapToStoredProcedures();
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<Order>()
+                    .HasMany(o => o.OrderLines)
+                    .WithMany()
+                    .MapToStoredProcedures(
+                        m =>
+                            {
+                                m.Insert(c => c.LeftKeyParameter(o => o.OrderId, "order_id"));
+                                m.Delete(c => c.RightKeyParameter(ol => ol.Id, "order_line_id"));
+                            });
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(2, migrationOperations.Count(o => o is AlterProcedureOperation));
+
+            var alterProcedureOperationInsert
+                = migrationOperations
+                    .OfType<AlterProcedureOperation>()
+                    .Single(o => o.Name == "dbo.Order_OrderLines_Insert");
+
+            Assert.True(alterProcedureOperationInsert.Parameters.Any(p => p.Name == "order_id"));
+
+            var alterProcedureOperationDelete
+                = migrationOperations
+                    .OfType<AlterProcedureOperation>()
+                    .Single(o => o.Name == "dbo.Order_OrderLines_Delete");
+
+            Assert.True(alterProcedureOperationDelete.Parameters.Any(p => p.Name == "order_line_id"));
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(0, migrationOperations.Count(o => o is AlterProcedureOperation));
+        }
+    }
+
     #endregion
 }

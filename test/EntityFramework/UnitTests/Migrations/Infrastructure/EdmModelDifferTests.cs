@@ -544,6 +544,29 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         [MigrationsTheory]
+        public void Can_detect_changed_modification_functions_when_many_to_many()
+        {
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel());
+
+            var targetModel = new TestContext_v2b().GetModel();
+
+            var alterProcedureOperations
+                = new EdmModelDiffer()
+                    .Diff(
+                        new TestContext().GetModel(),
+                        targetModel,
+                        commandTreeGenerator,
+                        new SqlServerMigrationSqlGenerator())
+                    .OfType<AlterProcedureOperation>()
+                    .ToList();
+
+            Assert.Equal(2, alterProcedureOperations.Count);
+            Assert.Equal(1, alterProcedureOperations.Count(ap => ap.Parameters.Any(p => p.Name == "order_thing_id")));
+            Assert.Equal(1, alterProcedureOperations.Count(ap => ap.Parameters.Any(p => p.Name == "order_id")));
+        }
+
+        [MigrationsTheory]
         public void Can_detect_moved_modification_functions()
         {
             var modelBuilder = new DbModelBuilder();
@@ -575,6 +598,29 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         [MigrationsTheory]
+        public void Can_detect_moved_modification_functions_when_many_to_many()
+        {
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel());
+
+            var targetModel = new TestContext_v2b().GetModel();
+
+            var moveProcedureOperations
+                = new EdmModelDiffer()
+                    .Diff(
+                        new TestContext().GetModel(),
+                        targetModel,
+                        commandTreeGenerator,
+                        new SqlServerMigrationSqlGenerator())
+                    .OfType<MoveProcedureOperation>()
+                    .ToList();
+
+            Assert.Equal(2, moveProcedureOperations.Count);
+            Assert.Equal(1, moveProcedureOperations.Count(c => c.NewSchema == "foo"));
+            Assert.Equal(1, moveProcedureOperations.Count(c => c.NewSchema == "bar"));
+        }
+
+        [MigrationsTheory]
         public void Can_detect_renamed_modification_functions()
         {
             var commandTreeGenerator
@@ -594,6 +640,28 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(1, renameProcedureOperations.Count);
             Assert.Equal(1, renameProcedureOperations.Count(c => c.NewName == "sproc_A"));
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_renamed_modification_functions_when_many_to_many()
+        {
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel());
+
+            var targetModel = new TestContext_v2b().GetModel();
+
+            var renameProcedureOperations
+                = new EdmModelDiffer()
+                    .Diff(
+                        new TestContext().GetModel(),
+                        targetModel,
+                        commandTreeGenerator,
+                        new SqlServerMigrationSqlGenerator())
+                    .OfType<RenameProcedureOperation>()
+                    .ToList();
+
+            Assert.Equal(1, renameProcedureOperations.Count);
+            Assert.Equal(1, renameProcedureOperations.Count(c => c.NewName == "m2m_insert"));
         }
 
         [MigrationsTheory]

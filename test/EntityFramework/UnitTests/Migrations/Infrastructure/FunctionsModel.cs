@@ -269,4 +269,35 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
                     m => { m.Insert(c => c.Result(o => o.OrderNo, "order_fu2")); });
         }
     }
+
+    internal class TestContext_v2b : TestContext
+    {
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder
+                .Entity<OrderThing>()
+                .HasMany(ot => ot.Orders)
+                .WithMany(o => o.OrderThings)
+                .MapToStoredProcedures(
+                    m =>
+                        {
+                            m.Insert(
+                                c =>
+                                    {
+                                        c.HasName("m2m_insert", "foo");
+                                        c.LeftKeyParameter(o => o.Id, "order_thing_id");
+                                    });
+
+                            m.Delete(
+                                c =>
+                                    {
+                                        c.HasName("OrderThing_Orders_Delete", "bar");
+                                        c.RightKeyParameter(o => o.Id, "order_id");
+                                    });
+                        }
+                );
+        }
+    }
 }
