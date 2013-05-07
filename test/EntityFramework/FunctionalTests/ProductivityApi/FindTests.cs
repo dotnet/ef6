@@ -1688,7 +1688,7 @@ namespace ProductivityApiTests
                 catch (ArgumentException ex)
                 {
                     Assert.Equal("keyValues", ex.ParamName);
-                    var withNoParam = ex.Message.Substring(0, ex.Message.LastIndexOf("\r\n"));
+                    Assert.NotEqual(-1, ex.Message.LastIndexOf("\r\n"));
 
                     Assert.IsType<EntitySqlException>(ex.InnerException);
                 }

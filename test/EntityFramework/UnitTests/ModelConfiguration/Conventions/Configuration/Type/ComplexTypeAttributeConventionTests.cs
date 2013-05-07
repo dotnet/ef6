@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using Xunit;
 
     public sealed class ComplexTypeAttributeConventionTests
@@ -15,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var modelConfiguration = new ModelConfiguration();
 
             new ComplexTypeAttributeConvention()
-                .Apply(mockType, modelConfiguration, new ComplexTypeAttribute());
+                .Apply(new LightweightTypeConfiguration(mockType, modelConfiguration), new ComplexTypeAttribute());
 
             Assert.True(modelConfiguration.IsComplexType(mockType));
         }

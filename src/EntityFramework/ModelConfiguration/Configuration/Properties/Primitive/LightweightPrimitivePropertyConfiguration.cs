@@ -490,7 +490,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             {
                 var entityTypeConfig = _configuration().TypeConfiguration as EntityTypeConfiguration;
 
-                if (entityTypeConfig != null)
+                if (entityTypeConfig != null
+                    && !entityTypeConfig.IsKeyConfigured)
                 {
                     entityTypeConfig.Key(ClrPropertyInfo);
                 }

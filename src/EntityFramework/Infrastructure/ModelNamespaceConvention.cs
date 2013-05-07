@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Infrastructure
 {
+    using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Configuration;
-    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -11,7 +11,7 @@ namespace System.Data.Entity.Infrastructure
     ///     <see cref="DbContext" /> class as the namespace of the conceptual model built by
     ///     Code First.
     /// </summary>
-    public class ModelNamespaceConvention : IConfigurationConvention
+    public class ModelNamespaceConvention : Convention
     {
         private readonly string _modelNamespace;
 
@@ -26,11 +26,10 @@ namespace System.Data.Entity.Infrastructure
             _modelNamespace = modelNamespace;
         }
 
-        /// <summary>
-        ///     Applies the convention to the given model.
-        /// </summary>
-        public void Apply(ModelConfiguration modelConfiguration)
+        internal override void ApplyModelConfiguration(ModelConfiguration modelConfiguration)
         {
+            base.ApplyModelConfiguration(modelConfiguration);
+
             modelConfiguration.ModelNamespace = _modelNamespace;
         }
     }

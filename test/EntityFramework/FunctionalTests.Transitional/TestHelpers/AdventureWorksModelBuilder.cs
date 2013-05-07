@@ -26,10 +26,10 @@ namespace System.Data.Entity
         {
             Ignore(
                 Assembly.GetExecutingAssembly().GetTypes()
-                        .Where(
-                            t => !string.IsNullOrWhiteSpace(t.Namespace)
-                                 && t.Namespace.Contains("Model")).Except(
-                                     Configurations.GetConfiguredTypes().Union(unignoredTypes)));
+                    .Where(
+                        t => !string.IsNullOrWhiteSpace(t.Namespace)
+                             && t.Namespace.Contains("Model")).Except(
+                                 Configurations.GetConfiguredTypes().Union(unignoredTypes)));
         }
-        }
+    }
 }

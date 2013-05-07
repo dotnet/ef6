@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Resources;
     using Xunit;
 
@@ -19,7 +20,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var modelConfiguration = new ModelConfiguration();
 
             new InversePropertyAttributeConvention()
-                .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("A"));
+                .Apply(
+                    mockPropertyInfo,
+                    new LightweightTypeConfiguration(mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
+                    new InversePropertyAttribute("A"));
 
             var navigationPropertyConfiguration
                 = modelConfiguration.Entity(mockTypeA).Navigation(mockPropertyInfo);
@@ -37,7 +41,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var modelConfiguration = new ModelConfiguration();
 
             new InversePropertyAttributeConvention()
-                .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("Bs"));
+                .Apply(
+                    mockPropertyInfo,
+                    new LightweightTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
+                    new InversePropertyAttribute("Bs"));
 
             var navigationPropertyConfiguration
                 = modelConfiguration.Entity(mockTypeB).Navigation(mockPropertyInfo);
@@ -55,7 +62,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var modelConfiguration = new ModelConfiguration();
 
             new InversePropertyAttributeConvention()
-                .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("B"));
+                .Apply(
+                    mockPropertyInfo,
+                    new LightweightTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
+                    new InversePropertyAttribute("B"));
 
             var navigationPropertyConfiguration
                 = modelConfiguration.Entity(mockTypeB).Navigation(mockPropertyInfo);
@@ -73,7 +83,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var modelConfiguration = new ModelConfiguration();
 
             new InversePropertyAttributeConvention()
-                .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("Bs"));
+                .Apply(
+                    mockPropertyInfo,
+                    new LightweightTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
+                    new InversePropertyAttribute("Bs"));
 
             var navigationPropertyConfiguration
                 = modelConfiguration.Entity(mockTypeB).Navigation(mockPropertyInfo);
@@ -94,9 +107,28 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             navigationPropertyConfiguration.InverseNavigationProperty = mockTypeB.GetProperty("A2");
 
             new InversePropertyAttributeConvention()
-                .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("A1"));
+                .Apply(
+                    mockPropertyInfo,
+                    new LightweightTypeConfiguration(mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
+                    new InversePropertyAttribute("A1"));
 
             Assert.NotSame(mockTypeB.GetProperty("A1"), navigationPropertyConfiguration.InverseNavigationProperty);
+        }
+
+        [Fact]
+        public void Apply_ignores_inverse_on_nonnavigation()
+        {
+            var mockTypeA = new MockType("A").Property(typeof(int), "B");
+            var mockPropertyInfo = mockTypeA.GetProperty("B");
+            var modelConfiguration = new ModelConfiguration();
+            var entityConfiguration = modelConfiguration.Entity(mockTypeA);
+
+            new InversePropertyAttributeConvention()
+                .Apply(
+                    mockPropertyInfo, new LightweightTypeConfiguration(mockTypeA, () => entityConfiguration, modelConfiguration),
+                    new InversePropertyAttribute("A1"));
+
+            Assert.False(entityConfiguration.IsNavigationPropertyConfigured(mockPropertyInfo));
         }
 
         [Fact]
@@ -111,7 +143,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 Strings.InversePropertyAttributeConvention_SelfInverseDetected("A", mockTypeA.Object),
                 Assert.Throws<InvalidOperationException>(
                     () => new InversePropertyAttributeConvention()
-                              .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("A"))).Message);
+                              .Apply(
+                                  mockPropertyInfo,
+                                  new LightweightTypeConfiguration(
+                              mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
+                                  new InversePropertyAttribute("A"))).Message);
         }
 
         [Fact]
@@ -127,7 +163,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 Strings.InversePropertyAttributeConvention_PropertyNotFound("Foo", mockTypeB.Object, "B", mockTypeA.Object),
                 Assert.Throws<InvalidOperationException>(
                     () => new InversePropertyAttributeConvention()
-                              .Apply(mockPropertyInfo, modelConfiguration, new InversePropertyAttribute("Foo"))).Message);
+                              .Apply(
+                                  mockPropertyInfo,
+                                  new LightweightTypeConfiguration(
+                              mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
+                                  new InversePropertyAttribute("Foo"))).Message);
         }
     }
 }

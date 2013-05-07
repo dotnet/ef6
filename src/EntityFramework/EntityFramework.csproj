@@ -267,8 +267,10 @@
     <Compile Include="ModelConfiguration\Configuration\Conventions\TypeConventionWithHavingConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Types\LightweightTypeConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Types\LightweightTypeConfiguration`.cs" />
-    <Compile Include="ModelConfiguration\Conventions\Configuration\AttributeConfigurationConvention```.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\IConfigurationConvention`.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Property\PrimitivePropertyAttributeConfigurationConvention.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Property\PropertyAttributeConfigurationConvention.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\Type\TypeAttributeConfigurationConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Convention.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\Api\PropertyMappingConfiguration.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\TypeConvention.cs" />
@@ -1673,7 +1675,6 @@
     <Compile Include="ModelConfiguration\Configuration\Types\EntityTypeConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Types\StructuralTypeConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Types\StructuralTypeConfiguration`.cs" />
-    <Compile Include="ModelConfiguration\Conventions\Configuration\AttributeConfigurationConvention``.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\IConfigurationConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\IConfigurationConvention``.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Property\ColumnAttributeConvention.cs" />

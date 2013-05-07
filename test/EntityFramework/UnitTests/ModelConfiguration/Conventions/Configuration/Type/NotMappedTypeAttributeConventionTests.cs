@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using Xunit;
 
     public sealed class NotMappedTypeAttributeConventionTests : TestBase
@@ -15,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var modelConfiguration = new ModelConfiguration();
 
             new NotMappedTypeAttributeConvention()
-                .Apply(mockType, modelConfiguration, new NotMappedAttribute());
+                .Apply(new LightweightTypeConfiguration(mockType, modelConfiguration), new NotMappedAttribute());
 
             Assert.True(modelConfiguration.IsIgnoredType(mockType));
         }

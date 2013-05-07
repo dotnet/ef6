@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -13,23 +13,16 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="InversePropertyAttribute" /> found on properties in the model.
     /// </summary>
-    public class InversePropertyAttributeConvention :
-        AttributeConfigurationConvention<PropertyInfo,  InversePropertyAttribute>
+    public class InversePropertyAttributeConvention : PropertyAttributeConfigurationConvention<InversePropertyAttribute>
     {
         public override void Apply(
-            PropertyInfo memberInfo, ModelConfiguration modelConfiguration,
-            InversePropertyAttribute attribute)
+            PropertyInfo memberInfo, LightweightTypeConfiguration configuration, InversePropertyAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
-            Check.NotNull(modelConfiguration, "modelConfiguration");
+            Check.NotNull(configuration, "configuration");
             Check.NotNull(attribute, "attribute");
 
-            var navigationPropertyConfiguration
-                = modelConfiguration
-                    .Entity(memberInfo.ReflectedType)
-                    .Navigation(memberInfo);
-
-            if (navigationPropertyConfiguration.InverseNavigationProperty != null)
+            if (!memberInfo.IsValidEdmNavigationProperty())
             {
                 return;
             }
@@ -57,7 +50,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     memberInfo.Name, memberInfo.ReflectedType);
             }
 
-            navigationPropertyConfiguration.InverseNavigationProperty = inverseNavigationProperty;
+            configuration.NavigationProperty(memberInfo).HasInverseNavigationProperty(p => inverseNavigationProperty);
         }
     }
 }

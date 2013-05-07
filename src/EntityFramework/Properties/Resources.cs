@@ -13580,6 +13580,14 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.TestDoublesCannotBeConverted); }
         }
+
+        /// <summary>
+        ///     A string like "The property '{0}' on type '{1}' cannot be configured as a navigation property because type '{2}' was configured as a complex type."
+        /// </summary>
+        internal static string InvalidNavigationPropertyComplexType(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.InvalidNavigationPropertyComplexType, p0, p1, p2);
+        }
     }
 
     /// <summary>
@@ -16973,6 +16981,7 @@ namespace System.Data.Entity.Resources
         internal const string LightweightPrimitivePropertyConfiguration_NonNullableProperty = "LightweightPrimitivePropertyConfiguration_NonNullableProperty";
         internal const string TestDoubleNotImplemented = "TestDoubleNotImplemented";
         internal const string TestDoublesCannotBeConverted = "TestDoublesCannotBeConverted";
+        internal const string InvalidNavigationPropertyComplexType = "InvalidNavigationPropertyComplexType";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

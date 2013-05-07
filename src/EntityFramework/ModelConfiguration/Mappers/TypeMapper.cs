@@ -5,7 +5,6 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -29,10 +28,10 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             _knownTypes.AddRange(
                 mappingContext.ModelConfiguration
-                              .ConfiguredTypes
-                              .Select(t => t.Assembly)
-                              .Distinct()
-                              .SelectMany(a => a.GetAccessibleTypes().Where(type => type.IsValidStructuralType())));
+                    .ConfiguredTypes
+                    .Select(t => t.Assembly)
+                    .Distinct()
+                    .SelectMany(a => a.GetAccessibleTypes().Where(type => type.IsValidStructuralType())));
         }
 
         public MappingContext MappingContext
@@ -117,14 +116,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         {
             DebugCheck.NotNull(type);
 
-            if (!type.IsValidStructuralType())
-            {
-                return null;
-            }
-
-            _mappingContext.ConventionsConfiguration.ApplyModelConfiguration(type, _mappingContext.ModelConfiguration);
-
-            if (_mappingContext.ModelConfiguration.IsIgnoredType(type)
+            if (!type.IsValidStructuralType()
+                || _mappingContext.ModelConfiguration.IsIgnoredType(type)
                 || _mappingContext.ModelConfiguration.IsComplexType(type))
             {
                 return null;
@@ -134,6 +127,14 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             if (entityType == null)
             {
+                _mappingContext.ConventionsConfiguration.ApplyModelConfiguration(type, _mappingContext.ModelConfiguration);
+
+                if (_mappingContext.ModelConfiguration.IsIgnoredType(type)
+                    || _mappingContext.ModelConfiguration.IsComplexType(type))
+                {
+                    return null;
+                }
+
                 entityType = _mappingContext.Model.AddEntityType(type.Name, _mappingContext.ModelConfiguration.ModelNamespace);
                 entityType.Abstract = type.IsAbstract;
 
@@ -278,8 +279,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             {
                 entityTypeConfiguration.ClearKey();
 
-                foreach (var property in type.BaseType.GetProperties(
-                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+                foreach (var property in type.BaseType.GetProperties(PropertyFilter.DefaultBindingFlags))
                 {
                     if (!_mappingContext.AttributeProvider.GetAttributes(property).OfType<NotMappedAttribute>().Any()
                         && entityTypeConfiguration.IgnoredProperties.Any(p => p.IsSameAs(property)))
@@ -300,17 +300,17 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             var members = entityType.DeclaredMembers.ToList();
 
+            var declaredProperties
+                = new PropertyFilter(_mappingContext.ModelBuilderVersion)
+                    .GetProperties(
+                        type,
+                        /*declaredOnly:*/ true,
+                        _mappingContext.ModelConfiguration.GetConfiguredProperties(type),
+                        _mappingContext.ModelConfiguration.StructuralTypes);
+
             foreach (var member in members)
             {
                 var propertyInfo = member.GetClrPropertyInfo();
-
-                var declaredProperties
-                    = new PropertyFilter(_mappingContext.ModelBuilderVersion)
-                        .GetProperties(
-                            type,
-                            /*declaredOnly:*/ true,
-                            _mappingContext.ModelConfiguration.GetConfiguredProperties(type),
-                            _mappingContext.ModelConfiguration.StructuralTypes);
 
                 if (!declaredProperties.Contains(propertyInfo))
                 {

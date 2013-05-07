@@ -589,14 +589,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         public void HasKey_configures_when_unset()
         {
             var type = new MockType()
-                .Property<int>("Property1");
+                .Property<int>("Property1")
+                .Property<int>("Property2");
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            var result = config.HasKey("Property1");
+            var result = config.HasKey("Property1").HasKey("Property2");
 
-            Assert.Equal(1, innerConfig.KeyProperties.Count());
-            Assert.True(innerConfig.KeyProperties.Any(p => p.Name == "Property1"));
+            Assert.Equal(new[] { "Property1", "Property2" }, innerConfig.KeyProperties.Select(p => p.Name));
             Assert.Same(config, result);
         }
 
@@ -604,14 +604,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         public void HasKey_PropertyInfo_configures_when_unset()
         {
             var type = new MockType()
-                .Property<int>("Property1");
+                .Property<int>("Property1")
+                .Property<int>("Property2");
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            var result = config.HasKey(config.ClrType.GetProperties().First());
+            var result = config.HasKey(config.ClrType.GetProperties().First())
+                .HasKey(config.ClrType.GetProperties().Last());
 
-            Assert.Equal(1, innerConfig.KeyProperties.Count());
-            Assert.True(innerConfig.KeyProperties.Any(p => p.Name == "Property1"));
+            Assert.Equal(new[] { "Property1", "Property2" }, innerConfig.KeyProperties.Select(p => p.Name));
             Assert.Same(config, result);
         }
 
@@ -656,9 +657,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             Assert.Equal("propertyNames", ex.ParamName);
 
-            Assert.Equal(Strings.CollectionEmpty("keyProperties", "HasKey"),
+            Assert.Equal(
+                Strings.CollectionEmpty("keyProperties", "HasKey"),
                 Assert.Throws<ArgumentException>(
-                () => config.HasKey(Enumerable.Empty<string>())).Message);
+                    () => config.HasKey(Enumerable.Empty<string>())).Message);
         }
 
         [Fact]
@@ -690,6 +692,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.HasKey(new[] { "Property2", "Property3" });
+
+            Assert.Equal(1, innerConfig.KeyProperties.Count());
+            Assert.False(innerConfig.KeyProperties.Any(p => p.Name == "Property2"));
+            Assert.False(innerConfig.KeyProperties.Any(p => p.Name == "Property3"));
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasKey_composite_is_noop_when_called_twice()
+        {
+            var type = new MockType()
+                .Property<int>("Property1")
+                .Property<int>("Property2")
+                .Property<int>("Property3");
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+
+            var result = config.HasKey(new[] { "Property1" })
+                .HasKey(new[] { "Property2", "Property3" });
 
             Assert.Equal(1, innerConfig.KeyProperties.Count());
             Assert.False(innerConfig.KeyProperties.Any(p => p.Name == "Property2"));

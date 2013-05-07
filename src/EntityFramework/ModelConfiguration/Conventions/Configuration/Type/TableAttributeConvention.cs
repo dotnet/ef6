@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
 
@@ -11,25 +10,20 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///     Convention to process instances of <see cref="TableAttribute" /> found on types in the model.
     /// </summary>
     public class TableAttributeConvention :
-        AttributeConfigurationConvention<Type, EntityTypeConfiguration, TableAttribute>
+        TypeAttributeConfigurationConvention<TableAttribute>
     {
-        public override void Apply(
-            Type memberInfo, EntityTypeConfiguration configuration, ModelConfiguration modelConfiguration, TableAttribute attribute)
+        public override void Apply(LightweightTypeConfiguration configuration, TableAttribute attribute)
         {
-            Check.NotNull(memberInfo, "memberInfo");
             Check.NotNull(configuration, "configuration");
             Check.NotNull(attribute, "attribute");
 
-            if (!configuration.IsTableNameConfigured)
+            if (string.IsNullOrWhiteSpace(attribute.Schema))
             {
-                if (string.IsNullOrWhiteSpace(attribute.Schema))
-                {
-                    configuration.ToTable(attribute.Name);
-                }
-                else
-                {
-                    configuration.ToTable(attribute.Name, attribute.Schema);
-                }
+                configuration.ToTable(attribute.Name);
+            }
+            else
+            {
+                configuration.ToTable(attribute.Name, attribute.Schema);
             }
         }
     }

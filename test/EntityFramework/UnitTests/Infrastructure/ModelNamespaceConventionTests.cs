@@ -13,7 +13,7 @@ namespace System.Data.Entity.Infrastructure
             var convention = new ModelNamespaceConvention("Foo");
             var modelConfiguration = new ModelConfiguration();
 
-            convention.Apply(modelConfiguration);
+            convention.ApplyModelConfiguration(modelConfiguration);
 
             Assert.Equal("Foo", modelConfiguration.ModelNamespace);
         }

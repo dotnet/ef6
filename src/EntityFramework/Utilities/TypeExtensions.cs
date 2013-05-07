@@ -7,6 +7,7 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Spatial;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -144,7 +145,9 @@ namespace System.Data.Entity.Utilities
                      || type.IsPrimitive
                      || type.IsInterface
                      || type.IsArray
-                     || type == typeof(string))
+                     || type == typeof(string)
+                     || type == typeof(DbGeography)
+                     || type == typeof(DbGeometry))
                    && type.IsValidStructuralPropertyType();
         }
 

@@ -40,7 +40,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         private readonly List<EntityMappingConfiguration> _nonCloneableMappings = new List<EntityMappingConfiguration>();
 
         private bool _isKeyConfigured;
-        private bool _isKeyConfiguredByAttributes;
         private string _entitySetName;
 
         private ModificationFunctionsConfiguration _modificationFunctionsConfiguration;
@@ -66,7 +65,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 source._entityMappingConfigurations.Except(source._nonCloneableMappings).Select(e => e.Clone()));
 
             _isKeyConfigured = source._isKeyConfigured;
-            _isKeyConfiguredByAttributes = source._isKeyConfiguredByAttributes;
             _entitySetName = source._entitySetName;
 
             if (source._modificationFunctionsConfiguration != null)
@@ -133,7 +131,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             foreach (var property in keyProperties)
             {
-                Key(property, OverridableConfigurationParts.None, false);
+                Key(property, OverridableConfigurationParts.None);
             }
 
             _isKeyConfigured = true;
@@ -147,12 +145,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             Check.NotNull(propertyInfo, "propertyInfo");
 
-            Key(propertyInfo, null, false);
+            Key(propertyInfo, null);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        internal virtual void Key(
-            PropertyInfo propertyInfo, OverridableConfigurationParts? overridableConfigurationParts, bool configuredByAttribute)
+        internal virtual void Key(PropertyInfo propertyInfo, OverridableConfigurationParts? overridableConfigurationParts)
         {
             DebugCheck.NotNull(propertyInfo);
 
@@ -162,14 +159,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
 
             if (!_isKeyConfigured
-                &&
-                // DevDiv #324763 (DbModelBuilder.Build is not idempotent):  If build is called twice when keys are configured via attributes 
-                // _isKeyConfigured is not set, thus we need to check whether the key has already been included.
-                !_keyProperties.ContainsSame(propertyInfo)
-                && (configuredByAttribute || !_isKeyConfiguredByAttributes))
+                && !_keyProperties.ContainsSame(propertyInfo))
             {
-                _isKeyConfiguredByAttributes |= configuredByAttribute;
-
                 _keyProperties.Add(propertyInfo);
 
                 Property(new PropertyPath(propertyInfo), overridableConfigurationParts);
@@ -180,7 +171,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             _keyProperties.Clear();
             _isKeyConfigured = false;
-            _isKeyConfiguredByAttributes = false;
         }
 
         /// <summary>
@@ -461,10 +451,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 var primaryKeys
                     = from p in _keyProperties
                       select new
-                                 {
-                                     PropertyInfo = p,
-                                     Property(new PropertyPath(p)).ColumnOrder
-                                 };
+                          {
+                              PropertyInfo = p,
+                              Property(new PropertyPath(p)).ColumnOrder
+                          };
 
                 if ((_keyProperties.Count > 1)
                     && primaryKeys.Any(p => !p.ColumnOrder.HasValue))
@@ -502,10 +492,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
                 if (navigationProperty == null)
                 {
+                    var property = entityType.Properties.SingleOrDefault(p => p.GetClrPropertyInfo() == propertyInfo);
+                    if (property != null
+                        && property.ComplexType != null)
+                    {
+                        throw new InvalidOperationException(
+                            Strings.InvalidNavigationPropertyComplexType(propertyInfo.Name, entityType.Name, property.ComplexType.Name));
+                    }
+
                     throw Error.NavigationPropertyNotFound(propertyInfo.Name, entityType.Name);
                 }
 
-                navigationPropertyConfiguration.Configure(navigationProperty, model, this);
+                // Don't configure inherited navigation properties
+                if (entityType.DeclaredNavigationProperties.Any(np => np.GetClrPropertyInfo().IsSameAs(propertyInfo)))
+                {
+                    navigationPropertyConfiguration.Configure(navigationProperty, model, this);
+                }
             }
         }
 
@@ -623,8 +625,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
                 var modificationFunctionMapping
                     = databaseMapping.GetEntitySetMappings()
-                                     .SelectMany(esm => esm.ModificationFunctionMappings)
-                                     .SingleOrDefault(mfm => mfm.EntityType == entityType);
+                        .SelectMany(esm => esm.ModificationFunctionMappings)
+                        .SingleOrDefault(mfm => mfm.EntityType == entityType);
 
                 if (modificationFunctionMapping != null)
                 {
@@ -654,7 +656,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             ConfigurePropertyMappings(propertyMappings, providerManifest, allowOverride);
 
-            _entityMappingConfigurations.Each(c => c.ConfigurePropertyMappings(
+            _entityMappingConfigurations.Each(
+                c => c.ConfigurePropertyMappings(
                     propertyMappings, providerManifest, allowOverride));
 
             foreach (var derivedEntityType 
@@ -684,7 +687,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
                 var associationSetMapping
                     = databaseMapping.GetAssociationSetMappings()
-                                     .SingleOrDefault(asm => asm.AssociationSet.ElementType == navigationProperty.Association);
+                        .SingleOrDefault(asm => asm.AssociationSet.ElementType == navigationProperty.Association);
 
                 if (associationSetMapping != null)
                 {
@@ -743,8 +746,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                         propertyPath);
                 }
                 else if (!entityTypeMappings.SelectMany(etm => etm.MappingFragments)
-                                            .SelectMany(mf => mf.ColumnMappings)
-                                            .Any(pm => pm.PropertyPath.SequenceEqual(propertyPath))
+                              .SelectMany(mf => mf.ColumnMappings)
+                              .Any(pm => pm.PropertyPath.SequenceEqual(propertyPath))
                          && !entityType.Abstract)
                 {
                     throw Error.InvalidEntitySplittingProperties(entityType.Name);

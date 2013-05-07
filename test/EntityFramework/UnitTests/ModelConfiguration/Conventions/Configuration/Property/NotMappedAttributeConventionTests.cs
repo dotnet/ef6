@@ -17,7 +17,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
 
             new NotMappedPropertyAttributeConvention()
-                .Apply(mockPropertyInfo, entityTypeConfiguration, new ModelConfiguration(), new NotMappedAttribute());
+                .Apply(
+                    mockPropertyInfo,
+                    new LightweightTypeConfiguration(typeof(object), () => entityTypeConfiguration, new ModelConfiguration()),
+                    new NotMappedAttribute());
 
             Assert.True(entityTypeConfiguration.IgnoredProperties.Contains(mockPropertyInfo));
         }

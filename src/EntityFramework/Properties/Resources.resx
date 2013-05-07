@@ -5412,4 +5412,7 @@
   <data name="TestDoublesCannotBeConverted" xml:space="preserve">
     <value>Conversion between generic and non-generic DbSet objects is not supported for test doubles.</value>
   </data>
+  <data name="InvalidNavigationPropertyComplexType" xml:space="preserve">
+    <value>The property '{0}' on type '{1}' cannot be configured as a navigation property because type '{2}' was configured as a complex type.</value>
+  </data>
 </root>

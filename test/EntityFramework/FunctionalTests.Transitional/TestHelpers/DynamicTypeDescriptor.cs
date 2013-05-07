@@ -87,7 +87,10 @@ namespace System.Data.Entity
         }
     }
 
-    internal class DynamicTypeDescriptionConfiguration<T> : IDisposable
+    /// <summary>
+    ///     Allows to add or remove attributes on a type and its properties at runtime
+    /// </summary>
+    public class DynamicTypeDescriptionConfiguration<T> : IDisposable
     {
         private readonly DynamicTypeDescriptionProvider<T> _dynamicTypeDescriptionProvider;
         private readonly Dictionary<string, Attribute[]> _propertyAttributes;
@@ -125,9 +128,16 @@ namespace System.Data.Entity
 
         public void SetPropertyAttributes<TProperty>(Expression<Func<T, TProperty>> property, params Attribute[] attributes)
         {
-            Debug.Assert(property != null);
+            DebugCheck.NotNull(property);
 
             PropertyAttributes[property.GetSimplePropertyAccess().Single().Name] = attributes;
+        }
+
+        public void SetPropertyAttributes(string propertyName, params Attribute[] attributes)
+        {
+            DebugCheck.NotEmpty(propertyName);
+
+            PropertyAttributes[propertyName] = attributes;
         }
     }
 }

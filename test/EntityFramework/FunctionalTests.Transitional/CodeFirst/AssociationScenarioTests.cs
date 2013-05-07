@@ -2034,7 +2034,7 @@ namespace FunctionalTests
 
             Assert.Throws<InvalidOperationException>(
                 () => BuildMapping(modelBuilder))
-                  .ValidateMessage("NavigationPropertyNotFound", "Detail", "SomeItem");
+                  .ValidateMessage("InvalidNavigationPropertyComplexType", "Detail", typeof(SomeItem).Name, typeof(SomeItemDetail).Name);
         }
 
         [Fact]

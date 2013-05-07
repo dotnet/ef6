@@ -3,28 +3,38 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Data.Entity.Config;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
+    using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
     ///     Convention to process instances of <see cref="KeyAttribute" /> found on properties in the model.
     /// </summary>
-    public class KeyAttributeConvention :
-        AttributeConfigurationConvention<PropertyInfo, EntityTypeConfiguration, KeyAttribute>
+    public class KeyAttributeConvention : Convention
     {
-        public override void Apply(
-            PropertyInfo memberInfo, EntityTypeConfiguration configuration, ModelConfiguration modelConfiguration, KeyAttribute attribute)
-        {
-            Check.NotNull(memberInfo, "memberInfo");
-            Check.NotNull(configuration, "configuration");
-            Check.NotNull(modelConfiguration, "modelConfiguration");
-            Check.NotNull(attribute, "attribute");
+        private readonly AttributeProvider _attributeProvider = DbConfiguration.GetService<AttributeProvider>();
 
-            if (memberInfo.IsValidEdmScalarProperty())
+        // Not using the public API to avoid including the property in the model if it wasn't in before
+        internal override void ApplyPropertyTypeConfiguration<TStructuralTypeConfiguration>(
+            PropertyInfo propertyInfo, Func<TStructuralTypeConfiguration> structuralTypeConfiguration, ModelConfiguration modelConfiguration)
+        {
+            DebugCheck.NotNull(propertyInfo);
+            DebugCheck.NotNull(structuralTypeConfiguration);
+            DebugCheck.NotNull(modelConfiguration);
+
+            if (typeof(TStructuralTypeConfiguration) == typeof(EntityTypeConfiguration)
+                && _attributeProvider.GetAttributes(propertyInfo).OfType<KeyAttribute>().Any())
             {
-                configuration.Key(memberInfo, null, true);
+                var entityTypeConfiguration = (EntityTypeConfiguration)(object)structuralTypeConfiguration();
+
+                if (propertyInfo.IsValidEdmScalarProperty())
+                {
+                    entityTypeConfiguration.Key(propertyInfo);
+                }
             }
         }
     }

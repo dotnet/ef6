@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using Moq;
     using Xunit;
@@ -13,13 +14,19 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_find_single_key()
         {
-            var mockPropertyInfo = new MockPropertyInfo(typeof(int), "Id");
-            var mockEntityTypeConfiguration = new Mock<EntityTypeConfiguration>(typeof(object));
+            var mockEntityTypeConfiguration = new Mock<EntityTypeConfiguration>(typeof(KeyAttributeEntity));
+            var propertyInfo = typeof(KeyAttributeEntity).GetProperty("Id");
 
             new KeyAttributeConvention()
-                .Apply(mockPropertyInfo, mockEntityTypeConfiguration.Object, new ModelConfiguration(), new KeyAttribute());
+                .ApplyPropertyTypeConfiguration(propertyInfo, () => mockEntityTypeConfiguration.Object, new ModelConfiguration());
 
-            mockEntityTypeConfiguration.Verify(e => e.Key(mockPropertyInfo, null, true));
+            mockEntityTypeConfiguration.Verify(e => e.Key(propertyInfo, It.IsAny<OverridableConfigurationParts?>()));
+        }
+
+        public class KeyAttributeEntity
+        {
+            [Key]
+            public int Id { get; set; }
         }
     }
 }

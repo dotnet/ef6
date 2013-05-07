@@ -56,7 +56,7 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(propertyInfo);
 
             return IsValidInterfaceStructuralProperty(propertyInfo)
-                && propertyInfo.PropertyType.IsValidEdmScalarType();
+                   && propertyInfo.PropertyType.IsValidEdmScalarType();
         }
 
         public static bool IsValidEdmNavigationProperty(this PropertyInfo propertyInfo)

@@ -3,22 +3,21 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Convention to process instances of <see cref="NotMappedAttribute" /> found on types in the model.
     /// </summary>
     public class NotMappedTypeAttributeConvention :
-        AttributeConfigurationConvention<Type, NotMappedAttribute>
+        TypeAttributeConfigurationConvention<NotMappedAttribute>
     {
-        public override void Apply(Type memberInfo, ModelConfiguration modelConfiguration, NotMappedAttribute attribute)
+        public override void Apply(LightweightTypeConfiguration configuration, NotMappedAttribute attribute)
         {
-            Check.NotNull(memberInfo, "memberInfo");
-            Check.NotNull(modelConfiguration, "modelConfiguration");
+            Check.NotNull(configuration, "configuration");
             Check.NotNull(attribute, "attribute");
 
-            modelConfiguration.Ignore(memberInfo);
+            configuration.Ignore();
         }
     }
 }

@@ -743,7 +743,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void NotMapped_can_be_used_to_choose_which_type_to_use_when_otherwise_there_wuld_be_a_collision()
+        public void NotMapped_can_be_used_to_choose_which_type_to_use_when_otherwise_there_would_be_a_collision()
         {
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<NotMappedOuter1.SynonymToastCrunch>();
@@ -778,7 +778,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void NotMapped_can_be_used_to_choose_which_enum_to_use_when_otherwise_there_wuld_be_a_collision()
+        public void NotMapped_can_be_used_to_choose_which_enum_to_use_when_otherwise_there_would_be_a_collision()
         {
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<NotMappedEnumOuter1.CountChocula>();
@@ -822,7 +822,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Type_level_Ignore_can_be_used_to_choose_which_type_to_use_when_otherwise_there_wuld_be_a_collision()
+        public void Type_level_Ignore_can_be_used_to_choose_which_type_to_use_when_otherwise_there_would_be_a_collision()
         {
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<ImplicitComplexOuter1.CountChocula>();
@@ -837,7 +837,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Property_level_Ignore_can_be_used_to_choose_which_complex_type_to_use_when_otherwise_there_wuld_be_a_collision()
+        public void Property_level_Ignore_can_be_used_to_choose_which_complex_type_to_use_when_otherwise_there_would_be_a_collision()
         {
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<ImplicitComplexOuter1.CountChocula>();
@@ -851,7 +851,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Property_level_Ignore_can_be_used_to_choose_which_enum_to_use_when_otherwise_there_wuld_be_a_collision()
+        public void Property_level_Ignore_can_be_used_to_choose_which_enum_to_use_when_otherwise_there_would_be_a_collision()
         {
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<ImplicitEnumOuter1.CountChocula>();

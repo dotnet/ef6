@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using Xunit;
 
@@ -16,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             new DatabaseGeneratedAttributeConvention()
                 .Apply(
-                    new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(),
+                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
                     new DatabaseGeneratedAttribute(DatabaseGeneratedOption.None));
 
             Assert.Equal(DatabaseGeneratedOption.None, propertyConfiguration.DatabaseGeneratedOption);
@@ -32,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             new DatabaseGeneratedAttributeConvention()
                 .Apply(
-                    new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(),
+                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
                     new DatabaseGeneratedAttribute(DatabaseGeneratedOption.None));
 
             Assert.Equal(DatabaseGeneratedOption.Computed, propertyConfiguration.DatabaseGeneratedOption);

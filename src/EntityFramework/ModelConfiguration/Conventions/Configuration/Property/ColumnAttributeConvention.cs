@@ -3,44 +3,33 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Utilities;
-    using System.Reflection;
 
     /// <summary>
     ///     Convention to process instances of <see cref="ColumnAttribute" /> found on properties in the model
     /// </summary>
     public class ColumnAttributeConvention
-        : AttributeConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration, ColumnAttribute>
+        : PrimitivePropertyAttributeConfigurationConvention<ColumnAttribute>
     {
-        public override void Apply(
-            PropertyInfo memberInfo,
-            PrimitivePropertyConfiguration configuration,
-            ModelConfiguration modelConfiguration,
-            ColumnAttribute attribute)
+        public override void Apply(LightweightPrimitivePropertyConfiguration configuration, ColumnAttribute attribute)
         {
-            Check.NotNull(memberInfo, "memberInfo");
             Check.NotNull(configuration, "configuration");
-            Check.NotNull(modelConfiguration, "modelConfiguration");
             Check.NotNull(attribute, "attribute");
 
-            if (string.IsNullOrWhiteSpace(configuration.ColumnName)
-                && !string.IsNullOrWhiteSpace(attribute.Name))
+            if (!string.IsNullOrWhiteSpace(attribute.Name))
             {
-                configuration.ColumnName = attribute.Name;
+                configuration.HasColumnName(attribute.Name);
             }
 
-            if (string.IsNullOrWhiteSpace(configuration.ColumnType)
-                && !string.IsNullOrWhiteSpace(attribute.TypeName))
+            if (!string.IsNullOrWhiteSpace(attribute.TypeName))
             {
-                configuration.ColumnType = attribute.TypeName;
+                configuration.HasColumnType(attribute.TypeName);
             }
 
-            if ((configuration.ColumnOrder == null)
-                && attribute.Order >= 0)
+            if (attribute.Order >= 0)
             {
-                configuration.ColumnOrder = attribute.Order;
+                configuration.HasColumnOrder(attribute.Order);
             }
         }
     }

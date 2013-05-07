@@ -3,9 +3,9 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.Resources;
     using Xunit;
-    using StringPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.StringPropertyConfiguration;
 
     public sealed class MaxLengthAttributeConventionTests : TestBase
     {
@@ -15,7 +15,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var propertyConfiguration = new StringPropertyConfiguration();
 
             new MaxLengthAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new MaxLengthAttribute());
+                .Apply(
+                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                    new MaxLengthAttribute());
 
             Assert.Null(propertyConfiguration.MaxLength);
             Assert.Equal(true, propertyConfiguration.IsMaxLength);
@@ -25,12 +27,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_not_set_is_max_length_if_value_exists()
         {
             var propertyConfiguration = new StringPropertyConfiguration
-                                            {
-                                                IsMaxLength = false
-                                            };
+                {
+                    IsMaxLength = false
+                };
 
             new MaxLengthAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new MaxLengthAttribute());
+                .Apply(
+                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                    new MaxLengthAttribute());
 
             Assert.Null(propertyConfiguration.MaxLength);
             Assert.Equal(false, propertyConfiguration.IsMaxLength);
@@ -42,7 +46,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var propertyConfiguration = new StringPropertyConfiguration();
 
             new MaxLengthAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new MaxLengthAttribute(100));
+                .Apply(
+                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                    new MaxLengthAttribute(100));
 
             Assert.Equal(100, propertyConfiguration.MaxLength);
             Assert.Null(propertyConfiguration.IsMaxLength);
@@ -52,15 +58,31 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_not_set_max_length_if_value_exists()
         {
             var propertyConfiguration = new StringPropertyConfiguration
-                                            {
-                                                MaxLength = 200
-                                            };
+                {
+                    MaxLength = 200
+                };
 
             new MaxLengthAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new MaxLengthAttribute(100));
+                .Apply(
+                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                    new MaxLengthAttribute(100));
 
             Assert.Equal(200, propertyConfiguration.MaxLength);
             Assert.Null(propertyConfiguration.IsMaxLength);
+        }
+
+        [Fact]
+        public void Apply_should_throw_on_invalid_value()
+        {
+            var propertyConfiguration = new StringPropertyConfiguration();
+
+            Assert.Equal(
+                Strings.MaxLengthAttributeConvention_InvalidMaxLength("P", typeof(object)),
+                Assert.Throws<InvalidOperationException>(
+                    () => new MaxLengthAttributeConvention()
+                              .Apply(
+                                  new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                                  new MaxLengthAttribute(-2))).Message);
         }
     }
 }

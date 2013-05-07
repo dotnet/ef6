@@ -101,7 +101,7 @@ namespace System.Data.Entity
 
         public MockType AsCollection()
         {
-            var mockCollectionType = new MockType();
+            var mockCollectionType = new MockType("ICollection[" + Object.Name + "]");
 
             mockCollectionType.Setup(t => t.GetInterfaces()).Returns(new[] { typeof(ICollection<>).MakeGenericType(this) });
 

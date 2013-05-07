@@ -528,7 +528,7 @@ namespace FunctionalTests
             {
                 var modelBuilder = new DbModelBuilder();
 
-                modelBuilder.Entity<LightweightEntityWithKeyConfiguration>();
+                modelBuilder.Entity<LightweightEntityWithKeyConfiguration>().HasKey(e => e.IntProperty);
                 modelBuilder.Properties()
                     .Where(p => p.Name == "IntProperty1")
                     .Configure(c => c.HasColumnOrder(1).IsKey());
@@ -538,6 +538,24 @@ namespace FunctionalTests
                 var entity = databaseMapping.Model.EntityTypes.Single();
                 var keys = entity.KeyProperties;
                 Assert.Equal(1, keys.Count());
+                Assert.Equal("IntProperty", keys.ElementAt(0).Name);
+            }
+
+            [Fact]
+            public void Is_key_adds_key_if_key_attribute_present()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntityWithKeyConfiguration>();
+                modelBuilder.Properties()
+                    .Where(p => p.Name == "IntProperty1")
+                    .Configure(c => c.HasColumnOrder(1).IsKey());
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                var entity = databaseMapping.Model.EntityTypes.Single();
+                var keys = entity.KeyProperties;
+                Assert.Equal(2, keys.Count());
                 Assert.Equal("IntProperty", keys.ElementAt(0).Name);
             }
         }

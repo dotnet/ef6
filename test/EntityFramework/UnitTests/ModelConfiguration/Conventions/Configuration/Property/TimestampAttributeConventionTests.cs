@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using Xunit;
     using BinaryPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.BinaryPropertyConfiguration;
 
@@ -17,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var propertyConfiguration = new BinaryPropertyConfiguration();
 
             new TimestampAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new TimestampAttribute());
+                .Apply(new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new TimestampAttribute());
 
             Assert_Timestamp(propertyConfiguration);
         }
@@ -31,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                             };
 
             new TimestampAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new TimestampAttribute());
+                .Apply(new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new TimestampAttribute());
 
             Assert_Timestamp(propertyConfiguration);
         }
@@ -45,7 +46,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                             };
 
             new TimestampAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new TimestampAttribute());
+                .Apply(new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new TimestampAttribute());
 
             Assert_Timestamp(propertyConfiguration);
         }
@@ -59,7 +60,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                             };
 
             new TimestampAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new TimestampAttribute());
+                .Apply(new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new TimestampAttribute());
 
             Assert_Timestamp(propertyConfiguration);
         }
@@ -73,7 +74,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                             };
 
             new TimestampAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new TimestampAttribute());
+                .Apply(new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new TimestampAttribute());
 
             Assert_Timestamp(propertyConfiguration);
         }
@@ -87,7 +88,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                             };
 
             new TimestampAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new TimestampAttribute());
+                .Apply(new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new TimestampAttribute());
 
             Assert.Null(propertyConfiguration.ColumnType);
         }
@@ -101,7 +102,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                             };
 
             new TimestampAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new TimestampAttribute());
+                .Apply(new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new TimestampAttribute());
 
             Assert.Null(propertyConfiguration.ColumnType);
         }

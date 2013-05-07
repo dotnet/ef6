@@ -7,10 +7,8 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-    using System.Data.Entity.Core;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration;
-    using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Linq;
     using FunctionalTests.Model;
@@ -313,16 +311,22 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void Build_model_containing_a_complex_type_with_annotations()
+        public void Build_model_containing_a_complex_type_with_required_attribute()
         {
-            var modelBuilder = new AdventureWorksModelBuilder(typeof(RowDetails));
+            var modelBuilder = new AdventureWorksModelBuilder();
 
-            modelBuilder.Entity<ProductDescription>();
+            modelBuilder.Entity<BillOfMaterials>();
+            modelBuilder.ComplexType<UnitMeasure>();
 
-            var databaseMapping = BuildMapping(modelBuilder);
+            using (var typeConfiguration = new DynamicTypeDescriptionConfiguration<BillOfMaterials>())
+            {
+                typeConfiguration.SetPropertyAttributes(t => t.UnitMeasure, new RequiredAttribute());
 
-            Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
-            Assert.Equal(1, databaseMapping.Model.ComplexTypes.Count());
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
+                Assert.Equal(1, databaseMapping.Model.ComplexTypes.Count());
+            }
         }
 
         [Fact]
@@ -351,7 +355,7 @@ namespace FunctionalTests
                 .HasColumnName("ROW_GUID");
 
             var databaseMapping = BuildMapping(modelBuilder);
-            
+
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
 
@@ -441,20 +445,20 @@ namespace FunctionalTests
                 false,
                 databaseMapping.Database.EntityTypes.ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line1")
                     .Nullable);
-            EdmModel tempQualifier1 = databaseMapping.Database;
+            var tempQualifier1 = databaseMapping.Database;
             DebugCheck.NotNull(tempQualifier1);
             Assert.Equal(
                 true,
                 tempQualifier1.EntityTypes.ElementAt(0).Properties.Single(c => c.Name == "WorkAddress_Line1")
                     .Nullable);
 
-            EdmModel tempQualifier2 = databaseMapping.Database;
+            var tempQualifier2 = databaseMapping.Database;
             DebugCheck.NotNull(tempQualifier2);
             Assert.Equal(
                 true,
                 tempQualifier2.EntityTypes.ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line2")
                     .Nullable);
-            EdmModel tempQualifier3 = databaseMapping.Database;
+            var tempQualifier3 = databaseMapping.Database;
             DebugCheck.NotNull(tempQualifier3);
             Assert.Equal(
                 true,
@@ -480,20 +484,20 @@ namespace FunctionalTests
                 false,
                 databaseMapping.Database.EntityTypes.ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line1")
                     .Nullable);
-            EdmModel tempQualifier1 = databaseMapping.Database;
+            var tempQualifier1 = databaseMapping.Database;
             DebugCheck.NotNull(tempQualifier1);
             Assert.Equal(
                 false,
                 tempQualifier1.EntityTypes.ElementAt(1).Properties.Single(c => c.Name == "WorkAddress_Line1")
                     .Nullable);
 
-            EdmModel tempQualifier2 = databaseMapping.Database;
+            var tempQualifier2 = databaseMapping.Database;
             DebugCheck.NotNull(tempQualifier2);
             Assert.Equal(
                 true,
                 tempQualifier2.EntityTypes.ElementAt(0).Properties.Single(c => c.Name == "HomeAddress_Line2")
                     .Nullable);
-            EdmModel tempQualifier3 = databaseMapping.Database;
+            var tempQualifier3 = databaseMapping.Database;
             DebugCheck.NotNull(tempQualifier3);
             Assert.Equal(
                 true,
@@ -518,10 +522,10 @@ namespace FunctionalTests
             modelBuilder.Entity<LoCTEmployeePhoto>()
                 .HasKey(
                     p => new
-                             {
-                                 p.EmployeeNo,
-                                 p.PhotoId
-                             });
+                        {
+                            p.EmployeeNo,
+                            p.PhotoId
+                        });
 
             var databaseMapping = BuildMapping(modelBuilder);
             databaseMapping.AssertValid();

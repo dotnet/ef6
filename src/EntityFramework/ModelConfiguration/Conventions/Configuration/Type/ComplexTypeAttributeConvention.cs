@@ -3,22 +3,21 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
 
     /// <summary>
     ///     Convention to process instances of <see cref="ComplexTypeAttribute" /> found on types in the model.
     /// </summary>
     public class ComplexTypeAttributeConvention :
-        AttributeConfigurationConvention<Type, ComplexTypeAttribute>
+        TypeAttributeConfigurationConvention<ComplexTypeAttribute>
     {
-        public override void Apply(Type memberInfo, ModelConfiguration modelConfiguration, ComplexTypeAttribute attribute)
+        public override void Apply(LightweightTypeConfiguration configuration, ComplexTypeAttribute attribute)
         {
-            Check.NotNull(memberInfo, "memberInfo");
-            Check.NotNull(modelConfiguration, "configuration");
+            Check.NotNull(configuration, "configuration");
             Check.NotNull(attribute, "attribute");
 
-            modelConfiguration.ComplexType(memberInfo);
+            configuration.IsComplexType();
         }
     }
 }

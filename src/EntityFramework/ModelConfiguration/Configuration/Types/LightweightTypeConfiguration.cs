@@ -295,7 +295,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             Check.NotEmpty(propertyName, "propertyName");
 
-            return HasKey(new[] { propertyName });
+            var propertyInfo = _type.GetProperty(propertyName, PropertyFilter.DefaultBindingFlags);
+            if (propertyInfo == null)
+            {
+                throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.FullName));
+            }
+
+            return HasKey(_type.GetProperty(propertyName));
         }
 
         /// <summary>
@@ -309,7 +315,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             Check.NotNull(propertyInfo, "propertyInfo");
 
-            return HasKey(new[] { propertyInfo });
+            ValidateConfiguration(ConfigurationAspect.Key);
+
+            if (_entityTypeConfiguration != null
+                && !_entityTypeConfiguration().IsKeyConfigured)
+            {
+                _entityTypeConfiguration().Key(propertyInfo);
+            }
+
+            return this;
         }
 
         /// <summary>
@@ -328,7 +342,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     n =>
                         {
                             var propertyInfo = _type.GetProperty(n, PropertyFilter.DefaultBindingFlags);
-
                             if (propertyInfo == null)
                             {
                                 throw new InvalidOperationException(Strings.NoSuchProperty(n, _type.FullName));
@@ -355,7 +368,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             Check.NotNull(keyProperties, "keyProperties");
             EntityUtil.CheckArgumentContainsNull(ref keyProperties, "keyProperties");
-            EntityUtil.CheckArgumentEmpty(ref keyProperties,
+            EntityUtil.CheckArgumentEmpty(
+                ref keyProperties,
                 p => Strings.CollectionEmpty(p, "HasKey"), "keyProperties");
 
             ValidateConfiguration(ConfigurationAspect.Key);

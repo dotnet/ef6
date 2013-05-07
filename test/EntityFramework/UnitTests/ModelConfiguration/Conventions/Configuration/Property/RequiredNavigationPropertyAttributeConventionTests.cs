@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration;
@@ -14,10 +13,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_make_end_kind_required()
         {
-            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+            var propertyInfo = typeof(RequiredAttributeEntity).GetProperty("Navigation");
+            var associationConfiguration = new NavigationPropertyConfiguration(propertyInfo);
 
             new RequiredNavigationPropertyAttributeConvention()
-                .Apply(new MockPropertyInfo(), associationConfiguration, new ModelConfiguration(), new RequiredAttribute());
+                .ApplyPropertyConfiguration(propertyInfo, () => associationConfiguration, new ModelConfiguration());
 
             Assert.Equal(RelationshipMultiplicity.One, associationConfiguration.RelationshipMultiplicity);
         }
@@ -25,14 +25,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_ignore_when_end_kind_set()
         {
+            var propertyInfo = typeof(RequiredAttributeEntity).GetProperty("Navigation");
             var associationConfiguration
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"))
-                      {
-                          RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne
-                      };
+                = new NavigationPropertyConfiguration(propertyInfo)
+                    {
+                        RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne
+                    };
 
             new RequiredNavigationPropertyAttributeConvention()
-                .Apply(new MockPropertyInfo(), associationConfiguration, new ModelConfiguration(), new RequiredAttribute());
+                .ApplyPropertyConfiguration(propertyInfo, () => associationConfiguration, new ModelConfiguration());
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationConfiguration.RelationshipMultiplicity);
         }
@@ -40,16 +41,26 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_ignore_when_end_kind_is_collection()
         {
+            var propertyInfo = typeof(RequiredAttributeEntity).GetProperty("Navigations");
             var associationConfiguration
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType().AsCollection(), "N"))
-                      {
-                          RelationshipMultiplicity = RelationshipMultiplicity.Many
-                      };
+                = new NavigationPropertyConfiguration(propertyInfo)
+                    {
+                        RelationshipMultiplicity = RelationshipMultiplicity.Many
+                    };
 
             new RequiredNavigationPropertyAttributeConvention()
-                .Apply(new MockPropertyInfo(), associationConfiguration, new ModelConfiguration(), new RequiredAttribute());
+                .ApplyPropertyConfiguration(propertyInfo, () => associationConfiguration, new ModelConfiguration());
 
             Assert.Equal(RelationshipMultiplicity.Many, associationConfiguration.RelationshipMultiplicity);
+        }
+
+        public class RequiredAttributeEntity
+        {
+            [Required]
+            public MockType Navigation { get; set; }
+
+            [Required]
+            public MockType Navigations { get; set; }
         }
     }
 }
