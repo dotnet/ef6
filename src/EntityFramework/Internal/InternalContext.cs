@@ -607,11 +607,15 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public virtual void DisposeContext()
         {
-            if (!IsDisposed
-                && OnDisposing != null)
+            if (!IsDisposed)
             {
-                OnDisposing(this, new EventArgs());
-                OnDisposing = null;
+                if (OnDisposing != null)
+                {
+                    OnDisposing(this, new EventArgs());
+                    OnDisposing = null;
+                }
+
+                Log = null;
             }
         }
 
@@ -1450,6 +1454,7 @@ namespace System.Data.Entity.Internal
                     if (_commandLogger != null)
                     {
                         _dispatchers.RemoveInterceptor(_commandLogger);
+                        _commandLogger.Writer.Flush();
                         _commandLogger = null;
                     }
 

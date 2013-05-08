@@ -367,5 +367,24 @@ namespace System.Data.Entity.Internal
             internalContext.Log = null;
             Assert.Null(internalContext.Log);
         }
+
+        [Fact]
+        public void Log_is_cleared_when_context_is_disposed()
+        {
+            var mockDispatchers = new Mock<Dispatchers>();
+
+            var context = new Mock<DbContext>().Object;
+            var internalContext = new LazyInternalContext(
+                context, new Mock<IInternalConnection>().Object, null, null, null, mockDispatchers.Object);
+
+            var writer = new Mock<TextWriter>().Object;
+            internalContext.Log = writer;
+
+            internalContext.Dispose();
+
+            mockDispatchers.Verify(
+                m => m.RemoveInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Writer == writer)),
+                Times.Once());
+        }
     }
 }

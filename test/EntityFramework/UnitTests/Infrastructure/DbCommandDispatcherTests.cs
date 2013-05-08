@@ -371,7 +371,14 @@ namespace System.Data.Entity.Infrastructure
                 result.Start();
                 cancellationTokenSource.Cancel();
 
-                Assert.Throws<AggregateException>(() => awaited.Wait());
+                try
+                {
+                    awaited.Wait();
+                }
+                catch (AggregateException)
+                {
+                    // Ignore
+                }
 
                 Assert.True(interceptResult.IsCanceled);
                 Assert.True(awaited.IsCanceled);
@@ -550,7 +557,14 @@ namespace System.Data.Entity.Infrastructure
                 cancellationTokenSource.Cancel();
 
                 var awaited = AwaitMe(interceptResult);
-                Assert.Throws<AggregateException>(() => awaited.Wait());
+                try
+                {
+                    awaited.Wait();
+                }
+                catch (AggregateException)
+                {
+                    // Ignore
+                }
 
                 Assert.True(interceptResult.IsCanceled);
                 Assert.True(awaited.IsCanceled);
@@ -758,7 +772,14 @@ namespace System.Data.Entity.Infrastructure
                 cancellationTokenSource.Cancel();
 
                 var awaited = AwaitMe(interceptResult);
-                Assert.Throws<AggregateException>(() => awaited.Wait());
+                try
+                {
+                    awaited.Wait();
+                }
+                catch (AggregateException)
+                {
+                    // Ignore
+                }
 
                 Assert.True(interceptResult.IsCanceled);
                 Assert.True(awaited.IsCanceled);
