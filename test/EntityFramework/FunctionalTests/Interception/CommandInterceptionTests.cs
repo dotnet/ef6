@@ -167,9 +167,18 @@ namespace System.Data.Entity.Interception
                     context.Database.Connection.Open();
 
                     cancellation.Cancel();
+
                     var command = context.Database.ExecuteSqlCommandAsync("update Blogs set Title = 'No' where Id = -1", cancellationToken);
 
-                    Assert.Throws<AggregateException>(() => command.Wait());
+                    try
+                    {
+                        command.Wait();
+                    }
+                    catch (AggregateException)
+                    {
+                        // Ignore
+                    }
+
                     Assert.True(command.IsCanceled);
 
                     context.Database.Connection.Close();
