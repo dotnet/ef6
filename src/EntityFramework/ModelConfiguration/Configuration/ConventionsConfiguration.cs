@@ -229,11 +229,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             foreach (var convention in _conventions)
             {
                 var modelConfigurationConvention
-                    = convention as IConfigurationConvention<Type, ModelConfiguration>;
+                    = convention as IConfigurationConvention<Type>;
 
                 if (modelConfigurationConvention != null)
                 {
-                    modelConfigurationConvention.Apply(type, () => modelConfiguration);
+                    modelConfigurationConvention.Apply(type, modelConfiguration);
                 }
 
                 var lightweightConfigurationConvention
@@ -247,7 +247,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         internal virtual void ApplyTypeConfiguration<TStructuralTypeConfiguration>(
-            Type type, Func<TStructuralTypeConfiguration> structuralTypeConfiguration)
+            Type type,
+            Func<TStructuralTypeConfiguration> structuralTypeConfiguration,
+            ModelConfiguration modelConfiguration)
             where TStructuralTypeConfiguration : StructuralTypeConfiguration
         {
             DebugCheck.NotNull(type);
@@ -260,7 +262,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                 if (propertyTypeConfigurationConvention != null)
                 {
-                    propertyTypeConfigurationConvention.Apply(type, structuralTypeConfiguration);
+                    propertyTypeConfigurationConvention.Apply(type, structuralTypeConfiguration, modelConfiguration);
                 }
 
                 var structuralTypeConfigurationConvention
@@ -268,7 +270,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                 if (structuralTypeConfigurationConvention != null)
                 {
-                    structuralTypeConfigurationConvention.Apply(type, structuralTypeConfiguration);
+                    structuralTypeConfigurationConvention.Apply(type, structuralTypeConfiguration, modelConfiguration);
                 }
 
                 var lightweightConfigurationConvention
@@ -276,7 +278,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                 if (lightweightConfigurationConvention != null)
                 {
-                    lightweightConfigurationConvention.ApplyTypeConfiguration(type, structuralTypeConfiguration);
+                    lightweightConfigurationConvention.ApplyTypeConfiguration(type, structuralTypeConfiguration, modelConfiguration);
                 }
             }
         }
@@ -289,11 +291,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             foreach (var convention in _conventions)
             {
                 var propertyConfigurationConvention
-                    = convention as IConfigurationConvention<PropertyInfo, ModelConfiguration>;
+                    = convention as IConfigurationConvention<PropertyInfo>;
 
                 if (propertyConfigurationConvention != null)
                 {
-                    propertyConfigurationConvention.Apply(propertyInfo, () => modelConfiguration);
+                    propertyConfigurationConvention.Apply(propertyInfo, modelConfiguration);
                 }
 
                 var lightweightConfigurationConvention
@@ -307,7 +309,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         internal virtual void ApplyPropertyConfiguration(
-            PropertyInfo propertyInfo, Func<PropertyConfiguration> propertyConfiguration)
+            PropertyInfo propertyInfo, Func<PropertyConfiguration> propertyConfiguration, ModelConfiguration modelConfiguration)
         {
             DebugCheck.NotNull(propertyInfo);
             DebugCheck.NotNull(propertyConfiguration);
@@ -318,7 +320,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             foreach (var convention in _conventions)
             {
                 new PropertyConfigurationConventionDispatcher(
-                    convention, propertyConfigurationType, propertyInfo, propertyConfiguration)
+                    convention, propertyConfigurationType, propertyInfo, propertyConfiguration, modelConfiguration)
                     .Dispatch();
 
                 var lightweightConfigurationConvention
@@ -326,13 +328,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                 if (lightweightConfigurationConvention != null)
                 {
-                    lightweightConfigurationConvention.ApplyPropertyConfiguration(propertyInfo, propertyConfiguration);
+                    lightweightConfigurationConvention.ApplyPropertyConfiguration(propertyInfo, propertyConfiguration, modelConfiguration);
                 }
             }
         }
 
         internal virtual void ApplyPropertyTypeConfiguration<TStructuralTypeConfiguration>(
-            PropertyInfo propertyInfo, Func<TStructuralTypeConfiguration> structuralTypeConfiguration)
+            PropertyInfo propertyInfo,
+            Func<TStructuralTypeConfiguration> structuralTypeConfiguration,
+            ModelConfiguration modelConfiguration)
             where TStructuralTypeConfiguration : StructuralTypeConfiguration
         {
             DebugCheck.NotNull(propertyInfo);
@@ -345,7 +349,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                 if (propertyTypeConfigurationConvention != null)
                 {
-                    propertyTypeConfigurationConvention.Apply(propertyInfo, structuralTypeConfiguration);
+                    propertyTypeConfigurationConvention.Apply(propertyInfo, structuralTypeConfiguration, modelConfiguration);
                 }
 
                 var structuralTypeConfigurationConvention
@@ -353,7 +357,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                 if (structuralTypeConfigurationConvention != null)
                 {
-                    structuralTypeConfigurationConvention.Apply(propertyInfo, structuralTypeConfiguration);
+                    structuralTypeConfigurationConvention.Apply(propertyInfo, structuralTypeConfiguration, modelConfiguration);
                 }
 
                 var lightweightConfigurationConvention
@@ -361,7 +365,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                 if (lightweightConfigurationConvention != null)
                 {
-                    lightweightConfigurationConvention.ApplyPropertyTypeConfiguration(propertyInfo, structuralTypeConfiguration);
+                    lightweightConfigurationConvention.ApplyPropertyTypeConfiguration(
+                        propertyInfo, structuralTypeConfiguration, modelConfiguration);
                 }
             }
         }

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
     using System.Reflection;
@@ -14,10 +15,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         AttributeConfigurationConvention<PropertyInfo, EntityTypeConfiguration, KeyAttribute>
     {
         public override void Apply(
-            PropertyInfo memberInfo, EntityTypeConfiguration configuration, KeyAttribute attribute)
+            PropertyInfo memberInfo, EntityTypeConfiguration configuration, ModelConfiguration modelConfiguration, KeyAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
             Check.NotNull(configuration, "configuration");
+            Check.NotNull(modelConfiguration, "modelConfiguration");
             Check.NotNull(attribute, "attribute");
 
             if (memberInfo.IsValidEdmScalarProperty())

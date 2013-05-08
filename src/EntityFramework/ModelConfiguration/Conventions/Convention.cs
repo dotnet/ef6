@@ -102,10 +102,12 @@ namespace System.Data.Entity.ModelConfiguration
         }
 
         internal virtual void ApplyTypeConfiguration<TStructuralTypeConfiguration>(
-            Type type, Func<TStructuralTypeConfiguration> structuralTypeConfiguration)
+            Type type,
+            Func<TStructuralTypeConfiguration> structuralTypeConfiguration,
+            ModelConfiguration modelConfiguration)
             where TStructuralTypeConfiguration : StructuralTypeConfiguration
         {
-            _conventionsConfiguration.ApplyTypeConfiguration(type, structuralTypeConfiguration);
+            _conventionsConfiguration.ApplyTypeConfiguration(type, structuralTypeConfiguration, modelConfiguration);
         }
 
         internal virtual void ApplyPropertyConfiguration(PropertyInfo propertyInfo, ModelConfiguration modelConfiguration)
@@ -114,16 +116,20 @@ namespace System.Data.Entity.ModelConfiguration
         }
 
         internal virtual void ApplyPropertyConfiguration(
-            PropertyInfo propertyInfo, Func<PropertyConfiguration> propertyConfiguration)
+            PropertyInfo propertyInfo,
+            Func<PropertyConfiguration> propertyConfiguration,
+            ModelConfiguration modelConfiguration)
         {
-            _conventionsConfiguration.ApplyPropertyConfiguration(propertyInfo, propertyConfiguration);
+            _conventionsConfiguration.ApplyPropertyConfiguration(propertyInfo, propertyConfiguration, modelConfiguration);
         }
 
         internal virtual void ApplyPropertyTypeConfiguration<TStructuralTypeConfiguration>(
-            PropertyInfo propertyInfo, Func<TStructuralTypeConfiguration> structuralTypeConfiguration)
+            PropertyInfo propertyInfo,
+            Func<TStructuralTypeConfiguration> structuralTypeConfiguration,
+            ModelConfiguration modelConfiguration)
             where TStructuralTypeConfiguration : StructuralTypeConfiguration
         {
-            _conventionsConfiguration.ApplyPropertyTypeConfiguration(propertyInfo, structuralTypeConfiguration);
+            _conventionsConfiguration.ApplyPropertyTypeConfiguration(propertyInfo, structuralTypeConfiguration, modelConfiguration);
         }
     }
 }

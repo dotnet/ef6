@@ -1,8 +1,9 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
 
@@ -33,10 +34,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             get { return _ofTypePredicate; }
         }
 
-        protected override void ApplyCore(Type memberInfo, Func<EntityTypeConfiguration> configuration)
+        protected override void ApplyCore(
+            Type memberInfo, Func<EntityTypeConfiguration> configuration, ModelConfiguration modelConfiguration)
         {
             DebugCheck.NotNull(memberInfo);
             DebugCheck.NotNull(configuration);
+            DebugCheck.NotNull(modelConfiguration);
 
             _entityConfigurationAction(new LightweightEntityConfiguration<T>(memberInfo, configuration));
         }

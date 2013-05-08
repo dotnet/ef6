@@ -15,19 +15,19 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///     Convention to process instances of <see cref="ForeignKeyAttribute" /> found on foreign key properties in the model.
     /// </summary>
     public class ForeignKeyPrimitivePropertyAttributeConvention :
-        AttributeConfigurationConvention<PropertyInfo, ModelConfiguration, ForeignKeyAttribute>
+        AttributeConfigurationConvention<PropertyInfo, ForeignKeyAttribute>
     {
         public override void Apply(
-            PropertyInfo memberInfo, ModelConfiguration configuration,
+            PropertyInfo memberInfo, ModelConfiguration modelConfiguration,
             ForeignKeyAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
-            Check.NotNull(configuration, "configuration");
+            Check.NotNull(modelConfiguration, "modelConfiguration");
             Check.NotNull(attribute, "attribute");
 
             if (memberInfo.IsValidEdmScalarProperty())
             {
-                ApplyNavigationProperty(memberInfo, configuration, attribute);
+                ApplyNavigationProperty(memberInfo, modelConfiguration, attribute);
             }
         }
 

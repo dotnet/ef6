@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using Xunit;
 
@@ -14,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
 
             new TableAttributeConvention()
-                .Apply(new MockType(), entityTypeConfiguration, new TableAttribute("Foo"));
+                .Apply(new MockType(), entityTypeConfiguration, new ModelConfiguration(), new TableAttribute("Foo"));
 
             Assert.Equal("Foo", entityTypeConfiguration.GetTableName().Name);
         }
@@ -26,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityTypeConfiguration.ToTable("Bar");
 
             new TableAttributeConvention()
-                .Apply(new MockType(), entityTypeConfiguration, new TableAttribute("Foo"));
+                .Apply(new MockType(), entityTypeConfiguration, new ModelConfiguration(), new TableAttribute("Foo"));
 
             Assert.Equal("Bar", entityTypeConfiguration.GetTableName().Name);
         }
@@ -38,7 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             new TableAttributeConvention()
                 .Apply(
-                    new MockType(), entityTypeConfiguration, new TableAttribute("Foo")
+                    new MockType(), entityTypeConfiguration, new ModelConfiguration(), new TableAttribute("Foo")
                                                                  {
                                                                      Schema = "Bar"
                                                                  });

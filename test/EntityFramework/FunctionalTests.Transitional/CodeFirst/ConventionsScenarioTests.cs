@@ -121,8 +121,8 @@ namespace FunctionalTests
 
             var lightweightTableConvention = new Convention();
             lightweightTableConvention.Entities()
-            .Where(t => t == typeof(LightweightEntity))
-            .Configure(e => e.ToTable("TheTable"));
+                .Where(t => t == typeof(LightweightEntity))
+                .Configure(e => e.ToTable("TheTable"));
             modelBuilder.Conventions.Add(lightweightTableConvention);
 
             var databaseMapping = BuildMapping(modelBuilder);
@@ -139,8 +139,8 @@ namespace FunctionalTests
 
             var lightweightTableConvention = new Convention();
             lightweightTableConvention.Entities()
-            .Where(t => t == typeof(LightweightEntity))
-            .Configure(e => e.ToTable("TheTable"));
+                .Where(t => t == typeof(LightweightEntity))
+                .Configure(e => e.ToTable("TheTable"));
             modelBuilder.Conventions.Add(lightweightTableConvention);
             modelBuilder.Conventions.Remove(lightweightTableConvention);
 
@@ -181,8 +181,8 @@ namespace FunctionalTests
             public LightweightTableConvention()
             {
                 Entities()
-                .Where(t => t == typeof(LightweightEntity))
-                .Configure(e => e.ToTable("TheTable"));
+                    .Where(t => t == typeof(LightweightEntity))
+                    .Configure(e => e.ToTable("TheTable"));
             }
         }
 

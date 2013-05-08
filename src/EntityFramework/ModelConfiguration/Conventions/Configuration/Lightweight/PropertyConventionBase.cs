@@ -1,8 +1,9 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Utilities;
     using System.Linq;
@@ -25,17 +26,20 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             get { return _predicates; }
         }
 
-        public void Apply(PropertyInfo memberInfo, Func<PrimitivePropertyConfiguration> configuration)
+        public void Apply(
+            PropertyInfo memberInfo, Func<PrimitivePropertyConfiguration> configuration, ModelConfiguration modelConfiguration)
         {
             DebugCheck.NotNull(memberInfo);
             DebugCheck.NotNull(configuration);
+            DebugCheck.NotNull(modelConfiguration);
 
             if (_predicates.All(p => p(memberInfo)))
             {
-                ApplyCore(memberInfo, configuration);
+                ApplyCore(memberInfo, configuration, modelConfiguration);
             }
         }
 
-        protected abstract void ApplyCore(PropertyInfo memberInfo, Func<PrimitivePropertyConfiguration> configuration);
+        protected abstract void ApplyCore(
+            PropertyInfo memberInfo, Func<PrimitivePropertyConfiguration> configuration, ModelConfiguration modelConfiguration);
     }
 }

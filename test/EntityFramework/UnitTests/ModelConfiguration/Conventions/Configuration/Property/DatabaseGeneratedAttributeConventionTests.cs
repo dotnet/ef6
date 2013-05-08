@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using Xunit;
 
@@ -14,7 +15,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var propertyConfiguration = new PrimitivePropertyConfiguration();
 
             new DatabaseGeneratedAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new DatabaseGeneratedAttribute(DatabaseGeneratedOption.None));
+                .Apply(
+                    new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(),
+                    new DatabaseGeneratedAttribute(DatabaseGeneratedOption.None));
 
             Assert.Equal(DatabaseGeneratedOption.None, propertyConfiguration.DatabaseGeneratedOption);
         }
@@ -23,12 +26,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_ignore_attribute_if_already_set()
         {
             var propertyConfiguration = new PrimitivePropertyConfiguration
-                                            {
-                                                DatabaseGeneratedOption = DatabaseGeneratedOption.Computed
-                                            };
+                {
+                    DatabaseGeneratedOption = DatabaseGeneratedOption.Computed
+                };
 
             new DatabaseGeneratedAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new DatabaseGeneratedAttribute(DatabaseGeneratedOption.None));
+                .Apply(
+                    new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(),
+                    new DatabaseGeneratedAttribute(DatabaseGeneratedOption.None));
 
             Assert.Equal(DatabaseGeneratedOption.Computed, propertyConfiguration.DatabaseGeneratedOption);
         }

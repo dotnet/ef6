@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using Xunit;
 
@@ -16,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
 
             new RequiredNavigationPropertyAttributeConvention()
-                .Apply(new MockPropertyInfo(), associationConfiguration, new RequiredAttribute());
+                .Apply(new MockPropertyInfo(), associationConfiguration, new ModelConfiguration(), new RequiredAttribute());
 
             Assert.Equal(RelationshipMultiplicity.One, associationConfiguration.RelationshipMultiplicity);
         }
@@ -31,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                       };
 
             new RequiredNavigationPropertyAttributeConvention()
-                .Apply(new MockPropertyInfo(), associationConfiguration, new RequiredAttribute());
+                .Apply(new MockPropertyInfo(), associationConfiguration, new ModelConfiguration(), new RequiredAttribute());
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationConfiguration.RelationshipMultiplicity);
         }
@@ -46,7 +47,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                       };
 
             new RequiredNavigationPropertyAttributeConvention()
-                .Apply(new MockPropertyInfo(), associationConfiguration, new RequiredAttribute());
+                .Apply(new MockPropertyInfo(), associationConfiguration, new ModelConfiguration(), new RequiredAttribute());
 
             Assert.Equal(RelationshipMultiplicity.Many, associationConfiguration.RelationshipMultiplicity);
         }

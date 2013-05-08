@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using Xunit;
 
@@ -14,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var propertyConfiguration = new PrimitivePropertyConfiguration();
 
             new ColumnAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ColumnAttribute("Foo"));
+                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new ColumnAttribute("Foo"));
 
             Assert.Equal("Foo", propertyConfiguration.ColumnName);
         }
@@ -28,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                             };
 
             new ColumnAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ColumnAttribute("Foo"));
+                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new ColumnAttribute("Foo"));
 
             Assert.Equal("Bar", propertyConfiguration.ColumnName);
         }

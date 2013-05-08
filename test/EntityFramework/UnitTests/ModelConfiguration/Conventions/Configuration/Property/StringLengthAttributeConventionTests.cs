@@ -3,9 +3,10 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.Resources;
     using Xunit;
+    using StringPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.StringPropertyConfiguration;
 
     public sealed class StringLengthAttributeConventionTests
     {
@@ -15,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var propertyConfiguration = new StringPropertyConfiguration();
 
             new StringLengthAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new StringLengthAttribute(12));
+                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new StringLengthAttribute(12));
 
             Assert.Equal(12, propertyConfiguration.MaxLength);
         }
@@ -29,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                             };
 
             new StringLengthAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new StringLengthAttribute(12));
+                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new StringLengthAttribute(12));
 
             Assert.Equal(11, propertyConfiguration.MaxLength);
         }
@@ -43,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 Strings.StringLengthAttributeConvention_InvalidMaximumLength("P", typeof(object)),
                 Assert.Throws<InvalidOperationException>(
                     () => new StringLengthAttributeConvention()
-                              .Apply(new MockPropertyInfo(), propertyConfiguration, new StringLengthAttribute(0))).Message);
+                              .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new StringLengthAttribute(0))).Message);
         }
     }
 }

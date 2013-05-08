@@ -10,15 +10,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///     Convention to process instances of <see cref="NotMappedAttribute" /> found on types in the model.
     /// </summary>
     public class NotMappedTypeAttributeConvention :
-        AttributeConfigurationConvention<Type, ModelConfiguration, NotMappedAttribute>
+        AttributeConfigurationConvention<Type, NotMappedAttribute>
     {
-        public override void Apply(Type memberInfo, ModelConfiguration configuration, NotMappedAttribute attribute)
+        public override void Apply(Type memberInfo, ModelConfiguration modelConfiguration, NotMappedAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
-            Check.NotNull(configuration, "configuration");
+            Check.NotNull(modelConfiguration, "modelConfiguration");
             Check.NotNull(attribute, "attribute");
 
-            configuration.Ignore(memberInfo);
+            modelConfiguration.Ignore(memberInfo);
         }
     }
 }

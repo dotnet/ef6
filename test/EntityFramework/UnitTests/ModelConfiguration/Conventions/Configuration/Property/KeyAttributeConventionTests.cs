@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using Moq;
     using Xunit;
@@ -16,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var mockEntityTypeConfiguration = new Mock<EntityTypeConfiguration>(typeof(object));
 
             new KeyAttributeConvention()
-                .Apply(mockPropertyInfo, mockEntityTypeConfiguration.Object, new KeyAttribute());
+                .Apply(mockPropertyInfo, mockEntityTypeConfiguration.Object, new ModelConfiguration(), new KeyAttribute());
 
             mockEntityTypeConfiguration.Verify(e => e.Key(mockPropertyInfo, null, true));
         }

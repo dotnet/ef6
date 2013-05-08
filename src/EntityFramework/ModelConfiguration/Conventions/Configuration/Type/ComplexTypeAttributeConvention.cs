@@ -10,15 +10,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///     Convention to process instances of <see cref="ComplexTypeAttribute" /> found on types in the model.
     /// </summary>
     public class ComplexTypeAttributeConvention :
-        AttributeConfigurationConvention<Type, ModelConfiguration, ComplexTypeAttribute>
+        AttributeConfigurationConvention<Type, ComplexTypeAttribute>
     {
-        public override void Apply(Type memberInfo, ModelConfiguration configuration, ComplexTypeAttribute attribute)
+        public override void Apply(Type memberInfo, ModelConfiguration modelConfiguration, ComplexTypeAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
-            Check.NotNull(configuration, "configuration");
+            Check.NotNull(modelConfiguration, "configuration");
             Check.NotNull(attribute, "attribute");
 
-            configuration.ComplexType(memberInfo);
+            modelConfiguration.ComplexType(memberInfo);
         }
     }
 }

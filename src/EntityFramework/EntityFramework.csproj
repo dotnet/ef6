@@ -259,6 +259,8 @@
     <Compile Include="Migrations\Model\ParameterModel.cs" />
     <Compile Include="Migrations\Model\DropProcedureOperation.cs" />
     <Compile Include="Migrations\Model\PropertyModel.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\AttributeConfigurationConvention```.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\IConfigurationConvention`.cs" />
     <Compile Include="ModelConfiguration\Conventions\Convention.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\Api\PropertyMappingConfiguration.cs" />
     <Compile Include="QueryableExtensions.cs" />
@@ -1671,9 +1673,9 @@
     <Compile Include="ModelConfiguration\Configuration\Types\EntityTypeConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Types\StructuralTypeConfiguration.cs" />
     <Compile Include="ModelConfiguration\Configuration\Types\StructuralTypeConfiguration`.cs" />
-    <Compile Include="ModelConfiguration\Conventions\Configuration\AttributeConfigurationConvention.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\AttributeConfigurationConvention``.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\IConfigurationConvention.cs" />
-    <Compile Include="ModelConfiguration\Conventions\Configuration\IConfigurationConvention`.cs" />
+    <Compile Include="ModelConfiguration\Conventions\Configuration\IConfigurationConvention``.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Property\ColumnAttributeConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Property\ConcurrencyCheckAttributeConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Property\DatabaseGeneratedAttributeConvention.cs" />

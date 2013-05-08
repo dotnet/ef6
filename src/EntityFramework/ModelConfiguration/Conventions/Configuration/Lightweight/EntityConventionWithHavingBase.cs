@@ -1,8 +1,9 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
 
@@ -27,19 +28,22 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             get { return _capturingPredicate; }
         }
 
-        protected override sealed void ApplyCore(Type memberInfo, Func<EntityTypeConfiguration> configuration)
+        protected override sealed void ApplyCore(
+            Type memberInfo, Func<EntityTypeConfiguration> configuration, ModelConfiguration modelConfiguration)
         {
             DebugCheck.NotNull(memberInfo);
             DebugCheck.NotNull(configuration);
+            DebugCheck.NotNull(modelConfiguration);
 
             var value = _capturingPredicate(memberInfo);
 
             if (value != null)
             {
-                InvokeAction(memberInfo, configuration, value);
+                InvokeAction(memberInfo, configuration, modelConfiguration, value);
             }
         }
 
-        protected abstract void InvokeAction(Type memberInfo, Func<EntityTypeConfiguration> configuration, T value);
+        protected abstract void InvokeAction(
+            Type memberInfo, Func<EntityTypeConfiguration> configuration, ModelConfiguration modelConfiguration, T value);
     }
 }

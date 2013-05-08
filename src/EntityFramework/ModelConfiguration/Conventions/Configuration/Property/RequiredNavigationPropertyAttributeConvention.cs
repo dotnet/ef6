@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.Utilities;
     using System.Reflection;
@@ -15,11 +16,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         : AttributeConfigurationConvention<PropertyInfo, NavigationPropertyConfiguration, RequiredAttribute>
     {
         public override void Apply(
-            PropertyInfo memberInfo, NavigationPropertyConfiguration configuration,
+            PropertyInfo memberInfo,
+            NavigationPropertyConfiguration configuration,
+            ModelConfiguration modelConfiguration,
             RequiredAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
             Check.NotNull(configuration, "configuration");
+            Check.NotNull(modelConfiguration, "modelConfiguration");
             Check.NotNull(attribute, "attribute");
 
             if ((configuration.RelationshipMultiplicity == null)

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -17,11 +18,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         private const int MaxLengthIndicator = -1;
 
         public override void Apply(
-            PropertyInfo memberInfo, LengthPropertyConfiguration configuration,
+            PropertyInfo memberInfo,
+            LengthPropertyConfiguration configuration,
+            ModelConfiguration modelConfiguration,
             MaxLengthAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
             Check.NotNull(configuration, "configuration");
+            Check.NotNull(modelConfiguration, "modelConfiguration");
             Check.NotNull(attribute, "attribute");
 
             if ((attribute.Length == 0)

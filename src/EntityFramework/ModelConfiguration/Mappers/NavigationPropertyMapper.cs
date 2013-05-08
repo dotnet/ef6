@@ -66,7 +66,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
                 _typeMapper.MappingContext.ConventionsConfiguration.ApplyPropertyConfiguration(
                     propertyInfo,
-                    () => entityTypeConfiguration().Navigation(propertyInfo));
+                    () => entityTypeConfiguration().Navigation(propertyInfo),
+                    _typeMapper.MappingContext.ModelConfiguration);
 
                 new AttributeMapper(_typeMapper.MappingContext.AttributeProvider)
                     .Map(propertyInfo, navigationProperty.Annotations);

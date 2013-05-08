@@ -1,7 +1,8 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Linq;
     using Xunit;
@@ -18,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var type = new MockType();
             var configuration = new EntityTypeConfiguration(type);
 
-            convention.Apply(type, () => configuration);
+            convention.Apply(type, () => configuration, new ModelConfiguration());
 
             Assert.True(actionInvoked);
         }
@@ -33,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var type = new MockType();
             var configuration = new EntityTypeConfiguration(type);
 
-            convention.Apply(type, () => configuration);
+            convention.Apply(type, () => configuration, new ModelConfiguration());
 
             Assert.True(actionInvoked);
         }
@@ -52,7 +53,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var type = new MockType();
             var configuration = new EntityTypeConfiguration(type);
 
-            convention.Apply(type, () => configuration);
+            convention.Apply(type, () => configuration, new ModelConfiguration());
 
             Assert.True(actionInvoked);
         }
@@ -67,7 +68,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var type = new MockType();
             var configuration = new EntityTypeConfiguration(type);
 
-            convention.Apply(type, () => configuration);
+            convention.Apply(type, () => configuration, new ModelConfiguration());
 
             Assert.False(actionInvoked);
         }
@@ -87,7 +88,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var type = new MockType();
             var configuration = new EntityTypeConfiguration(type);
 
-            convention.Apply(type, () => configuration);
+            convention.Apply(type, () => configuration, new ModelConfiguration());
 
             Assert.False(lastPredicateInvoked);
             Assert.False(actionInvoked);
@@ -107,7 +108,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var type = new MockType();
             var configuration = new EntityTypeConfiguration(type);
 
-            convention.Apply(type, () => configuration);
+            convention.Apply(type, () => configuration, new ModelConfiguration());
 
             Assert.False(actionInvoked);
         }

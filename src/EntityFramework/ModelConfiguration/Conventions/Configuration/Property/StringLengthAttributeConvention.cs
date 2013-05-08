@@ -3,10 +3,11 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Reflection;
+    using StringPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.StringPropertyConfiguration;
 
     /// <summary>
     ///     Convention to process instances of <see cref="StringLengthAttribute" /> found on properties in the model.
@@ -17,10 +18,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public override void Apply(
             PropertyInfo memberInfo,
             StringPropertyConfiguration configuration,
+            ModelConfiguration modelConfiguration,
             StringLengthAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
             Check.NotNull(configuration, "configuration");
+            Check.NotNull(modelConfiguration, "modelConfiguration");
             Check.NotNull(attribute, "attribute");
 
             if (attribute.MaximumLength < -1

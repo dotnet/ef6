@@ -5,9 +5,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Reflection;
 
-    public interface IConfigurationConvention<TMemberInfo> : IConvention
+    public interface IConfigurationConvention<TMemberInfo, TConfiguration> : IConvention
         where TMemberInfo : MemberInfo
+        where TConfiguration : ConfigurationBase
     {
-        void Apply(TMemberInfo memberInfo, ModelConfiguration modelConfiguration);
+        void Apply(TMemberInfo memberInfo, Func<TConfiguration> configuration, ModelConfiguration modelConfiguration);
     }
 }

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
     using System.Reflection;
@@ -14,10 +15,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         : AttributeConfigurationConvention<PropertyInfo, StructuralTypeConfiguration, NotMappedAttribute>
     {
         public override void Apply(
-            PropertyInfo memberInfo, StructuralTypeConfiguration configuration, NotMappedAttribute attribute)
+            PropertyInfo memberInfo, StructuralTypeConfiguration configuration, ModelConfiguration modelConfiguration,
+            NotMappedAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
             Check.NotNull(configuration, "configuration");
+            Check.NotNull(modelConfiguration, "modelConfiguration");
             Check.NotNull(attribute, "attribute");
 
             configuration.Ignore(memberInfo);

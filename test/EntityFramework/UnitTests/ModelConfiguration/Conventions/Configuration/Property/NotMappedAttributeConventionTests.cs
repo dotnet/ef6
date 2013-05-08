@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Linq;
     using Xunit;
@@ -16,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
 
             new NotMappedPropertyAttributeConvention()
-                .Apply(mockPropertyInfo, entityTypeConfiguration, new NotMappedAttribute());
+                .Apply(mockPropertyInfo, entityTypeConfiguration, new ModelConfiguration(), new NotMappedAttribute());
 
             Assert.True(entityTypeConfiguration.IgnoredProperties.Contains(mockPropertyInfo));
         }

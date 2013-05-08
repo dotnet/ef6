@@ -17,12 +17,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             private readonly Type _propertyConfigurationType;
             private readonly PropertyInfo _propertyInfo;
             private readonly Func<PropertyConfiguration> _propertyConfiguration;
+            private readonly ModelConfiguration _modelConfiguration;
 
             public PropertyConfigurationConventionDispatcher(
                 IConvention convention,
                 Type propertyConfigurationType,
                 PropertyInfo propertyInfo,
-                Func<PropertyConfiguration> propertyConfiguration)
+                Func<PropertyConfiguration> propertyConfiguration,
+                ModelConfiguration modelConfiguration)
             {
                 Check.NotNull(convention, "convention");
                 Check.NotNull(propertyConfigurationType, "propertyConfigurationType");
@@ -33,6 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 _propertyConfigurationType = propertyConfigurationType;
                 _propertyInfo = propertyInfo;
                 _propertyConfiguration = propertyConfiguration;
+                _modelConfiguration = modelConfiguration;
             }
 
             public void Dispatch()
@@ -57,7 +60,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     && typeof(TPropertyConfiguration).IsAssignableFrom(_propertyConfigurationType))
                 {
                     propertyConfigurationConvention.Apply(
-                        _propertyInfo, () => (TPropertyConfiguration)_propertyConfiguration());
+                        _propertyInfo, () => (TPropertyConfiguration)_propertyConfiguration(), _modelConfiguration);
                 }
             }
         }

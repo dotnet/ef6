@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -98,7 +99,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 var complexTypeConfiguration
                     = new Func<ComplexTypeConfiguration>(() => _mappingContext.ModelConfiguration.ComplexType(type));
 
-                _mappingContext.ConventionsConfiguration.ApplyTypeConfiguration(type, complexTypeConfiguration);
+                _mappingContext.ConventionsConfiguration.ApplyTypeConfiguration(
+                    type, complexTypeConfiguration, _mappingContext.ModelConfiguration);
 
                 MapStructuralElements(
                     type,
@@ -153,7 +155,8 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 var entityTypeConfiguration
                     = new Func<EntityTypeConfiguration>(() => _mappingContext.ModelConfiguration.Entity(type));
 
-                _mappingContext.ConventionsConfiguration.ApplyTypeConfiguration(type, entityTypeConfiguration);
+                _mappingContext.ConventionsConfiguration.ApplyTypeConfiguration(
+                    type, entityTypeConfiguration, _mappingContext.ModelConfiguration);
 
                 MapStructuralElements(
                     type,
@@ -215,7 +218,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 _mappingContext.ConventionsConfiguration.ApplyPropertyConfiguration(
                     propertyInfo, _mappingContext.ModelConfiguration);
                 _mappingContext.ConventionsConfiguration.ApplyPropertyTypeConfiguration(
-                    propertyInfo, structuralTypeConfiguration);
+                    propertyInfo, structuralTypeConfiguration, _mappingContext.ModelConfiguration);
 
                 if (!_mappingContext.ModelConfiguration.IsIgnoredProperty(type, propertyInfo))
                 {

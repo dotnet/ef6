@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Utilities;
     using System.Reflection;
@@ -16,16 +17,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public override void Apply(
             PropertyInfo memberInfo,
             PrimitivePropertyConfiguration configuration,
+            ModelConfiguration modelConfiguration,
             DatabaseGeneratedAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
             Check.NotNull(configuration, "configuration");
+            Check.NotNull(modelConfiguration, "modelConfiguration");
             Check.NotNull(attribute, "attribute");
 
             if (configuration.DatabaseGeneratedOption == null)
             {
-                configuration.DatabaseGeneratedOption =
-                    attribute.DatabaseGeneratedOption;
+                configuration.DatabaseGeneratedOption = attribute.DatabaseGeneratedOption;
             }
         }
     }

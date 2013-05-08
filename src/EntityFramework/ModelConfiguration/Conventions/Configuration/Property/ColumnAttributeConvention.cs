@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Utilities;
     using System.Reflection;
@@ -14,11 +15,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         : AttributeConfigurationConvention<PropertyInfo, PrimitivePropertyConfiguration, ColumnAttribute>
     {
         public override void Apply(
-            PropertyInfo memberInfo, PrimitivePropertyConfiguration configuration,
+            PropertyInfo memberInfo,
+            PrimitivePropertyConfiguration configuration,
+            ModelConfiguration modelConfiguration,
             ColumnAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
             Check.NotNull(configuration, "configuration");
+            Check.NotNull(modelConfiguration, "modelConfiguration");
             Check.NotNull(attribute, "attribute");
 
             if (string.IsNullOrWhiteSpace(configuration.ColumnName)

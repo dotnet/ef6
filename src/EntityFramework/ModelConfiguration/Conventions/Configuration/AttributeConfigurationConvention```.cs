@@ -37,17 +37,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             _attributeProvider = attributeProvider;
         }
 
-        public abstract void Apply(TMemberInfo memberInfo, TConfiguration configuration, TAttribute attribute);
+        public abstract void Apply(
+            TMemberInfo memberInfo, TConfiguration configuration, ModelConfiguration modelConfiguration, TAttribute attribute);
 
-        void IConfigurationConvention<TMemberInfo, TConfiguration>.Apply(
-            TMemberInfo memberInfo, Func<TConfiguration> configuration)
+        public void Apply(TMemberInfo memberInfo, Func<TConfiguration> configuration, ModelConfiguration modelConfiguration)
         {
             Check.NotNull(memberInfo, "memberInfo");
             Check.NotNull(configuration, "configuration");
 
             foreach (var attribute in _attributeProvider.GetAttributes(memberInfo).OfType<TAttribute>())
             {
-                Apply(memberInfo, configuration(), attribute);
+                Apply(memberInfo, configuration(), modelConfiguration, attribute);
             }
         }
     }

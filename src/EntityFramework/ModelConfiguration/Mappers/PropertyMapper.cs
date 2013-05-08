@@ -98,7 +98,9 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 if (!property.IsComplexType)
                 {
                     _typeMapper.MappingContext.ConventionsConfiguration.ApplyPropertyConfiguration(
-                        propertyInfo, () => structuralTypeConfiguration().Property(new PropertyPath(propertyInfo)));
+                        propertyInfo,
+                        () => structuralTypeConfiguration().Property(new PropertyPath(propertyInfo)),
+                        _typeMapper.MappingContext.ModelConfiguration);
                 }
             }
 

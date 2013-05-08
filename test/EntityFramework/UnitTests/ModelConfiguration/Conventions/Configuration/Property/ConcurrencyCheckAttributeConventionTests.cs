@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using Xunit;
 
@@ -15,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var propertyConfiguration = new PrimitivePropertyConfiguration();
 
             new ConcurrencyCheckAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ConcurrencyCheckAttribute());
+                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new ConcurrencyCheckAttribute());
 
             Assert.Equal(ConcurrencyMode.Fixed, propertyConfiguration.ConcurrencyMode);
         }
@@ -29,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                             };
 
             new ConcurrencyCheckAttributeConvention()
-                .Apply(new MockPropertyInfo(), propertyConfiguration, new ConcurrencyCheckAttribute());
+                .Apply(new MockPropertyInfo(), propertyConfiguration, new ModelConfiguration(), new ConcurrencyCheckAttribute());
 
             Assert.Equal(ConcurrencyMode.None, propertyConfiguration.ConcurrencyMode);
         }

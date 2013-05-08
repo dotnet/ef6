@@ -108,17 +108,17 @@ namespace System.Data.Entity.ModelConfiguration
                 c => c.ApplyModelConfiguration(typeof(object), modelConfiguration),
                 c => c.ApplyModelConfiguration(typeof(object), modelConfiguration));
             Verify_method_delegates(
-                c => c.ApplyPropertyConfiguration(mockPropertyInfo, propertyConfiguration),
-                c => c.ApplyPropertyConfiguration(mockPropertyInfo, propertyConfiguration));
+                c => c.ApplyPropertyConfiguration(mockPropertyInfo, propertyConfiguration, modelConfiguration),
+                c => c.ApplyPropertyConfiguration(mockPropertyInfo, propertyConfiguration, modelConfiguration));
             Verify_method_delegates(
                 c => c.ApplyPropertyConfiguration(mockPropertyInfo, modelConfiguration),
                 c => c.ApplyPropertyConfiguration(mockPropertyInfo, modelConfiguration));
             Verify_method_delegates(
-                c => c.ApplyPropertyTypeConfiguration(mockPropertyInfo, entityConfiguration),
-                c => c.ApplyPropertyTypeConfiguration(mockPropertyInfo, entityConfiguration));
+                c => c.ApplyPropertyTypeConfiguration(mockPropertyInfo, entityConfiguration, modelConfiguration),
+                c => c.ApplyPropertyTypeConfiguration(mockPropertyInfo, entityConfiguration, modelConfiguration));
             Verify_method_delegates(
-                c => c.ApplyTypeConfiguration(typeof(object), entityConfiguration),
-                c => c.ApplyTypeConfiguration(typeof(object), entityConfiguration));
+                c => c.ApplyTypeConfiguration(typeof(object), entityConfiguration, modelConfiguration),
+                c => c.ApplyTypeConfiguration(typeof(object), entityConfiguration, modelConfiguration));
         }
 
         private void Verify_method_delegates(

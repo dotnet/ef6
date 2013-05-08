@@ -14,18 +14,18 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///     Convention to process instances of <see cref="InversePropertyAttribute" /> found on properties in the model.
     /// </summary>
     public class InversePropertyAttributeConvention :
-        AttributeConfigurationConvention<PropertyInfo, ModelConfiguration, InversePropertyAttribute>
+        AttributeConfigurationConvention<PropertyInfo,  InversePropertyAttribute>
     {
         public override void Apply(
-            PropertyInfo memberInfo, ModelConfiguration configuration,
+            PropertyInfo memberInfo, ModelConfiguration modelConfiguration,
             InversePropertyAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
-            Check.NotNull(configuration, "configuration");
+            Check.NotNull(modelConfiguration, "modelConfiguration");
             Check.NotNull(attribute, "attribute");
 
             var navigationPropertyConfiguration
-                = configuration
+                = modelConfiguration
                     .Entity(memberInfo.ReflectedType)
                     .Navigation(memberInfo);
 

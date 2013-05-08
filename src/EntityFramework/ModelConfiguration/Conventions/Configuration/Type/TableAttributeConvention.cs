@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
 
@@ -13,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         AttributeConfigurationConvention<Type, EntityTypeConfiguration, TableAttribute>
     {
         public override void Apply(
-            Type memberInfo, EntityTypeConfiguration configuration, TableAttribute attribute)
+            Type memberInfo, EntityTypeConfiguration configuration, ModelConfiguration modelConfiguration, TableAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
             Check.NotNull(configuration, "configuration");
