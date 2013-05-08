@@ -151,5 +151,51 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 entityType.KeyProperties
                     .Count(p => p.GetStoreGeneratedPattern() == StoreGeneratedPattern.Identity));
         }
+
+        [Fact]
+        public void Apply_should_not_match_required_self_ref()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
+
+            entityType.AddKeyMember(property);
+
+            var associationType
+                = model.AddAssociationType(
+                    "A",
+                    entityType, RelationshipMultiplicity.One,
+                    entityType, RelationshipMultiplicity.Many);
+
+            model.AddAssociationType(associationType);
+
+            ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
+                .Apply(entityType, model);
+
+            Assert.Null(entityType.KeyProperties.Single().GetStoreGeneratedPattern());
+        }
+
+        [Fact]
+        public void Apply_should_match_optional_self_ref()
+        {
+            var model = new EdmModel(DataSpace.CSpace);
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
+
+            entityType.AddKeyMember(property);
+
+            var associationType
+                = model.AddAssociationType(
+                    "A",
+                    entityType, RelationshipMultiplicity.ZeroOrOne,
+                    entityType, RelationshipMultiplicity.Many);
+
+            model.AddAssociationType(associationType);
+
+            ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
+                .Apply(entityType, model);
+
+            Assert.NotNull(entityType.KeyProperties.Single().GetStoreGeneratedPattern());
+        }
     }
 }

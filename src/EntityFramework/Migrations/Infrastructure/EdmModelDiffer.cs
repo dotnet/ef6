@@ -5,6 +5,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Config;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Mapping;
@@ -13,6 +14,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -528,6 +530,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 (m, s) => m.GenerateInsert(s),
                 modificationCommandTreeGenerator,
                 migrationSqlGenerator,
+                modificationFunctionMapping.InsertFunctionMapping.Function.Name,
                 rowsAffectedParameterName: null);
         }
 
@@ -558,6 +561,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 (m, s) => m.GenerateUpdate(s),
                 modificationCommandTreeGenerator,
                 migrationSqlGenerator,
+                modificationFunctionMapping.UpdateFunctionMapping.Function.Name,
                 rowsAffectedParameterName: modificationFunctionMapping.UpdateFunctionMapping.RowsAffectedParameterName);
         }
 
@@ -573,6 +577,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 (m, s) => m.GenerateDelete(s),
                 modificationCommandTreeGenerator,
                 migrationSqlGenerator,
+                modificationFunctionMapping.DeleteFunctionMapping.Function.Name,
                 rowsAffectedParameterName: modificationFunctionMapping.DeleteFunctionMapping.RowsAffectedParameterName);
         }
 
@@ -596,6 +601,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Func<ModificationCommandTreeGenerator, string, IEnumerable<TCommandTree>> treeGenerator,
             ModificationCommandTreeGenerator modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator,
+            string functionName,
             string rowsAffectedParameterName)
             where TCommandTree : DbModificationCommandTree
         {
@@ -611,10 +617,20 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         modificationFunctionMapping,
                         _target.StorageEntityContainerMapping);
 
-                commandTrees
-                    = dynamicToFunctionModificationCommandConverter
-                        .Convert(treeGenerator(modificationCommandTreeGenerator, modificationFunctionMapping.EntityType.Identity))
-                        .ToArray();
+                try
+                {
+                    commandTrees
+                        = dynamicToFunctionModificationCommandConverter
+                            .Convert(treeGenerator(modificationCommandTreeGenerator, modificationFunctionMapping.EntityType.Identity))
+                            .ToArray();
+                }
+                catch (UpdateException e)
+                {
+                    throw new InvalidOperationException(
+                        Strings.ErrorGeneratingCommandTree(
+                            functionName,
+                            modificationFunctionMapping.EntityType.Name), e);
+                }
             }
 
             return GenerateFunctionBody(migrationSqlGenerator, rowsAffectedParameterName, commandTrees);

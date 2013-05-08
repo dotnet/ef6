@@ -24,6 +24,49 @@ namespace System.Data.Entity.Migrations.Infrastructure
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class EdmModelDifferTests : DbTestCase
     {
+        public class WorldContext_Invalid : ModificationCommandTreeGeneratorTests.WorldContext_Fk
+        {
+            static WorldContext_Invalid()
+            {
+                Database.SetInitializer<WorldContext_Invalid>(null);
+            }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                base.OnModelCreating(modelBuilder);
+
+                modelBuilder
+                    .Entity<ModificationCommandTreeGeneratorTests.Thing>()
+                    .Property(t => t.Id)
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            }
+        }
+
+        [MigrationsTheory]
+        public void Update_exceptions_should_be_wrapped_when_generating_sproc_bodies()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            var context = new WorldContext_Invalid();
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(
+                    context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo));
+
+            Assert.Throws<InvalidOperationException>(
+                () => new EdmModelDiffer()
+                          .Diff(
+                              model1.GetModel(),
+                              context.GetModel(),
+                              commandTreeGenerator,
+                              new SqlServerMigrationSqlGenerator())
+                          .OfType<CreateProcedureOperation>()
+                          .ToList())
+                .ValidateMessage("ErrorGeneratingCommandTree", "Thing_Insert", "Thing");
+        }
+
         [MigrationsTheory]
         public void Can_diff_identical_models_at_different_edm_versions_and_no_diffs_produced()
         {

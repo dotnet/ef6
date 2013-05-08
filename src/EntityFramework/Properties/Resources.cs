@@ -13476,6 +13476,14 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.CommandLogAsync); }
         }
+
+        /// <summary>
+        ///     A string like "An error occurred while attempting to generate the body SQL of the stored procedure '{0}' for entity type '{1}'. This can happen if the entity type has both a self-referencing association and a store-generated key. See the inner exception for details."
+        /// </summary>
+        internal static string ErrorGeneratingCommandTree(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ErrorGeneratingCommandTree, p0, p1);
+        }
     }
 
     /// <summary>
@@ -16856,6 +16864,7 @@ namespace System.Data.Entity.Resources
         internal const string CommandLogCanceled = "CommandLogCanceled";
         internal const string CommandLogComplete = "CommandLogComplete";
         internal const string CommandLogAsync = "CommandLogAsync";
+        internal const string ErrorGeneratingCommandTree = "ErrorGeneratingCommandTree";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

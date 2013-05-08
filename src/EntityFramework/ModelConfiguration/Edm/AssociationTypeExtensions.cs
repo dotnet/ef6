@@ -122,7 +122,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Debug.Assert(sourceEnd.GetEntityType() != null);
             Debug.Assert(targetEnd.GetEntityType() != null);
 
-            return ((sourceEnd.GetEntityType().GetRootType() == targetEnd.GetEntityType().GetRootType()));
+            return sourceEnd.GetEntityType().GetRootType() == targetEnd.GetEntityType().GetRootType();
         }
 
         public static bool IsRequiredToNonRequired(this AssociationType associationType)

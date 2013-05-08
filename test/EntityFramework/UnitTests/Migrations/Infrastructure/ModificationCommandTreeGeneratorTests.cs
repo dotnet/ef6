@@ -2,12 +2,181 @@
 
 namespace System.Data.Entity.Migrations.Infrastructure
 {
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
 
     public class ModificationCommandTreeGeneratorTests
     {
+        public class WorldContext : DbContext
+        {
+            static WorldContext()
+            {
+                Database.SetInitializer<WorldContext>(null);
+            }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<Thing>()
+                    .MapToStoredProcedures();
+            }
+        }
+
+        public class WorldContext_Fk : WorldContext
+        {
+            static WorldContext_Fk()
+            {
+                Database.SetInitializer<WorldContext_Fk>(null);
+            }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                base.OnModelCreating(modelBuilder);
+
+                modelBuilder
+                    .Entity<Thing>()
+                    .HasRequired(t => t.Container)
+                    .WithMany()
+                    .HasForeignKey(t => t.ContainerFk);
+            }
+        }
+
+        public class Thing
+        {
+            public int Id { get; set; }
+            public Thing Container { get; set; }
+            public int ContainerFk { get; set; }
+        }
+
+        [Fact]
+        public void Can_generate_dynamic_insert_command_trees_for_self_ref_fk()
+        {
+            DbModel model;
+
+            using (var context = new WorldContext_Fk())
+            {
+                model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateInsert(GetType().Namespace + ".Thing")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_dynamic_update_command_trees_for_self_ref_fk()
+        {
+            DbModel model;
+
+            using (var context = new WorldContext_Fk())
+            {
+                model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateUpdate(GetType().Namespace + ".Thing")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_dynamic_delete_command_trees_for_self_ref_fk()
+        {
+            DbModel model;
+
+            using (var context = new WorldContext_Fk())
+            {
+                model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateDelete(GetType().Namespace + ".Thing")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_dynamic_insert_command_trees_for_self_ref_ia()
+        {
+            DbModel model;
+
+            using (var context = new WorldContext())
+            {
+                model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateInsert(GetType().Namespace + ".Thing")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_dynamic_update_command_trees_for_self_ref_ia()
+        {
+            DbModel model;
+
+            using (var context = new WorldContext())
+            {
+                model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateUpdate(GetType().Namespace + ".Thing")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_dynamic_delete_command_trees_for_self_ref_ia()
+        {
+            DbModel model;
+
+            using (var context = new WorldContext())
+            {
+                model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateDelete(GetType().Namespace + ".Thing")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
         [Fact]
         public void Can_generate_dynamic_insert_command_trees_for_many_to_many_association()
         {

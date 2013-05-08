@@ -4,11 +4,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Linq;
 
@@ -165,14 +168,25 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 InstantiateComplexProperties(entity, entityType.Properties);
 
                 set.Attach(entity);
-                context.Entry(entity).State = state;
+
+                if (state != EntityState.Deleted)
+                {
+                    // For deletes, we need to set the state
+                    // _after_ dealing with IAs.
+                    context.Entry(entity).State = state;
+                }
 
                 ChangeRelationshipStates(context, entityType, entity, state);
 
+                if (state == EntityState.Deleted)
+                {
+                    context.Entry(entity).State = state;
+                }
+
                 using (var commandTracer = new CommandTracer(context))
                 {
-                    context.SaveChanges();
-
+                    ((IObjectContextAdapter)context).ObjectContext.SaveChanges(SaveOptions.None);
+                    
                     foreach (var commandTree in commandTracer.CommandTrees)
                     {
                         yield return (TCommandTree)commandTree;
@@ -227,7 +241,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
                     var principalStub = set.Local.Cast<object>().SingleOrDefault();
 
-                    if (principalStub == null)
+                    if ((principalStub == null)
+                        || (ReferenceEquals(entity, principalStub)
+                            && state == EntityState.Added))
                     {
                         principalStub = set.Create();
 
@@ -262,6 +278,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     case PrimitiveTypeKind.String:
                         clrPropertyInfo.SetValue(entity, "tmp", null);
                         break;
+
                     case PrimitiveTypeKind.Binary:
                         clrPropertyInfo.SetValue(entity, new byte[0], null);
                         break;

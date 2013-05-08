@@ -40,12 +40,25 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     && _applicableTypes.Contains(property.PrimitiveType.PrimitiveTypeKind))
                 {
                     if (!model.AssociationTypes.Any(a => IsNonTableSplittingForeignKey(a, property))
-                        && !ParentOfTpc(edmDataModelItem, model))
+                        && !ParentOfTpc(edmDataModelItem, model)
+                        && !HasRequiredSelfRef(edmDataModelItem, model))
                     {
                         property.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
                     }
                 }
             }
+        }
+
+        private static bool HasRequiredSelfRef(EntityType entityType, EdmModel model)
+        {
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(model);
+
+            return model.AssociationTypes
+                .Any(
+                    at => at.SourceEnd.GetEntityType().GetRootType() == entityType.GetRootType()
+                          && at.TargetEnd.GetEntityType().GetRootType() == entityType.GetRootType()
+                          && (at.SourceEnd.IsRequired() || at.TargetEnd.IsRequired()));
         }
 
         /// <summary>

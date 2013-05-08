@@ -5373,4 +5373,7 @@
   <data name="CommandLogAsync" xml:space="preserve">
     <value>-- Executing asynchronously</value>
   </data>
+  <data name="ErrorGeneratingCommandTree" xml:space="preserve">
+    <value>An error occurred while attempting to generate the body SQL of the stored procedure '{0}' for entity type '{1}'. This can happen if the entity type has both a self-referencing association and a store-generated key. See the inner exception for details.</value>
+  </data>
 </root>
