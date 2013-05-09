@@ -61,7 +61,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void Configure_should_uniquify_unconfigured_assocation_function_names()
+        public void Configure_should_uniquify_unconfigured_association_function_names()
         {
             var typeA = new MockType("A");
             var typeB = new MockType("B").Property(typeA.AsCollection(), "As");
@@ -77,7 +77,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 = new ModificationFunctionsConfiguration();
 
             var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
-            modificationFunctionConfiguration.HasName("M2M_Delete");
+            modificationFunctionConfiguration.HasName("AB_Delete");
 
             navigationPropertyConfiguration.ModificationFunctionsConfiguration
                 .Insert(modificationFunctionConfiguration);
@@ -118,8 +118,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 
-            Assert.True(databaseMapping.Database.Functions.Any(f => f.Name == "M2M_Delete"));
-            Assert.True(databaseMapping.Database.Functions.Any(f => f.Name == "M2M_Delete1"));
+            Assert.True(databaseMapping.Database.Functions.Any(f => f.Name == "AB_Delete"));
+            Assert.True(databaseMapping.Database.Functions.Any(f => f.Name == "AB_Delete1"));
         }
 
         [Fact]

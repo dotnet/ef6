@@ -1896,7 +1896,7 @@ namespace System.Data.Entity.Migrations
                     .MapToStoredProcedures(
                         m =>
                             {
-                                m.Insert(c => c.HasName("Order_OrderLines_Insert", "foo"));
+                                m.Insert(c => c.HasName("OrderOrderLine_Insert", "foo"));
                                 m.Delete(c => c.HasName("del_order_orderlines", "bar"));
                             });
 
@@ -1912,14 +1912,14 @@ namespace System.Data.Entity.Migrations
             var moveProcedureOperation
                 = migrationOperations
                     .OfType<MoveProcedureOperation>()
-                    .Single(o => o.Name == "dbo.Order_OrderLines_Delete");
+                    .Single(o => o.Name == "dbo.OrderOrderLine_Delete");
 
             Assert.Equal("bar", moveProcedureOperation.NewSchema);
 
             var renameProcedureOperation
                 = migrationOperations
                     .OfType<RenameProcedureOperation>()
-                    .Single(o => o.Name == "bar.Order_OrderLines_Delete");
+                    .Single(o => o.Name == "bar.OrderOrderLine_Delete");
 
             Assert.Equal("del_order_orderlines", renameProcedureOperation.NewName);
         }
@@ -1980,14 +1980,14 @@ namespace System.Data.Entity.Migrations
             var renameProcedureOperationInsert
                 = migrationOperations
                     .OfType<RenameProcedureOperation>()
-                    .Single(o => o.Name == "dbo.Order_OrderLines_Insert");
+                    .Single(o => o.Name == "dbo.OrderOrderLine_Insert");
 
             Assert.Equal("ins_order_orderlines", renameProcedureOperationInsert.NewName);
 
             var renameProcedureOperationDelete
                 = migrationOperations
                     .OfType<RenameProcedureOperation>()
-                    .Single(o => o.Name == "dbo.Order_OrderLines_Delete");
+                    .Single(o => o.Name == "dbo.OrderOrderLine_Delete");
 
             Assert.Equal("del_order_orderlines", renameProcedureOperationDelete.NewName);
         }
@@ -2048,14 +2048,14 @@ namespace System.Data.Entity.Migrations
             var alterProcedureOperationInsert
                 = migrationOperations
                     .OfType<AlterProcedureOperation>()
-                    .Single(o => o.Name == "dbo.Order_OrderLines_Insert");
+                    .Single(o => o.Name == "dbo.OrderOrderLine_Insert");
 
             Assert.True(alterProcedureOperationInsert.Parameters.Any(p => p.Name == "order_id"));
 
             var alterProcedureOperationDelete
                 = migrationOperations
                     .OfType<AlterProcedureOperation>()
-                    .Single(o => o.Name == "dbo.Order_OrderLines_Delete");
+                    .Single(o => o.Name == "dbo.OrderOrderLine_Delete");
 
             Assert.True(alterProcedureOperationDelete.Parameters.Any(p => p.Name == "order_line_id"));
         }

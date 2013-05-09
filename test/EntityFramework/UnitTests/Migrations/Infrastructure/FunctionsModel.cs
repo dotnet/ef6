@@ -293,7 +293,7 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
                             m.Delete(
                                 c =>
                                     {
-                                        c.HasName("OrderThing_Orders_Delete", "bar");
+                                        c.HasName("OrderThingOrder_Delete", "bar");
                                         c.RightKeyParameter(o => o.Id, "order_id");
                                     });
                         }

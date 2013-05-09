@@ -108,6 +108,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             DebugCheck.NotNull(databaseMapping);
 
             var iaFkProperties = GetIndependentFkColumns(associationSetMapping).ToList();
+            var sourceEntityType = associationSetMapping.AssociationSet.ElementType.SourceEnd.GetEntityType();
+            var targetEntityType = associationSetMapping.AssociationSet.ElementType.TargetEnd.GetEntityType();
+            var functionNamePrefix = sourceEntityType.Name + targetEntityType.Name;
 
             var insertFunctionMapping
                 = GenerateFunctionMapping(
@@ -117,7 +120,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     databaseMapping,
                     Enumerable.Empty<EdmProperty>(),
                     iaFkProperties,
-                    new ColumnMappingBuilder[0]);
+                    new ColumnMappingBuilder[0],
+                    functionNamePrefix: functionNamePrefix);
 
             var deleteFunctionMapping
                 = GenerateFunctionMapping(
@@ -127,7 +131,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     databaseMapping,
                     Enumerable.Empty<EdmProperty>(),
                     iaFkProperties,
-                    new ColumnMappingBuilder[0]);
+                    new ColumnMappingBuilder[0],
+                    functionNamePrefix: functionNamePrefix);
 
             associationSetMapping.ModificationFunctionMapping
                 = new StorageAssociationSetModificationFunctionMapping(
@@ -224,7 +229,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             IEnumerable<EdmProperty> parameterProperties,
             IEnumerable<Tuple<StorageModificationFunctionMemberPath, EdmProperty>> iaFkProperties,
             IList<ColumnMappingBuilder> columnMappings,
-            IEnumerable<EdmProperty> resultProperties = null)
+            IEnumerable<EdmProperty> resultProperties = null,
+            string functionNamePrefix = null)
         {
             DebugCheck.NotNull(entitySetBase);
             DebugCheck.NotNull(entityTypeBase);
@@ -286,7 +292,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var function
                 = databaseMapping.Database
                                  .AddFunction(
-                                     entityTypeBase.Name + "_" + modificationOperator.ToString(),
+                                     (functionNamePrefix ?? entityTypeBase.Name) + "_" + modificationOperator.ToString(),
                                      functionPayload);
 
             var functionMapping

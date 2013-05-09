@@ -213,15 +213,32 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 = new DbDatabaseMapping()
                     .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
 
-            var associationSetMapping = databaseMapping.AddAssociationSetMapping(
-                new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), new EntitySet());
+            var associationType
+                = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
+                      {
+                          SourceEnd =
+                              new AssociationEndMember(
+                              "S",
+                              new EntityType(
+                              "E1", "N", DataSpace.CSpace)),
+                          TargetEnd =
+                              new AssociationEndMember(
+                              "T",
+                              new EntityType(
+                              "E2", "N", DataSpace.CSpace))
+                      };
+
+            associationType.SourceEnd.SetClrPropertyInfo(mockPropertyInfo);
+
+            var associationSetMapping
+                = databaseMapping.AddAssociationSetMapping(new AssociationSet("AS", associationType), new EntitySet());
 
             var dependentTable = databaseMapping.Database.AddTable("T");
 
             associationSetMapping.StoreEntitySet = databaseMapping.Database.GetEntitySet(dependentTable);
             associationSetMapping.AssociationSet.ElementType.SetConfiguration(navigationPropertyConfiguration);
-            associationSetMapping.SourceEndMapping.EndMember = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
-            associationSetMapping.SourceEndMapping.EndMember.SetClrPropertyInfo(mockPropertyInfo);
+
+            associationSetMapping.SourceEndMapping.EndMember = associationType.SourceEnd;
 
             navigationPropertyConfiguration.Configure(associationSetMapping, databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 

@@ -219,7 +219,9 @@ namespace FunctionalTests
                             .Single();
 
                     Assert.NotNull(functionMapping.InsertFunctionMapping);
+                    Assert.Equal("TagProductA_Insert", functionMapping.InsertFunctionMapping.Function.Name);
                     Assert.NotNull(functionMapping.DeleteFunctionMapping);
+                    Assert.Equal("TagProductA_Delete", functionMapping.DeleteFunctionMapping.Function.Name);
                 }
 
                 [Fact]
@@ -420,7 +422,7 @@ namespace FunctionalTests
                         .Entity<Tag>()
                         .HasMany(t => t.Products)
                         .WithMany(p => p.Tags)
-                        .MapToStoredProcedures(map => map.Insert(f => f.HasName("Tag_Products_Delete")));
+                        .MapToStoredProcedures(map => map.Insert(f => f.HasName("TagProductA_Delete")));
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -434,8 +436,8 @@ namespace FunctionalTests
                             .Single()
                             .ModificationFunctionMapping;
 
-                    Assert.Equal("Tag_Products_Delete", functionMapping.InsertFunctionMapping.Function.Name);
-                    Assert.Equal("Tag_Products_Delete1", functionMapping.DeleteFunctionMapping.Function.Name);
+                    Assert.Equal("TagProductA_Delete", functionMapping.InsertFunctionMapping.Function.Name);
+                    Assert.Equal("TagProductA_Delete1", functionMapping.DeleteFunctionMapping.Function.Name);
                 }
             }
 
@@ -814,7 +816,7 @@ namespace FunctionalTests
                                 f => f.LeftKeyParameter(t => t.Name, "tag_id")));
 
                     Assert.Equal(
-                        Strings.ModificationFunctionParameterNotFound("Name", "Tag_Products_Insert"),
+                        Strings.ModificationFunctionParameterNotFound("Name", "TagProductA_Insert"),
                         Assert.Throws<InvalidOperationException>(
                             () => BuildMapping(modelBuilder)).Message);
                 }

@@ -260,7 +260,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var function = functionMapping.Function;
 
             Assert.NotNull(function);
-            Assert.Equal("M2M_Insert", function.Name);
+            Assert.Equal("E1E2_Insert", function.Name);
             Assert.Equal(2, function.Parameters.Count);
 
             functionMapping = modificationFunctionMapping.DeleteFunctionMapping;
@@ -272,7 +272,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             function = modificationFunctionMapping.DeleteFunctionMapping.Function;
 
             Assert.NotNull(function);
-            Assert.Equal("M2M_Delete", function.Name);
+            Assert.Equal("E1E2_Delete", function.Name);
             Assert.Equal(2, function.Parameters.Count);
         }
     }
