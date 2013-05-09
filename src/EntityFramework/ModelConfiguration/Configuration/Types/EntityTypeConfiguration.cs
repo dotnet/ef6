@@ -22,6 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     /// <summary>
     ///     Allows configuration to be performed for an entity type in a model.
     /// </summary>
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class EntityTypeConfiguration : StructuralTypeConfiguration
     {
         private readonly List<PropertyInfo> _keyProperties = new List<PropertyInfo>();
@@ -642,6 +643,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                     .ToList();
 
             ConfigurePropertyMappings(propertyMappings, providerManifest, allowOverride);
+
+            _entityMappingConfigurations.Each(c => c.ConfigurePropertyMappings(
+                    propertyMappings, providerManifest, allowOverride));
 
             foreach (var derivedEntityType 
                 in databaseMapping.Model.EntityTypes.Where(et => et.BaseType == entityType))

@@ -149,6 +149,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeFirst\EntitySplittingTests.cs" />
     <Compile Include="CodeFirst\NonPublicPropertyTests.cs" />
     <Compile Include="Interception\BlogContextNoInit.cs" />
     <Compile Include="Interception\DbCommandLoggerTests.cs" />

@@ -369,6 +369,7 @@
     <Compile Include="ModelConfiguration\Configuration\Functions\ModificationFunctionConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\LightweightPropertyConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\MissingPropertyConfigurationTests.cs" />
+    <Compile Include="ModelConfiguration\Configuration\Properties\Primitive\PropertyMappingConfigurationTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\TphColumnFixerTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Types\LightweightEntityConfigurationOfTTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\Types\LightweightEntityConfigurationTests.cs" />

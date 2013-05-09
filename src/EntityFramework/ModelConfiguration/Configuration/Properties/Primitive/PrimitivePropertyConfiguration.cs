@@ -153,12 +153,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         internal virtual void Configure(
             IEnumerable<Tuple<ColumnMappingBuilder, EntityType>> propertyMappings,
             DbProviderManifest providerManifest,
-            bool allowOverride = false)
+            bool allowOverride = false,
+            bool fillFromExistingConfiguration = false)
         {
             DebugCheck.NotNull(propertyMappings);
             DebugCheck.NotNull(providerManifest);
 
-            propertyMappings.Each(pm => Configure(pm.Item1.ColumnProperty, pm.Item2, providerManifest, allowOverride));
+            propertyMappings.Each(pm => Configure(
+                pm.Item1.ColumnProperty, 
+                pm.Item2, 
+                providerManifest, 
+                allowOverride, 
+                fillFromExistingConfiguration));
         }
 
         internal void ConfigureFunctionParameters(IEnumerable<FunctionParameter> parameters)
@@ -210,7 +216,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
         internal virtual void Configure(
             EdmProperty column, EntityType table, DbProviderManifest providerManifest,
-            bool allowOverride = false)
+            bool allowOverride = false, 
+            bool fillFromExistingConfiguration = false)
         {
             DebugCheck.NotNull(column);
             DebugCheck.NotNull(table);
@@ -228,6 +235,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     != OverridableConfigurationParts.OverridableInSSpace
                     && !overridable
                     && !allowOverride
+                    && !fillFromExistingConfiguration
                     && !existingConfiguration.IsCompatible(this, inCSpace: false, errorMessage: out errorMessage))
                 {
                     throw Error.ConflictingColumnConfiguration(column.Name, table.Name, errorMessage);

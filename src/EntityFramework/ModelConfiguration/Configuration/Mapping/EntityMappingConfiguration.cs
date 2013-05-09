@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -28,6 +29,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         private readonly List<NotNullConditionConfiguration> _notNullConditions =
             new List<NotNullConditionConfiguration>();
 
+        private readonly Dictionary<PropertyPath, PrimitivePropertyConfiguration> _primitivePropertyConfigurations
+            = new Dictionary<PropertyPath, PrimitivePropertyConfiguration>();
+
         internal EntityMappingConfiguration()
         {
         }
@@ -47,6 +51,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             _valueConditions.AddRange(source._valueConditions.Select(c => c.Clone(this)));
             _notNullConditions.AddRange(source._notNullConditions.Select(c => c.Clone(this)));
+
+            source._primitivePropertyConfigurations.Each(
+                c => _primitivePropertyConfigurations.Add(c.Key, c.Value.Clone()));
         }
 
         internal virtual EntityMappingConfiguration Clone()
@@ -85,6 +92,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             }
         }
 
+        internal IDictionary<PropertyPath, PrimitivePropertyConfiguration> PrimitivePropertyConfigurations
+        {
+            get { return _primitivePropertyConfigurations; }
+        }
+
+        internal TPrimitivePropertyConfiguration Property<TPrimitivePropertyConfiguration>(
+            PropertyPath propertyPath, Func<TPrimitivePropertyConfiguration> primitivePropertyConfigurationCreator)
+            where TPrimitivePropertyConfiguration : PrimitivePropertyConfiguration
+        {
+            DebugCheck.NotNull(propertyPath);
+
+            if (_properties == null)
+            {
+                _properties = new List<PropertyPath>();
+            }
+            Property(propertyPath);
+
+            PrimitivePropertyConfiguration primitivePropertyConfiguration;
+            if (!_primitivePropertyConfigurations.TryGetValue(propertyPath, out primitivePropertyConfiguration))
+            {
+                _primitivePropertyConfigurations.Add(propertyPath,
+                    primitivePropertyConfiguration = primitivePropertyConfigurationCreator());
+            }
+
+            return (TPrimitivePropertyConfiguration)primitivePropertyConfiguration;
+        }
+
         private void Property(PropertyPath property)
         {
             DebugCheck.NotNull(property);
@@ -94,7 +128,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 _properties.Add(property);
             }
         }
-
         #endregion
 
         #region Condition Properties
@@ -328,6 +361,35 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             CleanupUnmappedArtifacts(databaseMapping, toTable);
 
             toTable.SetConfiguration(this);
+        }
+
+        internal void ConfigurePropertyMappings(
+            IList<Tuple<ColumnMappingBuilder, EntityType>> propertyMappings,
+            DbProviderManifest providerManifest,
+            bool allowOverride = false)
+        {
+            DebugCheck.NotNull(propertyMappings);
+            DebugCheck.NotNull(providerManifest);
+
+            foreach (var configuration in _primitivePropertyConfigurations)
+            {
+                var propertyPath = configuration.Key;
+                var propertyConfiguration = configuration.Value;
+
+                propertyConfiguration.Configure(
+                    propertyMappings.Where(
+                        pm =>
+                        propertyPath.Equals(
+                            new PropertyPath(
+                            pm.Item1.PropertyPath
+                                .Skip(pm.Item1.PropertyPath.Count - propertyPath.Count)
+                                .Select(p => p.GetClrPropertyInfo()))
+                            )
+                        && TableName.Equals(pm.Item2.GetTableName())),
+                    providerManifest,
+                    allowOverride,
+                    fillFromExistingConfiguration: true);
+            }
         }
 
         private void ConfigureDefaultDiscriminator(

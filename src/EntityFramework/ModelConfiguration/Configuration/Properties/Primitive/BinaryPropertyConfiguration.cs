@@ -58,10 +58,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
         internal override void Configure(
             IEnumerable<Tuple<ColumnMappingBuilder, EntityType>> propertyMappings,
-            DbProviderManifest providerManifest,
-            bool allowOverride = false)
+            DbProviderManifest providerManifest,            
+            bool allowOverride = false,
+            bool fillFromExistingConfiguration = false)
         {
-            base.Configure(propertyMappings, providerManifest, allowOverride);
+            base.Configure(propertyMappings, providerManifest, allowOverride, fillFromExistingConfiguration);
 
             propertyMappings
                 .Each(

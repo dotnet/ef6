@@ -4,6 +4,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -51,6 +53,210 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             _entityMappingConfiguration.Properties
                 = propertiesExpression.GetComplexPropertyAccessList().ToList();
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:System.struct" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <typeparam name="T"> The type of the property being configured. </typeparam>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property<T>(
+            Expression<Func<TEntityType, T>> propertyExpression)
+            where T : struct
+        {
+            return new PropertyMappingConfiguration(
+                Property<PrimitivePropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:System.struct?" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <typeparam name="T"> The type of the property being configured. </typeparam>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property<T>(
+            Expression<Func<TEntityType, T?>> propertyExpression)
+            where T : struct
+        {
+            return new PropertyMappingConfiguration(
+                Property<PrimitivePropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:DbGeometry" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property(
+            Expression<Func<TEntityType, DbGeometry>> propertyExpression)
+        {
+            return new PropertyMappingConfiguration(
+                Property<PrimitivePropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:DbGeography" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property(
+            Expression<Func<TEntityType, DbGeography>> propertyExpression)
+        {
+            return new PropertyMappingConfiguration(
+                Property<PrimitivePropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:System.string" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property(Expression<Func<TEntityType, string>> propertyExpression)
+        {
+            return new PropertyMappingConfiguration(
+                Property<Properties.Primitive.StringPropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:System.byte[]" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property(Expression<Func<TEntityType, byte[]>> propertyExpression)
+        {
+            return new PropertyMappingConfiguration(
+                Property<Properties.Primitive.BinaryPropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:System.decimal" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property(Expression<Func<TEntityType, decimal>> propertyExpression)
+        {
+            return new PropertyMappingConfiguration(
+                Property<Properties.Primitive.DecimalPropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:System.decimal?" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property(Expression<Func<TEntityType, decimal?>> propertyExpression)
+        {
+            return new PropertyMappingConfiguration(
+                Property<Properties.Primitive.DecimalPropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:System.DateTime" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property(Expression<Func<TEntityType, DateTime>> propertyExpression)
+        {
+            return new PropertyMappingConfiguration(
+                Property<Properties.Primitive.DateTimePropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:System.DateTime?" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property(Expression<Func<TEntityType, DateTime?>> propertyExpression)
+        {
+            return new PropertyMappingConfiguration(
+                Property<Properties.Primitive.DateTimePropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:System.DateTimeOffset" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property(
+            Expression<Func<TEntityType, DateTimeOffset>> propertyExpression)
+        {
+            return new PropertyMappingConfiguration(
+                Property<Properties.Primitive.DateTimePropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:System.DateTimeOffset?" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property(
+            Expression<Func<TEntityType, DateTimeOffset?>> propertyExpression)
+        {
+            return new PropertyMappingConfiguration(
+                Property<Properties.Primitive.DateTimePropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:System.TimeSpan" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property(Expression<Func<TEntityType, TimeSpan>> propertyExpression)
+        {
+            return new PropertyMappingConfiguration(
+                Property<Properties.Primitive.DateTimePropertyConfiguration>(propertyExpression));
+        }
+
+        /// <summary>
+        ///     Configures a <see cref="T:System.TimeSpan?" /> property that is included in this mapping fragment.
+        /// </summary>
+        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> A configuration object that can be used to configure the property. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+        public PropertyMappingConfiguration Property(Expression<Func<TEntityType, TimeSpan?>> propertyExpression)
+        {
+            return new PropertyMappingConfiguration(
+                Property<Properties.Primitive.DateTimePropertyConfiguration>(propertyExpression));
+        }
+
+        internal TPrimitivePropertyConfiguration Property<TPrimitivePropertyConfiguration>(
+            LambdaExpression lambdaExpression)
+            where TPrimitivePropertyConfiguration : PrimitivePropertyConfiguration, new()
+        {
+            return _entityMappingConfiguration.Property(
+                lambdaExpression.GetComplexPropertyAccess(),
+                () => new TPrimitivePropertyConfiguration
+                {
+                    OverridableConfigurationParts = OverridableConfigurationParts.None
+                });
         }
 
         /// <summary>

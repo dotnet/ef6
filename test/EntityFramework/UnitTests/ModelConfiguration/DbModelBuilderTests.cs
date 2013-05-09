@@ -879,7 +879,7 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void EntityMappingConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<EntityMappingConfiguration>(5);
+            VerifyFieldCount<EntityMappingConfiguration>(6);
         }
 
         [Fact]
