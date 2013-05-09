@@ -1115,7 +1115,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                                 })
                    where (n1.index == n2.index)
                          && !n1.name.EqualsIgnoreCase(n2.name)
-                   let t = GetQualifiedTableName(_target.Model, d2.RoleAttribute())
+                   let end = a2.Descendants(EdmXNames.Ssdl.EndNames)
+                                .Single(e => e.RoleAttribute().EqualsOrdinal(d2.RoleAttribute()))
+                   let t = GetQualifiedTableName(_target.Model, end.TypeAttribute().Split(new []{'.'}).Last())
                    select new RenameColumnOperation(t, n1.name, n2.name);
         }
 

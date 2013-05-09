@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations.Infrastructure
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Common;
     using System.Data.Entity.Config;
@@ -1148,6 +1149,45 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("ordering.Orders", columnRename.Table);
             Assert.Equal("MigrationsCustomer_Name", columnRename.Name);
             Assert.Equal("CustomerName", columnRename.NewName);
+        }
+
+        public class SelfRef
+        {
+            public int Id { get; set; }
+            public int Fk { get; set; }
+            public ICollection<SelfRef> Children { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_fk_column_rename_when_self_ref()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder
+                .Entity<SelfRef>()
+                .HasMany(s => s.Children)
+                .WithOptional()
+                .HasForeignKey(s => s.Fk);
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder
+                .Entity<SelfRef>()
+                .Property(s => s.Fk)
+                .HasColumnName("changed");
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations 
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(5, operations.Count());
+
+            var renameColumnOperation
+                = operations.OfType<RenameColumnOperation>().Single();
+
+            Assert.Equal("Fk", renameColumnOperation.Name);
+            Assert.Equal("changed", renameColumnOperation.NewName);
         }
 
         [MigrationsTheory]
