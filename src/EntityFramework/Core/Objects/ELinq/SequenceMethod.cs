@@ -181,6 +181,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         AsQueryableGeneric,
         AsEnumerable,
 
+        ToList,
+
         Zip,
 
         NotSupported,

@@ -272,6 +272,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 yield return new ObjectQueryBuilderDistinctTranslator();
                 yield return new ObjectQueryBuilderExceptTranslator();
                 yield return new ObjectQueryBuilderFirstTranslator();
+                yield return new ObjectQueryBuilderToListTranslator();
                 yield return new ObjectQueryIncludeTranslator();
                 yield return new ObjectQueryBuilderIntersectTranslator();
                 yield return new ObjectQueryBuilderOfTypeTranslator();
@@ -465,6 +466,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                 }
             }
+
+            private sealed class ObjectQueryBuilderToListTranslator : ObjectQueryBuilderCallTranslator
+	        {
+	            internal ObjectQueryBuilderToListTranslator()
+	                : base("ToList", SequenceMethod.ToList)
+	            {
+	            }
+	        }
 
             private sealed class ObjectQueryIncludeTranslator : ObjectQueryCallTranslator
             {
@@ -2403,7 +2412,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
             private sealed class PassthroughTranslator : UnarySequenceMethodTranslator
             {
                 internal PassthroughTranslator()
-                    : base(SequenceMethod.AsQueryableGeneric, SequenceMethod.AsQueryable, SequenceMethod.AsEnumerable)
+                    : base(SequenceMethod.AsQueryableGeneric, SequenceMethod.AsQueryable, SequenceMethod.AsEnumerable, SequenceMethod.ToList)
                 {
                 }
 

@@ -319,7 +319,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 SequenceMethod.SequenceEqualComparer);
             map.Add(@"AsEnumerable(IEnumerable`1<T0>)->IEnumerable`1<T0>", SequenceMethod.AsEnumerable);
             map.Add(@"ToArray(IEnumerable`1<T0>)->TSource[]", SequenceMethod.NotSupported);
-            map.Add(@"ToList(IEnumerable`1<T0>)->List`1<T0>", SequenceMethod.NotSupported);
+            map.Add(@"ToList(IEnumerable`1<T0>)->List`1<T0>", SequenceMethod.ToList);
             map.Add(@"ToDictionary(IEnumerable`1<T0>, Func`2<T0, T1>)->Dictionary`2<T1, T0>", SequenceMethod.NotSupported);
             map.Add(
                 @"ToDictionary(IEnumerable`1<T0>, Func`2<T0, T1>, IEqualityComparer`1<T1>)->Dictionary`2<T1, T0>",

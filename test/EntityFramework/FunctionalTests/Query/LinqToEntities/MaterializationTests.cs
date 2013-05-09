@@ -127,6 +127,23 @@ namespace System.Data.Entity.Query.LinqToEntities
         }
 
         [Fact]
+	    public void Can_materialize_properties_into_non_mapped_type_with_nested_list()
+	    {
+	        using (var context = new ArubaContext())
+	        {
+	            var query = context.People.Where(o => o.Id == 1).Select(m => new MyNonMappedTypeWithNestedNonMappedList
+	            {
+	                NestedList = m.Children.Select(p => new MyNonMappedType { Id = p.Id, Name = p.Name }).ToList()
+	            });
+	            var results = query.ToList();
+	            var children = context.People.Include(i => i.Children).Single(o => o.Id == 1).Children.Count;
+	  
+	            Assert.Equal(1, results.Count);
+	            Assert.Equal(children, results[0].NestedList.Count);
+	        }
+	    }
+
+        [Fact]
         public void Can_materialize_nested_anonymous_types()
         {
             using (var context = new ArubaContext())
@@ -191,5 +208,10 @@ namespace System.Data.Entity.Query.LinqToEntities
             public int Id { get; set; }
             public string Name { get; set; }
         }
+
+        public class MyNonMappedTypeWithNestedNonMappedList
+	    {
+	        public List<MyNonMappedType> NestedList { get; set; }
+	    }
     }
 }
