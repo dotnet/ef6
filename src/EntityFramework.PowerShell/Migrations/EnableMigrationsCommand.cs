@@ -96,8 +96,7 @@ namespace System.Data.Entity.Migrations
 
                         project.AddFile(path, new TemplateProcessor().Process(template, tokens));
 
-                        if (!enableAutomaticMigrations
-                            && StartUpProject.TryBuild()
+                        if (StartUpProject.TryBuild()
                             && project.TryBuild())
                         {
                             var configurationTypeName = rootNamespace + "." + migrationsNamespace + ".Configuration";
@@ -111,7 +110,12 @@ namespace System.Data.Entity.Migrations
 
                                 if (scaffoldedMigration != null)
                                 {
-                                    new MigrationWriter(this).Write(scaffoldedMigration);
+                                    if (!enableAutomaticMigrations)
+                                    {
+                                        new MigrationWriter(this).Write(scaffoldedMigration);
+
+                                        WriteWarning(Strings.EnableMigrations_InitialScaffold(scaffoldedMigration.MigrationId));
+                                    }
 
                                     // We found an initial create so we need to add an explicit ContextKey
                                     // assignment to the configuration
@@ -122,9 +126,6 @@ namespace System.Data.Entity.Migrations
                                           + (!isVb ? ";" : null);
 
                                     File.WriteAllText(absolutePath, new TemplateProcessor().Process(template, tokens));
-
-                                    WriteWarning(
-                                        Strings.EnableMigrations_InitialScaffold(scaffoldedMigration.MigrationId));
                                 }
                             }
                         }
