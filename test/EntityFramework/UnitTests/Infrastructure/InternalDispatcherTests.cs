@@ -287,7 +287,6 @@ namespace System.Data.Entity.Infrastructure
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(It.IsAny<DbCommandInterceptionContext>()), Times.Never()));
 
-                operation.Start();
                 cancellationTokenSource.Cancel();
                 Assert.Throws<AggregateException>(() => interceptTask.Wait());
 
