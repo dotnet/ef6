@@ -368,17 +368,9 @@ namespace System.Data.Entity.Infrastructure
 
                 var awaited = AwaitMe(interceptResult);
 
-                result.Start();
                 cancellationTokenSource.Cancel();
 
-                try
-                {
-                    awaited.Wait();
-                }
-                catch (AggregateException)
-                {
-                    // Ignore
-                }
+                Assert.Throws<AggregateException>(() => awaited.Wait());
 
                 Assert.True(interceptResult.IsCanceled);
                 Assert.True(awaited.IsCanceled);
@@ -553,18 +545,11 @@ namespace System.Data.Entity.Infrastructure
                     m => m.ScalarExecuted(
                         mockCommand.Object, It.IsAny<int>(), It.IsAny<DbCommandInterceptionContext>()), Times.Never());
 
-                result.Start();
+                var awaited = AwaitMe(interceptResult);
+
                 cancellationTokenSource.Cancel();
 
-                var awaited = AwaitMe(interceptResult);
-                try
-                {
-                    awaited.Wait();
-                }
-                catch (AggregateException)
-                {
-                    // Ignore
-                }
+                Assert.Throws<AggregateException>(() => awaited.Wait());
 
                 Assert.True(interceptResult.IsCanceled);
                 Assert.True(awaited.IsCanceled);
@@ -768,18 +753,11 @@ namespace System.Data.Entity.Infrastructure
                     m => m.ReaderExecuted(mockCommand.Object, It.IsAny<DbDataReader>(), It.IsAny<DbCommandInterceptionContext>()),
                     Times.Never());
 
-                result.Start();
+                var awaited = AwaitMe(interceptResult);
+
                 cancellationTokenSource.Cancel();
 
-                var awaited = AwaitMe(interceptResult);
-                try
-                {
-                    awaited.Wait();
-                }
-                catch (AggregateException)
-                {
-                    // Ignore
-                }
+                Assert.Throws<AggregateException>(() => awaited.Wait());
 
                 Assert.True(interceptResult.IsCanceled);
                 Assert.True(awaited.IsCanceled);
