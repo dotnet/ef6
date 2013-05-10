@@ -75,7 +75,6 @@
     <DefineConstants>$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
@@ -106,20 +105,8 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
-    <COMReference Include="VSWebSite">
-      <Guid>{A6613CCA-B54B-43B0-AE3C-BA7E299C1CC8}</Guid>
-      <VersionMajor>8</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\ByteExtensions.cs">
-      <Link>ConnectionFactoryConfig\Utilities\ByteExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\EntityFramework\Properties\Resources.PowerShell.cs">
       <Link>Properties\Resources.PowerShell.cs</Link>
     </Compile>

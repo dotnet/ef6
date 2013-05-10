@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Migrations.Utilities
 {
-    extern alias powershell;
     using System.Collections;
     using System.Data.Entity.Migrations.Design;
     using System.IO;
@@ -10,9 +9,6 @@ namespace System.Data.Entity.Migrations.Utilities
     using System.Resources;
     using EnvDTE;
     using Moq;
-    using powershell::System.Data.Entity.Migrations;
-    using powershell::System.Data.Entity.Migrations.Extensions;
-    using powershell::System.Data.Entity.Migrations.Utilities;
     using Xunit;
 
     public class MigrationWriterTests : IDisposable
@@ -106,11 +102,11 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         private void TestWrite(
-            Func<MigrationWriter, ScaffoldedMigration, string> action,
+            Func<System.Data.Entity.Migrations.Utilities.MigrationWriter, ScaffoldedMigration, string> action,
             bool skipUserCodeVerification = false)
         {
             var command = CreateCommand(_projectDir);
-            var writer = new MigrationWriter(command);
+            var writer = new System.Data.Entity.Migrations.Utilities.MigrationWriter(command);
             var scaffoldedMigration = new ScaffoldedMigration
                                           {
                                               MigrationId = MigrationId,
@@ -148,7 +144,7 @@ namespace System.Data.Entity.Migrations.Utilities
             }
         }
 
-        private static MigrationsDomainCommand CreateCommand(string projectDir)
+        private static System.Data.Entity.Migrations.MigrationsDomainCommand CreateCommand(string projectDir)
         {
             var fullPathProperty = new Mock<Property>();
             fullPathProperty.SetupGet(p => p.Value).Returns(projectDir);
@@ -160,17 +156,17 @@ namespace System.Data.Entity.Migrations.Utilities
 
             var projectItems = new Mock<ProjectItems>();
             projectItems.SetupGet(pi => pi.Kind).Returns(
-                ProjectExtensions.VsProjectItemKindPhysicalFolder);
+                System.Data.Entity.Migrations.Extensions.ProjectExtensions.VsProjectItemKindPhysicalFolder);
             projectItems.Setup(pi => pi.AddFromDirectory(It.IsAny<string>())).Returns(
                 () =>
-                {
-                    var dirProjectItems = new Mock<ProjectItems>();
+                    {
+                        var dirProjectItems = new Mock<ProjectItems>();
 
-                    var dirProjectItem = new Mock<ProjectItem>();
-                    dirProjectItem.SetupGet(pi => pi.ProjectItems).Returns(dirProjectItems.Object);
+                        var dirProjectItem = new Mock<ProjectItem>();
+                        dirProjectItem.SetupGet(pi => pi.ProjectItems).Returns(dirProjectItems.Object);
 
-                    return dirProjectItem.Object;
-                });
+                        return dirProjectItem.Object;
+                    });
 
             var project = new Mock<Project>();
             projectItems.SetupGet(pi => pi.Parent).Returns(() => project.Object);
@@ -178,7 +174,7 @@ namespace System.Data.Entity.Migrations.Utilities
             project.SetupGet(p => p.DTE).Returns(dte.Object);
             project.SetupGet(p => p.ProjectItems).Returns(projectItems.Object);
 
-            var command = new Mock<MigrationsDomainCommand>();
+            var command = new Mock<System.Data.Entity.Migrations.MigrationsDomainCommand>();
             command.SetupGet(c => c.Project).Returns(project.Object);
             command.Setup(c => c.WriteWarning(It.IsAny<string>())).Callback(() => { });
 
