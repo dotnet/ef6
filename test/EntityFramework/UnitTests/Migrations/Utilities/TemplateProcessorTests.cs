@@ -2,9 +2,7 @@
 
 namespace System.Data.Entity.Migrations.Utilities
 {
-    extern alias powershell;
     using System.Collections.Generic;
-    using powershell::System.Data.Entity.Migrations.Utilities;
     using Xunit;
 
     public class TemplateProcessorTests

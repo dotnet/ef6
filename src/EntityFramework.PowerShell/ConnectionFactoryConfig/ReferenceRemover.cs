@@ -4,10 +4,8 @@ namespace System.Data.Entity.ConnectionFactoryConfig
 {
     using System.Data.Entity.Utilities;
     using System.Linq;
-    using System.Reflection;
     using EnvDTE;
     using VSLangProj;
-    using VsWebSite;
 
     internal class ReferenceRemover
     {
@@ -40,34 +38,20 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             }
         }
 
-        public dynamic TryFindReference(string identity, string publicKeyToken)
+        public Reference TryFindReference(string identity, string publicKeyToken)
         {
             DebugCheck.NotEmpty(identity);
             DebugCheck.NotEmpty(publicKeyToken);
 
             var vsProject = _project.Object as VSProject;
-            if (vsProject != null)
-            {
-                return vsProject.References
-                           .OfType<Reference>()
-                           .FirstOrDefault(
-                               r => r.StrongName
-                                    && r.Identity == identity
-                                    && publicKeyToken.Equals(r.PublicKeyToken, StringComparison.OrdinalIgnoreCase));
-            }
-
-            var vsWebSite = _project.Object as VSWebSite;
-            return vsWebSite == null
-                ? null
-                : vsWebSite.References.OfType<AssemblyReference>().FirstOrDefault(
-                    ar =>
-                    {
-                        var r = new AssemblyName(ar.StrongName);
-                        return r.Name == identity
-                            && publicKeyToken.Equals(
-                                r.GetPublicKeyToken().ToHexString(),
-                                StringComparison.OrdinalIgnoreCase);
-                    });
+            return vsProject == null
+                       ? null
+                       : vsProject.References
+                                  .OfType<Reference>()
+                                  .FirstOrDefault(
+                                      r => r.StrongName
+                                           && r.Identity == identity
+                                           && publicKeyToken.Equals(r.PublicKeyToken, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
