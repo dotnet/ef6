@@ -8,17 +8,41 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Migrations;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.Utilities;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
 
     public class ConventionsScenarioTests : TestBase
     {
+        internal class StoreEntitySetNamingConvention : IDbConvention<EntitySet>
+        {
+            public void Apply(EntitySet entity, EdmModel model)
+            {
+                entity.Name = "Foomatic_" + entity.Name;
+            }
+        }
+
+        [Fact]
+        public void Can_set_entity_set_name_via_store_convention()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            modelBuilder.Entity<Customer>();
+            modelBuilder.Conventions.Add<StoreEntitySetNamingConvention>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            Assert.Equal(
+                1,
+                databaseMapping.Database.GetEntitySets().Count(
+                    t => t.Name == "Foomatic_Customer"));
+        }
+
         [Fact]
         public void Add_custom_model_convention()
         {
@@ -28,6 +52,8 @@ namespace FunctionalTests
             modelBuilder.Conventions.Add<EntitySetNamingConvention>();
 
             var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
 
             Assert.Equal(
                 1,
@@ -52,6 +78,8 @@ namespace FunctionalTests
             modelBuilder.Conventions.AddAfter<IdKeyDiscoveryConvention>(new CodeKeyDiscoveryConvention());
 
             var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
 
             Assert.Equal(1, databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Count());
         }
@@ -96,6 +124,8 @@ namespace FunctionalTests
 
             var databaseMapping = BuildMapping(modelBuilder);
 
+            databaseMapping.AssertValid();
+
             Assert.True(databaseMapping.Database.GetEntitySets().All(t => t.Table == "TheTable"));
         }
 
@@ -109,6 +139,8 @@ namespace FunctionalTests
                 .Configure(p => p.HasMaxLength(256));
 
             var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
 
             var table
                 = databaseMapping.Database.EntityTypes
@@ -135,6 +167,8 @@ namespace FunctionalTests
 
             var databaseMapping = BuildMapping(modelBuilder);
 
+            databaseMapping.AssertValid();
+
             var column = databaseMapping.Database.EntityTypes
                 .Single()
                 .Properties.Single(c => c.Name == "ComplexProperty_StringProperty");
@@ -152,6 +186,8 @@ namespace FunctionalTests
 
             var databaseMapping = BuildMapping(modelBuilder);
 
+            databaseMapping.AssertValid();
+
             var entity = databaseMapping.Model.EntityTypes.Single();
             Assert.Equal(1, entity.KeyProperties.Count());
             Assert.Equal("IntProperty", entity.KeyProperties.Single().Name);
@@ -167,6 +203,8 @@ namespace FunctionalTests
                 .Configure(c => c.HasKey(e => e.IntProperty));
 
             var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
 
             var entity = databaseMapping.Model.EntityTypes.Single();
             Assert.Equal(1, entity.KeyProperties.Count());
@@ -184,6 +222,8 @@ namespace FunctionalTests
                 .Configure(c => c.IsKey());
 
             var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
 
             var entity = databaseMapping.Model.EntityTypes.Single();
             Assert.Equal(1, entity.KeyProperties.Count());
@@ -206,6 +246,8 @@ namespace FunctionalTests
 
             var databaseMapping = BuildMapping(modelBuilder);
 
+            databaseMapping.AssertValid();
+
             var entity = databaseMapping.Model.EntityTypes.Single();
             var keys = entity.KeyProperties;
             Assert.Equal(2, keys.Count());
@@ -225,6 +267,8 @@ namespace FunctionalTests
 
             var databaseMapping = BuildMapping(modelBuilder);
 
+            databaseMapping.AssertValid();
+
             var entity = databaseMapping.Model.EntityTypes.Single();
             var keys = entity.KeyProperties;
             Assert.Equal(1, keys.Count());
@@ -241,6 +285,8 @@ namespace FunctionalTests
                 .Configure(c => c.HasKey(e => new { e.IntProperty, e.IntProperty1 }));
 
             var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
 
             var entity = databaseMapping.Model.EntityTypes.Single();
             var keys = entity.KeyProperties;
@@ -259,6 +305,8 @@ namespace FunctionalTests
                 .Configure(c => c.HasKey(e => e.IntProperty));
 
             var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
 
             var entity = databaseMapping.Model.EntityTypes.Single();
             var keys = entity.KeyProperties;
@@ -308,8 +356,11 @@ namespace FunctionalTests
     public class LightweightEntityWithKeyConfiguration : ILightweightEntity
     {
         public int Id { get; set; }
-        [Key, Column(Order = 0)]
+
+        [Key]
+        [Column(Order = 0)]
         public int IntProperty { get; set; }
+
         public int IntProperty1 { get; set; }
         public LightweightComplexType ComplexProperty { get; set; }
     }

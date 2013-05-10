@@ -168,12 +168,15 @@ namespace System.Data.Entity.Edm.Serialization
             _xmlWriter.WriteEndElement();
         }
 
-        private void WriteMappingFragmentElement(StorageMappingFragment mappingFragment)
+        internal void WriteMappingFragmentElement(StorageMappingFragment mappingFragment)
         {
             DebugCheck.NotNull(mappingFragment);
 
             _xmlWriter.WriteStartElement(StorageMslConstructs.MappingFragmentElement);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.MappingFragmentStoreEntitySetAttribute, mappingFragment.Table.Name);
+
+            _xmlWriter.WriteAttributeString(
+                StorageMslConstructs.MappingFragmentStoreEntitySetAttribute, 
+                mappingFragment.TableSet.Name);
 
             foreach (var propertyMapping in mappingFragment.Properties)
             {

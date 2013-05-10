@@ -13,6 +13,33 @@ namespace System.Data.Entity.Edm.Serialization
     public class MslXmlSchemaWriterTests
     {
         [Fact]
+        public void WriteMappingFragment_should_write_store_entity_set_name()
+        {
+            var fixture = new Fixture();
+
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+            var entitySet = new EntitySet("ES", "S", null, null, entityType);
+            var entityContainer = new EntityContainer("EC", DataSpace.SSpace);
+
+            entityContainer.AddEntitySetBase(entitySet);
+
+            var storageEntitySetMapping
+                = new StorageEntitySetMapping(
+                    entitySet,
+                    new StorageEntityContainerMapping(entityContainer));
+
+            StorageTypeMapping typeMapping = new StorageEntityTypeMapping(storageEntitySetMapping);
+
+            var mappingFragment = new StorageMappingFragment(entitySet, typeMapping, false);
+
+            fixture.Writer.WriteMappingFragmentElement(mappingFragment);
+
+            Assert.Equal(
+                @"<MappingFragment StoreEntitySet=""ES"" />",
+                fixture.ToString());
+        }
+
+        [Fact]
         public void WriteEntitySetMappingElement_should_write_modification_function_mappings()
         {
             var fixture = new Fixture();
@@ -350,7 +377,6 @@ namespace System.Data.Entity.Edm.Serialization
                                     }
                         });
 
-
             var rowTypeProperty1 = new EdmProperty("RTProperty1", typeUsage);
             var rowTypeProperty2 = new EdmProperty("RTProperty2", typeUsage);
             var rowType = new RowType(new[] { rowTypeProperty1, rowTypeProperty2 });
@@ -389,7 +415,6 @@ namespace System.Data.Entity.Edm.Serialization
                     {
                         structuralTypeMapping
                     });
-
 
             var containerMapping = new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.SSpace));
             containerMapping.AddFunctionImportMapping(functionImportMapping);
