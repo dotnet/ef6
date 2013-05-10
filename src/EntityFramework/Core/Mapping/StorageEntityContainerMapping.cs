@@ -415,7 +415,7 @@ namespace System.Data.Entity.Core.Mapping
         /// errors and warnings encountered during generation.</param>
         /// <returns>A ContainerMappingViewGroup instance generated from this container mapping,
         /// or null if there are no entity set mappings.</returns>
-        public ContainerMappingViewGroup Generate(IList<EdmSchemaError> errors)
+        public ContainerMappingViewGroup GenerateViews(IList<EdmSchemaError> errors)
         {
             if (!HasViews)
             {

@@ -265,7 +265,7 @@ namespace System.Data.Entity.Core.Mapping
                     StorageMappingItemCollectionTests.Msl);
 
             var errors = new List<EdmSchemaError>();
-            var viewGroups = mappingCollection.Generate(errors);
+            var viewGroups = mappingCollection.GenerateViews(errors);
 
             Assert.Equal(1, viewGroups.Count);
 

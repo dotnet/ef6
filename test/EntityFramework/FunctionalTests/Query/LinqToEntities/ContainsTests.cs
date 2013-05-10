@@ -218,11 +218,7 @@ WHERE (([Extent1].[Genre] IN (1,2)) AND ([Extent1].[Genre] IS NOT NULL))
 FROM [dbo].[Books] AS [Extent1]
 WHERE ([Extent1].[Title] IN (N'Title1', N'Title2')) 
     OR ([Extent1].[Title] = @p__linq__0) 
-    OR ([Extent1].[Title] IS NULL)
-
-/*
-String p__linq__0 = ""Title3""
-*/";
+    OR ([Extent1].[Title] IS NULL)";
 
             var parameter = "Title3";
 
@@ -248,11 +244,7 @@ FROM [dbo].[Books] AS [Extent1]
 WHERE (([Extent1].[Title] IN (N'Title1', N'Title2')) AND ([Extent1].[Title] IS NOT NULL))
     OR (([Extent1].[Title] = @p__linq__0) AND (NOT ([Extent1].[Title] IS NULL OR @p__linq__0 IS NULL))) 
     OR (([Extent1].[Title] IS NULL) AND (@p__linq__0 IS NULL)) 
-    OR ([Extent1].[Title] IS NULL)
-
-/*
-String p__linq__0 = ""Title3""
-*/";
+    OR ([Extent1].[Title] IS NULL)";
 
             var parameter = "Title3";
 

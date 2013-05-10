@@ -56,83 +56,14 @@ namespace System.Data.Entity.Core.Objects.Internal
             CompiledQueryParameters = compiledQueryParameters;
         }
 
-        internal string ToTraceString(ObjectParameterCollection parameters = null)
+        internal string ToTraceString()
         {
             var entityCommandDef = CommandDefinition as EntityCommandDefinition;
 
-            if (entityCommandDef == null)
-            {
-                return String.Empty;
-            }
-
-            var traceString = entityCommandDef.ToTraceString();
-
-            if (parameters == null
-                || parameters.Count == 0)
-            {
-                return traceString;
-            }
-
-            var command = CommandDefinition.CreateCommand();
-            var sb = new StringBuilder();
-
-            sb.Append(traceString);
-            sb.Append("\n\n/*\n");
-
-            // append parameter information
-            foreach (var objParam in parameters)
-            {
-                var index = command.Parameters.IndexOf(objParam.Name);
-
-                if (index != -1)
-                {
-                    var dbParam = command.Parameters[index];
-                    sb.Append(dbParam.DbType);
-                }
-                else
-                {
-                    Debug.Assert(
-                        false,
-                        "A parameter in the input ObjectParameterCollection does not have a match in the command definition's DbParameterCollection.");
-                }
-
-                sb.Append(" ");
-                sb.Append(objParam.Name);
-                sb.Append(" = ");
-
-                var value = objParam.Value;
-                var type = (value != null) ? value.GetType() : null;
-
-                switch (Type.GetTypeCode(type))
-                {
-                    case TypeCode.Empty:
-                    case TypeCode.DBNull:
-                        sb.Append("(null)");
-                        break;
-
-                    case TypeCode.Char:
-                        sb.Append("'");
-                        sb.Append(value);
-                        sb.Append("'");
-                        break;
-
-                    case TypeCode.String:
-                        sb.Append("\"");
-                        sb.Append(value);
-                        sb.Append("\"");
-                        break;
-
-                    default:
-                        sb.Append(value);
-                        break;
-                }
-
-                sb.Append("\n");
-            }
-
-            sb.Append("*/\n");
-
-            return sb.ToString();
+            return 
+                (entityCommandDef != null) 
+                    ? entityCommandDef.ToTraceString() 
+                    : string.Empty;
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",

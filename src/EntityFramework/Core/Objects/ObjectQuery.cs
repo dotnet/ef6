@@ -202,7 +202,7 @@ namespace System.Data.Entity.Core.Objects
         [Browsable(false)]
         public string ToTraceString()
         {
-            return _state.GetExecutionPlan(null).ToTraceString(Parameters);
+            return _state.GetExecutionPlan(null).ToTraceString();
         }
 
         /// <summary>Returns information about the result type of the query.</summary>

@@ -1517,7 +1517,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="errors">A list of EdmSchemaError that accumulates potential 
         /// errors and warnings encountered during generation.</param>
         /// <returns>A list of ContainerMappingViewGroup generated from this mapping collection.</returns>
-        public IList<ContainerMappingViewGroup> Generate(IList<EdmSchemaError> errors)
+        public IList<ContainerMappingViewGroup> GenerateViews(IList<EdmSchemaError> errors)
         {
             var viewGroups = new List<ContainerMappingViewGroup>();
 
@@ -1526,7 +1526,7 @@ namespace System.Data.Entity.Core.Mapping
                 var mapping = item as StorageEntityContainerMapping;
                 if (mapping != null)
                 {
-                    var group = mapping.Generate(errors);
+                    var group = mapping.GenerateViews(errors);
 
                     if (group == null) break;
 

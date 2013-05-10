@@ -168,14 +168,7 @@ CASE WHEN (((@p__linq__0 = 1) AND (@p__linq__1 = 1)) OR ((@p__linq__2 = 1) AND (
 FROM ( SELECT DISTINCT 
 	[Extent1].[FirstName] AS [FirstName]
 	FROM [dbo].[ArubaOwners] AS [Extent1]
-)  AS [Distinct1]
-
-/*
-Boolean p__linq__0 = True
-Boolean p__linq__1 = False
-Boolean p__linq__2 = False
-Boolean p__linq__3 = True
-*/";
+)  AS [Distinct1]";
 
             bool a = true;
             bool b = false;

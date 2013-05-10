@@ -18,11 +18,8 @@ namespace System.Data.Entity.Query.LinqToEntities
                 var expectedSql =
 @"SELECT 
 @p__linq__0 AS [C1]
-FROM [dbo].[ArubaTasks] AS [Extent1]
+FROM [dbo].[ArubaTasks] AS [Extent1]";
 
-/*
-Int32 p__linq__0 = 3
-*/";
                 var query = context.Tasks.Select(t => localList.Count);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
 
@@ -128,11 +125,7 @@ FROM [dbo].[ArubaTasks] AS [Extent1]";
                 var expectedSql =
 @"SELECT 
 @p__linq__0 AS [C1]
-FROM [dbo].[ArubaTasks] AS [Extent1]
-
-/*
-String p__linq__0 = ""staticField""
-*/";
+FROM [dbo].[ArubaTasks] AS [Extent1]";
 
                 var query = context.Tasks.Select(c => StubClass.StaticField);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
@@ -150,11 +143,7 @@ String p__linq__0 = ""staticField""
                 var expectedSql =
 @"SELECT 
 @p__linq__0 AS [C1]
-FROM [dbo].[ArubaTasks] AS [Extent1]
-
-/*
-String p__linq__0 = ""StaticProperty""
-*/";
+FROM [dbo].[ArubaTasks] AS [Extent1]";
 
                 var query = context.Tasks.Select(c => StubClass.StaticProperty);
                 QueryTestHelpers.VerifyDbQuery(query, expectedSql);
