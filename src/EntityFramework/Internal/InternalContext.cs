@@ -1444,17 +1444,16 @@ namespace System.Data.Entity.Internal
             get { return Owner.GetType().ToString(); }
         }
 
-        public virtual TextWriter Log
+        public virtual Action<string> Log
         {
-            get { return _commandLogger != null ? _commandLogger.Writer : null; }
+            get { return _commandLogger != null ? _commandLogger.Sink : null; }
             set
             {
-                if (_commandLogger == null || _commandLogger.Writer != value)
+                if (_commandLogger == null || _commandLogger.Sink != value)
                 {
                     if (_commandLogger != null)
                     {
                         _dispatchers.RemoveInterceptor(_commandLogger);
-                        _commandLogger.Writer.Flush();
                         _commandLogger = null;
                     }
 

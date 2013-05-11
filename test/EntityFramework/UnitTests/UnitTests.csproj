@@ -286,8 +286,8 @@
     <Compile Include="Infrastructure\DbCommandInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\DbCommandLoggerTests.cs" />
     <Compile Include="Infrastructure\DbCommandTreeDispatcherTests.cs" />
+    <Compile Include="Infrastructure\DbCommandTreeInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\DbInterceptionContextTests.cs" />
-    <Compile Include="Infrastructure\DbInterceptorTests.cs" />
     <Compile Include="Infrastructure\DbLocalViewTests.cs" />
     <Compile Include="Infrastructure\DbProviderInfoTests.cs" />
     <Compile Include="Infrastructure\DbQueryTests.cs" />

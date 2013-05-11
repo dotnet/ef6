@@ -164,15 +164,13 @@ namespace System.Data.Entity.Interception
                 get { return _log; }
             }
 
-            public DbCommandTree TreeCreated(DbCommandTree commandTree, DbInterceptionContext interceptionContext)
+            public void TreeCreated(DbCommandTree commandTree, DbCommandTreeInterceptionContext interceptionContext)
             {
                 if (_context == null
                     || interceptionContext.DbContexts.Contains(_context))
                 {
                     _log.Add(commandTree);
                 }
-
-                return commandTree;
             }
         }
     }

@@ -4,15 +4,19 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
 
     internal class DbCommandTreeDispatcher : DispatcherBase<IDbCommandTreeInterceptor>
     {
-        public virtual DbCommandTree Created(DbCommandTree commandTree, DbInterceptionContext interceptionContext)
+        public virtual DbCommandTree Created(DbCommandTree commandTree, DbCommandTreeInterceptionContext interceptionContext)
         {
             DebugCheck.NotNull(commandTree);
             DebugCheck.NotNull(interceptionContext);
 
-            return InternalDispatcher.Dispatch(commandTree, (r, i) => i.TreeCreated(r, interceptionContext));
+            Debug.Assert(!interceptionContext.IsResultSet);
+
+            return InternalDispatcher.Dispatch(
+                commandTree, interceptionContext,  i => i.TreeCreated(commandTree, interceptionContext));
         }
     }
 }

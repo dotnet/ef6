@@ -11,12 +11,18 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void Created_dispatches_to_interceptors_which_can_modify_result()
         {
-            var interceptionContext = new DbInterceptionContext();
+            var interceptionContext = new DbCommandTreeInterceptionContext();
             var tree = new Mock<DbCommandTree>().Object;
 
             var mockInterceptor = new Mock<IDbCommandTreeInterceptor>();
             var interceptedTree = new Mock<DbCommandTree>().Object;
-            mockInterceptor.Setup(m => m.TreeCreated(tree, interceptionContext)).Returns(interceptedTree);
+            mockInterceptor.Setup(m => m.TreeCreated(tree, interceptionContext))
+                .Callback<DbCommandTree, DbCommandTreeInterceptionContext>(
+                    (t, i) =>
+                        {
+                            Assert.Same(tree, interceptionContext.Result);
+                            interceptionContext.Result = interceptedTree;
+                        });
 
             var dispatcher = new DbCommandTreeDispatcher();
             var internalDispatcher = dispatcher.InternalDispatcher;
@@ -31,7 +37,7 @@ namespace System.Data.Entity.Infrastructure
         public void Created_returns_tree_if_no_interceptors_are_registered()
         {
             var tree = new Mock<DbCommandTree>().Object;
-            Assert.Same(tree, new DbCommandTreeDispatcher().Created(tree, new DbInterceptionContext()));
+            Assert.Same(tree, new DbCommandTreeDispatcher().Created(tree, new DbCommandTreeInterceptionContext()));
         }
     }
 }

@@ -467,10 +467,10 @@ namespace System.Data.Entity
             {
                 var mockContext = new Mock<InternalContextForMock>();
                 var database = new Database(mockContext.Object);
-                
-                var writer = new Mock<TextWriter>().Object;
-                database.Log = writer;
-                mockContext.VerifySet(m => m.Log = writer);
+
+                Action<string> sink = new StringWriter().Write;
+                database.Log = sink;
+                mockContext.VerifySet(m => m.Log = sink);
 
                 var _ = database.Log;
                 mockContext.VerifyGet(m => m.Log);

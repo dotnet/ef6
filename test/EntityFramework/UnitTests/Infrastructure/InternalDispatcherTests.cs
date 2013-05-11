@@ -137,7 +137,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Operation_Dispatch_dispatches_to_all_registered_interceptors_and_aggregates_results_of_operations()
             {
-                var interceptionContext = new DbInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext<string>();
                 var mockInterceptors = CreateMockInterceptors();
                 var dispatcher = new InternalDispatcher<FakeInterceptor1>();
                 mockInterceptors.Each(i => dispatcher.Add(i.Object));
@@ -148,7 +148,31 @@ namespace System.Data.Entity.Infrastructure
                         () => "0",
                         interceptionContext,
                         i => i.CallMeFirst(interceptionContext),
-                        (r, i, c) => r + i.CallMe(c)));
+                        (i, c) => c.Result = c.Result + i.CallMe(c)));
+
+                mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
+                mockInterceptors.Each(i => i.Verify(m => m.CallMe(It.Is<DbInterceptionContext>(c => c.Exception == null)), Times.Once()));
+            }
+
+            [Fact]
+            public void Execution_of_operation_can_be_canceled_with_everything_else_still_happening()
+            {
+                var interceptionContext = new DbCommandInterceptionContext<string>();
+                var mockInterceptors = CreateMockInterceptors();
+                mockInterceptors.First()
+                    .Setup(m => m.CallMeFirst(It.IsAny<DbCommandInterceptionContext<string>>()))
+                    .Callback<DbInterceptionContext>(c => ((DbCommandInterceptionContext<string>)c).Result = "N");
+
+                var dispatcher = new InternalDispatcher<FakeInterceptor1>();
+                mockInterceptors.Each(i => dispatcher.Add(i.Object));
+
+                Assert.Equal(
+                    "N123",
+                    dispatcher.Dispatch<DbCommandInterceptionContext<string>, string>(
+                        () => { throw new Exception("Bang!"); },
+                        interceptionContext,
+                        i => i.CallMeFirst(interceptionContext),
+                        (i, c) => c.Result = c.Result + i.CallMe(c)));
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(It.Is<DbInterceptionContext>(c => c.Exception == null)), Times.Once()));
@@ -157,49 +181,79 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Operation_Dispatch_executes_operation_and_returns_result_if_no_dispatchers_registered()
             {
-                var interceptionContext = new DbInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext<string>();
                 Assert.Equal(
                     "0",
                     new InternalDispatcher<FakeInterceptor1>().Dispatch(
-                        () => "0", interceptionContext, i => i.CallMeFirst(interceptionContext), (r, i, c) => r + i.CallMe(c)));
+                        () => "0", interceptionContext, i => i.CallMeFirst(interceptionContext), (i, c) => c.Result = c.Result + i.CallMe(c)));
             }
 
             [Fact]
             public void Operation_Dispatch_dispatches_to_all_registered_interceptors_even_if_exception_thrown()
             {
-                var interceptionContext = new DbInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext<string>();
                 var mockInterceptors = CreateMockInterceptors();
                 var dispatcher = new InternalDispatcher<FakeInterceptor1>();
                 mockInterceptors.Each(i => dispatcher.Add(i.Object));
 
                 var exception = Assert.Throws<Exception>(
-                    () => dispatcher.Dispatch<DbInterceptionContext, string>(
+                    () => dispatcher.Dispatch<DbCommandInterceptionContext<string>, string>(
                         () => { throw new Exception("Bang!"); },
                         interceptionContext,
                         i => i.CallMeFirst(interceptionContext),
-                        (r, i, c) => r + i.CallMe(c)));
+                        (i, c) => i.CallMe(c)));
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
                 mockInterceptors.Each(
                     i => i.Verify(m => m.CallMe(It.Is<DbInterceptionContext>(c => c.Exception == exception)), Times.Once()));
             }
 
+#if !NET40
             [Fact]
             public void Async_Dispatch_dispatches_to_all_registered_interceptors_and_aggregates_results_of_operations()
             {
-                var interceptionContext = new DbInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext<string>();
                 var mockInterceptors = CreateMockInterceptors();
+                mockInterceptors.First()
+                    .Setup(m => m.CallMeFirst(It.IsAny<DbCommandInterceptionContext<string>>()))
+                    .Callback<DbInterceptionContext>(c => ((DbCommandInterceptionContext<string>)c).Result = "N");
+
                 var dispatcher = new InternalDispatcher<FakeInterceptor1>();
                 mockInterceptors.Each(i => dispatcher.Add(i.Object));
 
-                var operation = new Task<string>(() => "0");
-                var modifiedContext = new DbInterceptionContext();
+                var operation = new Task<string>(() => { throw new Exception("Bang!"); });
+                var modifiedContext = new DbCommandInterceptionContext<string>();
 
                 var interceptTask = dispatcher.Dispatch(
                     () => operation,
                     interceptionContext,
                     i => i.CallMeFirst(interceptionContext),
-                    (r, i, c) => r + i.CallMe(c),
+                    (i, c) => c.Result = c.Result + i.CallMe(c),
+                    (c, t) => modifiedContext);
+
+                mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
+                mockInterceptors.Each(i => i.Verify(m => m.CallMe(modifiedContext), Times.Once()));
+
+                interceptTask.Wait();
+                Assert.Equal("N123", interceptTask.Result);
+            }
+
+            [Fact]
+            public void Execution_of_async_operation_can_be_canceled_with_everything_else_still_happening()
+            {
+                var interceptionContext = new DbCommandInterceptionContext<string>();
+                var mockInterceptors = CreateMockInterceptors();
+                var dispatcher = new InternalDispatcher<FakeInterceptor1>();
+                mockInterceptors.Each(i => dispatcher.Add(i.Object));
+
+                var operation = new Task<string>(() => "0");
+                var modifiedContext = new DbCommandInterceptionContext<string>();
+
+                var interceptTask = dispatcher.Dispatch(
+                    () => operation,
+                    interceptionContext,
+                    i => i.CallMeFirst(interceptionContext),
+                    (i, c) => c.Result = c.Result + i.CallMe(c),
                     (c, t) => modifiedContext);
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
@@ -217,7 +271,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Async_Dispatch_executes_operation_and_returns_result_if_no_dispatchers_registered()
             {
-                var interceptionContext = new DbInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext<string>();
                 var dispatcher = new InternalDispatcher<FakeInterceptor1>();
                 var operation = new Task<string>(() => "0");
 
@@ -225,7 +279,7 @@ namespace System.Data.Entity.Infrastructure
                     () => operation,
                     interceptionContext,
                     i => i.CallMeFirst(interceptionContext),
-                    (r, i, c) => r + i.CallMe(c),
+                    (i, c) => c.Result = c.Result + i.CallMe(c),
                     (c, t) => interceptionContext);
 
                 operation.Start();
@@ -238,7 +292,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Async_Dispatch_dispatches_to_all_registered_interceptors_even_if_exception_thrown()
             {
-                var interceptionContext = new DbInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext<string>();
                 var mockInterceptors = CreateMockInterceptors();
                 var dispatcher = new InternalDispatcher<FakeInterceptor1>();
                 mockInterceptors.Each(i => dispatcher.Add(i.Object));
@@ -250,7 +304,7 @@ namespace System.Data.Entity.Infrastructure
                     () => operation,
                     interceptionContext,
                     i => i.CallMeFirst(interceptionContext),
-                    (r, i, c) => r + i.CallMe(c),
+                    (i, c) => c.Result =c.Result + i.CallMe(c),
                     (c, t) => c);
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
@@ -274,14 +328,14 @@ namespace System.Data.Entity.Infrastructure
                 var cancellationToken = cancellationTokenSource.Token;
                 var operation = new Task<string>(() => "0", cancellationToken);
 
-                var interceptionContext = new DbInterceptionContext();
-                var modifiedContext = new DbInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext<string>();
+                var modifiedContext = new DbCommandInterceptionContext<string>();
 
                 var interceptTask = dispatcher.Dispatch(
                     () => operation,
                     interceptionContext,
                     i => i.CallMeFirst(interceptionContext),
-                    (r, i, c) => r + i.CallMe(c),
+                    (i, c) => c.Result = c.Result + i.CallMe(c),
                     (c, t) => modifiedContext);
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMeFirst(interceptionContext), Times.Once()));
@@ -292,6 +346,7 @@ namespace System.Data.Entity.Infrastructure
 
                 mockInterceptors.Each(i => i.Verify(m => m.CallMe(modifiedContext), Times.Once()));
             }
+#endif
         }
 
         private static IList<Mock<FakeInterceptor1>> CreateMockInterceptors(int count = 3)

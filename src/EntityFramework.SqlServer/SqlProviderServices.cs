@@ -850,8 +850,6 @@ namespace System.Data.Entity.SqlServer
                 // invalid connection may now be valid.
                 SqlConnection.ClearPool(sqlConnection);
 
-                var interceptionContext = new DbCommandInterceptionContext();
-
                 var setDatabaseOptionsScript = SqlDdlBuilder.SetDatabaseOptionsScript(sqlVersion, databaseName);
                 if (!String.IsNullOrEmpty(setDatabaseOptionsScript))
                 {
@@ -861,7 +859,7 @@ namespace System.Data.Entity.SqlServer
                                 // set database options
                                 using (var command = CreateCommand(conn, setDatabaseOptionsScript, commandTimeout))
                                 {
-                                    Interception.Dispatch.Command.NonQuery(command, interceptionContext);
+                                    Interception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext<int>());
                                 }
                             });
                 }
@@ -875,7 +873,7 @@ namespace System.Data.Entity.SqlServer
                                 // create database objects
                                 using (var command = CreateCommand(conn, createObjectsScript, commandTimeout))
                                 {
-                                    Interception.Dispatch.Command.NonQuery(command, interceptionContext);
+                                    Interception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext<int>());
                                 }
                             });
                 }
@@ -994,7 +992,7 @@ namespace System.Data.Entity.SqlServer
                         // create database
                         using (var command = CreateCommand(conn, createDatabaseScript, commandTimeout))
                         {
-                            Interception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext());
+                            Interception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext<int>());
                         }
                         sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
                     });
@@ -1064,7 +1062,7 @@ namespace System.Data.Entity.SqlServer
                                 using (var command = CreateCommand(conn, databaseExistsScript, commandTimeout))
                                 {
                                     var rowsAffected = (int)Interception.Dispatch.Command.Scalar(
-                                        command, new DbCommandInterceptionContext());
+                                        command, new DbCommandInterceptionContext<object>());
 
                                     databaseDoesNotExistInSysTables = (rowsAffected == 0);
                                 }
@@ -1093,7 +1091,7 @@ namespace System.Data.Entity.SqlServer
                         using (var command = CreateCommand(conn, databaseExistsScript, commandTimeout))
                         {
                             var rowsAffected = (int)Interception.Dispatch.Command.Scalar(
-                                command, new DbCommandInterceptionContext());
+                                command, new DbCommandInterceptionContext<object>());
                          
                             databaseExistsInSysTables = (rowsAffected > 0);
                         }
@@ -1148,7 +1146,7 @@ namespace System.Data.Entity.SqlServer
 
                             using (
                                 var reader = Interception.Dispatch.Command.Reader(
-                                    command, new DbCommandInterceptionContext()))
+                                    command, new DbCommandInterceptionContext<DbDataReader>()))
                             {
                                 while (reader.Read())
                                 {
@@ -1189,7 +1187,7 @@ namespace System.Data.Entity.SqlServer
                     {
                         using (var command = CreateCommand(conn, dropDatabaseScript, commandTimeout))
                         {
-                            Interception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext());
+                            Interception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext<int>());
                         }
                     });
             }

@@ -280,7 +280,7 @@ namespace System.Data.Entity.Internal
 #endif
 
         [Fact]
-        public void Log_can_be_set_to_log_to_a_new_writer()
+        public void Log_can_be_set_to_log_to_a_new_sink()
         {
             var mockDispatchers = new Mock<Dispatchers>();
 
@@ -288,23 +288,23 @@ namespace System.Data.Entity.Internal
             var internalContext = new LazyInternalContext(
                 context, new Mock<IInternalConnection>().Object, null, null, null, mockDispatchers.Object);
 
-            var writer = new Mock<TextWriter>().Object;
-            internalContext.Log = writer;
+            Action<string> sink = new StringWriter().Write;
+            internalContext.Log = sink;
 
             mockDispatchers.Verify(
-                m => m.AddInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Writer == writer)),
+                m => m.AddInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Sink == sink)),
                 Times.Once());
 
-            // Setting same writer again is a no-op
-            internalContext.Log = writer;
+            // Setting same sink again is a no-op
+            internalContext.Log = sink;
 
             mockDispatchers.Verify(
-                m => m.AddInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Writer == writer)),
+                m => m.AddInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Sink == sink)),
                 Times.Once());
         }
 
         [Fact]
-        public void Setting_log_again_reoplaces_the_existing_writer()
+        public void Setting_log_again_reoplaces_the_existing_sink()
         {
             var mockDispatchers = new Mock<Dispatchers>();
 
@@ -312,18 +312,18 @@ namespace System.Data.Entity.Internal
             var internalContext = new LazyInternalContext(
                 context, new Mock<IInternalConnection>().Object, null, null, null, mockDispatchers.Object);
 
-            var writer = new Mock<TextWriter>().Object;
-            internalContext.Log = writer;
+            Action<string> sink = new StringWriter().Write;
+            internalContext.Log = sink;
 
-            var newWriter = new Mock<TextWriter>().Object;
-            internalContext.Log = newWriter;
+            Action<string> newSink = new StringWriter().Write;
+            internalContext.Log = newSink;
 
             mockDispatchers.Verify(
-                m => m.RemoveInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Writer == writer)),
+                m => m.RemoveInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Sink == sink)),
                 Times.Once());
             
             mockDispatchers.Verify(
-                m => m.AddInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Writer == newWriter)),
+                m => m.AddInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Sink == newSink)),
                 Times.Once());
             
             mockDispatchers.Verify(
@@ -340,17 +340,17 @@ namespace System.Data.Entity.Internal
             var internalContext = new LazyInternalContext(
                 context, new Mock<IInternalConnection>().Object, null, null, null, mockDispatchers.Object);
 
-            var writer = new Mock<TextWriter>().Object;
-            internalContext.Log = writer;
+            Action<string> sink = new StringWriter().Write;
+            internalContext.Log = sink;
             internalContext.Log = null;
 
             mockDispatchers.Verify(
-                m => m.RemoveInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Writer == writer)),
+                m => m.RemoveInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Sink == sink)),
                 Times.Once());
         }
 
         [Fact]
-        public void Log_returns_the_current_writer_in_use_or_null()
+        public void Log_returns_the_current_sink_in_use_or_null()
         {
             var mockDispatchers = new Mock<Dispatchers>();
 
@@ -359,10 +359,10 @@ namespace System.Data.Entity.Internal
                 context, new Mock<IInternalConnection>().Object, null, null, null, mockDispatchers.Object);
 
             Assert.Null(internalContext.Log);
-            
-            var writer = new Mock<TextWriter>().Object;
-            internalContext.Log = writer;
-            Assert.Same(writer, internalContext.Log);
+
+            Action<string> sink = new StringWriter().Write;
+            internalContext.Log = sink;
+            Assert.Same(sink, internalContext.Log);
 
             internalContext.Log = null;
             Assert.Null(internalContext.Log);
@@ -377,13 +377,13 @@ namespace System.Data.Entity.Internal
             var internalContext = new LazyInternalContext(
                 context, new Mock<IInternalConnection>().Object, null, null, null, mockDispatchers.Object);
 
-            var writer = new Mock<TextWriter>().Object;
-            internalContext.Log = writer;
+            Action<string> sink = new StringWriter().Write;
+            internalContext.Log = sink;
 
             internalContext.Dispose();
 
             mockDispatchers.Verify(
-                m => m.RemoveInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Writer == writer)),
+                m => m.RemoveInterceptor(It.Is<DbCommandLogger>(l => l.Context == context && l.Sink == sink)),
                 Times.Once());
         }
     }

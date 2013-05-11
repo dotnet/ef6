@@ -342,7 +342,7 @@ namespace System.Data.Entity.Core.EntityClient
                         CallBase = true
                     };
 
-                var mockInterceptor = new Mock<DbInterceptor>
+                var mockInterceptor = new Mock<DbCommandInterceptor>
                     {
                         CallBase = true
                     };
@@ -360,11 +360,9 @@ namespace System.Data.Entity.Core.EntityClient
 
                 dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), CommandBehavior.Default);
                 mockInterceptor.Verify(
-                    m => m.ReaderExecuting(dbCommandMock.Object, It.IsAny<DbCommandInterceptionContext>()));
+                    m => m.ReaderExecuting(dbCommandMock.Object, It.IsAny<DbCommandInterceptionContext<DbDataReader>>()));
                 mockInterceptor.Verify(
-                    m =>
-                    m.ReaderExecuted(
-                        dbCommandMock.Object, It.IsAny<DbDataReader>(), It.IsAny<DbCommandInterceptionContext>()));
+                    m => m.ReaderExecuted(dbCommandMock.Object, It.IsAny<DbCommandInterceptionContext<DbDataReader>>()));
             }
 
             [Fact]

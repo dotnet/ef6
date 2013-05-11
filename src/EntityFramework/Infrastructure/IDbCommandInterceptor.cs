@@ -16,7 +16,7 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext);
+        void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext<int> interceptionContext);
 
         /// <summary>
         ///     This method is called after a call to <see cref="DbCommand.ExecuteNonQuery" />  or
@@ -28,10 +28,8 @@ namespace System.Data.Entity.Infrastructure
         ///     or failed.
         /// </remarks>
         /// <param name="command">The command being executed.</param>
-        /// <param name="result">The result of the command execution.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        /// <returns>The result to be used by Entity Framework.</returns>
-        int NonQueryExecuted(DbCommand command, int result, DbCommandInterceptionContext interceptionContext);
+        void NonQueryExecuted(DbCommand command, DbCommandInterceptionContext<int> interceptionContext);
 
         /// <summary>
         ///     This method is called before a call to <see cref="DbCommand.ExecuteReader(CommandBehavior)" />  or
@@ -39,7 +37,7 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        void ReaderExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext);
+        void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext);
 
         /// <summary>
         ///     This method is called after a call to <see cref="DbCommand.ExecuteReader(CommandBehavior)" />  or
@@ -51,10 +49,8 @@ namespace System.Data.Entity.Infrastructure
         ///     or failed.
         /// </remarks>
         /// <param name="command">The command being executed.</param>
-        /// <param name="result">The result of the command execution.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        /// <returns>The result to be used by Entity Framework.</returns>
-        DbDataReader ReaderExecuted(DbCommand command, DbDataReader result, DbCommandInterceptionContext interceptionContext);
+        void ReaderExecuted(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext);
 
         /// <summary>
         ///     This method is called before a call to <see cref="DbCommand.ExecuteScalar" />  or
@@ -62,7 +58,7 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        void ScalarExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext);
+        void ScalarExecuting(DbCommand command, DbCommandInterceptionContext<object> interceptionContext);
 
         /// <summary>
         ///     This method is called after a call to <see cref="DbCommand.ExecuteScalar" />  or
@@ -74,9 +70,7 @@ namespace System.Data.Entity.Infrastructure
         ///     or failed.
         /// </remarks>
         /// <param name="command">The command being executed.</param>
-        /// <param name="result">The result of the command execution.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        /// <returns>The result to be used by Entity Framework.</returns>
-        object ScalarExecuted(DbCommand command, object result, DbCommandInterceptionContext interceptionContext);
+        void ScalarExecuted(DbCommand command, DbCommandInterceptionContext<object> interceptionContext);
     }
 }

@@ -56,7 +56,8 @@ namespace System.Data.Entity.Core.Common
 
                 providerServices.CreateCommandDefinition(mockCommandTree.Object);
 
-                mockCommandTreeInterceptor.Verify(m => m.TreeCreated(mockCommandTree.Object, It.IsAny<DbInterceptionContext>()), Times.Once());
+                mockCommandTreeInterceptor.Verify(
+                    m => m.TreeCreated(mockCommandTree.Object, It.IsAny<DbCommandTreeInterceptionContext>()), Times.Once());
             }
         }
 

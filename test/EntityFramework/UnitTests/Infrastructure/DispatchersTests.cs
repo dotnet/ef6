@@ -54,19 +54,19 @@ namespace System.Data.Entity.Infrastructure
         {
             public abstract void CallMe();
 
-            public abstract void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext);
+            public abstract void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext<int> interceptionContext);
 
-            public abstract int NonQueryExecuted(DbCommand command, int result, DbCommandInterceptionContext interceptionContext);
+            public abstract void NonQueryExecuted(DbCommand command, DbCommandInterceptionContext<int> interceptionContext);
 
-            public abstract void ReaderExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext);
+            public abstract void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext);
 
-            public abstract DbDataReader ReaderExecuted(DbCommand command, DbDataReader result, DbCommandInterceptionContext interceptionContext);
+            public abstract void ReaderExecuted(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext);
 
-            public abstract void ScalarExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext);
+            public abstract void ScalarExecuting(DbCommand command, DbCommandInterceptionContext<object> interceptionContext);
 
-            public abstract object ScalarExecuted(DbCommand command, object result, DbCommandInterceptionContext interceptionContext);
+            public abstract void ScalarExecuted(DbCommand command, DbCommandInterceptionContext<object> interceptionContext);
 
-            public abstract DbCommandTree TreeCreated(DbCommandTree commandTree, DbInterceptionContext interceptionContext);
+            public abstract void TreeCreated(DbCommandTree commandTree, DbCommandTreeInterceptionContext interceptionContext);
 
             public abstract bool CommandExecuting(DbCommand command, DbInterceptionContext interceptionContext);
 

@@ -12,16 +12,16 @@ namespace System.Data.Entity.Infrastructure
     {
         /// <summary>
         ///     This method is called after a new <see cref="DbCommandTree" /> has been created.
-        ///     This method should return the given tree. However, the tree used by Entity Framework
-        ///     can be changed by returning a different value.
+        ///     The tree that is used after interception can be changed by setting
+        ///     <see cref="DbCommandTreeInterceptionContext.Result" /> while intercepting.
         /// </summary>
         /// <remarks>
         ///     Command trees are created for both queries and insert/update/delete commands. However, query
         ///     command trees are cached by model which means that command tree creation only happens the
         ///     first time a query is executed and this notification will only happen at that time
         /// </remarks>
-        /// <param name="command">The tree that has been created.</param>
+        /// <param name="commandTree">The tree that has been created.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        DbCommandTree TreeCreated(DbCommandTree commandTree, DbInterceptionContext interceptionContext);
+        void TreeCreated(DbCommandTree commandTree, DbCommandTreeInterceptionContext interceptionContext);
     }
 }

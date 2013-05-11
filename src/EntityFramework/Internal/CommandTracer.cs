@@ -55,14 +55,12 @@ namespace System.Data.Entity.Internal
             return true;
         }
 
-        public DbCommandTree TreeCreated(DbCommandTree commandTree, DbInterceptionContext interceptionContext)
+        public void TreeCreated(DbCommandTree commandTree, DbCommandTreeInterceptionContext interceptionContext)
         {
             if (interceptionContext.DbContexts.Contains(_context, ReferenceEquals))
             {
                 _commandTrees.Add(commandTree);
             }
-
-            return commandTree;
         }
 
         public bool ConnectionOpening(EntityConnection connection, DbInterceptionContext interceptionContext)

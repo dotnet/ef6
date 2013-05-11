@@ -389,11 +389,11 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        public class TestNonQueryInterceptor : DbInterceptor
+        public class TestNonQueryInterceptor : DbCommandInterceptor
         {
             public readonly List<DbCommand> Commands = new List<DbCommand>();
 
-            public override void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
+            public override void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext<int> interceptionContext)
             {
                 Commands.Add(command);
 
@@ -402,11 +402,11 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        public class TestScalarInterceptor : DbInterceptor
+        public class TestScalarInterceptor : DbCommandInterceptor
         {
             public readonly List<DbCommand> Commands = new List<DbCommand>();
 
-            public override void ScalarExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
+            public override void ScalarExecuting(DbCommand command, DbCommandInterceptionContext<object> interceptionContext)
             {
                 Commands.Add(command);
 
@@ -415,11 +415,11 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        public class TestReaderInterceptor : DbInterceptor
+        public class TestReaderInterceptor : DbCommandInterceptor
         {
             public readonly List<DbCommand> Commands = new List<DbCommand>();
 
-            public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
+            public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
             {
                 Commands.Add(command);
 

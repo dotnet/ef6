@@ -5,6 +5,7 @@ namespace System.Data.Entity.Interception
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -29,7 +30,7 @@ namespace System.Data.Entity.Interception
             var log = new StringWriter();
             using (var context = new BlogContextNoInit())
             {
-                context.Database.Log = log;
+                context.Database.Log = log.Write;
                 BlogContext.DoStuff(context);
             }
 
@@ -55,12 +56,12 @@ namespace System.Data.Entity.Interception
             Assert.Equal(asyncCount, logLines.Count(l => _resourceVerifier.IsMatch("CommandLogAsync", l)));
 
             Assert.Equal(paramCount, logLines.Count(l => l.StartsWith("-- @")));
-            Assert.Equal(1, logLines.Count(l => l.StartsWith("-- @") && l.EndsWith("[Throw it away...]")));
-            Assert.Equal(imALoggerCount, logLines.Count(l => l.StartsWith("-- @") && l.EndsWith("[I'm a logger and I'm okay...]")));
-            Assert.Equal(paramCount / 2, logLines.Count(l => l.StartsWith("-- @") && l.EndsWith("[1]")));
+            Assert.Equal(1, logLines.Count(l => l.StartsWith("-- @") && l.Contains("'Throw it away...'")));
+            Assert.Equal(imALoggerCount, logLines.Count(l => l.StartsWith("-- @") && l.Contains("'I'm a logger and I'm okay...'")));
+            Assert.Equal(paramCount / 2, logLines.Count(l => l.StartsWith("-- @") && l.Contains("'1'")));
 
-            Assert.Equal(selectCount, logLines.Count(l => _resourceVerifier.IsMatch("CommandLogComplete", l, "SqlDataReader")));
-            Assert.Equal(updateCount, logLines.Count(l => _resourceVerifier.IsMatch("CommandLogComplete", l, "1")));
+            Assert.Equal(selectCount, logLines.Count(l => _resourceVerifier.IsMatch("CommandLogComplete", l, new AnyValueParameter(), "SqlDataReader", "")));
+            Assert.Equal(updateCount, logLines.Count(l => _resourceVerifier.IsMatch("CommandLogComplete", l, new AnyValueParameter(), "1", "")));
         }
 
         [Fact]
@@ -70,15 +71,15 @@ namespace System.Data.Entity.Interception
             var log = new StringWriter();
             using (var context = new BlogContextNoInit())
             {
-                context.Database.Log = log;
+                context.Database.Log = log.Write;
                 exception = Assert.Throws<SqlException>(() => context.Blogs.SqlQuery("select * from No.Chance").ToList());
             }
 
             var logLines = log.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
-            Assert.Equal(4, logLines.Length);
+            Assert.Equal(5, logLines.Length);
             Assert.Equal("select * from No.Chance", logLines[0]);
-            _resourceVerifier.VerifyMatch("CommandLogFailed", logLines[1], exception.Message);
+            _resourceVerifier.VerifyMatch("CommandLogFailed", logLines[2], new AnyValueParameter(), exception.Message, "");
         }
 
 #if !NET40
@@ -89,7 +90,7 @@ namespace System.Data.Entity.Interception
             var log = new StringWriter();
             using (var context = new BlogContextNoInit())
             {
-                context.Database.Log = log;
+                context.Database.Log = log.Write;
                 var query = context.Blogs.SqlQuery("select * from No.Chance").ToListAsync();
 
                 exception = Assert.Throws<AggregateException>(() => query.Wait()).InnerException;
@@ -99,8 +100,8 @@ namespace System.Data.Entity.Interception
 
             Assert.Equal(5, logLines.Length);
             Assert.Equal("select * from No.Chance", logLines[0]);
-            _resourceVerifier.VerifyMatch("CommandLogAsync", logLines[1]);
-            _resourceVerifier.VerifyMatch("CommandLogFailed", logLines[2], exception.Message);
+            _resourceVerifier.VerifyMatch("CommandLogAsync", logLines[1], new AnyValueParameter(), "");
+            _resourceVerifier.VerifyMatch("CommandLogFailed", logLines[2], new AnyValueParameter(), exception.Message, "");
         }
 
         [Fact]
@@ -109,7 +110,7 @@ namespace System.Data.Entity.Interception
             var log = new StringWriter();
             using (var context = new BlogContextNoInit())
             {
-                context.Database.Log = log;
+                context.Database.Log = log.Write;
 
                 context.Database.Connection.Open();
 
@@ -127,8 +128,8 @@ namespace System.Data.Entity.Interception
 
             Assert.Equal(5, logLines.Length);
             Assert.Equal("update Blogs set Title = 'No' where Id = -1", logLines[0]);
-            _resourceVerifier.VerifyMatch("CommandLogAsync", logLines[1]);
-            _resourceVerifier.VerifyMatch("CommandLogCanceled", logLines[2]);
+            _resourceVerifier.VerifyMatch("CommandLogAsync", logLines[1], new AnyValueParameter(), "");
+            _resourceVerifier.VerifyMatch("CommandLogCanceled", logLines[2], new AnyValueParameter(), "");
         }
 #endif
 
@@ -143,7 +144,7 @@ namespace System.Data.Entity.Interception
 
                 using (var context = new BlogContextNoInit())
                 {
-                    context.Database.Log = log;
+                    context.Database.Log = log.Write;
                     var blog = context.Blogs.Single();
                     Assert.Equal("Half a Unicorn", blog.Title);
                 }
@@ -168,22 +169,27 @@ namespace System.Data.Entity.Interception
 
         public class TestDbCommandLogger : DbCommandLogger
         {
-            public TestDbCommandLogger(DbContext context, TextWriter writer)
-                : base(context, writer)
+            public TestDbCommandLogger(DbContext context, Action<string> sink)
+                : base(context, sink)
             {
             }
 
             public override void LogCommand(DbCommand command, DbCommandInterceptionContext interceptionContext)
             {
-                Writer.WriteLine(
-                    "Context '{0}' is executing command '{1}'",
-                    Context.GetType().Name,
-                    command.CommandText.Replace(Environment.NewLine, ""));
+                Sink(
+                    string.Format(
+                        CultureInfo.CurrentCulture,
+                        "Context '{0}' is executing command '{1}'{2}",
+                        Context.GetType().Name,
+                        command.CommandText.Replace(Environment.NewLine, ""), Environment.NewLine));
             }
 
             public override void LogResult(DbCommand command, object result, DbCommandInterceptionContext interceptionContext)
             {
-                Writer.WriteLine("Context '{0}' finished executing command", Context.GetType().Name);
+                Sink(
+                    string.Format(
+                        CultureInfo.CurrentCulture, "Context '{0}' finished executing command{1}", Context.GetType().Name,
+                        Environment.NewLine));
             }
         }
     }

@@ -13446,35 +13446,43 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "-- Failed: {0}"
+        ///     A string like "-- Failed in {0} ms with error: {1}{2}"
         /// </summary>
-        internal static string CommandLogFailed(object p0)
+        internal static string CommandLogFailed(object p0, object p1, object p2)
         {
-            return EntityRes.GetString(EntityRes.CommandLogFailed, p0);
+            return EntityRes.GetString(EntityRes.CommandLogFailed, p0, p1, p2);
         }
 
         /// <summary>
-        ///     A string like "-- Canceled"
+        ///     A string like "-- Canceled in {0} ms{1}"
         /// </summary>
-        internal static string CommandLogCanceled
+        internal static string CommandLogCanceled(object p0, object p1)
         {
-            get { return EntityRes.GetString(EntityRes.CommandLogCanceled); }
+            return EntityRes.GetString(EntityRes.CommandLogCanceled, p0, p1);
         }
 
         /// <summary>
-        ///     A string like "-- Completed with result: {0}"
+        ///     A string like "-- Completed in {0} ms with result: {1}{2}"
         /// </summary>
-        internal static string CommandLogComplete(object p0)
+        internal static string CommandLogComplete(object p0, object p1, object p2)
         {
-            return EntityRes.GetString(EntityRes.CommandLogComplete, p0);
+            return EntityRes.GetString(EntityRes.CommandLogComplete, p0, p1, p2);
         }
 
         /// <summary>
-        ///     A string like "-- Executing asynchronously"
+        ///     A string like "-- Executing asynchronously at {0}{1}"
         /// </summary>
-        internal static string CommandLogAsync
+        internal static string CommandLogAsync(object p0, object p1)
         {
-            get { return EntityRes.GetString(EntityRes.CommandLogAsync); }
+            return EntityRes.GetString(EntityRes.CommandLogAsync, p0, p1);
+        }
+
+        /// <summary>
+        ///     A string like "-- Executing at {0}{1}"
+        /// </summary>
+        internal static string CommandLogNonAsync(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.CommandLogNonAsync, p0, p1);
         }
 
         /// <summary>
@@ -16864,6 +16872,7 @@ namespace System.Data.Entity.Resources
         internal const string CommandLogCanceled = "CommandLogCanceled";
         internal const string CommandLogComplete = "CommandLogComplete";
         internal const string CommandLogAsync = "CommandLogAsync";
+        internal const string CommandLogNonAsync = "CommandLogNonAsync";
         internal const string ErrorGeneratingCommandTree = "ErrorGeneratingCommandTree";
 
         private static EntityRes loader;

@@ -11,18 +11,15 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     /// <remarks>
     ///     Delegates of this type are used to create instances derived from <see cref="DbCommandLogger" />
-    ///     for use with <see cref="Database.Log" /> to log generated SQL to a <see cref="TextWriter" />.
+    ///     for use with <see cref="Database.Log" /> to log generated SQL to a <see cref="Action{String}"/> sink.
     ///     The factory is set on <see cref="DbConfiguration.SetCommandLogger" />
     /// </remarks>
     /// <param name="context">
     ///     The <see cref="DbContext" /> for which command will be logged.
     /// </param>
-    /// <param name="writer">
-    ///     The  <see cref="TextWriter" />
-    /// </param>
-    /// to which log output will be written.
+    /// <param name="sink">The delegate to which output will be sent.</param>
     /// <returns>
     ///     The <see cref="DbCommandLogger" /> to use.
     /// </returns>
-    public delegate DbCommandLogger DbCommandLoggerFactory(DbContext context, TextWriter writer);
+    public delegate DbCommandLogger DbCommandLoggerFactory(DbContext context, Action<string> sink);
 }

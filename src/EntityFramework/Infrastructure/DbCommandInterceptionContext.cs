@@ -15,7 +15,7 @@ namespace System.Data.Entity.Infrastructure
     ///     Instances of this class are publicly immutable. To add contextual information use one of the
     ///     With... or As... methods to create a new interception context containing the new information.
     /// </remarks>
-    public class DbCommandInterceptionContext : DbInterceptionContext
+    public abstract class DbCommandInterceptionContext : DbInterceptionContext
     {
         private bool _isAsync;
         private TaskStatus _taskStatus;
@@ -24,16 +24,16 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Constructs a new <see cref="DbCommandInterceptionContext" /> with no state.
         /// </summary>
-        public DbCommandInterceptionContext()
+        protected DbCommandInterceptionContext()
         {
         }
 
         /// <summary>
         ///     Creates a new <see cref="DbCommandInterceptionContext" /> by copying state from the given
-        ///     interception context. Also see <see cref="DbCommandInterceptionContext.Clone" />
+        ///     interception context. Also see <see cref="DbInterceptionContext.Clone" />
         /// </summary>
         /// <param name="copyFrom">The context from which to copy state.</param>
-        public DbCommandInterceptionContext(DbInterceptionContext copyFrom)
+        protected DbCommandInterceptionContext(DbInterceptionContext copyFrom)
             : base(copyFrom)
         {
             var asThisType = copyFrom as DbCommandInterceptionContext;
@@ -113,12 +113,6 @@ namespace System.Data.Entity.Infrastructure
         private DbCommandInterceptionContext TypedClone()
         {
             return (DbCommandInterceptionContext)Clone();
-        }
-
-        /// <inheritdoc />
-        protected override DbInterceptionContext Clone()
-        {
-            return new DbCommandInterceptionContext(this);
         }
 
         /// <summary>

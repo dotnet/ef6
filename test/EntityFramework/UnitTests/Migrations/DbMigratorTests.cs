@@ -495,7 +495,7 @@ namespace System.Data.Entity.Migrations
                     Sql = "Some Sql"
                 };
 
-            var mockInterceptor = new Mock<DbInterceptor> { CallBase = true };
+            var mockInterceptor = new Mock<DbCommandInterceptor> { CallBase = true };
             Interception.AddInterceptor(mockInterceptor.Object);
 
             try
@@ -507,8 +507,8 @@ namespace System.Data.Entity.Migrations
                 Interception.RemoveInterceptor(mockInterceptor.Object);
             }
 
-            mockInterceptor.Verify(m => m.NonQueryExecuting(mockCommand.Object, It.IsAny<DbCommandInterceptionContext>()));
-            mockInterceptor.Verify(m => m.NonQueryExecuted(mockCommand.Object, 2013, It.IsAny<DbCommandInterceptionContext>()));
+            mockInterceptor.Verify(m => m.NonQueryExecuting(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<int>>()));
+            mockInterceptor.Verify(m => m.NonQueryExecuted(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<int>>()));
         }
 
         [Fact]
@@ -539,7 +539,7 @@ namespace System.Data.Entity.Migrations
                 SuppressTransaction = true
             };
 
-            var mockInterceptor = new Mock<DbInterceptor> { CallBase = true };
+            var mockInterceptor = new Mock<DbCommandInterceptor> { CallBase = true };
             Interception.AddInterceptor(mockInterceptor.Object);
 
             try
@@ -553,12 +553,11 @@ namespace System.Data.Entity.Migrations
 
             mockInterceptor.Verify(m => m.NonQueryExecuting(
                 mockCommand.Object,
-                It.Is<DbCommandInterceptionContext>(c => c.DbContexts.Contains(context))));
+                It.Is<DbCommandInterceptionContext<int>>(c => c.DbContexts.Contains(context))));
             
             mockInterceptor.Verify(m => m.NonQueryExecuted(
                 mockCommand.Object, 
-                2013,
-                It.Is<DbCommandInterceptionContext>(c => c.DbContexts.Contains(context))));
+                It.Is<DbCommandInterceptionContext<int>>(c => c.DbContexts.Contains(context) && c.Result == 2013)));
         }
     }
 }

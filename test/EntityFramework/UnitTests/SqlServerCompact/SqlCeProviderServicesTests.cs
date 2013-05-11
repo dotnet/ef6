@@ -106,11 +106,11 @@ namespace System.Data.Entity.SqlServerCompact
                 }
             }
 
-            public class TestNonQueryInterceptor : DbInterceptor
+            public class TestNonQueryInterceptor : DbCommandInterceptor
             {
                 public readonly List<string> CommandTexts = new List<string>();
 
-                public override void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
+                public override void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext<int> interceptionContext)
                 {
                     CommandTexts.Add(command.CommandText);
 

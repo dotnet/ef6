@@ -230,13 +230,13 @@ namespace System.Data.Entity.Config
             Assert.IsType<DbCommandLoggerFactory>(factory);
 
             var context = new Mock<DbContext>().Object;
-            var writer = new Mock<TextWriter>().Object;
+            Action<string> sink = new StringWriter().Write;
 
-            var logger = factory(context, writer);
+            var logger = factory(context, sink);
 
             Assert.IsType<DbCommandLogger>(logger);
             Assert.Same(context, logger.Context);
-            Assert.Same(writer, logger.Writer);
+            Assert.Same(sink, logger.Sink);
         }
     }
 }

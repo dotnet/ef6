@@ -5362,16 +5362,19 @@
     <value>Attempt to add member {0} to structural type {1} failed. Member has DataSpace {2}, structural type has DataSpace {3}. They must be the same.</value>
   </data>
   <data name="CommandLogFailed" xml:space="preserve">
-    <value>-- Failed: {0}</value>
+    <value>-- Failed in {0} ms with error: {1}{2}</value>
   </data>
   <data name="CommandLogCanceled" xml:space="preserve">
-    <value>-- Canceled</value>
+    <value>-- Canceled in {0} ms{1}</value>
   </data>
   <data name="CommandLogComplete" xml:space="preserve">
-    <value>-- Completed with result: {0}</value>
+    <value>-- Completed in {0} ms with result: {1}{2}</value>
   </data>
   <data name="CommandLogAsync" xml:space="preserve">
-    <value>-- Executing asynchronously</value>
+    <value>-- Executing asynchronously at {0}{1}</value>
+  </data>
+  <data name="CommandLogNonAsync" xml:space="preserve">
+    <value>-- Executing at {0}{1}</value>
   </data>
   <data name="ErrorGeneratingCommandTree" xml:space="preserve">
     <value>An error occurred while attempting to generate the body SQL of the stored procedure '{0}' for entity type '{1}'. This can happen if the entity type has both a self-referencing association and a store-generated key. See the inner exception for details.</value>

@@ -255,3 +255,6 @@ using System.Diagnostics.CodeAnalysis;
 [assembly:
     SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Scope = "type",
         Target = "System.Data.Entity.Core.EntityClient.Internal.EntityCommandDefinition")]
+[assembly:
+    SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "ms", Scope = "resource",
+        Target = "System.Data.Entity.Properties.Resources.resources")]

@@ -71,11 +71,27 @@ namespace System.Data.Entity.Infrastructure
         }
 
         public TResult Dispatch<TInterceptionContext, TResult>(
+            TResult result,
+            TInterceptionContext interceptionContext,
+            Action<TInterceptor> intercept)
+            where TInterceptionContext : DbInterceptionContext, IDbInterceptionContextWithResult<TResult>
+        {
+            if (_interceptors.Count == 0)
+            {
+                return result;
+            }
+
+            interceptionContext.Result = result;
+            _interceptors.Each(intercept);
+            return interceptionContext.Result;
+        }
+
+        public TResult Dispatch<TInterceptionContext, TResult>(
             Func<TResult> operation,
             TInterceptionContext interceptionContext,
             Action<TInterceptor> executing,
-            Func<TResult, TInterceptor, TInterceptionContext, TResult> executed)
-            where TInterceptionContext : DbInterceptionContext
+            Action<TInterceptor, TInterceptionContext> executed)
+            where TInterceptionContext : DbInterceptionContext, IDbInterceptionContextWithResult<TResult>
         {
             if (_interceptors.Count == 0)
             {
@@ -84,30 +100,32 @@ namespace System.Data.Entity.Infrastructure
 
             _interceptors.Each(executing);
 
-            var result = default(TResult);
-
+            TResult result;
             try
             {
-                result = operation();
+                result = interceptionContext.IsResultSet ? interceptionContext.Result : operation();
             }
             catch (Exception ex)
             {
                 interceptionContext = (TInterceptionContext)interceptionContext.WithException(ex);
-                _interceptors.Aggregate(result, (r, i) => executed(r, i, interceptionContext));
+                _interceptors.Each(i => executed(i, interceptionContext));
 
                 throw;
             }
 
-            return _interceptors.Aggregate(result, (r, i) => executed(r, i, interceptionContext));
+            interceptionContext.Result = result;
+            _interceptors.Each(i => executed(i, interceptionContext));
+            return interceptionContext.Result;
         }
 
+#if !NET40
         public Task<TResult> Dispatch<TInterceptionContext, TResult>(
             Func<Task<TResult>> operation,
             TInterceptionContext interceptionContext,
             Action<TInterceptor> executing,
-            Func<TResult, TInterceptor, TInterceptionContext, TResult> executed,
+            Action<TInterceptor, TInterceptionContext> executed,
             Func<TInterceptionContext, Task, TInterceptionContext> updateInterceptionContext)
-            where TInterceptionContext : DbInterceptionContext
+            where TInterceptionContext : DbInterceptionContext, IDbInterceptionContextWithResult<TResult>
         {
             if (_interceptors.Count == 0)
             {
@@ -116,7 +134,7 @@ namespace System.Data.Entity.Infrastructure
 
             _interceptors.Each(executing);
 
-            var task = operation();
+            var task = interceptionContext.IsResultSet ? Task.FromResult(interceptionContext.Result) : operation();
 
             // This first continuation is setup to always run the "executed" interceptors even
             // if the task fails or is canceled.
@@ -131,7 +149,9 @@ namespace System.Data.Entity.Infrastructure
                             contextToPropagate = (TInterceptionContext)contextToPropagate.WithException(t.Exception.InnerException);
                         }
 
-                        return _interceptors.Aggregate(result, (r, i) => executed(r, i, contextToPropagate));
+                        contextToPropagate.Result = result;
+                        _interceptors.Each(i => executed(i, contextToPropagate));
+                        return contextToPropagate.Result;
                     }, TaskContinuationOptions.ExecuteSynchronously);
 
             // The second continuation is setup to transfer state from the original task into the
@@ -156,5 +176,6 @@ namespace System.Data.Entity.Infrastructure
 
             return tcs.Task;
         }
+#endif
     }
 }

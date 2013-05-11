@@ -157,11 +157,11 @@ namespace System.Data.Entity.SqlServer
                 Assert.Same(connection.CreateCommand(), interceptor.Commands.Single());
             }
 
-            public class TestReaderInterceptor : DbInterceptor
+            public class TestReaderInterceptor : DbCommandInterceptor
             {
                 public readonly List<DbCommand> Commands = new List<DbCommand>();
 
-                public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
+                public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
                 {
                     Commands.Add(command);
 

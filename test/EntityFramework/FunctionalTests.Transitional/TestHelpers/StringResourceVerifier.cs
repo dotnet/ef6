@@ -202,7 +202,18 @@ Actual:'{1}'",
             }
             else
             {
-                messageFromResources = string.Format(CultureInfo.InvariantCulture, messageFromResources, stringParameters);
+                Assert.True(stringParameters.Count(p => p is AnyValueParameter) <= 1, "Only one 'AnyValueParameter' allowed.");
+
+                messageFromResources = string.Format(CultureInfo.CurrentCulture, messageFromResources, stringParameters);
+
+                var anyValueParameter = stringParameters.OfType<AnyValueParameter>().SingleOrDefault();
+                if (anyValueParameter != null)
+                {
+                    var parts = messageFromResources.Split(new[] { anyValueParameter.ToString() }, StringSplitOptions.None);
+                    Assert.Equal(2, parts.Length);
+
+                    return parts.Length == 2 && actualMessage.StartsWith(parts[0]) && actualMessage.EndsWith(parts[1]);
+                }
 
                 return isExactMatch ? actualMessage == messageFromResources : actualMessage.Contains(messageFromResources);
             }

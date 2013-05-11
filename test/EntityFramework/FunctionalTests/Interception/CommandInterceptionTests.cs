@@ -319,7 +319,7 @@ namespace System.Data.Entity.Interception
                 get { return _log; }
             }
 
-            public void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
+            public void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext<int> interceptionContext)
             {
                 if (ShouldLog(interceptionContext))
                 {
@@ -327,16 +327,15 @@ namespace System.Data.Entity.Interception
                 }
             }
 
-            public int NonQueryExecuted(DbCommand command, int result, DbCommandInterceptionContext interceptionContext)
+            public void NonQueryExecuted(DbCommand command, DbCommandInterceptionContext<int> interceptionContext)
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.NonQueryExecuted, command, interceptionContext, result));
+                    _log.Add(new CommandLogItem(CommandMethod.NonQueryExecuted, command, interceptionContext, interceptionContext.Result));
                 }
-                return result;
             }
 
-            public void ReaderExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
+            public void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
             {
                 if (ShouldLog(interceptionContext))
                 {
@@ -344,18 +343,16 @@ namespace System.Data.Entity.Interception
                 }
             }
 
-            public DbDataReader ReaderExecuted(
-                DbCommand command, DbDataReader result, DbCommandInterceptionContext interceptionContext)
+            public void ReaderExecuted(
+                DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.ReaderExecuted, command, interceptionContext, result));
+                    _log.Add(new CommandLogItem(CommandMethod.ReaderExecuted, command, interceptionContext, interceptionContext.Result));
                 }
-
-                return result;
             }
 
-            public void ScalarExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
+            public void ScalarExecuting(DbCommand command, DbCommandInterceptionContext<object> interceptionContext)
             {
                 if (ShouldLog(interceptionContext))
                 {
@@ -363,14 +360,12 @@ namespace System.Data.Entity.Interception
                 }
             }
 
-            public object ScalarExecuted(DbCommand command, object result, DbCommandInterceptionContext interceptionContext)
+            public void ScalarExecuted(DbCommand command, DbCommandInterceptionContext<object> interceptionContext)
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.ScalarExecuted, command, interceptionContext, result));
+                    _log.Add(new CommandLogItem(CommandMethod.ScalarExecuted, command, interceptionContext, interceptionContext.Result));
                 }
-
-                return result;
             }
 
             private bool ShouldLog(DbInterceptionContext interceptionContext)

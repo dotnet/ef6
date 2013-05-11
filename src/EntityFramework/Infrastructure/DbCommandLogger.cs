@@ -6,12 +6,14 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Config;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.IO;
+    using System.Diagnostics;
+    using System.Globalization;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     This is the default logger used when some <see cref="TextWriter" /> is set onto the <see cref="Database.Log" />
+    ///     This is the default logger used when some <see cref="Action{String}" /> is set onto the <see cref="Database.Log" />
     ///     property. A different logger can be used by creating a class that inherits from this class and overrides
     ///     some or all methods to change behavior.
     /// </summary>
@@ -19,30 +21,31 @@ namespace System.Data.Entity.Infrastructure
     ///     To set the new logger create a code-based configuration for EF using <see cref="DbConfiguration" /> and then
     ///     set the logger class to use with <see cref="DbConfiguration.SetCommandLogger" />.
     ///     Note that setting the type of logger to use with this method does change the way command are
-    ///     logged when <see cref="Database.Log" />is used. It is still necessary to set a <see cref="TextWriter" />
-    ///     instance onto <see cref="Database.Log" /> before any commands will be logged.
+    ///     logged when <see cref="Database.Log" />is used. It is still necessary to set a <see cref="Action{String}" />
+    ///     onto <see cref="Database.Log" /> before any commands will be logged.
     ///     For more low-level control over logging/interception see <see cref="IDbCommandInterceptor" /> and
     ///     <see cref="Interception" />.
     /// </remarks>
     public class DbCommandLogger : IDbCommandInterceptor
     {
         private readonly DbContext _context;
-        private readonly TextWriter _writer;
+        private readonly Action<string> _sink;
+        private readonly Stopwatch _stopwatch = new Stopwatch();
 
         /// <summary>
         ///     Creates a logger that will not filter by any <see cref="DbContext" /> and will instead log every command
         ///     from any context and also commands that do not originate from a context.
         /// </summary>
         /// <remarks>
-        ///     This constructor is not used when a writer is set on <see cref="Database.Log" />. Instead it can be
+        ///     This constructor is not used when a delegate is set on <see cref="Database.Log" />. Instead it can be
         ///     used by setting the logger directly using <see cref="Interception.AddInterceptor" />.
         /// </remarks>
-        /// <param name="writer">The writer to which commands will be logged.</param>
-        public DbCommandLogger(TextWriter writer)
+        /// <param name="sink">The delegate to which output will be sent.</param>
+        public DbCommandLogger(Action<string> sink)
         {
-            Check.NotNull(writer, "writer");
+            Check.NotNull(sink, "sink");
 
-            _writer = writer;
+            _sink = sink;
         }
 
         /// <summary>
@@ -53,14 +56,14 @@ namespace System.Data.Entity.Infrastructure
         ///     of <see cref="Database.Log" />.
         /// </remarks>
         /// <param name="context">The context for which commands should be logged.</param>
-        /// <param name="writer">The writer to which commands will be logged.</param>
-        public DbCommandLogger(DbContext context, TextWriter writer)
+        /// <param name="sink">The delegate to which output will be sent.</param>
+        public DbCommandLogger(DbContext context, Action<string> sink)
         {
             Check.NotNull(context, "context");
-            Check.NotNull(writer, "writer");
+            Check.NotNull(sink, "sink");
 
             _context = context;
-            _writer = writer;
+            _sink = sink;
         }
 
         /// <summary>
@@ -73,11 +76,19 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     The writer to which commands are being logged.
+        ///     The delegate to which output is being sent.
         /// </summary>
-        public TextWriter Writer
+        public Action<string> Sink
         {
-            get { return _writer; }
+            get { return _sink; }
+        }
+
+        /// <summary>
+        ///     The stop watch used to time executions.
+        /// </summary>
+        public Stopwatch Stopwatch
+        {
+            get { return _stopwatch; }
         }
 
         /// <summary>
@@ -87,12 +98,13 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        public virtual void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
+        public virtual void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext<int> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             Executing(command, interceptionContext);
+            Stopwatch.Restart();
         }
 
         /// <summary>
@@ -101,16 +113,14 @@ namespace System.Data.Entity.Infrastructure
         ///     The default implementation calls <see cref="Executed" />
         /// </summary>
         /// <param name="command">The command being executed.</param>
-        /// <param name="result">The result of the command execution.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        /// <returns>The result to be used by Entity Framework.</returns>
-        public virtual int NonQueryExecuted(DbCommand command, int result, DbCommandInterceptionContext interceptionContext)
+        public virtual void NonQueryExecuted(DbCommand command, DbCommandInterceptionContext<int> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            Executed(command, result, interceptionContext);
-            return result;
+            Stopwatch.Stop();
+            Executed(command, interceptionContext.Result, interceptionContext);
         }
 
         /// <summary>
@@ -120,12 +130,13 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        public virtual void ReaderExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
+        public virtual void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             Executing(command, interceptionContext);
+            Stopwatch.Restart();
         }
 
         /// <summary>
@@ -134,16 +145,14 @@ namespace System.Data.Entity.Infrastructure
         ///     The default implementation calls <see cref="Executed" />
         /// </summary>
         /// <param name="command">The command being executed.</param>
-        /// <param name="result">The result of the command execution.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        /// <returns>The result to be used by Entity Framework.</returns>
-        public virtual DbDataReader ReaderExecuted(DbCommand command, DbDataReader result, DbCommandInterceptionContext interceptionContext)
+        public virtual void ReaderExecuted(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            Executed(command, result, interceptionContext);
-            return result;
+            Stopwatch.Stop();
+            Executed(command, interceptionContext.Result, interceptionContext);
         }
 
         /// <summary>
@@ -153,12 +162,13 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        public virtual void ScalarExecuting(DbCommand command, DbCommandInterceptionContext interceptionContext)
+        public virtual void ScalarExecuting(DbCommand command, DbCommandInterceptionContext<object> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             Executing(command, interceptionContext);
+            Stopwatch.Restart();
         }
 
         /// <summary>
@@ -167,16 +177,14 @@ namespace System.Data.Entity.Infrastructure
         ///     The default implementation calls <see cref="Executed" />
         /// </summary>
         /// <param name="command">The command being executed.</param>
-        /// <param name="result">The result of the command execution.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        /// <returns>The result to be used by Entity Framework.</returns>
-        public virtual object ScalarExecuted(DbCommand command, object result, DbCommandInterceptionContext interceptionContext)
+        public virtual void ScalarExecuted(DbCommand command, DbCommandInterceptionContext<object> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            Executed(command, result, interceptionContext);
-            return result;
+            Stopwatch.Stop();
+            Executed(command, interceptionContext.Result, interceptionContext);
         }
 
         /// <summary>
@@ -192,8 +200,8 @@ namespace System.Data.Entity.Infrastructure
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            if (_context == null
-                || interceptionContext.DbContexts.Contains(_context, ReferenceEquals))
+            if (Context == null
+                || interceptionContext.DbContexts.Contains(Context, ReferenceEquals))
             {
                 LogCommand(command, interceptionContext);
             }
@@ -213,8 +221,8 @@ namespace System.Data.Entity.Infrastructure
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            if (_context == null
-                || interceptionContext.DbContexts.Contains(_context, ReferenceEquals))
+            if (Context == null
+                || interceptionContext.DbContexts.Contains(Context, ReferenceEquals))
             {
                 LogResult(command, result, interceptionContext);
             }
@@ -222,7 +230,7 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Called to log a command that is about to be executed. Override this method to change how the
-        ///     command is logged to <see cref="Writer" />.
+        ///     command is logged to <see cref="Sink" />.
         /// </summary>
         /// <param name="command">The command to be logged.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
@@ -233,11 +241,12 @@ namespace System.Data.Entity.Infrastructure
 
             if (command.CommandText.EndsWith(Environment.NewLine, StringComparison.Ordinal))
             {
-                _writer.Write(command.CommandText);
+                Sink(command.CommandText);
             }
             else
             {
-                _writer.WriteLine(command.CommandText);
+                Sink(command.CommandText);
+                Sink(Environment.NewLine);
             }
 
             foreach (var parameter in command.Parameters.OfType<DbParameter>())
@@ -245,16 +254,15 @@ namespace System.Data.Entity.Infrastructure
                 LogParameter(command, interceptionContext, parameter);
             }
 
-            if (interceptionContext.IsAsync)
-            {
-                _writer.WriteLine(Strings.CommandLogAsync);
-            }
+            Sink(interceptionContext.IsAsync
+                      ? Strings.CommandLogAsync(DateTime.Now, Environment.NewLine)
+                      : Strings.CommandLogNonAsync(DateTime.Now, Environment.NewLine));
         }
 
         /// <summary>
         ///     Called by <see cref="LogCommand" /> to log each parameter. This method can be called from an overridden
         ///     implementation of <see cref="LogCommand" /> to log parameters, and/or can be overridden to
-        ///     change the way that parameters are logged to <see cref="Writer" />.
+        ///     change the way that parameters are logged to <see cref="Sink" />.
         /// </summary>
         /// <param name="command">The command being logged.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
@@ -265,23 +273,48 @@ namespace System.Data.Entity.Infrastructure
             Check.NotNull(interceptionContext, "interceptionContext");
             Check.NotNull(parameter, "parameter");
 
-            // This is not a resource string because nothing in this string should be localized.
-            const string parameterFormat = "-- {0}: {1} {2}{3} (Size = {4}; Precision = {5}; Scale = {6}) [{7}]";
-            _writer.WriteLine(
-                parameterFormat,
-                parameter.ParameterName,
-                parameter.Direction,
-                (parameter.IsNullable ? "Nullable " : ""),
-                parameter.DbType,
-                parameter.Size,
-                ((IDbDataParameter)parameter).Precision,
-                ((IDbDataParameter)parameter).Scale,
-                (parameter.Value == null || parameter.Value == DBNull.Value ? "null" : parameter.Value));
+            // -- Name: [Value] (Type = {}, Direction = {}, IsNullable = {}, Size = {}, Precision = {} Scale = {})
+            var builder = new StringBuilder();
+            builder.Append("-- ")
+                .Append(parameter.ParameterName)
+                .Append(": '")
+                .Append((parameter.Value == null || parameter.Value == DBNull.Value) ? "null" : parameter.Value)
+                .Append("' (Type = ")
+                .Append(parameter.DbType);
+
+            if (parameter.Direction != ParameterDirection.Input)
+            {
+                builder.Append(", Direction = ").Append(parameter.Direction);
+            }
+
+            if (!parameter.IsNullable)
+            {
+                builder.Append(", IsNullable = false");
+            }
+
+            if (parameter.Size != 0)
+            {
+                builder.Append(", Size = ").Append(parameter.Size);
+            }
+
+            if (((IDbDataParameter)parameter).Precision != 0)
+            {
+                builder.Append(", Precision = ").Append(((IDbDataParameter)parameter).Precision);
+            }
+
+            if (((IDbDataParameter)parameter).Scale != 0)
+            {
+                builder.Append(", Scale = ").Append(((IDbDataParameter)parameter).Scale);
+            }
+
+            builder.Append(")").Append(Environment.NewLine);
+
+            Sink(builder.ToString());
         }
 
         /// <summary>
         ///     Called to log the result of executing a command. Override this method to change how results are
-        ///     logged to <see cref="Writer" />.
+        ///     logged to <see cref="Sink" />.
         /// </summary>
         /// <param name="command">The command being logged.</param>
         /// <param name="result">The result returned when the command was executed.</param>
@@ -293,11 +326,12 @@ namespace System.Data.Entity.Infrastructure
 
             if (interceptionContext.Exception != null)
             {
-                _writer.WriteLine(Strings.CommandLogFailed(interceptionContext.Exception.Message));
+                Sink(Strings.CommandLogFailed(
+                    Stopwatch.ElapsedMilliseconds, interceptionContext.Exception.Message, Environment.NewLine));
             }
             else if (interceptionContext.TaskStatus.HasFlag(TaskStatus.Canceled))
             {
-                _writer.WriteLine(Strings.CommandLogCanceled);
+                Sink(Strings.CommandLogCanceled(Stopwatch.ElapsedMilliseconds, Environment.NewLine));
             }
             else
             {
@@ -306,9 +340,9 @@ namespace System.Data.Entity.Infrastructure
                                        : (result is DbDataReader)
                                              ? result.GetType().Name
                                              : result.ToString();
-                _writer.WriteLine(Strings.CommandLogComplete(resultString));
+                Sink(Strings.CommandLogComplete(Stopwatch.ElapsedMilliseconds, resultString, Environment.NewLine));
             }
-            _writer.WriteLine();
+            Sink(Environment.NewLine);
         }
     }
 }

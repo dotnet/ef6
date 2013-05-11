@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -33,16 +34,18 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="command">The command on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual int NonQuery(DbCommand command, DbCommandInterceptionContext interceptionContext)
+        public virtual int NonQuery(DbCommand command, DbCommandInterceptionContext<int> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
+
+            Debug.Assert(!interceptionContext.IsResultSet);
 
             return InternalDispatcher.Dispatch(
                 command.ExecuteNonQuery,
                 interceptionContext,
                 i => i.NonQueryExecuting(command, interceptionContext),
-                (r, i, c) => i.NonQueryExecuted(command, r, c));
+                (i, c) => i.NonQueryExecuted(command, c));
         }
 
         /// <summary>
@@ -54,16 +57,18 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="command">The command on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual object Scalar(DbCommand command, DbCommandInterceptionContext interceptionContext)
+        public virtual object Scalar(DbCommand command, DbCommandInterceptionContext<object> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
+
+            Debug.Assert(!interceptionContext.IsResultSet);
 
             return InternalDispatcher.Dispatch(
                 command.ExecuteScalar,
                 interceptionContext,
                 i => i.ScalarExecuting(command, interceptionContext),
-                (r, i, c) => i.ScalarExecuted(command, r, c));
+                (i, c) => i.ScalarExecuted(command, c));
         }
 
         /// <summary>
@@ -76,16 +81,18 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
         public virtual DbDataReader Reader(
-            DbCommand command, DbCommandInterceptionContext interceptionContext)
+            DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
+
+            Debug.Assert(!interceptionContext.IsResultSet);
 
             return InternalDispatcher.Dispatch(
                 () => command.ExecuteReader(interceptionContext.CommandBehavior),
                 interceptionContext,
                 i => i.ReaderExecuting(command, interceptionContext),
-                (r, i, c) => i.ReaderExecuted(command, r, c));
+                (i, c) => i.ReaderExecuted(command, c));
         }
 
 #if !NET40
@@ -100,10 +107,12 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
         public virtual Task<int> AsyncNonQuery(
-            DbCommand command, CancellationToken cancellationToken, DbCommandInterceptionContext interceptionContext)
+            DbCommand command, CancellationToken cancellationToken, DbCommandInterceptionContext<int> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
+
+            Debug.Assert(!interceptionContext.IsResultSet);
 
             if (!interceptionContext.IsAsync)
             {
@@ -114,7 +123,7 @@ namespace System.Data.Entity.Infrastructure
                 () => command.ExecuteNonQueryAsync(cancellationToken),
                 interceptionContext,
                 i => i.NonQueryExecuting(command, interceptionContext),
-                (r, i, c) => i.NonQueryExecuted(command, r, c),
+                (i, c) => i.NonQueryExecuted(command, c),
                 UpdateInterceptionContext);
         }
 
@@ -129,10 +138,12 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
         public virtual Task<object> AsyncScalar(
-            DbCommand command, CancellationToken cancellationToken, DbCommandInterceptionContext interceptionContext)
+            DbCommand command, CancellationToken cancellationToken, DbCommandInterceptionContext<object> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
+
+            Debug.Assert(!interceptionContext.IsResultSet);
 
             if (!interceptionContext.IsAsync)
             {
@@ -143,7 +154,7 @@ namespace System.Data.Entity.Infrastructure
                 () => command.ExecuteScalarAsync(cancellationToken),
                 interceptionContext,
                 i => i.ScalarExecuting(command, interceptionContext),
-                (r, i, c) => i.ScalarExecuted(command, r, c),
+                (i, c) => i.ScalarExecuted(command, c),
                 UpdateInterceptionContext);
         }
 
@@ -158,10 +169,12 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
         public virtual Task<DbDataReader> AsyncReader(
-            DbCommand command, CancellationToken cancellationToken, DbCommandInterceptionContext interceptionContext)
+            DbCommand command, CancellationToken cancellationToken, DbCommandInterceptionContext<DbDataReader> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
+
+            Debug.Assert(!interceptionContext.IsResultSet);
 
             if (!interceptionContext.IsAsync)
             {
@@ -172,11 +185,12 @@ namespace System.Data.Entity.Infrastructure
                 () => command.ExecuteReaderAsync(interceptionContext.CommandBehavior, cancellationToken),
                 interceptionContext,
                 i => i.ReaderExecuting(command, interceptionContext),
-                (r, i, c) => i.ReaderExecuted(command, r, c),
+                (i, c) => i.ReaderExecuted(command, c),
                 UpdateInterceptionContext);
         }
 
-        private static DbCommandInterceptionContext UpdateInterceptionContext(DbCommandInterceptionContext interceptionContext, Task t)
+        private static DbCommandInterceptionContext<TResult> UpdateInterceptionContext<TResult>(
+            DbCommandInterceptionContext<TResult> interceptionContext, Task t)
         {
             return interceptionContext.WithTaskStatus(t.Status);
         }
