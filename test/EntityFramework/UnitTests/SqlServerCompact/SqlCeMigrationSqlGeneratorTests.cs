@@ -73,6 +73,27 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         [Fact]
+        public void Generate_can_output_alter_column_with_default_constraint()
+        {
+            var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();
+
+            var column = new ColumnModel(PrimitiveTypeKind.Int32)
+            {
+                Name = "Bar",
+                DefaultValue = 42
+            };
+
+            var alterColumnOperation = new AlterColumnOperation("Foo", column, false);
+
+            var sql = migrationSqlGenerator
+                .Generate(new[] { alterColumnOperation }, "4.0").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Equal(@"ALTER TABLE [Foo] ALTER COLUMN [Bar] [int]
+ALTER TABLE [Foo] ALTER COLUMN [Bar] DROP DEFAULT
+ALTER TABLE [Foo] ALTER COLUMN [Bar] SET DEFAULT 42", sql);
+        }
+
+        [Fact]
         public void Generate_should_output_invariant_decimals_when_non_invariant_culture()
         {
             var migrationProvider = new SqlCeMigrationSqlGenerator();

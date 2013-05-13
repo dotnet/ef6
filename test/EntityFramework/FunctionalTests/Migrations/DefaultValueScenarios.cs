@@ -44,6 +44,31 @@ namespace System.Data.Entity.Migrations
             migrator.Update();
         }
 
+        private class AlterDefaultMigration : DbMigration
+        {
+            public override void Up()
+            {
+                CreateTable(
+                    "TableA",
+                    c => new
+                    {
+                        c = c.Int(defaultValue: 42)
+                    });
+
+                AlterColumn("TableA", "c", c => c.Int(defaultValue: 43));
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_alter_default_constraint()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<BlankSlate>(new AlterDefaultMigration());
+
+            migrator.Update();
+        }
+
         private class DefaultValuesMigration : DbMigration
         {
             public override void Up()

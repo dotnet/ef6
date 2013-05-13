@@ -64,7 +64,6 @@ namespace System.Data.Entity.SqlServer
 
             _statements = new List<MigrationStatement>();
             _generatedSchemas = new HashSet<string>();
-            _variableCounter = 0;
 
             InitializeProviderServices(providerManifestToken);
 
@@ -583,31 +582,7 @@ namespace System.Data.Entity.SqlServer
 
             using (var writer = Writer())
             {
-                var variable = "@var" + _variableCounter++;
-
-                writer.Write("DECLARE ");
-                writer.Write(variable);
-                writer.WriteLine(" nvarchar(128)");
-                writer.Write("SELECT ");
-                writer.Write(variable);
-                writer.WriteLine(" = name");
-                writer.WriteLine("FROM sys.default_constraints");
-                writer.Write("WHERE parent_object_id = object_id(N'");
-                writer.Write(dropColumnOperation.Table);
-                writer.WriteLine("')");
-                writer.Write("AND col_name(parent_object_id, parent_column_id) = '");
-                writer.Write(dropColumnOperation.Name);
-                writer.WriteLine("';");
-                writer.Write("IF ");
-                writer.Write(variable);
-                writer.WriteLine(" IS NOT NULL");
-                writer.Indent++;
-                writer.Write("EXECUTE('ALTER TABLE ");
-                writer.Write(Name(dropColumnOperation.Table));
-                writer.Write(" DROP CONSTRAINT ' + ");
-                writer.Write(variable);
-                writer.WriteLine(")");
-                writer.Indent--;
+                DropDefaultConstraint(dropColumnOperation.Table, dropColumnOperation.Name, writer);
 
                 writer.Write("ALTER TABLE ");
                 writer.Write(Name(dropColumnOperation.Table));
@@ -634,6 +609,8 @@ namespace System.Data.Entity.SqlServer
             {
                 using (var writer = Writer())
                 {
+                    DropDefaultConstraint(alterColumnOperation.Table, column.Name, writer);
+
                     writer.Write("ALTER TABLE ");
                     writer.Write(Name(alterColumnOperation.Table));
                     writer.Write(" ADD CONSTRAINT DF_");
@@ -670,6 +647,39 @@ namespace System.Data.Entity.SqlServer
 
                 Statement(writer);
             }
+        }
+
+        private void DropDefaultConstraint(string table, string column, IndentedTextWriter writer)
+        {
+            DebugCheck.NotEmpty(table);
+            DebugCheck.NotEmpty(column);
+            DebugCheck.NotNull(writer);
+
+            var variable = "@var" + _variableCounter++;
+
+            writer.Write("DECLARE ");
+            writer.Write(variable);
+            writer.WriteLine(" nvarchar(128)");
+            writer.Write("SELECT ");
+            writer.Write(variable);
+            writer.WriteLine(" = name");
+            writer.WriteLine("FROM sys.default_constraints");
+            writer.Write("WHERE parent_object_id = object_id(N'");
+            writer.Write(table);
+            writer.WriteLine("')");
+            writer.Write("AND col_name(parent_object_id, parent_column_id) = '");
+            writer.Write(column);
+            writer.WriteLine("';");
+            writer.Write("IF ");
+            writer.Write(variable);
+            writer.WriteLine(" IS NOT NULL");
+            writer.Indent++;
+            writer.Write("EXECUTE('ALTER TABLE ");
+            writer.Write(Name(table));
+            writer.Write(" DROP CONSTRAINT ' + ");
+            writer.Write(variable);
+            writer.WriteLine(")");
+            writer.Indent--;
         }
 
         /// <summary>

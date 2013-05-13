@@ -461,6 +461,17 @@ namespace System.Data.Entity.SqlServerCompact
                     writer.Write(Name(alterColumnOperation.Table));
                     writer.Write(" ALTER COLUMN ");
                     writer.Write(Quote(column.Name));
+                    writer.Write(" DROP DEFAULT");
+
+                    Statement(writer);
+                }
+
+                using (var writer = Writer())
+                {
+                    writer.Write("ALTER TABLE ");
+                    writer.Write(Name(alterColumnOperation.Table));
+                    writer.Write(" ALTER COLUMN ");
+                    writer.Write(Quote(column.Name));
                     writer.Write(" SET DEFAULT ");
                     writer.Write(
                         (column.DefaultValue != null)
