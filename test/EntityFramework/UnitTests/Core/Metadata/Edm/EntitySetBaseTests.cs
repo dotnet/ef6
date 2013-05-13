@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Resources;
     using Moq;
     using Xunit;
 
@@ -66,9 +67,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var entitySetBase
                 = new TestEntitySetBase
-                {
-                    DefiningQuery = "Foo"
-                };
+                      {
+                          DefiningQuery = "Foo"
+                      };
 
             Assert.Equal("Foo", entitySetBase.DefiningQuery);
         }
@@ -80,7 +81,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             entitySetBase.SetReadOnly();
 
             Assert.Equal(
-                Resources.Strings.OperationOnReadOnlyItem,
+                Strings.OperationOnReadOnlyItem,
                 Assert.Throws<InvalidOperationException>(() => entitySetBase.DefiningQuery = "abc").Message);
         }
     }

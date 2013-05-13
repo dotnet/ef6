@@ -174,7 +174,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public string Table
         {
             get { return _table; }
-            internal set
+            set
             {
                 DebugCheck.NotEmpty(value);
                 Util.ThrowIfReadOnly(this);
@@ -192,7 +192,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public string Schema
         {
             get { return _schema; }
-            internal set
+            set
             {
                 DebugCheck.NotEmpty(value);
                 Util.ThrowIfReadOnly(this);
