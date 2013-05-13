@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Edm;
@@ -26,6 +25,10 @@ namespace System.Data.Entity.Migrations
     {
         CSharp,
         VB
+    }
+
+    public class BlankSlate : DbContext
+    {
     }
 
     public abstract class DbTestCase : TestBase, IUseFixture<DatabaseProviderFixture>

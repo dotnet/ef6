@@ -11,6 +11,39 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class DefaultValueScenarios : DbTestCase
     {
+        private class ColumnClashMigration : DbMigration
+        {
+            public override void Up()
+            {
+                CreateTable(
+                    "TableA",
+                    c => new
+                             {
+                                 c = c.Int()
+                             });
+
+                CreateTable(
+                    "TableB",
+                    c => new
+                             {
+                                 c = c.Int()
+                             });
+
+                AlterColumn("TableA", "c", c => c.Int(defaultValue: 42));
+                AlterColumn("TableB", "c", c => c.Int(defaultValue: 42));
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_create_constraints_and_names_are_table_qualified()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<BlankSlate>(new ColumnClashMigration());
+
+            migrator.Update();
+        }
+
         private class DefaultValuesMigration : DbMigration
         {
             public override void Up()

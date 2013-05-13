@@ -27,7 +27,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             SqlGenerator sqlGenerator,
             out List<SqlParameter> parameters,
             bool generateReturningSql = true,
-            bool upperCaseKeywords = false)
+            bool upperCaseKeywords = true)
         {
             const string dummySetParameter = "@p";
 
@@ -103,7 +103,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             DbDeleteCommandTree tree,
             SqlGenerator sqlGenerator,
             out List<SqlParameter> parameters,
-            bool upperCaseKeywords = false,
+            bool upperCaseKeywords = true,
             bool createParameters = true)
         {
             var commandText
@@ -138,7 +138,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             SqlGenerator sqlGenerator,
             out List<SqlParameter> parameters,
             bool generateReturningSql = true,
-            bool upperCaseKeywords = false,
+            bool upperCaseKeywords = true,
             bool createParameters = true)
         {
             var commandText

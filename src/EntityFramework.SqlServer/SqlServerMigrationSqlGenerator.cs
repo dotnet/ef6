@@ -637,6 +637,8 @@ namespace System.Data.Entity.SqlServer
                     writer.Write("ALTER TABLE ");
                     writer.Write(Name(alterColumnOperation.Table));
                     writer.Write(" ADD CONSTRAINT DF_");
+                    writer.Write(alterColumnOperation.Table);
+                    writer.Write("_");
                     writer.Write(column.Name);
                     writer.Write(" DEFAULT ");
                     writer.Write(

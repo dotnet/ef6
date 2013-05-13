@@ -37,8 +37,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     firstCommandTree,
                     _sqlGenerator,
                     out _,
-                    generateReturningSql: false,
-                    upperCaseKeywords: true));
+                    generateReturningSql: false));
 
             sql.AppendLine();
 
@@ -53,8 +52,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     DmlSqlGenerator.GenerateInsertSql(
                         commandTree,
                         _sqlGenerator,
-                        out _, generateReturningSql: false,
-                        upperCaseKeywords: true));
+                        out _, 
+                        generateReturningSql: false));
 
                 sql.AppendLine();
             }
@@ -161,8 +160,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     commandTrees.First(),
                     _sqlGenerator,
                     out _,
-                    generateReturningSql: false,
-                    upperCaseKeywords: true));
+                    generateReturningSql: false));
 
             foreach (var commandTree in commandTrees.Skip(1))
             {
@@ -171,8 +169,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         commandTree,
                         _sqlGenerator,
                         out _,
-                        generateReturningSql: false,
-                        upperCaseKeywords: true));
+                        generateReturningSql: false));
 
                 sql.AppendLine("AND @@ROWCOUNT > 0");
                 sql.AppendLine();
@@ -215,8 +212,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 DmlSqlGenerator.GenerateDeleteSql(
                     commandTrees.First(),
                     _sqlGenerator,
-                    out _,
-                    upperCaseKeywords: true));
+                    out _));
 
             sql.AppendLine();
 
@@ -226,8 +222,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     DmlSqlGenerator.GenerateDeleteSql(
                         commandTree,
                         _sqlGenerator,
-                        out _,
-                        upperCaseKeywords: true));
+                        out _));
 
                 sql.AppendLine("AND @@ROWCOUNT > 0");
                 sql.AppendLine();

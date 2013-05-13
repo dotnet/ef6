@@ -109,9 +109,7 @@
       <HintPath>..\..\..\packages\xunit.extensions.1.9.1\lib\net20\xunit.extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Migrations\Sql\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.csdl" />
     <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.msl" />

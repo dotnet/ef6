@@ -66,7 +66,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             DbUpdateCommandTree tree,
             out List<DbParameter> parameters,
             bool isLocalProvider,
-            bool upperCaseKeywords = false)
+            bool upperCaseKeywords = true)
         {
             var commandTexts = new List<String>();
 
@@ -161,7 +161,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             DbDeleteCommandTree tree,
             out List<DbParameter> parameters,
             bool isLocalProvider,
-            bool upperCaseKeywords = false,
+            bool upperCaseKeywords = true,
             bool createParameters = true)
         {
             var commandTexts = new List<String>();
@@ -200,7 +200,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             DbInsertCommandTree tree,
             out List<DbParameter> parameters,
             bool isLocalProvider,
-            bool upperCaseKeywords = false,
+            bool upperCaseKeywords = true,
             bool createParameters = true)
         {
             var commandTexts = new List<String>();

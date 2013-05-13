@@ -30,7 +30,7 @@ namespace System.Data.Entity.Internal
                     var interceptedCommand = commandTracer.DbCommands.Single();
 
                     Assert.Equal(
-                        "insert [dbo].[YummyProducts]([Id], [Name])\r\nvalues (@0, @1)\r\n",
+                        "INSERT [dbo].[YummyProducts]([Id], [Name])\r\nVALUES (@0, @1)\r\n",
                         interceptedCommand.CommandText);
 
                     Assert.Equal(2, interceptedCommand.Parameters.Count);
