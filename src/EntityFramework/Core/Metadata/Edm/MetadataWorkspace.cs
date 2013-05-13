@@ -80,7 +80,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _itemsOSpace = new Lazy<ObjectItemCollection>(oSpaceLoader, isThreadSafe: true);
             _itemsCSSpace = new Lazy<StorageMappingItemCollection>(csMappingLoader, isThreadSafe: true);
             _itemsOCSpace = new Lazy<DefaultObjectMappingItemCollection>(
-                () => new DefaultObjectMappingItemCollection(_itemsCSpace.Value, _itemsOSpace.Value), isThreadSafe: true);
+                () => new DefaultObjectMappingItemCollection(GetAndCheckValueForItemCollection(_itemsCSpace), _itemsOSpace.Value),
+                isThreadSafe: true);
         }
 
         /// <summary>
@@ -109,7 +110,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _itemsOSpace = new Lazy<ObjectItemCollection>(() => new ObjectItemCollection(), isThreadSafe: true);
             _itemsCSSpace = new Lazy<StorageMappingItemCollection>(csMappingLoader, isThreadSafe: true);
             _itemsOCSpace = new Lazy<DefaultObjectMappingItemCollection>(
-                () => new DefaultObjectMappingItemCollection(_itemsCSpace.Value, _itemsOSpace.Value), isThreadSafe: true);
+                () => new DefaultObjectMappingItemCollection(GetAndCheckValueForItemCollection(_itemsCSpace), _itemsOSpace.Value),
+                isThreadSafe: true);
         }
 
         /// <summary>
@@ -185,7 +187,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     && _itemsSSpace != null)
                 {
                     var mapping = new StorageMappingItemCollection(
-                        _itemsCSpace.Value, _itemsSSpace.Value, csSpaceReaders, composite.GetPaths(DataSpace.CSSpace));
+                        GetAndCheckValueForItemCollection(_itemsCSpace),
+                        GetAndCheckValueForItemCollection(_itemsSSpace), 
+                        csSpaceReaders,
+                        composite.GetPaths(DataSpace.CSSpace));
                     _itemsCSSpace = new Lazy<StorageMappingItemCollection>(() => mapping, isThreadSafe: true);
                 }
             }
@@ -333,7 +338,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         {
                             _itemsOCSpace =
                                 new Lazy<DefaultObjectMappingItemCollection>(
-                                    () => new DefaultObjectMappingItemCollection(_itemsCSpace.Value, _itemsOSpace.Value));
+                                    () =>
+                                    new DefaultObjectMappingItemCollection(
+                                        GetAndCheckValueForItemCollection(_itemsCSpace), _itemsOSpace.Value));
                         }
                         break;
                     case DataSpace.CSSpace:
@@ -354,8 +361,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        private T GetAndCheckValueForItemCollection<T>(Lazy<T> itemCollectionLoader) where T : ItemCollection
+        {
+            DebugCheck.NotNull(itemCollectionLoader);
+            var itemCollection = itemCollectionLoader.Value;
+            if (itemCollection != null)
+            {
+                CheckAndSetItemCollectionVersionInWorkSpace(itemCollection);
+            }
+            return itemCollection;
+        }
+
         private void CheckAndSetItemCollectionVersionInWorkSpace(ItemCollection itemCollectionToRegister)
         {
+            DebugCheck.NotNull(itemCollectionToRegister);
             var versionToRegister = XmlConstants.UndefinedVersion;
             string itemCollectionType = null;
             switch (itemCollectionToRegister.DataSpace)
@@ -917,7 +936,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             switch (dataSpace)
             {
                 case DataSpace.CSpace:
-                    collection = _itemsCSpace == null ? null : _itemsCSpace.Value;
+                    collection = _itemsCSpace == null ? null : GetAndCheckValueForItemCollection(_itemsCSpace);
                     break;
                 case DataSpace.OSpace:
                     Debug.Assert(_itemsOSpace != null);
@@ -927,10 +946,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     collection = _itemsOCSpace == null ? null : _itemsOCSpace.Value;
                     break;
                 case DataSpace.CSSpace:
-                    collection = _itemsCSSpace == null ? null : _itemsCSSpace.Value;
+                    collection = _itemsCSSpace == null ? null : GetAndCheckValueForItemCollection(_itemsCSSpace);
                     break;
                 case DataSpace.SSpace:
-                    collection = _itemsSSpace == null ? null : _itemsSSpace.Value;
+                    collection = _itemsSSpace == null ? null : GetAndCheckValueForItemCollection(_itemsSSpace);
                     break;
                 default:
                     if (required)
@@ -1306,10 +1325,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal virtual ViewLoader GetUpdateViewLoader()
         {
-            if (_itemsCSSpace != null
-                && _itemsCSSpace.Value != null)
+            if (_itemsCSSpace != null)
             {
-                return _itemsCSSpace.Value.GetUpdateViewLoader();
+                var itemsCSSpaceValue = GetAndCheckValueForItemCollection(_itemsCSSpace);
+                if (itemsCSSpaceValue != null)
+                {
+                    return itemsCSSpaceValue.GetUpdateViewLoader();
+                }
             }
             return null;
         }
@@ -1533,8 +1555,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal virtual QueryCacheManager GetQueryCacheManager()
         {
-            Debug.Assert(_itemsSSpace != null && _itemsSSpace.Value != null);
-            return _itemsSSpace.Value.QueryCacheManager;
+            Debug.Assert(_itemsSSpace != null);
+            var itemsSSpaceValue = GetAndCheckValueForItemCollection(_itemsSSpace);
+            Debug.Assert(itemsSSpaceValue != null);
+            return itemsSSpaceValue.QueryCacheManager;
         }
 
         internal bool TryDetermineCSpaceModelType<T>(out EdmType modelEdmType)
