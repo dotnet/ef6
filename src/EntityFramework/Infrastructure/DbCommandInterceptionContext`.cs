@@ -35,11 +35,11 @@ namespace System.Data.Entity.Infrastructure
         public DbCommandInterceptionContext(DbInterceptionContext copyFrom)
             : base(copyFrom)
         {
-            var asThisType = copyFrom as DbCommandInterceptionContext<TResult>;
-            if (asThisType != null)
+            var asResultType = copyFrom as IDbInterceptionContextWithResult<TResult>;
+            if (asResultType != null)
             {
-                _isResultSet = asThisType._isResultSet;
-                _result = asThisType._result;
+                _isResultSet = asResultType.IsResultSet;
+                _result = asResultType.Result;
             }
         }
 

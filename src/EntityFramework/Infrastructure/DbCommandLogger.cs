@@ -239,19 +239,23 @@ namespace System.Data.Entity.Infrastructure
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            if (command.CommandText.EndsWith(Environment.NewLine, StringComparison.Ordinal))
+            var commandText = command.CommandText ?? "<null>";
+            if (commandText.EndsWith(Environment.NewLine, StringComparison.Ordinal))
             {
-                Sink(command.CommandText);
+                Sink(commandText);
             }
             else
             {
-                Sink(command.CommandText);
+                Sink(commandText);
                 Sink(Environment.NewLine);
             }
 
-            foreach (var parameter in command.Parameters.OfType<DbParameter>())
+            if (command.Parameters != null)
             {
-                LogParameter(command, interceptionContext, parameter);
+                foreach (var parameter in command.Parameters.OfType<DbParameter>())
+                {
+                    LogParameter(command, interceptionContext, parameter);
+                }
             }
 
             Sink(interceptionContext.IsAsync

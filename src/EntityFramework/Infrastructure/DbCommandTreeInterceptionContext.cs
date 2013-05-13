@@ -26,11 +26,11 @@ namespace System.Data.Entity.Infrastructure
         public DbCommandTreeInterceptionContext(DbInterceptionContext copyFrom)
             : base(copyFrom)
         {
-            var asThisType = copyFrom as DbCommandTreeInterceptionContext;
-            if (asThisType != null)
+            var asResultType = copyFrom as IDbInterceptionContextWithResult<DbCommandTree>;
+            if (asResultType != null)
             {
-                _isResultSet = asThisType._isResultSet;
-                _result = asThisType._result;
+                _isResultSet = asResultType.IsResultSet;
+                _result = asResultType.Result;
             }
         }
 

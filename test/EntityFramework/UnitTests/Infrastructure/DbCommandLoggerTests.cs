@@ -335,6 +335,15 @@ namespace System.Data.Entity.Infrastructure
             }
 
             [Fact]
+            public void LogCommand_can_handle_commands_with_null_text_and_parameters()
+            {
+                var writer = new StringWriter();
+                new DbCommandLogger(writer.Write).LogCommand(new Mock<DbCommand>().Object, new DbCommandInterceptionContext<int>());
+
+                Assert.Equal("<null>", GetLines(writer)[0]);
+            }
+
+            [Fact]
             public void LogCommand_logs_command_text_and_parameters()
             {
                 var parameter1 = CreateParameter("Param1", ParameterDirection.Input, true, DbType.String, 4000, 0, 0, "value");
