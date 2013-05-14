@@ -43,8 +43,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     This routine is only used for building up rule patterns.
         ///     NEVER use this routine for building up nodes in a user command tree.
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="children"> </param>
         internal Node(Op op, params Node[] children)
             : this(-1, op, new List<Node>(children))
         {
@@ -147,8 +145,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Is this subtree equivalent to another subtree
         /// </summary>
-        /// <param name="other"> </param>
-        /// <returns> </returns>
         internal bool IsEquivalent(Node other)
         {
             if (Children.Count

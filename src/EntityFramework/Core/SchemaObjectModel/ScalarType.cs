@@ -211,9 +211,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Parses the default value for Edm Type Time based on the DateTime format "HH:mm:ss.fffffffz".
         ///     The value is first converted to DateTime value and then converted to TimeSpan.
         /// </summary>
-        /// <param name="text"> </param>
-        /// <param name="value"> </param>
-        /// <returns> </returns>
         private static bool TryParseTime(string text, out object value)
         {
             DateTime temp;

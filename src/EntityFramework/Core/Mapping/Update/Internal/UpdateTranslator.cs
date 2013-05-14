@@ -388,8 +388,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         ///     Yields all relationship state entries with the given key as an end.
         /// </summary>
-        /// <param name="entityKey"> </param>
-        /// <returns> </returns>
         internal IEnumerable<IEntityStateEntry> GetRelationships(EntityKey entityKey)
         {
             return _stateManager.FindRelationshipsByKey(entityKey);
@@ -735,8 +733,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         ///     Gets a metadata wrapper for the given type. The wrapper makes
         ///     certain tasks in the update pipeline more efficient.
         /// </summary>
+        /// <param name="entitySetBase"> </param>
         /// <param name="type"> Structural type </param>
         /// <returns> Metadata wrapper </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal ExtractorMetadata GetExtractorMetadata(EntitySetBase entitySetBase, StructuralType type)
         {
             ExtractorMetadata metadata;
@@ -909,7 +909,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         ///     Validates and tracks a state entry being processed by this translator.
         /// </summary>
-        /// <param name="stateEntry"> </param>
         private void ValidateAndRegisterStateEntry(IEntityStateEntry stateEntry)
         {
             DebugCheck.NotNull(stateEntry);

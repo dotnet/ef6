@@ -19,7 +19,7 @@ namespace System.Data.Entity.Internal.Validation
         ///     Initializes a new instance of EntityValidationContext class.
         /// </summary>
         /// <param name="entityEntry"> The entity being validated or the entity that owns the property being validated. </param>
-        /// <param name="externalValidationContexts"> External contexts needed for validation. </param>
+        /// <param name="externalValidationContext"> External context needed for validation. </param>
         public EntityValidationContext(InternalEntityEntry entityEntry, ValidationContext externalValidationContext)
         {
             DebugCheck.NotNull(entityEntry);

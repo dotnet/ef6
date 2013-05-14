@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             _withTies = withTies;
         }
 
-        /// <summary>Gets or sets an expression that specifies the input collection.</summary>
+        /// <summary>Gets an expression that specifies the input collection.</summary>
         /// <returns>An expression that specifies the input collection.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _argument; }
         }
 
-        /// <summary>Gets or sets an expression that specifies the limit on the number of elements returned from the input collection.</summary>
+        /// <summary>Gets an expression that specifies the limit on the number of elements returned from the input collection.</summary>
         /// <returns>An expression that specifies the limit on the number of elements returned from the input collection.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">

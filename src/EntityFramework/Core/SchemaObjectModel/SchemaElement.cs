@@ -37,61 +37,43 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Static Fields
 
-        /// <summary>
-        /// </summary>
         protected const int MaxValueVersionComponent = short.MaxValue;
 
         #endregion
 
         #region Public Properties
 
-        /// <summary>
-        /// </summary>
         internal int LineNumber
         {
             get { return _lineNumber; }
         }
 
-        /// <summary>
-        /// </summary>
         internal int LinePosition
         {
             get { return _linePosition; }
         }
 
-        /// <summary>
-        /// </summary>
         public virtual string Name
         {
             get { return _name; }
             set { _name = value; }
         }
 
-        /// <summary>
-        /// </summary>
         internal DocumentationElement Documentation { get; set; }
 
-        /// <summary>
-        /// </summary>
         internal SchemaElement ParentElement { get; private set; }
 
-        /// <summary>
-        /// </summary>
         internal Schema Schema
         {
             get { return _schema; }
             set { _schema = value; }
         }
 
-        /// <summary>
-        /// </summary>
         public virtual string FQName
         {
             get { return Name; }
         }
 
-        /// <summary>
-        /// </summary>
         public virtual string Identity
         {
             get { return Name; }
@@ -121,24 +103,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         {
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="errorCode"> </param>
-        /// <param name="severity"> </param>
-        /// <param name="lineNumber"> </param>
-        /// <param name="linePosition"> </param>
-        /// <param name="message"> </param>
         internal void AddError(ErrorCode errorCode, EdmSchemaErrorSeverity severity, int lineNumber, int linePosition, object message)
         {
             AddError(errorCode, severity, SchemaLocation, lineNumber, linePosition, message);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="errorCode"> </param>
-        /// <param name="severity"> </param>
-        /// <param name="reader"> </param>
-        /// <param name="message"> </param>
         internal void AddError(ErrorCode errorCode, EdmSchemaErrorSeverity severity, XmlReader reader, object message)
         {
             int lineNumber;
@@ -147,31 +116,16 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             AddError(errorCode, severity, SchemaLocation, lineNumber, linePosition, message);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="errorCode"> </param>
-        /// <param name="severity"> </param>
-        /// <param name="message"> </param>
         internal void AddError(ErrorCode errorCode, EdmSchemaErrorSeverity severity, object message)
         {
             AddError(errorCode, severity, SchemaLocation, LineNumber, LinePosition, message);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="errorCode"> </param>
-        /// <param name="severity"> </param>
-        /// <param name="element"> </param>
-        /// <param name="message"> </param>
         internal void AddError(ErrorCode errorCode, EdmSchemaErrorSeverity severity, SchemaElement element, object message)
         {
             AddError(errorCode, severity, element.Schema.Location, element.LineNumber, element.LinePosition, message);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
-        /// <returns> </returns>
         internal void Parse(XmlReader reader)
         {
             GetPositionInfo(reader);
@@ -223,7 +177,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                         ParseText(reader);
                         break;
 
-                        // we ignore these childless elements
+                    // we ignore these childless elements
                     case XmlNodeType.Whitespace:
                     case XmlNodeType.XmlDeclaration:
                     case XmlNodeType.Comment:
@@ -233,7 +187,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                             break;
                         }
 
-                        // we ignore these elements that can have children
+                    // we ignore these elements that can have children
                     case XmlNodeType.DocumentType:
                     case XmlNodeType.EntityReference:
                         {
@@ -292,8 +246,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
         internal virtual void ResolveTopLevelNames()
         {
         }
@@ -306,9 +258,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Protected Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="parentElement"> </param>
         internal SchemaElement(SchemaElement parentElement)
         {
             if (parentElement != null)
@@ -337,23 +286,14 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _name = name;
         }
 
-        /// <summary>
-        /// </summary>
         protected virtual void HandleAttributesComplete()
         {
         }
 
-        /// <summary>
-        /// </summary>
         protected virtual void HandleChildElementsComplete()
         {
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
-        /// <param name="field"> </param>
-        /// <returns> </returns>
         protected string HandleUndottedNameAttribute(XmlReader reader, string field)
         {
             var name = field;
@@ -368,12 +308,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return name;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
-        /// <param name="field"> </param>
-        /// <param name="errorMessageId"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "field")]
         protected ReturnValue<string> HandleDottedNameAttribute(XmlReader reader, string field)
         {
@@ -426,11 +360,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return true;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
-        /// <param name="field"> </param>
-        /// <returns> </returns>
         internal bool HandleBoolAttribute(XmlReader reader, ref bool field)
         {
             bool value;
@@ -468,8 +397,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Protected Properties
 
-        /// <summary>
-        /// </summary>
         protected string SchemaLocation
         {
             get
@@ -496,32 +423,17 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Private Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
-        /// <returns> </returns>
         private void HandleDocumentationElement(XmlReader reader)
         {
             Documentation = new DocumentationElement(this);
             Documentation.Parse(reader);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         protected virtual void HandleNameAttribute(XmlReader reader)
         {
             Name = HandleUndottedNameAttribute(reader, Name);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="errorCode"> </param>
-        /// <param name="severity"> </param>
-        /// <param name="source"> </param>
-        /// <param name="lineNumber"> </param>
-        /// <param name="linePosition"> </param>
-        /// <param name="message"> </param>
         private void AddError(
             ErrorCode errorCode, EdmSchemaErrorSeverity severity, string sourceLocation, int lineNumber, int linePosition, object message)
         {
@@ -597,9 +509,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// <summary>
         ///     This overload assumes the default namespace
         /// </summary>
-        /// <param name="reader"> </param>
-        /// <param name="localName"> </param>
-        /// <returns> </returns>
         internal static bool CanHandleAttribute(XmlReader reader, string localName)
         {
             Debug.Assert(reader.NamespaceURI != null);

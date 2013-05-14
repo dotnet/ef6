@@ -26,7 +26,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Constructor overload for rules
         /// </summary>
-        /// <param name="opType"> </param>
         protected ConstantBaseOp(OpType opType)
             : base(opType)
         {

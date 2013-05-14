@@ -247,10 +247,12 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Adds an object to the ObjectStateManager.
         /// </summary>
-        /// <param name="dataObject"> the object to add </param>
+        /// <param name="wrappedObject"> the object to add </param>
+        /// <param name="passedKey"> </param>
         /// <param name="entitySet"> the entity set of the given object </param>
         /// <param name="argumentName"> Name of the argument passed to a public method, for use in exceptions. </param>
         /// <param name="isAdded"> Indicates whether the entity is added or unchanged. </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual EntityEntry AddEntry(
             IEntityWrapper wrappedObject, EntityKey passedKey, EntitySet entitySet, string argumentName, bool isAdded)
         {
@@ -634,9 +636,11 @@ namespace System.Data.Entity.Core.Objects
         ///     Upgrades an entity key entry in the cache to a a regular entity
         /// </summary>
         /// <param name="keyEntry"> the key entry that exists in the state manager </param>
-        /// <param name="entity"> the object to add </param>
+        /// <param name="wrappedEntity"> the object to add </param>
         /// <param name="replacingEntry"> True if this promoted key entry is replacing an existing detached entry </param>
         /// <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
+        /// <param name="keyEntryInitialized"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual void PromoteKeyEntry(
             EntityEntry keyEntry,
             IEntityWrapper wrappedEntity,
@@ -747,9 +751,9 @@ namespace System.Data.Entity.Core.Objects
         ///     the user, and not in cases where they are manually setting relationships.
         /// </summary>
         /// <param name="mergeOption"> The MergeOption to use to decide how to resolve EntityReference conflicts </param>
-        /// <param name="sourceEntity"> The entity instance on the source side of the relationship </param>
+        /// <param name="wrappedSource"> The entity instance on the source side of the relationship </param>
         /// <param name="sourceMember"> The AssociationEndMember that contains the metadata for the source entity </param>
-        /// <param name="targetEntity"> The entity instance on the source side of the relationship </param>
+        /// <param name="wrappedTarget"> The entity instance on the source side of the relationship </param>
         /// <param name="targetMember"> The AssociationEndMember that contains the metadata for the target entity </param>
         /// <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
         /// <param name="relationshipAlreadyExists"> Whether or not the relationship entry already exists in the cache for these entities </param>
@@ -934,10 +938,9 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
         /// <param name="associationSet"> AssociationSet for the relationships </param>
         /// <param name="sourceMember"> Role of sourceEntity in associationSet </param>
-        /// <param name="sourceKey"> EntityKey for sourceEntity </param>
-        /// <param name="sourceEntity"> Source entity in the relationship </param>
+        /// <param name="wrappedSource"> Source entity in the relationship </param>
         /// <param name="targetMember"> Role of each targetEntity in associationSet </param>
-        /// <param name="targetEntities"> List of target entities to use to create relationships with sourceEntity </param>
+        /// <param name="targets"> List of target entities to use to create relationships with sourceEntity </param>
         /// <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
         internal virtual int UpdateRelationships(
             ObjectContext context, MergeOption mergeOption, AssociationSet associationSet, AssociationEndMember sourceMember,
@@ -1086,7 +1089,6 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Removes relationships if necessary when a query determines that the source entity has no relationships on the server
         /// </summary>
-        /// <param name="context"> ObjectContext that contains the client relationships </param>
         /// <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
         /// <param name="associationSet"> AssociationSet for the incoming relationship </param>
         /// <param name="sourceKey"> EntityKey of the source entity in the relationship </param>
@@ -1143,7 +1145,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="associationSet"> AssociationSet for the relationship we are looking for </param>
         /// <param name="sourceMember"> AssociationEndMember for the source role of the relationship </param>
         /// <param name="sourceKey"> EntityKey for the source entity in the relationship (passed here so we don't have to look it up again) </param>
-        /// <param name="sourceEntity"> Source entity in the relationship </param>
+        /// <param name="wrappedSource"> Source entity in the relationship </param>
         /// <param name="targetMember"> AssociationEndMember for the target role of the relationship </param>
         /// <param name="targetKey"> EntityKey for the target entity in the relationship </param>
         /// <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
@@ -1408,8 +1410,6 @@ namespace System.Data.Entity.Core.Objects
         ///     Attach entity in unchanged state (skip Added state, don't create temp key)
         ///     It is equal (but faster) to call AddEntry(); AcceptChanges().
         /// </summary>
-        /// <param name="entity"> </param>
-        /// <param name="entitySet"> </param>
         internal virtual EntityEntry AttachEntry(EntityKey entityKey, IEntityWrapper wrappedObject, EntitySet entitySet)
         {
             DebugCheck.NotNull(wrappedObject);
@@ -1452,9 +1452,11 @@ namespace System.Data.Entity.Core.Objects
         ///     Checks that the EntityKey attached to the given entity
         ///     appropriately matches the given entity.
         /// </summary>
-        /// <param name="entity"> The entity whose key must be verified </param>
+        /// <param name="wrappedEntity"> The entity whose key must be verified </param>
+        /// <param name="entityKey"> </param>
         /// <param name="entitySetForType"> The entity set corresponding to the type of the given entity. </param>
         /// <param name="forAttach"> If true, then the exception message will reflect a bad key to attach, otherwise it will reflect a general inconsistency </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void CheckKeyMatchesEntity(IEntityWrapper wrappedEntity, EntityKey entityKey, EntitySet entitySetForType, bool forAttach)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -1760,8 +1762,6 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Find the ObjectStateEntry from _keylessEntityStore for an entity that doesn't implement IEntityWithKey.
         /// </summary>
-        /// <param name="entity"> </param>
-        /// <returns> </returns>
         private bool TryGetEntryFromKeylessStore(object entity, out EntityEntry entryRef)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
@@ -2203,7 +2203,7 @@ namespace System.Data.Entity.Core.Objects
         ///     When the object is not detached and does not have an entry in the state manager
         ///     or when you try to change the state to <see cref="F:System.Data.Entity.EntityState.Detached" />
         ///     from any other <see cref="T:System.Data.Entity.EntityState." />
-        ///     or when  state  is not a valid <seecref="T:System.Data.Entity.EntityState" /> value.
+        ///     or when  state  is not a valid <see cref="T:System.Data.Entity.EntityState" /> value.
         /// </exception>
         public virtual ObjectStateEntry ChangeObjectState(object entity, EntityState entityState)
         {

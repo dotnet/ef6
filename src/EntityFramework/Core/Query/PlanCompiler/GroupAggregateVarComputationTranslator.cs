@@ -28,8 +28,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Private constructor
         /// </summary>
-        /// <param name="command"> </param>
-        /// <param name="groupAggregateVarInfoManager"> </param>
         private GroupAggregateVarComputationTranslator(
             Command command,
             GroupAggregateVarInfoManager groupAggregateVarInfoManager)
@@ -56,6 +54,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="templateNode"> A tree that is equvalent to the input tree, but over the group aggregate variable represented by the groupAggregetVarInfo </param>
         /// <param name="isUnnested"> </param>
         /// <returns> True, if the translation can be done, false otherwise </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public static bool TryTranslateOverGroupAggregateVar(
             Node subtree,
             bool isVarDefinition,
@@ -128,11 +127,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Visitor Methods
 
         /// <summary>
-        ///     See <cref="TryTranslateOverGroupAggregateVar" />
+        ///     See <see cref="TryTranslateOverGroupAggregateVar" />
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(VarRefOp op, Node n)
         {
             return TranslateOverGroupAggregateVar(op.Var, null);
@@ -143,9 +139,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     group aggregate var.
         ///     Otherwise do default processing
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(PropertyOp op, Node n)
         {
             if (n.Child0.Op.OpType
@@ -168,8 +161,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     is either a reference to the group aggregate var or to a constant, it returns the
         ///     translation of the ouput var.
         /// </summary>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node VisitCollect(Node n)
@@ -249,8 +240,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     It only recognizes any of the constant base ops
         ///     and possibly casts over these nodes.
         /// </summary>
-        /// <param name="node"> </param>
-        /// <returns> </returns>
         private static bool IsConstant(Node node)
         {
             var currentNode = node;
@@ -269,9 +258,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     it returns the corresponding translation over the group aggregate var. Also, if _targetGroupAggregateVarInfo
         ///     is not set, it sets it to the group aggregate var representing the referenced var.
         /// </summary>
-        /// <param name="var"> </param>
-        /// <param name="property"> </param>
-        /// <returns> </returns>
         private Node TranslateOverGroupAggregateVar(Var var, EdmMember property)
         {
             GroupAggregateVarRefInfo groupAggregateVarRefInfo;
@@ -315,8 +301,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     If the reference of the child node did not change, the child node did not change either,
         ///     this is because a node can only be reused "as is" when building a template.
         /// </summary>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         protected override Node VisitDefault(Node n)
         {
             var newChildren = new List<Node>(n.Children.Count);

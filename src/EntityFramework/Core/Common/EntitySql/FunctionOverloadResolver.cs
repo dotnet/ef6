@@ -70,10 +70,19 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         ///     Resolves <paramref name="argTypes" /> against the list of function signatures.
         /// </summary>
+        /// <param name="functionsMetadata"> </param>
+        /// <param name="argTypes"> </param>
         /// <param name="getSignatureParams"> function formal signature getter </param>
         /// <param name="getParameterTypeUsage"> TypeUsage getter for a signature param </param>
         /// <param name="getParameterMode"> ParameterMode getter for a signature param </param>
+        /// <param name="flattenArgumentType"> </param>
+        /// <param name="flattenParameterType"> </param>
+        /// <param name="isPromotableTo"> </param>
+        /// <param name="isStructurallyEqual"> </param>
+        /// <param name="isGroupAggregateFunction"> </param>
+        /// <param name="isAmbiguous"> </param>
         /// <returns> Funciton metadata </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static TFunctionMetadata ResolveFunctionOverloads<TFunctionMetadata, TFunctionParameterMetadata>(
             IList<TFunctionMetadata> functionsMetadata,
             IList<TypeUsage> argTypes,
@@ -155,25 +164,25 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 // 
                 isAmbiguous = ranks.Any(
                     rank =>
-                        {
-                            Debug.Assert(rank.Length == bestCandidateRank.Length, "composite ranks have different number of elements");
+                    {
+                        Debug.Assert(rank.Length == bestCandidateRank.Length, "composite ranks have different number of elements");
 
-                            if (!ReferenceEquals(bestCandidateRank, rank)) // do not compare best cadnidate against itself
+                        if (!ReferenceEquals(bestCandidateRank, rank)) // do not compare best cadnidate against itself
+                        {
+                            // All individual ranks of the best candidate must equal or better than the ranks of all other candidates,
+                            // otherwise we consider it ambigous, even though it has an unambigously best total rank.
+                            for (var i = 0; i < rank.Length; ++i)
                             {
-                                // All individual ranks of the best candidate must equal or better than the ranks of all other candidates,
-                                // otherwise we consider it ambigous, even though it has an unambigously best total rank.
-                                for (var i = 0; i < rank.Length; ++i)
+                                if (bestCandidateRank[i]
+                                    < rank[i])
                                 {
-                                    if (bestCandidateRank[i]
-                                        < rank[i])
-                                    {
-                                        return true;
-                                    }
+                                    return true;
                                 }
                             }
+                        }
 
-                            return false;
-                        });
+                        return false;
+                    });
             }
 
             return isAmbiguous ? null : bestCandidate;
@@ -185,11 +194,16 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="argumentList"> list of argument types </param>
         /// <param name="flatArgumentList"> flattened list of argument types </param>
-        /// <param name="overloadParamList1"> list of overload parameter types </param>
+        /// <param name="overloadParamList"> list of overload parameter types </param>
         /// <param name="getParameterTypeUsage"> TypeUsage getter for the overload parameters </param>
         /// <param name="getParameterMode"> ParameterMode getter for the overload parameters </param>
+        /// <param name="flattenParameterType"> </param>
+        /// <param name="isPromotableTo"> </param>
+        /// <param name="isStructurallyEqual"> </param>
+        /// <param name="isGroupAggregateFunction"> </param>
         /// <param name="totalRank"> returns total promotion rank of the overload, 0 if no arguments </param>
         /// <param name="parameterRanks"> returns individual promotion ranks of the overload parameters, empty array if no arguments </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool TryRankFunctionParameters<TFunctionParameterMetadata>(
             IList<TypeUsage> argumentList,
             IList<TypeUsage> flatArgumentList,

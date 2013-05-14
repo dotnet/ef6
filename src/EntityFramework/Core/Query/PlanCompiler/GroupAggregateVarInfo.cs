@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Helper class to track the aggregate nodes that are candidates to be
@@ -26,6 +27,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="defingingGroupNode"> The GroupIntoOp node </param>
         /// <param name="groupAggregateVar"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal GroupAggregateVarInfo(Node defingingGroupNode, Var groupAggregateVar)
         {
             _definingGroupByNode = defingingGroupNode;

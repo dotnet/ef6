@@ -56,7 +56,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Writes the Entity Data Model represented by the given <see cref="DbModel" /> to the
         ///     given writer in EDMX form.
         /// </summary>
-        /// <param name="modelaseMapping"> An object representing the EDM. </param>
+        /// <param name="model"> An object representing the EDM. </param>
         /// <param name="writer"> The writer. </param>
         public static void WriteEdmx(DbModel model, XmlWriter writer)
         {

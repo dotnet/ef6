@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the left argument.
+        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the left argument.
         /// </summary>
         /// <returns>
         ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the left argument.
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the right argument.
+        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the right argument.
         /// </summary>
         /// <returns>
         ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the right argument.

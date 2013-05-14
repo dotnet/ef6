@@ -49,9 +49,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="parentElement"> </param>
         internal FacetEnabledSchemaElement(Function parentElement)
             : base(parentElement)
         {

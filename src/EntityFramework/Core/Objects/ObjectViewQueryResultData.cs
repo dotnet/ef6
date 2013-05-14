@@ -68,8 +68,6 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Cannot be a DbDataRecord or a derivative of DbDataRecord
         /// </summary>
-        /// <param name="elementType"> </param>
-        /// <returns> </returns>
         private static bool IsEditable(Type elementType)
         {
             return !((elementType == typeof(DbDataRecord)) ||

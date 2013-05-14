@@ -36,9 +36,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TArgType"> </typeparam>
-        /// <param name="visitor"> </param>
-        /// <param name="arg"> </param>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
         {
@@ -48,10 +45,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TResultType"> </typeparam>
-        /// <typeparam name="TArgType"> </typeparam>
-        /// <param name="visitor"> </param>
-        /// <param name="arg"> </param>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
             ColumnMapVisitorWithResults<TResultType, TArgType> visitor, TArgType arg)
@@ -62,7 +55,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Debugging support
         /// </summary>
-        /// <returns> </returns>
         public override string ToString()
         {
             var str = String.Format(CultureInfo.InvariantCulture, "C{0}", base.ToString());

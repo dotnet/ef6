@@ -36,7 +36,6 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// <summary>
         ///     Static factory to create boolean literals by value only.
         /// </summary>
-        /// <param name="value"> </param>
         internal static Literal NewBooleanLiteral(bool value)
         {
             return new Literal(value);

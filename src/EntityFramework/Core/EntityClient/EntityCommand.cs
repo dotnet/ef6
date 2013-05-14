@@ -102,7 +102,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </summary>
         /// <param name="statement"> The eSQL command text to execute </param>
         /// <param name="connection"> The connection object </param>
-        /// <param name="resolver>"> Resolver used to resolve DbProviderServices </param>
+        /// <param name="resolver"> Resolver used to resolve DbProviderServices </param>
         public EntityCommand(string statement, EntityConnection connection, IDbDependencyResolver resolver)
             : this(statement, connection)
         {
@@ -173,7 +173,10 @@ namespace System.Data.Entity.Core.EntityClient
         ///     constructor is used by ObjectQueryExecution plan to execute an ObjectQuery.
         /// </summary>
         /// <param name="connection"> The connection against which this EntityCommand should execute </param>
-        /// <param name="commandDefinition"> The prepared command definition that can be executed using this EntityCommand </param>
+        /// <param name="entityCommandDefinition"> The prepared command definition that can be executed using this EntityCommand </param>
+        /// <param name="context"> </param>
+        /// <param name="factory"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal EntityCommand(
             EntityConnection connection, EntityCommandDefinition entityCommandDefinition, DbInterceptionContext context, EntityDataReaderFactory factory = null)
             : this(entityCommandDefinition, context, factory)
@@ -968,7 +971,6 @@ namespace System.Data.Entity.Core.EntityClient
         ///     Returns a dictionary of parameter name and parameter typeusage in s-space from the entity parameter
         ///     collection given by the user.
         /// </summary>
-        /// <returns> </returns>
         internal virtual Dictionary<string, TypeUsage> GetParameterTypeUsage()
         {
             Debug.Assert(null != _parameters, "_parameters must not be null");

@@ -21,9 +21,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     where Y is of row type, and the types of the input CaseOp, the NULL and Y are the same,
         ///     return true
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         internal static bool IsRowTypeCaseOpWithNullability(CaseOp op, Node n, out bool thenClauseIsNull)
         {
             thenClauseIsNull = false; //any default value will do
@@ -80,8 +77,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Is the given op one of the ConstantBaseOp-s
         /// </summary>
-        /// <param name="opType"> </param>
-        /// <returns> </returns>
         internal static bool IsConstantBaseOp(OpType opType)
         {
             return opType == OpType.Constant ||
@@ -99,10 +94,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     but it does not include any AND parts of predicate2 that are present
         ///     in predicate1.
         /// </summary>
-        /// <param name="predicate1"> </param>
-        /// <param name="predicate2"> </param>
-        /// <param name="command"> </param>
-        /// <returns> </returns>
         internal static Node CombinePredicates(Node predicate1, Node predicate2, Command command)
         {
             var andParts1 = BreakIntoAndParts(predicate1);
@@ -137,8 +128,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     have nodes with AND ops, but
         ///     would not be broken unless they are the AND nodes themselves.
         /// </summary>
-        /// <param name="predicate"> </param>
-        /// <param name="andParts"> </param>
         private static IEnumerable<Node> BreakIntoAndParts(Node predicate)
         {
             return Helpers.GetLeafNodes(

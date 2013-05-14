@@ -93,8 +93,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Override EdmEquals to support value comparison of TypeUsage property
         /// </summary>
-        /// <param name="item"> </param>
-        /// <returns> </returns>
         internal override bool EdmEquals(MetadataItem item)
         {
             // short-circuit if this and other are reference equivalent

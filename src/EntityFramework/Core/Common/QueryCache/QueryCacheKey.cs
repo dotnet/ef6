@@ -42,14 +42,11 @@ namespace System.Data.Entity.Core.Common.QueryCache
         ///     Determines whether two instances of QueryCacheContext are equal.
         ///     Equality is value based.
         /// </summary>
-        /// <param name="obj"> </param>
-        /// <returns> </returns>
         public abstract override bool Equals(object obj);
 
         /// <summary>
         ///     Returns QueryCacheContext instance HashCode
         /// </summary>
-        /// <returns> </returns>
         public abstract override int GetHashCode();
 
         #endregion
@@ -88,9 +85,6 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <summary>
         ///     default string comparer
         /// </summary>
-        /// <param name="s"> </param>
-        /// <param name="t"> </param>
-        /// <returns> </returns>
         protected virtual bool Equals(string s, string t)
         {
             return String.Equals(s, t, _stringComparison);

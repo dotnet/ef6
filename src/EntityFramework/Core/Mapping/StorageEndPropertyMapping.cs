@@ -50,7 +50,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Construct a new End Property mapping object
         /// </summary>
-        /// <param name="member"> </param>
         public StorageEndPropertyMapping()
             : base(null)
         {
@@ -90,7 +89,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Add a property mapping as a child of End property mapping
         /// </summary>
-        /// <param name="prop"> </param>
         public void AddProperty(StoragePropertyMapping prop)
         {
             m_properties.Add(prop);

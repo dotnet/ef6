@@ -106,10 +106,10 @@ namespace System.Data.Entity.Infrastructure
 
             Execute(
                 () =>
-                    {
-                        action();
-                        return (object)null;
-                    });
+                {
+                    action();
+                    return (object)null;
+                });
         }
 
         /// <summary>
@@ -189,10 +189,10 @@ namespace System.Data.Entity.Infrastructure
 
             return ProtectedExecuteAsync(
                 async () =>
-                    {
-                        await func().ConfigureAwait(continueOnCapturedContext: false);
-                        return true;
-                    }, cancellationToken);
+                {
+                    await func().ConfigureAwait(continueOnCapturedContext: false);
+                    return true;
+                }, cancellationToken);
         }
 
         /// <summary>
@@ -341,7 +341,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Determines whether the specified exception represents a transient failure that can be compensated by a retry.
         /// </summary>
-        /// <param name="ex">The exception object to be verified.</param>
+        /// <param name="exception">The exception object to be verified.</param>
         /// <returns>
         ///     <c>true</c> if the specified exception is considered as transient, otherwise <c>false</c>.
         /// </returns>

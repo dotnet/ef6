@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     /// </summary>
     internal class ObjectQueryProvider : IQueryProvider
 #if !NET40
-                                         , IDbAsyncQueryProvider
+, IDbAsyncQueryProvider
 #endif
     {
         // Although ObjectQuery contains a reference to ObjectContext, it is possible
@@ -44,7 +44,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
         ///     is used to transfer state information to the new ObjectQuery instance created using
         ///     the private CreateQuery method overloads.
         /// </summary>
-        /// <param name="query"> </param>
         internal ObjectQueryProvider(ObjectQuery query)
             : this(query.Context)
         {

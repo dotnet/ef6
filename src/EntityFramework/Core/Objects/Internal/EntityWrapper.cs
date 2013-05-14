@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <param name="entity"> The entity to wrap </param>
         /// <param name="relationshipManager"> The RelationshipManager associated with the entity </param>
         /// <param name="key"> The entity's key </param>
-        /// <param name="entitySet"> The entity set, or null if none is known </param>
+        /// <param name="set"> The entity set, or null if none is known </param>
         /// <param name="context"> The context to which the entity should be attached </param>
         /// <param name="mergeOption"> NoTracking for non-tracked entities, AppendOnly otherwise </param>
         /// <param name="identityType"> The type of the entity ignoring any possible proxy type </param>

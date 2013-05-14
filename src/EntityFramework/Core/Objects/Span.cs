@@ -34,7 +34,6 @@ namespace System.Data.Entity.Core.Objects
         ///     Checks whether relationship span needs to be performed. Currently this is only when the query is
         ///     not using MergeOption.NoTracking.
         /// </summary>
-        /// <param name="mergeOption"> </param>
         /// <returns> True if the query needs a relationship span rewrite </returns>
         internal static bool RequiresRelationshipSpan(MergeOption mergeOption)
         {
@@ -157,7 +156,6 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Creates a new Span with the same SpanPaths as this Span
         /// </summary>
-        /// <returns> </returns>
         internal Span Clone()
         {
             var newSpan = new Span();
@@ -170,7 +168,6 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Adds the path if it does not already exist
         /// </summary>
-        /// <param name="spanPath"> </param>
         internal void AddSpanPath(SpanPath spanPath)
         {
             if (ValidateSpanPath(spanPath))
@@ -183,7 +180,6 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Returns true if the path can be added
         /// </summary>
-        /// <param name="spanPath"> </param>
         private bool ValidateSpanPath(SpanPath spanPath)
         {
             // Check for dupliacte entries

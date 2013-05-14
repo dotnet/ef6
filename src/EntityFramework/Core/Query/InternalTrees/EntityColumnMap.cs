@@ -19,8 +19,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="type"> column datatype </param>
         /// <param name="name"> column name </param>
-        /// <param name="entityIdentity"> entity identity information </param>
         /// <param name="properties"> list of properties </param>
+        /// <param name="entityIdentity"> entity identity information </param>
         internal EntityColumnMap(TypeUsage type, string name, ColumnMap[] properties, EntityIdentity entityIdentity)
             : base(type, name, properties)
         {
@@ -39,9 +39,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TArgType"> </typeparam>
-        /// <param name="visitor"> </param>
-        /// <param name="arg"> </param>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
         {
@@ -51,10 +48,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TResultType"> </typeparam>
-        /// <typeparam name="TArgType"> </typeparam>
-        /// <param name="visitor"> </param>
-        /// <param name="arg"> </param>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
             ColumnMapVisitorWithResults<TResultType, TArgType> visitor, TArgType arg)
@@ -65,7 +58,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Debugging support
         /// </summary>
-        /// <returns> </returns>
         public override string ToString()
         {
             var str = String.Format(CultureInfo.InvariantCulture, "E{0}", base.ToString());

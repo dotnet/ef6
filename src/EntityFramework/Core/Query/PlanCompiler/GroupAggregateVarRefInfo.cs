@@ -25,8 +25,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Public constructor
         /// </summary>
-        /// <param name="groupAggregateVarInfo"> </param>
-        /// <param name="computation"> </param>
         internal GroupAggregateVarRefInfo(GroupAggregateVarInfo groupAggregateVarInfo, Node computation, bool isUnnested)
         {
             _groupAggregateVarInfo = groupAggregateVarInfo;

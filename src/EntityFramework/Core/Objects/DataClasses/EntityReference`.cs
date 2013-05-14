@@ -294,7 +294,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     This operation is not allowed if the owner is null
         /// </summary>
-        /// <returns> </returns>
         internal override IEnumerable GetInternalEnumerable()
         {
             // This shouldn't be converted to an iterator method because then the check for a null owner
@@ -594,10 +593,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             _wrappedCachedValue = NullEntityWrapper.NullWrapper;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="entity"> </param>
-        /// <param name="relationshipAlreadyExists"> </param>
         /// <returns> True if the verify succeeded, False if the Add should no-op </returns>
         internal override bool VerifyEntityForAdd(IEntityWrapper wrappedEntity, bool relationshipAlreadyExists)
         {
@@ -635,7 +630,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Disconnected adds are not supported for an EntityReference so we should report this as an error.
         /// </summary>
-        /// <param name="entity"> The entity to add to the related end in a disconnected state. </param>
+        /// <param name="wrappedEntity"> The entity to add to the related end in a disconnected state. </param>
         internal override void DisconnectedAdd(IEntityWrapper wrappedEntity)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -646,7 +641,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Disconnected removes are not supported for an EntityReference so we should report this as an error.
         /// </summary>
-        /// <param name="entity"> The entity to remove from the related end in a disconnected state. </param>
+        /// <param name="wrappedEntity"> The entity to remove from the related end in a disconnected state. </param>
         internal override bool DisconnectedRemove(IEntityWrapper wrappedEntity)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -658,9 +653,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Remove from the RelatedEnd
         /// </summary>
-        /// <param name="wrappedEntity"> </param>
-        /// <param name="resetIsLoaded"> </param>
-        /// <returns> </returns>
         internal override bool RemoveFromLocalCache(IEntityWrapper wrappedEntity, bool resetIsLoaded, bool preserveForeignKey)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -689,8 +681,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Remove from the POCO collection
         /// </summary>
-        /// <param name="wrappedEntity"> </param>
-        /// <returns> </returns>
         internal override bool RemoveFromObjectCache(IEntityWrapper wrappedEntity)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -820,7 +810,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///     Take any values in the incoming RelatedEnd and sets them onto the values
         ///     that currently exist in this RelatedEnd
         /// </summary>
-        /// <param name="rhs"> </param>
         internal void InitializeWithValue(RelatedEnd relatedEnd)
         {
             Debug.Assert(_wrappedCachedValue.Entity == null, "The EntityReference already has a value.");

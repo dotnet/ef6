@@ -21,38 +21,27 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="lookUpTable"> </param>
         public FilteredSchemaElementLookUpTable(SchemaElementLookUpTable<S> lookUpTable)
         {
             _lookUpTable = lookUpTable;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns> </returns>
         public IEnumerator<T> GetEnumerator()
         {
             return _lookUpTable.GetFilteredEnumerator<T>();
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns> </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _lookUpTable.GetFilteredEnumerator<T>();
         }
 
-        /// <summary>
-        /// </summary>
         public int Count
         {
             get
             {
                 var count = 0;
-                foreach (SchemaElement element  in _lookUpTable)
+                foreach (SchemaElement element in _lookUpTable)
                 {
                     if (element is T)
                     {
@@ -63,10 +52,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="key"> </param>
-        /// <returns> </returns>
         public bool ContainsKey(string key)
         {
             if (!_lookUpTable.ContainsKey(key))
@@ -76,8 +61,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return _lookUpTable[key] as T != null;
         }
 
-        /// <summary>
-        /// </summary>
         public T this[string key]
         {
             get
@@ -96,10 +79,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="key"> </param>
-        /// <returns> </returns>
         public T LookUpEquivalentKey(string key)
         {
             return _lookUpTable.LookUpEquivalentKey(key) as T;

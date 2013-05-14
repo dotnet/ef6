@@ -25,13 +25,13 @@ namespace System.Data.Entity.Migrations
         ///     from database terminology.
         ///     This method can useful when seeding data using Migrations.
         /// </summary>
+        /// <param name="set"> </param>
         /// <param name="entities"> The entities to add or update. </param>
         /// <remarks>
-        ///     When the
-        ///     <param name="set" />
-        ///     parameter is a custom or fake IDbSet implementation, this method will
+        ///     When the <paramref name="set" /> parameter is a custom or fake IDbSet implementation, this method will
         ///     attempt to locate and invoke a public, instance method with the same signature as this extension method.
         /// </remarks>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public static void AddOrUpdate<TEntity>(
             this IDbSet<TEntity> set, params TEntity[] entities)
             where TEntity : class
@@ -67,14 +67,14 @@ namespace System.Data.Entity.Migrations
         ///     Equivalent to an "upsert" operation from database terminology.
         ///     This method can useful when seeding data using Migrations.
         /// </summary>
+        /// <param name="set"> </param>
         /// <param name="identifierExpression"> An expression specifying the properties that should be used when determining whether an Add or Update operation should be performed. </param>
         /// <param name="entities"> The entities to add or update. </param>
         /// <remarks>
-        ///     When the
-        ///     <param name="set" />
-        ///     parameter is a custom or fake IDbSet implementation, this method will
+        ///     When the <paramref name="set" /> parameter is a custom or fake IDbSet implementation, this method will
         ///     attempt to locate and invoke a public, instance method with the same signature as this extension method.
         /// </remarks>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static void AddOrUpdate<TEntity>(
             this IDbSet<TEntity> set, Expression<Func<TEntity, object>> identifierExpression, params TEntity[] entities)

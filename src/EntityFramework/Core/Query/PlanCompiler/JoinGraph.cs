@@ -319,7 +319,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="joinNode"> current join Node </param>
         /// <param name="leftVar"> left-side column </param>
         /// <param name="rightVar"> right-side column </param>
-        /// <returns> </returns>
         private bool AddJoinEdge(AugmentedJoinNode joinNode, ColumnVar leftVar, ColumnVar rightVar)
         {
             AugmentedTableNode leftTableNode;
@@ -487,6 +486,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="node"> </param>
         /// <param name="maxVisibility"> highest node that this node is visible at </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void BuildJoinEdges(AugmentedNode node, int maxVisibility)
         {
             switch (node.Node.Op.OpType)
@@ -547,8 +547,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     a join on that intersection.
         ///     If an edge already exists between these tables, then don't add a new edge
         /// </summary>
-        /// <param name="edge1"> </param>
-        /// <param name="edge2"> </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static bool GenerateTransitiveEdge(JoinEdge edge1, JoinEdge edge2)
@@ -668,9 +666,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Given a list of key vars a list of corresponding value vars, creates a list
         ///     of key-value pairs that is ordered based on the keys
         /// </summary>
-        /// <param name="keyVars"> </param>
-        /// <param name="valueVars"> </param>
-        /// <returns> </returns>
         private static IEnumerable<KeyValuePair<ColumnVar, ColumnVar>> CreateOrderedKeyValueList(
             List<ColumnVar> keyVars, List<ColumnVar> valueVars)
         {
@@ -736,9 +731,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     - The root represents the table
         ///     - The table is a on the left spine of a left outer join tree
         /// </summary>
-        /// <param name="root"> </param>
-        /// <param name="table"> </param>
-        /// <returns> </returns>
         private static bool AreAllTableRowsPreserved(AugmentedNode root, AugmentedTableNode table)
         {
             if (root is AugmentedTableNode)
@@ -766,9 +758,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Does the set of given joinEdges contain a join edge to a given table
         /// </summary>
-        /// <param name="joinEdges"> </param>
-        /// <param name="table"> </param>
-        /// <returns> </returns>
         private static bool ContainsJoinEdgeForTable(IEnumerable<JoinEdge> joinEdges, Table table)
         {
             foreach (var joinEdge in joinEdges)
@@ -784,11 +773,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Determines whether each of the given joinEdges can be turned into an inner join
         ///     NOTE: Due to how we create join edges, currenlty there can only be one join edge in this group
-        ///     See <cref="CanJoinEdgeBeTurnedIntoInnerJoin" /> for details.
+        ///     See <see cref="CanJoinEdgeBeTurnedIntoInnerJoin" /> for details.
         /// </summary>
-        /// <param name="rightNode"> </param>
-        /// <param name="joinEdges"> </param>
-        /// <returns> </returns>
         private bool CanAllJoinEdgesBeTurnedIntoInnerJoins(AugmentedNode rightNode, IEnumerable<JoinEdge> joinEdges)
         {
             foreach (var joinEdge in joinEdges)
@@ -808,9 +794,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     This means that if B is participating in any joins prior to being joined with A, these have to be
         ///     left outer joins and B has to be a driver (on the left spine).
         /// </summary>
-        /// <param name="rightNode"> </param>
-        /// <param name="joinEdge"> </param>
-        /// <returns> </returns>
         private bool CanJoinEdgeBeTurnedIntoInnerJoin(AugmentedNode rightNode, JoinEdge joinEdge)
         {
             return !joinEdge.RestrictedElimination
@@ -827,8 +810,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     and the child multiplicity is One. However, this scenario cannot be specified in the ssdl,
         ///     thus this case has not be implemented
         /// </summary>
-        /// <param name="joinEdge"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private bool IsConstraintPresentForTurningIntoInnerJoin(JoinEdge joinEdge)
@@ -907,11 +888,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     either the replacement table to the original table's location, or the table to the
         ///     replacing table's location.
         ///     For the table that would have to move, it checks whether such move would be valid
-        ///     with regards to its participation as driver in Left Outer Joins (<see cref= CanBeMoved />)
+        ///     with regards to its participation as driver in Left Outer Joins (<see cref="M:CanBeMoved" />)
         /// </summary>
-        /// <param name="table"> </param>
-        /// <param name="replacingTable"> </param>
-        /// <returns> </returns>
         private static bool CanBeEliminatedBasedOnLojParticipation(AugmentedTableNode table, AugmentedTableNode replacingTable)
         {
             //The table with lower id, would have to be logically located at the other table's location
@@ -934,9 +912,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     - The table coming from tableJoinEdge does not participate in any other join on the way up to the least common ancestor
         ///     - The table coming from replacingTableJoinEdge does not get filtered on the way up to the least common ancestor
         /// </summary>
-        /// <param name="tableJoinEdge"> </param>
-        /// <param name="replacingTableJoinEdge"> </param>
-        /// <returns> </returns>
         private static bool CanBeEliminatedViaStarJoinBasedOnOtherJoinParticipation(JoinEdge tableJoinEdge, JoinEdge replacingTableJoinEdge)
         {
             if (tableJoinEdge.JoinNode == null
@@ -958,10 +933,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     - if it is on the right side of a left outer join or participates in any inner join, thus it is only
         ///     allowed to be on the left side of a left outer join
         /// </summary>
-        /// <param name="joinEdge"> </param>
-        /// <param name="leastCommonAncestor"> </param>
-        /// <param name="disallowAnyJoin"> </param>
-        /// <returns> </returns>
         private static bool CanGetFileredByJoins(JoinEdge joinEdge, AugmentedNode leastCommonAncestor, bool disallowAnyJoin)
         {
             AugmentedNode currentNode = joinEdge.Right;
@@ -991,9 +962,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     and the replacing table is not part of that subtree then the table cannot be moved,
         ///     otherwise it can.
         /// </summary>
-        /// <param name="table"> </param>
-        /// <param name="replacingTable"> </param>
-        /// <returns> </returns>
         private static bool CanBeMovedBasedOnLojParticipation(AugmentedTableNode table, AugmentedTableNode replacingTable)
         {
             var leastCommonAncestor = GetLeastCommonAncestor(table, replacingTable);
@@ -1016,9 +984,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Gets the least common ancestor for two given nodes in the tree
         /// </summary>
-        /// <param name="node1"> </param>
-        /// <param name="node2"> </param>
-        /// <returns> </returns>
         private static AugmentedNode GetLeastCommonAncestor(AugmentedNode node1, AugmentedNode node2)
         {
             if (node1.Id
@@ -1118,8 +1083,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     add these to the list of replaced vars for the replacingVar too.
         ///     The info about the replacedVar no longer needs to be maintained.
         /// </summary>
-        /// <param name="replacingVar"> </param>
-        /// <param name="replacedVar"> </param>
         private void AddReverseMapping(Var replacingVar, Var replacedVar)
         {
             VarVec oldReplacedVars;
@@ -1257,9 +1220,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     1. are joined to the center (X) on the same columns
         ///     2. are of the same join kind
         /// </summary>
-        /// <param name="edge1"> </param>
-        /// <param name="edge2"> </param>
-        /// <returns> </returns>
         private static bool AreMatchingForStarSelfJoinElimination(JoinEdge edge1, JoinEdge edge2)
         {
             // In order for the join edges to be compatible thay have to  
@@ -1294,8 +1254,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     NOTE:  The second limitation is really arbitrary, to should be possible
         ///     to also allow other conditions
         /// </summary>
-        /// <param name="joinEdge"> </param>
-        /// <returns> </returns>
         private bool QualifiesForStarSelfJoinGroup(JoinEdge joinEdge)
         {
             //
@@ -1497,7 +1455,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Eliminate the left table
         /// </summary>
-        /// <param name="joinEdge"> </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void EliminateLeftTable(JoinEdge joinEdge)
@@ -1528,7 +1485,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Eliminate the right table
         /// </summary>
-        /// <param name="joinEdge"> </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void EliminateRightTable(JoinEdge joinEdge)
@@ -1554,8 +1510,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Are any of the key columns from the right table of the given join edge referenced
         ///     elsewhere (outside the join condition)
         /// </summary>
-        /// <param name="joinEdge"> </param>
-        /// <returns> </returns>
         private bool RightTableHasKeyReferences(JoinEdge joinEdge)
         {
             //For transitive edges we don't have a joinNode.
@@ -1596,7 +1550,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="joinEdge"> the current join edge </param>
         /// <param name="fkConstraint"> the referential integrity constraint </param>
-        /// <returns> </returns>
         private bool TryEliminateParentChildJoin(JoinEdge joinEdge, ForeignKeyConstraint fkConstraint)
         {
             //
@@ -1634,9 +1587,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 EliminateLeftTable(joinEdge);
                 return true;
             }
-                //
-                // For left outer joins, try and eliminate the child table
-                //
+            //
+            // For left outer joins, try and eliminate the child table
+            //
             else
             {
                 // SQLBUDT #512375: For the 1 - 0..1 we also verify that the child's columns are not 
@@ -1652,11 +1605,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     it checks whether the join condition includes (but is not necessarily joined only on)
         ///     the foreign key constraint.
         /// </summary>
-        /// <param name="fkConstraint"> </param>
-        /// <param name="parentVars"> </param>
-        /// <param name="childVars"> </param>
-        /// <param name="childForeignKeyVars"> </param>
-        /// <returns> </returns>
         private static bool IsJoinOnFkConstraint(
             ForeignKeyConstraint fkConstraint, IList<ColumnVar> parentVars, IList<ColumnVar> childVars,
             out IList<ColumnVar> childForeignKeyVars)
@@ -1735,7 +1683,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="joinEdge"> the current join edge </param>
         /// <param name="fkConstraint"> the referential integrity constraint </param>
-        /// <returns> </returns>
         private bool TryEliminateChildParentJoin(JoinEdge joinEdge, ForeignKeyConstraint fkConstraint)
         {
             IList<ColumnVar> childColumnVars;
@@ -1768,10 +1715,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     include the fk constraint.
         ///     3. It can be eliminated based on possible participation in a left outer join
         /// </summary>
-        /// <param name="joinEdge"> </param>
-        /// <param name="fkConstraintKeyCount"> </param>
-        /// <param name="allowRefsForJoinedOnFkOnly"
-        /// <returns> </returns>
         private bool TryEliminateRightTable(JoinEdge joinEdge, int fkConstraintKeyCount, bool allowRefsForJoinedOnFkOnly)
         {
             if (HasNonKeyReferences(joinEdge.Right.Table))
@@ -1937,9 +1880,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Build a filter node (if necessary) to prune out null values for the specified
         ///     columns
         /// </summary>
-        /// <param name="inputNode"> </param>
-        /// <param name="nonNullableColumns"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node BuildFilterForNullableColumns(Node inputNode, VarVec nonNullableColumns)
@@ -1985,7 +1925,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="inputNode"> the input node </param>
         /// <param name="predicateNode"> the filter predicate </param>
-        /// <returns> </returns>
         private Node BuildFilterNode(Node inputNode, Node predicateNode)
         {
             if (predicateNode == null)
@@ -2335,12 +2274,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     If the predicateMinimuLocationId is less or equal to the target location id of the current result, it is AND-ed with the
         ///     current result, otherwise it is included in the list of predicates that need to be propagated up (outPredicates)
         /// </summary>
-        /// <param name="targetNodeId"> </param>
-        /// <param name="predicateNode"> </param>
-        /// <param name="predicateMinLocationId"> </param>
-        /// <param name="result"> </param>
-        /// <param name="outPredicates"> </param>
-        /// <returns> </returns>
         private Node ClassifyPredicate(
             int targetNodeId, Node predicateNode, int predicateMinLocationId, Node result, Dictionary<Node, int> outPredicates)
         {
@@ -2358,9 +2291,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Combines two predicates into one by AND-ing them.
         /// </summary>
-        /// <param name="node1"> </param>
-        /// <param name="node2"> </param>
-        /// <returns> </returns>
         private Node CombinePredicates(Node node1, Node node2)
         {
             if (node1 == null)
@@ -2380,9 +2310,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Get the location id of the AugumentedTableNode at which the given var is defined.
         ///     If the var is not in th m_varToDefiningNodeMap, then it return the input defaultLocationId
         /// </summary>
-        /// <param name="var"> </param>
-        /// <param name="defaultLocationId"> </param>
-        /// <returns> </returns>
         private int GetLocationId(Var var, int defaultLocationId)
         {
             AugmentedTableNode node;
@@ -2400,9 +2327,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Gets the location id of least common ancestor for two nodes in the tree given their location ids
         /// </summary>
-        /// <param name="nodeId1"> </param>
-        /// <param name="nodeId2"> </param>
-        /// <returns> </returns>
         private int GetLeastCommonAncestor(int nodeId1, int nodeId2)
         {
             if (nodeId1 == nodeId2)
@@ -2432,8 +2356,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Helper method for <see cref="GetLeastCommonAncestor(int, int)" />
         ///     Given a root node pick its immediate child to which the node identifed with the given nodeId bellongs.
         /// </summary>
-        /// <param name="nodeId"> </param>
-        /// <param name="root"> </param>
         /// <returns> The immediate child of the given root that is root of the subree that contains the node with the given nodeId. </returns>
         private static AugmentedNode PickSubtree(int nodeId, AugmentedNode root)
         {

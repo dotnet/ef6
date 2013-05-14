@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Adds the specified <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> to the collection.
         /// </summary>
-        /// <param name="parameter">The parameter to add to the collection.</param>
+        /// <param name="item">The parameter to add to the collection.</param>
         /// <exception cref="T:System.ArgumentNullException">The  parameter  argument is null.</exception>
         /// <exception cref="T:System.ArgumentException">
         ///     The  parameter  argument already exists in the collection. This behavior differs from that of most collections that allow duplicate entries. -or-Another parameter with the same name as the  parameter  argument already exists in the collection. Note that the lookup is case-insensitive. This behavior differs from that of most collections, and is more like that of a
@@ -175,7 +175,7 @@ namespace System.Data.Entity.Core.Objects
         ///     Checks for the existence of a specified <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> in the collection by reference.
         /// </summary>
         /// <returns>Returns true if the parameter object was found in the collection; otherwise, false.  </returns>
-        /// <param name="parameter">
+        /// <param name="item">
         ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> to find in the collection.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">The  parameter  argument is null.</exception>
@@ -215,7 +215,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Allows the parameters in the collection to be copied into a supplied array, starting with the object at the specified index.</summary>
         /// <param name="array">The array into which to copy the parameters.</param>
-        /// <param name="index">The index in the array at which to start copying the parameters.</param>
+        /// <param name="arrayIndex">The index in the array at which to start copying the parameters.</param>
         public void CopyTo(ObjectParameter[] array, int arrayIndex)
         {
             _parameters.CopyTo(array, arrayIndex);
@@ -229,7 +229,7 @@ namespace System.Data.Entity.Core.Objects
         ///     Removes an instance of an <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> from the collection by reference if it exists in the collection.
         /// </summary>
         /// <returns>Returns true if the parameter object was found and removed from the collection; otherwise, false. </returns>
-        /// <param name="parameter">An object to remove from the collection.</param>
+        /// <param name="item">An object to remove from the collection.</param>
         /// <exception cref="T:System.ArgumentNullException">The  parameter  argument is null.</exception>
         public bool Remove(ObjectParameter item)
         {

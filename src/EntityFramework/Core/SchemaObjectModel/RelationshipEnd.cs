@@ -20,7 +20,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// <summary>
         ///     construct a Relationship End
         /// </summary>
-        /// <param name="relationship"> </param>
         public RelationshipEnd(Relationship relationship)
             : base(relationship)
         {
@@ -268,7 +267,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                     multiplicity = RelationshipMultiplicity.Many;
                     return true;
                 default:
-                    multiplicity = (RelationshipMultiplicity)(- 1);
+                    multiplicity = (RelationshipMultiplicity)(-1);
                     return false;
             }
         }

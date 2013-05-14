@@ -12,8 +12,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Constrcut a new member mapping metadata object
         /// </summary>
-        /// <param name="edmNavigationProperty"> </param>
-        /// <param name="clrNavigationProperty"> </param>
         internal ObjectNavigationPropertyMapping(NavigationProperty edmNavigationProperty, NavigationProperty clrNavigationProperty)
             :
                 base(edmNavigationProperty, clrNavigationProperty)

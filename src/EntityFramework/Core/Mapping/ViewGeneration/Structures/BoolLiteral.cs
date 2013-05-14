@@ -6,12 +6,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.Utils;
     using System.Text;
-    using DomainConstraint = System.Data.Entity.Core.Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>;
-    using DomainVariable = System.Data.Entity.Core.Common.Utils.Boolean.DomainVariable<BoolLiteral, Constant>;
     using DomainBoolExpr =
-        System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
+            System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
+    using DomainConstraint = System.Data.Entity.Core.Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>;
     using DomainTermExpr =
-        System.Data.Entity.Core.Common.Utils.Boolean.TermExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
+            System.Data.Entity.Core.Common.Utils.Boolean.TermExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
+    using DomainVariable = System.Data.Entity.Core.Common.Utils.Boolean.DomainVariable<BoolLiteral, Constant>;
 
     /// <summary>
     ///     A class that ties up all the literals in boolean expressions.
@@ -71,8 +71,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// <summary>
         ///     See <see cref="BoolExpression.GetRequiredSlots" />.
         /// </summary>
-        /// <param name="projectedSlotMap"> </param>
-        /// <param name="requiredSlots"> </param>
         internal abstract void GetRequiredSlots(MemberProjectionIndex projectedSlotMap, bool[] requiredSlots);
 
         /// <summary>

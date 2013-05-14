@@ -102,6 +102,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="relPropertyHelper"> helper for rel properties </param>
         /// <param name="typesNeedingNullSentinel"> which types need a null sentinel </param>
         /// <param name="structuredTypeInfo"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static void Process(
             Command itree,
             HashSet<md.TypeUsage> referencedTypes,
@@ -126,6 +127,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="freeFloatingEntityConstructorTypes"> free-floating entityConstructor types </param>
         /// <param name="discriminatorMaps"> discriminator information for entity sets mapped using TPH pattern </param>
         /// <param name="relPropertyHelper"> helper for rel properties </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "itree")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -175,8 +177,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Gets the "single" entityset that stores instances of this type
         /// </summary>
-        /// <param name="type"> </param>
-        /// <returns> </returns>
         internal md.EntitySet GetEntitySet(md.EntityTypeBase type)
         {
             md.EntitySet set;
@@ -386,7 +386,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Build up auxilliary information for each referenced type in the query
         /// </summary>
-        /// <param name="referencedTypes"> </param>
         private void PopulateTypeInfoMap(HashSet<md.TypeUsage> referencedTypes)
         {
             foreach (var t in referencedTypes)
@@ -493,9 +492,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 superTypeInfo = CreateTypeInfoForStructuredType(md.TypeUsage.Create(type.EdmType.BaseType), discriminatorMap);
             }
-                // 
-                // Handle Ref types also in a similar fashion
-                //
+            // 
+            // Handle Ref types also in a similar fashion
+            //
             else if (TypeHelpers.TryGetEdmType(type, out refType))
             {
                 var entityType = refType.ElementType as md.EntityType;
@@ -561,7 +560,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
 
                     // Only handle root types. The call below will ensure that all the 
-                    // subtypes are appropriately tagged
+                // subtypes are appropriately tagged
                 else if (kv.Value.IsRootType
                          && (md.TypeSemantics.IsEntityType(kv.Key) || md.TypeSemantics.IsComplexType(kv.Key)))
                 {
@@ -574,8 +573,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Assign a typeid to a root type
         /// </summary>
-        /// <param name="typeInfo"> </param>
-        /// <param name="typeId"> </param>
         private void AssignRootTypeId(TypeInfo typeInfo, string typeId)
         {
             typeInfo.TypeId = typeId;
@@ -622,8 +619,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Coming soon: relax the "need subtype" requirement (ie) any entity/complex type will
         ///     have a typeid
         /// </summary>
-        /// <param name="typeInfo"> </param>
-        /// <returns> </returns>
         private static bool NeedsTypeIdProperty(TypeInfo typeInfo)
         {
             return typeInfo.ImmediateSubTypes.Count > 0 && !md.TypeSemantics.IsReferenceType(typeInfo.Type);
@@ -634,8 +629,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     at the top level of the query; we capture that information in the preprocessor
         ///     and pass it in here.
         /// </summary>
-        /// <param name="typeInfo"> </param>
-        /// <returns> </returns>
         private bool NeedsNullSentinelProperty(TypeInfo typeInfo)
         {
             return m_typesNeedingNullSentinel.Contains(typeInfo.Type.EdmType.Identity);
@@ -646,8 +639,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     or a reference type, AND we cannot determine that there is only entityset
         ///     in the query that could be producing instances of this entity
         /// </summary>
-        /// <param name="typeInfo"> </param>
-        /// <returns> </returns>
         private bool NeedsEntitySetIdProperty(TypeInfo typeInfo)
         {
             md.EntityType entityType;
@@ -910,7 +901,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     to the new property for use in later modules.
         ///     Finally, we identify the TypeId and EntitySetId property if they exist
         /// </summary>
-        /// <param name="type"> </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void CreateFlattenedRecordType(RootTypeInfo type)
@@ -1104,7 +1094,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Get the root entity type for a type
         /// </summary>
         /// <param name="type"> entity type </param>
-        /// <returns> </returns>
         private static md.EntityTypeBase GetRootType(md.EntityTypeBase type)
         {
             while (type.BaseType != null)

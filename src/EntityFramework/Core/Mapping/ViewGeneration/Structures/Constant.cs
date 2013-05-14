@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     /// <summary>
@@ -44,7 +45,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// <summary>
         ///     Generates eSQL for the constant expression.
         /// </summary>
+        /// <param name="builder"> </param>
         /// <param name="outputMember"> The member to which this constant is directed </param>
+        /// <param name="blockAlias"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal abstract StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias);
 
         /// <summary>

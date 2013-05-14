@@ -108,11 +108,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         /// <param name="stateEntry"> state manager entry containing value (used for error reporting) </param>
         /// <param name="record"> Record containing value (used to find the actual value) </param>
-        /// <param name="currentValues"> Indicates whether we are reading current or original values. </param>
+        /// <param name="useCurrentValues"> Indicates whether we are reading current or original values. </param>
         /// <param name="key"> Entity key for the state entry. Must be set for entity records. </param>
         /// <param name="ordinal"> Ordinal of Member for which to retrieve a value. </param>
-        /// modified (must be ordinally aligned with the type). Null indicates all members are modified.
-        /// </param>
         /// <param name="modifiedPropertiesBehavior"> Indicates how to determine whether a property is modified. </param>
         /// <returns> Propagator result describing this member value. </returns>
         internal PropagatorResult RetrieveMember(

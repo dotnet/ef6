@@ -20,9 +20,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// <summary>
         ///     Entry point for View Generation
         /// </summary>
-        /// <param name="containerMapping"> </param>
-        /// <param name="workSpace"> </param>
-        /// <param name="config"> </param>
         /// <returns> Generated Views for EntitySets </returns>
         internal static ViewGenResults GenerateViewsFromMapping(StorageEntityContainerMapping containerMapping, ConfigViewGenerator config)
         {

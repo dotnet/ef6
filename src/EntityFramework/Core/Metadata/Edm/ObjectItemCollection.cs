@@ -155,9 +155,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     internal static method to get the relationship name
         /// </summary>
-        /// <param name="clrType"> </param>
-        /// <param name="relationshipName"> </param>
-        /// <returns> </returns>
         internal AssociationType GetRelationshipType(string relationshipName)
         {
             AssociationType associationType;
@@ -425,10 +422,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Get the OSpace type given the CSpace typename
         /// </summary>
-        /// <param name="cspaceTypeName"> </param>
-        /// <param name="ignoreCase"> </param>
-        /// <param name="edmType"> </param>
-        /// <returns> </returns>
         internal bool TryGetOSpaceType(EdmType cspaceType, out EdmType edmType)
         {
             Debug.Assert(DataSpace.CSpace == cspaceType.DataSpace, "DataSpace should be CSpace");
@@ -449,8 +442,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Today, since we allow non-default mapping between entity type and complex type,
         ///     this is only possible for entity and complex type.
         /// </summary>
-        /// <param name="edmType"> </param>
-        /// <returns> </returns>
         internal static string TryGetMappingCSpaceTypeIdentity(EdmType edmType)
         {
             Debug.Assert(DataSpace.OSpace == edmType.DataSpace, "DataSpace must be OSpace");

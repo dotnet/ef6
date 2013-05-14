@@ -79,8 +79,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         ///     Requires: InitializeExtentInformation has been called for the extent being persisted.
         /// </summary>
         /// <param name="entitySetBase"> Entity set containing member. </param>
+        /// <param name="workspace"> </param>
         /// <param name="member"> Member to lookup </param>
         /// <returns> Whether the member is server generated in some context </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal bool IsServerGen(EntitySetBase entitySetBase, MetadataWorkspace workspace, EdmMember member)
         {
             return SyncContains(entitySetBase, workspace, m_serverGenProperties, member);
@@ -119,7 +121,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         ///     Initializes all information relevant to the entity set.
         /// </summary>
         /// <param name="entitySetBase"> Association set or entity set to load. </param>
+        /// <param name="workspace"> </param>
         /// <param name="evaluate"> Function to evaluate to produce a result. </param>
+        /// <param name="arg"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private TResult SyncInitializeEntitySet<TArg, TResult>(
             EntitySetBase entitySetBase, MetadataWorkspace workspace, Func<TArg, TResult> evaluate, TArg arg)
         {

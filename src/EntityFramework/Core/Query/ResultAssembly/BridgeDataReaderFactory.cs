@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     internal class BridgeDataReaderFactory
@@ -28,8 +29,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         /// </summary>
         /// <param name="storeDataReader"> </param>
         /// <param name="columnMap"> column map of the first result set </param>
+        /// <param name="workspace"> </param>
         /// <param name="nextResultColumnMaps"> enumerable of the column maps for NextResult() calls. </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public virtual DbDataReader Create(
             DbDataReader storeDataReader, ColumnMap columnMap, MetadataWorkspace workspace, IEnumerable<ColumnMap> nextResultColumnMaps)
         {

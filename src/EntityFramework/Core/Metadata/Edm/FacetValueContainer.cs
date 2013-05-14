@@ -19,7 +19,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     ///     new FacetValues( MaxLength = EdmConstants.UnboundedValue, Nullable = true};
     ///     and these are type checked at compile time
     /// </summary>
-    /// <typeparam name="T"> </typeparam>
     internal struct FacetValueContainer<T>
     {
         private T _value;

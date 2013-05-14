@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
@@ -21,9 +22,11 @@ namespace System.Data.Entity.Core.Mapping
         ///     Determines whether the given view is valid.
         /// </summary>
         /// <param name="view"> Query view to validate. </param>
-        /// <param name="storeItemCollection"> Store item collection. </param>
         /// <param name="setMapping"> Mapping in which view is declared. </param>
+        /// <param name="elementType"> </param>
+        /// <param name="includeSubtypes"> </param>
         /// <returns> Errors in view definition. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static IEnumerable<EdmSchemaError> ValidateQueryView(
             DbQueryCommandTree view, StorageSetMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
         {
@@ -92,7 +95,7 @@ namespace System.Data.Entity.Core.Mapping
             {
                 switch (expressionKind)
                 {
-                        // Supported expression kinds
+                    // Supported expression kinds
                     case DbExpressionKind.Constant:
                     case DbExpressionKind.Property:
                     case DbExpressionKind.Null:

@@ -15,8 +15,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="fromRole"> role from which the relationship originates </param>
         /// <param name="toRole"> role to which the relationship is linked/targeted to </param>
-        /// <param name="toProperties"> properties on entity type of from role which take part in the constraint </param>
         /// <param name="fromProperties"> properties on entity type of to role which take part in the constraint </param>
+        /// <param name="toProperties"> properties on entity type of from role which take part in the constraint </param>
         /// <exception cref="ArgumentNullException">Argument Null exception if any of the arguments is null</exception>
         public ReferentialConstraint(
             RelationshipEndMember fromRole,

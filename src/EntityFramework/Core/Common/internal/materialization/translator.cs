@@ -1365,8 +1365,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             /// <summary>
             ///     Remove spanned info from the edmType
             /// </summary>
-            /// <param name="edmType"> </param>
-            /// <returns> </returns>
             private EdmType ResolveSpanType(EdmType edmType)
             {
                 var result = edmType;

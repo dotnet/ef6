@@ -13,8 +13,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Constrcut a new member mapping metadata object
         /// </summary>
-        /// <param name="edmMember"> </param>
-        /// <param name="clrMember"> </param>
         protected ObjectMemberMapping(EdmMember edmMember, EdmMember clrMember)
         {
             Debug.Assert(edmMember.BuiltInTypeKind == clrMember.BuiltInTypeKind, "BuiltInTypeKind must be the same");

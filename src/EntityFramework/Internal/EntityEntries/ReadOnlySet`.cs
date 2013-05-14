@@ -10,7 +10,6 @@ namespace System.Data.Entity.Internal
     ///     An implementation of <see cref="ISet{T}" /> that wraps an existing set but makes
     ///     it read-only.
     /// </summary>
-    /// <typeparam name="T"> </typeparam>
     internal class ReadOnlySet<T> : ISet<T>
     {
         #region Constructors and fields

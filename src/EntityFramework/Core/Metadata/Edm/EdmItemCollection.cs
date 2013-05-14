@@ -14,6 +14,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Runtime.Versioning;
@@ -242,18 +243,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     resources. See the remarks section below for some useful information.
         /// </summary>
         /// <param name="xmlReaders"> A list of XmlReader instances </param>
+        /// <param name="sourceFilePaths"> </param>
         /// <param name="dataModelOption"> whether this is a entity data model or provider data model </param>
         /// <param name="providerManifest"> provider manifest from which the primitive type definition comes from </param>
         /// <param name="itemCollection"> item collection to add the item after loading </param>
-        /// <param name="computeFilePaths"> Indicates whether the method should bother with the file paths; see remarks below </param>
-        /// <remarks>
-        ///     In order to accommodate XmlReaders over artifacts embedded as resources in assemblies, the
-        ///     notion of a filepath had to be abstracted into a URI. In reality, however, a res:// URI that
-        ///     points to an embedded resource does not constitute a valid URI (i.e., one that can be parsed
-        ///     by the System.Uri class in the .NET framework). In such cases, we need to supply a list of
-        ///     "filepaths" (which includes res:// URIs), instead of having this method create the collection.
-        ///     This distinction is made by setting the 'computeFilePaths' flags appropriately.
-        /// </remarks>
+        /// <param name="throwOnError"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static IList<EdmSchemaError> LoadItems(
             IEnumerable<XmlReader> xmlReaders,
             IEnumerable<string> sourceFilePaths,
@@ -343,7 +338,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Load metadata from a SOM schema directly
         /// </summary>
-        /// <param name="somSchema"> The SOM schema to load from </param>
+        /// <param name="somSchemas"> The SOM schemas to load from </param>
         /// <param name="providerManifest"> The provider manifest used for loading the type </param>
         /// <param name="itemCollection"> item collection in which primitive types are present </param>
         /// <returns> The newly created items </returns>

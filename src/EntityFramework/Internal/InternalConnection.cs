@@ -44,7 +44,6 @@ namespace System.Data.Entity.Internal
         ///     Returns a key consisting of the connection type and connection string.
         ///     If this is an EntityConnection then the metadata path is included in the key returned.
         /// </summary>
-        /// <value> </value>
         public virtual string ConnectionKey
         {
             get

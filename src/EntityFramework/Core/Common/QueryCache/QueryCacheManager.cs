@@ -120,6 +120,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <param name="inQueryCacheEntry"> </param>
         /// <param name="outQueryCacheEntry"> The existing entry in the dicitionary if already there; inQueryCacheEntry if none was found and inQueryCacheEntry was added instead. </param>
         /// <returns> true if the output entry was already found; false if it had to be added. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal bool TryLookupAndAdd(QueryCacheEntry inQueryCacheEntry, out QueryCacheEntry outQueryCacheEntry)
         {
             DebugCheck.NotNull(inQueryCacheEntry);
@@ -195,8 +196,6 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <summary>
         ///     lookup service
         /// </summary>
-        /// <param name="queryCacheKey"> </param>
-        /// <param name="queryCacheEntry"> </param>
         /// <returns> true if cache hit, false if cache miss </returns>
         private bool TryInternalCacheLookup(QueryCacheKey queryCacheKey, out QueryCacheEntry queryCacheEntry)
         {
@@ -282,9 +281,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
                             _cacheData.Remove(cacheKeys[i]);
                             evictedEntriesCount++;
                         }
-                            //
-                            // otherwise, age the entry in a progressive scheme
-                            //
+                        //
+                        // otherwise, age the entry in a progressive scheme
+                        //
                         else
                         {
                             var agingIndex = unchecked(cacheKeys[i].AgingIndex + 1);

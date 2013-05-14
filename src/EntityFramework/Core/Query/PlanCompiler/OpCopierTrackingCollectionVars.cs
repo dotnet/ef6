@@ -32,11 +32,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Equivalent to OpCopier.Copy, only in addition it keeps track of the defining subtrees
         ///     of collection vars defined in the subtree rooted at the copy of the input node n.
         /// </summary>
-        /// <param name="cmd"> </param>
-        /// <param name="n"> </param>
-        /// <param name="varMap"> </param>
-        /// <param name="newCollectionVarDefinitions"> </param>
-        /// <returns> </returns>
         internal static Node Copy(Command cmd, Node n, out VarMap varMap, out Dictionary<Var, Node> newCollectionVarDefinitions)
         {
             var oc = new OpCopierTrackingCollectionVars(cmd);
@@ -53,9 +48,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Tracks the collection vars after calling the base implementation
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(MultiStreamNestOp op, Node n)
         {
             var result = base.Visit(op, n);

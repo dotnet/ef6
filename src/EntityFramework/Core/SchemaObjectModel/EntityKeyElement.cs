@@ -56,9 +56,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return false;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandlePropertyRefElement(XmlReader reader)
         {
             var property = new PropertyRefElement(ParentElement);

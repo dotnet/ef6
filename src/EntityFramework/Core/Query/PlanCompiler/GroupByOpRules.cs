@@ -126,7 +126,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     We only do this if each c1, ..ck is refereneced (in aggregates) at most once or it is a constant.
         /// </summary>
         /// <param name="context"> Rule processing context </param>
-        /// <param name="projectNode"> Current ProjectOp node </param>
+        /// <param name="n"> Current ProjectOp node </param>
         /// <param name="newNode"> modified subtree </param>
         /// <returns> Transformation status </returns>
         private static bool ProcessGroupByOverProject(RuleProcessingContext context, Node n, out Node newNode)
@@ -217,10 +217,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             ///     replace each occurance of the given vars with their definitions,
             ///     where each key-value pair in the dictionary is a var-definition pair.
             /// </summary>
-            /// <param name="varReplacementTable"> </param>
-            /// <param name="root"> </param>
-            /// <param name="command"> </param>
-            /// <returns> </returns>
             internal static Node Replace(Dictionary<Var, Node> varReplacementTable, Node root, Command command)
             {
                 var replacer = new VarRefReplacer(varReplacementTable, command);
@@ -243,8 +239,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <summary>
             ///     Recomputes node info post regular processing.
             /// </summary>
-            /// <param name="n"> </param>
-            /// <returns> </returns>
             protected override Node VisitDefault(Node n)
             {
                 var result = base.VisitDefault(n);
@@ -273,10 +267,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             ///     Public entry point. Returns true if at least one of the given vars occurs more than
             ///     once in the subree rooted at the given root.
             /// </summary>
-            /// <param name="varVec"> </param>
-            /// <param name="root"> </param>
-            /// <param name="command"> </param>
-            /// <returns> </returns>
             internal static bool AnyVarUsedMoreThanOnce(VarVec varVec, Node root, Command command)
             {
                 var usageFinder = new VarRefUsageFinder(varVec, command);

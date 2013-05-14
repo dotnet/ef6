@@ -30,7 +30,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="name"> The name of this type </param>
         /// <param name="namespaceName"> The namespace name of this type </param>
-        /// <param name="version"> The version of this type </param>
         /// <param name="dataSpace"> dataSpace in which this primitive type belongs to </param>
         /// <param name="baseType"> The primitive type that this type is derived from </param>
         /// <param name="providerManifest"> The ProviderManifest of the provider of this type </param>
@@ -85,8 +84,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return BuiltInTypeKind.PrimitiveType; }
         }
 
-        /// <summary>
-        /// </summary>
         internal override Type ClrType
         {
             get { return ClrEquivalentType; }

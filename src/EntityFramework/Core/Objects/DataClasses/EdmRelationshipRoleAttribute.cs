@@ -4,8 +4,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Data.Entity.Core.Metadata.Edm;
 
-    /// <summary>
-    /// </summary>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class EdmRelationshipAttribute : Attribute
     {

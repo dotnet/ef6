@@ -43,8 +43,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Construct a new Scalar EdmProperty mapping object
         /// </summary>
-        /// <param name="member"> </param>
-        /// <param name="columnMember"> </param>
         public StorageScalarPropertyMapping(EdmProperty member, EdmProperty columnMember)
             : base(member)
         {

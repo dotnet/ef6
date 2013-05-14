@@ -22,16 +22,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         private IRelationshipEnd _toEnd;
         private IRelationship _relationship;
 
-        /// <summary>
-        /// </summary>
-        /// <param name="parent"> </param>
         public NavigationProperty(SchemaEntityType parent)
             : base(parent)
         {
         }
 
-        /// <summary>
-        /// </summary>
         public new SchemaEntityType ParentElement
         {
             get { return base.ParentElement as SchemaEntityType; }
@@ -99,8 +94,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return false;
         }
 
-        /// <summary>
-        /// </summary>
         internal override void ResolveTopLevelNames()
         {
             base.ResolveTopLevelNames();
@@ -146,8 +139,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
         internal override void Validate()
         {
             base.Validate();
@@ -170,25 +161,16 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Private Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleToRoleAttribute(XmlReader reader)
         {
             _unresolvedToEndRole = HandleUndottedNameAttribute(reader, _unresolvedToEndRole);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleFromRoleAttribute(XmlReader reader)
         {
             _unresolvedFromEndRole = HandleUndottedNameAttribute(reader, _unresolvedFromEndRole);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleAssociationAttribute(XmlReader reader)
         {
             Debug.Assert(

@@ -69,7 +69,6 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         /// <summary>
         ///     Returns the list of all the canonical functions
         /// </summary>
-        /// <returns> </returns>
         public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
         {
             InitializeCanonicalFunctions();
@@ -899,8 +898,6 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         /// <summary>
         ///     Returns the list of super-types for the given primitiveType
         /// </summary>
-        /// <param name="primitiveType"> </param>
-        /// <returns> </returns>
         internal ReadOnlyCollection<PrimitiveType> GetPromotionTypes(PrimitiveType primitiveType)
         {
             InitializePromotableTypes();

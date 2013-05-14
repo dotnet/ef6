@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
     using System.Xml;
@@ -36,7 +37,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="nav"> </param>
         /// <param name="attributeName"> name of the attribute </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static string GetAttributeValue(
             XPathNavigator nav,
             string attributeName)
@@ -55,10 +56,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     The method returns typed attribute value of the specified xml attribute.
         ///     The method does not do any specific casting but uses the methods on XPathNavigator.
         /// </summary>
-        /// <param name="nav"> </param>
-        /// <param name="attributeName"> </param>
-        /// <param name="clrType"> </param>
-        /// <returns> </returns>
         internal static object GetTypedAttributeValue(
             XPathNavigator nav,
             string attributeName,
@@ -79,7 +76,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="facetCollection"> Collection of facet description </param>
         /// <param name="facetName"> name of the facet </param>
-        /// <returns> </returns>
         internal static FacetDescription GetFacet(IEnumerable<FacetDescription> facetCollection, string facetName)
         {
             foreach (var facetDescription in facetCollection)
@@ -160,7 +156,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                          || (it.RelationshipMultiplicity.Equals(RelationshipMultiplicity.ZeroOrOne))));
                 }
             }
-                //For 0..1:* associations, * end must be mapped to key.
+            //For 0..1:* associations, * end must be mapped to key.
             else if (associationType.AssociationEndMembers.Any(
                 it =>
                 (it.RelationshipMultiplicity.Equals(RelationshipMultiplicity.ZeroOrOne))))
@@ -177,8 +173,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Creates a single comma delimited string given a list of strings
         /// </summary>
-        /// <param name="stringList"> </param>
-        /// <returns> </returns>
         internal static String GetCommaDelimitedString(IEnumerable<string> stringList)
         {
             DebugCheck.NotNull(stringList);

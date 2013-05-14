@@ -12,9 +12,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     {
         #region constructor
 
-        /// <summary>
-        /// </summary>
-        /// <param name="parentElement"> </param>
         internal ReferenceTypeElement(SchemaElement parentElement)
             : base(parentElement)
         {

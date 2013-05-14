@@ -434,7 +434,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// <summary>
         ///     Validates the Precision value for DateTime family of types since the Min and Max allowed values for Precision for these types are same.
         /// </summary>
-        /// <param name="typeUsage"> </param>
         private void ValidatePrecisionFacetsForDateTimeFamily(EdmType type, Dictionary<string, Facet> facets)
         {
             var primitiveType = (PrimitiveType)type;

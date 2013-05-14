@@ -223,8 +223,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <summary>
         ///     Gets the proxy object's entity wrapper field value
         /// </summary>
-        /// <param name="entity"> </param>
-        /// <returns> </returns>
         internal IEntityWrapper GetEntityWrapper(object entity)
         {
             return Proxy_GetEntityWrapper(entity) as IEntityWrapper;

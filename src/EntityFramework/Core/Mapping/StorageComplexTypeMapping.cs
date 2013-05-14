@@ -146,7 +146,6 @@ namespace System.Data.Entity.Core.Mapping
         ///     The method finds the type in which the member with the given name exists
         ///     form the list of IsOfTypes and Type.
         /// </summary>
-        /// <param name="memberName"> </param>
         internal ComplexType GetOwnerType(string memberName)
         {
             foreach (var type in m_types.Values)

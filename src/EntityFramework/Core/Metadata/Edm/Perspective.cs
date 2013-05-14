@@ -194,9 +194,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     returns the primitive type for a given primitive type kind.
         /// </summary>
-        /// <param name="primitiveTypeKind"> </param>
-        /// <param name="primitiveType"> </param>
-        /// <returns> </returns>
         internal virtual bool TryGetMappedPrimitiveType(PrimitiveTypeKind primitiveTypeKind, out PrimitiveType primitiveType)
         {
             primitiveType = _metadataWorkspace.GetMappedPrimitiveType(primitiveTypeKind, DataSpace.CSpace);

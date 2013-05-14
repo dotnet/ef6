@@ -73,7 +73,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Add type mapping as a child under this Property Mapping
         /// </summary>
-        /// <param name="typeMapping"> </param>
         internal void AddTypeMapping(StorageComplexTypeMapping typeMapping)
         {
             m_typeMappings.Add(typeMapping);

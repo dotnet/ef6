@@ -96,8 +96,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <summary>
         ///     Returns a delegate that creates the fast LightweightEntityWrapper
         /// </summary>
-        /// <typeparam name="TEntity"> </typeparam>
-        /// <returns> </returns>
         private static Func<object, IEntityWrapper> CreateWrapperDelegateTypedLightweight<TEntity>()
             where TEntity : class, IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
         {
@@ -206,7 +204,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     the entity.
         /// </summary>
         /// <param name="entity"> the entity to wrap </param>
-        /// <param name="context"> the state manager in which the entity may exist, or null </param>
+        /// <param name="stateManager"> the state manager in which the entity may exist, or null </param>
         /// <returns> a new or existing wrapper </returns>
         internal IEntityWrapper WrapEntityUsingStateManager(object entity, ObjectStateManager stateManager)
         {
@@ -220,7 +218,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     the entity.
         /// </summary>
         /// <param name="entity"> The entity to wrap </param>
-        /// <param name="context"> The state manager in which the entity may exist, or null </param>
+        /// <param name="stateManager"> The state manager in which the entity may exist, or null </param>
         /// <param name="existingEntry"> The existing state entry for the given entity if one exists, otherwise null </param>
         /// <returns> A new or existing wrapper </returns>
         internal virtual IEntityWrapper WrapEntityUsingStateManagerGettingEntry(

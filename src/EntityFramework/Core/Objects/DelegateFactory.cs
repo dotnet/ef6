@@ -200,8 +200,8 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     generate a delegate equivalent to
         ///     private object MemberGetter(object target) { return target.PropertyX; }
-        ///     or if the property is Nullable<> generate a delegate equivalent to
-        ///     private object MemberGetter(object target) { Nullable<X>y = target.PropertyX; return ((y.HasValue) ? y.Value : null); }
+        ///     or if the property is Nullable&lt;&gt; generate a delegate equivalent to
+        ///     private object MemberGetter(object target) { Nullable&lt;X&gt; y = target.PropertyX; return ((y.HasValue) ? y.Value : null); }
         /// </summary>
         internal static Func<object, object> CreatePropertyGetter(Type entityDeclaringType, PropertyInfo propertyInfo)
         {

@@ -1253,9 +1253,6 @@ namespace System.Data.Entity.Infrastructure.Pluralization
         ///     captalize the return word if the parameter is capitalized
         ///     if word is "Table", then return "Tables"
         /// </summary>
-        /// <param name="word"> </param>
-        /// <param name="action"> </param>
-        /// <returns> </returns>
         private static string Capitalize(string word, Func<string, string> action)
         {
             var result = action(word);
@@ -1282,9 +1279,6 @@ namespace System.Data.Entity.Infrastructure.Pluralization
         /// <summary>
         ///     separate one combine word in to two parts, prefix word and the last word(suffix word)
         /// </summary>
-        /// <param name="word"> </param>
-        /// <param name="prefixWord"> </param>
-        /// <returns> </returns>
         private static string GetSuffixWord(string word, out string prefixWord)
         {
             // use the last space to separate the words
@@ -1338,8 +1332,6 @@ namespace System.Data.Entity.Infrastructure.Pluralization
         ///     return true when the word is "[\s]*" or leading or tailing with spaces
         ///     or contains non alphabetical characters
         /// </summary>
-        /// <param name="word"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private bool IsNoOpWord(string word)
         {

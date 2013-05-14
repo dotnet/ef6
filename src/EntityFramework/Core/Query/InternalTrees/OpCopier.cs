@@ -1085,9 +1085,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Copies a PhysicalProjectOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(PhysicalProjectOp op, Node n)
         {
             // Visit the Node's children and map their Vars
@@ -1158,9 +1155,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Copies a singleStreamNestOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(SingleStreamNestOp op, Node n)
         {
             return VisitNestOp(n);
@@ -1169,9 +1163,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Copies a multiStreamNestOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(MultiStreamNestOp op, Node n)
         {
             return VisitNestOp(n);

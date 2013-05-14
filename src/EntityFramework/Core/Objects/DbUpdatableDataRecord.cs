@@ -10,8 +10,6 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
-    /// <summary>
-    /// </summary>
     public abstract class DbUpdatableDataRecord : DbDataRecord, IExtendedDataRecord
     {
         internal readonly StateManagerTypeMetadata _metadata;
@@ -45,7 +43,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Returns a value that has the given field ordinal.</summary>
         /// <returns>The value that has the given field ordinal.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override object this[int i]
         {
             get { return GetValue(i); }
@@ -61,7 +59,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Retrieves the field value as a Boolean.</summary>
         /// <returns>The field value as a Boolean.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override bool GetBoolean(int i)
         {
             return (bool)GetValue(i);
@@ -69,7 +67,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Retrieves the field value as a byte.</summary>
         /// <returns>The field value as a byte.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override byte GetByte(int i)
         {
             return (byte)GetValue(i);
@@ -77,7 +75,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Retrieves the field value as a byte array.</summary>
         /// <returns>The number of bytes copied.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         /// <param name="dataIndex">The index at which to start copying data.</param>
         /// <param name="buffer">The destination buffer where data is copied.</param>
         /// <param name="bufferIndex">The index in the destination buffer where copying will begin.</param>
@@ -125,7 +123,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Retrieves the field value as a char.</summary>
         /// <returns>The field value as a char.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override char GetChar(int i)
         {
             return (char)GetValue(i);
@@ -133,7 +131,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Retrieves the field value as a char array.</summary>
         /// <returns>The number of characters copied.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         /// <param name="dataIndex">The index at which to start copying data.</param>
         /// <param name="buffer">The destination buffer where data is copied.</param>
         /// <param name="bufferIndex">The index in the destination buffer where copying will begin.</param>
@@ -198,7 +196,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///     The field value as a <see cref="T:System.Data.Common.DbDataReader" />.
         /// </returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         protected override DbDataReader GetDbDataReader(int i)
         {
             throw new NotSupportedException();
@@ -206,7 +204,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Retrieves the name of the field data type.</summary>
         /// <returns>The name of the field data type.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override string GetDataTypeName(int i)
         {
             return (GetFieldType(i)).Name;
@@ -218,7 +216,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///     The field value as a <see cref="T:System.DateTime" />.
         /// </returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override DateTime GetDateTime(int i)
         {
             return (DateTime)GetValue(i);
@@ -226,7 +224,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Retrieves the field value as a decimal.</summary>
         /// <returns>The field value as a decimal.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override Decimal GetDecimal(int i)
         {
             return (Decimal)GetValue(i);
@@ -234,7 +232,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Retrieves the field value as a double.</summary>
         /// <returns>The field value as a double.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override double GetDouble(int i)
         {
             return (double)GetValue(i);
@@ -242,7 +240,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Retrieves the type of a field.</summary>
         /// <returns>The field type.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override Type GetFieldType(int i)
         {
             Debug.Assert(_cacheEntry != null, "CacheEntry is required.");
@@ -251,7 +249,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Retrieves the field value as a float.</summary>
         /// <returns>The field value as a float.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override float GetFloat(int i)
         {
             return (float)GetValue(i);
@@ -263,7 +261,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///     The field value as a <see cref="T:System.Guid" />.
         /// </returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override Guid GetGuid(int i)
         {
             return (Guid)GetValue(i);
@@ -275,7 +273,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///     The field value as an <see cref="T:System.Int16" />.
         /// </returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override Int16 GetInt16(int i)
         {
             return (Int16)GetValue(i);
@@ -287,7 +285,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///     The field value as an <see cref="T:System.Int32" />.
         /// </returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override Int32 GetInt32(int i)
         {
             return (Int32)GetValue(i);
@@ -299,7 +297,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///     The field value as an <see cref="T:System.Int64" />.
         /// </returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override Int64 GetInt64(int i)
         {
             return (Int64)GetValue(i);
@@ -307,7 +305,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Retrieves the name of a field.</summary>
         /// <returns>The name of the field.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override string GetName(int i)
         {
             Debug.Assert(_cacheEntry != null, "CacheEntry is required.");
@@ -330,7 +328,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Retrieves the field value as a string.</summary>
         /// <returns>The field value.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override string GetString(int i)
         {
             return (string)GetValue(i);
@@ -338,7 +336,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Retrieves the value of a field.</summary>
         /// <returns>The field value.</returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override object GetValue(int i)
         {
             return GetRecordValue(i);
@@ -370,7 +368,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///     true if the field is set to <see cref="T:System.DBNull" />; otherwise false.
         /// </returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public override bool IsDBNull(int i)
         {
             return (GetValue(i) == DBNull.Value);
@@ -533,7 +531,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>
         ///     A field value as a <see cref="T:System.Data.Common.DbDataRecord" />.
         /// </returns>
-        /// <param name="ordinal">The ordinal of the field.</param>
+        /// <param name="i">The ordinal of the field.</param>
         public DbDataRecord GetDataRecord(int i)
         {
             return (DbDataRecord)GetValue(i);

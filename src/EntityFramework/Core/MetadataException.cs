@@ -50,8 +50,6 @@ namespace System.Data.Entity.Core
         /// <summary>
         ///     constructor for deserialization
         /// </summary>
-        /// <param name="info"> </param>
-        /// <param name="context"> </param>
         private MetadataException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

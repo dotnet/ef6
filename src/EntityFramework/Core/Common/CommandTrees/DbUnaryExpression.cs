@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the argument.
+        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the argument.
         /// </summary>
         /// <returns>
         ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the argument.

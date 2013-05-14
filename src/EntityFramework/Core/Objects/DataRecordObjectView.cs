@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Objects
         ///     Return a <see cref="PropertyInfo" /> instance that represents
         ///     a strongly-typed indexer property on the specified type.
         /// </summary>
-        /// <param name="typedIndexer">
+        /// <param name="type">
         ///     <see cref="Type" /> that may define the appropriate indexer.
         /// </param>
         /// <returns>
@@ -93,7 +93,6 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Return the element type for the supplied type.
         /// </summary>
-        /// <param name="type"> </param>
         /// <returns>
         ///     If <paramref name="type" /> represents a list type that doesn't also implement ITypedList or IListSource, return the element type for items in that list. Otherwise, return the type supplied by
         ///     <paramref

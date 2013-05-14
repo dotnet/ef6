@@ -18,7 +18,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Simple constructor - gets a list of key columns
         /// </summary>
-        /// <param name="keyColumns"> </param>
         internal EntityIdentity(SimpleColumnMap[] keyColumns)
         {
             DebugCheck.NotNull(keyColumns);

@@ -257,8 +257,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         ///     D(F) = Sigma_p D(S)
         ///     I(F) = Sigma_p I(S)
         /// </summary>
-        /// <param name="node"> </param>
-        /// <returns> </returns>
         public override ChangeNode Visit(DbFilterExpression node)
         {
             Check.NotNull(node, "node");
@@ -287,7 +285,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         ///     retrieves the changes from the grouper.
         /// </summary>
         /// <param name="node"> Extent expression node </param>
-        /// <returns> </returns>
         public override ChangeNode Visit(DbScanExpression node)
         {
             Check.NotNull(node, "node");

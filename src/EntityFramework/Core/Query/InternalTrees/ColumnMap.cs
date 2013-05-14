@@ -108,21 +108,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TArgType"> </typeparam>
-        /// <param name="visitor"> </param>
-        /// <param name="arg"> </param>
-        /// <returns> </returns>
         [DebuggerNonUserCode]
         internal abstract void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg);
 
         /// <summary>
         ///     Visitor Design Pattern
         /// </summary>
-        /// <typeparam name="TResultType"> </typeparam>
-        /// <typeparam name="TArgType"> </typeparam>
-        /// <param name="visitor"> </param>
-        /// <param name="arg"> </param>
-        /// <returns> </returns>
         [DebuggerNonUserCode]
         internal abstract TResultType Accept<TResultType, TArgType>(
             ColumnMapVisitorWithResults<TResultType, TArgType> visitor, TArgType arg);

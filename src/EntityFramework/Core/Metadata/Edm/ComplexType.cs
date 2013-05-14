@@ -19,7 +19,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="name"> The name of the complex type </param>
         /// <param name="namespaceName"> The namespace name of the type </param>
-        /// <param name="version"> The version of this type </param>
         /// <param name="dataSpace"> dataSpace in which this ComplexType belongs to </param>
         /// <exception cref="System.ArgumentNullException">If either name, namespace or version arguments are null</exception>
         public ComplexType(string name, string namespaceName, DataSpace dataSpace)
@@ -180,8 +179,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// </summary>
         internal override Type ClrType
         {
             get { return _type; }

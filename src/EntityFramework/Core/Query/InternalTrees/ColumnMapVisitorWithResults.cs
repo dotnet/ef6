@@ -7,8 +7,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     ///     This visitor class allows you to return results; it's useful for operations
     ///     that copy or manipulate the hierarchy.
     /// </summary>
-    /// <typeparam name="TArgType"> </typeparam>
-    /// <typeparam name="TResultType"> </typeparam>
     internal abstract class ColumnMapVisitorWithResults<TResultType, TArgType>
     {
         #region EntityIdentity handling

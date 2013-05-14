@@ -81,7 +81,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get { return _name; }
         }
-        
+
         /// <summary>
         ///     Gets the name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />.
         /// </summary>
@@ -194,7 +194,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> on which this parameter is declared.
+        ///     Gets the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> on which this parameter is declared.
         /// </summary>
         /// <returns>
         ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> object that represents the function on which this parameter is declared.

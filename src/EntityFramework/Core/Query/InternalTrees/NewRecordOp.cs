@@ -23,7 +23,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Basic constructor. All fields have a value specified
         /// </summary>
-        /// <param name="type"> </param>
         internal NewRecordOp(TypeUsage type)
             : base(OpType.NewRecord, type)
         {
@@ -36,8 +35,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     described here.
         ///     The missing fields are considered to be "null"
         /// </summary>
-        /// <param name="type"> </param>
-        /// <param name="fields"> </param>
         internal NewRecordOp(TypeUsage type, List<EdmProperty> fields)
             : base(OpType.NewRecord, type)
         {
@@ -70,9 +67,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     children. If no value has been provided for this field, then simply
         ///     return false
         /// </summary>
-        /// <param name="field"> </param>
-        /// <param name="fieldPosition"> </param>
-        /// <returns> </returns>
         internal bool GetFieldPosition(EdmProperty field, out int fieldPosition)
         {
             Debug.Assert(

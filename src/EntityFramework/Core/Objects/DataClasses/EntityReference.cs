@@ -438,7 +438,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                  (targetEntity.ObjectStateEntry == null || // setting to a detached principle
                   (EntityKey == null && targetEntity.ObjectStateEntry.State == EntityState.Deleted || // setting to a deleted principle
                    (CachedForeignKey == null && targetEntity.ObjectStateEntry.State == EntityState.Added)))))
-                // setting to an added principle
+            // setting to an added principle
             {
                 throw new InvalidOperationException(Strings.EntityReference_CannotChangeReferentialConstraintProperty);
             }
@@ -569,7 +569,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///     but we're not tracked by that context.
         /// </summary>
         /// <param name="dependentEntity"> The entity into which foreign key values will be written </param>
-        /// <param name="principalEntity"> The key from which key values will be obtained </param>
+        /// <param name="principalKey"> The key from which key values will be obtained </param>
         internal void UpdateForeignKeyValues(IEntityWrapper dependentEntity, EntityKey principalKey)
         {
             DebugCheck.NotNull(dependentEntity.Entity);

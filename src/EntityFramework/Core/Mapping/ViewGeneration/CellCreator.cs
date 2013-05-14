@@ -470,9 +470,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         ///     Takes in a JoinTreeNode and a Contition Property Map and creates an BoolExpression
         ///     for the Condition Map.
         /// </summary>
-        /// <param name="joinTreeNode"> </param>
-        /// <param name="conditionMap"> </param>
-        /// <returns> </returns>
         private static BoolExpression GetConditionExpression(MemberPath member, StorageConditionPropertyMapping conditionMap)
         {
             //Get the member for which the condition is being specified

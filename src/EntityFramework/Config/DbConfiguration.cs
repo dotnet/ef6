@@ -579,7 +579,7 @@ namespace System.Data.Entity.Config
         ///     <see cref="DbSpatialServices" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
-        /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this spatial provider will be used. </param>
+        /// <param name="key"> The <see cref="DbProviderInfo" /> indicating the type of ADO.NET connection for which this spatial provider will be used. </param>
         /// <param name="spatialProvider"> The spatial provider. </param>
         protected internal void AddDbSpatialServices(DbProviderInfo key, DbSpatialServices spatialProvider)
         {

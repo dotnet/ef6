@@ -159,7 +159,6 @@ namespace System.Data.Entity.Internal
             /// </summary>
             /// <param name="left"> The left item to compare. </param>
             /// <param name="right"> The right item to compare. </param>
-            /// <returns> </returns>
             public override int Compare(T left, T right)
             {
                 var leftValue = _prop.GetValue(left);

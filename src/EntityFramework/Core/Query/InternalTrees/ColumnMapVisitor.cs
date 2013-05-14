@@ -8,7 +8,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     ///     return results; it's useful for operations such as printing and
     ///     searching.
     /// </summary>
-    /// <typeparam name="TArgType"> </typeparam>
     internal abstract class ColumnMapVisitor<TArgType>
     {
         #region visitor helpers
@@ -16,8 +15,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Common List(ColumnMap) code
         /// </summary>
-        /// <param name="columnMaps"> </param>
-        /// <param name="arg"> </param>
         protected void VisitList<TListType>(TListType[] columnMaps, TArgType arg)
             where TListType : ColumnMap
         {

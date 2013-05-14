@@ -46,10 +46,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Construct a new condition Property mapping object
         /// </summary>
-        /// <param name="edmProperty"> </param>
-        /// <param name="columnMember"> </param>
-        /// <param name="value"> </param>
-        /// <param name="isNull"> </param>
         public StorageConditionPropertyMapping(
             EdmProperty edmProperty, EdmProperty columnMember
             , object value, bool? isNull)

@@ -94,9 +94,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     If the given node is not the top most SortOp node remove it.
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(SortOp op, Node n)
         {
             VisitChildren(n);

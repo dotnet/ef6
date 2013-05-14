@@ -13,7 +13,6 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// <summary>
         ///     Initializes property definition using the name and the type definition.
         /// </summary>
-        /// <param name="identifier"> </param>
         internal PropDefinition(Identifier name, Node typeDefExpr)
         {
             _name = name;

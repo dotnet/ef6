@@ -416,8 +416,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// </summary>
             /// <param name="left"> Left row. </param>
             /// <param name="right"> Right row. </param>
-            /// <param name="leftKey"> Key used to join left element. </param>
-            /// <param name="rightKey"> Key used to join right element. </param>
             /// <param name="result"> Result change node; used for type information. </param>
             /// <returns> Result of joining the input rows. </returns>
             private PropagatorResult CreateResultTuple(
@@ -481,9 +479,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <summary>
             ///     See <see cref="LeftPlaceholder"></see>
             /// </summary>
-            /// <param name="key"> </param>
-            /// <param name="mode"> </param>
-            /// <returns> </returns>
             private PropagatorResult RightPlaceholder(CompositeKey key, PopulateMode mode)
             {
                 return PlaceholderPopulator.Populate(m_right.Placeholder, key, m_rightPlaceholderKey, mode);

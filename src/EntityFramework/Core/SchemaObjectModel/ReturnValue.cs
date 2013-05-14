@@ -14,15 +14,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #endregion
 
-        /// <summary>
-        /// </summary>
         internal bool Succeeded
         {
             get { return _succeeded; }
         }
 
-        /// <summary>
-        /// </summary>
         internal T Value
         {
             get { return _value; }

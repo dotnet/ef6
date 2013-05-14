@@ -207,8 +207,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Create a VarVec with a single Var
         /// </summary>
-        /// <param name="v"> </param>
-        /// <returns> </returns>
         internal virtual VarVec CreateVarVec(Var v)
         {
             var varset = CreateVarVec();
@@ -219,8 +217,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Create a VarVec with the set of specified vars
         /// </summary>
-        /// <param name="v"> </param>
-        /// <returns> </returns>
         internal virtual VarVec CreateVarVec(IEnumerable<Var> v)
         {
             var vec = CreateVarVec();
@@ -231,8 +227,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Create a new VarVec from the input VarVec
         /// </summary>
-        /// <param name="v"> </param>
-        /// <returns> </returns>
         internal virtual VarVec CreateVarVec(VarVec v)
         {
             var vec = CreateVarVec();
@@ -243,7 +237,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Release a VarVec to the freelist
         /// </summary>
-        /// <param name="vec"> </param>
         internal virtual void ReleaseVarVec(VarVec vec)
         {
             m_freeVarVecs.Push(vec);
@@ -257,8 +250,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Create a new enumerator for a VarVec; use a free one if its
         ///     available; otherwise, create a new one
         /// </summary>
-        /// <param name="vec"> </param>
-        /// <returns> </returns>
         internal virtual VarVec.VarVecEnumerator GetVarVecEnumerator(VarVec vec)
         {
             VarVec.VarVecEnumerator enumerator;
@@ -279,7 +270,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Release an enumerator; keep it in a local stack for future use
         /// </summary>
-        /// <param name="enumerator"> </param>
         internal virtual void ReleaseVarVecEnumerator(VarVec.VarVecEnumerator enumerator)
         {
             if (!m_disableVarVecEnumCaching)
@@ -295,7 +285,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Create an ordered list of Vars - initially empty
         /// </summary>
-        /// <returns> </returns>
         internal static VarList CreateVarList()
         {
             return new VarList();
@@ -304,8 +293,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Create an ordered list of Vars
         /// </summary>
-        /// <param name="vars"> </param>
-        /// <returns> </returns>
         internal static VarList CreateVarList(IEnumerable<Var> vars)
         {
             return new VarList(vars);
@@ -364,7 +351,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="properties"> list of columns for the table </param>
         /// <param name="keyMembers"> the key columns (if any) </param>
         /// <param name="entitySet"> (OPTIONAL) entityset corresponding to this table </param>
-        /// <returns> </returns>
         internal virtual TableMD CreateFlatTableDefinition(
             IEnumerable<EdmProperty> properties, IEnumerable<EdmMember> keyMembers, EntitySetBase entitySet)
         {
@@ -463,8 +449,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     The operation invalidates the <paramref name="oldVar" />. After the operation has completed
         ///     the <paramref name="oldVar" />) is invalidated internally and should no longer be used.
         /// </remarks>
-        /// Func
-        /// <
         private ParameterVar ReplaceParameterVar(ParameterVar oldVar, Func<TypeUsage, TypeUsage> generateReplacementType)
         {
             DebugCheck.NotNull(oldVar);
@@ -654,8 +638,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             {
                 return new NullOp(type);
             }
-                // Identify "safe" constants - the only safe ones are boolean (and we should
-                // probably include ints eventually)
+            // Identify "safe" constants - the only safe ones are boolean (and we should
+            // probably include ints eventually)
             else if (TypeSemantics.IsBooleanType(type))
             {
                 return new InternalConstantOp(type, value);
@@ -683,7 +667,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     An internal constant that serves as a null sentinel, i.e. it is only ever used
         ///     to be checked whether it is null
         /// </summary>
-        /// <returns> </returns>
         internal virtual NullSentinelOp CreateNullSentinelOp()
         {
             return new NullSentinelOp(IntegerType, 1);
@@ -703,7 +686,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Create a constant predicateOp
         /// </summary>
         /// <param name="value"> value of the constant predicate </param>
-        /// <returns> </returns>
         internal virtual ConstantPredicateOp CreateConstantPredicateOp(bool value)
         {
             return value ? m_trueOp : m_falseOp;
@@ -712,7 +694,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Create a constant predicate with value=true
         /// </summary>
-        /// <returns> </returns>
         internal virtual ConstantPredicateOp CreateTrueOp()
         {
             return m_trueOp;
@@ -721,7 +702,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Create a constant predicateOp with the value false
         /// </summary>
-        /// <returns> </returns>
         internal virtual ConstantPredicateOp CreateFalseOp()
         {
             return m_falseOp;
@@ -750,8 +730,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Create a "dummy" treatOp (i.e.) we can actually ignore the treatOp.
         /// </summary>
-        /// <param name="type"> </param>
-        /// <returns> </returns>
         internal virtual TreatOp CreateFakeTreatOp(TypeUsage type)
         {
             return new TreatOp(type, true);
@@ -928,9 +906,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     have any values specified as part of the Node. All other fields are
         ///     considered to be null.
         /// </summary>
-        /// <param name="type"> </param>
-        /// <param name="fields"> </param>
-        /// <returns> </returns>
         internal virtual NewRecordOp CreateNewRecordOp(
             TypeUsage type,
             List<EdmProperty> fields)
@@ -1107,7 +1082,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="definingExpr"> </param>
         /// <param name="computedVar"> new Var produced </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal Node CreateVarDefNode(Node definingExpr, out Var computedVar)
         {
             DebugCheck.NotNull(definingExpr.Op);
@@ -1125,7 +1100,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="definingExpr"> </param>
         /// <param name="computedVar"> the computed Var produced </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal Node CreateVarDefListNode(Node definingExpr, out Var computedVar)
         {
             var varDefNode = CreateVarDefNode(definingExpr, out computedVar);
@@ -1224,8 +1199,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     A variant of the above where the ProjectOp produces exactly one var
         /// </summary>
-        /// <param name="v"> </param>
-        /// <returns> </returns>
         internal virtual ProjectOp CreateProjectOp(Var v)
         {
             var varSet = CreateVarVec();
@@ -1378,8 +1351,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Creates a new GroupByIntoOp
         /// </summary>
         /// <param name="gbyKeys"> A VarSet that specifies the Key variables produced by the GroupByOp </param>
-        /// <param name="outputs"> A VarSet that specifies the vars from the input that represent the real grouping input </param>
         /// <param name="inputs"> A VarSet that specifies all (Key and Aggregate) variables produced by the GroupByOp </param>
+        /// <param name="outputs"> A VarSet that specifies the vars from the input that represent the real grouping input </param>
         /// <returns> A new GroupByOp with the specified key and output VarSets </returns>
         internal virtual GroupByIntoOp CreateGroupByIntoOp(VarVec gbyKeys, VarVec inputs, VarVec outputs)
         {
@@ -1399,8 +1372,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     An overload of the above - where the distinct has exactly one key
         /// </summary>
-        /// <param name="keyVar"> </param>
-        /// <returns> </returns>
         internal virtual DistinctOp CreateDistinctOp(Var keyVar)
         {
             return new DistinctOp(CreateVarVec(keyVar));
@@ -1472,7 +1443,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Create a single-row-op (the relop analog of Element)
         /// </summary>
-        /// <returns> </returns>
         internal virtual SingleRowOp CreateSingleRowOp()
         {
             return SingleRowOp.Instance;
@@ -1481,7 +1451,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Create a SingleRowTableOp - a table with exactly one row (and no columns)
         /// </summary>
-        /// <returns> </returns>
         internal virtual SingleRowTableOp CreateSingleRowTableOp()
         {
             return SingleRowTableOp.Instance;
@@ -1496,7 +1465,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="outputVars"> list of output vars </param>
         /// <param name="columnMap"> columnmap describing the output element </param>
-        /// <returns> </returns>
         internal virtual PhysicalProjectOp CreatePhysicalProjectOp(VarList outputVars, SimpleCollectionColumnMap columnMap)
         {
             return new PhysicalProjectOp(outputVars, columnMap);
@@ -1506,7 +1474,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Create a physicalProjectOp - with a single column output
         /// </summary>
         /// <param name="outputVar"> the output element </param>
-        /// <returns> </returns>
         internal virtual PhysicalProjectOp CreatePhysicalProjectOp(Var outputVar)
         {
             var varList = CreateVarList();
@@ -1549,7 +1516,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="outputVars"> List of outputVars </param>
         /// <param name="collectionInfoList"> CollectionInfo for each collection </param>
         /// <param name="discriminatorVar"> Var describing the discriminator </param>
-        /// <returns> </returns>
         internal virtual SingleStreamNestOp CreateSingleStreamNestOp(
             VarVec keys,
             List<SortKey> prefixSortKeys, List<SortKey> postfixSortKeys,
@@ -1565,7 +1531,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="prefixSortKeys"> list of prefix sort keys </param>
         /// <param name="outputVars"> List of outputVars </param>
         /// <param name="collectionInfoList"> CollectionInfo for each collection element </param>
-        /// <returns> </returns>
         internal virtual MultiStreamNestOp CreateMultiStreamNestOp(
             List<SortKey> prefixSortKeys, VarVec outputVars,
             List<CollectionInfo> collectionInfoList)
@@ -1635,8 +1600,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     of the plan compiler.
         ///     Two types are considered to be equal if their "identities" are equal.
         /// </summary>
-        /// <param name="x"> </param>
-        /// <param name="y"> </param>
         /// <returns> true, if the types are "equal" </returns>
         internal static bool EqualTypes(TypeUsage x, TypeUsage y)
         {
@@ -1647,8 +1610,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Check to see if two types are considered "equal" for the purposes
         ///     of the plan compiler
         /// </summary>
-        /// <param name="x"> </param>
-        /// <param name="y"> </param>
         /// <returns> true, if the types are "equal" </returns>
         internal static bool EqualTypes(EdmType x, EdmType y)
         {
@@ -1671,7 +1632,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="inputNodes"> list of input nodes - one for each branch </param>
         /// <param name="inputVars"> list of input vars - N for each branch </param>
         /// <param name="resultNode"> the resulting union-all subtree </param>
-        /// <param name="resultVar"> the output vars from the union-all subtree </param>
+        /// <param name="resultVars"> the output vars from the union-all subtree </param>
         internal virtual void BuildUnionAllLadder(
             IList<Node> inputNodes, IList<Var> inputVars,
             out Node resultNode, out IList<Var> resultVars)
@@ -1727,10 +1688,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     A simplified version of the method above - each branch can produce only one var
         /// </summary>
-        /// <param name="inputNodes"> </param>
-        /// <param name="inputVars"> </param>
-        /// <param name="resultNode"> </param>
-        /// <param name="resultVar"> </param>
         internal virtual void BuildUnionAllLadder(
             IList<Node> inputNodes, IList<Var> inputVars,
             out Node resultNode, out Var resultVar)
@@ -1758,7 +1715,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="inputNode"> the input relop to the project </param>
         /// <param name="inputVars"> List of vars from the input that need to be projected </param>
         /// <param name="computedExpressions"> list (possibly empty) of any computed expressions </param>
-        /// <returns> </returns>
         internal virtual Node BuildProject(
             Node inputNode, IEnumerable<Var> inputVars,
             IEnumerable<Node> computedExpressions)
@@ -1825,6 +1781,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             resultNode = BuildFakeTreatProject(filterNode, inputVar, desiredType, out resultVar);
         }
 
+        /// <summary>
         /// Builds out a ProjectOp over the input that introduces a "Fake" TreatOp over the input Var to cast it to the desired type
         /// The "Fake" TreatOp is only there for "compile-time" typing reasons, and will be ignored in the rest of the plan compiler.
         /// </summary>
@@ -1874,7 +1831,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="relOpNode"> the relop tree </param>
         /// <param name="relOpVar"> the single output var from the relop tree </param>
-        /// <returns> </returns>
         internal virtual Node BuildCollect(Node relOpNode, Var relOpVar)
         {
             var physicalProjectNode = CreateNode(CreatePhysicalProjectOp(relOpVar), relOpNode);

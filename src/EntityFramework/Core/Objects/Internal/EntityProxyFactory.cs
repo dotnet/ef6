@@ -197,7 +197,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     Enumerate list of supplied O-Space EntityTypes,
         ///     and generate a proxy type for each EntityType (if possible for the particular type).
         /// </summary>
-        /// <param name="ospaceEntityType"> Enumeration of O-Space EntityType objects. Must not be null. In addition, the elements of the enumeration must not be null. </param>
+        /// <param name="ospaceEntityTypes"> Enumeration of O-Space EntityType objects. Must not be null. In addition, the elements of the enumeration must not be null. </param>
+        /// <param name="workspace"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static void TryCreateProxyTypes(IEnumerable<EntityType> ospaceEntityTypes, MetadataWorkspace workspace)
         {
             DebugCheck.NotNull(ospaceEntityTypes);
@@ -368,8 +370,11 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <summary>
         ///     Build a CLR proxy type for the supplied EntityType.
         /// </summary>
+        /// <param name="moduleBuilder"> </param>
         /// <param name="ospaceEntityType"> EntityType in O-Space that represents the CLR type to be proxied. </param>
+        /// <param name="workspace"> </param>
         /// <returns> EntityProxyTypeInfo object that contains the constructed proxy type, along with any behaviors associated with that type; or null if a proxy type cannot be constructed for the specified EntityType. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static EntityProxyTypeInfo BuildType(
             ModuleBuilder moduleBuilder,
             ClrEntityType ospaceEntityType,
@@ -444,7 +449,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </summary>
         /// <param name="member"> EdmMember that specifies the member to be intercepted. </param>
         /// <param name="proxyType"> Type of the proxy. </param>
-        /// <param name="lazyLoadBehavior"> LazyLoadBehavior object that supplies the behavior to load related ends. </param>
+        /// <param name="proxyTypeInfo"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static void InterceptMember(EdmMember member, Type proxyType, EntityProxyTypeInfo proxyTypeInfo)
         {
             var property = EntityUtil.GetTopProperty(proxyType, member.Name);

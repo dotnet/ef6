@@ -327,7 +327,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Gets an object that represents a scalar or complex property of this entity.
         /// </summary>
         /// <typeparam name="TProperty"> The type of the property. </typeparam>
-        /// <param name="navigationProperty"> An expression representing the property. </param>
+        /// <param name="property"> An expression representing the property. </param>
         /// <returns> An object representing the property. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#",
@@ -371,7 +371,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Gets an object that represents a complex property of this entity.
         /// </summary>
         /// <typeparam name="TComplexProperty"> The type of the complex property. </typeparam>
-        /// <param name="navigationProperty"> An expression representing the complex property. </param>
+        /// <param name="property"> An expression representing the complex property. </param>
         /// <returns> An object representing the complex property. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#",

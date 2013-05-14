@@ -42,7 +42,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="name"> name of the type </param>
         /// <param name="namespaceName"> namespace of the type </param>
-        /// <param name="version"> version of the type </param>
         /// <param name="dataSpace"> dataSpace in which this type belongs to </param>
         /// <exception cref="System.ArgumentNullException">Thrown if either the name, namespace or version arguments are null</exception>
         internal EdmType(
@@ -224,10 +223,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="type"> The edm type to initialize with item attributes </param>
         /// <param name="name"> The name of this type </param>
         /// <param name="namespaceName"> The namespace of this type </param>
-        /// <param name="version"> The version of this type </param>
         /// <param name="dataSpace"> dataSpace in which this type belongs to </param>
         /// <param name="isAbstract"> If the type is abstract </param>
-        /// <param name="isSealed"> If the type is sealed </param>
         /// <param name="baseType"> The base type for this type </param>
         internal static void
             Initialize(
@@ -274,7 +271,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     check to see if otherType is among the base types,
         /// </summary>
-        /// <param name="otherType"> </param>
         /// <returns> if otherType is among the base types, return true, otherwise returns false. when othertype is same as the current type, return false. </returns>
         internal virtual bool IsSubtypeOf(EdmType otherType)
         {
@@ -284,7 +280,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     check to see if otherType is among the sub-types,
         /// </summary>
-        /// <param name="otherType"> </param>
         /// <returns> if otherType is among the sub-types, returns true, otherwise returns false. when othertype is same as the current type, return false. </returns>
         internal virtual bool IsBaseTypeOf(EdmType otherType)
         {
@@ -298,8 +293,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Check if this type is assignable from otherType
         /// </summary>
-        /// <param name="otherType"> </param>
-        /// <returns> </returns>
         internal virtual bool IsAssignableFrom(EdmType otherType)
         {
             return Helper.IsAssignableFrom(this, otherType);

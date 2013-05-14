@@ -5,8 +5,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
 
-    /// <summary>
-    /// </summary>
     internal sealed class RefOp : ScalarOp
     {
         #region private state

@@ -265,8 +265,6 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         ///     just guess at "Object".  You need to use the DataRecordInfo property
         ///     to get better information for those.
         /// </summary>
-        /// <param name="typeUsage"> </param>
-        /// <returns> </returns>
         internal static Type GetClrTypeFromTypeMetadata(TypeUsage typeUsage)
         {
             Type result;

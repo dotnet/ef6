@@ -36,7 +36,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Basic constructor
         /// </summary>
-        /// <param name="command"> </param>
         internal NodeInfoVisitor(Command command)
         {
             m_command = command;
@@ -84,8 +83,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Default implementation for scalarOps. Simply adds up external references
         ///     from each child
         /// </summary>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         protected override NodeInfo VisitDefault(Node n)
         {
             Debug.Assert(n.Op.IsScalarOp || n.Op.IsAncillaryOp, "not a supported optype");
@@ -105,9 +102,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     The given definition is non nullable if it is a non-null constant
         ///     or a reference to non-nullable input
         /// </summary>
-        /// <param name="definition"> </param>
-        /// <param name="nonNullableInputs"> </param>
-        /// <returns> </returns>
         private static bool IsDefinitionNonNullable(Node definition, VarVec nonNullableInputs)
         {
             return (definition.Op.OpType == OpType.Constant
@@ -137,7 +131,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The VarRefOp </param>
         /// <param name="n"> Current node </param>
-        /// <returns> </returns>
         public override NodeInfo Visit(VarRefOp op, Node n)
         {
             var nodeInfo = InitNodeInfo(n);
@@ -197,9 +190,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     NonNullableDefinitions: default(empty)
         ///     NonNullableInputDefinitions : default(empty) because cannot be used
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override NodeInfo Visit(UnnestOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -279,7 +269,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The ProjectOp </param>
         /// <param name="n"> corresponding Node </param>
-        /// <returns> </returns>
         public override NodeInfo Visit(ProjectOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -362,7 +351,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The FilterOp </param>
         /// <param name="n"> corresponding Node </param>
-        /// <returns> </returns>
         public override NodeInfo Visit(FilterOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -420,7 +408,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The GroupByOp </param>
         /// <param name="n"> corresponding Node </param>
-        /// <returns> </returns>
         protected override NodeInfo VisitGroupByOp(GroupByBaseOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -484,7 +471,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The CrossJoinOp </param>
         /// <param name="n"> corresponding Node </param>
-        /// <returns> </returns>
         public override NodeInfo Visit(CrossJoinOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -544,7 +530,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The JoinOp </param>
         /// <param name="n"> corresponding Node </param>
-        /// <returns> </returns>
         protected override NodeInfo VisitJoinOp(JoinBaseOp op, Node n)
         {
             if (!(op.OpType == OpType.InnerJoin ||
@@ -644,7 +629,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The ApplyOp </param>
         /// <param name="n"> corresponding Node </param>
-        /// <returns> </returns>
         protected override NodeInfo VisitApplyOp(ApplyBaseOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -704,7 +688,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The SetOp </param>
         /// <param name="n"> corresponding Node </param>
-        /// <returns> </returns>
         protected override NodeInfo VisitSetOp(SetOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -829,7 +812,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The SortOp </param>
         /// <param name="n"> corresponding Node </param>
-        /// <returns> </returns>
         protected override NodeInfo VisitSortOp(SortBaseOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -883,7 +865,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The DistinctOp </param>
         /// <param name="n"> corresponding Node </param>
-        /// <returns> </returns>
         public override NodeInfo Visit(DistinctOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -974,7 +955,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The PhysicalProjectOp </param>
         /// <param name="n"> corresponding Node </param>
-        /// <returns> </returns>
         public override NodeInfo Visit(PhysicalProjectOp op, Node n)
         {
             var nodeInfo = InitExtendedNodeInfo(n);
@@ -1019,7 +999,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The NestOp </param>
         /// <param name="n"> corresponding Node </param>
-        /// <returns> </returns>
         protected override NodeInfo VisitNestOp(NestBaseOp op, Node n)
         {
             var ssnOp = op as SingleStreamNestOp;

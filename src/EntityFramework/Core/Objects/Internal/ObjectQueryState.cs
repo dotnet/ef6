@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Reflection;
 
@@ -68,7 +69,11 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <summary>
         ///     Constructs a new <see cref="ObjectQueryState" /> instance that uses the specified context and parameters collection.
         /// </summary>
+        /// <param name="elementType"> </param>
         /// <param name="context"> The ObjectContext to which the implemented ObjectQuery belongs </param>
+        /// <param name="parameters"> </param>
+        /// <param name="span"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected ObjectQueryState(Type elementType, ObjectContext context, ObjectParameterCollection parameters, Span span)
         {
             // Validate the element type
@@ -343,7 +348,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     Shouldn't be named CreateQuery to avoid ambiguity with reflection.
         /// </summary>
         /// <typeparam name="TResultType"> The required element type of the new ObjectQuery </typeparam>
-        /// <param name="queryState"> The underlying ObjectQueryState instance that should back the returned ObjectQuery </param>
         /// <returns> A new ObjectQuery based on the specified query state, with the specified element type </returns>
         public ObjectQuery<TResultType> CreateObjectQuery<TResultType>()
         {

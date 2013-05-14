@@ -330,7 +330,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// <summary>
         ///     Resolve the type - if the type is not found, return appropriate error
         /// </summary>
-        /// <returns> </returns>
         public bool TryResolveType(string namespaceName, string typeName, out SchemaType schemaType)
         {
             // For resolving entity container names, namespace can be null
@@ -361,7 +360,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Checks if the xml reader has base uri. If it doesn't have, it adds error, other
         ///     returns the location from the base uri
         /// </summary>
-        /// <returns> </returns>
         internal static bool TryGetBaseUri(XmlReader xmlReader, out string location)
         {
             var baseUri = xmlReader.BaseURI;
@@ -388,7 +386,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     it sets the errorEncountered to true. Returns true if the number of errors encountered is more
         ///     than max errors
         /// </summary>
-        /// <returns> </returns>
         private static bool UpdateErrorCollectionAndCheckForMaxErrors(
             List<EdmSchemaError> errorCollection,
             IList<EdmSchemaError> newErrors, ref bool errorEncountered)

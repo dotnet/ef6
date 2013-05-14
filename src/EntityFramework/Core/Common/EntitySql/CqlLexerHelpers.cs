@@ -93,7 +93,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="tokenId"> tokenid </param>
         /// <param name="tokenvalue"> ast node </param>
-        /// <returns> </returns>
         internal static Token NewToken(short tokenId, Node tokenvalue)
         {
             return new Token(tokenId, tokenvalue);
@@ -104,7 +103,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="tokenId"> tokenid </param>
         /// <param name="termToken"> lexical value </param>
-        /// <returns> </returns>
         internal static Token NewToken(short tokenId, TerminalToken termToken)
         {
             return new Token(tokenId, termToken);
@@ -170,7 +168,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         {
             internal static char translate(char c)
 
-                #region TRANSLATE
+            #region TRANSLATE
 
             {
                 if (Char.IsWhiteSpace(c)
@@ -233,8 +231,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         ///     returns true if given term is a eSQL keyword
         /// </summary>
-        /// <param name="term"> </param>
-        /// <returns> </returns>
         internal static bool IsReservedKeyword(string term)
         {
             return InternalKeywordDictionary.ContainsKey(term);
@@ -516,7 +512,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         ///     Maps double quoted string to a literal or an idendifier
         /// </summary>
-        /// <param name="symbol"> </param>
         /// <returns> Token </returns>
         internal Token MapDoubleQuotedString(string symbol)
         {
@@ -672,8 +667,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         ///     These are 'mandatory' line breaks. NOTE that CRLF is treated as a
         ///     composite 'character' and was intentionaly omitted in the character set bellow.
         /// </summary>
-        /// <param name="c"> </param>
-        /// <returns> </returns>
         internal static bool IsNewLine(Char c)
         {
             for (var i = 0; i < _newLineCharacters.Length; i++)
@@ -689,8 +682,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         ///     extracts single quoted literal 'payload'. literal MUST BE normalized.
         /// </summary>
-        /// <param name="literal"> </param>
-        /// <returns> </returns>
         private static string GetLiteralSingleQuotePayload(string literal)
         {
             Debug.Assert(-1 != literal.IndexOf('\''), "quoted literal value must have single quotes");
@@ -731,8 +722,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         ///     returns true if guid literal value format is valid
         /// </summary>
-        /// <param name="guidValue"> </param>
-        /// <returns> </returns>
         private static bool IsValidGuidValue(string guidValue)
         {
             var startIndex = 0;
@@ -765,8 +754,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         ///     returns true if binary literal value format is valid
         /// </summary>
-        /// <param name="binaryValue"> </param>
-        /// <returns> </returns>
         private static bool IsValidBinaryValue(string binaryValue)
         {
             DebugCheck.NotNull(binaryValue);
@@ -791,8 +778,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         ///     allowed format is: dddd-d?d-d?d{space}+d?d:d?d(:d?d(.d?d?d)?)?
         ///     where d is any decimal digit.
         /// </summary>
-        /// <param name="datetimeValue"> </param>
-        /// <returns> </returns>
         private static bool IsValidDateTimeValue(string datetimeValue)
         {
             if (null == _reDateTimeValue)
@@ -807,8 +792,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         ///     allowed format is: +d?d:d?d(:d?d(.d?d?d)?)?
         ///     where d is any decimal digit.
         /// </summary>
-        /// <param name="timeValue"> </param>
-        /// <returns> </returns>
         private static bool IsValidTimeValue(string timeValue)
         {
             if (null == _reTimeValue)
@@ -823,8 +806,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         ///     allowed format is: dddd-d?d-d?d{space}+d?d:d?d(:d?d(.d?d?d)?)?([+-]d?d:d?d)?
         ///     where d is any decimal digit.
         /// </summary>
-        /// <param name="datetimeOffsetValue"> </param>
-        /// <returns> </returns>
         private static bool IsValidDateTimeOffsetValue(string datetimeOffsetValue)
         {
             if (null == _reDateTimeOffsetValue)

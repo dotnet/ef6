@@ -22,7 +22,6 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     For testing purpuses only.
         /// </summary>
-        /// <param name="propertyName"> </param>
         internal FieldDescriptor(string propertyName)
             : base(propertyName, null)
         {

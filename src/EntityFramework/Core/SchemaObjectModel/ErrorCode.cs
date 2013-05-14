@@ -22,154 +22,57 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     /// </summary>
     internal enum ErrorCode
     {
-        /// <summary>
-        /// </summary>
         InvalidErrorCodeValue = 0,
         // unused 1,
-        /// <summary>
-        /// </summary>
         SecurityError = 2,
         // unused 3,
-        /// <summary>
-        /// </summary>
         IOException = 4,
-
-        /// <summary>
-        /// </summary>
         XmlError = 5,
-
-        /// <summary>
-        /// </summary>
         TooManyErrors = 6,
-
-        /// <summary>
-        /// </summary>
         MalformedXml = 7,
-
-        /// <summary>
-        /// </summary>
         UnexpectedXmlNodeType = 8,
-
-        /// <summary>
-        /// </summary>
         UnexpectedXmlAttribute = 9,
-
-        /// <summary>
-        /// </summary>
         UnexpectedXmlElement = 10,
-
-        /// <summary>
-        /// </summary>
         TextNotAllowed = 11,
-
-        /// <summary>
-        /// </summary>
         EmptyFile = 12,
-
-        /// <summary>
-        /// </summary>
         XsdError = 13,
-
-        /// <summary>
-        /// </summary>
         InvalidAlias = 14,
         // unused 15,
-        /// <summary>
-        /// </summary>
         IntegerExpected = 16,
-
-        /// <summary>
-        /// </summary>
         InvalidName = 17,
         // unused 18,
-        /// <summary>
-        /// </summary>
         AlreadyDefined = 19,
-
-        /// <summary>
-        /// </summary>
         ElementNotInSchema = 20,
         // unused 21,
-        /// <summary>
-        /// </summary>
         InvalidBaseType = 22,
-
-        /// <summary>
-        /// </summary>
         NoConcreteDescendants = 23,
-
-        /// <summary>
-        /// </summary>
         CycleInTypeHierarchy = 24,
-
-        /// <summary>
-        /// </summary>
         InvalidVersionNumber = 25,
-
-        /// <summary>
-        /// </summary>
         InvalidSize = 26,
-
-        /// <summary>
-        /// </summary>
         InvalidBoolean = 27,
         // unused 28,
-        /// <summary>
-        /// </summary>
         BadType = 29,
         // unused 30,
         // unused 31,
-        /// <summary>
-        /// </summary>
         InvalidVersioningClass = 32,
-
-        /// <summary>
-        /// </summary>
         InvalidVersionIntroduced = 33,
-
-        /// <summary>
-        /// </summary>
         BadNamespace = 34,
         // unused 35,
         // unused 36,
         // unused 37,
-        /// <summary>
-        /// </summary>
         UnresolvedReferenceSchema = 38,
         // unused 39,
-        /// <summary>
-        /// </summary>
         NotInNamespace = 40,
-
-        /// <summary>
-        /// </summary>
         NotUnnestedType = 41,
-
-        /// <summary>
-        /// </summary>
         BadProperty = 42,
-
-        /// <summary>
-        /// </summary>
         UndefinedProperty = 43,
-
-        /// <summary>
-        /// </summary>
         InvalidPropertyType = 44,
-
-        /// <summary>
-        /// </summary>
         InvalidAsNestedType = 45,
-
-        /// <summary>
-        /// </summary>
         InvalidChangeUnit = 46,
-
-        /// <summary>
-        /// </summary>
         UnauthorizedAccessException = 47,
         // unused 48,
         // unused 49,
+
         /// <summary>
         ///     Namespace attribute must be specified.
         /// </summary>
@@ -185,12 +88,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// </summary>
         ScaleOutOfRange = 52,
 
-        /// <summary>
-        /// </summary>
         DefaultNotAllowed = 53,
-
-        /// <summary>
-        /// </summary>
         InvalidDefault = 54,
 
         /// <summary>
@@ -198,32 +96,12 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// </summary>
         RequiredFacetMissing = 55,
 
-        /// <summary>
-        /// </summary>
         BadImageFormatException = 56,
-
-        /// <summary>
-        /// </summary>
         MissingSchemaXml = 57,
-
-        /// <summary>
-        /// </summary>
         BadPrecisionAndScale = 58,
-
-        /// <summary>
-        /// </summary>
         InvalidChangeUnitUsage = 59,
-
-        /// <summary>
-        /// </summary>
         NameTooLong = 60,
-
-        /// <summary>
-        /// </summary>
         CircularlyDefinedType = 61,
-
-        /// <summary>
-        /// </summary>
         InvalidAssociation = 62,
 
         /// <summary>
@@ -235,6 +113,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     This facet value is constant and is specified in the schema
         /// </summary>
         ConstantFacetSpecifiedInSchema = 64,
+
         // unused 65,
         // unused 66,
         // unused 67,
@@ -244,12 +123,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // unused 71,
         // unused 72,
         // unused 73,
-        /// <summary>
-        /// </summary>
         BadNavigationProperty = 74,
-
-        /// <summary>
-        /// </summary>
         InvalidKey = 75,
         // unused 76,
         // unused 77,
@@ -267,13 +141,16 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // unused 89,
         // unused 90,
         // unused 91,
+
         /// <summary>
         ///     Multiplicity value was malformed
         /// </summary>
         InvalidMultiplicity = 92,
+
         // unused 93,
         // unused 94,
         // unused 95,
+
         /// <summary>
         ///     The value for the Action attribute is invalid or not allowed in the current context
         /// </summary>
@@ -283,7 +160,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     An error occured processing the On&lt;Operation&gt;  elements
         /// </summary>
         InvalidOperation = 97,
+
         // unused 98,
+
         /// <summary>
         ///     Ends were given for the Property element of a EntityContainer that is not a RelationshipSet
         /// </summary>
@@ -303,9 +182,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     An end element was not given, and cannot be infered because there is no EntityContainerEntitySets that are the correct type to be used as an EntitySet.
         /// </summary>
         MissingExtentEntityContainerEnd = 102,
+
         // unused 103,
         // unused 104,
         // unused 105,
+
         /// <summary>
         ///     Not a valid parameter direction for the parameter in a function
         /// </summary>
@@ -315,7 +196,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Unable to infer an optional schema part, to resolve this, be more explicit
         /// </summary>
         FailedInference = 107,
+
         // unused = 108,
+
         /// <summary>
         ///     Invalid facet attribute(s) specified in provider manifest
         /// </summary>
@@ -355,8 +238,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Missing constraint in relationship type in ssdl
         /// </summary>
         MissingConstraintOnRelationshipType = 116,
+
         // unused 117,
         // unused 118,
+
         /// <summary>
         ///     Same role referred in the ToRole and FromRole of a referential constraint
         /// </summary>
@@ -376,7 +261,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Invalid PrimitiveTypeKind
         /// </summary>
         InvalidPrimitiveTypeKind = 122,
+
         // unused 123,
+
         /// <summary>
         ///     Invalid TypeConversion DestinationType
         /// </summary>
@@ -477,7 +364,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Schema, Table and DefiningQuery are all specified, and are mutualy exlusive
         /// </summary>
         TableAndSchemaAreMutuallyExclusiveWithDefiningQuery = 143,
+
         // unused 144,
+
         /// <summary>
         ///     Conurency can't change for any sub types of an EntitySet type.
         /// </summary>
@@ -567,7 +456,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Invalid Entity Container Name in extends attribute
         /// </summary>
         InvalidEntityContainerNameInExtends = 164,
+
         // unused 165,
+
         /// <summary>
         ///     Must specify namespace or alias of the schema in which this type is defined
         /// </summary>
@@ -632,7 +523,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     ComplexTypeAsReturnTypeAndDefinedEntitySet
         /// </summary>
         ComplexTypeAsReturnTypeAndNestedComplexProperty = 178,
+
         // unused = 179,
+
         /// <summary>
         ///     A function import can be either composable or side-effecting, but not both.
         /// </summary>
@@ -657,6 +550,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Return type has not been declared
         /// </summary>
         ReturnTypeNotDeclared = 184,
+
         TypeNotDeclared = 185,
         RowTypeWithoutProperty = 186,
         ReturnTypeDeclaredAsAttributeAndElement = 187,
@@ -667,6 +561,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Collection and reference type parameters are not allowed in function imports.
         /// </summary>
         FunctionImportCollectionAndRefParametersNotAllowed = 190,
+
         IncompatibleSchemaVersion = 191,
 
         /// <summary>
@@ -698,9 +593,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     In SSDL, if composable function returns a collection of rows (TVF), all row properties must be of scalar types.
         /// </summary>
         TVFReturnTypeRowHasNonScalarProperty = 197,
+
         // FunctionUnknownEntityContainer = 198,
         // FunctionEntityContainerMustBeSpecified = 199,
         // FunctionUnknownEntitySet = 200,
+
         /// <summary>
         ///     Only nullable parameters are supported in function imports.
         /// </summary>

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Represents a key composed of multiple parts.
@@ -20,7 +21,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         ///     Initialize a new composite key using the given constant values. Order is important.
         /// </summary>
-        /// <param name="values"> Key values. </param>
+        /// <param name="constants"> Key values. </param>
         internal CompositeKey(PropagatorResult[] constants)
         {
             DebugCheck.NotNull(constants);
@@ -39,8 +40,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         ///     Creates a merged key instance where each key component contains both elements.
         /// </summary>
+        /// <param name="keyManager"> </param>
         /// <param name="other"> Must be a non-null compatible key (same number of components). </param>
         /// <returns> Merged key. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal CompositeKey Merge(KeyManager keyManager, CompositeKey other)
         {
             DebugCheck.NotNull(other);

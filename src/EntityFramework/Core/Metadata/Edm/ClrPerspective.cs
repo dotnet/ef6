@@ -19,7 +19,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Creates a new instance of perspective class so that query can work
         ///     ignorant of all spaces
         /// </summary>
-        /// <param name="metadataWorkspace"> </param>
         internal ClrPerspective(MetadataWorkspace metadataWorkspace)
             : base(metadataWorkspace, DataSpace.CSpace)
         {

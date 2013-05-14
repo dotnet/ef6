@@ -23,9 +23,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region constructor
 
-        /// <summary>
-        /// </summary>
-        /// <param name="parentElement"> </param>
         internal ReturnType(Function parentElement)
             : base(parentElement)
         {
@@ -141,9 +138,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Private Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleTypeAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);

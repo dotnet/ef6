@@ -231,9 +231,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Gets an itme with identity
         /// </summary>
-        /// <param name="identity"> </param>
-        /// <param name="ignoreCase"> </param>
-        /// <returns> </returns>
         public override EdmMember GetValue(string identity, bool ignoreCase)
         {
             EdmMember item = null;

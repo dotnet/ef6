@@ -21,9 +21,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock,
         ///     this method doesn't provide any locking mechanism.
         /// </summary>
-        /// <param name="assemblyToLookup"> </param>
-        /// <param name="cacheEntry"> </param>
-        /// <returns> </returns>
         internal bool TryGetConventionalOcCacheFromAssemblyCache(Assembly assemblyToLookup, out ImmutableAssemblyCacheEntry cacheEntry)
         {
             cacheEntry = null;
@@ -34,8 +31,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock,
         ///     this method doesn't provide any locking mechanism.
         /// </summary>
-        /// <param name="assembly"> </param>
-        /// <param name="cacheEntry"> </param>
         internal void AddAssemblyToOcCacheFromAssemblyCache(Assembly assembly, ImmutableAssemblyCacheEntry cacheEntry)
         {
             if (_conventionalOcCache.ContainsKey(assembly))

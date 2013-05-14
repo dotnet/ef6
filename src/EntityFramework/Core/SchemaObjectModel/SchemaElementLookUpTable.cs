@@ -24,26 +24,16 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Methods
 
-        /// <summary>
-        /// </summary>
         public int Count
         {
             get { return KeyToType.Count; }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="key"> </param>
-        /// <returns> </returns>
         public bool ContainsKey(string key)
         {
             return KeyToType.ContainsKey(KeyFromName(key));
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="key"> </param>
-        /// <returns> </returns>
         public T LookUpEquivalentKey(string key)
         {
             key = KeyFromName(key);
@@ -57,23 +47,16 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return null;
         }
 
-        /// <summary>
-        /// </summary>
         public T this[string key]
         {
             get { return KeyToType[KeyFromName(key)]; }
         }
 
-        /// <summary>
-        /// </summary>
         public T GetElementAt(int index)
         {
             return KeyToType[_keysInDefOrder[index]];
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns> </returns>
         public IEnumerator<T> GetEnumerator()
         {
             return new SchemaElementLookUpTableEnumerator<T, T>(KeyToType, _keysInDefOrder);
@@ -84,9 +67,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return new SchemaElementLookUpTableEnumerator<T, T>(KeyToType, _keysInDefOrder);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns> </returns>
         public IEnumerator<S> GetFilteredEnumerator<S>()
             where S : T
         {
@@ -157,19 +137,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Private Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="type"> </param>
-        /// <returns> </returns>
         private static string KeyFromElement(T type)
         {
             return KeyFromName(type.Identity);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="unnormalizedKey"> </param>
-        /// <returns> </returns>
         private static string KeyFromName(string unnormalizedKey)
         {
             DebugCheck.NotEmpty(unnormalizedKey);
@@ -181,8 +153,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Private Properties
 
-        /// <summary>
-        /// </summary>
         private Dictionary<string, T> KeyToType
         {
             get

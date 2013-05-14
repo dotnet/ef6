@@ -20,7 +20,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// <summary>
         ///     construct a Referential constraint
         /// </summary>
-        /// <param name="relationship"> </param>
         public ReferentialConstraint(Relationship relationship)
             : base(relationship)
         {
@@ -188,8 +187,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                                 Strings.InvalidMultiplicityToRoleUpperBoundMustBeOne(dependentRoleEnd.Name, ParentElement.Name));
                         }
                     }
-                        // if the ToProperty is not the key, then the upper bound must be many i.e every parent (from property) can
-                        // be related to many childs
+                    // if the ToProperty is not the key, then the upper bound must be many i.e every parent (from property) can
+                    // be related to many childs
                     else if (dependentRoleEnd.Multiplicity
                              != RelationshipMultiplicity.Many)
                     {
@@ -263,11 +262,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Resolves the given property names to the property in the item
         ///     Also checks whether the properties form the key for the given type and whether all the properties are nullable or not
         /// </summary>
-        /// <param name="roleElement"> </param>
-        /// <param name="itemType"> </param>
-        /// <param name="isKeyProperty"> </param>
-        /// <param name="areAllPropertiesNullable"> </param>
-        /// <param name="isSubsetOfKeyProperties"> </param>
         private static void IsKeyProperty(
             ReferentialConstraintRoleElement roleElement, SchemaEntityType itemType,
             out bool isKeyProperty,

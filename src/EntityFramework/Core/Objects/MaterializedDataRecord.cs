@@ -24,8 +24,6 @@ namespace System.Data.Entity.Core.Objects
         private readonly TypeUsage _edmUsage;
         private readonly object[] _values;
 
-        /// <summary>
-        /// </summary>
         internal MaterializedDataRecord(MetadataWorkspace workspace, TypeUsage edmUsage, object[] values)
         {
             DebugCheck.NotNull(edmUsage);
@@ -42,8 +40,6 @@ namespace System.Data.Entity.Core.Objects
             _values = values; // take ownership of the array
         }
 
-        /// <summary>
-        /// </summary>
         public DataRecordInfo DataRecordInfo
         {
             get
@@ -68,43 +64,31 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// </summary>
         public override int FieldCount
         {
             get { return _values.Length; }
         }
 
-        /// <summary>
-        /// </summary>
         public override object this[int ordinal]
         {
             get { return GetValue(ordinal); }
         }
 
-        /// <summary>
-        /// </summary>
         public override object this[string name]
         {
             get { return GetValue(GetOrdinal(name)); }
         }
 
-        /// <summary>
-        /// </summary>
         public override bool GetBoolean(int ordinal)
         {
             return ((bool)_values[ordinal]);
         }
 
-        /// <summary>
-        /// </summary>
         public override byte GetByte(int ordinal)
         {
             return ((byte)_values[ordinal]);
         }
 
-        /// <summary>
-        /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public override long GetBytes(int ordinal, long fieldOffset, byte[] buffer, int bufferOffset, int length)
         {
@@ -196,15 +180,11 @@ namespace System.Data.Entity.Core.Objects
             return cbytes;
         }
 
-        /// <summary>
-        /// </summary>
         public override char GetChar(int ordinal)
         {
             return ((string)GetValue(ordinal))[0];
         }
 
-        /// <summary>
-        /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public override long GetChars(int ordinal, long fieldOffset, char[] buffer, int bufferOffset, int length)
         {
@@ -294,8 +274,6 @@ namespace System.Data.Entity.Core.Objects
             return cchars;
         }
 
-        /// <summary>
-        /// </summary>
         public DbDataRecord GetDataRecord(int ordinal)
         {
             return ((DbDataRecord)_values[ordinal]);
@@ -309,86 +287,62 @@ namespace System.Data.Entity.Core.Objects
             return GetDbDataReader(i);
         }
 
-        /// <summary>
-        /// </summary>
         public override string GetDataTypeName(int ordinal)
         {
             return GetMember(ordinal).TypeUsage.EdmType.Name;
         }
 
-        /// <summary>
-        /// </summary>
         public override DateTime GetDateTime(int ordinal)
         {
             return ((DateTime)_values[ordinal]);
         }
 
-        /// <summary>
-        /// </summary>
         public override Decimal GetDecimal(int ordinal)
         {
             return ((Decimal)_values[ordinal]);
         }
 
-        /// <summary>
-        /// </summary>
         public override double GetDouble(int ordinal)
         {
             return ((double)_values[ordinal]);
         }
 
-        /// <summary>
-        /// </summary>
         public override Type GetFieldType(int ordinal)
         {
             var edmMemberType = GetMember(ordinal).TypeUsage.EdmType;
             return edmMemberType.ClrType ?? typeof(Object);
         }
 
-        /// <summary>
-        /// </summary>
         public override float GetFloat(int ordinal)
         {
             return ((float)_values[ordinal]);
         }
 
-        /// <summary>
-        /// </summary>
         public override Guid GetGuid(int ordinal)
         {
             return ((Guid)_values[ordinal]);
         }
 
-        /// <summary>
-        /// </summary>
         public override Int16 GetInt16(int ordinal)
         {
             return ((Int16)_values[ordinal]);
         }
 
-        /// <summary>
-        /// </summary>
         public override Int32 GetInt32(int ordinal)
         {
             return ((Int32)_values[ordinal]);
         }
 
-        /// <summary>
-        /// </summary>
         public override Int64 GetInt64(int ordinal)
         {
             return ((Int64)_values[ordinal]);
         }
 
-        /// <summary>
-        /// </summary>
         public override string GetName(int ordinal)
         {
             return GetMember(ordinal).Name;
         }
 
-        /// <summary>
-        /// </summary>
         public override int GetOrdinal(string name)
         {
             if (null == _fieldNameLookup)
@@ -398,22 +352,16 @@ namespace System.Data.Entity.Core.Objects
             return _fieldNameLookup.GetOrdinal(name);
         }
 
-        /// <summary>
-        /// </summary>
         public override string GetString(int ordinal)
         {
             return ((string)_values[ordinal]);
         }
 
-        /// <summary>
-        /// </summary>
         public override object GetValue(int ordinal)
         {
             return _values[ordinal];
         }
 
-        /// <summary>
-        /// </summary>
         public override int GetValues(object[] values)
         {
             Check.NotNull(values, "values");
@@ -431,8 +379,6 @@ namespace System.Data.Entity.Core.Objects
             return DataRecordInfo.FieldMetadata[ordinal].FieldType;
         }
 
-        /// <summary>
-        /// </summary>
         public override bool IsDBNull(int ordinal)
         {
             return (DBNull.Value == _values[ordinal]);
@@ -498,7 +444,6 @@ namespace System.Data.Entity.Core.Objects
         ///     Initialize the property descriptors for each PrimitiveType attribute.
         ///     See similar functionality in DataRecordObjectView's ITypedList implementation.
         /// </summary>
-        /// <returns> </returns>
         private PropertyDescriptorCollection InitializePropertyDescriptors()
         {
             if (null == _values)
@@ -525,7 +470,6 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="structuralType"> The structural type definition </param>
         /// <param name="componentType"> The type to use as the component type </param>
         /// <param name="isReadOnly"> Whether the properties in the collection should be read only or not </param>
-        /// <returns> </returns>
         internal static PropertyDescriptorCollection CreatePropertyDescriptorCollection(
             StructuralType structuralType, Type componentType, bool isReadOnly)
         {

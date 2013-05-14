@@ -49,9 +49,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Return a copy of the column map, replacing all vars with the replacements
         ///     found in the replacementVarMap
         /// </summary>
-        /// <param name="columnMap"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         internal static ColumnMap Copy(ColumnMap columnMap, VarMap replacementVarMap)
         {
             return columnMap.Accept(_instance, replacementVarMap);
@@ -66,9 +63,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     replacement.  Note that we will follow the chain of replacements, in
         ///     case the replacement was also replaced.
         /// </summary>
-        /// <param name="originalVar"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         private static Var GetReplacementVar(Var originalVar, VarMap replacementVarMap)
         {
             // SQLBUDT #478509: Follow the chain of mapped vars, don't
@@ -95,10 +89,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Copies the List of ColumnMaps or SimpleColumnMaps
         /// </summary>
-        /// <typeparam name="TListType"> </typeparam>
-        /// <param name="tList"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         internal TListType[] VisitList<TListType>(TListType[] tList, VarMap replacementVarMap)
             where TListType : ColumnMap
         {
@@ -117,9 +107,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Copies the DiscriminatedEntityIdentity
         /// </summary>
-        /// <param name="entityIdentity"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         protected override EntityIdentity VisitEntityIdentity(DiscriminatedEntityIdentity entityIdentity, VarMap replacementVarMap)
         {
             var newEntitySetCol = (SimpleColumnMap)entityIdentity.EntitySetColumnMap.Accept(this, replacementVarMap);
@@ -130,9 +117,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Copies the SimpleEntityIdentity
         /// </summary>
-        /// <param name="entityIdentity"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         protected override EntityIdentity VisitEntityIdentity(SimpleEntityIdentity entityIdentity, VarMap replacementVarMap)
         {
             var newKeys = VisitList(entityIdentity.Keys, replacementVarMap);
@@ -144,9 +128,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     ComplexTypeColumnMap
         /// </summary>
-        /// <param name="columnMap"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         internal override ColumnMap Visit(ComplexTypeColumnMap columnMap, VarMap replacementVarMap)
         {
             var newNullability = columnMap.NullSentinel;
@@ -161,9 +142,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     DiscriminatedCollectionColumnMap
         /// </summary>
-        /// <param name="columnMap"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         internal override ColumnMap Visit(DiscriminatedCollectionColumnMap columnMap, VarMap replacementVarMap)
         {
             var newElementColumnMap = columnMap.Element.Accept(this, replacementVarMap);
@@ -177,9 +155,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     EntityColumnMap
         /// </summary>
-        /// <param name="columnMap"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         internal override ColumnMap Visit(EntityColumnMap columnMap, VarMap replacementVarMap)
         {
             var newEntityIdentity = VisitEntityIdentity(columnMap.EntityIdentity, replacementVarMap);
@@ -190,9 +165,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     SimplePolymorphicColumnMap
         /// </summary>
-        /// <param name="columnMap"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         internal override ColumnMap Visit(SimplePolymorphicColumnMap columnMap, VarMap replacementVarMap)
         {
             var newDiscriminator = (SimpleColumnMap)columnMap.TypeDiscriminator.Accept(this, replacementVarMap);
@@ -226,9 +198,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     RecordColumnMap
         /// </summary>
-        /// <param name="columnMap"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         internal override ColumnMap Visit(RecordColumnMap columnMap, VarMap replacementVarMap)
         {
             var newNullability = columnMap.NullSentinel;
@@ -243,9 +212,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     RefColumnMap
         /// </summary>
-        /// <param name="columnMap"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         internal override ColumnMap Visit(RefColumnMap columnMap, VarMap replacementVarMap)
         {
             var newEntityIdentity = VisitEntityIdentity(columnMap.EntityIdentity, replacementVarMap);
@@ -255,9 +221,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     ScalarColumnMap
         /// </summary>
-        /// <param name="columnMap"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         internal override ColumnMap Visit(ScalarColumnMap columnMap, VarMap replacementVarMap)
         {
             return new ScalarColumnMap(columnMap.Type, columnMap.Name, columnMap.CommandId, columnMap.ColumnPos);
@@ -266,9 +229,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     SimpleCollectionColumnMap
         /// </summary>
-        /// <param name="columnMap"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         internal override ColumnMap Visit(SimpleCollectionColumnMap columnMap, VarMap replacementVarMap)
         {
             var newElementColumnMap = columnMap.Element.Accept(this, replacementVarMap);
@@ -280,9 +240,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     VarRefColumnMap
         /// </summary>
-        /// <param name="columnMap"> </param>
-        /// <param name="replacementVarMap"> </param>
-        /// <returns> </returns>
         internal override ColumnMap Visit(VarRefColumnMap columnMap, VarMap replacementVarMap)
         {
             var replacementVar = GetReplacementVar(columnMap.Var, replacementVarMap);

@@ -35,10 +35,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Add an entry that var is a computation represented by the computationTemplate
         ///     over the var represented by the given groupAggregateVarInfo
         /// </summary>
-        /// <param name="var"> </param>
-        /// <param name="groupAggregateVarInfo"> </param>
-        /// <param name="computationTemplate"> </param>
-        /// <param name="isUnnested"> </param>
         internal void Add(Var var, GroupAggregateVarInfo groupAggregateVarInfo, Node computationTemplate, bool isUnnested)
         {
             _groupAggregateVarRelatedVarToInfo.Add(
@@ -50,11 +46,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Add an entry that the given property of the given var is a computation represented
         ///     by the computationTemplate over the var represented by the given groupAggregateVarInfo
         /// </summary>
-        /// <param name="var"> </param>
-        /// <param name="groupAggregateVarInfo"> </param>
-        /// <param name="computationTemplate"> </param>
-        /// <param name="isUnnested"> </param>
-        /// <param name="property"> </param>
         internal void Add(
             Var var, GroupAggregateVarInfo groupAggregateVarInfo, Node computationTemplate, bool isUnnested, EdmMember property)
         {
@@ -84,9 +75,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Gets the groupAggregateVarRefInfo representing the definition of the given var over
         ///     a group aggregate var if any.
         /// </summary>
-        /// <param name="var"> </param>
-        /// <param name="groupAggregateVarRefInfo"> </param>
-        /// <returns> </returns>
         internal bool TryGetReferencedGroupAggregateVarInfo(Var var, out GroupAggregateVarRefInfo groupAggregateVarRefInfo)
         {
             return _groupAggregateVarRelatedVarToInfo.TryGetValue(var, out groupAggregateVarRefInfo);
@@ -96,10 +84,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Gets the groupAggregateVarRefInfo representing the definition of the given property of the given
         ///     var over a group aggregate var if any.
         /// </summary>
-        /// <param name="var"> </param>
-        /// <param name="property"> </param>
-        /// <param name="groupAggregateVarRefInfo"> </param>
-        /// <returns> </returns>
         internal bool TryGetReferencedGroupAggregateVarInfo(
             Var var, EdmMember property, out GroupAggregateVarRefInfo groupAggregateVarRefInfo)
         {

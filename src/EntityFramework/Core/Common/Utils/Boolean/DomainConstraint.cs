@@ -8,8 +8,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     ///     Represents a constraint of the form:
     ///     Var1 in Range
     /// </summary>
-    /// <typeparam name="T_Element"> Type of range elements. </typeparam>
     /// <typeparam name="T_Variable"> Type of the variable. </typeparam>
+    /// <typeparam name="T_Element"> Type of range elements. </typeparam>
     internal class DomainConstraint<T_Variable, T_Element>
     {
         private readonly DomainVariable<T_Variable, T_Element> _variable;
@@ -59,7 +59,6 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         ///     Inverts this constraint (this iff. !result)
         ///     !(Var in Range) iff. Var in (Var.Domain - Range)
         /// </summary>
-        /// <returns> </returns>
         internal DomainConstraint<T_Variable, T_Element> InvertDomainConstraint()
         {
             return new DomainConstraint<T_Variable, T_Element>(

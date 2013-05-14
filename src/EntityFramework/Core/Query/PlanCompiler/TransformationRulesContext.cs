@@ -35,7 +35,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Remap the given subree using the current remapper
         /// </summary>
-        /// <param name="subTree"> </param>
         internal void RemapSubtree(Node subTree)
         {
             m_remapper.RemapSubtree(subTree);
@@ -44,8 +43,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Adds a mapping from oldVar to newVar
         /// </summary>
-        /// <param name="oldVar"> </param>
-        /// <param name="newVar"> </param>
         internal void AddVarMapping(Var oldVar, Var newVar)
         {
             m_remapper.AddMapping(oldVar, newVar);
@@ -65,6 +62,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="node"> Current subtree to process </param>
         /// <param name="varMap"> </param>
         /// <returns> The updated subtree </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scalarOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -137,8 +135,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     True, if it is listed as such on any on the node infos on any of the
         ///     current relop ancestors.
         /// </summary>
-        /// <param name="var"> </param>
-        /// <returns> </returns>
         internal bool IsNonNullable(Var var)
         {
             foreach (var relOpAncestor in m_relOpAncestors)
@@ -211,8 +207,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Is the op not safe for null sentinel value change
         /// </summary>
-        /// <param name="optype"> </param>
-        /// <returns> </returns>
         internal static bool IsOpNotSafeForNullSentinelValueChange(OpType optype)
         {
             return optype == OpType.Distinct ||
@@ -225,8 +219,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Does the given subtree contain a node with an op that
         ///     is not safer for null sentinel value change
         /// </summary>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         internal static bool HasOpNotSafeForNullSentinelValueChange(Node n)
         {
             if (IsOpNotSafeForNullSentinelValueChange(n.Op.OpType))
@@ -250,7 +242,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="node"> current subtree </param>
         /// <param name="varRefMap"> dictionary of var refcounts to fill in </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varRef")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -332,7 +323,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="conditionVar"> null discriminator var </param>
         /// <param name="expr"> expression </param>
-        /// <returns> </returns>
         internal Node BuildNullIfExpression(Var conditionVar, Node expr)
         {
             var varRefOp = Command.CreateVarRefOp(conditionVar);
@@ -350,7 +340,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Shut off filter pushdown for this subtree
         /// </summary>
-        /// <param name="n"> </param>
         internal void SuppressFilterPushdown(Node n)
         {
             m_suppressions[n] = n;
@@ -359,8 +348,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Is filter pushdown shut off for this subtree?
         /// </summary>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         internal bool IsFilterPushdownSuppressed(Node n)
         {
             return m_suppressions.ContainsKey(n);
@@ -369,9 +356,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Given a list of vars try to get one that is of type Int32
         /// </summary>
-        /// <param name="varList"> </param>
-        /// <param name="int32Var"> </param>
-        /// <returns> </returns>
         internal static bool TryGetInt32Var(IEnumerable<Var> varList, out Var int32Var)
         {
             foreach (var v in varList)
@@ -416,11 +400,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private bool m_reapplyNullabilityRules;
         private readonly Stack<Node> m_relOpAncestors = new Stack<Node>();
 #if DEBUG
-    /// <summary>
-    ///     Used to see all the applied rules.
-    ///     One way to use it is to put a conditional breakpoint at the end of
-    ///     PostProcessSubTree with the condition m_relOpAncestors.Count == 0
-    /// </summary>
+        /// <summary>
+        ///     Used to see all the applied rules.
+        ///     One way to use it is to put a conditional breakpoint at the end of
+        ///     PostProcessSubTree with the condition m_relOpAncestors.Count == 0
+        /// </summary>
         internal readonly StringBuilder appliedRules = new StringBuilder();
 #endif
 
@@ -433,7 +417,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Calls the VarRemapper to update any Vars in this node, and recomputes
         ///     the nodeinfo
         /// </summary>
-        /// <param name="n"> </param>
         internal override void PreProcess(Node n)
         {
             m_remapper.RemapNode(n);
@@ -445,7 +428,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Calls the VarRemapper to update any Vars in the entire subtree
         ///     If the given node has a RelOp it is pushed on the relOp ancestors stack.
         /// </summary>
-        /// <param name="subTree"> </param>
         internal override void PreProcessSubTree(Node subTree)
         {
             if (subTree.Op.IsRelOp)
@@ -474,7 +456,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     If the given node has a RelOp it is popped from the relOp ancestors stack.
         /// </summary>
-        /// <param name="subtree"> </param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RelOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -499,6 +480,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="n"> </param>
         /// <param name="rule"> the rule that was applied </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal override void PostProcess(Node n, Rule rule)
         {
             if (rule != null)
@@ -524,8 +506,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Get the hash value for this subtree
         /// </summary>
-        /// <param name="node"> </param>
-        /// <returns> </returns>
         internal override int GetHashCode(Node node)
         {
             var nodeInfo = Command.GetNodeInfo(node);

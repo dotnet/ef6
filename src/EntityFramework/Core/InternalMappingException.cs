@@ -49,8 +49,6 @@ namespace System.Data.Entity.Core
         /// <summary>
         ///     constructor
         /// </summary>
-        /// <param name="info"> </param>
-        /// <param name="context"> </param>
         protected InternalMappingException(SerializationInfo info, StreamingContext context)
             :
                 base(info, context)

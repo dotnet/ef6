@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that provides the value for this sort key.
+        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that provides the value for this sort key.
         /// </summary>
         /// <returns>
         ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that provides the value for this sort key.

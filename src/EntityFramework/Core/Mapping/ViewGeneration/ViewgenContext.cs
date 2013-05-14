@@ -116,8 +116,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         ///     add any equivalence facts between sets implied by 1:1 associations.
         ///     We can collect other implication facts but we don't have a scenario that needs them( yet ).
         /// </summary>
-        /// <param name="rightKB"> </param>
-        /// <param name="rightDomainMap"> </param>
         private void CreateConstraintsForForeignKeyAssociationsAffectingThisWrapper(
             FragmentQueryKB rightKB, MemberDomainMap rightDomainMap)
         {

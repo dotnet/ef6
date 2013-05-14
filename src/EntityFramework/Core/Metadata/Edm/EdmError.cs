@@ -16,8 +16,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Constructs a EdmSchemaError object.
         /// </summary>
         /// <param name="message"> The explanation of the error. </param>
-        /// <param name="errorCode"> The code associated with this error. </param>
-        /// <param name="severity"> The severity of the error. </param>
         internal EdmError(string message)
         {
             Check.NotEmpty(message, "message");

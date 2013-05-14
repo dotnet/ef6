@@ -31,7 +31,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Constructor for a root type
         /// </summary>
-        /// <param name="type"> </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal RootTypeInfo(TypeUsage type, ExplicitDiscriminatorMap discriminatorMap)
@@ -64,8 +63,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     corresponding property in the new type.
         ///     NOTE: Only to be used by StructuredTypeInfo
         /// </summary>
-        /// <param name="propertyRef"> </param>
-        /// <param name="newProperty"> </param>
         internal void AddPropertyMapping(PropertyRef propertyRef, EdmProperty newProperty)
         {
             m_propertyMap[propertyRef] = newProperty;
@@ -87,7 +84,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Adds a new property reference to the list of desired properties
         ///     NOTE: Only to be used by StructuredTypeInfo
         /// </summary>
-        /// <param name="propertyRef"> </param>
         internal void AddPropertyRef(PropertyRef propertyRef)
         {
             m_propertyRefList.Add(propertyRef);
@@ -180,7 +176,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="propertyRef"> property reference (on the old type) </param>
         /// <param name="throwIfMissing"> throw if the property is not found </param>
         /// <param name="property"> the corresponding property on the new type </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal new bool TryGetNewProperty(PropertyRef propertyRef, bool throwIfMissing, out EdmProperty property)

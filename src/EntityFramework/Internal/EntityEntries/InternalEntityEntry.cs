@@ -596,7 +596,6 @@ namespace System.Data.Entity.Internal
         ///     Gets the related end for the navigation property with the given name.
         /// </summary>
         /// <param name="navigationProperty"> The navigation property. </param>
-        /// <returns> </returns>
         public virtual IRelatedEnd GetRelatedEnd(string navigationProperty)
         {
             EdmMember member;

@@ -60,8 +60,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Construct a new Mapping Fragment object
         /// </summary>
-        /// <param name="tableExtent"> </param>
-        /// <param name="typeMapping"> </param>
         public StorageMappingFragment(EntitySet tableExtent, StorageTypeMapping typeMapping, bool isSQueryDistinct)
         {
             Check.NotNull(tableExtent, "tableExtent");

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Internally, entities are wrapped in some implementation of this
@@ -38,7 +39,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     Ensures that the collection with the given name is not null by setting a new empty
         ///     collection onto the property if necessary.
         /// </summary>
-        /// <param name="collectionName"> The name of the collection to operate on </param>
+        /// <param name="relatedEnd"> The name of the collection to operate on </param>
         void EnsureCollectionNotNull(RelatedEnd relatedEnd);
 
         /// <summary>
@@ -102,7 +103,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <summary>
         ///     Takes a snapshot of the relationships of the entity stored in the entry
         /// </summary>
-        /// <param name="entry"> </param>
         void TakeSnapshotOfRelationships(EntityEntry entry);
 
         /// <summary>
@@ -134,7 +134,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     Returns value of the entity's property described by the navigation property.
         /// </summary>
         /// <param name="relatedEnd"> navigation property to retrieve </param>
-        /// <returns> </returns>
         object GetNavigationPropertyValue(RelatedEnd relatedEnd);
 
         /// <summary>
@@ -153,7 +152,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     the RelationshipManager when needed, then this method is a no-op.  This is
         ///     typically the case for non-POCO entities.
         /// </summary>
+        /// <param name="relatedEnd"> </param>
         /// <param name="value"> The value to remove </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         void RemoveNavigationPropertyValue(RelatedEnd relatedEnd, object value);
 
         /// <summary>

@@ -37,7 +37,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             /// <summary>
             ///     Constructs a new enumerator for the specified Vec
             /// </summary>
-            /// <param name="vec"> </param>
             internal VarVecEnumerator(VarVec vec)
             {
                 Init(vec);
@@ -50,7 +49,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             /// <summary>
             ///     Initialize the enumerator to enumerate over the supplied Vec
             /// </summary>
-            /// <param name="vec"> </param>
             internal void Init(VarVec vec)
             {
                 m_position = -1;
@@ -82,7 +80,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             /// <summary>
             ///     Move to the next position
             /// </summary>
-            /// <returns> </returns>
             public bool MoveNext()
             {
                 m_position++;
@@ -149,7 +146,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Computes (this Minus other) by performing (this And (Not(other)))
         ///     A temp VarVec is used and released at the end of the operation
         /// </summary>
-        /// <param name="other"> </param>
         internal void Minus(VarVec other)
         {
             var tmp = m_command.CreateVarVec(other);
@@ -162,8 +158,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Does this have a non-zero overlap with the other vec
         /// </summary>
-        /// <param name="other"> </param>
-        /// <returns> </returns>
         internal bool Overlaps(VarVec other)
         {
             var otherCopy = m_command.CreateVarVec(other);
@@ -178,8 +172,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Written this way deliberately under the assumption that "other"
         ///     is a relatively small vec
         /// </summary>
-        /// <param name="other"> </param>
-        /// <returns> </returns>
         internal bool Subsumes(VarVec other)
         {
             for (var i = 0; i < other.m_bitVector.Length; i++)
@@ -221,7 +213,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     The enumerator pattern
         /// </summary>
-        /// <returns> </returns>
         public IEnumerator<Var> GetEnumerator()
         {
             return m_command.GetVarVecEnumerator(this);
@@ -351,7 +342,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Debugging support
         ///     provide a string representation for debugging.
-        ///     <returns> </returns>
         /// </summary>
         public override string ToString()
         {
@@ -380,7 +370,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Create a clone of this vec
         /// </summary>
-        /// <returns> </returns>
         public VarVec Clone()
         {
             var newVec = m_command.CreateVarVec();

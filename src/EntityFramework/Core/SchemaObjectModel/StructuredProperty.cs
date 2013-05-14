@@ -33,9 +33,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="parentElement"> </param>
         internal StructuredProperty(StructuredType parentElement)
             : base(parentElement)
         {
@@ -46,8 +43,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Properties
 
-        /// <summary>
-        /// </summary>
         public override SchemaType Type
         {
             get { return _type; }
@@ -69,15 +64,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             get { return _typeUsageBuilder.Nullable; }
         }
 
-        /// <summary>
-        /// </summary>
         public string Default
         {
             get { return _typeUsageBuilder.Default; }
         }
 
-        /// <summary>
-        /// </summary>
         public object DefaultAsObject
         {
             get { return _typeUsageBuilder.DefaultAsObject; }
@@ -97,8 +88,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Internal Methods
 
-        /// <summary>
-        /// </summary>
         internal override void ResolveTopLevelNames()
         {
             base.ResolveTopLevelNames();
@@ -130,8 +119,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// <summary>
         ///     Resolve the type string to a SchemaType object
         /// </summary>
-        /// <param name="typeName"> </param>
-        /// <returns> </returns>
         protected virtual SchemaType ResolveType(string typeName)
         {
             SchemaType element;
@@ -159,9 +146,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Internal Properties
 
-        /// <summary>
-        /// </summary>
-        /// <value> </value>
         internal string UnresolvedType { get; set; }
 
         #endregion
@@ -228,9 +212,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Private Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleTypeAttribute(XmlReader reader)
         {
             if (UnresolvedType != null)
@@ -253,7 +234,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// <summary>
         ///     Handles the Multiplicity attribute on the property.
         /// </summary>
-        /// <param name="reader"> </param>
         private void HandleCollectionKindAttribute(XmlReader reader)
         {
             var value = reader.Value;

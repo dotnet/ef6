@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Reflection;
     using System.Xml;
@@ -23,8 +24,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Constructor - loads the resource stream
         /// </summary>
-        /// <param name="path"> The path to the resource to load </param>
+        /// <param name="assembly"> </param>
+        /// <param name="resourceName"> </param>
         /// <param name="uriRegistry"> The global registry of URIs </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal MetadataArtifactLoaderResource(Assembly assembly, string resourceName, ICollection<string> uriRegistry)
         {
             DebugCheck.NotNull(assembly);
@@ -81,7 +84,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     GetHashCode override that defers the result to the _path member variable.
         /// </summary>
-        /// <returns> </returns>
         public override int GetHashCode()
         {
             return Path.GetHashCode();

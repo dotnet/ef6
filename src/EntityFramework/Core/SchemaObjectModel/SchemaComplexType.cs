@@ -13,9 +13,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     {
         #region Public Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="parentElement"> </param>
         internal SchemaComplexType(Schema parentElement)
             : base(parentElement)
         {
@@ -34,8 +31,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Protected Methods
 
-        /// <summary>
-        /// </summary>
         internal override void ResolveTopLevelNames()
         {
             base.ResolveTopLevelNames();

@@ -29,7 +29,6 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Applies the convention to the given model.
         /// </summary>
-        /// <param name="model"> The model. </param>
         public void Apply(ModelConfiguration modelConfiguration)
         {
             modelConfiguration.ModelNamespace = _modelNamespace;

@@ -73,7 +73,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="xmlReaders">xmlReaders where the CDM schemas are loaded</param>
         /// <param name="filePaths">the paths where the files can be found that match the xml readers collection</param>
+        /// <param name="resolver"> </param>
         /// <param name="errors">An out parameter to return the collection of errors encountered while loading</param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private StoreItemCollection(
             IEnumerable<XmlReader> xmlReaders,
             ReadOnlyCollection<string> filePaths,
@@ -317,8 +319,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     checks if the schemaKey refers to the provider manifest schema key
         ///     and if true, loads the provider manifest
         /// </summary>
-        /// <param name="connection"> The connection where the store manifest is loaded from </param>
-        /// <returns> The provider manifest object that was loaded </returns>
+        /// <param name="storeManifest"> The store manifest </param>
         private void LoadProviderManifest(DbProviderManifest storeManifest)
         {
             foreach (var primitiveType in storeManifest.GetStoreTypes())
@@ -450,12 +451,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Paths to SSDL artifacts. Used in error messages. Can be <c>null</c> in which case
         ///     the base Uri of the XmlReader will be used as a path.
         /// </param>
-        /// <param name="errors">
-        ///     The collection of errors encountered while loading.
-        /// </param>
         /// <param name="resolver">
         ///     Custom resolver. Currently used to resolve DbProviderServices implementation. If <c>null</c>
         ///     the default resolver will be used.
+        /// </param>
+        /// <param name="errors">
+        ///     The collection of errors encountered while loading.
         /// </param>
         /// <returns>
         ///     <see cref="StoreItemCollection" /> instance if no errors encountered. Otherwise <c>null</c>.

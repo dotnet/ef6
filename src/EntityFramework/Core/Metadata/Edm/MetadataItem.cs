@@ -120,8 +120,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Just checks for identities to be equal
         /// </summary>
-        /// <param name="item"> </param>
-        /// <returns> </returns>
         internal virtual bool EdmEquals(MetadataItem item)
         {
             return ((null != item) &&
@@ -157,7 +155,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Builds identity string for this item. By default, the method calls the identity property.
         /// </summary>
-        /// <param name="builder"> </param>
         internal virtual void BuildIdentity(StringBuilder builder)
         {
             builder.Append(Identity);
@@ -166,7 +163,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Adds the given metadata property to the metadata property collection
         /// </summary>
-        /// <param name="metadataProperty"> </param>
         internal void AddMetadataProperties(List<MetadataProperty> metadataProperties)
         {
             MetadataProperties.Source.AtomicAddRange(metadataProperties);

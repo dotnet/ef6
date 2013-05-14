@@ -167,7 +167,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Adds the given end to the collection of ends
         /// </summary>
-        /// <param name="associationSetEnd"> </param>
         internal void AddAssociationSetEnd(AssociationSetEnd associationSetEnd)
         {
             AssociationSetEnds.Source.Add(associationSetEnd);
@@ -198,7 +197,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Check.NotEmpty(name, "name");
             Check.NotNull(type, "type");
 
-            if (!CheckEntitySetAgainstEndMember(sourceSet, type.SourceEnd) 
+            if (!CheckEntitySetAgainstEndMember(sourceSet, type.SourceEnd)
                 || !CheckEntitySetAgainstEndMember(targetSet, type.TargetEnd))
             {
                 throw new ArgumentException(Strings.AssociationSet_EndEntityTypeMismatch);

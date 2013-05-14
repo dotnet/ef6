@@ -93,7 +93,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Produce a a new remapped varList
         /// </summary>
-        /// <param name="varList"> </param>
         /// <returns> remapped varList </returns>
         internal VarList RemapVarList(VarList varList)
         {
@@ -103,9 +102,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Remap the given varList using the given varMap
         /// </summary>
-        /// <param name="command"> </param>
-        /// <param name="varMap"> </param>
-        /// <param name="varList"> </param>
         internal static VarList RemapVarList(Command command, Dictionary<Var, Var> varMap, VarList varList)
         {
             var varRemapper = new VarRemapper(command, varMap);
@@ -119,8 +115,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Get the mapping for a Var - returns the var itself, mapping was found
         /// </summary>
-        /// <param name="v"> </param>
-        /// <returns> </returns>
         private Var Map(Var v)
         {
             Var newVar;
@@ -215,7 +209,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     The reason we have this method is because the default VisitDefault
         ///     actually visits the children, and we don't want to do that
         /// </summary>
-        /// <param name="n"> </param>
         protected override void VisitDefault(Node n)
         {
             // Do nothing. 

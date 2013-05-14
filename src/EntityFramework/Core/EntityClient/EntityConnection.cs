@@ -837,19 +837,19 @@ namespace System.Data.Entity.Core.EntityClient
                 var executionStrategy = DbProviderServices.GetExecutionStrategy(_storeConnection, GetMetadataWorkspace());
                 storeTransaction = executionStrategy.Execute(
                     () =>
+                    {
+                        if (_storeConnection.State == ConnectionState.Broken)
                         {
-                            if (_storeConnection.State == ConnectionState.Broken)
-                            {
-                                _storeConnection.Close();
-                            }
+                            _storeConnection.Close();
+                        }
 
-                            if (_storeConnection.State == ConnectionState.Closed)
-                            {
-                                _storeConnection.Open();
-                            }
+                        if (_storeConnection.State == ConnectionState.Closed)
+                        {
+                            _storeConnection.Open();
+                        }
 
-                            return _storeConnection.BeginTransaction(isolationLevel);
-                        });
+                        return _storeConnection.BeginTransaction(isolationLevel);
+                    });
             }
             catch (Exception e)
             {
@@ -889,7 +889,6 @@ namespace System.Data.Entity.Core.EntityClient
         ///     Thrown if the connection associated with the <see cref="Database" /> object is already participating in a transaction
         /// </exception>
         /// <exception cref="InvalidOperationException">Thrown if the connection associated with the transaction does not match the Entity Framework's connection</exception>
-        /// <summary>
         internal virtual EntityTransaction UseStoreTransaction(DbTransaction storeTransaction)
         {
             if (storeTransaction == null)

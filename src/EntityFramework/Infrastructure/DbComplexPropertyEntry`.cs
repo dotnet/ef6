@@ -98,7 +98,7 @@ namespace System.Data.Entity.Infrastructure
         ///     This method can be used for both scalar or complex properties.
         /// </summary>
         /// <typeparam name="TNestedProperty"> The type of the nested property. </typeparam>
-        /// <param name="navigationProperty"> An expression representing the nested property. </param>
+        /// <param name="property"> An expression representing the nested property. </param>
         /// <returns> An object representing the nested property. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#",
@@ -144,7 +144,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Gets an object that represents a nested complex property of this property.
         /// </summary>
         /// <typeparam name="TNestedComplexProperty"> The type of the nested property. </typeparam>
-        /// <param name="navigationProperty"> An expression representing the nested property. </param>
+        /// <param name="property"> An expression representing the nested property. </param>
         /// <returns> An object representing the nested property. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#",

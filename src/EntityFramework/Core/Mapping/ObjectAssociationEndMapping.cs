@@ -12,8 +12,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Constrcut a new AssociationEnd member mapping metadata object
         /// </summary>
-        /// <param name="edmAssociationEnd"> </param>
-        /// <param name="clrAssociationEnd"> </param>
         internal ObjectAssociationEndMapping(AssociationEndMember edmAssociationEnd, AssociationEndMember clrAssociationEnd)
             : base(edmAssociationEnd, clrAssociationEnd)
         {

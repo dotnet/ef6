@@ -80,8 +80,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     then tries to recompute the NodeInfo (with the fond hope that
         ///     some keys have now shown up)
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         protected override void VisitRelOpDefault(RelOp op, Node n)
         {
             VisitChildren(n);

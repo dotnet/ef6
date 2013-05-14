@@ -58,8 +58,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// </summary>
         internal override Type ClrType
         {
             get { return _type; }

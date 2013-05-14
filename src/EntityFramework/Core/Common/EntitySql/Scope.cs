@@ -16,7 +16,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         ///     Initialize using a given key comparer.
         /// </summary>
-        /// <param name="keyComparer"> </param>
         internal Scope(IEqualityComparer<string> keyComparer)
         {
             _scopeEntries = new Dictionary<string, ScopeEntry>(keyComparer);

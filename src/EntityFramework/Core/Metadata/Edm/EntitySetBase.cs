@@ -93,7 +93,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets or sets escaped provider specific SQL describing this entity set.
+        ///     Gets escaped provider specific SQL describing this entity set.
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public string DefiningQuery

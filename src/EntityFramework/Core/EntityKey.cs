@@ -205,8 +205,7 @@ namespace System.Data.Entity.Core
         /// <summary>
         ///     Constructs an EntityKey from an IExtendedDataRecord representing the entity.
         /// </summary>
-        /// <param name="entitySet"> EntitySet of the entity </param>
-        /// <param name="record"> an IExtendedDataRecord that represents the entity </param>
+        /// <param name="qualifiedEntitySetName"> EntitySet of the entity </param>
         internal EntityKey(string qualifiedEntitySetName)
         {
             DebugCheck.NotEmpty(qualifiedEntitySetName);
@@ -712,8 +711,8 @@ namespace System.Data.Entity.Core
                         return false;
                     }
                 }
-                    // Key names might not be in the same order so try a slower approach that matches
-                    // key names between the keys.
+                // Key names might not be in the same order so try a slower approach that matches
+                // key names between the keys.
                 else if (!ValuesWithBinaryEqual(key1._keyNames[i], key1._compositeKeyValues[i], key2))
                 {
                     return false;
@@ -745,8 +744,8 @@ namespace System.Data.Entity.Core
                         return false;
                     }
                 }
-                    // Key names might not be in the same order so try a slower approach that matches
-                    // key names between the keys.
+                // Key names might not be in the same order so try a slower approach that matches
+                // key names between the keys.
                 else if (!ValuesEqual(key1._keyNames[i], key1._compositeKeyValues[i], key2))
                 {
                     return false;
@@ -1219,7 +1218,9 @@ namespace System.Data.Entity.Core
         ///     Asserts that the "state" of the EntityKey is correct, by validating assumptions
         ///     based on whether the key is a singleton, composite, or temporary.
         /// </summary>
+        /// <param name="entitySet"> </param>
         /// <param name="isTemporary"> whether we expect this EntityKey to be marked temporary </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [Conditional("DEBUG")]
         private void AssertCorrectState(EntitySetBase entitySet, bool isTemporary)
         {
@@ -1302,8 +1303,6 @@ namespace System.Data.Entity.Core
         /// <summary>
         ///     Dev Note: this must be called from within a _lock block on _nameLookup
         /// </summary>
-        /// <param name="name"> </param>
-        /// <returns> </returns>
         internal static string LookupSingletonName(string name)
         {
             return string.IsNullOrEmpty(name) ? null : NameLookup.GetOrAdd(name, n => n);

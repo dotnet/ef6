@@ -39,9 +39,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Add a ReferenceSchema to the table
+        ///     Add a UsingElement to the table
         /// </summary>
-        /// <param name="refSchema"> the ReferenceSchema to add </param>
+        /// <param name="usingElement"> the UsingElement to add </param>
         public void Add(UsingElement usingElement)
         {
             DebugCheck.NotNull(usingElement);
@@ -114,10 +114,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// <summary>
         ///     Check if the given name is a reserved keyword. if yes, add appropriate error to the refschema
         /// </summary>
-        /// <param name="refSchema"> </param>
-        /// <param name="name"> </param>
-        /// <param name="nameKind"> </param>
-        /// <returns> </returns>
         private bool CheckForSystemNamespace(UsingElement refSchema, string name, NameKind nameKind)
         {
             Debug.Assert(

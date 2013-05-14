@@ -451,7 +451,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Callback to process an expression
         /// </summary>
         /// <param name="e"> The expression to convert </param>
-        /// <returns> </returns>
         private delegate Node VisitExprDelegate(DbExpression e);
 
         private Node VisitExpr(DbExpression e)
@@ -469,8 +468,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Convert this expression into a "scalar value" ITree expression. There are two main
         /// </summary>
-        /// <param name="expr"> </param>
-        /// <returns> </returns>
         private Node VisitExprAsScalar(DbExpression expr)
         {
             if (expr == null)
@@ -499,13 +496,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 node = ConvertRelOpToScalarOpTree(node, expr.ResultType);
             }
-                //
-                // If the current expression is a boolean, and it is really a predicate, then
-                // scalarize the predicate (ie) convert it into a "case when <predicate> then 'true' else 'false' end" expression
-                // SQLBUDT #431406: handle 3-valued logic for all predicates except IsNull
-                // Convert boolean predicate p into
-                //    case when p then true when not(p) then false else null end
-                //
+            //
+            // If the current expression is a boolean, and it is really a predicate, then
+            // scalarize the predicate (ie) convert it into a "case when <predicate> then 'true' else 'false' end" expression
+            // SQLBUDT #431406: handle 3-valued logic for all predicates except IsNull
+            // Convert boolean predicate p into
+            //    case when p then true when not(p) then false else null end
+            //
             else if (IsPredicate(expr))
             {
                 node = ConvertPredicateToScalarOpTree(node, expr);
@@ -517,9 +514,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Convert a rel op Itree node into a scalar op tree
         /// </summary>
-        /// <param name="node"> </param>
-        /// <param name="resultType"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RelOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -579,7 +573,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Convert an expression into an iqt predicate
         /// </summary>
         /// <param name="expr"> the expression to process </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "relOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -825,7 +818,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="boundExpression"> The DbExpression that defines the binding </param>
         /// <param name="bindingName"> The name of the binding variable </param>
-        /// <returns> </returns>
         private Node VisitBoundExpressionPushBindingScope(DbExpression boundExpression, string bindingName)
         {
             Var boundVar;
@@ -841,7 +833,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="boundVar">
         ///     Var representing the RelOp produced for the <paramref name="boundExpression" />
         /// </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DbExpressionBinding")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -872,7 +863,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="boundVar"> The Var produced by the RelOp from DbExpression that defines the binding </param>
         /// <param name="bindingName"> The name of the binding variable </param>
-        /// <returns> </returns>
         private void PushBindingScope(Var boundVar, string bindingName)
         {
             //
@@ -924,7 +914,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Creates a new variable scope that is based on a CQT DbLambda and pushes it onto the variable scope stack.
         /// </summary>
-        /// <param name="function"> The DbLambda that defines the scope </param>
+        /// <param name="lambda"> The DbLambda that defines the scope </param>
         /// <param name="argumentValues"> A list of Nodes and IsPredicate bits produced by converting the CQT Expressions that provide the arguments to the Lambda function </param>
         /// <param name="expandingEdmFunction"> an edm function for which the current lambda represents the generated body, otherwise null </param>
         private void EnterLambdaFunction(DbLambda lambda, List<Tuple<Node, bool>> argumentValues, EdmFunction expandingEdmFunction)
@@ -1197,7 +1187,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="node"> the expression to soft-cast </param>
         /// <param name="targetType"> the desired type to cast to </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node BuildSoftCast(Node node, TypeUsage targetType)
@@ -1911,8 +1900,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
 
                     // Next simplest - two IsOfOnly filters can never be merged if the types are different
-                    // (and if the types were equal the above condition would have been satisfied).
-                    // SC_CONSIDER: Replace this contradiction with 'CASE WHEN <input> IS NULL THEN NULL ELSE FALSE' ?
+                // (and if the types were equal the above condition would have been satisfied).
+                // SC_CONSIDER: Replace this contradiction with 'CASE WHEN <input> IS NULL THEN NULL ELSE FALSE' ?
                 else if (isExact && otherIsExact)
                 {
                     result = new IsOfFilter(otherRequiredType, otherIsExact);
@@ -2480,9 +2469,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 "Unrecognized JoinType specified in DbJoinExpression");
 
 #if DEBUG
-    //
-    // Assert that the DbJoinExpression is producing a collection result with a record element type.
-    // IsCollectionOfRecord() is defined only in DEBUG
+            //
+            // Assert that the DbJoinExpression is producing a collection result with a record element type.
+            // IsCollectionOfRecord() is defined only in DEBUG
             PlanCompiler.Assert(IsCollectionOfRecord(e.ResultType), "Invalid Type returned by DbJoinExpression");
 #endif
 
@@ -2585,9 +2574,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Check.NotNull(e, "e");
 
 #if DEBUG
-    //
-    // Assert that the DbJoinExpression is producing a collection result with a record element type.
-    // IsCollectionOfRecord() is defined only in DEBUG
+            //
+            // Assert that the DbJoinExpression is producing a collection result with a record element type.
+            // IsCollectionOfRecord() is defined only in DEBUG
             PlanCompiler.Assert(IsCollectionOfRecord(e.ResultType), "Invalid Type returned by DbApplyExpression");
 #endif
 
@@ -2652,7 +2641,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             Check.NotNull(e, "e");
 
 #if DEBUG
-    // IsCollectionOfRecord() is defined only in DEBUG
+            // IsCollectionOfRecord() is defined only in DEBUG
             PlanCompiler.Assert(IsCollectionOfRecord(e.ResultType), "DbGroupByExpression has invalid result Type (not record collection)");
 #endif
 
@@ -2724,9 +2713,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
                     aggVarDefNodes.Add(ProcessFunctionAggregate(funcAgg, argNodes, out aggVar));
                 }
-                    //
-                    // Handle if it is DbGroupAggregate
-                    //
+                //
+                // Handle if it is DbGroupAggregate
+                //
                 else
                 {
                     groupAggDefNode = ProcessGroupAggregate(
@@ -2874,13 +2863,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     |
         ///     copyOfInput
         /// </summary>
-        /// <param name="keyVarDefNodes"> </param>
-        /// <param name="copyOfInput"> </param>
-        /// <param name="copyOfkeyVarDefNodes"> </param>
-        /// <param name="copyKeyVarSet"> </param>
-        /// <param name="inputResultType"> </param>
-        /// <param name="groupAggVar"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node ProcessGroupAggregate(
@@ -2900,7 +2882,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     _iqtCommand.CreateProjectOp(projectOutpus),
                     groupDefNode, //the input
                     _iqtCommand.CreateNode(
-                        //the key var defs
+                    //the key var defs
                         _iqtCommand.CreateVarDefListOp(),
                         copyOfkeyVarDefNodes
                         ));
@@ -2983,8 +2965,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     If the return type of the input node is a RowType it flattens its individual non-row properties.
         ///     The produced nodes are added to the given flattenedProperties list
         /// </summary>
-        /// <param name="input"> </param>
-        /// <param name="flattenedProperties"> </param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RowType")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]

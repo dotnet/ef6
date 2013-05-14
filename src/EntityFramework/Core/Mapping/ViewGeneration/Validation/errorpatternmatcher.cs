@@ -671,8 +671,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
         /// <summary>
         ///     Return true if there were any Store conditions on this cell wrapper.
         /// </summary>
-        /// <param name="wrapper"> </param>
-        /// <returns> </returns>
         private static bool CheckForStoreConditions(LeftCellWrapper wrapper)
         {
             return wrapper.Cells.SelectMany(c => c.SQuery.Conditions).Any();

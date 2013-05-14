@@ -12,9 +12,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Determines whether the given node is a VarRef over the given var
         /// </summary>
-        /// <param name="node"> </param>
-        /// <param name="var"> </param>
-        /// <returns> </returns>
         internal static bool IsVarRefOverGivenVar(Node node, Var var)
         {
             if (node.Op.OpType

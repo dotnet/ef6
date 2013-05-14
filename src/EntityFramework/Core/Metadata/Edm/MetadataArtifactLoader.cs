@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Runtime.Versioning;
     using System.Xml;
@@ -70,8 +71,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="extensionCheck"> Any URI extension checks to perform </param>
         /// <param name="validExtension"> A specific extension for an artifact resource </param>
         /// <param name="uriRegistry"> The global registry of URIs </param>
-        /// <param name="resolveAssembly"> </param>
+        /// <param name="resolver"> </param>
         /// <returns> A concrete instance of an artifact loader. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file name which is a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For CheckArtifactExtension method call. But the path is not created in this method.
         internal static MetadataArtifactLoader Create(
@@ -197,7 +199,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Helper method that wraps a collection of XmlReader objects in MetadataArtifactLoader
         ///     instances.
         /// </summary>
-        /// <param name="filePaths"> The collection of XmlReader objects to wrap </param>
+        /// <param name="xmlReaders"> The collection of XmlReader objects to wrap </param>
         /// <returns> An instance of MetadataArtifactLoader </returns>
         public static MetadataArtifactLoader CreateCompositeFromXmlReaders(IEnumerable<XmlReader> xmlReaders)
         {
@@ -220,7 +222,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     If the path doesn't have the right extension, throw
         /// </summary>
         /// <param name="path"> The path to the resource </param>
-        /// <param name="validExtension"> </param>
         internal static void CheckArtifactExtension(string path, string validExtension)
         {
             DebugCheck.NotEmpty(path);

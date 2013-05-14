@@ -33,8 +33,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Overrides the default equality function. Two SimplePropertyRefs are
         ///     equal, if they describe the same property
         /// </summary>
-        /// <param name="obj"> </param>
-        /// <returns> </returns>
         public override bool Equals(object obj)
         {
             var other = obj as SimplePropertyRef;
@@ -47,15 +45,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Overrides the default hashcode function.
         ///     Simply returns the hashcode for the property instead
         /// </summary>
-        /// <returns> </returns>
         public override int GetHashCode()
         {
             return m_property.Name.GetHashCode();
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns> </returns>
         public override string ToString()
         {
             return m_property.Name;

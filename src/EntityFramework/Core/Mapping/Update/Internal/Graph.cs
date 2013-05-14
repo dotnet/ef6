@@ -194,7 +194,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         ///     For debugging purposes.
         /// </summary>
-        /// <returns> </returns>
         public override string ToString()
         {
             var sb = new StringBuilder();

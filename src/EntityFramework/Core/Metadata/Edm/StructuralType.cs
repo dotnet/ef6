@@ -27,7 +27,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="name"> name of the structural type </param>
         /// <param name="namespaceName"> namespace of the structural type </param>
-        /// <param name="version"> version of the structural type </param>
         /// <param name="dataSpace"> dataSpace in which this edmtype belongs to </param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
         internal StructuralType(string name, string namespaceName, DataSpace dataSpace)
@@ -129,8 +128,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     DataSpace = member.TypeUsage.EdmType.DataSpace;
                 }
-                    // We need to build types that span across more than one space. For such row types, we set the 
-                    // DataSpace to -1
+                // We need to build types that span across more than one space. For such row types, we set the 
+                // DataSpace to -1
                 else if (DataSpace != (DataSpace)(-1)
                          && member.TypeUsage.EdmType.DataSpace != DataSpace)
                 {

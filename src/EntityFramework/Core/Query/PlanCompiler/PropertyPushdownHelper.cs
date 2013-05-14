@@ -149,8 +149,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Gets the list of "identity" properties for an entity. Gets the
         ///     "entitysetid" property in addition to the "key" properties
         /// </summary>
-        /// <param name="type"> </param>
-        /// <returns> </returns>
         private static PropertyRefList GetIdentityProperties(md.EntityType type)
         {
             var desiredProperties = GetKeyProperties(type);
@@ -161,8 +159,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Gets the list of key properties for an entity
         /// </summary>
-        /// <param name="entityType"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "EntityType")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-EdmProperty")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -210,7 +206,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     push down the appropriate references, but it isn't clear to Murali that the
         ///     complexity is worth it.
         /// </remarks>
-        /// <param name="n"> </param>
         protected override void VisitDefault(Node n)
         {
             // for each child that is a complex type, simply ask for all properties
@@ -236,8 +231,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Record - ask for all properties (Note: This should be more optimized in the future
         ///     since we can actually "remap" the properties)
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(SoftCastOp op, Node n)
         {
             PropertyRefList childProps = null;
@@ -271,8 +264,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     CaseOp handling
         ///     Pushes its desired properties to each of the WHEN/ELSE clauses
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(CaseOp op, Node n)
         {
             // First find the properties that my parent expects from me
@@ -294,8 +285,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     CollectOp handling.
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(CollectOp op, Node n)
         {
             // Simply visit the children without pushing down any references to them.
@@ -305,8 +294,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     ComparisonOp handling
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "childOpType")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -346,8 +333,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     ElementOp handling
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(ElementOp op, Node n)
         {
             // Cannot occur at this stage of processing
@@ -359,8 +344,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Ask for the "identity" properties from the input entity, and push that
         ///     down to my child
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScalarOp")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetEntityRefOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -460,8 +443,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Pushes down the requested properties along with the current
         ///     property to the child
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(PropertyOp op, Node n)
         {
             VisitPropertyOp(op, n, new SimplePropertyRef(op.PropertyInfo));
@@ -472,8 +453,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Simply passes down "my" desired properties, and additionally
         ///     asks for the TypeID property
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(TreatOp op, Node n)
         {
             // First find the properties that my parent expects from me
@@ -492,8 +471,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Simply passes along the current "desired" properties
         ///     to the corresponding Var
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(VarRefOp op, Node n)
         {
             if (TypeUtils.IsStructuredType(op.Var.Type))
@@ -514,8 +491,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Pushes the "desired" properties to the
         ///     defining expression
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(VarDefOp op, Node n)
         {
             if (TypeUtils.IsStructuredType(op.Var.Type))
@@ -530,8 +505,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     VarDefListOp handling
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(VarDefListOp op, Node n)
         {
             // Simply visit the children without pushing down any references to them.
@@ -552,6 +525,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> apply op </param>
         /// <param name="n"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override void VisitApplyOp(ApplyBaseOp op, Node n)
         {
             VisitNode(n.Child1); // the right input
@@ -562,8 +536,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     DistinctOp handling
         ///     Require all properties out of all structured vars
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(DistinctOp op, Node n)
         {
             foreach (var v in op.Keys)
@@ -581,8 +553,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Process the predicate child, and then the input child - since the
         ///     predicate child will probably have references to the input.
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(FilterOp op, Node n)
         {
             VisitNode(n.Child1); // visit predicate first
@@ -592,8 +562,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     GroupByOp handling
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         protected override void VisitGroupByOp(GroupByBaseOp op, Node n)
         {
             // First "request" all properties for every key (that is a structured type)
@@ -623,6 +591,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> join op </param>
         /// <param name="n"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override void VisitJoinOp(JoinBaseOp op, Node n)
         {
             if (n.Op.OpType
@@ -641,8 +610,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     ProjectOp handling
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(ProjectOp op, Node n)
         {
             VisitNode(n.Child1); // visit projections first
@@ -652,8 +619,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     ScanTableOp handler
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scanTableOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -697,6 +662,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> the setop </param>
         /// <param name="n"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override void VisitSetOp(SetOp op, Node n)
         {
             foreach (var varMap in op.VarMap)
@@ -737,8 +703,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     need all its properties. Then process any local definitions, and
         ///     finally the relop input
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         protected override void VisitSortOp(SortBaseOp op, Node n)
         {
             // foreach sort key, every single bit of the Var is needed
@@ -762,8 +726,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     UnnestOp handling
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(UnnestOp op, Node n)
         {
             VisitChildren(n);
@@ -776,8 +738,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     PhysicalProjectOp handling
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(PhysicalProjectOp op, Node n)
         {
             // Insist that we need all properties from all the outputs
@@ -796,8 +756,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     MultiStreamNestOp handling
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(MultiStreamNestOp op, Node n)
         {
             // Cannot occur at this stage of processing
@@ -807,8 +765,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     SingleStreamNestOp handling
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         public override void Visit(SingleStreamNestOp op, Node n)
         {
             // Cannot occur at this stage of processing

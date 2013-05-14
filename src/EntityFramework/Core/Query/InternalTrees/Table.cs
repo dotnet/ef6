@@ -69,8 +69,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             get { return m_referencedColumns; }
         }
 
-        /// <summary>
-        /// </summary>
         internal VarVec NonNullableColumns
         {
             get { return m_nonnullableColumns; }
@@ -95,7 +93,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     String form - for debugging
         /// </summary>
-        /// <returns> </returns>
         public override string ToString()
         {
             return String.Format(CultureInfo.InvariantCulture, "{0}::{1}", m_tableMetadata, TableId);

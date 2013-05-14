@@ -116,7 +116,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// <summary>
         ///     Sets time for <paramref name="perfType" /> since the last call to <see cref="SetTimeForFinishedActivity" />.
         /// </summary>
-        /// <param name="perfType"> </param>
         internal void SetTimeForFinishedActivity(PerfType perfType)
         {
             var timeElapsed = m_watch.Elapsed;

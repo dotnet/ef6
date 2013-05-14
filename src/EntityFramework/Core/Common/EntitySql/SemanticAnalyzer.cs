@@ -215,7 +215,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="astStatement"> </param>
         /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static ParseResult ConvertStatement(Statement astStatement, SemanticResolver sr)
         {
             DebugCheck.NotNull(astStatement);
@@ -243,7 +243,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         ///     Converts query statement AST to a <see cref="DbQueryCommandTree" />
         /// </summary>
+        /// <param name="astStatement"> </param>
         /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static ParseResult ConvertQueryStatementToDbCommandTree(Statement astStatement, SemanticResolver sr)
         {
             DebugCheck.NotNull(astStatement);
@@ -1267,7 +1269,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         ///     Try convert method expr in a group scope as a collection aggregate
         /// </summary>
+        /// <param name="methodExpr"> </param>
+        /// <param name="metadataFunctionGroup"> </param>
+        /// <param name="sr"> </param>
         /// <param name="argTypes"> argTypes are returned regardless of the function result </param>
+        /// <param name="converted"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool TryConvertAsCollectionFunction(
             MethodExpr methodExpr,
             MetadataFunctionGroup metadataFunctionGroup,
@@ -1676,8 +1683,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         ///     Converts WITH RELATIONSHIP (AST.RelshipNavigationExpr)
         /// </summary>
-        /// <param name="driverEntityType"> The entity that is being constructed for with this RELATIONSHIP clause is processed. </param>
         /// <param name="relshipExpr"> the ast expression </param>
+        /// <param name="driverEntityType"> The entity that is being constructed for with this RELATIONSHIP clause is processed. </param>
         /// <param name="sr"> the Semantic Resolver context </param>
         /// <returns> a DbRelatedEntityRef instance </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
@@ -2195,7 +2202,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="astBuiltInExpr"> </param>
         /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertArithmeticArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var operands = ConvertValueExpressionsWithUntypedNulls(
@@ -2238,7 +2245,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="astBuiltInExpr"> </param>
         /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertPlusOperands(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var operands = ConvertValueExpressionsWithUntypedNulls(
@@ -2280,7 +2287,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="astBuiltInExpr"> </param>
         /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertLogicalArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var leftExpr = ConvertValueExpressionAllowUntypedNulls(astBuiltInExpr.Arg1, sr);
@@ -2328,7 +2335,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="astBuiltInExpr"> </param>
         /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertEqualCompArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             //
@@ -2360,7 +2367,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="astBuiltInExpr"> </param>
         /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertOrderCompArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var compArgs = ConvertValueExpressionsWithUntypedNulls(
@@ -2389,7 +2396,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="astBuiltInExpr"> </param>
         /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertSetArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             //
@@ -2522,7 +2529,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// </summary>
         /// <param name="astBuiltInExpr"> </param>
         /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertInExprArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var rightExpr = ConvertValueExpression(astBuiltInExpr.Arg2, sr);
@@ -3715,17 +3722,17 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             sr.CurrentScopeRegion.ApplyToScopeEntries(
                 scopeEntry =>
-                    {
-                        Debug.Assert(
-                            scopeEntry.EntryKind == ScopeEntryKind.SourceVar || scopeEntry.EntryKind == ScopeEntryKind.InvalidGroupInputRef,
-                            "scopeEntry.EntryKind == ScopeEntryKind.SourceVar || scopeEntry.EntryKind == ScopeEntryKind.InvalidGroupInputRef");
+                {
+                    Debug.Assert(
+                        scopeEntry.EntryKind == ScopeEntryKind.SourceVar || scopeEntry.EntryKind == ScopeEntryKind.InvalidGroupInputRef,
+                        "scopeEntry.EntryKind == ScopeEntryKind.SourceVar || scopeEntry.EntryKind == ScopeEntryKind.InvalidGroupInputRef");
 
-                        if (scopeEntry.EntryKind
-                            == ScopeEntryKind.SourceVar)
-                        {
-                            ((SourceScopeEntry)scopeEntry).ReplaceParentVar(whereBinding.Variable);
-                        }
-                    });
+                    if (scopeEntry.EntryKind
+                        == ScopeEntryKind.SourceVar)
+                    {
+                        ((SourceScopeEntry)scopeEntry).ReplaceParentVar(whereBinding.Variable);
+                    }
+                });
 
             Debug.Assert(whereBinding != null, "whereBinding != null");
 
@@ -3780,11 +3787,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             sr.CurrentScopeRegion.ApplyToScopeEntries(
                 (scopeEntry) =>
-                    {
-                        Debug.Assert(scopeEntry.EntryKind == ScopeEntryKind.SourceVar, "scopeEntry.EntryKind == ScopeEntryKind.SourceVar");
-                        ((SourceScopeEntry)scopeEntry).AdjustToGroupVar(
-                            groupInputBinding.Variable, groupInputBinding.GroupVariable, groupAggregateBinding.Variable);
-                    });
+                {
+                    Debug.Assert(scopeEntry.EntryKind == ScopeEntryKind.SourceVar, "scopeEntry.EntryKind == ScopeEntryKind.SourceVar");
+                    ((SourceScopeEntry)scopeEntry).AdjustToGroupVar(
+                        groupInputBinding.Variable, groupInputBinding.GroupVariable, groupAggregateBinding.Variable);
+                });
 
             //
             // This set will include names of keys, aggregates and the group partition name if specified.
@@ -4104,11 +4111,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     //
                     sr.CurrentScopeRegion.ApplyToScopeEntries(
                         (scopeEntry) =>
-                            {
-                                Debug.Assert(
-                                    scopeEntry.EntryKind == ScopeEntryKind.SourceVar, "scopeEntry.EntryKind == ScopeEntryKind.SourceVar");
-                                ((SourceScopeEntry)scopeEntry).RollbackAdjustmentToGroupVar(source.Variable);
-                            });
+                        {
+                            Debug.Assert(
+                                scopeEntry.EntryKind == ScopeEntryKind.SourceVar, "scopeEntry.EntryKind == ScopeEntryKind.SourceVar");
+                            ((SourceScopeEntry)scopeEntry).RollbackAdjustmentToGroupVar(source.Variable);
+                        });
 
                     //
                     // Remove the group operation flag.
@@ -4222,10 +4229,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             sr.RollbackToScope(groupInputScope);
             sr.CurrentScopeRegion.ApplyToScopeEntries(
                 (scopeEntry) =>
-                    {
-                        Debug.Assert(scopeEntry.EntryKind == ScopeEntryKind.SourceVar, "scopeEntry.EntryKind == ScopeEntryKind.SourceVar");
-                        return new InvalidGroupInputRefScopeEntry();
-                    });
+                {
+                    Debug.Assert(scopeEntry.EntryKind == ScopeEntryKind.SourceVar, "scopeEntry.EntryKind == ScopeEntryKind.SourceVar");
+                    return new InvalidGroupInputRefScopeEntry();
+                });
 
             //
             // Add final group scope.
@@ -4727,18 +4734,18 @@ namespace System.Data.Entity.Core.Common.EntitySql
             {
                 sr.CurrentScopeRegion.ApplyToScopeEntries(
                     scopeEntry =>
-                        {
-                            Debug.Assert(
-                                scopeEntry.EntryKind == ScopeEntryKind.SourceVar
-                                || scopeEntry.EntryKind == ScopeEntryKind.InvalidGroupInputRef,
-                                "scopeEntry.EntryKind == ScopeEntryKind.SourceVar || scopeEntry.EntryKind == ScopeEntryKind.InvalidGroupInputRef");
+                    {
+                        Debug.Assert(
+                            scopeEntry.EntryKind == ScopeEntryKind.SourceVar
+                            || scopeEntry.EntryKind == ScopeEntryKind.InvalidGroupInputRef,
+                            "scopeEntry.EntryKind == ScopeEntryKind.SourceVar || scopeEntry.EntryKind == ScopeEntryKind.InvalidGroupInputRef");
 
-                            if (scopeEntry.EntryKind
-                                == ScopeEntryKind.SourceVar)
-                            {
-                                ((SourceScopeEntry)scopeEntry).ReplaceParentVar(sortBinding.Variable);
-                            }
-                        });
+                        if (scopeEntry.EntryKind
+                            == ScopeEntryKind.SourceVar)
+                        {
+                            ((SourceScopeEntry)scopeEntry).ReplaceParentVar(sortBinding.Variable);
+                        }
+                    });
             }
 
             Debug.Assert(null != sortBinding, "null != sortBinding");
@@ -4825,7 +4832,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static Dictionary<BuiltInKind, BuiltInExprConverter> CreateBuiltInExprConverter()
         {
-            var builtInExprConverter = new Dictionary<BuiltInKind, BuiltInExprConverter>(sizeof (BuiltInKind));
+            var builtInExprConverter = new Dictionary<BuiltInKind, BuiltInExprConverter>(sizeof(BuiltInKind));
 
             ////////////////////////////
             // Arithmetic Expressions

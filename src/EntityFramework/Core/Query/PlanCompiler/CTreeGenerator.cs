@@ -104,7 +104,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <summary>
             ///     Constructs a new VarInfoList that contains the specified VarInfo instances.
             /// </summary>
-            /// <param name="elements"> </param>
             internal VarInfoList(IEnumerable<VarInfo> elements)
                 : base(elements)
             {
@@ -113,7 +112,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <summary>
             ///     Prepends the specified property name to the property path of all VarInfo instances in this list.
             /// </summary>
-            /// <param name="propName"> </param>
             internal void PrependProperty(string propName)
             {
                 foreach (var vInf in this)
@@ -1152,7 +1150,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> the softcast Op </param>
         /// <param name="n"> the node </param>
-        /// <returns> </returns>
         public override DbExpression Visit(SoftCastOp op, Node n)
         {
             // Aconrad 9/21/06 - temporarily removing check here 
@@ -1239,7 +1236,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="aliasMap"> map to identify the appropriate alias generator </param>
         /// <param name="defaultAliasGenerator"> the default alias generator </param>
         /// <param name="alreadyUsedNames"> list of already used names </param>
-        /// <returns> </returns>
         private static string GenerateNameForVar(
             Var projectedVar, Dictionary<string, AliasGenerator> aliasMap,
             AliasGenerator defaultAliasGenerator, Dictionary<string, string> alreadyUsedNames)
@@ -1298,9 +1294,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     2. The Vars produced by a SetOpArgument projection are only allowed to be DbExpressionBinding
         ///     based and are brought into scope when the original SetOp argument Node is visited.
         /// </summary>
-        /// <param name="sourceInfo"> </param>
-        /// <param name="outputVars"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1309:UseOrdinalStringComparison",
             MessageId =
                 "System.Collections.Generic.Dictionary`2<System.String,System.String>.#ctor(System.Collections.Generic.IEqualityComparer`1<System.String>)"
@@ -1476,7 +1469,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     uninteresting, but the input row count is
         /// </summary>
         /// <param name="relOpNode"> the relOp node </param>
-        /// <returns> </returns>
         private RelOpInfo BuildEmptyProjection(Node relOpNode)
         {
             //
@@ -2014,7 +2006,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="joinNode"> The IQT Node that references the JoinOp </param>
         /// <param name="joinKind"> The CQT DbExpressionKind that represents the type of join to create </param>
-        /// <returns> </returns>
         private DbExpression VisitBinaryJoin(Node joinNode, DbExpressionKind joinKind)
         {
             //
@@ -2276,7 +2267,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"> The visited SetOp </param>
         /// <param name="n"> The Node that references the SetOp </param>
         /// <param name="alias"> Alias to use when publishing the SetOp's Vars </param>
-        /// <param name="setOpBuilder"> Callback to construct the SetOp DbExpression from the left and right arguments </param>
+        /// <param name="setOpExpressionBuilder"> Callback to construct the SetOp DbExpression from the left and right arguments </param>
         /// <returns> The DbExpression equivalent of the SetOp </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "vars")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -2388,9 +2379,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     where e' is the CTree version of e
         ///     Add a Project over e, if it does not already have a ProjectOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override DbExpression Visit(SingleRowOp op, Node n)
         {
             RelOpInfo inputInfo;

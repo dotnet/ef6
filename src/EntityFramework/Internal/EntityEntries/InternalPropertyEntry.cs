@@ -6,6 +6,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     The internal class used to implement <see cref="System.Data.Entity.Infrastructure.DbPropertyEntry" /> and
@@ -298,7 +299,9 @@ namespace System.Data.Entity.Internal
         ///     Sets the property value, potentially by setting individual nested values for a complex
         ///     property.
         /// </summary>
+        /// <param name="internalValues"> </param>
         /// <param name="value"> The value. </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void SetPropertyValueUsingValues(InternalPropertyValues internalValues, object value)
         {
             DebugCheck.NotNull(internalValues);

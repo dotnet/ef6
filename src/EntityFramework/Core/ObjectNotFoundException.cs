@@ -39,8 +39,6 @@ namespace System.Data.Entity.Core
         /// <summary>
         ///     Initializes a new instance of ObjectNotFoundException
         /// </summary>
-        /// <param name="info"> </param>
-        /// <param name="context"> </param>
         private ObjectNotFoundException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

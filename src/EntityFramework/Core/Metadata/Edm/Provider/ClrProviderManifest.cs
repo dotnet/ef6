@@ -62,7 +62,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         ///     Returns the <see cref="PrimitiveTypeKind" /> corresponding to the given CLR type
         /// </summary>
         /// <param name="clrType"> The CLR type for which the PrimitiveTypeKind value should be resolved </param>
-        /// <param name="primitiveType"> The PrimitiveTypeKind value to which the CLR type resolves, if any. </param>
+        /// <param name="resolvedPrimitiveTypeKind"> The PrimitiveTypeKind value to which the CLR type resolves, if any. </param>
         /// <returns> True if the CLR type represents a primitive (EDM) type; otherwise false. </returns>
         internal static bool TryGetPrimitiveTypeKind(Type clrType, out PrimitiveTypeKind resolvedPrimitiveTypeKind)
         {
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
                 // As an optimization, short-circuit when the provided type has a known type code.
                 switch (Type.GetTypeCode(clrType))
                 {
-                        // PrimitiveTypeKind.Binary = byte[] = TypeCode.Object
+                    // PrimitiveTypeKind.Binary = byte[] = TypeCode.Object
                     case TypeCode.Boolean:
                         primitiveTypeKind = PrimitiveTypeKind.Boolean;
                         break;
@@ -82,16 +82,16 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
                     case TypeCode.DateTime:
                         primitiveTypeKind = PrimitiveTypeKind.DateTime;
                         break;
-                        // PrimitiveTypeKind.DateTimeOffset = System.DateTimeOffset = TypeCode.Object
+                    // PrimitiveTypeKind.DateTimeOffset = System.DateTimeOffset = TypeCode.Object
                     case TypeCode.Decimal:
                         primitiveTypeKind = PrimitiveTypeKind.Decimal;
                         break;
                     case TypeCode.Double:
                         primitiveTypeKind = PrimitiveTypeKind.Double;
                         break;
-                        // PrimitiveTypeKind.Geography = System.Data.Entity.Spatial.DbGeometry (or subtype) = TypeCode.Object
-                        // PrimitiveTypeKind.Geometry = System.Data.Entity.Spatial.DbGeometry (or subtype) = TypeCode.Object
-                        // PrimitiveTypeKind.Guid = System.Guid = TypeCode.Object
+                    // PrimitiveTypeKind.Geography = System.Data.Entity.Spatial.DbGeometry (or subtype) = TypeCode.Object
+                    // PrimitiveTypeKind.Geometry = System.Data.Entity.Spatial.DbGeometry (or subtype) = TypeCode.Object
+                    // PrimitiveTypeKind.Guid = System.Guid = TypeCode.Object
                     case TypeCode.Int16:
                         primitiveTypeKind = PrimitiveTypeKind.Int16;
                         break;
@@ -110,7 +110,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
                     case TypeCode.String:
                         primitiveTypeKind = PrimitiveTypeKind.String;
                         break;
-                        // PrimitiveTypeKind.Time = System.TimeSpan = TypeCode.Object
+                    // PrimitiveTypeKind.Time = System.TimeSpan = TypeCode.Object
                     case TypeCode.Object:
                         {
                             if (typeof(byte[]) == clrType)
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
                             {
                                 primitiveTypeKind = PrimitiveTypeKind.DateTimeOffset;
                             }
-                                // DbGeography/Geometry are abstract so subtypes must be allowed
+                            // DbGeography/Geometry are abstract so subtypes must be allowed
                             else if (typeof(DbGeography).IsAssignableFrom(clrType))
                             {
                                 primitiveTypeKind = PrimitiveTypeKind.Geography;

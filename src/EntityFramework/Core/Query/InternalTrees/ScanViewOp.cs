@@ -14,7 +14,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Scan constructor
         /// </summary>
-        /// <param name="table"> </param>
         internal ScanViewOp(Table table)
             : base(OpType.ScanView, table)
         {

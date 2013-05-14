@@ -78,7 +78,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     GetHashCode override that defers the result to the _path member variable.
         /// </summary>
-        /// <returns> </returns>
         public override int GetHashCode()
         {
             return _path.GetHashCode();

@@ -64,7 +64,6 @@ namespace System.Data.Entity.Internal
         ///     For reference navigation properties, this means setting the value onto the
         ///     <see cref="EntityReference{T}" /> object.
         /// </summary>
-        /// <param name="entity"> The entity. </param>
         /// <param name="value"> The value. </param>
         protected virtual void SetNavigationPropertyOnRelatedEnd(object value)
         {

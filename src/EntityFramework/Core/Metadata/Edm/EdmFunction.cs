@@ -278,7 +278,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return GetFunctionAttribute(FunctionAttributes.NiladicFunction); }
         }
 
-        /// <summary>Gets or sets whether this instance is mapped to a function or to a stored procedure.</summary>
+        /// <summary>Gets whether this instance is mapped to a function or to a stored procedure.</summary>
         /// <returns>true if this instance is mapped to a function; false if this instance is mapped to a stored procedure.</returns>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Composable")]
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]

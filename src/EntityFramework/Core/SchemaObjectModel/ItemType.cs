@@ -25,9 +25,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="parentElement"> </param>
         public SchemaEntityType(Schema parentElement)
             : base(parentElement)
         {
@@ -42,8 +39,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Protected Methods
 
-        /// <summary>
-        /// </summary>
         internal override void ResolveTopLevelNames()
         {
             base.ResolveTopLevelNames();
@@ -56,7 +51,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                         ErrorCode.InvalidBaseType, EdmSchemaErrorSeverity.Error,
                         Strings.InvalidBaseTypeForItemType(BaseType.FQName, FQName));
                 }
-                    // Since the base type is not null, key must be defined on the base type
+                // Since the base type is not null, key must be defined on the base type
                 else if (_keyElement != null
                          && BaseType != null)
                 {
@@ -65,8 +60,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                         Strings.InvalidKeyKeyDefinedInBaseClass(FQName, BaseType.FQName));
                 }
             }
-                // If the base type is not null, then the key must be defined on the base entity type, since
-                // we don't allow entity type without keys. 
+            // If the base type is not null, then the key must be defined on the base entity type, since
+            // we don't allow entity type without keys. 
             else if (_keyElement == null)
             {
                 AddError(
@@ -118,8 +113,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             get { return _keyElement; }
         }
 
-        /// <summary>
-        /// </summary>
         public IList<PropertyRefElement> DeclaredKeyProperties
         {
             get
@@ -132,9 +125,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <value> </value>
         public IList<PropertyRefElement> KeyProperties
         {
             get
@@ -153,8 +143,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
         public ISchemaElementLookUpTable<NavigationProperty> NavigationProperties
         {
             get
@@ -171,8 +159,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Protected Methods
 
-        /// <summary>
-        /// </summary>
         internal override void Validate()
         {
             // structured type base class will validate all members (properties, nav props, etc)
@@ -225,9 +211,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Private Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleNavigationPropertyElement(XmlReader reader)
         {
             var navigationProperty = new NavigationProperty(this);
@@ -235,9 +218,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             AddMember(navigationProperty);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleKeyElement(XmlReader reader)
         {
             _keyElement = new EntityKeyElement(this);

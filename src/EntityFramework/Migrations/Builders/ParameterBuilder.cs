@@ -20,10 +20,11 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name="fixedLength"> Value indicating whether or not all data should be padded to the maximum length. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
-        /// <param name="timestamp"> Value indicating whether or not this parameter should be configured as a timestamp. </param>
         /// <param name="name"> The name of the parameter. </param>
         /// <param name="storeType"> Provider specific data type to use for this parameter. </param>
+        /// <param name="outParameter"> </param>
         /// <returns> The newly constructed parameter definition. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ParameterModel Binary(

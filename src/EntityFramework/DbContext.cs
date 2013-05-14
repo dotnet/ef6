@@ -365,7 +365,7 @@ namespace System.Data.Entity
                 if (dbEntityEntry.InternalEntry.EntityType != typeof(EdmMetadata)
                     &&
 #pragma warning restore 612,618
-                    ShouldValidateEntity(dbEntityEntry))
+ ShouldValidateEntity(dbEntityEntry))
                 {
                     var validationResult = ValidateEntity(dbEntityEntry, new Dictionary<object, object>());
 
@@ -420,15 +420,6 @@ namespace System.Data.Entity
         ///     Internal method that calls the protected ValidateEntity method.
         /// </summary>
         /// <param name="entityEntry"> DbEntityEntry instance to be validated. </param>
-        /// <param name="items">
-        ///     User-defined dictionary containing additional info for custom validation. It will be passed to
-        ///     <see
-        ///         cref="System.ComponentModel.DataAnnotations.ValidationContext" />
-        ///     and will be exposed as
-        ///     <see
-        ///         cref="System.ComponentModel.DataAnnotations.ValidationContext.Items" />
-        ///     . This parameter is optional and can be null.
-        /// </param>
         /// <returns> Entity validation result. Possibly null when ValidateEntity is overridden. </returns>
         internal virtual DbEntityValidationResult CallValidateEntity(DbEntityEntry entityEntry)
         {

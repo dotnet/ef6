@@ -41,7 +41,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Simple wrapper to invoke the appropriate action on a node
         /// </summary>
         /// <param name="n"> the node to process </param>
-        /// <returns> </returns>
         internal TResultType VisitNode(Node n)
         {
             // Invoke the visitor
@@ -64,7 +63,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     No processing yet for this node - raises an exception
         /// </summary>
-        /// <param name="n"> </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal virtual TResultType Unimplemented(Node n)
@@ -76,9 +74,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Catch-all processor - raises an exception
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(Op op, Node n)
         {
             return Unimplemented(n);
@@ -101,9 +96,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     VarDefOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(VarDefOp op, Node n)
         {
             return VisitAncillaryOpDefault(op, n);
@@ -112,9 +104,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     VarDefListOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(VarDefListOp op, Node n)
         {
             return VisitAncillaryOpDefault(op, n);
@@ -139,9 +128,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     PhysicalProjectOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(PhysicalProjectOp op, Node n)
         {
             return VisitPhysicalOpDefault(op, n);
@@ -164,9 +150,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     SingleStreamNestOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(SingleStreamNestOp op, Node n)
         {
             return VisitNestOp(op, n);
@@ -175,9 +158,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     MultiStreamNestOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(MultiStreamNestOp op, Node n)
         {
             return VisitNestOp(op, n);
@@ -217,9 +197,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     CrossApply
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(CrossApplyOp op, Node n)
         {
             return VisitApplyOp(op, n);
@@ -228,9 +205,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     OuterApply
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(OuterApplyOp op, Node n)
         {
             return VisitApplyOp(op, n);
@@ -255,9 +229,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     CrossJoin
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(CrossJoinOp op, Node n)
         {
             return VisitJoinOp(op, n);
@@ -266,9 +237,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     FullOuterJoin
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(FullOuterJoinOp op, Node n)
         {
             return VisitJoinOp(op, n);
@@ -277,9 +245,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     LeftOuterJoin
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(LeftOuterJoinOp op, Node n)
         {
             return VisitJoinOp(op, n);
@@ -288,9 +253,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     InnerJoin
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(InnerJoinOp op, Node n)
         {
             return VisitJoinOp(op, n);
@@ -315,9 +277,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Except
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(ExceptOp op, Node n)
         {
             return VisitSetOp(op, n);
@@ -326,9 +285,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Intersect
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(IntersectOp op, Node n)
         {
             return VisitSetOp(op, n);
@@ -337,9 +293,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     UnionAll
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(UnionAllOp op, Node n)
         {
             return VisitSetOp(op, n);
@@ -350,9 +303,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Distinct
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(DistinctOp op, Node n)
         {
             return VisitRelOpDefault(op, n);
@@ -361,9 +311,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     FilterOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(FilterOp op, Node n)
         {
             return VisitRelOpDefault(op, n);
@@ -372,9 +319,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     GroupByBaseOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         protected virtual TResultType VisitGroupByOp(GroupByBaseOp op, Node n)
         {
             return VisitRelOpDefault(op, n);
@@ -383,9 +327,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     GroupByOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(GroupByOp op, Node n)
         {
             return VisitGroupByOp(op, n);
@@ -394,9 +335,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     GroupByIntoOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(GroupByIntoOp op, Node n)
         {
             return VisitGroupByOp(op, n);
@@ -405,9 +343,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     ProjectOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(ProjectOp op, Node n)
         {
             return VisitRelOpDefault(op, n);
@@ -418,9 +353,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Default handler for all TableOps
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         protected virtual TResultType VisitTableOp(ScanTableBaseOp op, Node n)
         {
             return VisitRelOpDefault(op, n);
@@ -429,9 +361,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     ScanTableOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(ScanTableOp op, Node n)
         {
             return VisitTableOp(op, n);
@@ -440,9 +369,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     ScanViewOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(ScanViewOp op, Node n)
         {
             return VisitTableOp(op, n);
@@ -455,7 +381,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The SingleRowOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(SingleRowOp op, Node n)
         {
             return VisitRelOpDefault(op, n);
@@ -466,7 +391,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> The SingleRowTableOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(SingleRowTableOp op, Node n)
         {
             return VisitRelOpDefault(op, n);
@@ -487,9 +411,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     SortOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(SortOp op, Node n)
         {
             return VisitSortOp(op, n);
@@ -498,9 +419,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     ConstrainedSortOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(ConstrainedSortOp op, Node n)
         {
             return VisitSortOp(op, n);
@@ -509,9 +427,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     UnnestOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(UnnestOp op, Node n)
         {
             return VisitRelOpDefault(op, n);
@@ -536,9 +451,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Default handler for all constant Ops
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         protected virtual TResultType VisitConstantOp(ConstantBaseOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -547,9 +459,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     AggregateOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(AggregateOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -558,9 +467,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     ArithmeticOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(ArithmeticOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -569,9 +475,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     CaseOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(CaseOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -580,9 +483,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     CastOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(CastOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -591,9 +491,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     SoftCastOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(SoftCastOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -602,9 +499,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     NestOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(CollectOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -613,9 +507,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     ComparisonOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(ComparisonOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -624,9 +515,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     ConditionalOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(ConditionalOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -635,9 +523,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     ConstantOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(ConstantOp op, Node n)
         {
             return VisitConstantOp(op, n);
@@ -646,9 +531,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     ConstantPredicateOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(ConstantPredicateOp op, Node n)
         {
             return VisitConstantOp(op, n);
@@ -657,9 +539,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     ElementOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(ElementOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -668,9 +547,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     ExistsOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(ExistsOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -679,9 +555,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     FunctionOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(FunctionOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -690,9 +563,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     GetEntityRefOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(GetEntityRefOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -701,9 +571,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     GetRefKeyOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(GetRefKeyOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -712,9 +579,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     InternalConstantOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(InternalConstantOp op, Node n)
         {
             return VisitConstantOp(op, n);
@@ -723,9 +587,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     IsOfOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(IsOfOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -734,9 +595,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     LikeOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(LikeOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -745,9 +603,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     NewEntityOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(NewEntityOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -756,9 +611,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     NewInstanceOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(NewInstanceOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -767,9 +619,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     DiscriminatedNewInstanceOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(DiscriminatedNewEntityOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -778,9 +627,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     NewMultisetOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(NewMultisetOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -789,9 +635,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     NewRecordOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(NewRecordOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -800,9 +643,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     NullOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(NullOp op, Node n)
         {
             return VisitConstantOp(op, n);
@@ -811,9 +651,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     NullSentinelOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(NullSentinelOp op, Node n)
         {
             return VisitConstantOp(op, n);
@@ -822,9 +659,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     PropertyOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(PropertyOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -833,9 +667,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     RelPropertyOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(RelPropertyOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -844,9 +675,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     RefOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(RefOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -855,9 +683,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     TreatOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(TreatOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);
@@ -866,9 +691,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     VarRefOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public virtual TResultType Visit(VarRefOp op, Node n)
         {
             return VisitScalarOpDefault(op, n);

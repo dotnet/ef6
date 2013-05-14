@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _input; }
         }
 
-        /// <summary>Gets or sets the Boolean predicate that should be evaluated for each element in the input set.</summary>
+        /// <summary>Gets the Boolean predicate that should be evaluated for each element in the input set.</summary>
         /// <returns>The Boolean predicate that should be evaluated for each element in the input set.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">

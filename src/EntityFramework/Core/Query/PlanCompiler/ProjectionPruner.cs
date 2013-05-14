@@ -1,7 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-using md = System.Data.Entity.Core.Metadata.Edm;
-using cqt = System.Data.Entity.Core.Common.CommandTrees;
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
@@ -151,7 +149,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Adds a reference to this Var
         /// </summary>
-        /// <param name="v"> </param>
         private void AddReference(Var v)
         {
             m_referencedVars.Set(v);
@@ -160,7 +157,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Adds a reference to each var in a set of Vars
         /// </summary>
-        /// <param name="varSet"> </param>
         private void AddReference(IEnumerable<Var> varSet)
         {
             foreach (var v in varSet)
@@ -172,18 +168,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Is this Var referenced?
         /// </summary>
-        /// <param name="v"> </param>
-        /// <returns> </returns>
         private bool IsReferenced(Var v)
         {
             return m_referencedVars.IsSet(v);
         }
 
         /// <summary>
-        ///     Is this var unreferenced? Duh
+        ///     Is this var unreferenced?
         /// </summary>
-        /// <param name="v"> </param>
-        /// <returns> </returns>
         private bool IsUnreferenced(Var v)
         {
             return !IsReferenced(v);
@@ -193,7 +185,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Prunes a VarMap - gets rid of unreferenced vars from the VarMap inplace
         ///     Additionally, propagates var references to the inner vars
         /// </summary>
-        /// <param name="varMap"> </param>
         private void PruneVarMap(VarMap varMap)
         {
             var unreferencedVars = new List<Var>();
@@ -297,9 +288,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     PhysicalProjectOp
         ///     Insist that all Vars in this are required
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(PhysicalProjectOp op, Node n)
         {
             if (n == m_command.Root)
@@ -324,9 +312,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     NestOps
         ///     Common handling for all NestOps.
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         protected override Node VisitNestOp(NestBaseOp op, Node n)
         {
             // Mark all vars as needed
@@ -342,9 +327,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     SingleStreamNestOp
         ///     Insist (for now) that all Vars are required
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(SingleStreamNestOp op, Node n)
         {
             AddReference(op.Discriminator);
@@ -355,9 +337,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     MultiStreamNestOp
         ///     Insist (for now) that all Vars are required
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(MultiStreamNestOp op, Node n)
         {
             return VisitNestOp(op, n);
@@ -375,6 +354,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"> </param>
         /// <param name="n"> the apply op </param>
         /// <returns> modified subtree </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override Node VisitApplyOp(ApplyBaseOp op, Node n)
         {
             // visit the right child first, then the left
@@ -390,7 +370,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> the DistinctOp </param>
         /// <param name="n"> Current subtree </param>
-        /// <returns> </returns>
         public override Node Visit(DistinctOp op, Node n)
         {
             if (op.Keys.Count > 1
@@ -412,7 +391,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> the ElementOp </param>
         /// <param name="n"> Current subtree </param>
-        /// <returns> </returns>
         public override Node Visit(ElementOp op, Node n)
         {
             var nodeInfo = m_command.GetExtendedNodeInfo(n.Child0);
@@ -431,7 +409,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> the filterOp </param>
         /// <param name="n"> current node </param>
-        /// <returns> </returns>
         public override Node Visit(FilterOp op, Node n)
         {
             // visit the predicate first, and then teh relop input
@@ -534,9 +511,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     First defer to default handling for groupby nodes
         ///     If all group aggregate vars are prunned out turn it into a GroupBy.
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(GroupByIntoOp op, Node n)
         {
             var result = VisitGroupByOp(op, n);
@@ -566,6 +540,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="op"> </param>
         /// <param name="n"> Node for the join subtree </param>
         /// <returns> modified subtree </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override Node VisitJoinOp(JoinBaseOp op, Node n)
         {
             // Simply visit all children for a CrossJoin
@@ -620,9 +595,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     ScanTableOp
         ///     Update the list of referenced columns
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scanTable")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -645,7 +617,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> </param>
         /// <param name="n"> current node </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override Node VisitSetOp(SetOp op, Node n)
         {
             // Prune the outputs varset, except for Intersect and Except, which require 
@@ -733,7 +705,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> the VarRefOp </param>
         /// <param name="n"> current node </param>
-        /// <returns> </returns>
         public override Node Visit(VarRefOp op, Node n)
         {
             AddReference(op.Var);
@@ -746,7 +717,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> the ExistsOp </param>
         /// <param name="n"> the input node </param>
-        /// <returns> </returns>
         public override Node Visit(ExistsOp op, Node n)
         {
             // Ensure that the child is a projectOp, and has exactly one var. Mark 

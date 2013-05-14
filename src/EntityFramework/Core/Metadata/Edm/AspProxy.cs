@@ -21,7 +21,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Determine whether we are inside an ASP.NET application.
         /// </summary>
-        /// <param name="webAssembly"> The System.Web assembly </param>
         /// <returns> true if we are running inside an ASP.NET application </returns>
         internal bool IsAspNetEnvironment()
         {

@@ -19,7 +19,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="name"> name of the relationship type </param>
         /// <param name="namespaceName"> namespace of the relationship type </param>
-        /// <param name="version"> version of the relationship type </param>
         /// <param name="dataSpace"> dataSpace in which this edmtype belongs to </param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
         internal RelationshipType(

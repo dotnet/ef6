@@ -86,7 +86,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Gets or sets the state of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />.
+        ///     Gets the state of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />.
         /// </summary>
         /// <returns>
         ///     The state of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />.
@@ -101,7 +101,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The entity object.</returns>
         public abstract object Entity { get; }
 
-        /// <summary>Gets or sets the entity key.</summary>
+        /// <summary>Gets the entity key.</summary>
         /// <returns>The entity key.</returns>
         public abstract EntityKey EntityKey { get; internal set; }
 

@@ -16,8 +16,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Construct a new ObjectTypeMapping object
         /// </summary>
-        /// <param name="clrType"> </param>
-        /// <param name="cdmType"> </param>
         internal ObjectTypeMapping(EdmType clrType, EdmType cdmType)
         {
             Debug.Assert(clrType.BuiltInTypeKind == cdmType.BuiltInTypeKind, "BuiltInTypeKind must be the same for both types");
@@ -93,7 +91,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     get a MemberMap for the member name specified
         /// </summary>
-        /// <param name="cdmPropertyName"> the name of the CDM member for which map needs to be retrieved </param>
+        /// <param name="propertyName"> the name of the CDM member for which map needs to be retrieved </param>
         internal ObjectPropertyMapping GetPropertyMap(String propertyName)
         {
             var memberMapping = GetMemberMap(propertyName, false /*ignoreCase*/);
@@ -112,7 +110,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Add a member mapping as a child of this object mapping
         /// </summary>
-        /// <param name="property"> child property mapping to be added </param>
+        /// <param name="memberMapping"> child property mapping to be added </param>
         internal void AddMemberMap(ObjectMemberMapping memberMapping)
         {
             Debug.Assert(
@@ -130,9 +128,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Returns the member map for the given clr member
         /// </summary>
-        /// <param name="clrPropertyName"> </param>
-        /// <param name="ignoreCase"> </param>
-        /// <returns> </returns>
         internal ObjectMemberMapping GetMemberMapForClrMember(string clrMemberName, bool ignoreCase)
         {
             return GetMemberMap(clrMemberName, ignoreCase);
@@ -141,9 +136,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     returns the member mapping for the given member
         /// </summary>
-        /// <param name="propertyName"> </param>
-        /// <param name="ignoreCase"> </param>
-        /// <returns> </returns>
         private ObjectMemberMapping GetMemberMap(string propertyName, bool ignoreCase)
         {
             Check.NotEmpty(propertyName, "propertyName");

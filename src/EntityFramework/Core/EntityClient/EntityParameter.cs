@@ -163,8 +163,6 @@ namespace System.Data.Entity.Core.EntityClient
         ///     need "value" which confuses folks when they call the constructor that takes the value
         ///     of the parameter.  c'est la vie.
         /// </summary>
-        /// <param name="parameterName"> </param>
-        /// <param name="argumentName"> </param>
         private void SetParameterNameWithValidation(string parameterName, string argumentName)
         {
             if (!string.IsNullOrEmpty(parameterName)
@@ -555,8 +553,6 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         ///     Determines the size of the given object
         /// </summary>
-        /// <param name="value"> </param>
-        /// <returns> </returns>
         private static int ValueSize(object value)
         {
             return ValueSizeCore(value);
@@ -574,7 +570,6 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         ///     Clones this parameter object
         /// </summary>
-        /// <returns> The new cloned object </returns>
         private void CloneHelper(EntityParameter destination)
         {
             destination._value = _value;

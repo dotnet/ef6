@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Linq; 
+    using System.Linq;
 
     /// <summary>
     ///     Represents the Entity Type
@@ -21,7 +21,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="name"> name of the entity type </param>
         /// <param name="namespaceName"> namespace of the entity type </param>
-        /// <param name="version"> version of the entity type </param>
         /// <param name="dataSpace"> dataSpace in which this edmtype belongs to </param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
         internal EntityTypeBase(string name, string namespaceName, DataSpace dataSpace)

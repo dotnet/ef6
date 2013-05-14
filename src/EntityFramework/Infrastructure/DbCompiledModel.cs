@@ -45,7 +45,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Creates a model for the given EDM metadata model.
         /// </summary>
-        /// <param name="modelaseMapping"> The EDM metadata model. </param>
+        /// <param name="model"> The EDM metadata model. </param>
         internal DbCompiledModel(DbModel model)
         {
             DebugCheck.NotNull(model);
@@ -93,7 +93,6 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <typeparam name="TContext"> The type of context to create. </typeparam>
         /// <param name="existingConnection"> An existing connection to a database for use by the context. </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public TContext CreateObjectContext<TContext>(DbConnection existingConnection) where TContext : ObjectContext
         {

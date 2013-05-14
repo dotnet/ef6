@@ -401,7 +401,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     // to the null sentinel.
                     if (nullSentinelDefinitionOp != null
                         && (nullSentinelDefinitionOp.IsEquivalent(varDefNode.Child0.Op) ||
-                            //The null sentinel has the same value of 1, thus it is safe.        
+                        //The null sentinel has the same value of 1, thus it is safe.        
                             varDefNode.Child0.Op.OpType == OpType.NullSentinel))
                     {
                         currentDefinition = command.CreateNode(command.CreateVarRefOp(sentinelVar));
@@ -622,10 +622,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     2. The right child of the apply produces at most one row
         ///     3. The right child of the apply produces at least one row, or the Apply operator in question is an OuterApply
         /// </summary>
-        /// <param name="rightChild"> </param>
-        /// <param name="applyRightChildNodeInfo"> </param>
-        /// <param name="applyKind"> </param>
-        /// <returns> </returns>
         private static bool CanRewriteApply(Node rightChild, ExtendedNodeInfo applyRightChildNodeInfo, OpType applyKind)
         {
             //Check whether it produces only one definition
@@ -676,8 +672,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             ///     Calculates the number of output columns for the subree
             ///     rooted at the given node
             /// </summary>
-            /// <param name="node"> </param>
-            /// <returns> </returns>
             internal static int CountOutputs(Node node)
             {
                 var visitor = new OutputCountVisitor();
@@ -695,7 +689,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             ///     and sum the number of their outputs.
             /// </summary>
             /// <param name="n"> Current node </param>
-            /// <returns> </returns>
             internal new int VisitChildren(Node n)
             {
                 var result = 0;
@@ -710,8 +703,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             ///     A default processor for any node.
             ///     Returns the sum of the children outputs
             /// </summary>
-            /// <param name="n"> </param>
-            /// <returns> /returns>
             protected override int VisitDefault(Node n)
             {
                 return VisitChildren(n);
@@ -726,9 +717,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <summary>
             ///     The number of outputs is same as for any of the inputs
             /// </summary>
-            /// <param name="op"> </param>
-            /// <param name="n"> </param>
-            /// <returns> </returns>
             protected override int VisitSetOp(SetOp op, Node n)
             {
                 return op.Outputs.Count;
@@ -739,9 +727,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <summary>
             ///     Distinct
             /// </summary>
-            /// <param name="op"> </param>
-            /// <param name="n"> </param>
-            /// <returns> </returns>
             public override int Visit(DistinctOp op, Node n)
             {
                 return op.Keys.Count;
@@ -750,9 +735,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <summary>
             ///     FilterOp
             /// </summary>
-            /// <param name="op"> </param>
-            /// <param name="n"> </param>
-            /// <returns> </returns>
             public override int Visit(FilterOp op, Node n)
             {
                 return VisitNode(n.Child0);
@@ -761,9 +743,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <summary>
             ///     GroupByOp
             /// </summary>
-            /// <param name="op"> </param>
-            /// <param name="n"> </param>
-            /// <returns> </returns>
             public override int Visit(GroupByOp op, Node n)
             {
                 return op.Outputs.Count;
@@ -772,9 +751,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <summary>
             ///     ProjectOp
             /// </summary>
-            /// <param name="op"> </param>
-            /// <param name="n"> </param>
-            /// <returns> </returns>
             public override int Visit(ProjectOp op, Node n)
             {
                 return op.Outputs.Count;
@@ -785,9 +761,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <summary>
             ///     ScanTableOp
             /// </summary>
-            /// <param name="op"> </param>
-            /// <param name="n"> </param>
-            /// <returns> </returns>
             public override int Visit(ScanTableOp op, Node n)
             {
                 return op.Table.Columns.Count;
@@ -796,9 +769,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <summary>
             ///     SingleRowTableOp
             /// </summary>
-            /// <param name="op"> </param>
-            /// <param name="n"> </param>
-            /// <returns> </returns>
             public override int Visit(SingleRowTableOp op, Node n)
             {
                 return 0;
@@ -807,9 +777,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             /// <summary>
             ///     Same as the input
             /// </summary>
-            /// <param name="op"> </param>
-            /// <param name="n"> </param>
-            /// <returns> </returns>
             protected override int VisitSortOp(SortBaseOp op, Node n)
             {
                 return VisitNode(n.Child0);
@@ -842,9 +809,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             ///     Public entry point.
             ///     Remaps the subree rooted at the given tree
             /// </summary>
-            /// <param name="root"> </param>
-            /// <param name="command"> </param>
-            /// <param name="oldVar"> </param>
             internal static void RemapSubtree(Node root, Command command, Var oldVar)
             {
                 var remapper = new VarDefinitionRemapper(oldVar, command);
@@ -856,7 +820,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             ///     Unlike the base implementation, we want to visit the childrent, even if no vars are in the
             ///     remapping dictionary.
             /// </summary>
-            /// <param name="subTree"> </param>
             internal override void RemapSubtree(Node subTree)
             {
                 foreach (var chi in subTree.Children)
@@ -872,9 +835,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             ///     If the node defines the node that needs to be remapped,
             ///     it remaps it to a new var.
             /// </summary>
-            /// <param name="op"> </param>
-            /// <param name="n"> </param>
-            /// <returns> </returns>
             public override void Visit(VarDefOp op, Node n)
             {
                 if (op.Var == m_oldVar)
@@ -889,9 +849,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             ///     If the columnVars defined by the table contain the var that needs to be remapped
             ///     all the column vars produces by the table are remaped to new vars.
             /// </summary>
-            /// <param name="op"> </param>
-            /// <param name="n"> </param>
-            /// <returns> </returns>
             public override void Visit(ScanTableOp op, Node n)
             {
                 if (op.Table.Columns.Contains(m_oldVar))
@@ -910,8 +867,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             ///     The var that needs to be remapped may be produced by a set op,
             ///     in which case the varmaps need to be updated too.
             /// </summary>
-            /// <param name="op"> </param>
-            /// <param name="n"> </param>
             protected override void VisitSetOp(SetOp op, Node n)
             {
                 base.VisitSetOp(op, n);
@@ -931,8 +886,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             ///     Replaces the entry in the varMap in which m_oldVar is a key
             ///     with an entry in which newVAr is the key and the value remains the same.
             /// </summary>
-            /// <param name="varMap"> </param>
-            /// <param name="newVar"> </param>
             private void RemapVarMapKey(VarMap varMap, Var newVar)
             {
                 var value = varMap[m_oldVar];
@@ -962,7 +915,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     into just OuterApply(X, Y)
         /// </summary>
         /// <param name="context"> rule processing context </param>
-        /// <param name="joinNode"> the join node </param>
+        /// <param name="applyNode"> the apply node </param>
         /// <param name="newNode"> transformed subtree </param>
         /// <returns> transformation status </returns>
         private static bool ProcessCrossApplyOverLeftOuterJoinOverSingleRowTable(

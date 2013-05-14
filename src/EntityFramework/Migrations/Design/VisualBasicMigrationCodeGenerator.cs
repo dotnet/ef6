@@ -281,7 +281,9 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         ///     Generates the closing code for a class that was started with WriteClassStart.
         /// </summary>
+        /// <param name="namespace"> </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "namespace")]
         protected virtual void WriteClassEnd(string @namespace, IndentedTextWriter writer)
         {
@@ -389,21 +391,21 @@ namespace System.Data.Entity.Migrations.Design
 
                 procedureOperation.Parameters.Each(
                     (p, i) =>
+                    {
+                        var scrubbedName = ScrubName(p.Name);
+
+                        writer.Write(".");
+                        writer.Write(scrubbedName);
+                        writer.Write(" =");
+                        Generate(p, writer, !string.Equals(p.Name, scrubbedName, StringComparison.Ordinal));
+
+                        if (i < procedureOperation.Parameters.Count - 1)
                         {
-                            var scrubbedName = ScrubName(p.Name);
+                            writer.Write(",");
+                        }
 
-                            writer.Write(".");
-                            writer.Write(scrubbedName);
-                            writer.Write(" =");
-                            Generate(p, writer, !string.Equals(p.Name, scrubbedName, StringComparison.Ordinal));
-
-                            if (i < procedureOperation.Parameters.Count - 1)
-                            {
-                                writer.Write(",");
-                            }
-
-                            writer.WriteLine();
-                        });
+                        writer.WriteLine();
+                    });
 
                 writer.Indent--;
                 writer.WriteLine("},");
@@ -541,21 +543,21 @@ namespace System.Data.Entity.Migrations.Design
 
             createTableOperation.Columns.Each(
                 (c, i) =>
+                {
+                    var scrubbedName = ScrubName(c.Name);
+
+                    writer.Write(".");
+                    writer.Write(scrubbedName);
+                    writer.Write(" =");
+                    Generate(c, writer, !string.Equals(c.Name, scrubbedName, StringComparison.Ordinal));
+
+                    if (i < columnCount - 1)
                     {
-                        var scrubbedName = ScrubName(c.Name);
+                        writer.Write(",");
+                    }
 
-                        writer.Write(".");
-                        writer.Write(scrubbedName);
-                        writer.Write(" =");
-                        Generate(c, writer, !string.Equals(c.Name, scrubbedName, StringComparison.Ordinal));
-
-                        if (i < columnCount - 1)
-                        {
-                            writer.Write(",");
-                        }
-
-                        writer.WriteLine();
-                    });
+                    writer.WriteLine();
+                });
 
             writer.Indent--;
             writer.Write("}");

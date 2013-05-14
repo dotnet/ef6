@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     The class for provider services of the entity client
@@ -23,10 +24,11 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <summary>
         ///     Create a Command Definition object, given the connection and command tree
         /// </summary>
-        /// <param name="connection"> connection to the underlying provider </param>
+        /// <param name="providerManifest"> </param>
         /// <param name="commandTree"> command tree for the statement </param>
         /// <returns> an executable command definition object </returns>
         /// <exception cref="ArgumentNullException">connection and commandTree arguments must not be null</exception>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
             Check.NotNull(providerManifest, "providerManifest");
@@ -64,8 +66,6 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         ///     This method is intended for provider writers to build a default command definition
         ///     from a command.
         /// </summary>
-        /// <param name="prototype"> </param>
-        /// <returns> </returns>
         /// <exception cref="ArgumentNullException">prototype argument must not be null</exception>
         /// <exception cref="InvalidCastException">prototype argument must be a EntityCommand</exception>
         public override DbCommandDefinition CreateCommandDefinition(DbCommand prototype)

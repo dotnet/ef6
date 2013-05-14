@@ -46,10 +46,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         private static readonly Regex _typeParser = new Regex(
             @"^(?<modifier>((Collection)|(Ref)))\s*\(\s*(?<typeName>\S*)\s*\)$", RegexOptions.Compiled);
 
-        /// <summary>
-        /// </summary>
-        /// <param name="type"> </param>
-        /// <returns> </returns>
         internal static void RemoveTypeModifier(ref string type, out TypeModifier typeModifier, out bool isRefType)
         {
             isRefType = false;
@@ -560,9 +556,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Internal Properties
 
-        /// <summary>
-        /// </summary>
-        /// <value> </value>
         internal string UnresolvedReturnType
         {
             get { return _unresolvedType; }
@@ -730,7 +723,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// <summary>
         ///     Handles ParameterTypeSemantics attribute
         /// </summary>
-        /// <param name="reader"> </param>
         private void HandleParameterTypeSemanticsAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);

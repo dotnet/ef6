@@ -66,8 +66,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Our definition of equality
         /// </summary>
-        /// <param name="obj"> </param>
-        /// <returns> </returns>
         public override bool Equals(object obj)
         {
             var other = obj as RelProperty;
@@ -80,7 +78,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     our hash code
         /// </summary>
-        /// <returns> </returns>
         public override int GetHashCode()
         {
             return ToEnd.Identity.GetHashCode();
@@ -89,7 +86,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     String form
         /// </summary>
-        /// <returns> </returns>
         [DebuggerNonUserCode]
         public override string ToString()
         {

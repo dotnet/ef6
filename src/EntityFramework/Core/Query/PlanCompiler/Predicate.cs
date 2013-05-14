@@ -37,7 +37,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Create an empty predicate
         /// </summary>
-        /// <param name="command"> </param>
         internal Predicate(Command command)
         {
             m_command = command;
@@ -133,11 +132,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Get the set of equi-join columns from this predicate
         /// </summary>
-        /// <param name="leftTableDefinitions"> </param>
-        /// <param name="rightTableDefinitions"> </param>
-        /// <param name="leftTableEquiJoinColumns"> </param>
-        /// <param name="rightTableEquiJoinColumns"> </param>
-        /// <param name="otherPredicates"> </param>
         internal void GetEquiJoinPredicates(
             VarVec leftTableDefinitions, VarVec rightTableDefinitions,
             out List<Var> leftTableEquiJoinColumns, out List<Var> rightTableEquiJoinColumns,

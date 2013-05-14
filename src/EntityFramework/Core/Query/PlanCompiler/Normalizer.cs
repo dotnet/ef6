@@ -53,9 +53,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Translate Exists(X) into Exists(select 1 from X)
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(ExistsOp op, Node n)
         {
             VisitChildren(n);
@@ -69,8 +66,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Build Project(select 1 from child).
         /// </summary>
-        /// <param name="child"> </param>
-        /// <returns> </returns>
         private Node BuildDummyProjectForExists(Node child)
         {
             Var newVar;
@@ -192,9 +187,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Collect(PhysicalProject(Unnest(Func))).
         ///     If the function is a collection aggregate, converts it into the corresponding group aggregate.
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "functionOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -208,7 +200,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             {
                 newNode = VisitCollectionFunction(op, n);
             }
-                // Is this a collection-aggregate function?
+            // Is this a collection-aggregate function?
             else if (PlanCompilerUtil.IsCollectionAggregateFunction(op, n))
             {
                 newNode = VisitCollectionAggregateFunction(op, n);
@@ -231,7 +223,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> JoinOp </param>
         /// <param name="n"> Current subtree </param>
-        /// <returns> </returns>
         protected override Node VisitJoinOp(JoinBaseOp op, Node n)
         {
             if (base.ProcessJoinOp(n))

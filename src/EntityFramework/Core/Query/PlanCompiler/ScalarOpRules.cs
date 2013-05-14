@@ -110,7 +110,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             List<Node> newNodeArgs = null;
             newNode = caseOpNode;
 
-            for (var i = 0; i < caseOpNode.Children.Count;)
+            for (var i = 0; i < caseOpNode.Children.Count; )
             {
                 // Special handling for the else clause
                 if (i == caseOpNode.Children.Count - 1)
@@ -222,10 +222,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     WHEN WN1  THEN TN1 ...
         ///     ELSE E
         /// </summary>
-        /// <param name="caseOp"> the current caseOp </param>
+        /// <param name="context"> </param>
         /// <param name="caseOpNode"> current subtree </param>
         /// <param name="newNode"> new subtree </param>
         /// <returns> true, if we performed a transformation </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool ProcessFlattenCase(RuleProcessingContext context, Node caseOpNode, out Node newNode)
         {
             newNode = caseOpNode;
@@ -495,7 +496,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="context"> </param>
         /// <param name="isNullNode"> </param>
         /// <param name="newNode"> new subtree </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool ProcessIsNullOverConstant(RuleProcessingContext context, Node isNullNode, out Node newNode)
         {
             newNode = context.Command.CreateNode(context.Command.CreateFalseOp());
@@ -515,7 +516,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="context"> </param>
         /// <param name="isNullNode"> </param>
         /// <param name="newNode"> new subtree </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool ProcessIsNullOverNull(RuleProcessingContext context, Node isNullNode, out Node newNode)
         {
             newNode = context.Command.CreateNode(context.Command.CreateTrueOp());
@@ -539,7 +540,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="context"> </param>
         /// <param name="castNullOp"> </param>
         /// <param name="newNode"> modified subtree </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool ProcessNullCast(RuleProcessingContext context, Node castNullOp, out Node newNode)
         {
             newNode = context.Command.CreateNode(context.Command.CreateNullOp(castNullOp.Op.Type));
@@ -567,7 +568,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="context"> </param>
         /// <param name="isNullNode"> </param>
         /// <param name="newNode"> new subtree </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool ProcessIsNullOverVarRef(RuleProcessingContext context, Node isNullNode, out Node newNode)
         {
             var command = context.Command;

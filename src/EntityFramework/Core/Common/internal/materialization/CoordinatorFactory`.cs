@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Text;
 
@@ -69,6 +70,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// <param name="elementWithErrorHandling"> Should return the unwrapped entity. </param>
         /// <param name="initializeCollection"> Can be null. </param>
         /// <param name="recordStateFactories"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal CoordinatorFactory(
             int depth,
             int stateSlot,

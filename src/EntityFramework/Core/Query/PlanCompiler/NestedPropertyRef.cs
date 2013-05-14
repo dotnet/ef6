@@ -49,8 +49,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Overrides the default equality function. Two NestedPropertyRefs are
         ///     equal if the have the same property name, and the types are the same
         /// </summary>
-        /// <param name="obj"> </param>
-        /// <returns> </returns>
         public override bool Equals(object obj)
         {
             var other = obj as NestedPropertyRef;
@@ -63,15 +61,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Overrides the default hashcode function. Simply adds the hashcodes
         ///     of the "property" and "propertyRef" fields
         /// </summary>
-        /// <returns> </returns>
         public override int GetHashCode()
         {
             return m_inner.GetHashCode() ^ m_outer.GetHashCode();
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns> </returns>
         public override string ToString()
         {
             return m_inner + "." + m_outer;

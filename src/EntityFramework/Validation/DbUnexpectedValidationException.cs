@@ -15,7 +15,6 @@ namespace System.Data.Entity.Validation
         /// <summary>
         ///     Initializes a new instance of DbUnexpectedValidationException.
         /// </summary>
-        /// <param name="message"> The exception message. </param>
         public DbUnexpectedValidationException()
         {
         }

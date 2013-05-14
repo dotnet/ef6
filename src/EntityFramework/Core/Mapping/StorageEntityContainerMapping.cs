@@ -283,8 +283,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Get a set mapping based upon the name of the set
         /// </summary>
-        /// <param name="setName"> </param>
-        /// <returns> </returns>
         internal StorageSetMapping GetSetMapping(string setName)
         {
             var setMap = GetEntitySetMapping(setName);
@@ -322,8 +320,6 @@ namespace System.Data.Entity.Core.Mapping
         ///     check whether the EntityContainerMapping contains
         ///     the map for the given AssociationSet
         /// </summary>
-        /// <param name="associationSet"> </param>
-        /// <returns> </returns>
         internal bool ContainsAssociationSetMapping(AssociationSet associationSet)
         {
             return m_associationSetMappings.ContainsKey(associationSet.Name);
@@ -332,8 +328,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Returns whether the Set Map for the given set has a query view or not
         /// </summary>
-        /// <param name="setName"> </param>
-        /// <returns> </returns>
         internal bool HasQueryViewForSetMap(string setName)
         {
             var set = GetSetMapping(setName);

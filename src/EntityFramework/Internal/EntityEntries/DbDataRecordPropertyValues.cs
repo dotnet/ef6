@@ -23,7 +23,7 @@ namespace System.Data.Entity.Internal
         /// <param name="internalContext"> The internal context. </param>
         /// <param name="type"> The type. </param>
         /// <param name="dataRecord"> The data record. </param>
-        /// <param name="isEntityValues">
+        /// <param name="isEntity">
         ///     If set to <c>true</c> this is a dictionary for an entity, otherwise it is a dictionary for a complex object.
         /// </param>
         internal DbDataRecordPropertyValues(

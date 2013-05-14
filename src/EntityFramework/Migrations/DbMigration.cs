@@ -60,19 +60,19 @@ namespace System.Data.Entity.Migrations
             parameters.GetType().GetProperties()
                 .Each(
                     (p, i) =>
+                    {
+                        var parameterModel = p.GetValue(parameters, null) as ParameterModel;
+
+                        if (parameterModel != null)
                         {
-                            var parameterModel = p.GetValue(parameters, null) as ParameterModel;
-
-                            if (parameterModel != null)
+                            if (string.IsNullOrWhiteSpace(parameterModel.Name))
                             {
-                                if (string.IsNullOrWhiteSpace(parameterModel.Name))
-                                {
-                                    parameterModel.Name = p.Name;
-                                }
-
-                                createProcedureOperation.Parameters.Add(parameterModel);
+                                parameterModel.Name = p.Name;
                             }
-                        });
+
+                            createProcedureOperation.Parameters.Add(parameterModel);
+                        }
+                    });
         }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
@@ -104,19 +104,19 @@ namespace System.Data.Entity.Migrations
             parameters.GetType().GetProperties()
                 .Each(
                     (p, i) =>
+                    {
+                        var parameterModel = p.GetValue(parameters, null) as ParameterModel;
+
+                        if (parameterModel != null)
                         {
-                            var parameterModel = p.GetValue(parameters, null) as ParameterModel;
-
-                            if (parameterModel != null)
+                            if (string.IsNullOrWhiteSpace(parameterModel.Name))
                             {
-                                if (string.IsNullOrWhiteSpace(parameterModel.Name))
-                                {
-                                    parameterModel.Name = p.Name;
-                                }
-
-                                alterProcedureOperation.Parameters.Add(parameterModel);
+                                parameterModel.Name = p.Name;
                             }
-                        });
+
+                            alterProcedureOperation.Parameters.Add(parameterModel);
+                        }
+                    });
         }
 
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
@@ -153,19 +153,19 @@ namespace System.Data.Entity.Migrations
             columns.GetType().GetProperties()
                 .Each(
                     (p, i) =>
+                    {
+                        var columnModel = p.GetValue(columns, null) as ColumnModel;
+
+                        if (columnModel != null)
                         {
-                            var columnModel = p.GetValue(columns, null) as ColumnModel;
-
-                            if (columnModel != null)
+                            if (string.IsNullOrWhiteSpace(columnModel.Name))
                             {
-                                if (string.IsNullOrWhiteSpace(columnModel.Name))
-                                {
-                                    columnModel.Name = p.Name;
-                                }
-
-                                createTableOperation.Columns.Add(columnModel);
+                                columnModel.Name = p.Name;
                             }
-                        });
+
+                            createTableOperation.Columns.Add(columnModel);
+                        }
+                    });
 
             return new TableBuilder<TColumns>(createTableOperation, this);
         }
@@ -280,7 +280,6 @@ namespace System.Data.Entity.Migrations
         /// <param name="dependentTable"> The table that contains the foreign key column. Schema name is optional, if no schema is specified then dbo is assumed. </param>
         /// <param name="dependentColumn"> The foreign key column. </param>
         /// <param name="principalTable"> The table that contains the column this foreign key references. Schema name is optional, if no schema is specified then dbo is assumed. </param>
-        /// <param name="principalColumn"> The columns this foreign key references. </param>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropForeignKey(
@@ -306,7 +305,6 @@ namespace System.Data.Entity.Migrations
         /// <param name="dependentTable"> The table that contains the foreign key columns. Schema name is optional, if no schema is specified then dbo is assumed. </param>
         /// <param name="dependentColumns"> The foreign key columns. </param>
         /// <param name="principalTable"> The table that contains the columns this foreign key references. Schema name is optional, if no schema is specified then dbo is assumed. </param>
-        /// <param name="principalColumns"> The columns this foreign key references. </param>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void DropForeignKey(

@@ -223,10 +223,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="relationshipName"> CSpace-qualified name of the relationship to navigate </param>
         /// <param name="sourceRoleName"> Name of the source role for the navigation. Indicates the direction of navigation across the relationship. </param>
         /// <param name="targetRoleName"> Name of the target role for the navigation. Indicates the direction of navigation across the relationship. </param>
-        /// <param name="sourcePropertyName"> Name of the property on the source of the navigation. </param>
-        /// <param name="targetPropertyName"> Name of the property on the target of the navigation. </param>
+        /// <param name="sourceAccessor"> Accessor of the property on the source of the navigation. </param>
+        /// <param name="targetAccessor"> Accessor of the property on the target of the navigation. </param>
         /// <param name="sourceRoleMultiplicity"> Multiplicity of the source role. RelationshipMultiplicity.OneToOne and RelationshipMultiplicity.Zero are both accepted for a reference end, and RelationshipMultiplicity.Many is accepted for a collection </param>
+        /// <param name="existingRelatedEnd"> </param>
         /// <returns> Collection of related entities of type TTargetEntity </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal EntityCollection<TTargetEntity> GetRelatedCollection<TSourceEntity, TTargetEntity>(
             string relationshipName,
             string sourceRoleName, string targetRoleName, NavigationPropertyAccessor sourceAccessor,
@@ -306,7 +308,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///     Re-merge items from collection so that relationship fixup is performed.
         ///     Ensure that any items in previous collection are excluded from the re-merge
         /// </summary>
-        /// <typeparam name="TTargetEntity"> </typeparam>
         /// <param name="previousCollection"> The previous EntityCollection containing items that have already had fixup performed </param>
         /// <param name="collection"> The new EntityCollection </param>
         private static void RemergeCollections<TTargetEntity>(
@@ -369,8 +370,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="relationshipName"> CSpace-qualified name of the relationship to navigate </param>
         /// <param name="sourceRoleName"> Name of the source role for the navigation. Indicates the direction of navigation across the relationship. </param>
         /// <param name="targetRoleName"> Name of the target role for the navigation. Indicates the direction of navigation across the relationship. </param>
-        /// <param name="sourcePropertyName"> Name of the property on the source of the navigation. </param>
-        /// <param name="targetPropertyName"> Name of the property on the target of the navigation. </param>
+        /// <param name="sourceAccessor"> Accessor of the property on the source of the navigation. </param>
+        /// <param name="targetAccessor"> Accessor of the property on the target of the navigation. </param>
         /// <param name="sourceRoleMultiplicity"> Multiplicity of the source role. RelationshipMultiplicity.OneToOne and RelationshipMultiplicity.Zero are both accepted for a reference end, and RelationshipMultiplicity.Many is accepted for a collection </param>
         /// <returns> Reference for related entity of type TTargetEntity </returns>
         internal EntityReference<TTargetEntity> GetRelatedReference<TSourceEntity, TTargetEntity>(
@@ -623,9 +624,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///     or if the relationship manager is already attached to a ObjectContext.
         /// </summary>
         /// <typeparam name="TTargetEntity"> Type of the entity represented by targetRoleName </typeparam>
-        /// <param name="relationshipName"> </param>
-        /// <param name="targetRoleName"> </param>
-        /// <param name="entityCollection"> </param>
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public void InitializeRelatedCollection<TTargetEntity>(
@@ -1028,7 +1026,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// </summary>
         /// <param name="navigation"> Describes the relationship and navigation direction </param>
         /// <param name="relationshipFixer"> Encapsulates information about the other end's type and cardinality, and knows how to create the other end </param>
-        /// <returns> </returns>
         internal RelatedEnd GetRelatedEnd(RelationshipNavigation navigation, IRelationshipFixer relationshipFixer)
         {
             RelatedEnd relatedEnd;
@@ -1664,7 +1661,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Helper method to validate consistency of RelationshipManager instances
         /// </summary>
-        /// <param name="entity"> entity to compare against </param>
+        /// <param name="wrappedEntity"> entity to compare against </param>
         /// <returns> True if entity is the owner of this RelationshipManager, otherwise false </returns>
         internal bool IsOwner(IEntityWrapper wrappedEntity)
         {

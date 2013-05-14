@@ -110,8 +110,6 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <summary>
         ///     Determines equality of two cache keys based on cache context values
         /// </summary>
-        /// <param name="otherObject"> </param>
-        /// <returns> </returns>
         public override bool Equals(object otherObject)
         {
             DebugCheck.NotNull(otherObject);
@@ -136,7 +134,6 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <summary>
         ///     Returns the hashcode for this cache key
         /// </summary>
-        /// <returns> </returns>
         public override int GetHashCode()
         {
             return _hashCode;

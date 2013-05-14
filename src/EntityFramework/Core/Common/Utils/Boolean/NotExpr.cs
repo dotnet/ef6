@@ -14,7 +14,6 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         /// <summary>
         ///     Initialize a new Not expression with the given child.
         /// </summary>
-        /// <param name="child"> </param>
         internal NotExpr(BoolExpr<T_Identifier> child)
             : base(new[] { child })
         {

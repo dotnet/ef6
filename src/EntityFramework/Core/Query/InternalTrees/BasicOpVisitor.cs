@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Data.Entity.Resources;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Simple implemenation of the BasicOpVisitor interface.
@@ -38,7 +39,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Visit this node
         /// </summary>
-        /// <param name="n"> </param>
         internal virtual void VisitNode(Node n)
         {
             n.Op.Accept(this, n);
@@ -47,7 +47,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Default node visitor
         /// </summary>
-        /// <param name="n"> </param>
         protected virtual void VisitDefault(Node n)
         {
             VisitChildren(n);
@@ -66,8 +65,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Default handler for all TableOps
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         protected virtual void VisitTableOp(ScanTableBaseOp op, Node n)
         {
             VisitRelOpDefault(op, n);
@@ -78,6 +75,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> join op </param>
         /// <param name="n"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected virtual void VisitJoinOp(JoinBaseOp op, Node n)
         {
             VisitRelOpDefault(op, n);
@@ -88,6 +86,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> apply op </param>
         /// <param name="n"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected virtual void VisitApplyOp(ApplyBaseOp op, Node n)
         {
             VisitRelOpDefault(op, n);
@@ -98,6 +97,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> set op </param>
         /// <param name="n"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected virtual void VisitSetOp(SetOp op, Node n)
         {
             VisitRelOpDefault(op, n);
@@ -108,6 +108,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> sort op </param>
         /// <param name="n"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected virtual void VisitSortOp(SortBaseOp op, Node n)
         {
             VisitRelOpDefault(op, n);
@@ -116,8 +117,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Default handler for all GroupBy ops
         /// </summary>
-        /// <param name="op"> sort op </param>
-        /// <param name="n"> </param>
         protected virtual void VisitGroupByOp(GroupByBaseOp op, Node n)
         {
             VisitRelOpDefault(op, n);
@@ -728,6 +727,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// </summary>
         /// <param name="op"> nest op </param>
         /// <param name="n"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected virtual void VisitNestOp(NestBaseOp op, Node n)
         {
             VisitPhysicalOpDefault(op, n);

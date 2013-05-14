@@ -50,8 +50,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Properties, Methods, Events & Delegates
 
-        /// <summary>
-        /// </summary>
         private SchemaElementLookUpTable<SchemaElement> Members
         {
             get
@@ -64,8 +62,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
         public ISchemaElementLookUpTable<EntityContainerEntitySet> EntitySets
         {
             get
@@ -78,8 +74,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
         public ISchemaElementLookUpTable<EntityContainerRelationshipSet> RelationshipSets
         {
             get
@@ -92,8 +86,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
         public ISchemaElementLookUpTable<Function> FunctionImports
         {
             get
@@ -106,8 +98,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
         public EntityContainer ExtendingEntityContainer
         {
             get { return _entityContainerGettingExtended; }
@@ -193,9 +183,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             Members.Add(functionImport, true, Strings.DuplicateEntityContainerMemberName);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleExtendsAttribute(XmlReader reader)
         {
             _unresolvedExtendedEntityContainerName = HandleUndottedNameAttribute(reader, _unresolvedExtendedEntityContainerName);
@@ -470,8 +457,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             get { return Name; }
         }
 
-        /// <summary>
-        /// </summary>
         public override string Identity
         {
             get { return Name; }
@@ -537,9 +522,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Returns true if the given two ends are similar - the relationship type that this ends belongs to is the same
         ///     and the entity set refered by the ends are same and they have the same role name
         /// </summary>
-        /// <param name="left"> </param>
-        /// <param name="right"> </param>
-        /// <returns> </returns>
         private static bool AreRelationshipEndsEqual(EntityContainerRelationshipSetEnd left, EntityContainerRelationshipSetEnd right)
         {
             Debug.Assert(

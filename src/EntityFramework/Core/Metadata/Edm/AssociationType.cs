@@ -195,7 +195,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Add the given referential constraint to the collection of referential constraints
         /// </summary>
-        /// <param name="referentialConstraint"> </param>
         internal void AddReferentialConstraint(ReferentialConstraint referentialConstraint)
         {
             ReferentialConstraints.Source.Add(referentialConstraint);

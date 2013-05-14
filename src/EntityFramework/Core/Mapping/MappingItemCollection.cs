@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Class for representing a collection of mapping items in Edm space.
@@ -26,6 +27,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         /// <param name="map"> </param>
         /// <returns> Returns false if no match found. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual bool TryGetMap(string identity, DataSpace typeSpace, out Map map)
         {
             //will only be implemented by Mapping Item Collections
@@ -35,7 +37,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Search for a Mapping metadata with the specified type key.
         /// </summary>
-        /// <param name="item"> </param>
         internal virtual Map GetMap(GlobalItem item)
         {
             DebugCheck.NotNull(item);
@@ -47,8 +48,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Search for a Mapping metadata with the specified type key.
         /// </summary>
-        /// <param name="item"> </param>
-        /// <param name="map"> </param>
         /// <returns> Returns false if no match found. </returns>
         internal virtual bool TryGetMap(GlobalItem item, out Map map)
         {
@@ -79,6 +78,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="ignoreCase"> true for case-insensitive lookup </param>
         /// <param name="map"> </param>
         /// <returns> Returns false if no match found. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual bool TryGetMap(string identity, DataSpace typeSpace, bool ignoreCase, out Map map)
         {
             //will only be implemented by Mapping Item Collections

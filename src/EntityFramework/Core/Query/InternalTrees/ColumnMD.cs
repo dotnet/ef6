@@ -61,7 +61,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     debugging help
         /// </summary>
-        /// <returns> </returns>
         public override string ToString()
         {
             return m_name;

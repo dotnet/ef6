@@ -8,8 +8,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     /// <summary>
     ///     Represents a variable with finite domain, e.g., c in {1, 2, 3}
     /// </summary>
-    /// <typeparam name="T_Element"> Type of domain variables (int in the above example). </typeparam>
     /// <typeparam name="T_Variable"> Type of the identifier (c above -- it need not be int). </typeparam>
+    /// <typeparam name="T_Element"> Type of domain variables (int in the above example). </typeparam>
     internal class DomainVariable<T_Variable, T_Element>
     {
         private readonly T_Variable _identifier;

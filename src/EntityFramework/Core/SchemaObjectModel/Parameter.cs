@@ -27,9 +27,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region constructor
 
-        /// <summary>
-        /// </summary>
-        /// <param name="parentElement"> </param>
         internal Parameter(Function parentElement)
             : base(parentElement)
         {

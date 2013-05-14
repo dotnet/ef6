@@ -54,7 +54,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         ///     Removes a scope when leaving a particular sub-expression.
         /// </summary>
-        /// <returns> Scope. </returns>
         internal void PopBindingScope()
         {
             _scopes.Pop();

@@ -909,7 +909,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         ///     expression with the results of the constant expressions in the specified list.
         /// </summary>
         /// <param name="expression"> A DbExpression to be matched. </param>
-        /// <param name="values"> A list of DbConstantExpression to test for a match. </param>
+        /// <param name="list"> A list of DbConstantExpression to test for a match. </param>
         /// <returns>
         ///     A new DbInExpression with the specified arguments if the DbConstantExpression list
         ///     is not empty, otherwise a false constant expression.
@@ -3303,10 +3303,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         ///     to be any type in the same type hierarchy as the result type of <paramref name="navigateFrom" />.
         ///     Only used by relationship span.
         /// </summary>
-        /// <param name="navigateFrom"> </param>
-        /// <param name="fromEnd"> </param>
-        /// <param name="toEnd"> </param>
-        /// <returns> </returns>
         internal static DbRelationshipNavigationExpression NavigateAllowingAllRelationshipsInSameTypeHierarchy(
             this DbExpression navigateFrom, RelationshipEndMember fromEnd, RelationshipEndMember toEnd)
         {

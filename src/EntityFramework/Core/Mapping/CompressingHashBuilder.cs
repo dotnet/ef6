@@ -43,7 +43,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     add string like "typename Instance#1"
         /// </summary>
-        /// <param name="objectIndex"> </param>
         internal void AppendObjectStartDump(object o, int objectIndex)
         {
             base.Append(string.Empty.PadLeft(SpacesPerIndent * _indent, ' '));

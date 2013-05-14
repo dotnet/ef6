@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     The list of all transformation rules to apply
@@ -187,8 +188,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Apply the rules that belong to the specified group to the given query tree.
         /// </summary>
-        /// <param name="compilerState"> </param>
-        /// <param name="rulesGroup"> </param>
         internal static bool Process(PlanCompiler compilerState, TransformationRulesGroup rulesGroup)
         {
             ReadOnlyCollection<ReadOnlyCollection<Rule>> rulesTable = null;
@@ -224,6 +223,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="rulesTable"> </param>
         /// <param name="projectionPruningRequired"> is projection pruning required after the rule application </param>
         /// <returns> Whether any rule has been applied after which reapplying nullability rules may be useful </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool Process(
             PlanCompiler compilerState, ReadOnlyCollection<ReadOnlyCollection<Rule>> rulesTable, out bool projectionPruningRequired)
         {

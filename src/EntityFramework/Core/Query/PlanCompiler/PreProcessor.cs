@@ -130,7 +130,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Mark this EntitySet as referenced in the query
         /// </summary>
-        /// <param name="entitySet"> </param>
         private void AddEntitySetReference(EntitySet entitySet)
         {
             m_referencedEntitySets.Add(entitySet);
@@ -849,7 +848,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="relProperty"> the rel property to traverse </param>
         /// <param name="relationshipSets"> list of relevant relationshipsets </param>
         /// <param name="sourceRefNode"> source ref </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node RewriteManyToManyNavigationProperty(
@@ -1066,9 +1064,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Mark Normalization as needed
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(ExistsOp op, Node n)
         {
             m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.Normalization);
@@ -1079,9 +1074,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Visit a function call expression. If function is mapped, expand and visit the mapping expression.
         ///     If this is TVF or a collection aggregate function, NestPullUp and Normalization are needed.
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "mentityTypeScopes")]
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -1164,9 +1156,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     marks that type as needing a null sentinel.
         ///     This allows in NominalTypeElimination the case op to be pushed inside Y's null sentinel.
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(CaseOp op, Node n)
         {
             VisitScalarOpDefault(op, n);
@@ -1183,9 +1172,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Special processing for ConditionalOp is handled by <see cref="ProcessConditionalOp" />
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(ConditionalOp op, Node n)
         {
             VisitScalarOpDefault(op, n);
@@ -1196,8 +1182,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     If it is a IsNull op over a row type or a complex type mark the type as needing a null sentinel.
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
         private void ProcessConditionalOp(ConditionalOp op, Node n)
         {
             if (op.OpType == OpType.IsNull && TypeSemantics.IsRowType(n.Child0.Op.Type)
@@ -1276,8 +1260,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Is the given node of shape NavigationProperty(SoftCast(VarRef)), or NavigationProperty(VarRef)
         /// </summary>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         private static bool IsNavigationPropertyOverVarRef(Node n)
         {
             if (n.Op.OpType != OpType.Property
@@ -1520,9 +1502,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Find the relationshipset that matches the current entityset + from/to roles
         /// </summary>
-        /// <param name="entitySet"> </param>
-        /// <param name="relProperty"> </param>
-        /// <returns> </returns>
         private static RelationshipSet FindRelationshipSet(EntitySetBase entitySet, RelProperty relProperty)
         {
             foreach (var es in entitySet.EntityContainer.BaseEntitySets)
@@ -1927,14 +1906,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
                 //
-                // Multiset constructors with only one elment or with multiple elments all of 
-                //   which are constants or nulls are converted into: 
-                //    
-                // UnionAll(Project(SingleRowTable, e1), Project(SingleRowTable, e2), ...)
-                // 
-                // The degenerate case when the collection has only one element does not require an
-                // outer unionAll node
-                //
+            // Multiset constructors with only one elment or with multiple elments all of 
+            //   which are constants or nulls are converted into: 
+            //    
+            // UnionAll(Project(SingleRowTable, e1), Project(SingleRowTable, e2), ...)
+            // 
+            // The degenerate case when the collection has only one element does not require an
+            // outer unionAll node
+            //
             else if (n.Children.Count == 1
                      || AreAllConstantsOrNulls(n.Children))
             {
@@ -1951,16 +1930,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // Build the union-all ladder
                 m_command.BuildUnionAllLadder(inputNodes, inputVars, out resultNode, out resultVar);
             }
-                //
-                //   All other cases:
-                //
-                //  select case when d = 0 then x when d = 1 then y else z end
-                //  from (  select 0 as d from single_row_table
-                //          union all 
-                //          select 1 as d from single_row_table
-                //          union all
-                //          select 2 as d  from single_row_table )
-                //
+            //
+            //   All other cases:
+            //
+            //  select case when d = 0 then x when d = 1 then y else z end
+            //  from (  select 0 as d from single_row_table
+            //          union all 
+            //          select 1 as d from single_row_table
+            //          union all
+            //          select 2 as d  from single_row_table )
+            //
             else
             {
                 var inputNodes = new List<Node>();
@@ -2019,8 +1998,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Returns true if each node in the list is either a constant or a null
         /// </summary>
-        /// <param name="nodes"> </param>
-        /// <returns> </returns>
         private static bool AreAllConstantsOrNulls(List<Node> nodes)
         {
             foreach (var node in nodes)
@@ -2038,9 +2015,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Default processing for a CollectOp. But make sure that we
         ///     go through the NestPullUp phase
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         public override Node Visit(CollectOp op, Node n)
         {
             m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.NestPullup);
@@ -2084,7 +2058,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="typeFilter">
         ///     An optional IsOfOp representing a type filter to apply to the scan table; will be set to <c>null</c> if the scan target is expanded to a view that renders the type filter superfluous.
         /// </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScanTableOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -2132,9 +2105,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Visitor for a ScanViewOp
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "mentityTypeScopes")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -2168,7 +2138,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> JoinOp </param>
         /// <param name="n"> Current subtree </param>
-        /// <returns> </returns>
         protected override Node VisitJoinOp(JoinBaseOp op, Node n)
         {
             // Only LeftOuterJoin and InnerJoin are handled by JoinElimination
@@ -2189,9 +2158,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Perform default relop processing; Also "require" the join-elimination phase
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         protected override Node VisitApplyOp(ApplyBaseOp op, Node n)
         {
             m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.JoinElimination);
@@ -2205,7 +2171,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     PhysicalProject(Sort)
         ///     We don't yet handle the TopN variant
         /// </summary>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SortOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -2248,9 +2213,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Checks to see if this filterOp represents an IS OF (or IS OF ONLY) filter over a ScanTableOp
         /// </summary>
         /// <param name="n"> the filterOp node </param>
-        /// <param name="ofType"> (OUT) the Type to restrict to </param>
-        /// <param name="isOfOnly"> (OUT) was an ONLY clause specified </param>
-        /// <returns> </returns>
+        /// <param name="typeFilter"> (OUT) the Type to restrict to </param>
         private static bool IsOfTypeOverScanTable(Node n, out IsOfOp typeFilter)
         {
             typeFilter = null;
@@ -2296,7 +2259,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> the filterOp </param>
         /// <param name="n"> the node tree </param>
-        /// <returns> </returns>
         public override Node Visit(FilterOp op, Node n)
         {
             IsOfOp typeFilter;
@@ -2323,9 +2285,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Note: This transformation cannot be moved in the normalizer,
         ///     because it needs to happen before any subquery augmentation happens.
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "projectOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -2378,7 +2337,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> the groupByInto op </param>
         /// <param name="n"> the node tree </param>
-        /// <returns> </returns>
         public override Node Visit(GroupByIntoOp op, Node n)
         {
             m_compilerState.MarkPhaseAsNeeded(PlanCompilerPhase.AggregatePushdown);

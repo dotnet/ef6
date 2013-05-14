@@ -73,7 +73,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     The tostring method for easy debuggability
         /// </summary>
-        /// <returns> </returns>
         public override string ToString()
         {
             return "";

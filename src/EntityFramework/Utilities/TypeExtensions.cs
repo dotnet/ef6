@@ -115,7 +115,6 @@ namespace System.Data.Entity.Utilities
         /// <summary>
         ///     Returns true if a variable of this type can be assigned a null value
         /// </summary>
-        /// <param name="type"> </param>
         /// <returns> True if a reference type or a nullable value type, false otherwise </returns>
         public static bool IsNullable(this Type type)
         {

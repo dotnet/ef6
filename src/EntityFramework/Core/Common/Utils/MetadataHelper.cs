@@ -776,8 +776,6 @@ namespace System.Data.Entity.Core.Common.Utils
         /// <summary>
         ///     Check if all the SchemaErrors have the serverity of SchemaErrorSeverity.Warning
         /// </summary>
-        /// <param name="schemaErrors"> </param>
-        /// <returns> </returns>
         internal static bool CheckIfAllErrorsAreWarnings(IList<EdmSchemaError> schemaErrors)
         {
             var length = schemaErrors.Count;

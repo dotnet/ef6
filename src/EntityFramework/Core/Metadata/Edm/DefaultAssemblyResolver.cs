@@ -156,9 +156,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ///     although they are different instances since the ReflectionOnly field in them are different, we sitll
             ///     consider them as the same.
             /// </summary>
-            /// <param name="x"> </param>
-            /// <param name="y"> </param>
-            /// <returns> </returns>
             public bool Equals(Assembly x, Assembly y)
             {
                 var xname = new AssemblyName(x.FullName);

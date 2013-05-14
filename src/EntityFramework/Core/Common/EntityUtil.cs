@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Returns true if the type implements ICollection<>
+        ///     Returns true if the type implements ICollection&lt;&gt;
         /// </summary>
         internal static bool IsAnICollection(Type type)
         {
@@ -60,13 +60,13 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Given a type that represents a collection, determine if the type implements ICollection&lt&gt, and if
-        ///     so return the element type of the collection.  Currently, if the collection implements ICollection&lt&gt
+        ///     Given a type that represents a collection, determine if the type implements ICollection&lt;&gt;, and if
+        ///     so return the element type of the collection.  Currently, if the collection implements ICollection&lt;&gt;
         ///     multiple times with different types, then we will return false since this is not supported.
         /// </summary>
         /// <param name="collectionType"> the collection type to examine </param>
         /// <param name="elementType"> the type of element </param>
-        /// <returns> true if the collection implement ICollection &lt &gt; false otherwise </returns>
+        /// <returns> true if the collection implement ICollection&lt;&gt; false otherwise </returns>
         internal static bool TryGetICollectionElementType(Type collectionType, out Type elementType)
         {
             elementType = null;
@@ -612,9 +612,6 @@ namespace System.Data.Entity.Core
         ///     Returns the PropertyInfo and Type where a given property is defined
         ///     This is done by traversing the type hierarchy to find the type match.
         /// </summary>
-        /// <param name="t"> </param>
-        /// <param name="propertyName"> </param>
-        /// <returns> </returns>
         internal static PropertyInfo GetTopProperty(ref Type t, string propertyName)
         {
             PropertyInfo propertyInfo = null;

@@ -354,9 +354,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="itemCollectionToRegister"> </param>
         private void CheckAndSetItemCollectionVersionInWorkSpace(ItemCollection itemCollectionToRegister)
         {
             var versionToRegister = XmlConstants.UndefinedVersion;
@@ -398,7 +395,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Add a token for this MetadataWorkspace just so this metadata workspace holds a reference to it, this
         ///     is for metadata caching to make the workspace marking a particular cache entry is still in used
         /// </summary>
-        /// <param name="token"> </param>
         internal virtual void AddMetadataEntryToken(object token)
         {
             if (_cacheTokens == null)
@@ -775,6 +771,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="function"> The function that needs to be returned </param>
         /// <returns> The function as specified in the function key or null </returns>
         /// <exception cref="System.ArgumentNullException">if name, namespaceName, parameterTypes or space argument is null</exception>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual bool TryGetFunction(
             string name,
             string namespaceName,
@@ -840,6 +837,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="mappingSpace"> space for which you want to get the mapped type </param>
         /// <param name="map"> </param>
         /// <returns> Returns false if no match found. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual bool TryGetMap(string typeIdentity, DataSpace typeSpace, bool ignoreCase, DataSpace mappingSpace, out Map map)
         {
             map = null;
@@ -866,6 +864,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="item"> </param>
         /// <param name="dataSpace"> space for which you want to get the mapped type </param>
         /// <exception cref="ArgumentException">Thrown if mapping space is not valid</exception>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual Map GetMap(GlobalItem item, DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, required: true);
@@ -879,6 +878,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="dataSpace"> space for which you want to get the mapped type </param>
         /// <param name="map"> </param>
         /// <returns> Returns false if no match found. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual bool TryGetMap(GlobalItem item, DataSpace dataSpace, out Map map)
         {
             map = null;
@@ -1257,8 +1257,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Returns a TypeOf/TypeOfOnly Query for a given Extent and Type as a command tree.
         /// </summary>
-        /// <param name="extent"> </param>
-        /// <returns> </returns>
         internal virtual bool TryGetGeneratedViewOfType(
             EntitySetBase extent, EntityTypeBase type, bool includeSubtypes, out GeneratedView generatedView)
         {
@@ -1306,7 +1304,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     context information used by the update pipeline when
         ///     processing changes to C-space extents.
         /// </summary>
-        /// <returns> </returns>
         internal virtual ViewLoader GetUpdateViewLoader()
         {
             if (_itemsCSSpace != null
@@ -1321,8 +1318,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Takes in a Edm space type usage and converts into an
         ///     equivalent O space type usage
         /// </summary>
-        /// <param name="edmSpaceTypeUsage"> </param>
-        /// <returns> </returns>
         internal virtual TypeUsage GetOSpaceTypeUsage(TypeUsage edmSpaceTypeUsage)
         {
             DebugCheck.NotNull(edmSpaceTypeUsage);
@@ -1360,8 +1355,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Returns true if the item collection for the given space has already been registered else returns false
         /// </summary>
-        /// <param name="dataSpace"> </param>
-        /// <returns> </returns>
         internal virtual bool IsItemCollectionAlreadyRegistered(DataSpace dataSpace)
         {
             ItemCollection itemCollection;

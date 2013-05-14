@@ -17,9 +17,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="parentElement"> </param>
         internal UsingElement(Schema parentElement)
             : base(parentElement)
         {
@@ -29,16 +26,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Properties
 
-        /// <summary>
-        /// </summary>
         public virtual string Alias { get; private set; }
 
-        /// <summary>
-        /// </summary>
         public virtual string NamespaceName { get; private set; }
 
-        /// <summary>
-        /// </summary>
         public override string FQName
         {
             get { return null; }
@@ -48,8 +39,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Protected Properties
 
-        /// <summary>
-        /// </summary>
         protected override bool ProhibitAttribute(string namespaceUri, string localName)
         {
             if (base.ProhibitAttribute(namespaceUri, localName))
@@ -89,9 +78,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Private Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleNamespaceAttribute(XmlReader reader)
         {
             Debug.Assert(String.IsNullOrEmpty(NamespaceName), "Alias must be set only once");
@@ -102,9 +88,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleAliasAttribute(XmlReader reader)
         {
             Debug.Assert(String.IsNullOrEmpty(Alias), "Alias must be set only once");

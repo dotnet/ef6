@@ -716,9 +716,8 @@ namespace System.Data.Entity.Core.Objects
         ///     Adds an object to the cache without adding its related
         ///     entities.
         /// </summary>
-        /// <param name="entity"> Object to be added. </param>
-        /// <param name="setName"> EntitySet name for the Object to be added. It may be qualified with container name </param>
-        /// <param name="containerName"> Container name for the Object to be added. </param>
+        /// <param name="entitySet"> EntitySet for the Object to be added. </param>
+        /// <param name="wrappedEntity"> Object to be added. </param>
         /// <param name="argumentName"> Name of the argument passed to a public method, for use in exceptions. </param>
         internal void AddSingleObject(EntitySet entitySet, IEntityWrapper wrappedEntity, string argumentName)
         {
@@ -805,7 +804,6 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>Explicitly loads an object that is related to the supplied object by the specified LINQ query and by using the default merge option. </summary>
         /// <param name="entity">The source object for which related objects are to be loaded.</param>
         /// <param name="selector">A LINQ expression that defines the related objects to be loaded.</param>
-        /// <typeparam name="TEntity"></typeparam>
         /// <exception cref="T:System.ArgumentException"> selector  does not supply a valid input parameter.</exception>
         /// <exception cref="T:System.ArgumentNullException"> selector  is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">
@@ -835,7 +833,6 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="mergeOption">
         ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> value to use when you load the related objects.
         /// </param>
-        /// <typeparam name="TEntity"></typeparam>
         /// <exception cref="T:System.ArgumentException"> selector  does not supply a valid input parameter.</exception>
         /// <exception cref="T:System.ArgumentNullException"> selector  is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">
@@ -1240,7 +1237,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Attaches single object to the cache without adding its related entities.
         /// </summary>
-        /// <param name="entity"> Entity to be attached. </param>
+        /// <param name="wrappedEntity"> Entity to be attached. </param>
         /// <param name="entitySet"> "Computed" entity set. </param>
         internal void AttachSingleObject(IEntityWrapper wrappedEntity, EntitySet entitySet)
         {
@@ -1489,7 +1486,6 @@ namespace System.Data.Entity.Core.Objects
         ///     Must be a valid mapped entity type and must be mapped to exactly one EntitySet across all of the EntityContainers in the metadata for this context.
         /// </summary>
         /// <param name="entityCLRType"> CLR type to use for EntitySet lookup. </param>
-        /// <returns> </returns>
         private EntitySet GetEntitySetForType(Type entityCLRType, string exceptionParameterName)
         {
             EntitySet entitySetForType = null;
@@ -1621,12 +1617,12 @@ namespace System.Data.Entity.Core.Objects
                 EnsureContextIsEnlistedInCurrentTransaction(
                     currentTransaction,
                     () =>
-                        {
-                            Connection.Open();
-                            _openedConnection = true;
-                            _connectionRequestCount++;
-                            return true;
-                        },
+                    {
+                        Connection.Open();
+                        _openedConnection = true;
+                        _connectionRequestCount++;
+                        return true;
+                    },
                     false);
 
                 // If we get here, we have an open connection, either enlisted in the current
@@ -1796,8 +1792,6 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Resets the state of connection management when the connection becomes closed.
         /// </summary>
-        /// <param name="sender"> </param>
-        /// <param name="e"> </param>
         private void ConnectionStateChange(object sender, StateChangeEventArgs e)
         {
             if (e.CurrentState
@@ -1901,7 +1895,6 @@ namespace System.Data.Entity.Core.Objects
         ///     Given an entity connection, returns a copy of its MetadataWorkspace. Ensure we get
         ///     all of the metadata item collections by priming the entity connection.
         /// </summary>
-        /// <returns> </returns>
         /// <exception cref="ObjectDisposedException">
         ///     If the
         ///     <see cref="ObjectContext" />
@@ -2376,6 +2369,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="entities"> on exit, entity is added to this dictionary. </param>
         /// <param name="key"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void RefreshCheck(
             Dictionary<EntityKey, EntityEntry> entities, EntityKey key)
         {
@@ -3012,7 +3006,7 @@ namespace System.Data.Entity.Core.Objects
                     entriesAffected = await executionStrategy.ExecuteAsync(
                         () => SaveChangesToStoreAsync(
                             options,
-                                  /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure, cancellationToken),
+                            /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure, cancellationToken),
                         cancellationToken)
                                                              .ConfigureAwait(continueOnCapturedContext: false);
                 }
@@ -3093,7 +3087,7 @@ namespace System.Data.Entity.Core.Objects
 
             var entriesAffected = await ExecuteInTransactionAsync(
                 () => _adapter.UpdateAsync(cancellationToken), throwOnExistingTransaction,
-                                            /*startLocalTransaction:*/ true, /*releaseConnectionOnSuccess:*/ true, cancellationToken)
+                /*startLocalTransaction:*/ true, /*releaseConnectionOnSuccess:*/ true, cancellationToken)
                                             .ConfigureAwait(continueOnCapturedContext: false);
 
             if ((SaveOptions.AcceptAllChangesAfterSave & options) != 0)
@@ -3130,7 +3124,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="func"> The function to invoke. </param>
         /// <param name="throwOnExistingTransaction"> Whether to throw on an existing transaction. </param>
         /// <param name="startLocalTransaction"> Whether should start a new local transaction when there's no existing one. </param>
-        /// <param name="releaseConnectionOnSucces"> Whether the connection will also be released when no exceptions are thrown. </param>
+        /// <param name="releaseConnectionOnSuccess"> Whether the connection will also be released when no exceptions are thrown. </param>
         /// <returns>
         ///     The result from invoking <paramref name="func" />.
         /// </returns>
@@ -3829,14 +3823,14 @@ namespace System.Data.Entity.Core.Objects
             EntityProxyFactory.TryCreateProxyTypes(
                 types.Select(
                     type =>
-                        {
-                            // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
-                            MetadataWorkspace.ImplicitLoadAssemblyForType(type, null);
+                    {
+                        // Ensure the assembly containing the entity's CLR type is loaded into the workspace.
+                        MetadataWorkspace.ImplicitLoadAssemblyForType(type, null);
 
-                            EntityType entityType;
-                            ospaceItems.TryGetItem(type.FullNameWithNesting(), out entityType);
-                            return entityType;
-                        }).Where(entityType => entityType != null),
+                        EntityType entityType;
+                        ospaceItems.TryGetItem(type.FullNameWithNesting(), out entityType);
+                        return entityType;
+                    }).Where(entityType => entityType != null),
                 MetadataWorkspace
                 );
         }
@@ -4059,9 +4053,9 @@ namespace System.Data.Entity.Core.Objects
                 return await executionStrategy.ExecuteAsync(
                     () => ExecuteInTransactionAsync(
                         () => CreateStoreCommand(commandText, parameters).ExecuteNonQueryAsync(cancellationToken),
-                              /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
-                              /*startLocalTransaction:*/ transactionalBehavior != TransactionalBehavior.DoNotEnsureTransaction,
-                              /*releaseConnectionOnSuccess:*/ true, cancellationToken),
+                        /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
+                        /*startLocalTransaction:*/ transactionalBehavior != TransactionalBehavior.DoNotEnsureTransaction,
+                        /*releaseConnectionOnSuccess:*/ true, cancellationToken),
                     cancellationToken);
             }
             finally
@@ -4076,7 +4070,6 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>An enumeration of objects of type  TResult .</returns>
         /// <param name="commandText">The command to execute, in the native language of the data source.</param>
         /// <param name="parameters">An array of parameters to pass to the command.</param>
-        /// <typeparam name="TElement"></typeparam>
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, params object[] parameters)
         {
             return ExecuteStoreQueryReliably<TElement>(
@@ -4112,7 +4105,6 @@ namespace System.Data.Entity.Core.Objects
         ///     .
         /// </param>
         /// <param name="parameters">An array of parameters to pass to the command.</param>
-        /// <typeparam name="TElement"></typeparam>
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
@@ -4441,8 +4433,8 @@ namespace System.Data.Entity.Core.Objects
                     () => ExecuteInTransactionAsync(
                         () => ExecuteStoreQueryInternalAsync<TElement>(
                             commandText, entitySetName, executionOptions, cancellationToken, parameters),
-                              /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
-                              /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !executionOptions.Streaming,
+                        /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
+                        /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !executionOptions.Streaming,
                         cancellationToken),
                     cancellationToken);
             }
@@ -4518,7 +4510,6 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="reader">
         ///     The <see cref="T:System.Data.Common.DbDataReader" /> that contains entity data to translate into entity objects.
         /// </param>
-        /// <typeparam name="TElement"></typeparam>
         /// <exception cref="T:System.ArgumentNullException">When  reader  is null.</exception>
         public virtual ObjectResult<TElement> Translate<TElement>(DbDataReader reader)
         {
@@ -4550,7 +4541,6 @@ namespace System.Data.Entity.Core.Objects
         ///         cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />
         ///     .
         /// </param>
-        /// <typeparam name="TEntity"></typeparam>
         /// <exception cref="T:System.ArgumentNullException">When  reader  is null.</exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException">
         ///     When the supplied  mergeOption  is not a valid <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> value.

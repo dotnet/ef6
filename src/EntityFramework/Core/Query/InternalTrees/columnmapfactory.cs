@@ -80,10 +80,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Build the collectionColumnMap from a store datareader, a type and an entitySet.
         /// </summary>
-        /// <param name="storeDataReader"> </param>
-        /// <param name="edmType"> </param>
-        /// <param name="entitySet"> </param>
-        /// <returns> </returns>
         internal virtual CollectionColumnMap CreateColumnMapFromReaderAndType(
             DbDataReader storeDataReader, EdmType edmType, EntitySet entitySet,
             Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping> renameList)
@@ -228,11 +224,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Build the entityColumnMap from a store datareader, a type and an entitySet and
         ///     a list ofproperties.
         /// </summary>
-        /// <param name="storeDataReader"> </param>
-        /// <param name="edmType"> </param>
-        /// <param name="entitySet"> </param>
-        /// <param name="propertyColumnMaps"> </param>
-        /// <returns> </returns>
         private static EntityColumnMap CreateEntityTypeElementColumnMap(
             DbDataReader storeDataReader, EdmType edmType, EntitySet entitySet,
             ColumnMap[] propertyColumnMaps, Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping> renameList)
@@ -284,9 +275,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     in the store datareader provided.  Note that we're hooking things up by name, not
         ///     by ordinal position.
         /// </summary>
-        /// <param name="storeDataReader"> </param>
-        /// <param name="edmType"> </param>
-        /// <returns> </returns>
         private static ColumnMap[] GetColumnMapsForType(
             DbDataReader storeDataReader, EdmType edmType,
             Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping> renameList)
@@ -340,9 +328,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Given a store datareader and a member of an edmType, find the column ordinal
         ///     in the datareader with the name of the member.
         /// </summary>
-        /// <param name="storeDataReader"> </param>
-        /// <param name="member"> </param>
-        /// <returns> </returns>
         private static int GetMemberOrdinalFromReader(
             DbDataReader storeDataReader, EdmMember member, EdmType currentType,
             Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping> renameList)
@@ -378,10 +363,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     We only have the functionImport provided to include it in the exception
         ///     message.
         /// </summary>
-        /// <param name="storeDataReader"> </param>
-        /// <param name="columnName"> </param>
-        /// <param name="functionImport"> </param>
-        /// <returns> </returns>
         private static int GetDiscriminatorOrdinalFromReader(DbDataReader storeDataReader, string columnName, EdmFunction functionImport)
         {
             int result;
@@ -397,9 +378,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         ///     Given a store datareader and a column name, try to find the column ordinal
         ///     in the datareader with the name of the column.
         /// </summary>
-        /// <param name="storeDataReader"> </param>
-        /// <param name="columnName"> </param>
-        /// <param name="ordinal"> </param>
         /// <returns> true if found, false otherwise. </returns>
         private static bool TryGetColumnOrdinalFromReader(DbDataReader storeDataReader, string columnName, out int ordinal)
         {

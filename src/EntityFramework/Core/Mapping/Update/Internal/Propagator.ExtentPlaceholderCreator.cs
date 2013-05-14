@@ -150,8 +150,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <summary>
             ///     Specialization of <see cref="CreatePlaceholder" /> for an entity set extent.
             /// </summary>
-            /// <param name="entitySet"> </param>
-            /// <returns> </returns>
             private PropagatorResult CreateEntitySetPlaceholder(EntitySet entitySet)
             {
                 DebugCheck.NotNull(entitySet);
@@ -172,8 +170,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             /// <summary>
             ///     Specialization of <see cref="CreatePlaceholder" /> for a relationship set extent.
             /// </summary>
-            /// <param name="associationSet"> </param>
-            /// <returns> </returns>
             private PropagatorResult CreateAssociationSetPlaceholder(AssociationSet associationSet)
             {
                 DebugCheck.NotNull(associationSet);
@@ -240,7 +236,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                     var args = new PropagatorResult[members.Count];
                     for (var ordinal = 0; ordinal < members.Count; ordinal++)
-                        //                    foreach (EdmMember member in members)
+                    //                    foreach (EdmMember member in members)
                     {
                         args[ordinal] = Visit(members[ordinal]);
                     }

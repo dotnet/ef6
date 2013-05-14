@@ -8,14 +8,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
     using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
     using System.Diagnostics;
     using System.Linq;
-    using DomainConstraint =
-        System.Data.Entity.Core.Common.Utils.Boolean.DomainConstraint<Structures.BoolLiteral, Structures.Constant>;
     using DomainBoolExpr =
-        System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr
-            <Common.Utils.Boolean.DomainConstraint<Structures.BoolLiteral, Structures.Constant>>;
+            System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr
+                <Common.Utils.Boolean.DomainConstraint<Structures.BoolLiteral, Structures.Constant>>;
+    using DomainConstraint =
+            System.Data.Entity.Core.Common.Utils.Boolean.DomainConstraint<Structures.BoolLiteral, Structures.Constant>;
     using DomainTermExpr =
-        System.Data.Entity.Core.Common.Utils.Boolean.TermExpr
-            <Common.Utils.Boolean.DomainConstraint<Structures.BoolLiteral, Structures.Constant>>;
+            System.Data.Entity.Core.Common.Utils.Boolean.TermExpr
+                <Common.Utils.Boolean.DomainConstraint<Structures.BoolLiteral, Structures.Constant>>;
 
     /// <summary>
     ///     Satisfiability test optimization.
@@ -116,7 +116,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         ///     Checks if the given expression is satisfiable in conjunction with this knowledge base.
         /// </summary>
         /// <param name="expression">Expression to be tested for satisfiability.</param>
-        /// <returns></returns>
         internal bool IsSatisfiable(DomainBoolExpr expression)
         {
             var context = IdentifierService<DomainConstraint>.Instance.CreateConversionContext();

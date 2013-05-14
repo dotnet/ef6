@@ -96,7 +96,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="v"> The Var </param>
         /// <param name="varInfo"> the corresponding VarInfo </param>
-        /// <returns> </returns>
         internal bool TryGetVarInfo(Var v, out VarInfo varInfo)
         {
             return m_map.TryGetValue(v, out varInfo);

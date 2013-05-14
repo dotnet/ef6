@@ -74,7 +74,7 @@ namespace System.Data.Entity.Core.Common
         /// <returns>
         ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of facet descriptions for the specified EDM type.
         /// </returns>
-        /// <param name="type">
+        /// <param name="edmType">
         ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> for which the facet descriptions are to be retrieved.
         /// </param>
         public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType edmType)

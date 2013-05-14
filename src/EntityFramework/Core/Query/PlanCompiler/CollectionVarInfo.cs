@@ -17,7 +17,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Create a CollectionVarInfo
         /// </summary>
-        /// <param name="newVar"> </param>
         internal CollectionVarInfo(Var newVar)
         {
             m_newVars = new List<Var>();

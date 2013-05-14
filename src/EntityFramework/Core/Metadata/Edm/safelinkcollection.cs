@@ -9,8 +9,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     ///     exposing the properties publicly that would allow them to be mutable and possibly dangerous
     ///     in a multithreading environment
     /// </summary>
-    /// <typeparam name="TParent"> </typeparam>
-    /// <typeparam name="TChild"> </typeparam>
     internal class SafeLinkCollection<TParent, TChild> : ReadOnlyMetadataCollection<TChild>
         where TChild : MetadataItem
         where TParent : class

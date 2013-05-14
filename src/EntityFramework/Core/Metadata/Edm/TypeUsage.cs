@@ -758,8 +758,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     EdmEquals override verifying the equivalence of all facets. Two facets are considered
         ///     equal if they have the same name and the same value (Object.Equals)
         /// </summary>
-        /// <param name="item"> </param>
-        /// <returns> </returns>
         internal override bool EdmEquals(MetadataItem item)
         {
             // short-circuit if this and other are reference equivalent

@@ -49,8 +49,6 @@ namespace System.Data.Entity.Core
         /// <summary>
         ///     initializes a new instance EntityCommandExecutionException with a given SerializationInfo and StreamingContext
         /// </summary>
-        /// <param name="serializationInfo"> </param>
-        /// <param name="streamingContext"> </param>
         private EntityCommandExecutionException(SerializationInfo serializationInfo, StreamingContext streamingContext)
             : base(serializationInfo, streamingContext)
         {

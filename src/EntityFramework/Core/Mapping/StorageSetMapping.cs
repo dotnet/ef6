@@ -7,7 +7,6 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.Contracts;
     using System.Linq;
     using Triple = Common.Utils.Pair<Metadata.Edm.EntitySetBase, Common.Utils.Pair<Metadata.Edm.EntityTypeBase, bool>>;
 
@@ -133,7 +132,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Add type mapping as a child under this SetMapping
         /// </summary>
-        /// <param name="typeMapping"> </param>
         public void AddTypeMapping(StorageTypeMapping typeMapping)
         {
             Check.NotNull(typeMapping, "typeMapping");

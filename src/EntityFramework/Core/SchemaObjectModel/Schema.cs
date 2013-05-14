@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Populate the schema object from a schema
         /// </summary>
         /// <param name="sourceReader"> TextReader containing the schema xml definition </param>
-        /// <param name="source"> Uri containing path to a schema file (may be null) </param>
+        /// <param name="sourceLocation"> Uri containing path to a schema file (may be null) </param>
         /// <returns> list of errors </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         internal IList<EdmSchemaError> Parse(XmlReader sourceReader, string sourceLocation)
@@ -116,7 +116,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Populate the schema object from a schema
         /// </summary>
         /// <param name="sourceReader"> TextReader containing the schema xml definition </param>
-        /// <param name="source"> Uri containing path to a schema file (may be null) </param>
+        /// <param name="sourceLocation"> Uri containing path to a schema file (may be null) </param>
         /// <returns> list of errors </returns>
         private IList<EdmSchemaError> InternalParse(XmlReader sourceReader, string sourceLocation)
         {
@@ -436,7 +436,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// <summary>
         ///     Vaidate the schema.
         /// </summary>
-        /// <returns> list of errors </returns>
         internal override void Validate()
         {
             if (String.IsNullOrEmpty(Namespace))
@@ -844,7 +843,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 }
                 return false;
             }
-                // For ssdl and provider manifest, make sure that the type is present in this schema or primitive schema
+            // For ssdl and provider manifest, make sure that the type is present in this schema or primitive schema
             else if (DataModel != SchemaDataModelOption.EntityDataModel
                      && type.Schema != this
                      && type.Schema != SchemaManager.PrimitiveSchema)
@@ -974,7 +973,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// <summary>
         ///     Handler for the using element
         /// </summary>
-        /// <param name="reader"> </param>
         private void HandleUsingElement(XmlReader reader)
         {
             var referencedNamespace = new UsingElement(this);

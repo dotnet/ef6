@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
@@ -31,9 +32,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     res://*/foo.csdl   -- could be multiple assemblies
         ///     res://MyAssembly/  -- could be multiple artifacts in the one assembly
         /// </summary>
-        /// <param name="path"> The path to the (collection of) resources </param>
+        /// <param name="originalPath"> The path to the (collection of) resources </param>
+        /// <param name="assemblyName"> </param>
+        /// <param name="resourceName"> </param>
         /// <param name="uriRegistry"> The global registry of URIs </param>
-        /// <param name="resolveAssembly"> </param>
+        /// <param name="resolver"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal MetadataArtifactLoaderCompositeResource(
             string originalPath, string assemblyName, string resourceName, ICollection<string> uriRegistry,
             MetadataArtifactAssemblyResolver resolver)
@@ -138,9 +142,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Load all resources from the assembly/assemblies identified in the resource path.
         /// </summary>
+        /// <param name="assemblyName"> </param>
+        /// <param name="resourceName"> </param>
         /// <param name="uriRegistry"> The global registry of URIs </param>
-        /// <param name="resolveAssembly"> </param>
-        /// <returns> </returns>
+        /// <param name="resolver"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static List<MetadataArtifactLoaderResource> LoadResources(
             string assemblyName, string resourceName, ICollection<string> uriRegistry, MetadataArtifactAssemblyResolver resolver)
         {
@@ -260,9 +266,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Load all resources from a specific assembly.
         /// </summary>
-        /// <param name="fullName"> The full name identifying the assembly to load resources from </param>
-        /// <param name="uriRegistry"> The global registry of URIs </param>
-        /// <param name="resolveAssembly"> delegate for resolve the assembly </param>
+        /// <param name="assemblyName"> The full name identifying the assembly to load resources from </param>
+        /// <param name="resolver"> delegate for resolve the assembly </param>
         private static Assembly ResolveAssemblyName(string assemblyName, MetadataArtifactAssemblyResolver resolver)
         {
             DebugCheck.NotNull(resolver);
@@ -336,7 +341,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     part (if any)
         /// </summary>
         /// <param name="path"> The resource path to parse </param>
-        /// <returns> An array of (two) strings containing the assembly name and the resource name </returns>
+        /// <param name="assemblyName"> </param>
+        /// <param name="resourceName"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static void ParseResourcePath(string path, out string assemblyName, out string resourceName)
         {
             // Extract the components from the path

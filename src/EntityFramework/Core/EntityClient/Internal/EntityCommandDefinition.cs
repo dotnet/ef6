@@ -286,7 +286,6 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         ///     Handles the following negative scenarios
         ///     Nested ComplexType Property in ComplexType
         /// </summary>
-        /// <param name="resultType"> </param>
         private static void ValidateEdmResultType(EdmType resultType, EdmFunction functionImport)
         {
             if (Helper.IsComplexType(resultType))
@@ -351,7 +350,6 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <summary>
         ///     Create a DbCommand object from the definition, that can be executed
         /// </summary>
-        /// <returns> </returns>
         public override DbCommand CreateCommand()
         {
             return new EntityCommand(this, new DbInterceptionContext());
@@ -380,8 +378,6 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <summary>
         ///     Constructs a EntityParameter from a CQT parameter.
         /// </summary>
-        /// <param name="queryParameter"> </param>
-        /// <returns> </returns>
         private static EntityParameter CreateEntityParameterFromQueryParameter(KeyValuePair<string, TypeUsage> queryParameter)
         {
             // We really can't have a parameter here that isn't a scalar type...
@@ -670,8 +666,6 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <summary>
         ///     Updates storeParameter size, precision and scale properties from user provided parameter properties.
         /// </summary>
-        /// <param name="entityParameter"> </param>
-        /// <param name="storeParameter"> </param>
         private static void SyncParameterProperties(
             EntityParameter entityParameter, DbParameter storeParameter, DbProviderServices storeProviderServices)
         {
@@ -717,9 +711,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         }
 
         /// <summary>
-        ///     Return the string used by EntityCommand and ObjectQuery<T>ToTraceString"/>
+        ///     Return the string used by EntityCommand and ObjectQuery&lt;T&gt; ToTraceString
         /// </summary>
-        /// <returns> </returns>
         internal virtual string ToTraceString()
         {
             if (_mappedCommandDefinitions != null)

@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>During serialization, maps actual types to xsi:type information.</summary>
         /// <returns>true if the type was resolved; otherwise, false.  </returns>
-        /// <param name="dataContractType">The actual type of the persistence-ignorant object.</param>
+        /// <param name="type">The actual type of the persistence-ignorant object.</param>
         /// <param name="declaredType">The declared type.</param>
         /// <param name="knownTypeResolver">
         ///     An instance of <see cref="T:System.Data.Entity.Core.Objects.ProxyDataContractResolver" />.

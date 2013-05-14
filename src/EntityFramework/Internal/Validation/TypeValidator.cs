@@ -81,8 +81,8 @@ namespace System.Data.Entity.Internal.Validation
         ///     collection.
         /// </summary>
         /// <param name="entityValidationContext"> Validation context. Must not be null. </param>
-        /// <param name="validationErrors"> Collection of validation errors. Any validation errors will be added to it. </param>
         /// <param name="parentProperty"> The entry for the complex property. Null if validating an entity. </param>
+        /// <param name="validationErrors"> Collection of validation errors. Any validation errors will be added to it. </param>
         /// <remarks>
         ///     Note that <paramref name="validationErrors" /> will be modified by this method. Errors should be only added,
         ///     never removed or changed. Taking a collection as a modifiable parameter saves a couple of memory allocations
@@ -95,7 +95,7 @@ namespace System.Data.Entity.Internal.Validation
         /// <summary>
         ///     Returns a validator for a child property.
         /// </summary>
-        /// <param name="propertyName"> Name of the child property for which to return a validator. </param>
+        /// <param name="name"> Name of the child property for which to return a validator. </param>
         /// <returns> Validator for a child property. Possibly null if there are no validators for requested property. </returns>
         public PropertyValidator GetPropertyValidator(string name)
         {

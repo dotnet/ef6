@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets or sets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the starting point of the navigation and must be a reference to an entity instance.
+        ///     Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the starting point of the navigation and must be a reference to an entity instance.
         /// </summary>
         /// <returns>
         ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the instance of the source relationship end from which navigation should occur.

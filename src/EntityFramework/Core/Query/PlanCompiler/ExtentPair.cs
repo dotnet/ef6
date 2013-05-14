@@ -30,8 +30,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Equals
         /// </summary>
-        /// <param name="obj"> </param>
-        /// <returns> </returns>
         public override bool Equals(object obj)
         {
             var other = obj as ExtentPair;
@@ -41,7 +39,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Hashcode
         /// </summary>
-        /// <returns> </returns>
         public override int GetHashCode()
         {
             return (Left.GetHashCode() << 4) ^ Right.GetHashCode();

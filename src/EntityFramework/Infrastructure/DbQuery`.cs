@@ -20,7 +20,7 @@ namespace System.Data.Entity.Infrastructure
         Justification = "Name is intentional")]
     public class DbQuery<TResult> : IOrderedQueryable<TResult>, IListSource, IInternalQueryAdapter
 #if !NET40
-                                    , IDbAsyncEnumerable<TResult>
+, IDbAsyncEnumerable<TResult>
 #endif
     {
         #region Fields and constructors
@@ -50,15 +50,9 @@ namespace System.Data.Entity.Infrastructure
         /// <remarks>
         ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
         ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
-        ///     the returned instance of the DbQuery
-        ///     <T>
-        ///         . Other instances of DbQuery
-        ///         <T>
-        ///             and the object context itself are not affected.
-        ///             Because the Include method returns the query object, you can call this method multiple times on an DbQuery
-        ///             <T>
-        ///                 to
-        ///                 specify multiple paths for the query.
+        ///     the returned instance of the DbQuery&lt;T&gt;. Other instances of DbQuery&lt;T&gt; and the object context itself are not affected.
+        ///     Because the Include method returns the query object, you can call this method multiple times on an DbQuery&lt;T&gt; to
+        ///     specify multiple paths for the query.
         /// </remarks>
         /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
         /// <returns>

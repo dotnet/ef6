@@ -22,10 +22,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="data"> </param>
-        /// <param name="keysInOrder"> </param>
         public SchemaElementLookUpTableEnumerator(Dictionary<string, S> data, List<string> keysInOrder)
         {
             DebugCheck.NotNull(data);
@@ -39,16 +35,12 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region IEnumerator Members
 
-        /// <summary>
-        /// </summary>
         public void Reset()
         {
             // it is implemented explicitly
             ((IEnumerator)_enumerator).Reset();
         }
 
-        /// <summary>
-        /// </summary>
         public T Current
         {
             get
@@ -67,9 +59,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns> </returns>
         public bool MoveNext()
         {
             while (_enumerator.MoveNext())
@@ -86,8 +75,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region IDisposable Members
 
-        /// <summary>
-        /// </summary>
         public void Dispose()
         {
         }

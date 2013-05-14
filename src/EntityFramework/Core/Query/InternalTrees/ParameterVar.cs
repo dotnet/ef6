@@ -28,8 +28,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Get the name of this Var
         /// </summary>
-        /// <param name="name"> </param>
-        /// <returns> </returns>
         internal override bool TryGetName(out string name)
         {
             name = ParameterName;

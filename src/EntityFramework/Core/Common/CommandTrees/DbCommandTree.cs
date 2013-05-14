@@ -70,7 +70,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>
         ///     Gets the name and type of each parameter declared on the command tree.
         /// </summary>
-        /// <returns> </returns>
         internal abstract IEnumerable<KeyValuePair<string, TypeUsage>> GetParameters();
 
         /// <summary>

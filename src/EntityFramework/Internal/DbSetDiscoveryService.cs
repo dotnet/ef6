@@ -192,8 +192,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Given a type that might be an IDbSet\IObjectSet, determine if the type implements IDbSet&lt&gt\IObjectSet&lt&gt, and if
-        ///     so return the element type of the IDbSet\IObjectSet.  Currently, if the collection implements IDbSet&lt&gt\IObjectSet&lt&gt
+        ///     Given a type that might be an IDbSet\IObjectSet, determine if the type implements IDbSet&lt;&gt;\IObjectSet&lt;&gt;, and if
+        ///     so return the element type of the IDbSet\IObjectSet.  Currently, if the collection implements IDbSet&lt;&gt;\IObjectSet&lt;&gt;
         ///     multiple times with different types, then we will return false since this is not supported.
         /// </summary>
         /// <param name="setType"> The type to check. </param>

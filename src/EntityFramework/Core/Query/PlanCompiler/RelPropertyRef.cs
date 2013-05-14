@@ -64,7 +64,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     debugging support
         /// </summary>
-        /// <returns> </returns>
         public override string ToString()
         {
             return m_property.ToString();

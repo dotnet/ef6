@@ -23,9 +23,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             get { return _singleton; }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns> </returns>
         public override string ToString()
         {
             return "NULLSENTINEL";

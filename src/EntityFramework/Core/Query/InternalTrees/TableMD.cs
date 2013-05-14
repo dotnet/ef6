@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Describes metadata about a table
@@ -53,6 +54,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <param name="properties"> prperties corresponding to columns of the table </param>
         /// <param name="keyProperties"> </param>
         /// <param name="extent"> entityset corresponding to the table (if any) </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal TableMD(
             IEnumerable<EdmProperty> properties, IEnumerable<EdmMember> keyProperties,
             EntitySetBase extent)
@@ -116,7 +118,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     String form - for debugging
         /// </summary>
-        /// <returns> </returns>
         public override string ToString()
         {
             return (m_extent != null ? m_extent.Name : "Transient");

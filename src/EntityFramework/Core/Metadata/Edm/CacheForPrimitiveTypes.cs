@@ -179,7 +179,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Get the list of the primitive types for the given dataspace
         /// </summary>
-        /// <returns> </returns>
         internal ReadOnlyCollection<PrimitiveType> GetTypes()
         {
             var primitiveTypes = new List<PrimitiveType>();

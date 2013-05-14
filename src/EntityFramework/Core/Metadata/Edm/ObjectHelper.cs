@@ -41,8 +41,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Returns the single error message from the list of errors
         /// </summary>
-        /// <param name="errors"> </param>
-        /// <returns> </returns>
         internal static string CombineErrorMessage(IEnumerable<EdmSchemaError> errors)
         {
             DebugCheck.NotNull(errors);
@@ -64,8 +62,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Returns the single error message from the list of errors
         /// </summary>
-        /// <param name="errors"> </param>
-        /// <returns> </returns>
         internal static string CombineErrorMessage(IEnumerable<EdmItemError> errors)
         {
             var sb = new StringBuilder(Environment.NewLine);
@@ -130,8 +126,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="edmProperty"> Edm property containing the cspace member type information </param>
         /// <param name="columnProperty"> edm property containing the sspace member type information </param>
-        /// <param name="fileName"> name of the mapping file from which this information was loaded from </param>
-        /// <returns> </returns>
         internal static TypeUsage ValidateAndConvertTypeUsage(
             EdmProperty edmProperty,
             EdmProperty columnProperty)

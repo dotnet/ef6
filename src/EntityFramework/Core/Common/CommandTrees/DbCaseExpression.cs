@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets or sets the Else clause of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
+        ///     Gets the Else clause of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
         /// </summary>
         /// <returns>
         ///     The Else clause of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.

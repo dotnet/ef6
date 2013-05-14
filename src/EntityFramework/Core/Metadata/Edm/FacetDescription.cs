@@ -236,7 +236,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Returns true if the facet type is of numeric type
         /// </summary>
         /// <param name="facetType"> Type of the facet </param>
-        /// <returns> </returns>
         internal static bool IsNumericType(EdmType facetType)
         {
             if (Helper.IsPrimitiveType(facetType))

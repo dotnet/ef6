@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Mapping
         private double m_MappingVersion;
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        private MetadataMappingHasherVisitor(double mappingVersion, bool sortSequence) 
+        private MetadataMappingHasherVisitor(double mappingVersion, bool sortSequence)
             : base(sortSequence)
         {
             m_MappingVersion = mappingVersion;
@@ -737,9 +737,6 @@ namespace System.Data.Entity.Core.Mapping
         ///     if already seen, then out the object instance index, return false;
         ///     if haven't seen, then add it to the m_itemAlreadySeen, out the current index, return true
         /// </summary>
-        /// <param name="o"> </param>
-        /// <param name="indexSeen"> </param>
-        /// <returns> </returns>
         private bool TryAddSeenItem(Object o, out int indexSeen)
         {
             if (!m_itemsAlreadySeen.TryGetValue(o, out indexSeen))
@@ -758,8 +755,6 @@ namespace System.Data.Entity.Core.Mapping
         ///     if the object has seen, then add the seen object style to the hash source, return false;
         ///     if not, then add it to the seen list, and append the object start dump to the hash source, return true
         /// </summary>
-        /// <param name="o"> </param>
-        /// <returns> </returns>
         private bool AddObjectToSeenListAndHashBuilder(object o, out int instanceIndex)
         {
             if (o == null)
@@ -819,8 +814,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Add V2 schema properties and attributes to the hash builder
         /// </summary>
-        /// <param name="content"> </param>
-        /// <param name="defaultValue"> </param>
         private void AddV2ObjectContentToHashBuilder(object content, double version)
         {
             // if the version number is greater than or equal to V2, then we add the value

@@ -145,8 +145,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         ///     return a list of propertyReader expressions from an array of translator results.
         /// </summary>
-        /// <param name="propertyTranslatorResults"> </param>
-        /// <returns> </returns>
         protected static List<Expression> GetPropertyReaders(List<TranslatorResult> propertyTranslatorResults)
         {
             var propertyReaders = propertyTranslatorResults.Select(s => s.UnwrappedExpression).ToList();

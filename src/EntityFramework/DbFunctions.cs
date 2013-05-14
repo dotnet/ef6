@@ -857,7 +857,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of hours to add. </param>
         /// <returns> A resulting date/time. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
@@ -876,7 +876,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of hours to add. </param>
         /// <returns> A resulting date/time. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
@@ -895,7 +895,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of hours to add. </param>
         /// <returns> A resulting time span. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
@@ -914,7 +914,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of minutes to add. </param>
         /// <returns> A resulting date/time. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
@@ -933,7 +933,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of minutes to add. </param>
         /// <returns> A resulting date/time. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
@@ -952,7 +952,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of minutes to add. </param>
         /// <returns> A resulting time span. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
@@ -971,7 +971,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of seconds to add. </param>
         /// <returns> A resulting date/time. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
@@ -990,7 +990,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of seconds to add. </param>
         /// <returns> A resulting date/time. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
@@ -1009,7 +1009,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of seconds to add. </param>
         /// <returns> A resulting time span. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
@@ -1028,7 +1028,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of milliseconds to add. </param>
         /// <returns> A resulting date/time. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
@@ -1047,7 +1047,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of milliseconds to add. </param>
         /// <returns> A resulting date/time. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
@@ -1066,7 +1066,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of milliseconds to add. </param>
         /// <returns> A resulting time span. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
@@ -1085,7 +1085,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of microseconds to add. </param>
         /// <returns> A resulting date/time. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
@@ -1104,7 +1104,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of microseconds to add. </param>
         /// <returns> A resulting date/time. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
@@ -1123,7 +1123,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of microseconds to add. </param>
         /// <returns> A resulting time span. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
@@ -1142,7 +1142,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of nanoseconds to add. </param>
         /// <returns> A resulting date/time. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
@@ -1161,7 +1161,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of nanoseconds to add. </param>
         /// <returns> A resulting date/time. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue")]
@@ -1180,7 +1180,7 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue"> The input date/time. </param>
+        /// <param name="timeValue"> The input date/time. </param>
         /// <param name="addValue"> The number of nanoseconds to add. </param>
         /// <returns> A resulting time span. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "addValue")]
@@ -1313,8 +1313,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first date/time. </param>
-        /// <param name="dateValue2"> The second date/time. </param>
+        /// <param name="timeValue1"> The first date/time. </param>
+        /// <param name="timeValue2"> The second date/time. </param>
         /// <returns> The number of hours between the first and second date/times. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
@@ -1332,8 +1332,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first date/time. </param>
-        /// <param name="dateValue2"> The second date/time. </param>
+        /// <param name="timeValue1"> The first date/time. </param>
+        /// <param name="timeValue2"> The second date/time. </param>
         /// <returns> The number of hours between the first and second date/times. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
@@ -1351,8 +1351,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first time span. </param>
-        /// <param name="dateValue2"> The second time span. </param>
+        /// <param name="timeValue1"> The first time span. </param>
+        /// <param name="timeValue2"> The second time span. </param>
         /// <returns> The number of hours between the first and second time spans. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
@@ -1370,8 +1370,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first date/time. </param>
-        /// <param name="dateValue2"> The second date/time. </param>
+        /// <param name="timeValue1"> The first date/time. </param>
+        /// <param name="timeValue2"> The second date/time. </param>
         /// <returns> The number of minutes between the first and second date/times. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
@@ -1389,8 +1389,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first date/time. </param>
-        /// <param name="dateValue2"> The second date/time. </param>
+        /// <param name="timeValue1"> The first date/time. </param>
+        /// <param name="timeValue2"> The second date/time. </param>
         /// <returns> The number of minutes between the first and second date/times. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
@@ -1408,8 +1408,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first time span. </param>
-        /// <param name="dateValue2"> The second time span. </param>
+        /// <param name="timeValue1"> The first time span. </param>
+        /// <param name="timeValue2"> The second time span. </param>
         /// <returns> The number of minutes between the first and second time spans. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
@@ -1427,8 +1427,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first date/time. </param>
-        /// <param name="dateValue2"> The second date/time. </param>
+        /// <param name="timeValue1"> The first date/time. </param>
+        /// <param name="timeValue2"> The second date/time. </param>
         /// <returns> The number of seconds between the first and second date/times. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
@@ -1446,8 +1446,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first date/time. </param>
-        /// <param name="dateValue2"> The second date/time. </param>
+        /// <param name="timeValue1"> The first date/time. </param>
+        /// <param name="timeValue2"> The second date/time. </param>
         /// <returns> The number of seconds between the first and second date/times. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
@@ -1465,8 +1465,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first time span. </param>
-        /// <param name="dateValue2"> The second time span. </param>
+        /// <param name="timeValue1"> The first time span. </param>
+        /// <param name="timeValue2"> The second time span. </param>
         /// <returns> The number of seconds between the first and second time spans. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
@@ -1484,8 +1484,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first date/time. </param>
-        /// <param name="dateValue2"> The second date/time. </param>
+        /// <param name="timeValue1"> The first date/time. </param>
+        /// <param name="timeValue2"> The second date/time. </param>
         /// <returns> The number of milliseconds between the first and second date/times. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
@@ -1503,8 +1503,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first date/time. </param>
-        /// <param name="dateValue2"> The second date/time. </param>
+        /// <param name="timeValue1"> The first date/time. </param>
+        /// <param name="timeValue2"> The second date/time. </param>
         /// <returns> The number of milliseconds between the first and second date/times. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
@@ -1522,8 +1522,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first time span. </param>
-        /// <param name="dateValue2"> The second time span. </param>
+        /// <param name="timeValue1"> The first time span. </param>
+        /// <param name="timeValue2"> The second time span. </param>
         /// <returns> The number of milliseconds between the first and second time spans. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
@@ -1541,8 +1541,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first date/time. </param>
-        /// <param name="dateValue2"> The second date/time. </param>
+        /// <param name="timeValue1"> The first date/time. </param>
+        /// <param name="timeValue2"> The second date/time. </param>
         /// <returns> The number of microseconds between the first and second date/times. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
@@ -1560,8 +1560,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first date/time. </param>
-        /// <param name="dateValue2"> The second date/time. </param>
+        /// <param name="timeValue1"> The first date/time. </param>
+        /// <param name="timeValue2"> The second date/time. </param>
         /// <returns> The number of microseconds between the first and second date/times. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
@@ -1579,8 +1579,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first time span. </param>
-        /// <param name="dateValue2"> The second time span. </param>
+        /// <param name="timeValue1"> The first time span. </param>
+        /// <param name="timeValue2"> The second time span. </param>
         /// <returns> The number of microseconds between the first and second time spans. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
@@ -1598,8 +1598,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first date/time. </param>
-        /// <param name="dateValue2"> The second date/time. </param>
+        /// <param name="timeValue1"> The first date/time. </param>
+        /// <param name="timeValue2"> The second date/time. </param>
         /// <returns> The number of nanoseconds between the first and second date/times. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
@@ -1617,8 +1617,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first date/time. </param>
-        /// <param name="dateValue2"> The second date/time. </param>
+        /// <param name="timeValue1"> The first date/time. </param>
+        /// <param name="timeValue2"> The second date/time. </param>
         /// <returns> The number of nanoseconds between the first and second date/times. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
@@ -1636,8 +1636,8 @@ namespace System.Data.Entity
         ///     You cannot call this function directly. This function can only appear within a LINQ to Entities query.
         ///     This function is translated to a corresponding function in the database.
         /// </remarks>
-        /// <param name="dateValue1"> The first time span. </param>
-        /// <param name="dateValue2"> The second time span. </param>
+        /// <param name="timeValue1"> The first time span. </param>
+        /// <param name="timeValue2"> The second time span. </param>
         /// <returns> The number of nanoseconds between the first and second time spans. </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "timeValue2")]

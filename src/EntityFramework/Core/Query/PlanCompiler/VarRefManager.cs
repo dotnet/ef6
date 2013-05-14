@@ -30,7 +30,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Constructs a new VarRefManager given a command.
         /// </summary>
-        /// <param name="command"> </param>
         internal VarRefManager(Command command)
         {
             m_nodeToParentMap = new Dictionary<Node, Node>();
@@ -45,7 +44,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Tracks the information that the given node is a parent of its children (one level only)
         /// </summary>
-        /// <param name="parent"> </param>
         internal void AddChildren(Node parent)
         {
             for (var i = 0; i < parent.Children.Count; i++)
@@ -147,9 +145,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Does the gvien VarList overlap with the given VarVec
         /// </summary>
-        /// <param name="listToCheck"> </param>
-        /// <param name="vars"> </param>
-        /// <returns> </returns>
         private static bool HasVarReferences(VarList listToCheck, VarVec vars)
         {
             foreach (var var in vars)
@@ -165,9 +160,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Do the two given varVecs overlap
         /// </summary>
-        /// <param name="listToCheck"> </param>
-        /// <param name="vars"> </param>
-        /// <returns> </returns>
         private static bool HasVarReferences(VarVec listToCheck, VarVec vars)
         {
             return listToCheck.Overlaps(vars);
@@ -176,9 +168,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Does the given list of sort keys contain a key with a var that is the given VarVec
         /// </summary>
-        /// <param name="listToCheck"> </param>
-        /// <param name="vars"> </param>
-        /// <returns> </returns>
         private static bool HasVarReferences(List<SortKey> listToCheck, VarVec vars)
         {
             foreach (var key in listToCheck)
@@ -195,10 +184,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Does the list of outputs of the given SetOp contain a var
         ///     from the given VarVec defined by the SetOp's child with the given index
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="vars"> </param>
-        /// <param name="index"> </param>
-        /// <returns> </returns>
         private static bool HasVarReferences(SetOp op, VarVec vars, int index)
         {
             foreach (var var in op.VarMap[index].Values)

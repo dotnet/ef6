@@ -1,6 +1,5 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-using OM = System.Collections.ObjectModel;
 
 namespace System.Data.Entity.Core.Objects
 {
@@ -28,7 +27,6 @@ namespace System.Data.Entity.Core.Objects
         ///     (one of the Invoke overloads).
         /// </summary>
         /// <param name="query"> Compiled query expression. </param>
-        /// <param name="parameterDelegateType"> The type of the delegate producing parameter values from CompiledQuery delegate arguments. For details, see CompiledQuery.Parameter.CreateObjectParameter. </param>
         private CompiledQuery(LambdaExpression query)
         {
             DebugCheck.NotNull(query);

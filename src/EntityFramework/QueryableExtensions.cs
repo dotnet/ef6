@@ -552,21 +552,16 @@ namespace System.Data.Entity
         ///     This extension method calls the Include(String) method of the source IQueryable object, if such a method exists.
         ///     If the source IQueryable does not have a matching method, then this method does nothing.
         ///     The Entity Framework ObjectQuery, ObjectSet, DbQuery, and DbSet types all have an appropriate Include method to call.
-        ///     When you call the Include method, the query path is only valid on the returned instance of the IQueryable
-        ///     <T>
-        ///         . Other
-        ///         instances of IQueryable
-        ///         <T>
-        ///             and the object context itself are not affected.  Because the Include method returns the
-        ///             query object, you can call this method multiple times on an IQueryable
-        ///             <T>to specify multiple paths for the query.
+        ///     When you call the Include method, the query path is only valid on the returned instance of the IQueryable&lt;T&gt;. Other
+        ///     instances of IQueryable&lt;T&gt; and the object context itself are not affected.  Because the Include method returns the
+        ///     query object, you can call this method multiple times on an IQueryable&lt;T&gt; to specify multiple paths for the query.
         /// </remarks>
         /// <typeparam name="T"> The type of entity being queried. </typeparam>
         /// <typeparam name="TProperty"> The type of navigation property being included. </typeparam>
         /// <param name="source"> The source IQueryable on which to call Include. </param>
         /// <param name="path"> A lambda expression representing the path to include. </param>
         /// <returns>
-        ///     A new IQueryable <T>with the defined query path.
+        ///     A new IQueryable&lt;T&gt; with the defined query path.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]

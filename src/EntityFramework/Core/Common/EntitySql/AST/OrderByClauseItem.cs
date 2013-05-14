@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     ///     Represents a order by clause item.
     /// </summary>
@@ -22,7 +24,10 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// <summary>
         ///     Initializes collated order by clause item.
         /// </summary>
+        /// <param name="orderExpr"> </param>
+        /// <param name="orderKind"> </param>
         /// <param name="optCollationIdentifier"> optional Collation identifier </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal OrderByClauseItem(Node orderExpr, OrderKind orderKind, Identifier optCollationIdentifier)
         {
             _orderExpr = orderExpr;

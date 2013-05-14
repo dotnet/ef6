@@ -12,10 +12,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     /// </summary>
     internal sealed class OnOperation : SchemaElement
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="parentElement"> </param>
-        /// <param name="operation"> </param>
         public OnOperation(RelationshipEnd parentElement, Operation operation)
             : base(parentElement)
         {

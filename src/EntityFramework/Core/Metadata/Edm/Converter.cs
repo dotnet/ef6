@@ -579,9 +579,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Initialize the end member if its not initialized already
         /// </summary>
-        /// <param name="associationType"> </param>
-        /// <param name="end"> </param>
-        /// <param name="endMemberType"> </param>
         private static AssociationEndMember InitializeAssociationEndMember(
             AssociationType associationType, IRelationshipEnd end,
             EntityType endMemberType)
@@ -675,6 +672,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="set"> The SOM element to process </param>
         /// <param name="container"> </param>
         /// <returns> The entity set object resulting from the convert </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static EntitySet GetEntitySet(EntityContainerEntitySet set, EntityContainer container)
         {
             return container.GetEntitySetByName(set.Name, false);
@@ -686,9 +684,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="relationshipSet"> The SOM element to process </param>
         /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
         /// <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
-        /// <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
         /// <param name="container"> </param>
+        /// <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
         /// <returns> The association set object resulting from the convert </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static AssociationSet ConvertToAssociationSet(
             EntityContainerRelationshipSet relationshipSet,
             DbProviderManifest providerManifest,
@@ -965,7 +964,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     }
                 }
             }
-                // this case must be second to avoid calling somFunction.Type when returnTypeList has more than one element.
+            // this case must be second to avoid calling somFunction.Type when returnTypeList has more than one element.
             else if (somFunction.Type != null)
             {
                 var returnType = GetFunctionTypeUsage(
@@ -1111,7 +1110,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="somEnumType"> SchemaEnumType to be covnerted. </param>
         /// <param name="newGlobalItems"> Global item objects where newly created Metadata EnumType will be added. </param>
-        /// <returns> </returns>
         private static EnumType ConvertToEnumType(SchemaEnumType somEnumType, Dictionary<SchemaElement, GlobalItem> newGlobalItems)
         {
             DebugCheck.NotNull(somEnumType);
@@ -1161,9 +1159,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         ///     Converts an SOM Documentation node to a metadata Documentation construct
         /// </summary>
         /// <param name="element"> The SOM element to process </param>
-        /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
-        /// <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
-        /// <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
         /// <returns> The Documentation object resulting from the convert operation </returns>
         private static Documentation ConvertToDocumentation(DocumentationElement element)
         {

@@ -272,7 +272,9 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         ///     Generates the closing code for a class that was started with WriteClassStart.
         /// </summary>
+        /// <param name="namespace"> </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "namespace")]
         protected virtual void WriteClassEnd(string @namespace, IndentedTextWriter writer)
         {
@@ -380,14 +382,14 @@ namespace System.Data.Entity.Migrations.Design
 
                 procedureOperation.Parameters.Each(
                     p =>
-                        {
-                            var scrubbedName = ScrubName(p.Name);
+                    {
+                        var scrubbedName = ScrubName(p.Name);
 
-                            writer.Write(scrubbedName);
-                            writer.Write(" =");
-                            Generate(p, writer, !string.Equals(p.Name, scrubbedName, StringComparison.Ordinal));
-                            writer.WriteLine(",");
-                        });
+                        writer.Write(scrubbedName);
+                        writer.Write(" =");
+                        Generate(p, writer, !string.Equals(p.Name, scrubbedName, StringComparison.Ordinal));
+                        writer.WriteLine(",");
+                    });
 
                 writer.Indent--;
                 writer.WriteLine("},");
@@ -522,14 +524,14 @@ namespace System.Data.Entity.Migrations.Design
 
             createTableOperation.Columns.Each(
                 c =>
-                    {
-                        var scrubbedName = ScrubName(c.Name);
+                {
+                    var scrubbedName = ScrubName(c.Name);
 
-                        writer.Write(scrubbedName);
-                        writer.Write(" =");
-                        Generate(c, writer, !string.Equals(c.Name, scrubbedName, StringComparison.Ordinal));
-                        writer.WriteLine(",");
-                    });
+                    writer.Write(scrubbedName);
+                    writer.Write(" =");
+                    Generate(c, writer, !string.Equals(c.Name, scrubbedName, StringComparison.Ordinal));
+                    writer.WriteLine(",");
+                });
 
             writer.Indent--;
             writer.Write("}");

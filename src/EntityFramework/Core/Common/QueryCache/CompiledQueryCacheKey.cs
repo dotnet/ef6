@@ -16,8 +16,6 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <summary>
         ///     Determines equality of this key with respect to <paramref name="compareTo" />
         /// </summary>
-        /// <param name="otherObject"> </param>
-        /// <returns> </returns>
         public override bool Equals(object compareTo)
         {
             DebugCheck.NotNull(compareTo);
@@ -32,7 +30,6 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <summary>
         ///     Returns the hashcode for this cache key
         /// </summary>
-        /// <returns> </returns>
         public override int GetHashCode()
         {
             return _cacheIdentity.GetHashCode();

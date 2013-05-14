@@ -92,7 +92,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// <summary>
         ///     do whole element validation
         /// </summary>
-        /// <returns> </returns>
         internal override void Validate()
         {
             base.Validate();

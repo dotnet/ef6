@@ -26,12 +26,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Properties
 
-        /// <summary>
-        /// </summary>
         public StructuredType BaseType { get; private set; }
 
-        /// <summary>
-        /// </summary>
         public ISchemaElementLookUpTable<StructuredProperty> Properties
         {
             get
@@ -44,8 +40,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
         protected SchemaElementLookUpTable<SchemaElement> NamedMembers
         {
             get
@@ -58,8 +52,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
         public virtual bool IsTypeHierarchyRoot
         {
             get
@@ -74,8 +66,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
         public bool IsAbstract
         {
             get { return _isAbstract; }
@@ -110,7 +100,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Determines whether this type is of the same type as baseType,
         ///     or is derived from baseType.
         /// </summary>
-        /// <param name="baseType"> </param>
         /// <returns> true if this type is of the baseType, false otherwise </returns>
         public bool IsOfType(StructuredType baseType)
         {
@@ -129,8 +118,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Protected Methods
 
-        /// <summary>
-        /// </summary>
         internal override void ResolveTopLevelNames()
         {
             base.ResolveTopLevelNames();
@@ -143,9 +130,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns> </returns>
         internal override void Validate()
         {
             base.Validate();
@@ -172,9 +156,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="parentElement"> </param>
         protected StructuredType(Schema parentElement)
             : base(parentElement)
         {
@@ -238,8 +219,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Protected Properties
 
-        /// <summary>
-        /// </summary>
         protected string UnresolvedBaseType
         {
             get { return _unresolvedBaseType; }
@@ -284,8 +263,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Private Methods
 
-        /// <summary>
-        /// </summary>
         private bool TryResolveBaseType()
         {
             if (_baseTypeResolveResult.HasValue)
@@ -339,9 +316,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return true;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleBaseTypeAttribute(XmlReader reader)
         {
             Debug.Assert(UnresolvedBaseType == null, string.Format(CultureInfo.CurrentCulture, "{0} is already defined", reader.Name));
@@ -355,17 +329,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             UnresolvedBaseType = baseType;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleAbstractAttribute(XmlReader reader)
         {
             HandleBoolAttribute(reader, ref _isAbstract);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandlePropertyElement(XmlReader reader)
         {
             var property = new StructuredProperty(this);

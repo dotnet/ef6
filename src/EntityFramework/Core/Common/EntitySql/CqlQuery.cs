@@ -62,7 +62,6 @@ namespace System.Data.Entity.Core.Common.EntitySql
         ///     parser options <seealso cref="ParserOptions" />
         /// </param>
         /// <param name="parameters"> ordinary parameters </param>
-        /// <param name="parseResult"> </param>
         /// <returns> A parse result with the command tree produced by parsing the given command. </returns>
         /// <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted</exception>
         /// <exception cref="System.Data.Entity.Core.MetadataException">Thrown when metadata related service requests fail</exception>
@@ -81,17 +80,17 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var result = CompileCommon(
                 commandText, parserOptions,
                 (astCommand, validatedParserOptions) =>
-                    {
-                        var parseResultInternal = AnalyzeCommandSemantics(astCommand, perspective, validatedParserOptions, parameters);
+                {
+                    var parseResultInternal = AnalyzeCommandSemantics(astCommand, perspective, validatedParserOptions, parameters);
 
-                        Debug.Assert(parseResultInternal != null, "parseResultInternal != null post-condition FAILED");
-                        Debug.Assert(
-                            parseResultInternal.CommandTree != null, "parseResultInternal.CommandTree != null post-condition FAILED");
+                    Debug.Assert(parseResultInternal != null, "parseResultInternal != null post-condition FAILED");
+                    Debug.Assert(
+                        parseResultInternal.CommandTree != null, "parseResultInternal.CommandTree != null post-condition FAILED");
 
-                        TypeHelpers.AssertEdmType(parseResultInternal.CommandTree);
+                    TypeHelpers.AssertEdmType(parseResultInternal.CommandTree);
 
-                        return parseResultInternal;
-                    });
+                    return parseResultInternal;
+                });
 
             return result;
         }
@@ -229,15 +228,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
             var result = AnalyzeSemanticsCommon(
                 astExpr, perspective, parserOptions, parameters, null /*variables*/,
                 (analyzer, astExpression) =>
-                    {
-                        var parseResultInternal = analyzer.AnalyzeCommand(astExpression);
+                {
+                    var parseResultInternal = analyzer.AnalyzeCommand(astExpression);
 
-                        Debug.Assert(parseResultInternal != null, "parseResultInternal != null post-condition FAILED");
-                        Debug.Assert(
-                            parseResultInternal.CommandTree != null, "parseResultInternal.CommandTree != null post-condition FAILED");
+                    Debug.Assert(parseResultInternal != null, "parseResultInternal != null post-condition FAILED");
+                    Debug.Assert(
+                        parseResultInternal.CommandTree != null, "parseResultInternal.CommandTree != null post-condition FAILED");
 
-                        return parseResultInternal;
-                    });
+                    return parseResultInternal;
+                });
 
             return result;
         }
@@ -277,11 +276,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 parameters,
                 variables,
                 (analyzer, astExpr) =>
-                    {
-                        var lambda = analyzer.AnalyzeQueryCommand(astExpr);
-                        Debug.Assert(null != lambda, "null != lambda post-condition FAILED");
-                        return lambda;
-                    });
+                {
+                    var lambda = analyzer.AnalyzeQueryCommand(astExpr);
+                    Debug.Assert(null != lambda, "null != lambda post-condition FAILED");
+                    return lambda;
+                });
         }
 
         private static TResult AnalyzeSemanticsCommon<TResult>(
@@ -306,17 +305,17 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 var analyzer = (new SemanticAnalyzer(SemanticResolver.Create(perspective, parserOptions, parameters, variables)));
                 result = analysisFunction(analyzer, astExpr);
             }
-                //
-                // Wrap MetadataException as EntityException inner exception
-                //
+            //
+            // Wrap MetadataException as EntityException inner exception
+            //
             catch (MetadataException metadataException)
             {
                 var message = Strings.GeneralExceptionAsQueryInnerException("Metadata");
                 throw new EntitySqlException(message, metadataException);
             }
-                //
-                // Wrap MappingException as EntityException inner exception
-                //
+            //
+            // Wrap MappingException as EntityException inner exception
+            //
             catch (MappingException mappingException)
             {
                 var message = Strings.GeneralExceptionAsQueryInnerException("Mapping");

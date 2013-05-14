@@ -102,7 +102,6 @@ namespace System.Data.Entity.Internal
         ///     Returns a key consisting of the connection type and connection string.
         ///     If this is an EntityConnection then the metadata path is included in the key returned.
         /// </summary>
-        /// <value> </value>
         public override string ConnectionKey
         {
             get
@@ -222,10 +221,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     <summary>
-        ///         Creates the underlying <see cref="DbConnection" /> (which may actually be an <see cref="EntityConnection" />)
-        ///         if it does not already exist.
-        ///     </summary>
+        ///     Creates the underlying <see cref="DbConnection" /> (which may actually be an <see cref="EntityConnection" />)
+        ///     if it does not already exist.
+        /// </summary>
         private void Initialize()
         {
             if (UnderlyingConnection == null)
@@ -241,8 +239,8 @@ namespace System.Data.Entity.Internal
                     _connectionStringOrigin = DbConnectionStringOrigin.DbContextInfo;
                     _connectionStringName = connection.Name;
                 }
-                    // If the name or connection string is a simple name or is in the form "name=foo" then use
-                    // that name to try to load from the app/web config file. 
+                // If the name or connection string is a simple name or is in the form "name=foo" then use
+                // that name to try to load from the app/web config file. 
                 else if (!DbHelpers.TryGetConnectionName(_nameOrConnectionString, out name)
                          || !TryInitializeFromAppConfig(name, AppConfig))
                 {
@@ -301,8 +299,9 @@ namespace System.Data.Entity.Internal
         ///     The connection might be a store connection or an EF connection.
         /// </summary>
         /// <param name="name"> The connection name. </param>
-        /// <param name="connectionStrings"> </param>
+        /// <param name="config"> </param>
         /// <returns> True if a connection from the app.config file was found and used. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private bool TryInitializeFromAppConfig(string name, AppConfig config)
         {
             DebugCheck.NotNull(config);

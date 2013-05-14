@@ -13,6 +13,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -153,9 +154,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
             ///     If the given method info corresponds to a Visual Basic property,
             ///     it also initializes the Visual Basic translators if they have not been initialized
             /// </summary>
-            /// <param name="methodInfo"> </param>
-            /// <param name="callTranslator"> </param>
-            /// <returns> </returns>
             private static bool TryGetCallTranslator(MethodInfo methodInfo, out CallTranslator callTranslator)
             {
                 if (_methodTranslators.TryGetValue(methodInfo, out callTranslator))
@@ -613,9 +611,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 /// <summary>
                 ///     Tries to check whether there is an alternative method suggested insted of the given unsupported one.
                 /// </summary>
-                /// <param name="originalMethodInfo"> </param>
-                /// <param name="suggestedMethodInfo"> </param>
-                /// <returns> </returns>
                 private static bool TryGetAlternativeMethod(MethodInfo originalMethodInfo, out MethodInfo suggestedMethodInfo)
                 {
                     if (_alternativeMethods.TryGetValue(originalMethodInfo, out suggestedMethodInfo))
@@ -644,7 +639,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 ///     Initializes the dictionary of alternative methods.
                 ///     Currently, it simply initializes an empty dictionary.
                 /// </summary>
-                /// <returns> </returns>
                 private static Dictionary<MethodInfo, MethodInfo> InitializeAlternateMethodInfos()
                 {
                     return new Dictionary<MethodInfo, MethodInfo>(1);
@@ -653,7 +647,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 /// <summary>
                 ///     Populates the dictionary of alternative methods with the VB methods
                 /// </summary>
-                /// <param name="vbAssembly"> </param>
                 private static void InitializeVBMethods(Assembly vbAssembly)
                 {
                     Debug.Assert(!_vbMethodsInitialized);
@@ -705,9 +698,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 ///     and EntityCollection as argument types to functions.
                 ///     NOTE: Changes made to this function might have to be applied to ExpressionCoverter.NormalizeSetSource() too.
                 /// </summary>
-                /// <param name="parent"> </param>
-                /// <param name="argumentExpr"> </param>
-                /// <returns> </returns>
                 private CqtExpression NormalizeAllSetSources(ExpressionConverter parent, CqtExpression argumentExpr)
                 {
                     DbExpression newExpr = null;
@@ -775,8 +765,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 ///     Handles nested converts recursively. Removing no-op casts is required to prevent the
                 ///     expression converter from complaining.
                 /// </summary>
-                /// <param name="functionArg"> </param>
-                /// <returns> </returns>
                 private Expression UnwrapNoOpConverts(Expression expression)
                 {
                     if (expression.NodeType
@@ -806,6 +794,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 /// <param name="clrReturnType"> Return type specified by the call </param>
                 /// <param name="isElementOfCollection"> Indicates if current call is for an Element of a Collection type </param>
                 /// <returns> DbFunctionExpression with aligned return types </returns>
+                [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
                 private CqtExpression ValidateReturnType(
                     CqtExpression result, TypeUsage actualReturnType, ExpressionConverter parent, MethodCallExpression call,
                     Type clrReturnType, bool isElementOfCollection)
@@ -855,7 +844,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                                 }
                                 break;
                             }
-                            //Handles Primitive types, Entity types and Complex types
+                        //Handles Primitive types, Entity types and Complex types
                         default:
                             {
                                 // For collection type, look for exact match of element types.
@@ -947,8 +936,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     // Math.Abs
                     foreach (
                         var argType in
-                            new[]
-                                { typeof(decimal), typeof(double), typeof(float), typeof(int), typeof(long), typeof(sbyte), typeof(short) })
+                            new[] { typeof(decimal), typeof(double), typeof(float), typeof(int), typeof(long), typeof(sbyte), typeof(short) })
                     {
                         result.Add(typeof(Math).GetMethod("Abs", BindingFlags.Public | BindingFlags.Static, null, new[] { argType }, null));
                     }
@@ -1035,9 +1023,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             AsUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
                     yield return
 #pragma warning disable 612,618
-                        typeof(EntityFunctions).GetMethod(
+ typeof(EntityFunctions).GetMethod(
 #pragma warning restore 612,618
-                            AsUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
+AsUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
                 }
             }
 
@@ -1055,9 +1043,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
                     yield return
 #pragma warning disable 612,618
-                        typeof(EntityFunctions).GetMethod(
+ typeof(EntityFunctions).GetMethod(
 #pragma warning restore 612,618
-                            AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
+AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
                 }
             }
 
@@ -1073,7 +1061,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                             typeof(Math).GetMethod(
                                 "Truncate", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double) }, null)
                         })
-                {      
+                {
                 }
 
                 // Translation:
@@ -1083,7 +1071,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     Debug.Assert(call.Arguments.Count == 1, "Expecting 1 argument for Math.Truncate");
 
                     var arg1 = parent.TranslateExpression(call.Arguments[0]);
-                    var zeroDigits = DbExpressionBuilder.Constant(0); 
+                    var zeroDigits = DbExpressionBuilder.Constant(0);
                     return arg1.Truncate(zeroDigits);
                 }
             }

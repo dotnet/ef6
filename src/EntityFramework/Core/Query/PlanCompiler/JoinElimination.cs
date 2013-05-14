@@ -78,8 +78,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Do we need to build a join graph for this node - returns false, if we've already
         ///     processed this
         /// </summary>
-        /// <param name="joinNode"> </param>
-        /// <returns> </returns>
         private bool NeedsJoinGraph(Node joinNode)
         {
             return !m_joinGraphUnnecessaryMap.ContainsKey(joinNode);
@@ -118,8 +116,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Default handler for a node. Simply visits the children, then handles any var
         ///     remapping, and then recomputes the node info
         /// </summary>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         private Node VisitDefaultForAllNodes(Node n)
         {
             VisitChildren(n);
@@ -137,8 +133,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Invokes default handling for a node and adds the child-parent tracking info to the VarRefManager.
         /// </summary>
-        /// <param name="n"> </param>
-        /// <returns> </returns>
         protected override Node VisitDefault(Node n)
         {
             m_varRefManager.AddChildren(n);
@@ -154,7 +148,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="op"> current join op </param>
         /// <param name="joinNode"> current join node </param>
-        /// <returns> </returns>
         protected override Node VisitJoinOp(JoinBaseOp op, Node joinNode)
         {
             Node newNode;

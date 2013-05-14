@@ -61,11 +61,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return !string.IsNullOrEmpty(end.Name);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="end"> </param>
-        /// <param name="name"> </param>
-        /// <returns> </returns>
         private bool ValidateUniqueName(SchemaElement end, string name)
         {
             if (EndLookup.ContainsKey(name))

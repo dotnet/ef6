@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Defines and injects behavior into proxy class Type definitions
@@ -16,9 +17,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     associated with the intercepted proxy member.
         /// </summary>
         /// <param name="member"> EdmMember that specifies the member to be intercepted. </param>
-        /// <param name="property"> PropertyInfo that specifies the CLR property to be intercepted. </param>
-        /// <param name="proxyParameter"> ParameterExpression that represents the proxy object. </param>
-        /// <param name="itemParameter"> ParameterExpression that represents the proxied property value. </param>
         /// <param name="getEntityWrapperDelegate"> The Func that retrieves the wrapper from a proxy </param>
         /// <returns> Expression tree that encapsulates lazy loading behavior for the supplied member, or null if the expression tree could not be constructed. </returns>
         internal static Func<TProxy, TItem, bool> GetInterceptorDelegate<TProxy, TItem>(
@@ -128,8 +126,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///         name="relationshipName" />
         ///     .
         /// </param>
+        /// <param name="mustBeNull"> </param>
         /// <param name="wrapperObject"> Entity wrapper object used to retrieve RelationshipManager for the proxied entity. </param>
         /// <returns> True if the value instance was mutated and can be returned False if the class should refetch the value because the instance has changed </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool LoadProperty<TItem>(
             TItem propertyValue, string relationshipName, string targetRoleName, bool mustBeNull, object wrapperObject) where TItem : class
         {

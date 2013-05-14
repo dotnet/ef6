@@ -443,7 +443,6 @@ namespace System.Data.Entity.Internal
         ///     This model can be used to create an <see cref="ObjectContext" /> or can be passed to a <see cref="DbContext" />
         ///     constructor to create a <see cref="DbContext" /> for this model.
         /// </summary>
-        /// <returns> </returns>
         public static DbCompiledModel CreateModel(LazyInternalContext internalContext)
         {
             var modelBuilder = internalContext.CreateModelBuilder();

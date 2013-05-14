@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets or sets LINQ initializer Metadata for this row type. If there is no associated
+        ///     Gets LINQ initializer Metadata for this row type. If there is no associated
         ///     initializer type, value is null.
         /// </summary>
         internal InitializerMetadata InitializerMetadata
@@ -204,8 +204,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     EdmEquals override verifying the equivalence of all members and their type usages.
         /// </summary>
-        /// <param name="item"> </param>
-        /// <returns> </returns>
         internal override bool EdmEquals(MetadataItem item)
         {
             // short-circuit if this and other are reference equivalent

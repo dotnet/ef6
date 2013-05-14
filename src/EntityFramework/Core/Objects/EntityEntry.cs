@@ -431,8 +431,6 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     API to accept the current values as original values and  mark the entity as Unchanged.
         /// </summary>
-        /// <param> </param>
-        /// <returns> </returns>
         public override void AcceptChanges()
         {
             ValidateState();
@@ -672,7 +670,6 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         ///     Remove a RelationshipEntry (one of its ends must equal this.EntityKey)
         /// </summary>
-        /// <param name="item"> </param>
         internal void RemoveRelationshipEnd(RelationshipEntry item)
         {
             DebugCheck.NotNull(item);
@@ -3157,7 +3154,7 @@ namespace System.Data.Entity.Core.Objects
                     ObjectStateManager.ChangeState(relationshipEntry, EntityState.Unchanged, EntityState.Added);
                     relationshipEntry.State = EntityState.Added;
                 }
-                    // Deleted -> Detached
+                // Deleted -> Detached
                 else if (relationshipEntry.State
                          == EntityState.Deleted)
                 {
@@ -3553,9 +3550,9 @@ namespace System.Data.Entity.Core.Objects
                 {
                     var relatedEnd = WrappedEntity.RelationshipManager.GetRelatedEndInternal(
                         dependent.Item1.ElementType.FullName, dependent.Item2.FromRole.Name) as EntityReference;
-                    
+
                     Debug.Assert(relatedEnd != null, "Expected non-null EntityReference to principal.");
-                    
+
                     // Prevent fixup using values that are effectively null but aren't nullable.
                     if (!ForeignKeyFactory.IsConceptualNullKey(relatedEnd.CachedForeignKey))
                     {
@@ -3748,6 +3745,7 @@ namespace System.Data.Entity.Core.Objects
         ///     If it would, then an exception is thrown.  If it would not and we can safely overwrite the existing
         ///     value, then true is returned.  If it would not but we should not overwrite the existing value,
         ///     then false is returned.
+        /// </summary>
         private static bool WillNotRefSteal(EntityReference refToPrincipal, IEntityWrapper wrappedPrincipal)
         {
             var dependentEnd = refToPrincipal.GetOtherEndOfRelationship(wrappedPrincipal);
@@ -3830,7 +3828,6 @@ namespace System.Data.Entity.Core.Objects
         ///     Fixup the FKs by the current reference values
         ///     Do this in the order of fixing up values from the principal ends first, and then propogate those values to the dependents
         /// </summary>
-        /// <param name="visited"> </param>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void FixupForeignKeysByReference(List<EntityEntry> visited)
         {
@@ -4084,8 +4081,8 @@ namespace System.Data.Entity.Core.Objects
                         Debug.Assert(!originalKeyIsConceptualNull, "If FK is nullable there shouldn't be a conceptual null set");
                         AddDetectedRelationship(tm.DeletedRelationshipsByForeignKey, originalKey, entityReference);
                     }
-                        //If there is a Conceptual Null set we need to check if the current values
-                        //are different from the values when the Conceptual Null was created
+                    //If there is a Conceptual Null set we need to check if the current values
+                    //are different from the values when the Conceptual Null was created
                     else if (!currentKey.Equals(originalKey)
                              && (!originalKeyIsConceptualNull || ForeignKeyFactory.IsConceptualNullKeyChanged(originalKey, currentKey)))
                     {

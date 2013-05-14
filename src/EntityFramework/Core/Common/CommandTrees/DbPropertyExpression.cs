@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets or sets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the instance from which the property should be retrieved.
+        ///     Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the instance from which the property should be retrieved.
         /// </summary>
         /// <returns>
         ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the instance from which the property should be retrieved.

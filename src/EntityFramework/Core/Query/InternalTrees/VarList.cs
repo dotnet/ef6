@@ -25,7 +25,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Not so trivial constructor
         /// </summary>
-        /// <param name="vars"> </param>
         internal VarList(IEnumerable<Var> vars)
             : base(vars)
         {

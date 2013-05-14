@@ -41,7 +41,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets or sets the columns that are indexed.
+        ///     Gets the columns that are indexed.
         /// </summary>
         public IList<string> Columns
         {

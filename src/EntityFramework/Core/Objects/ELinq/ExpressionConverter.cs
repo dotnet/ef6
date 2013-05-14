@@ -679,8 +679,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         ///     Gets the target type for an Is or As expression.
         /// </summary>
-        /// <param name="toClrType"> Test or return type. </param>
         /// <param name="operationType"> Type of operation; used in error reporting. </param>
+        /// <param name="toClrType"> Test or return type. </param>
         /// <param name="fromClrType"> Input type in CLR metadata. </param>
         /// <returns> Appropriate target type usage. </returns>
         private TypeUsage GetIsOrAsTargetType(ExpressionType operationType, Type toClrType, Type fromClrType)
@@ -1384,7 +1384,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         return constant.Equal(unknown); // same as EqualsPattern.PositiveNullEqualityNonComposable
                     }
                     return constant.Equal(unknown).And(unknown.IsNull().Not());
-                    // add more logic to avoid undefined result for true clr semantics
+                // add more logic to avoid undefined result for true clr semantics
                 default:
                     Debug.Fail("unknown pattern");
                     return null;
@@ -1439,6 +1439,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="insertPercentAtEnd"> Should '%' be inserted at the end of the pattern </param>
         /// <param name="defaultTranslator"> The delegate that provides the default translation </param>
         /// <returns> The translation </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private DbExpression TranslateFunctionIntoLike(
             MethodCallExpression call, bool insertPercentAtStart, bool insertPercentAtEnd,
             Func<ExpressionConverter, MethodCallExpression, DbExpression, DbExpression, DbExpression> defaultTranslator)
@@ -1545,7 +1546,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="functionName"> Should represent a non-aggregate canonical function </param>
         /// <param name="Expression"> Passed only for error handling purposes </param>
         /// <param name="linqArguments"> </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private DbFunctionExpression TranslateIntoCanonicalFunction(
             string functionName, Expression Expression, params Expression[] linqArguments)
         {
@@ -1563,7 +1564,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <param name="functionName"> Should represent a non-aggregate canonical function </param>
         /// <param name="Expression"> Passed only for error handling purposes </param>
         /// <param name="translatedArguments"> </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private DbFunctionExpression CreateCanonicalFunction(
             string functionName, Expression Expression, params DbExpression[] translatedArguments)
         {
@@ -1579,11 +1580,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         ///     Finds a canonical function with the given functionName and argumentTypes
         /// </summary>
-        /// <param name="functionName"> </param>
-        /// <param name="argumentTypes"> </param>
-        /// <param name="isGroupAggregateFunction"> </param>
-        /// <param name="Expression"> </param>
-        /// <returns> </returns>
         private EdmFunction FindCanonicalFunction(
             string functionName, IList<TypeUsage> argumentTypes, bool isGroupAggregateFunction, Expression Expression)
         {
@@ -1593,12 +1589,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         ///     Finds a function with the given namespaceName, functionName and argumentTypes
         /// </summary>
-        /// <param name="namespaceName"> </param>
-        /// <param name="functionName"> </param>
-        /// <param name="argumentTypes"> </param>
-        /// <param name="isGroupAggregateFunction"> </param>
-        /// <param name="Expression"> </param>
-        /// <returns> </returns>
         private EdmFunction FindFunction(
             string namespaceName, string functionName, IList<TypeUsage> argumentTypes, bool isGroupAggregateFunction, Expression Expression)
         {
@@ -1624,7 +1614,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         ///     Helper method for FindFunction
         /// </summary>
-        /// <param name="Expression"> </param>
         private static void ThrowUnresolvableFunction(Expression Expression)
         {
             if (Expression.NodeType
@@ -1647,7 +1636,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         ///     Helper method for FindCanonicalFunction
         /// </summary>
-        /// <param name="Expression"> </param>
         private static void ThrowUnresolvableFunctionOverload(Expression Expression, bool isAmbiguous)
         {
             if (Expression.NodeType

@@ -51,7 +51,7 @@ namespace System.Data.Entity.Internal
         ///     If the workspace is not compatible with the provider manifest obtained from the given
         ///     connection then an exception is thrown.
         /// </summary>
-        /// <param name="storeConnection"> The connection to use to create or check SSDL provider info. </param>
+        /// <param name="connection"> The connection to use to create or check SSDL provider info. </param>
         /// <returns> The workspace. </returns>
         public MetadataWorkspace GetMetadataWorkspace(DbConnection connection)
         {

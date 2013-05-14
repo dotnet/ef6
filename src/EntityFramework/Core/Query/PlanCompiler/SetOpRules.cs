@@ -38,7 +38,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="context"> Rule processing context </param>
         /// <param name="setOpNode"> the current setop tree </param>
-        /// <param name="filterNodeIndex"> Index of the filter node in the setop </param>
         /// <param name="newNode"> transformed subtree </param>
         /// <returns> transformation status </returns>
         private static bool ProcessSetOpOverEmptySet(RuleProcessingContext context, Node setOpNode, out Node newNode)

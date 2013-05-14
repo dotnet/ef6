@@ -12,8 +12,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Constrcut a new member mapping metadata object
         /// </summary>
-        /// <param name="edmProperty"> </param>
-        /// <param name="clrProperty"> </param>
         internal ObjectPropertyMapping(EdmProperty edmProperty, EdmProperty clrProperty)
             :
                 base(edmProperty, clrProperty)

@@ -42,8 +42,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         /// <param name="name"> The name of this enum type. </param>
         /// <param name="namespaceName"> The namespace this enum type belongs to. </param>
-        /// <param name="isFlags"> Indicates whether the enum type is defined as flags (i.e. can be treated as a bit field). </param>
         /// <param name="underlyingType"> Underlying type of this enumeration type. </param>
+        /// <param name="isFlags"> Indicates whether the enum type is defined as flags (i.e. can be treated as a bit field). </param>
         /// <param name="dataSpace"> DataSpace this enum type lives in. Can be either CSpace or OSpace </param>
         /// <exception cref="System.ArgumentNullException">Thrown if name or namespace arguments are null</exception>
         /// <remarks>

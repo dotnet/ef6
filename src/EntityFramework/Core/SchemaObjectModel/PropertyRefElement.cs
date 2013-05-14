@@ -20,7 +20,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /// <summary>
         ///     construct a KeyProperty object
         /// </summary>
-        /// <param name="parentElement"> </param>
         public PropertyRefElement(SchemaElement parentElement)
             : base(parentElement)
         {
@@ -52,8 +51,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ///     Please make sure that the caller of this methods handles the error case and add errors
         ///     appropriately
         /// </summary>
-        /// <param name="entityType"> </param>
-        /// <returns> </returns>
         internal bool ResolveNames(SchemaEntityType entityType)
         {
             if (string.IsNullOrEmpty(Name))

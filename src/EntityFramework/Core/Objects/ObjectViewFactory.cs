@@ -207,7 +207,6 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="objectViewDataType"> The type of class that implements the IObjectViewData to be used by the ObjectView. </param>
         /// <param name="viewData"> The IObjectViewData to be used by the ObjectView to access the binding list. </param>
         /// <param name="eventDataSource"> Event source used by ObjectView for entity and membership changes. </param>
-        /// <returns> </returns>
         private static IBindingList CreateObjectView(Type clrElementType, Type objectViewDataType, object viewData, object eventDataSource)
         {
             var objectViewType = _genericObjectViewType.MakeGenericType(clrElementType);
@@ -235,7 +234,6 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         /// <param name="typeUsage"> The TypeUsage to be mapped to O-Space. Should either be associated with C-Space or O-Space. </param>
         /// <param name="objectContext"> ObjectContext used to perform type mapping. </param>
-        /// <returns> </returns>
         private static TypeUsage GetOSpaceTypeUsage(TypeUsage typeUsage, ObjectContext objectContext)
         {
             TypeUsage ospaceTypeUsage;

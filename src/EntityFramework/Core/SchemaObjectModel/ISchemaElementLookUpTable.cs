@@ -10,23 +10,12 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     internal interface ISchemaElementLookUpTable<T>
         where T : SchemaElement
     {
-        /// <summary>
-        /// </summary>
         int Count { get; }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="key"> </param>
-        /// <returns> </returns>
         bool ContainsKey(string key);
 
-        /// <summary>
-        /// </summary>
         T this[string key] { get; }
 
-        /// <summary>
-        /// </summary>
-        /// <returns> </returns>
         IEnumerator<T> GetEnumerator();
 
         /// <summary>

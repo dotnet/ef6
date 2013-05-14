@@ -22,7 +22,6 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         ///     Asserts types are in Model space
         /// </summary>
-        /// <param name="typeUsage"> </param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "CSpace")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PrimitiveType")]
         [Conditional("DEBUG")]
@@ -60,7 +59,6 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         ///     Asserts querycommandtrees are in model space type terms
         /// </summary>
-        /// <param name="commandTree"> </param>
         [Conditional("DEBUG")]
         internal static void AssertEdmType(DbCommandTree commandTree)
         {
@@ -78,8 +76,6 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         ///     Determines whether a given typeUsage is valid as OrderBy sort key
         /// </summary>
-        /// <param name="typeUsage"> </param>
-        /// <returns> </returns>
         internal static bool IsValidSortOpKeyType(TypeUsage typeUsage)
         {
             if (TypeSemantics.IsRowType(typeUsage))
@@ -103,8 +99,6 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         ///     Determines whether a given typeusage is valid as GroupBy key
         /// </summary>
-        /// <param name="typeUsage"> </param>
-        /// <returns> </returns>
         internal static bool IsValidGroupKeyType(TypeUsage typeUsage)
         {
             return IsSetComparableOpType(typeUsage);
@@ -113,8 +107,6 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         ///     Determine wheter a given typeusage is valid for Distinct operator
         /// </summary>
-        /// <param name="typeUsage"> </param>
-        /// <returns> </returns>
         internal static bool IsValidDistinctOpType(TypeUsage typeUsage)
         {
             return IsSetComparableOpType(typeUsage);
@@ -123,8 +115,6 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         ///     Determine wheter a given typeusage is valid for set comparison operator such as UNION, INTERSECT and EXCEPT
         /// </summary>
-        /// <param name="typeUsage"> </param>
-        /// <returns> </returns>
         internal static bool IsSetComparableOpType(TypeUsage typeUsage)
         {
             if (Helper.IsEntityType(typeUsage.EdmType)
@@ -155,8 +145,6 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         ///     Returns true if typeUsage type is valid for IS [NOT] NULL (expr) operator
         /// </summary>
-        /// <param name="typeUsage"> </param>
-        /// <returns> </returns>
         internal static bool IsValidIsNullOpType(TypeUsage typeUsage)
         {
             return TypeSemantics.IsReferenceType(typeUsage) ||
@@ -479,8 +467,6 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         ///     Retrieves Properties and/or RelationshipEnds declared by the specified type or any base type.
         /// </summary>
-        /// <param name="type"> </param>
-        /// <returns> </returns>
         internal static IBaseList<EdmMember> GetAllStructuralMembers(TypeUsage type)
         {
             return GetAllStructuralMembers(type.EdmType);
@@ -507,8 +493,6 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         ///     Retrieves Properties and/or RelationshipEnds declared by (and ONLY by) the specified type.
         /// </summary>
-        /// <param name="type"> </param>
-        /// <returns> </returns>
         internal static IEnumerable GetDeclaredStructuralMembers(TypeUsage type)
         {
             return GetDeclaredStructuralMembers(type.EdmType);
@@ -517,8 +501,6 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         ///     Retrieves Properties and/or RelationshipEnds declared by (and ONLY by) the specified type.
         /// </summary>
-        /// <param name="edmType"> </param>
-        /// <returns> </returns>
         internal static IEnumerable GetDeclaredStructuralMembers(EdmType edmType)
         {
             switch (edmType.BuiltInTypeKind)
@@ -672,7 +654,6 @@ namespace System.Data.Entity.Core.Common
         ///     Converts the given CLR type into a DbType
         /// </summary>
         /// <param name="clrType"> The CLR type to convert </param>
-        /// <returns> </returns>
         internal static DbType ConvertClrTypeToDbType(Type clrType)
         {
             switch (Type.GetTypeCode(clrType))
@@ -786,8 +767,6 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         ///     returns a Typeusage
         /// </summary>
-        /// <param name="primitiveTypeKind"> </param>
-        /// <returns> </returns>
         internal static TypeUsage GetLiteralTypeUsage(PrimitiveTypeKind primitiveTypeKind)
         {
             // all clr strings by default are unicode

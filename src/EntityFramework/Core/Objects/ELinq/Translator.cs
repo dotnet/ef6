@@ -239,9 +239,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
             ///     If the given property info corresponds to a Visual Basic property,
             ///     it also initializes the Visual Basic translators if they have not been initialized
             /// </summary>
-            /// <param name="propertyInfo"> </param>
-            /// <param name="propertyTranslator"> </param>
-            /// <returns> </returns>
             private static bool TryGetTranslator(PropertyInfo propertyInfo, out PropertyTranslator propertyTranslator)
             {
                 //If the type is generic, we try to match the generic property

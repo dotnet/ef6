@@ -26,8 +26,6 @@ namespace System.Data.Entity.Core.Common.QueryCache
         /// <summary>
         ///     cache entry constructor
         /// </summary>
-        /// <param name="queryCacheKey"> </param>
-        /// <param name="target"> </param>
         internal QueryCacheEntry(QueryCacheKey queryCacheKey, object target)
         {
             _queryCacheKey = queryCacheKey;

@@ -4,8 +4,6 @@ namespace System.Data.Entity.Core.Objects
 {
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue")]
     public enum RefreshMode
     {

@@ -13,9 +13,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="id"> </param>
-        /// <param name="table"> </param>
-        /// <param name="columnMetadata"> </param>
         internal ColumnVar(int id, Table table, ColumnMD columnMetadata)
             : base(id, VarType.Column, columnMetadata.Type)
         {
@@ -42,8 +39,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Get the name of this column var
         /// </summary>
-        /// <param name="name"> </param>
-        /// <returns> </returns>
         internal override bool TryGetName(out string name)
         {
             name = m_columnMetadata.Name;

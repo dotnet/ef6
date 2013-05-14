@@ -2,8 +2,6 @@
 
 namespace System.Data.Entity.Core.Objects
 {
-    /// <summary>
-    /// </summary>
     public enum MergeOption
     {
         /// <summary>

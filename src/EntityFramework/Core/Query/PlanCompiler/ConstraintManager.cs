@@ -55,7 +55,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Load all relationships in this entity container
         /// </summary>
-        /// <param name="entityContainer"> </param>
         internal void LoadRelationships(md.EntityContainer entityContainer)
         {
             // Check to see if I've already loaded information for this entity container
@@ -132,7 +131,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Is this relationship a binary relationship (ie) does it have exactly 2 end points?
         ///     This should ideally be a method supported by RelationType itself
         /// </summary>
-        /// <param name="relationshipType"> </param>
         /// <returns> true, if this is a binary relationship </returns>
         private static bool IsBinary(md.RelationshipType relationshipType)
         {

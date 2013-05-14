@@ -84,7 +84,7 @@ namespace System.Data.Entity.Infrastructure
         ///     The other dictionary must be based on the same type as this dictionary, or a type derived
         ///     from the type for this dictionary.
         /// </summary>
-        /// <param name="dictionary"> The dictionary to read values from. </param>
+        /// <param name="propertyValues"> The dictionary to read values from. </param>
         public void SetValues(DbPropertyValues propertyValues)
         {
             Check.NotNull(propertyValues, "propertyValues");

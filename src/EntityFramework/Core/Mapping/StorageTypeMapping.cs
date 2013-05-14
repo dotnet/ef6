@@ -89,7 +89,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Add a fragment mapping as child of this type mapping
         /// </summary>
-        /// <param name="fragment"> </param>
         public void AddFragment(StorageMappingFragment fragment)
         {
             Check.NotNull(fragment, "fragment");

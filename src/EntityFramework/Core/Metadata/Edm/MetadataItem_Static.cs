@@ -594,7 +594,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="builtInType"> The built In type which is getting initialized </param>
         /// <param name="name"> name of the built in type </param>
         /// <param name="isAbstract"> whether the type is abstract or not </param>
-        /// <param name="isSealed"> whether the type is sealed or not </param>
         /// <param name="baseType"> The base type of the built in type </param>
         private static void InitializeBuiltInTypes(
             ComplexType builtInType,

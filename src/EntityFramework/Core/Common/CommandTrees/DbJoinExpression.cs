@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _right; }
         }
 
-        /// <summary>Gets or sets the join condition to apply.</summary>
+        /// <summary>Gets the join condition to apply.</summary>
         /// <returns>The join condition to apply.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">

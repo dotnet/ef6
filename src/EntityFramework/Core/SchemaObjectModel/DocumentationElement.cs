@@ -19,9 +19,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="parentElement"> </param>
         public DocumentationElement(SchemaElement parentElement)
             : base(parentElement)
         {
@@ -80,9 +77,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return true;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleSummaryElement(XmlReader reader)
         {
             var text = new TextElement(this);
@@ -92,9 +86,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _metdataDocumentation.Summary = text.Value;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void HandleLongDescriptionElement(XmlReader reader)
         {
             var text = new TextElement(this);

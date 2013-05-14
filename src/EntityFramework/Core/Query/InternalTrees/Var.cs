@@ -48,8 +48,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Try to get the name of this Var.
         /// </summary>
-        /// <param name="name"> </param>
-        /// <returns> </returns>
         internal virtual bool TryGetName(out string name)
         {
             name = null;
@@ -59,7 +57,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Debugging support
         /// </summary>
-        /// <returns> </returns>
         public override string ToString()
         {
             return String.Format(CultureInfo.InvariantCulture, "{0}", Id);

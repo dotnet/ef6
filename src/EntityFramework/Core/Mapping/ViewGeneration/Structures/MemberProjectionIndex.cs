@@ -169,8 +169,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// <summary>
         ///     Starting at the <paramref name="member" />, recursively generates <see cref="MemberPath" />s for the fields embedded in it.
         /// </summary>
+        /// <param name="index"> </param>
+        /// <param name="edmItemCollection"> </param>
         /// <param name="member"> corresponds to a value of an Entity or Complex or Association type </param>
         /// <param name="needKeysOnly"> indicates whether we need to only collect members that are keys </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static void GatherPartialSignature(
             MemberProjectionIndex index, EdmItemCollection edmItemCollection, MemberPath member, bool needKeysOnly)
         {
@@ -213,9 +216,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         ///     and the attributes.
         ///     If <paramref name="needKeysOnly" />=true, collect the key fields only.
         /// </summary>
+        /// <param name="index"> </param>
+        /// <param name="edmItemCollection"> </param>
+        /// <param name="member"> </param>
         /// <param name="possibleType">
         ///     the <paramref name="member" /> 's type or one of its subtypes
         /// </param>
+        /// <param name="needKeysOnly"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static void GatherSignatureFromTypeStructuralMembers(
             MemberProjectionIndex index,
             EdmItemCollection edmItemCollection,

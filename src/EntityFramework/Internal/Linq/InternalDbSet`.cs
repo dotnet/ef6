@@ -6,6 +6,7 @@ namespace System.Data.Entity.Internal.Linq
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -18,9 +19,9 @@ namespace System.Data.Entity.Internal.Linq
     /// <typeparam name="TEntity"> The type of the entity. </typeparam>
     internal class InternalDbSet<TEntity> : DbSet, IQueryable<TEntity>
 #if !NET40
-                                            , IDbAsyncEnumerable<TEntity>
+, IDbAsyncEnumerable<TEntity>
 #endif
-        where TEntity : class
+ where TEntity : class
     {
         #region Fields and constructors
 
@@ -44,6 +45,7 @@ namespace System.Data.Entity.Internal.Linq
         /// <param name="internalContext"> </param>
         /// <param name="internalSet"> The internal set to wrap, or null if a new internal set should be created. </param>
         /// <returns> The set. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public static InternalDbSet<TEntity> Create(InternalContext internalContext, IInternalSet internalSet)
         {
             return

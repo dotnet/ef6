@@ -15,9 +15,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="parentElement"> </param>
         public TextElement(SchemaElement parentElement)
             : base(parentElement)
         {
@@ -27,8 +24,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Properties
 
-        /// <summary>
-        /// </summary>
         public string Value { get; private set; }
 
         #endregion
@@ -45,9 +40,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Private Methods
 
-        /// <summary>
-        /// </summary>
-        /// <param name="reader"> </param>
         private void TextElementTextHandler(XmlReader reader)
         {
             var text = reader.Value;

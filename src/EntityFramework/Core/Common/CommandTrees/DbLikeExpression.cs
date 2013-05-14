@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             _escape = escape;
         }
 
-        /// <summary>Gets or sets an expression that specifies the string to compare against the given pattern.</summary>
+        /// <summary>Gets an expression that specifies the string to compare against the given pattern.</summary>
         /// <returns>An expression that specifies the string to compare against the given pattern.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _argument; }
         }
 
-        /// <summary>Gets or sets an expression that specifies the pattern against which the given string should be compared.</summary>
+        /// <summary>Gets an expression that specifies the pattern against which the given string should be compared.</summary>
         /// <returns>An expression that specifies the pattern against which the given string should be compared.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _pattern; }
         }
 
-        /// <summary>Gets or sets an expression that provides an optional escape string to use for the comparison.</summary>
+        /// <summary>Gets an expression that provides an optional escape string to use for the comparison.</summary>
         /// <returns>An expression that provides an optional escape string to use for the comparison.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">

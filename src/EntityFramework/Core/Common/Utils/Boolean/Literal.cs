@@ -11,7 +11,6 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     ///     or
     ///     !Term
     /// </summary>
-    /// <typeparam name="T_Identifier"> </typeparam>
     internal sealed class Literal<T_Identifier> : NormalFormNode<T_Identifier>,
                                                   IEquatable<Literal<T_Identifier>>
     {

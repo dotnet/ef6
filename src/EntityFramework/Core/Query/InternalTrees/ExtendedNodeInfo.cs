@@ -65,8 +65,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         ///     Compute the hash value for this node
         /// </summary>
-        /// <param name="cmd"> </param>
-        /// <param name="n"> </param>
         internal override void ComputeHashValue(Command cmd, Node n)
         {
             base.ComputeHashValue(cmd, n);

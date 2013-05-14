@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
@@ -22,8 +23,6 @@ namespace System.Data.Entity.Core.Mapping
         ///     Constructor to create an instance of DefaultObjectMappingItemCollection.
         ///     To start with we will create a Schema under which maps will be created.
         /// </summary>
-        /// <param name="edmCollection"> </param>
-        /// <param name="objectCollection"> </param>
         public DefaultObjectMappingItemCollection(
             EdmItemCollection edmCollection,
             ObjectItemCollection objectCollection)
@@ -91,6 +90,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="ignoreCase"> true for case-insensitive lookup </param>
         /// <param name="map"> </param>
         /// <returns> Returns false if no match found. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal override bool TryGetMap(string identity, DataSpace typeSpace, bool ignoreCase, out Map map)
         {
             EdmType cdmType = null;
@@ -186,6 +186,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         /// <param name="map"> </param>
         /// <returns> Returns false if no match found. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal override bool TryGetMap(string identity, DataSpace typeSpace, out Map map)
         {
             return TryGetMap(identity, typeSpace, false /*ignoreCase*/, out map);
@@ -194,7 +195,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Search for a Mapping metadata with the specified type key.
         /// </summary>
-        /// <param name="item"> </param>
         internal override Map GetMap(GlobalItem item)
         {
             Map map;
@@ -208,8 +208,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Search for a Mapping metadata with the specified type key.
         /// </summary>
-        /// <param name="item"> </param>
-        /// <param name="map"> </param>
         /// <returns> Returns false if no match found. </returns>
         internal override bool TryGetMap(GlobalItem item, out Map map)
         {
@@ -247,8 +245,6 @@ namespace System.Data.Entity.Core.Mapping
         ///     the type in Object space contains the members with the same name as those of defined in
         ///     C space. It is not required the otherway.
         /// </summary>
-        /// <param name="cdmType"> </param>
-        /// <param name="clrType"> </param>
         private Map GetDefaultMapping(EdmType cdmType, EdmType clrType)
         {
             DebugCheck.NotNull(cdmType);
@@ -323,7 +319,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Convert CSpace TypeMetadata into OSpace TypeMetadata
         /// </summary>
-        /// <param name="cdmType"> </param>
         /// <returns> OSpace type metadata </returns>
         private EdmType ConvertCSpaceToOSpaceType(EdmType cdmType)
         {
@@ -365,7 +360,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Convert CSpace TypeMetadata into OSpace TypeMetadata
         /// </summary>
-        /// <param name="clrType"> </param>
         /// <returns> OSpace type metadata </returns>
         private EdmType ConvertOSpaceToCSpaceType(EdmType clrType)
         {
@@ -453,9 +447,6 @@ namespace System.Data.Entity.Core.Mapping
         ///     and creates a member map between them. These member maps are added
         ///     as children of the object mapping.
         /// </summary>
-        /// <param name="cdmType"> </param>
-        /// <param name="objectType"> </param>
-        /// <param name="ocItemCollection"> </param>
         internal static ObjectTypeMapping LoadObjectMapping(
             EdmType cdmType, EdmType objectType, DefaultObjectMappingItemCollection ocItemCollection)
         {
@@ -516,9 +507,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Tries and get the mapping ospace member for the given edmMember and the ospace type
         /// </summary>
-        /// <param name="edmMember"> </param>
-        /// <param name="objectType"> </param>
-        /// <returns> </returns
         private static EdmMember GetObjectMember(EdmMember edmMember, StructuralType objectType)
         {
             // Assuming that we will have a single member in O-space for a member in C space
@@ -620,9 +608,6 @@ namespace System.Data.Entity.Core.Mapping
         ///     Validates the scalar property on the cspace side and ospace side and creates a new
         ///     ObjectPropertyMapping, if everything maps property
         /// </summary>
-        /// <param name="edmProperty"> </param>
-        /// <param name="objectProperty"> </param>
-        /// <returns> </returns>
         private static ObjectPropertyMapping LoadScalarPropertyMapping(EdmProperty edmProperty, EdmProperty objectProperty)
         {
             Debug.Assert(
@@ -638,12 +623,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Load the entity type or complex type mapping
         /// </summary>
-        /// <param name="objectMapping"> </param>
-        /// <param name="edmType"> </param>
-        /// <param name="objectType"> </param>
-        /// <param name="ocItemCollection">
-        ///     <param name="typeMappings"> </param>
-        /// </param>
         private static void LoadEntityTypeOrComplexTypeMapping(
             ObjectTypeMapping objectMapping, EdmType edmType, EdmType objectType,
             DefaultObjectMappingItemCollection ocItemCollection, Dictionary<string, ObjectTypeMapping> typeMappings)
@@ -788,11 +767,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         ///     Loads Association Type Mapping
         /// </summary>
-        /// <param name="objectMapping"> </param>
-        /// <param name="edmType"> </param>
-        /// <param name="objectType"> </param>
-        /// <param name="ocItemCollection"> </param>
-        /// <param name="typeMappings"> </param>
         private static void LoadAssociationTypeMapping(
             ObjectTypeMapping objectMapping, EdmType edmType, EdmType objectType,
             DefaultObjectMappingItemCollection ocItemCollection, Dictionary<string, ObjectTypeMapping> typeMappings)
@@ -836,11 +810,6 @@ namespace System.Data.Entity.Core.Mapping
         ///     It goes through the CDM members of the Complex Cdm type and
         ///     tries to find the corresponding members in Complex Clr type.
         /// </summary>
-        /// <param name="containingEdmMember"> </param>
-        /// <param name="containingClrMember"> </param>
-        /// <param name="ocItemCollection"> </param>
-        /// <param name="typeMappings"> </param>
-        /// <returns> </returns>
         private static ObjectComplexPropertyMapping LoadComplexMemberMapping(
             EdmProperty containingEdmMember, EdmProperty containingClrMember,
             DefaultObjectMappingItemCollection ocItemCollection, Dictionary<string, ObjectTypeMapping> typeMappings)

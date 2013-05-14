@@ -19,9 +19,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     VarRefColumnMap
         /// </summary>
-        /// <param name="columnMap"> </param>
-        /// <param name="typesNeedingNullSentinel"> </param>
-        /// <returns> </returns>
         internal override void Visit(VarRefColumnMap columnMap, HashSet<string> typesNeedingNullSentinel)
         {
             AddTypeNeedingNullSentinel(typesNeedingNullSentinel, columnMap.Type);
@@ -31,8 +28,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Recursively add any Row types to the list of types needing a sentinel.
         /// </summary>
-        /// <param name="typesNeedingNullableSentinel"> </param>
-        /// <param name="typeUsage"> </param>
         private static void AddTypeNeedingNullSentinel(HashSet<string> typesNeedingNullSentinel, TypeUsage typeUsage)
         {
             if (TypeSemantics.IsCollectionType(typeUsage))
@@ -57,8 +52,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Marks the given typeUsage as needing a null sentinel.
         ///     Call this method instead of calling Add over the HashSet directly, to ensure consistency.
         /// </summary>
-        /// <param name="typesNeedingNullSentinel"> </param>
-        /// <param name="typeUsage"> </param>
         internal static void MarkAsNeedingNullSentinel(HashSet<string> typesNeedingNullSentinel, TypeUsage typeUsage)
         {
             typesNeedingNullSentinel.Add(typeUsage.EdmType.Identity);

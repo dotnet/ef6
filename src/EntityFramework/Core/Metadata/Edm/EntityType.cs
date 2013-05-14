@@ -32,8 +32,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="name"> name of the entity type </param>
         /// <param name="namespaceName"> namespace of the entity type </param>
         /// <param name="dataSpace"> dataspace in which the EntityType belongs to </param>
-        /// <param name="members"> members of the entity type [property and navigational property] </param>
         /// <param name="keyMemberNames"> key members for the type </param>
+        /// <param name="members"> members of the entity type [property and navigational property] </param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
         internal EntityType(
             string name,
@@ -252,8 +252,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="name">The name of the entity type.</param>
         /// <param name="namespaceName">The namespace of the entity type.</param>
         /// <param name="dataSpace">The dataspace in which the EntityType belongs to.</param>
-        /// <param name="members">Members of the entity type (primitive and navigation properties).</param>
         /// <param name="keyMemberNames">Name of key members for the type.</param>
+        /// <param name="members">Members of the entity type (primitive and navigation properties).</param>
         /// <param name="metadataProperties">Metadata properties to be associated with the instance.</param>
         /// <exception cref="System.ArgumentException">Thrown if either name, namespace arguments are null.</exception>
         /// <notes>The newly created EntityType will be read only.</notes>

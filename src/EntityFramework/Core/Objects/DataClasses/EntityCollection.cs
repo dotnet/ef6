@@ -376,7 +376,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 #endif
 
         /// <summary>Adds an object to the collection.</summary>
-        /// <param name="entity">
+        /// <param name="item">
         ///     An object to add to the collection.  entity  must implement
         ///     <see
         ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.IEntityWithRelationships" />
@@ -393,7 +393,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Add the item to the underlying collection
         /// </summary>
-        /// <param name="entity"> </param>
         internal override void DisconnectedAdd(IEntityWrapper wrappedEntity)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -415,8 +414,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Remove the item from the underlying collection
         /// </summary>
-        /// <param name="entity"> </param>
-        /// <param name="applyConstraints"> </param>
         internal override bool DisconnectedRemove(IEntityWrapper wrappedEntity)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -436,7 +433,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Removes an object from the collection and marks the relationship for deletion.</summary>
         /// <returns>true if item was successfully removed; otherwise, false. </returns>
-        /// <param name="entity">The object to remove from the collection.</param>
+        /// <param name="item">The object to remove from the collection.</param>
         /// <exception cref="T:System.ArgumentNullException"> entity  object is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">The  entity  object is not attached to the same object context.-or-The  entity  object does not have a valid relationship manager.</exception>
         public bool Remove(TEntity item)
@@ -568,10 +565,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="entity"> </param>
-        /// <param name="relationshipAlreadyExists"> </param>
         /// <returns> True if the verify succeeded, False if the Add should no-op </returns>
         internal override bool VerifyEntityForAdd(IEntityWrapper wrappedEntity, bool relationshipAlreadyExists)
         {
@@ -609,9 +602,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Remove from the RelatedEnd
         /// </summary>
-        /// <param name="wrappedEntity"> </param>
-        /// <param name="resetIsLoaded"> </param>
-        /// <returns> </returns>
         internal override bool RemoveFromLocalCache(IEntityWrapper wrappedEntity, bool resetIsLoaded, bool preserveForeignKey)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -631,8 +621,6 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Remove from the POCO collection
         /// </summary>
-        /// <param name="wrappedEntity"> </param>
-        /// <returns> </returns>
         internal override bool RemoveFromObjectCache(IEntityWrapper wrappedEntity)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -788,7 +776,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         ///     true if the object is found in the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />; otherwise, false.
         /// </returns>
-        /// <param name="entity">
+        /// <param name="item">
         ///     The object to locate in the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />.
         /// </param>
         public bool Contains(TEntity item)

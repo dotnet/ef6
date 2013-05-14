@@ -146,8 +146,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Get index of the element passed as the argument
         /// </summary>
-        /// <param name="value"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Design", "CA1061:DoNotHideBaseClassMethods")]
         public override int IndexOf(TDerived value)
         {
@@ -176,8 +174,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Get index of the element passed as the argument
         /// </summary>
-        /// <param name="item"> </param>
-        /// <returns> </returns>
         int IBaseList<TBase>.IndexOf(TBase item)
         {
             if (_predicate(item))

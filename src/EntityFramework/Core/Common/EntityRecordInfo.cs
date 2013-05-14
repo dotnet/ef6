@@ -44,10 +44,6 @@ namespace System.Data.Entity.Core.Common
             ValidateEntityType(entitySet);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="metadata"> </param>
-        /// <param name="entityKey"> </param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "entitySet")]
         internal EntityRecordInfo(EntityType metadata, EntityKey entityKey, EntitySet entitySet)
             : base(TypeUsage.Create(metadata))

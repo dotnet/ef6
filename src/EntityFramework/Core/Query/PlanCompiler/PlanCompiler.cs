@@ -111,8 +111,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Retail Assertion code.
         ///     Provides the ability to have retail asserts.
         /// </summary>
-        /// <param name="condition"> </param>
-        /// <param name="message"> </param>
         internal static void Assert(bool condition, string message)
         {
             if (!condition)
@@ -138,8 +136,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="ctree"> the input CQT </param>
         /// <param name="providerCommands"> list of provider commands </param>
         /// <param name="resultColumnMap"> column map for result assembly </param>
+        /// <param name="columnCount"> </param>
         /// <param name="entitySets"> the entity sets referenced in this query </param>
-        /// <returns> a compiled plan object </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal static void Compile(
@@ -182,25 +181,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
 #if DEBUG
-    /// <summary>
-    ///     Get the current plan compiler phase
-    /// </summary>
+        /// <summary>
+        ///     Get the current plan compiler phase
+        /// </summary>
         internal PlanCompilerPhase Phase
         {
             get { return m_phase; }
         }
 
         /// <summary>
-///     Sets the current plan compiler trace function to <paramref name="traceCallback" />, enabling plan compiler tracing
-/// </summary>
+        ///     Sets the current plan compiler trace function to <paramref name="traceCallback" />, enabling plan compiler tracing
+        /// </summary>
         internal static void TraceOn(Action<string, object> traceCallback)
         {
             s_traceCallback = traceCallback;
         }
 
         /// <summary>
-///     Sets the current plan compiler trace function to <c>null</c>, disabling plan compiler tracing
-/// </summary>
+        ///     Sets the current plan compiler trace function to <c>null</c>, disabling plan compiler tracing
+        /// </summary>
         internal static void TraceOff()
         {
             s_traceCallback = null;
@@ -221,7 +220,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Is the specified phase needed for this query?
         /// </summary>
         /// <param name="phase"> the phase in question </param>
-        /// <returns> </returns>
         internal bool IsPhaseNeeded(PlanCompilerPhase phase)
         {
             return ((m_neededPhases & (1 << (int)phase)) != 0);
@@ -245,7 +243,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// </summary>
         /// <param name="providerCommands"> list of provider commands </param>
         /// <param name="resultColumnMap"> column map for the result </param>
+        /// <param name="columnCount"> </param>
         /// <param name="entitySets"> the entity sets exposed in this query </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void Compile(
             out List<ProviderCommandInfo> providerCommands, out ColumnMap resultColumnMap, out int columnCount,
             out Set<md.EntitySet> entitySets)
@@ -275,13 +275,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             // The "optional" phases are AggregatePushdown, Normalization, NTE, NestPullup and JoinElimination
             //
             m_neededPhases = (1 << (int)PlanCompilerPhase.PreProcessor) |
-                             // (1 << (int)PlanCompilerPhase.AggregatePushdown) |
-                             // (1 << (int)PlanCompilerPhase.Normalization) |
-                             // (1 << (int)PlanCompilerPhase.NTE) |
+                // (1 << (int)PlanCompilerPhase.AggregatePushdown) |
+                // (1 << (int)PlanCompilerPhase.Normalization) |
+                // (1 << (int)PlanCompilerPhase.NTE) |
                              (1 << (int)PlanCompilerPhase.ProjectionPruning) |
-                             // (1 << (int)PlanCompilerPhase.NestPullup) |
+                // (1 << (int)PlanCompilerPhase.NestPullup) |
                              (1 << (int)PlanCompilerPhase.Transformations) |
-                             // (1 << (int)PlanCompilerPhase.JoinElimination) |
+                // (1 << (int)PlanCompilerPhase.JoinElimination) |
                              (1 << (int)PlanCompilerPhase.CodeGen);
 
             // Perform any necessary preprocessing
@@ -364,7 +364,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             CodeGen.Process(this, out providerCommands, out resultColumnMap, out columnCount);
 
 #if DEBUG
-    // GC.KeepAlive makes FxCop Grumpy.
+            // GC.KeepAlive makes FxCop Grumpy.
             var size = beforePreProcessor.Length;
             size = beforeAggregatePushdown.Length;
             size = beforeNormalization.Length;
@@ -388,9 +388,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Helper method for applying transformation rules
         /// </summary>
-        /// <param name="dumpString"> </param>
-        /// <param name="rulesGroup"> </param>
-        /// <returns> </returns>
         private bool ApplyTransformations(ref string dumpString, TransformationRulesGroup rulesGroup)
         {
             if (MayApplyTransformationRules)
@@ -404,8 +401,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Logic to perform between each compile phase
         /// </summary>
-        /// <param name="newPhase"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "newPhase")]
         private string SwitchToPhase(PlanCompilerPhase newPhase)
         {
@@ -453,7 +448,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     MaxNodeCountForTransformations or if it is specified that they should be applied
         ///     regardless of the size of the query.
         /// </summary>
-        /// <returns> </returns>
         private bool ComputeMayApplyTransformations()
         {
             //

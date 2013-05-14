@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         /// <summary>
         ///     Initializes eSQL command.
         /// </summary>
-        /// <param name="nsDeclList"> optional namespace imports </param>
+        /// <param name="nsImportList"> optional namespace imports </param>
         /// <param name="statement"> command statement </param>
         internal Command(NodeList<NamespaceImport> nsImportList, Statement statement)
         {

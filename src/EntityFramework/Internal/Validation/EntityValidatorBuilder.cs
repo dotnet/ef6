@@ -30,8 +30,7 @@ namespace System.Data.Entity.Internal.Validation
         /// <summary>
         ///     Builds an <see cref="EntityValidator" /> for the given <paramref name="entityEntry" />.
         /// </summary>
-        /// <param name="entityType"> The entity entry to build the validator for. </param>
-        /// <param name="targetType"> Whether the currently processed type is the target type or one of the ancestor types. </param>
+        /// <param name="entityEntry"> The entity entry to build the validator for. </param>
         /// <returns>
         ///     <see cref="EntityValidator" /> for the given <paramref name="entityEntry" /> . Possibly null if no validation has been specified for this entity type.
         /// </returns>

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Internal helper class for query
@@ -31,6 +32,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="ignoreCase"> true for case-insensitive lookup </param>
         /// <param name="usage"> </param>
         /// <returns> a list of types that have the specified full name but may differ by strong name </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal override bool TryGetTypeByName(string fullName, bool ignoreCase, out TypeUsage usage)
         {
             Check.NotEmpty(fullName, "fullName");
@@ -49,10 +51,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Returns the entity container in CSpace or SSpace
         /// </summary>
-        /// <param name="name"> </param>
-        /// <param name="ignoreCase"> </param>
-        /// <param name="entityContainer"> </param>
-        /// <returns> </returns>
         internal override bool TryGetEntityContainer(string name, bool ignoreCase, out EntityContainer entityContainer)
         {
             if (!base.TryGetEntityContainer(name, ignoreCase, out entityContainer))

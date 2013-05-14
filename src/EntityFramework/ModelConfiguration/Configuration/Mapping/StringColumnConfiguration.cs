@@ -37,7 +37,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="value">
         ///     The maximum length for the property. Setting 'null' will result in a default length being used for the column.
-        ///     <returns> The same StringColumnConfiguration instance so that multiple calls can be chained. </returns>
+        /// </param>
+        /// <returns> The same StringColumnConfiguration instance so that multiple calls can be chained. </returns>
         public new StringColumnConfiguration HasMaxLength(int? value)
         {
             base.HasMaxLength(value);

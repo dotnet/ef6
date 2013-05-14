@@ -33,7 +33,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
         /// </summary>
         /// <param name="sourceMigration"> The migration to update from. If null is supplied, a script to update the current database will be produced. </param>
         /// <param name="targetMigration"> The migration to update to. If null is supplied, a script to update to the latest migration will be produced. </param>
-        /// </param>
         /// <returns> The generated SQL script. </returns>
         public string ScriptUpdate(string sourceMigration, string targetMigration)
         {

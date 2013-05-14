@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         ///     Initializes query statement.
         /// </summary>
         /// <param name="functionDefList"> optional function definitions </param>
-        /// <param name="statement"> query top level expression </param>
+        /// <param name="expr"> query top level expression </param>
         internal QueryStatement(NodeList<FunctionDefinition> functionDefList, Node expr)
         {
             _functionDefList = functionDefList;

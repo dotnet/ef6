@@ -66,12 +66,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return qualifiedTypeName.Substring(lastDot + 1);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="schema"> </param>
-        /// <param name="reader"> </param>
-        /// <param name="value"> </param>
-        /// <returns> </returns>
         public static bool GetString(Schema schema, XmlReader reader, out string value)
         {
             DebugCheck.NotNull(schema);
@@ -97,12 +91,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return true;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="schema"> </param>
-        /// <param name="reader"> </param>
-        /// <param name="name"> </param>
-        /// <returns> </returns>
         public static bool GetDottedName(Schema schema, XmlReader reader, out string name)
         {
             if (!GetString(schema, reader, out name))
@@ -138,12 +126,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return true;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="schema"> </param>
-        /// <param name="reader"> </param>
-        /// <param name="name"> </param>
-        /// <returns> </returns>
         public static bool GetUndottedName(Schema schema, XmlReader reader, out string name)
         {
             DebugCheck.NotNull(schema);
@@ -181,12 +163,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return true;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="schema"> </param>
-        /// <param name="reader"> </param>
-        /// <param name="value"> </param>
-        /// <returns> </returns>
         public static bool GetBool(Schema schema, XmlReader reader, out bool value)
         {
             DebugCheck.NotNull(schema);
@@ -275,11 +251,6 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return false;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="lhsName"> </param>
-        /// <param name="rhsName"> </param>
-        /// <returns> </returns>
         public static int CompareNames(string lhsName, string rhsName)
         {
             return string.Compare(lhsName, rhsName, StringComparison.Ordinal);

@@ -13,11 +13,8 @@ namespace System.Data.Entity.Infrastructure
 
     /// <summary>
     ///     Exception thrown by <see cref="DbContext" /> when the saving of changes to the database fails.
-    ///     Note that update issues that involve independent associations will result in
-    ///     an
-    ///     <see cref="DbIndependentAssociationUpdateException"/ and not an instance of this exception. Note that state
-    ///         entries referenced by this exception are not serialized due to security and accesses to the state entries after
-    ///         serialization will return null.
+    ///     Note that state entries referenced by this exception are not serialized due to security and accesses to the
+    ///     state entries after serialization will return null.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
         Justification = "SerializeObjectState used instead")]

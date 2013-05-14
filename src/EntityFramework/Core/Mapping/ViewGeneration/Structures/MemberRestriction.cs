@@ -5,11 +5,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using DomainBoolExpr =
-        System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
+            System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
     using DomainTermExpr =
-        System.Data.Entity.Core.Common.Utils.Boolean.TermExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
+            System.Data.Entity.Core.Common.Utils.Boolean.TermExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
 
     /// <summary>
     ///     An abstract class that denotes the boolean expression: "var in values".
@@ -53,9 +54,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         /// <summary>
         ///     Creates a complete member restriction with the meaning "<paramref name="slot" /> in <paramref name="values" />".
         /// </summary>
+        /// <param name="slot"> </param>
+        /// <param name="values"> </param>
         /// <param name="possibleValues">
         ///     all the values that the <paramref name="slot" /> can take
         /// </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected MemberRestriction(MemberProjectedSlot slot, IEnumerable<Constant> values, IEnumerable<Constant> possibleValues)
             : this(slot, new Domain(values, possibleValues))
         {

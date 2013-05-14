@@ -202,44 +202,46 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public void InvalidateCache()
         {
-            _collectionData.IdentityDictionary 
+            _collectionData.IdentityDictionary
                 = new Lazy<Dictionary<string, OrderedIndex>>(
                 () =>
+                {
+                    if (_collectionData.OrderedList.Count > UseSortedListCrossover)
                     {
-                        if (_collectionData.OrderedList.Count > UseSortedListCrossover)
+                        // Rebuild the fast by-identity lookup dictionary
+
+                        var identityDictionary
+                            = new Dictionary<string, OrderedIndex>(
+                                _collectionData.OrderedList.Count,
+                                StringComparer.OrdinalIgnoreCase);
+
+                        for (var i = 0; i < _collectionData.OrderedList.Count; i++)
                         {
-                            // Rebuild the fast by-identity lookup dictionary
-
-                            var identityDictionary
-                                = new Dictionary<string, OrderedIndex>(
-                                    _collectionData.OrderedList.Count,
-                                    StringComparer.OrdinalIgnoreCase);
-
-                            for (var i = 0; i < _collectionData.OrderedList.Count; i++)
-                            {
-                                AddToDictionary(
-                                    identityDictionary,
-                                    _collectionData.OrderedList,
-                                    _collectionData.OrderedList[i].Identity,
-                                    i,
-                                    false);
-                            }
-
-                            return identityDictionary;
+                            AddToDictionary(
+                                identityDictionary,
+                                _collectionData.OrderedList,
+                                _collectionData.OrderedList[i].Identity,
+                                i,
+                                false);
                         }
 
-                        return null;
-                    });
+                        return identityDictionary;
+                    }
+
+                    return null;
+                });
         }
 
         /// <summary>
         ///     Adds an item to the identityDictionary
         /// </summary>
-        /// <param name="collectionData"> The collection data to add to </param>
+        /// <param name="identityDictionary"> The collection data to add to </param>
+        /// <param name="orderedList"> </param>
         /// <param name="identity"> The identity to add </param>
         /// <param name="index"> The identity's index in collection </param>
         /// <param name="updateIfFound"> Whether the item should be updated if a matching item is found. </param>
         /// <returns> Index of the added entity, possibly different from the index parameter if updateIfFound is true. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         private static int AddToDictionary(
             Dictionary<string, OrderedIndex> identityDictionary,
@@ -389,24 +391,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         collectionData.IdentityDictionary
                             = new Lazy<Dictionary<string, OrderedIndex>>(
                                 () =>
+                                {
+                                    var identityDictionary
+                                        = new Dictionary<string, OrderedIndex>(
+                                            collectionData.OrderedList.Count + 1,
+                                            StringComparer.OrdinalIgnoreCase);
+
+                                    for (var i = 0; i < collectionData.OrderedList.Count; ++i)
                                     {
-                                        var identityDictionary
-                                            = new Dictionary<string, OrderedIndex>(
-                                                collectionData.OrderedList.Count + 1,
-                                                StringComparer.OrdinalIgnoreCase);
+                                        AddToDictionary(
+                                            identityDictionary,
+                                            collectionData.OrderedList,
+                                            collectionData.OrderedList[i].Identity,
+                                            i,
+                                            false);
+                                    }
 
-                                        for (var i = 0; i < collectionData.OrderedList.Count; ++i)
-                                        {
-                                            AddToDictionary(
-                                                identityDictionary,
-                                                collectionData.OrderedList,
-                                                collectionData.OrderedList[i].Identity,
-                                                i,
-                                                false);
-                                        }
-
-                                        return identityDictionary;
-                                    });
+                                    return identityDictionary;
+                                });
                     }
                 }
             }
@@ -561,7 +563,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         index = orderIndex.ExactIndex;
                     }
-                        //return this, only in case when ignore case is false
+                    //return this, only in case when ignore case is false
                     else if (EqualIdentity(collectionData.OrderedList, orderIndex.ExactIndex, identity))
                     {
                         // fast return if exact match
@@ -667,7 +669,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Gets the enumerator over this collection
         /// </summary>
-        /// <returns> </returns>
         public ReadOnlyMetadataCollection<T>.Enumerator GetEnumerator()
         {
             return new ReadOnlyMetadataCollection<T>.Enumerator(this);
@@ -676,7 +677,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Gets the enumerator over this collection
         /// </summary>
-        /// <returns> </returns>
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return GetEnumerator();
@@ -685,7 +685,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Gets the enumerator over this collection
         /// </summary>
-        /// <returns> </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -783,29 +782,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     IdentityDictionary
                         = new Lazy<Dictionary<string, OrderedIndex>>(
                             () =>
+                            {
+                                var identityDictionary
+                                    = new Dictionary<string, OrderedIndex>(
+                                        OrderedList.Capacity,
+                                        StringComparer.OrdinalIgnoreCase);
+
+                                if (null != original.IdentityDictionary.Value)
                                 {
-                                    var identityDictionary
-                                        = new Dictionary<string, OrderedIndex>(
-                                            OrderedList.Capacity,
-                                            StringComparer.OrdinalIgnoreCase);
-
-                                    if (null != original.IdentityDictionary.Value)
+                                    foreach (var pair in original.IdentityDictionary.Value)
                                     {
-                                        foreach (var pair in original.IdentityDictionary.Value)
-                                        {
-                                            identityDictionary.Add(pair.Key, pair.Value);
-                                        }
+                                        identityDictionary.Add(pair.Key, pair.Value);
                                     }
-                                    else
+                                }
+                                else
+                                {
+                                    for (var i = 0; i < OrderedList.Count; ++i)
                                     {
-                                        for (var i = 0; i < OrderedList.Count; ++i)
-                                        {
-                                            AddToDictionary(identityDictionary, OrderedList, OrderedList[i].Identity, i, false);
-                                        }
+                                        AddToDictionary(identityDictionary, OrderedList, OrderedList[i].Identity, i, false);
                                     }
+                                }
 
-                                    return identityDictionary;
-                                });
+                                return identityDictionary;
+                            });
                 }
             }
         }

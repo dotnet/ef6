@@ -31,9 +31,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Creates type information for a type
         /// </summary>
-        /// <param name="type"> </param>
-        /// <param name="superTypeInfo"> </param>
-        /// <returns> </returns>
         internal static TypeInfo Create(md.TypeUsage type, TypeInfo superTypeInfo, ExplicitDiscriminatorMap discriminatorMap)
         {
             TypeInfo result;
@@ -210,7 +207,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         ///     Get the new property for the supplied propertyRef
         /// </summary>
         /// <param name="propertyRef"> property reference (on the old type) </param>
-        /// <returns> </returns>
         internal md.EdmProperty GetNewProperty(PropertyRef propertyRef)
         {
             md.EdmProperty property;
@@ -225,7 +221,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <param name="propertyRef"> property reference (on the old type) </param>
         /// <param name="throwIfMissing"> throw if the property is not found </param>
         /// <param name="newProperty"> the corresponding property on the new type </param>
-        /// <returns> </returns>
         internal bool TryGetNewProperty(PropertyRef propertyRef, bool throwIfMissing, out md.EdmProperty newProperty)
         {
             return RootType.TryGetNewProperty(propertyRef, throwIfMissing, out newProperty);
@@ -283,7 +278,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Get the list of all properties in the flattened type
         /// </summary>
-        /// <returns> </returns>
         internal IEnumerable<PropertyRef> GetAllPropertyRefs()
         {
             foreach (var p in PropertyRefList)
@@ -295,7 +289,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         ///     Get the list of all properties in the flattened type
         /// </summary>
-        /// <returns> </returns>
         internal IEnumerable<md.EdmProperty> GetAllProperties()
         {
             foreach (var m in FlattenedType.Properties)

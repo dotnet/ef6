@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _keys; }
         }
 
-        /// <summary>Gets or sets an expression that specifies the number of elements to skip from the input collection.</summary>
+        /// <summary>Gets an expression that specifies the number of elements to skip from the input collection.</summary>
         /// <returns>An expression that specifies the number of elements to skip from the input collection.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
