@@ -35,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modificationFunctionsConfiguration.Insert(modificationFunctionConfiguration);
 
-            modelConfiguration.Entity(typeB).MapToStoredProcedures(modificationFunctionsConfiguration);
+            modelConfiguration.Entity(typeB).MapToStoredProcedures(modificationFunctionsConfiguration, true);
 
             var model = new EdmModel(DataSpace.CSpace);
 
@@ -56,8 +56,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 
-            Assert.True(databaseMapping.Database.Functions.Any(f => f.Name == "A_Insert"));
-            Assert.True(databaseMapping.Database.Functions.Any(f => f.Name == "A_Insert1"));
+            Assert.True(databaseMapping.Database.Functions.Any(f => f.StoreFunctionNameAttribute == "A_Insert"));
+            Assert.True(databaseMapping.Database.Functions.Any(f => f.StoreFunctionNameAttribute == "A_Insert1"));
         }
 
         [Fact]
@@ -118,8 +118,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 
-            Assert.True(databaseMapping.Database.Functions.Any(f => f.Name == "AB_Delete"));
-            Assert.True(databaseMapping.Database.Functions.Any(f => f.Name == "AB_Delete1"));
+            Assert.True(databaseMapping.Database.Functions.Any(f => f.StoreFunctionNameAttribute == "AB_Delete"));
+            Assert.True(databaseMapping.Database.Functions.Any(f => f.StoreFunctionNameAttribute == "AB_Delete1"));
         }
 
         [Fact]
@@ -150,9 +150,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modelConfiguration.Configure(model);
 
-            Assert.True(modelConfiguration.Entity(rootType).IsMappedToFunctions);
-            Assert.True(modelConfiguration.Entity(middleType).IsMappedToFunctions);
-            Assert.True(modelConfiguration.Entity(leafType).IsMappedToFunctions);
+            Assert.NotNull(modelConfiguration.Entity(rootType).ModificationFunctionsConfiguration);
+            Assert.NotNull(modelConfiguration.Entity(middleType).ModificationFunctionsConfiguration);
+            Assert.NotNull(modelConfiguration.Entity(leafType).ModificationFunctionsConfiguration);
         }
 
         [Fact]
@@ -204,8 +204,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modelConfiguration.Configure(model);
 
-            Assert.True(modelConfiguration.Entity(baseType).IsMappedToFunctions);
-            Assert.True(modelConfiguration.Entity(derivedType).IsMappedToFunctions);
+            Assert.NotNull(modelConfiguration.Entity(baseType).ModificationFunctionsConfiguration);
+            Assert.NotNull(modelConfiguration.Entity(derivedType).ModificationFunctionsConfiguration);
         }
 
         [Fact]

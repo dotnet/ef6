@@ -227,7 +227,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         select o);
         }
 
-        private IEnumerable<MoveProcedureOperation> DiffModificationFunctionSchemas(
+        private static IEnumerable<MoveProcedureOperation> DiffModificationFunctionSchemas(
             StorageEntityTypeModificationFunctionMapping sourceModificationFunctionMapping,
             StorageEntityTypeModificationFunctionMapping targetModificationFunctionMapping)
         {
@@ -239,7 +239,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             {
                 yield return new MoveProcedureOperation(
                     GetSchemaQualifiedName(
-                        sourceModificationFunctionMapping.InsertFunctionMapping.Function.Name,
+                        sourceModificationFunctionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute,
                         sourceModificationFunctionMapping.InsertFunctionMapping.Function.Schema),
                     targetModificationFunctionMapping.InsertFunctionMapping.Function.Schema);
             }
@@ -249,7 +249,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             {
                 yield return new MoveProcedureOperation(
                     GetSchemaQualifiedName(
-                        sourceModificationFunctionMapping.UpdateFunctionMapping.Function.Name,
+                        sourceModificationFunctionMapping.UpdateFunctionMapping.Function.StoreFunctionNameAttribute,
                         sourceModificationFunctionMapping.UpdateFunctionMapping.Function.Schema),
                     targetModificationFunctionMapping.UpdateFunctionMapping.Function.Schema);
             }
@@ -259,13 +259,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
             {
                 yield return new MoveProcedureOperation(
                     GetSchemaQualifiedName(
-                        sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Name,
+                        sourceModificationFunctionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute,
                         sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Schema),
                     targetModificationFunctionMapping.DeleteFunctionMapping.Function.Schema);
             }
         }
 
-        private IEnumerable<MoveProcedureOperation> DiffModificationFunctionSchemas(
+        private static IEnumerable<MoveProcedureOperation> DiffModificationFunctionSchemas(
             StorageAssociationSetModificationFunctionMapping sourceModificationFunctionMapping,
             StorageAssociationSetModificationFunctionMapping targetModificationFunctionMapping)
         {
@@ -277,7 +277,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             {
                 yield return new MoveProcedureOperation(
                     GetSchemaQualifiedName(
-                        sourceModificationFunctionMapping.InsertFunctionMapping.Function.Name,
+                        sourceModificationFunctionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute,
                         sourceModificationFunctionMapping.InsertFunctionMapping.Function.Schema),
                     targetModificationFunctionMapping.InsertFunctionMapping.Function.Schema);
             }
@@ -287,7 +287,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             {
                 yield return new MoveProcedureOperation(
                     GetSchemaQualifiedName(
-                        sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Name,
+                        sourceModificationFunctionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute,
                         sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Schema),
                     targetModificationFunctionMapping.DeleteFunctionMapping.Function.Schema);
             }
@@ -345,69 +345,69 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         select o);
         }
 
-        private IEnumerable<RenameProcedureOperation> DiffModificationFunctionNames(
+        private static IEnumerable<RenameProcedureOperation> DiffModificationFunctionNames(
             StorageAssociationSetModificationFunctionMapping sourceModificationFunctionMapping,
             StorageAssociationSetModificationFunctionMapping targetModificationFunctionMapping)
         {
             DebugCheck.NotNull(sourceModificationFunctionMapping);
             DebugCheck.NotNull(targetModificationFunctionMapping);
 
-            if (!sourceModificationFunctionMapping.InsertFunctionMapping.Function.Name
-                     .EqualsOrdinal(targetModificationFunctionMapping.InsertFunctionMapping.Function.Name))
+            if (!sourceModificationFunctionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute
+                     .EqualsOrdinal(targetModificationFunctionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute))
             {
                 yield return new RenameProcedureOperation(
                     GetSchemaQualifiedName(
-                        sourceModificationFunctionMapping.InsertFunctionMapping.Function.Name,
+                        sourceModificationFunctionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute,
                         targetModificationFunctionMapping.InsertFunctionMapping.Function.Schema),
-                    targetModificationFunctionMapping.InsertFunctionMapping.Function.Name);
+                    targetModificationFunctionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute);
             }
 
-            if (!sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Name
-                     .EqualsOrdinal(targetModificationFunctionMapping.DeleteFunctionMapping.Function.Name))
+            if (!sourceModificationFunctionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute
+                     .EqualsOrdinal(targetModificationFunctionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute))
             {
                 yield return new RenameProcedureOperation(
                     GetSchemaQualifiedName(
-                        sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Name,
+                        sourceModificationFunctionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute,
                         targetModificationFunctionMapping.DeleteFunctionMapping.Function.Schema),
-                    targetModificationFunctionMapping.DeleteFunctionMapping.Function.Name);
+                    targetModificationFunctionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute);
             }
         }
 
-        private IEnumerable<RenameProcedureOperation> DiffModificationFunctionNames(
+        private static IEnumerable<RenameProcedureOperation> DiffModificationFunctionNames(
             StorageEntityTypeModificationFunctionMapping sourceModificationFunctionMapping,
             StorageEntityTypeModificationFunctionMapping targetModificationFunctionMapping)
         {
             DebugCheck.NotNull(sourceModificationFunctionMapping);
             DebugCheck.NotNull(targetModificationFunctionMapping);
 
-            if (!sourceModificationFunctionMapping.InsertFunctionMapping.Function.Name
-                     .EqualsOrdinal(targetModificationFunctionMapping.InsertFunctionMapping.Function.Name))
+            if (!sourceModificationFunctionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute
+                     .EqualsOrdinal(targetModificationFunctionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute))
             {
                 yield return new RenameProcedureOperation(
                     GetSchemaQualifiedName(
-                        sourceModificationFunctionMapping.InsertFunctionMapping.Function.Name,
+                        sourceModificationFunctionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute,
                         targetModificationFunctionMapping.InsertFunctionMapping.Function.Schema),
-                    targetModificationFunctionMapping.InsertFunctionMapping.Function.Name);
+                    targetModificationFunctionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute);
             }
 
-            if (!sourceModificationFunctionMapping.UpdateFunctionMapping.Function.Name
-                     .EqualsOrdinal(targetModificationFunctionMapping.UpdateFunctionMapping.Function.Name))
+            if (!sourceModificationFunctionMapping.UpdateFunctionMapping.Function.StoreFunctionNameAttribute
+                     .EqualsOrdinal(targetModificationFunctionMapping.UpdateFunctionMapping.Function.StoreFunctionNameAttribute))
             {
                 yield return new RenameProcedureOperation(
                     GetSchemaQualifiedName(
-                        sourceModificationFunctionMapping.UpdateFunctionMapping.Function.Name,
+                        sourceModificationFunctionMapping.UpdateFunctionMapping.Function.StoreFunctionNameAttribute,
                         targetModificationFunctionMapping.UpdateFunctionMapping.Function.Schema),
-                    targetModificationFunctionMapping.UpdateFunctionMapping.Function.Name);
+                    targetModificationFunctionMapping.UpdateFunctionMapping.Function.StoreFunctionNameAttribute);
             }
 
-            if (!sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Name
-                     .EqualsOrdinal(targetModificationFunctionMapping.DeleteFunctionMapping.Function.Name))
+            if (!sourceModificationFunctionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute
+                     .EqualsOrdinal(targetModificationFunctionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute))
             {
                 yield return new RenameProcedureOperation(
                     GetSchemaQualifiedName(
-                        sourceModificationFunctionMapping.DeleteFunctionMapping.Function.Name,
+                        sourceModificationFunctionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute,
                         targetModificationFunctionMapping.DeleteFunctionMapping.Function.Schema),
-                    targetModificationFunctionMapping.DeleteFunctionMapping.Function.Name);
+                    targetModificationFunctionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute);
             }
         }
 
@@ -530,7 +530,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 (m, s) => m.GenerateInsert(s),
                 modificationCommandTreeGenerator,
                 migrationSqlGenerator,
-                modificationFunctionMapping.InsertFunctionMapping.Function.Name,
+                modificationFunctionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute,
                 rowsAffectedParameterName: null);
         }
 
@@ -561,7 +561,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 (m, s) => m.GenerateUpdate(s),
                 modificationCommandTreeGenerator,
                 migrationSqlGenerator,
-                modificationFunctionMapping.UpdateFunctionMapping.Function.Name,
+                modificationFunctionMapping.UpdateFunctionMapping.Function.StoreFunctionNameAttribute,
                 rowsAffectedParameterName: modificationFunctionMapping.UpdateFunctionMapping.RowsAffectedParameterName);
         }
 
@@ -577,7 +577,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 (m, s) => m.GenerateDelete(s),
                 modificationCommandTreeGenerator,
                 migrationSqlGenerator,
-                modificationFunctionMapping.DeleteFunctionMapping.Function.Name,
+                modificationFunctionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute,
                 rowsAffectedParameterName: modificationFunctionMapping.DeleteFunctionMapping.RowsAffectedParameterName);
         }
 
@@ -807,14 +807,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             DebugCheck.NotNull(function);
 
-            var createProcedureOpeation
-                = new CreateProcedureOperation(GetSchemaQualifiedName(function.Name, function.Schema), bodySql);
+            var createProcedureOperation
+                = new CreateProcedureOperation(GetSchemaQualifiedName(function.StoreFunctionNameAttribute, function.Schema), bodySql);
 
             function
                 .Parameters
-                .Each(p => createProcedureOpeation.Parameters.Add(BuildParameterModel(p, _target)));
+                .Each(p => createProcedureOperation.Parameters.Add(BuildParameterModel(p, _target)));
 
-            return createProcedureOpeation;
+            return createProcedureOperation;
         }
 
         private AlterProcedureOperation BuildAlterProcedureOperation(EdmFunction function, string bodySql)
@@ -822,7 +822,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             DebugCheck.NotNull(function);
 
             var alterProcedureOperation
-                = new AlterProcedureOperation(GetSchemaQualifiedName(function.Name, function.Schema), bodySql);
+                = new AlterProcedureOperation(GetSchemaQualifiedName(function.StoreFunctionNameAttribute, function.Schema), bodySql);
 
             function
                 .Parameters
@@ -907,15 +907,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                {
                                    new DropProcedureOperation(
                                        GetSchemaQualifiedName(
-                                           mfm1.InsertFunctionMapping.Function.Name,
+                                           mfm1.InsertFunctionMapping.Function.StoreFunctionNameAttribute,
                                            mfm1.InsertFunctionMapping.Function.Schema)),
                                    new DropProcedureOperation(
                                        GetSchemaQualifiedName(
-                                           mfm1.UpdateFunctionMapping.Function.Name,
+                                           mfm1.UpdateFunctionMapping.Function.StoreFunctionNameAttribute,
                                            mfm1.UpdateFunctionMapping.Function.Schema)),
                                    new DropProcedureOperation(
                                        GetSchemaQualifiedName(
-                                           mfm1.DeleteFunctionMapping.Function.Name,
+                                           mfm1.DeleteFunctionMapping.Function.StoreFunctionNameAttribute,
                                            mfm1.DeleteFunctionMapping.Function.Schema))
                                }
                  select o)
@@ -932,11 +932,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                       {
                                           new DropProcedureOperation(
                                               GetSchemaQualifiedName(
-                                                  asm1.ModificationFunctionMapping.InsertFunctionMapping.Function.Name,
+                                                  asm1.ModificationFunctionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute,
                                                   asm1.ModificationFunctionMapping.InsertFunctionMapping.Function.Schema)),
                                           new DropProcedureOperation(
                                               GetSchemaQualifiedName(
-                                                  asm1.ModificationFunctionMapping.DeleteFunctionMapping.Function.Name,
+                                                  asm1.ModificationFunctionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute,
                                                   asm1.ModificationFunctionMapping.DeleteFunctionMapping.Function.Schema))
                                       }
                         select o);
@@ -1336,7 +1336,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                           SingleOrDefault());
         }
 
-        private CreateTableOperation BuildCreateTableOperation(
+        private static CreateTableOperation BuildCreateTableOperation(
             string entitySetName,
             string tableName,
             string schema,
@@ -1458,7 +1458,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return column;
         }
 
-        private AddForeignKeyOperation BuildAddForeignKeyOperation(XDocument edmx, XElement association)
+        private static AddForeignKeyOperation BuildAddForeignKeyOperation(XDocument edmx, XElement association)
         {
             DebugCheck.NotNull(edmx);
             DebugCheck.NotNull(association);
@@ -1483,7 +1483,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return addForeignKeyOperation;
         }
 
-        private DropForeignKeyOperation BuildDropForeignKeyOperation(XDocument edmx, XElement association)
+        private static DropForeignKeyOperation BuildDropForeignKeyOperation(XDocument edmx, XElement association)
         {
             DebugCheck.NotNull(edmx);
             DebugCheck.NotNull(association);
@@ -1496,7 +1496,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return dropForeignKeyOperation;
         }
 
-        private void BuildForeignKeyOperation(
+        private static void BuildForeignKeyOperation(
             XDocument edmx, XElement association, ForeignKeyOperation foreignKeyOperation)
         {
             DebugCheck.NotNull(edmx);
@@ -1530,15 +1530,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return providerFactory.GetProviderServices().GetProviderManifest(providerInfo.ProviderManifestToken);
         }
 
-        public virtual string GetSchemaQualifiedName(string table, string schema)
+        private static string GetSchemaQualifiedName(string table, string schema)
         {
             DebugCheck.NotEmpty(table);
             DebugCheck.NotEmpty(schema);
 
-            return schema + "." + table;
+            return new DatabaseName(table, schema).ToString();
         }
 
-        private string GetQualifiedTableName(XDocument model, string entitySetName)
+        private static string GetQualifiedTableName(XDocument model, string entitySetName)
         {
             DebugCheck.NotNull(model);
             DebugCheck.NotEmpty(entitySetName);
@@ -1556,7 +1556,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return GetSchemaQualifiedName(schemaAndTable.Table, schemaAndTable.Schema);
         }
 
-        private string GetQualifiedTableNameFromType(XDocument model, string entityTypeName)
+        private static string GetQualifiedTableNameFromType(XDocument model, string entityTypeName)
         {
             DebugCheck.NotNull(model);
             DebugCheck.NotEmpty(entityTypeName);

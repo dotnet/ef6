@@ -2,11 +2,29 @@
 
 namespace System.Data.Entity.Utilities
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
     using Xunit;
 
     public class IEnumerableExtensionsTests
     {
+        [Fact]
+        public void Uniquify_should_assign_produce_unique_value()
+        {
+            var namedItems = new List<EdmProperty>();
+
+            Assert.Equal("Foo", namedItems.Select(i => i.Name).Uniquify("Foo"));
+
+            namedItems.Add(new EdmProperty("Foo"));
+
+            Assert.Equal("Foo1", namedItems.Select(i => i.Name).Uniquify("Foo"));
+
+            namedItems.Add(new EdmProperty("Foo1"));
+
+            Assert.Equal("Foo2", namedItems.Select(i => i.Name).Uniquify("Foo"));
+        }
+
         [Fact]
         public void Each_should_iterate_sequence()
         {

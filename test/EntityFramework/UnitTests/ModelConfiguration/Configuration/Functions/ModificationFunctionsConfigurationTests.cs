@@ -10,6 +10,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
     public class ModificationFunctionsConfigurationTests
     {
         [Fact]
+        public void Can_merge_configurations()
+        {
+            var modificationFunctionsConfigurationA = new ModificationFunctionsConfiguration();
+            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            
+            modificationFunctionsConfigurationA.Insert(modificationFunctionConfiguration);
+            modificationFunctionsConfigurationA.Update(modificationFunctionConfiguration);
+            modificationFunctionsConfigurationA.Delete(modificationFunctionConfiguration);
+
+            var modificationFunctionsConfigurationB = new ModificationFunctionsConfiguration();
+
+            modificationFunctionsConfigurationB.Merge(modificationFunctionsConfigurationA, true);
+
+            Assert.Same(modificationFunctionConfiguration, modificationFunctionsConfigurationB.InsertModificationFunctionConfiguration);
+            Assert.Same(modificationFunctionConfiguration, modificationFunctionsConfigurationB.UpdateModificationFunctionConfiguration);
+            Assert.Same(modificationFunctionConfiguration, modificationFunctionsConfigurationB.DeleteModificationFunctionConfiguration);
+        }
+
+        [Fact]
         public void Can_clone_configuration()
         {
             var modificationFunctionsConfiguration = new ModificationFunctionsConfiguration();

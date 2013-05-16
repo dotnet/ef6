@@ -297,7 +297,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private void ConfigureFunctionMappings(EdmModel model, EntityTypeConfiguration entityTypeConfiguration, EntityType entityType)
         {
-            if (!entityTypeConfiguration.IsMappedToFunctions)
+            if (entityTypeConfiguration.ModificationFunctionsConfiguration == null)
             {
                 return;
             }
@@ -313,7 +313,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 if (!entityType.BaseType.Abstract
                     && (!_entityConfigurations
                              .TryGetValue(baseClrType, out baseTypeConfiguration)
-                        || !baseTypeConfiguration.IsMappedToFunctions))
+                        || baseTypeConfiguration.ModificationFunctionsConfiguration == null))
                 {
                     throw Error.BaseTypeNotMappedToFunctions(
                         baseClrType.FullName,
@@ -330,7 +330,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                          {
                              var entityConfiguration = Entity(e.GetClrType());
 
-                             if (!entityConfiguration.IsMappedToFunctions)
+                             if (entityConfiguration.ModificationFunctionsConfiguration == null)
                              {
                                  entityConfiguration.MapToStoredProcedures();
                              }
@@ -416,19 +416,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     continue;
                 }
 
+                var modificationFunctionsConfiguration 
+                    = entityTypeConfiguration.ModificationFunctionsConfiguration;
+
                 UniquifyFunctionName(
                     databaseMapping,
-                    entityTypeConfiguration.ModificationFunctionsConfiguration.InsertModificationFunctionConfiguration,
+                    modificationFunctionsConfiguration.InsertModificationFunctionConfiguration,
                     modificationFunctionMapping.InsertFunctionMapping);
 
                 UniquifyFunctionName(
                     databaseMapping,
-                    entityTypeConfiguration.ModificationFunctionsConfiguration.UpdateModificationFunctionConfiguration,
+                    modificationFunctionsConfiguration.UpdateModificationFunctionConfiguration,
                     modificationFunctionMapping.UpdateFunctionMapping);
 
                 UniquifyFunctionName(
                     databaseMapping,
-                    entityTypeConfiguration.ModificationFunctionsConfiguration.DeleteModificationFunctionConfiguration,
+                    modificationFunctionsConfiguration.DeleteModificationFunctionConfiguration,
                     modificationFunctionMapping.DeleteFunctionMapping);
             }
 
@@ -470,9 +473,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             if ((modificationFunctionConfiguration == null)
                 || string.IsNullOrWhiteSpace(modificationFunctionConfiguration.Name))
             {
-                functionMapping.Function.Name
+                functionMapping.Function.StoreFunctionNameAttribute
                     = databaseMapping.Database.Functions.Except(new[] { functionMapping.Function })
-                                     .UniquifyName(functionMapping.Function.Name);
+                                     .Select(f => f.StoreFunctionNameAttribute)
+                                     .Uniquify(functionMapping.Function.StoreFunctionNameAttribute);
             }
         }
 

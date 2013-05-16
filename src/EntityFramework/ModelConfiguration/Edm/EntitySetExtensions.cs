@@ -2,10 +2,8 @@
 
 namespace System.Data.Entity.ModelConfiguration.Edm
 {
-    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
-    using System.Linq;
 
     internal static class EntitySetExtensions
     {
@@ -21,28 +19,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(entitySet);
 
             entitySet.Annotations.SetConfiguration(configuration);
-        }
-
-        public static string UniquifyIdentifier(
-            this IEnumerable<EntitySet> aliasedMetadataItems, string identifier)
-        {
-            DebugCheck.NotNull(aliasedMetadataItems);
-            DebugCheck.NotEmpty(identifier);
-
-            return Uniquify(aliasedMetadataItems.Select(n => n.Table), identifier);
-        }
-
-        private static string Uniquify(IEnumerable<string> inputStrings, string targetString)
-        {
-            var uniqueString = targetString;
-            var i = 0;
-
-            while (inputStrings.Any(n => string.Equals(n, uniqueString, StringComparison.Ordinal)))
-            {
-                uniqueString = targetString + ++i;
-            }
-
-            return uniqueString;
         }
     }
 }

@@ -605,7 +605,6 @@
     <Compile Include="ModelConfiguration\DbModelBuilderTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Common\DataModelAnnotationExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Common\INamedDataModelItemExtensionsTests.cs" />
-    <Compile Include="ModelConfiguration\Edm\Db\EntitySetExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Db\EdmModelExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Db\EdmPropertyExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Db\EntityTypeExtensionsTests.cs" />

@@ -136,5 +136,43 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             return true;
         }
+
+        public void Merge(ModificationFunctionsConfiguration modificationFunctionsConfiguration, bool allowOverride)
+        {
+            DebugCheck.NotNull(modificationFunctionsConfiguration);
+
+            if (_insertModificationFunctionConfiguration == null)
+            {
+                _insertModificationFunctionConfiguration
+                    = modificationFunctionsConfiguration.InsertModificationFunctionConfiguration;
+            }
+            else
+            {
+                _insertModificationFunctionConfiguration
+                    .Merge(modificationFunctionsConfiguration.InsertModificationFunctionConfiguration, allowOverride);
+            }
+
+            if (_updateModificationFunctionConfiguration == null)
+            {
+                _updateModificationFunctionConfiguration
+                    = modificationFunctionsConfiguration.UpdateModificationFunctionConfiguration;
+            }
+            else
+            {
+                _updateModificationFunctionConfiguration
+                    .Merge(modificationFunctionsConfiguration.UpdateModificationFunctionConfiguration, allowOverride);
+            }
+
+            if (_deleteModificationFunctionConfiguration == null)
+            {
+                _deleteModificationFunctionConfiguration
+                    = modificationFunctionsConfiguration.DeleteModificationFunctionConfiguration;
+            }
+            else
+            {
+                _deleteModificationFunctionConfiguration
+                    .Merge(modificationFunctionsConfiguration.DeleteModificationFunctionConfiguration, allowOverride);
+            }
+        }
     }
 }

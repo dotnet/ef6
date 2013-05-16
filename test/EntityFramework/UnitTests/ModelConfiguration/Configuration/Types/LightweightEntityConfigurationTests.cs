@@ -419,7 +419,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             config.MapToStoredProcedures();
 
-            Assert.True(innerConfig.IsMappedToFunctions);
+            Assert.NotNull(innerConfig.ModificationFunctionsConfiguration);
         }
 
         [Fact]
@@ -441,7 +441,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             config.MapToStoredProcedures();
 
-            Assert.True(innerConfig.IsMappedToFunctions);
+            Assert.NotNull(innerConfig.ModificationFunctionsConfiguration);
         }
 
         [Fact]

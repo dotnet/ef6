@@ -169,8 +169,8 @@ namespace FunctionalTests
 
                     modelBuilder.Entity<Order>().MapToStoredProcedures();
                     modelBuilder.Entity<OrderLine>()
-                                .MapToStoredProcedures()
-                                .Ignore(ol => ol.OrderId);
+                        .MapToStoredProcedures()
+                        .Ignore(ol => ol.OrderId);
 
                     var databaseMapping = BuildMapping(modelBuilder);
 
@@ -219,9 +219,9 @@ namespace FunctionalTests
                             .Single();
 
                     Assert.NotNull(functionMapping.InsertFunctionMapping);
-                    Assert.Equal("TagProductA_Insert", functionMapping.InsertFunctionMapping.Function.Name);
+                    Assert.Equal("TagProductA_Insert", functionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute);
                     Assert.NotNull(functionMapping.DeleteFunctionMapping);
-                    Assert.Equal("TagProductA_Delete", functionMapping.DeleteFunctionMapping.Function.Name);
+                    Assert.Equal("TagProductA_Delete", functionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute);
                 }
 
                 [Fact]
@@ -340,7 +340,7 @@ namespace FunctionalTests
                     var modelBuilder = new DbModelBuilder();
 
                     modelBuilder.Entity<Engine>()
-                                .MapToStoredProcedures(map => map.Update(f => f.RowsAffectedParameter("Name")));
+                        .MapToStoredProcedures(map => map.Update(f => f.RowsAffectedParameter("Name")));
 
                     modelBuilder.Ignore<Team>();
 
@@ -366,7 +366,7 @@ namespace FunctionalTests
                     var modelBuilder = new DbModelBuilder();
 
                     modelBuilder.Entity<Engine>()
-                                .MapToStoredProcedures(map => map.Update(f => f.Parameter(e => e.Name, "RowsAffected")));
+                        .MapToStoredProcedures(map => map.Update(f => f.Parameter(e => e.Name, "RowsAffected")));
 
                     modelBuilder.Ignore<Team>();
 
@@ -408,9 +408,9 @@ namespace FunctionalTests
                             .ModificationFunctionMappings
                             .Single();
 
-                    Assert.Equal("OrderLine_Update", functionMapping.InsertFunctionMapping.Function.Name);
-                    Assert.Equal("OrderLine_Update1", functionMapping.UpdateFunctionMapping.Function.Name);
-                    Assert.Equal("OrderLine_Delete", functionMapping.DeleteFunctionMapping.Function.Name);
+                    Assert.Equal("OrderLine_Update", functionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute);
+                    Assert.Equal("OrderLine_Update1", functionMapping.UpdateFunctionMapping.Function.StoreFunctionNameAttribute);
+                    Assert.Equal("OrderLine_Delete", functionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute);
                 }
 
                 [Fact]
@@ -436,8 +436,8 @@ namespace FunctionalTests
                             .Single()
                             .ModificationFunctionMapping;
 
-                    Assert.Equal("TagProductA_Delete", functionMapping.InsertFunctionMapping.Function.Name);
-                    Assert.Equal("TagProductA_Delete1", functionMapping.DeleteFunctionMapping.Function.Name);
+                    Assert.Equal("TagProductA_Delete", functionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute);
+                    Assert.Equal("TagProductA_Delete1", functionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute);
                 }
             }
 
@@ -479,9 +479,9 @@ namespace FunctionalTests
                             .ModificationFunctionMappings
                             .Single();
 
-                    Assert.Equal("insert_order_line", functionMapping.InsertFunctionMapping.Function.Name);
-                    Assert.Equal("update_order_line", functionMapping.UpdateFunctionMapping.Function.Name);
-                    Assert.Equal("delete_order_line", functionMapping.DeleteFunctionMapping.Function.Name);
+                    Assert.Equal("insert_order_line", functionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute);
+                    Assert.Equal("update_order_line", functionMapping.UpdateFunctionMapping.Function.StoreFunctionNameAttribute);
+                    Assert.Equal("delete_order_line", functionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute);
                     Assert.Equal("foo", functionMapping.UpdateFunctionMapping.Function.Schema);
                     Assert.Equal("bar", functionMapping.DeleteFunctionMapping.Function.Schema);
                 }
@@ -742,8 +742,8 @@ namespace FunctionalTests
                             .Select(asm => asm.ModificationFunctionMapping)
                             .Single();
 
-                    Assert.Equal("ins_product_tag", functionMapping.InsertFunctionMapping.Function.Name);
-                    Assert.Equal("del_product_tag", functionMapping.DeleteFunctionMapping.Function.Name);
+                    Assert.Equal("ins_product_tag", functionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute);
+                    Assert.Equal("del_product_tag", functionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute);
                     Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "tag_id"));
                     Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "tag_id"));
                     Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "product_id"));
@@ -795,8 +795,8 @@ namespace FunctionalTests
                             .Select(asm => asm.ModificationFunctionMapping)
                             .Single();
 
-                    Assert.Equal("ins_product_tag", functionMapping.InsertFunctionMapping.Function.Name);
-                    Assert.Equal("del_product_tag", functionMapping.DeleteFunctionMapping.Function.Name);
+                    Assert.Equal("ins_product_tag", functionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute);
+                    Assert.Equal("del_product_tag", functionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute);
                     Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "tag_id"));
                     Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "tag_id"));
                     Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "product_id"));
@@ -1114,14 +1114,14 @@ namespace FunctionalTests
                     Assert.NotNull(orderLineFunctionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "is_shipped"));
                     Assert.NotNull(
                         orderLineFunctionMapping.InsertFunctionMapping.Function.Parameters
-                                                .Single(p => p.Name == "Quantity" && p.TypeName == "int"));
+                            .Single(p => p.Name == "Quantity" && p.TypeName == "int"));
 
                     Assert.NotNull(orderLineFunctionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "the_id"));
                     Assert.NotNull(orderLineFunctionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "order_id"));
                     Assert.NotNull(orderLineFunctionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "is_shipped"));
                     Assert.NotNull(
                         orderLineFunctionMapping.UpdateFunctionMapping.Function.Parameters
-                                                .Single(p => p.Name == "Quantity" && p.TypeName == "int"));
+                            .Single(p => p.Name == "Quantity" && p.TypeName == "int"));
 
                     Assert.NotNull(orderLineFunctionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "the_id"));
                     Assert.NotNull(orderLineFunctionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "order_id"));
@@ -1154,42 +1154,6 @@ namespace FunctionalTests
                                         f.Parameter(ol => ol.IsShipped, "Price");
                                         f.Parameter(ol => ol.Price, "Price");
                                     }));
-
-                    Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
-                }
-
-                [Fact]
-                public void Should_throw_when_conflicting_function_names_configured()
-                {
-                    var modelBuilder = new DbModelBuilder();
-
-                    modelBuilder
-                        .Entity<OrderLine>()
-                        .MapToStoredProcedures(
-                            map =>
-                                {
-                                    map.Insert(f => f.HasName("OrderLine_Update"));
-                                    map.Update(f => f.HasName("OrderLine_Update"));
-                                });
-
-                    Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
-                }
-
-                [Fact]
-                public void Should_throw_when_conflicting_association_function_names_configured()
-                {
-                    var modelBuilder = new DbModelBuilder();
-
-                    modelBuilder
-                        .Entity<Tag>()
-                        .HasMany(t => t.Products)
-                        .WithMany(p => p.Tags)
-                        .MapToStoredProcedures(
-                            map =>
-                                {
-                                    map.Insert(f => f.HasName("Tag_Products_Delete"));
-                                    map.Delete(f => f.HasName("Tag_Products_Delete"));
-                                });
 
                     Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
                 }
@@ -1323,9 +1287,9 @@ namespace FunctionalTests
                             .ModificationFunctionMappings
                             .Single();
 
-                    Assert.Equal("insert_order_line", functionMapping.InsertFunctionMapping.Function.Name);
-                    Assert.Equal("update_order_line", functionMapping.UpdateFunctionMapping.Function.Name);
-                    Assert.Equal("delete_order_line", functionMapping.DeleteFunctionMapping.Function.Name);
+                    Assert.Equal("insert_order_line", functionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute);
+                    Assert.Equal("update_order_line", functionMapping.UpdateFunctionMapping.Function.StoreFunctionNameAttribute);
+                    Assert.Equal("delete_order_line", functionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute);
                     Assert.Equal("foo", functionMapping.UpdateFunctionMapping.Function.Schema);
                     Assert.Equal("bar", functionMapping.DeleteFunctionMapping.Function.Schema);
                 }
@@ -1361,9 +1325,9 @@ namespace FunctionalTests
                             .SelectMany(esm => esm.ModificationFunctionMappings)
                             .Single();
 
-                    Assert.Equal("insert_order_line", functionMapping.InsertFunctionMapping.Function.Name);
-                    Assert.Equal("update_order_line", functionMapping.UpdateFunctionMapping.Function.Name);
-                    Assert.Equal("delete_order_line", functionMapping.DeleteFunctionMapping.Function.Name);
+                    Assert.Equal("insert_order_line", functionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute);
+                    Assert.Equal("update_order_line", functionMapping.UpdateFunctionMapping.Function.StoreFunctionNameAttribute);
+                    Assert.Equal("delete_order_line", functionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute);
                     Assert.Equal("foo", functionMapping.UpdateFunctionMapping.Function.Schema);
                     Assert.Equal("bar", functionMapping.DeleteFunctionMapping.Function.Schema);
                 }
@@ -2029,46 +1993,6 @@ namespace FunctionalTests
                 }
 
                 [Fact]
-                public void Should_throw_when_conflicting_function_names_configured()
-                {
-                    var modelBuilder = new DbModelBuilder();
-
-                    modelBuilder.Entity<OrderLine>();
-
-                    modelBuilder
-                        .Entities()
-                        .Configure(
-                            c => c.MapToStoredProcedures(
-                                map =>
-                                    {
-                                        map.Insert(f => f.HasName("OrderLine_Update"));
-                                        map.Update(f => f.HasName("OrderLine_Update"));
-                                    }));
-
-                    Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
-                }
-
-                [Fact]
-                public void Should_throw_when_conflicting_function_names_configured_when_type_specified()
-                {
-                    var modelBuilder = new DbModelBuilder();
-
-                    modelBuilder.Entity<OrderLine>();
-
-                    modelBuilder
-                        .Entities<OrderLine>()
-                        .Configure(
-                            c => c.MapToStoredProcedures(
-                                map =>
-                                    {
-                                        map.Insert(f => f.HasName("OrderLine_Update"));
-                                        map.Update(f => f.HasName("OrderLine_Update"));
-                                    }));
-
-                    Assert.Throws<ModelValidationException>(() => BuildMapping(modelBuilder));
-                }
-
-                [Fact]
                 public void Can_configure_parameter_name_via_properties()
                 {
                     var modelBuilder = new DbModelBuilder();
@@ -2229,10 +2153,10 @@ namespace FunctionalTests
                     modelBuilder.Entity<Order>();
                     modelBuilder.Entity<MigrationsCustomer>();
                     modelBuilder.Entity<Tag>()
-                                .HasMany(t => t.Products)
-                                .WithMany(p => p.Tags)
-                                .Map(m => m.ToTable("TagProductAs"))
-                                .MapToStoredProcedures();
+                        .HasMany(t => t.Products)
+                        .WithMany(p => p.Tags)
+                        .Map(m => m.ToTable("TagProductAs"))
+                        .MapToStoredProcedures();
                 }
             }
 
@@ -2274,9 +2198,9 @@ namespace FunctionalTests
 
                     modelBuilder.Ignore<Order>();
                     modelBuilder.Entity<MigrationsCustomer>()
-                                .Map(m => m.ToTable("MigrationsCustomers"))
-                                .Map<SpecialCustomer>(m => m.ToTable("SpecialCustomers"))
-                                .Map<GoldCustomer>(m => m.ToTable("GoldCustomers"));
+                        .Map(m => m.ToTable("MigrationsCustomers"))
+                        .Map<SpecialCustomer>(m => m.ToTable("SpecialCustomers"))
+                        .Map<GoldCustomer>(m => m.ToTable("GoldCustomers"));
                 }
             }
 
@@ -2318,24 +2242,24 @@ namespace FunctionalTests
 
                     modelBuilder.Ignore<Order>();
                     modelBuilder.Entity<MigrationsCustomer>()
-                                .Map(
-                                    m =>
-                                        {
-                                            m.MapInheritedProperties();
-                                            m.ToTable("MigrationsCustomers");
-                                        })
-                                .Map<SpecialCustomer>(
-                                    m =>
-                                        {
-                                            m.MapInheritedProperties();
-                                            m.ToTable("SpecialCustomers");
-                                        })
-                                .Map<GoldCustomer>(
-                                    m =>
-                                        {
-                                            m.MapInheritedProperties();
-                                            m.ToTable("GoldCustomers");
-                                        });
+                        .Map(
+                            m =>
+                                {
+                                    m.MapInheritedProperties();
+                                    m.ToTable("MigrationsCustomers");
+                                })
+                        .Map<SpecialCustomer>(
+                            m =>
+                                {
+                                    m.MapInheritedProperties();
+                                    m.ToTable("SpecialCustomers");
+                                })
+                        .Map<GoldCustomer>(
+                            m =>
+                                {
+                                    m.MapInheritedProperties();
+                                    m.ToTable("GoldCustomers");
+                                });
                 }
             }
         }

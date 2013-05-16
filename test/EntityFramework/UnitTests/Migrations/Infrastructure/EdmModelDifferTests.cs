@@ -525,7 +525,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
-            modelBuilder.Entity<OrderLine>();
+            modelBuilder.Entity<OrderLine>().ToTable("[foo.[]]].bar");
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -533,7 +533,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
-            Assert.Equal(1, operations.OfType<CreateTableOperation>().Count());
+
+            var createTableOperation = operations.OfType<CreateTableOperation>().Single();
+
+            Assert.Equal("[foo.[]]].bar", createTableOperation.Name);
         }
 
         [MigrationsTheory]

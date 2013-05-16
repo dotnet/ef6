@@ -147,7 +147,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
             config.MapToStoredProcedures();
 
-            Assert.True(innerConfig.IsMappedToFunctions);
+            Assert.True(innerConfig.ModificationFunctionsConfiguration != null);
         }
 
         [Fact]

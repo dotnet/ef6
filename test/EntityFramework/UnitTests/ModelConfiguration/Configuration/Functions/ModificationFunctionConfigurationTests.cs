@@ -13,6 +13,66 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
     public class ModificationFunctionConfigurationTests
     {
         [Fact]
+        public void Merge_configurations_without_override()
+        {
+            var modificationFunctionConfigurationA = new ModificationFunctionConfiguration();
+
+            modificationFunctionConfigurationA.HasName("Foo", "baz");
+
+            var mockPropertyInfo = new MockPropertyInfo();
+
+            modificationFunctionConfigurationA.Parameter(new PropertyPath(mockPropertyInfo), "baz");
+            modificationFunctionConfigurationA.Result(new PropertyPath(mockPropertyInfo), "foo");
+            modificationFunctionConfigurationA.RowsAffectedParameter("bar");
+
+            var modificationFunctionConfigurationB = new ModificationFunctionConfiguration();
+
+            modificationFunctionConfigurationB.HasName("Foo", "baz");
+
+            modificationFunctionConfigurationB.Parameter(new PropertyPath(mockPropertyInfo), "baz");
+            modificationFunctionConfigurationB.Result(new PropertyPath(mockPropertyInfo), "foo");
+            modificationFunctionConfigurationB.RowsAffectedParameter("bar");
+
+            modificationFunctionConfigurationA.Merge(modificationFunctionConfigurationB, allowOverride: false);
+
+            Assert.Equal("Foo", modificationFunctionConfigurationA.Name);
+            Assert.Equal("baz", modificationFunctionConfigurationA.Schema);
+            Assert.Equal(1, modificationFunctionConfigurationA.ParameterNames.Count(p => p.Value.Item1 == "baz"));
+            Assert.Equal(1, modificationFunctionConfigurationA.ResultBindings.Count(p => p.Value == "foo"));
+            Assert.Equal("bar", modificationFunctionConfigurationA.RowsAffectedParameterName);
+        }
+
+        [Fact]
+        public void Merge_configurations_with_override()
+        {
+            var modificationFunctionConfigurationA = new ModificationFunctionConfiguration();
+
+            modificationFunctionConfigurationA.HasName("Foo", "baz");
+
+            var mockPropertyInfo = new MockPropertyInfo();
+
+            modificationFunctionConfigurationA.Parameter(new PropertyPath(mockPropertyInfo), "baz");
+            modificationFunctionConfigurationA.Result(new PropertyPath(mockPropertyInfo), "foo");
+            modificationFunctionConfigurationA.RowsAffectedParameter("bar");
+
+            var modificationFunctionConfigurationB = new ModificationFunctionConfiguration();
+
+            modificationFunctionConfigurationB.HasName("2", "2");
+
+            modificationFunctionConfigurationB.Parameter(new PropertyPath(mockPropertyInfo), "2");
+            modificationFunctionConfigurationB.Result(new PropertyPath(mockPropertyInfo), "2");
+            modificationFunctionConfigurationB.RowsAffectedParameter("2");
+
+            modificationFunctionConfigurationA.Merge(modificationFunctionConfigurationB, allowOverride: true);
+
+            Assert.Equal("2", modificationFunctionConfigurationA.Name);
+            Assert.Equal("2", modificationFunctionConfigurationA.Schema);
+            Assert.Equal(1, modificationFunctionConfigurationA.ParameterNames.Count(p => p.Value.Item1 == "2"));
+            Assert.Equal(1, modificationFunctionConfigurationA.ResultBindings.Count(p => p.Value == "2"));
+            Assert.Equal("2", modificationFunctionConfigurationA.RowsAffectedParameterName);
+        }
+
+        [Fact]
         public void Can_clone_configuration()
         {
             var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
@@ -177,7 +237,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                     null,
                     null));
 
-            Assert.Equal("Foo", function.Name);
+            Assert.Equal("Foo", function.StoreFunctionNameAttribute);
             Assert.Equal("Bar", function.Schema);
             Assert.Equal("Foo", functionParameter1.Name);
             Assert.Equal("Bar", functionParameter2.Name);

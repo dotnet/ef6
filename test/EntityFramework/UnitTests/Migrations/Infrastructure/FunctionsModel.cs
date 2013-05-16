@@ -287,7 +287,7 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
                                 c =>
                                     {
                                         c.HasName("m2m_insert", "foo");
-                                        c.LeftKeyParameter(o => o.Id, "order_thing_id");
+                                        c.LeftKeyParameter(o => o.Id, "order_thing_id2");
                                     });
 
                             m.Delete(

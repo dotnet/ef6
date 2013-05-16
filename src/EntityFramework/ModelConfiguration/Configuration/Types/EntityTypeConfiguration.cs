@@ -120,16 +120,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             get { return _isKeyConfigured; }
         }
 
-        internal bool IsMappedToFunctions
-        {
-            get { return _modificationFunctionsConfiguration != null; }
-        }
-
-        internal ModificationFunctionsConfiguration ModificationFunctionsConfiguration
-        {
-            get { return _modificationFunctionsConfiguration; }
-        }
-
         internal IEnumerable<PropertyInfo> KeyProperties
         {
             get { return _keyProperties; }
@@ -206,17 +196,32 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
         internal bool IsExplicitEntity { get; set; }
 
+        internal ModificationFunctionsConfiguration ModificationFunctionsConfiguration
+        {
+            get { return _modificationFunctionsConfiguration; }
+        }
+
         internal virtual void MapToStoredProcedures()
         {
-            _modificationFunctionsConfiguration = new ModificationFunctionsConfiguration();
+            if (_modificationFunctionsConfiguration == null)
+            {
+                _modificationFunctionsConfiguration = new ModificationFunctionsConfiguration();
+            }
         }
 
         internal virtual void MapToStoredProcedures(
-            ModificationFunctionsConfiguration modificationFunctionsConfiguration)
+            ModificationFunctionsConfiguration modificationFunctionsConfiguration, bool allowOverride)
         {
             DebugCheck.NotNull(modificationFunctionsConfiguration);
 
-            _modificationFunctionsConfiguration = modificationFunctionsConfiguration;
+            if (_modificationFunctionsConfiguration == null)
+            {
+                _modificationFunctionsConfiguration = modificationFunctionsConfiguration;
+            }
+            else
+            {
+                _modificationFunctionsConfiguration.Merge(modificationFunctionsConfiguration, allowOverride);
+            }
         }
 
         internal void ReplaceFrom(EntityTypeConfiguration existing)

@@ -52,9 +52,11 @@ namespace System.Data.Entity.Migrations.Model
         {
             get
             {
-                var databaseName = _name.ToDatabaseName();
+                var databaseName = DatabaseName.Parse(_name);
 
-                return new MoveTableOperation(NewSchema + '.' + databaseName.Name, databaseName.Schema)
+                return new MoveTableOperation(
+                    new DatabaseName(databaseName.Name, NewSchema).ToString(), 
+                    databaseName.Schema)
                            {
                                IsSystem = IsSystem
                            };

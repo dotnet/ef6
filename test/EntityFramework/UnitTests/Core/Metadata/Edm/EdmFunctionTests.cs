@@ -20,6 +20,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
+        public void Can_get_and_set_store_function_name_attribute()
+        {
+            var function
+                = new EdmFunction("F", "N", DataSpace.SSpace)
+                {
+                    StoreFunctionNameAttribute = "Foo"
+                };
+
+            Assert.Equal("Foo", function.StoreFunctionNameAttribute);
+        }
+
+        [Fact]
         public void Can_get_full_name()
         {
             var function = new EdmFunction("F", "N", DataSpace.SSpace);

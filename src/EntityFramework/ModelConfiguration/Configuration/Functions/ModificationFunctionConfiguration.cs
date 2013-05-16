@@ -24,6 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private string _name;
         private string _schema;
         private string _rowsAffectedParameter;
+
         private List<FunctionParameter> _configuredParameters;
 
         public ModificationFunctionConfiguration()
@@ -140,7 +141,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             if (!string.IsNullOrWhiteSpace(_name))
             {
-                modificationFunctionMapping.Function.Name = _name;
+                modificationFunctionMapping.Function.StoreFunctionNameAttribute = _name;
             }
         }
 
@@ -162,7 +163,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 if (modificationFunctionMapping.RowsAffectedParameter == null)
                 {
-                    throw Error.NoRowsAffectedParameter(modificationFunctionMapping.Function.Name);
+                    throw Error.NoRowsAffectedParameter(modificationFunctionMapping.Function.StoreFunctionNameAttribute);
                 }
 
                 modificationFunctionMapping.RowsAffectedParameter.Name = _rowsAffectedParameter;
@@ -197,9 +198,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                              && (pb.MemberPath.AssociationSetEnd != null)
                              && pb.MemberPath.Members.First().GetClrPropertyInfo().IsSameAs(propertyPath.Last())
                              && pb.MemberPath.AssociationSetEnd.ParentAssociationSet.AssociationSetEnds
-                                  .Select(ae => ae.CorrespondingAssociationEndMember.GetClrPropertyInfo())
-                                  .Where(pi => pi != null)
-                                  .Any(pi => pi.IsSameAs(propertyPath.First()))))
+                                    .Select(ae => ae.CorrespondingAssociationEndMember.GetClrPropertyInfo())
+                                    .Where(pi => pi != null)
+                                    .Any(pi => pi.IsSameAs(propertyPath.First()))))
                         .ToList();
 
                 if (parameterBindings.Count == 1)
@@ -212,7 +213,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                         {
                             throw Error.ModificationFunctionParameterNotFoundOriginal(
                                 propertyPath,
-                                modificationFunctionMapping.Function.Name);
+                                modificationFunctionMapping.Function.StoreFunctionNameAttribute);
                         }
                     }
 
@@ -241,7 +242,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     throw Error.ModificationFunctionParameterNotFound(
                         propertyPath,
-                        modificationFunctionMapping.Function.Name);
+                        modificationFunctionMapping.Function.StoreFunctionNameAttribute);
                 }
             }
 
@@ -280,7 +281,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     throw Error.ResultBindingNotFound(
                         propertyInfo.Name,
-                        modificationFunctionMapping.Function.Name);
+                        modificationFunctionMapping.Function.StoreFunctionNameAttribute);
                 }
 
                 resultBinding.ColumnName = columnName;
@@ -312,6 +313,39 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                             kv2 => kv2.Key,
                             (kv1, kv2) => !Equals(kv1.Value, kv2.Value))
                         .Any(j => j);
+        }
+
+        public void Merge(ModificationFunctionConfiguration modificationFunctionConfiguration, bool allowOverride)
+        {
+            DebugCheck.NotNull(modificationFunctionConfiguration);
+
+            if (allowOverride || string.IsNullOrWhiteSpace(_name))
+            {
+                _name = modificationFunctionConfiguration.Name ?? _name;
+            }
+
+            if (allowOverride || string.IsNullOrWhiteSpace(_schema))
+            {
+                _schema = modificationFunctionConfiguration.Schema ?? _schema;
+            }
+
+            if (allowOverride || string.IsNullOrWhiteSpace(_rowsAffectedParameter))
+            {
+                _rowsAffectedParameter 
+                    = modificationFunctionConfiguration.RowsAffectedParameterName ?? _rowsAffectedParameter;
+            }
+
+            foreach (var parameterName in modificationFunctionConfiguration.ParameterNames
+                .Where(parameterName => allowOverride || !_parameterNames.ContainsKey(parameterName.Key)))
+            {
+                _parameterNames[parameterName.Key] = parameterName.Value;
+            }
+
+            foreach (var resultBinding in modificationFunctionConfiguration.ResultBindings
+                .Where(resultBinding => allowOverride || !_resultBindings.ContainsKey(resultBinding.Key)))
+            {
+                _resultBindings[resultBinding.Key] = resultBinding.Value;
+            }
         }
     }
 }

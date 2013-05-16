@@ -26,13 +26,6 @@ namespace System.Data.Entity.Utilities
 
         private static readonly Regex _migrationIdPattern = new Regex(@"\d{15}_.+");
 
-        public static DatabaseName ToDatabaseName(this string s)
-        {
-            DebugCheck.NotEmpty(s);
-
-            return DatabaseName.Parse(s);
-        }
-
         public static bool EqualsIgnoreCase(this string s1, string s2)
         {
             return string.Equals(s1, s2, StringComparison.OrdinalIgnoreCase);

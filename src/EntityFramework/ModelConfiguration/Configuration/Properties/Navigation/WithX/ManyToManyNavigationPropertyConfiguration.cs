@@ -45,8 +45,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         public ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType> MapToStoredProcedures()
         {
-            _navigationPropertyConfiguration.ModificationFunctionsConfiguration
-                = new ModificationFunctionsConfiguration();
+            if (_navigationPropertyConfiguration.ModificationFunctionsConfiguration == null)
+            {
+                _navigationPropertyConfiguration.ModificationFunctionsConfiguration
+                    = new ModificationFunctionsConfiguration();
+            }
 
             return this;
         }
@@ -63,8 +66,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modificationFunctionMappingConfigurationAction(modificationFunctionMappingConfiguration);
 
-            _navigationPropertyConfiguration.ModificationFunctionsConfiguration
-                = modificationFunctionMappingConfiguration.Configuration;
+            if (_navigationPropertyConfiguration.ModificationFunctionsConfiguration == null)
+            {
+                _navigationPropertyConfiguration.ModificationFunctionsConfiguration
+                    = modificationFunctionMappingConfiguration.Configuration;
+            }
+            else
+            {
+                _navigationPropertyConfiguration.ModificationFunctionsConfiguration
+                    .Merge(modificationFunctionMappingConfiguration.Configuration, allowOverride: true);
+            }
 
             return this;
         }

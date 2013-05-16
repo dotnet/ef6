@@ -90,5 +90,50 @@ namespace System.Data.Entity.Utilities
                 Strings.InvalidDatabaseName("."),
                 Assert.Throws<ArgumentException>(() => DatabaseName.Parse(".")).Message);
         }
+
+        [Fact]
+        public void Parse_parses_name_with_delimeters()
+        {
+            var databaseName = DatabaseName.Parse("[a.].[.b]");
+
+            Assert.Equal("a.", databaseName.Schema);
+            Assert.Equal(".b", databaseName.Name);
+
+            databaseName = DatabaseName.Parse("foo.[bar.baz]");
+
+            Assert.Equal("foo", databaseName.Schema);
+            Assert.Equal("bar.baz", databaseName.Name);
+
+            databaseName = DatabaseName.Parse("[foo.[bar].baz");
+
+            Assert.Equal("foo.[bar", databaseName.Schema);
+            Assert.Equal("baz", databaseName.Name);
+
+            databaseName = DatabaseName.Parse("[foo.[bar.baz]");
+
+            Assert.Null(databaseName.Schema);
+            Assert.Equal("foo.[bar.baz", databaseName.Name);
+        }
+
+        [Fact]
+        public void Parse_parses_name_with_escaped_delimeters()
+        {
+            var databaseName = DatabaseName.Parse("[a.]].]]].[.b.[c]]d]");
+
+            Assert.Equal("a.].]", databaseName.Schema);
+            Assert.Equal(".b.[c]d", databaseName.Name);
+        }
+
+        [Fact]
+        public void ToString_should_escape_name_when_required()
+        {
+            var databaseName = DatabaseName.Parse("[a.]].]]].[.b.[c]]d]");
+
+            Assert.Equal("[a.]].]]].[.b.[c]]d]", databaseName.ToString());
+
+            databaseName = DatabaseName.Parse("abc.[d.ef]");
+
+            Assert.Equal("abc.[d.ef]", databaseName.ToString());
+        }
     }
 }

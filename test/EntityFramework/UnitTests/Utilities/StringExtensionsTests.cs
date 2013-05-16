@@ -18,18 +18,6 @@ namespace System.Data.Entity.Utilities
 
         }
 
-        public class ToDatabaseName
-        {
-            [Fact]
-            public void ToDatabaseName_returns_database_name()
-            {
-                var databaseName = "dbo.Customers".ToDatabaseName();
-
-                Assert.Equal("dbo", databaseName.Schema);
-                Assert.Equal("Customers", databaseName.Name);
-            }
-        }
-
         public class IsValidMigrationId
         {
             [Fact]

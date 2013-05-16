@@ -73,7 +73,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             // Duplicate configured name, uniquify the identity so that
                             // a validation exception can be generated later on. For valid
                             // models, we sync it back up in SetReadOnly()
-                            _identity = _declaringType.Members.UniquifyIdentity(Identity);
+                            _identity = _declaringType.Members.Select(i => i.Identity).Uniquify(Identity);
                         }
 
                         _declaringType.NotifyItemIdentityChanged();

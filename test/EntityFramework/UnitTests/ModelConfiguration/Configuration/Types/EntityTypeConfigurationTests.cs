@@ -22,11 +22,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
 
-            Assert.False(entityTypeConfiguration.IsMappedToFunctions);
+            Assert.Null(entityTypeConfiguration.ModificationFunctionsConfiguration);
 
             entityTypeConfiguration.MapToStoredProcedures();
 
-            Assert.True(entityTypeConfiguration.IsMappedToFunctions);
+            Assert.NotNull(entityTypeConfiguration.ModificationFunctionsConfiguration);
         }
 
         [Fact]
@@ -34,11 +34,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
 
-            Assert.False(entityTypeConfiguration.IsMappedToFunctions);
+            Assert.Null(entityTypeConfiguration.ModificationFunctionsConfiguration);
 
-            entityTypeConfiguration.MapToStoredProcedures(new ModificationFunctionsConfiguration());
+            entityTypeConfiguration.MapToStoredProcedures(new ModificationFunctionsConfiguration(), true);
 
-            Assert.True(entityTypeConfiguration.IsMappedToFunctions);
+            Assert.NotNull(entityTypeConfiguration.ModificationFunctionsConfiguration);
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var modificationFunctionsConfigurationMock = new Mock<ModificationFunctionsConfiguration>();
 
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
-            entityTypeConfiguration.MapToStoredProcedures(modificationFunctionsConfigurationMock.Object);
+            entityTypeConfiguration.MapToStoredProcedures(modificationFunctionsConfigurationMock.Object, true);
 
             entityType.SetConfiguration(entityTypeConfiguration);
 

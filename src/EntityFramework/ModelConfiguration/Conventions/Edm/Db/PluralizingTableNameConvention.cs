@@ -30,9 +30,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
                 entitySet.Table
                     = model.GetEntitySets()
-                           .Where(es => es.Schema == entitySet.Schema)
-                           .Except(new[] { entitySet })
-                           .UniquifyIdentifier(_pluralizationService.Pluralize(entitySet.Table));
+                        .Where(es => es.Schema == entitySet.Schema)
+                        .Except(new[] { entitySet })
+                        .Select(n => n.Table)
+                        .Uniquify(_pluralizationService.Pluralize(entitySet.Table));
             }
         }
     }

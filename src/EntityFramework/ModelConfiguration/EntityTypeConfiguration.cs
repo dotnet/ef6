@@ -151,7 +151,9 @@ namespace System.Data.Entity.ModelConfiguration
 
             modificationFunctionMappingConfigurationAction(modificationFunctionMappingConfiguration);
 
-            _entityTypeConfiguration.MapToStoredProcedures(modificationFunctionMappingConfiguration.Configuration);
+            _entityTypeConfiguration.MapToStoredProcedures(
+                modificationFunctionMappingConfiguration.Configuration,
+                allowOverride: true);
 
             return this;
         }

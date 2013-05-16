@@ -52,6 +52,7 @@ namespace System.Data.Entity.Migrations
         private readonly DbContextInfo _usersContextInfo;
         private readonly EdmModelDiffer _modelDiffer;
         private readonly ModificationCommandTreeGenerator _modificationCommandTreeGenerator;
+        private readonly DbContext _contextForInterception;
 
         private readonly bool _calledByCreateDatabase;
 
@@ -59,7 +60,7 @@ namespace System.Data.Entity.Migrations
         private readonly string _targetDatabase;
         private readonly string _legacyContextKey;
         private readonly string _defaultSchema;
-        private DbContext _contextForInterception;
+
         private MigrationSqlGenerator _sqlGenerator;
         private bool _emptyMigrationNeeded;
 
@@ -846,7 +847,7 @@ namespace System.Data.Entity.Migrations
             if (createHistoryOperation != null)
             {
                 _historyRepository.CurrentSchema
-                    = createHistoryOperation.Name.ToDatabaseName().Schema;
+                    = DatabaseName.Parse(createHistoryOperation.Name).Schema;
             }
 
             var moveHistoryOperation
@@ -961,7 +962,7 @@ namespace System.Data.Entity.Migrations
             return new InterceptableDbCommand(command, interceptionContext);
         }
 
-        private void FillInForeignKeyOperations(IEnumerable<MigrationOperation> operations, XDocument targetModel)
+        private static void FillInForeignKeyOperations(IEnumerable<MigrationOperation> operations, XDocument targetModel)
         {
             DebugCheck.NotNull(operations);
             DebugCheck.NotNull(targetModel);
@@ -973,7 +974,7 @@ namespace System.Data.Entity.Migrations
                 var principalTable = GetStandardizedTableName(foreignKeyOperation.PrincipalTable);
                 var entitySetName
                     = (from es in targetModel.Descendants(EdmXNames.Ssdl.EntitySetNames)
-                       where _modelDiffer.GetSchemaQualifiedName(es.TableAttribute(), es.SchemaAttribute())
+                       where new DatabaseName(es.TableAttribute(), es.SchemaAttribute()).ToString()
                                          .EqualsIgnoreCase(principalTable)
                        select es.NameAttribute()).SingleOrDefault();
 
@@ -1011,12 +1012,16 @@ namespace System.Data.Entity.Migrations
 
         private static string GetStandardizedTableName(string tableName)
         {
-            if (tableName.Contains('.'))
+            DebugCheck.NotEmpty(tableName);
+
+            var databaseName = DatabaseName.Parse(tableName);
+
+            if (!string.IsNullOrWhiteSpace(databaseName.Schema))
             {
                 return tableName;
             }
 
-            return EdmModelExtensions.DefaultSchema + "." + tableName;
+            return new DatabaseName(tableName, EdmModelExtensions.DefaultSchema).ToString();
         }
 
         /// <summary>

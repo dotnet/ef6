@@ -299,7 +299,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             DebugCheck.NotNull(modificationFunctionsConfiguration);
 
-            _configuration().MapToStoredProcedures(modificationFunctionsConfiguration);
+            _configuration().MapToStoredProcedures(modificationFunctionsConfiguration, allowOverride: false);
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]

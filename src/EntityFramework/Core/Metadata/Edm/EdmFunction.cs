@@ -144,7 +144,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly ReadOnlyMetadataCollection<FunctionParameter> _returnParameters;
         private readonly ReadOnlyMetadataCollection<FunctionParameter> _parameters;
         private readonly FunctionAttributes _functionAttributes = FunctionAttributes.Default;
-        private readonly string _storeFunctionNameAttribute;
+        private string _storeFunctionNameAttribute;
         private readonly ParameterTypeSemantics _parameterTypeSemantics;
         private readonly string _commandTextAttribute;
         private string _schemaName;
@@ -244,7 +244,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public string StoreFunctionNameAttribute
         {
-            get { return _storeFunctionNameAttribute; }
+            get { return _storeFunctionNameAttribute ?? Name; }
+            set
+            {
+                Check.NotEmpty(value, "value");
+                Util.ThrowIfReadOnly(this);
+
+                _storeFunctionNameAttribute = value;
+            }
         }
 
         [MetadataProperty(typeof(ParameterTypeSemantics), false)]

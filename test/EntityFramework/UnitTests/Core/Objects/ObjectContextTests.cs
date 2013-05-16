@@ -15,6 +15,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
@@ -37,6 +38,27 @@ namespace System.Data.Entity.Core.Objects
 
                 Assert.Same(context, ((IObjectContextAdapter)context).ObjectContext);
             }
+        }
+
+        [Fact]
+        public void FactMethodName()
+        {
+            var ops = new MigrationOperation[]
+                          {
+                              new AddColumnOperation("dbo.__MigrationHistory", 
+                                  new ColumnModel(PrimitiveTypeKind.String)), 
+                                  new DropPrimaryKeyOperation(), 
+                                  new AddPrimaryKeyOperation()
+                          };
+
+            Assert.True(
+                ops.Select(o => o.GetType()).SequenceEqual(
+                    new[]
+                        {
+                            typeof(AddColumnOperation),
+                            typeof(DropPrimaryKeyOperation),
+                            typeof(AddPrimaryKeyOperation)
+                        }));
         }
 
         public class SaveChanges : TestBase
@@ -528,6 +550,11 @@ namespace System.Data.Entity.Core.Objects
                                                 });
 
                 var dbCommandMock = new Mock<DbCommand>();
+                
+                parameterCollectionMock
+                   .Setup(m => m.GetEnumerator())
+                   .Returns(new List<DbParameter>().GetEnumerator());
+
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
                 var dbConnectionMock = new Mock<DbConnection>();
@@ -583,6 +610,10 @@ namespace System.Data.Entity.Core.Objects
 
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.SetupGet(m => m.CommandText).Returns("{0} Foo {1} Bar {2} Baz {3}");
+                parameterCollectionMock
+                   .Setup(m => m.GetEnumerator())
+                   .Returns(new List<DbParameter>().GetEnumerator());
+
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
                 dbCommandMock.Protected().Setup<DbParameter>("CreateDbParameter").
@@ -719,8 +750,9 @@ namespace System.Data.Entity.Core.Objects
                 var parameterMock = new Mock<DbParameter>();
                 var correctParameters = false;
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
-                parameterCollectionMock.Setup(m => m.AddRange(It.IsAny<DbParameter[]>())).
-                                        Callback(
+                parameterCollectionMock
+                    .Setup(m => m.AddRange(It.IsAny<DbParameter[]>()))
+                    .Callback(
                                             (Array p) =>
                                                 {
                                                     var list = p.ToList<DbParameter>();
@@ -730,6 +762,9 @@ namespace System.Data.Entity.Core.Objects
                                                         correctParameters = true;
                                                     }
                                                 });
+                parameterCollectionMock
+                    .Setup(m => m.GetEnumerator())
+                    .Returns(new List<DbParameter>().GetEnumerator());
 
                 dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>()).Returns(
                     Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } }));
@@ -764,6 +799,9 @@ namespace System.Data.Entity.Core.Objects
                                                         correctParameters = true;
                                                     }
                                                 });
+                parameterCollectionMock
+                   .Setup(m => m.GetEnumerator())
+                   .Returns(new List<DbParameter>().GetEnumerator());
 
                 var dataReader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } });
                 // This reader will throw if buffering is on
@@ -789,8 +827,14 @@ namespace System.Data.Entity.Core.Objects
                 var storeDataReaderMock = new Mock<DbDataReader>();
                 dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>()).Returns(
                     storeDataReaderMock.Object);
+
+                var parameterCollectionMock = new Mock<DbParameterCollection>();
+                parameterCollectionMock
+                   .Setup(m => m.GetEnumerator())
+                   .Returns(new List<DbParameter>().GetEnumerator());
+
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
-                    () => new Mock<DbParameterCollection>().Object);
+                    () => parameterCollectionMock.Object);
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
@@ -831,8 +875,14 @@ namespace System.Data.Entity.Core.Objects
 
                 dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>())
                              .Throws(new InvalidOperationException("Foo"));
+
+                var parameterCollectionMock = new Mock<DbParameterCollection>();
+                parameterCollectionMock
+                   .Setup(m => m.GetEnumerator())
+                   .Returns(new List<DbParameter>().GetEnumerator());
+
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
-                    () => new Mock<DbParameterCollection>().Object);
+                    () => parameterCollectionMock.Object);
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
@@ -852,8 +902,13 @@ namespace System.Data.Entity.Core.Objects
 
                 dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>())
                              .Returns(dataReader);
+                var parameterCollectionMock = new Mock<DbParameterCollection>();
+                parameterCollectionMock
+                   .Setup(m => m.GetEnumerator())
+                   .Returns(new List<DbParameter>().GetEnumerator());
+
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
-                    () => new Mock<DbParameterCollection>().Object);
+                    () => parameterCollectionMock.Object);
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
@@ -1976,6 +2031,15 @@ namespace System.Data.Entity.Core.Objects
             {
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
+
+                var parameterCollectionMock = new Mock<DbParameterCollection>();
+                parameterCollectionMock
+                   .Setup(m => m.GetEnumerator())
+                   .Returns(new List<DbParameter>().GetEnumerator());
+
+                dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
+                    () => parameterCollectionMock.Object);
+
                 var dbConnectionMock = new Mock<DbConnection>();
                 dbConnectionMock.Protected().Setup<DbCommand>("CreateDbCommand").Returns(() => dbCommandMock.Object);
                 dbConnectionMock.Setup(m => m.DataSource).Returns("fake");
@@ -2062,6 +2126,10 @@ namespace System.Data.Entity.Core.Objects
                                                     }
                                                 });
 
+                parameterCollectionMock
+                   .Setup(m => m.GetEnumerator())
+                   .Returns(new List<DbParameter>().GetEnumerator());
+
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
@@ -2115,6 +2183,10 @@ namespace System.Data.Entity.Core.Objects
                                                         correctParameters = true;
                                                     }
                                                 });
+
+                parameterCollectionMock
+                   .Setup(m => m.GetEnumerator())
+                   .Returns(new List<DbParameter>().GetEnumerator());
 
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(0));
@@ -2191,7 +2263,7 @@ namespace System.Data.Entity.Core.Objects
                 Executes_in_a_transaction_using_ExecutionStrategy(startTransaction: false);
             }
 
-            private void Executes_in_a_transaction_using_ExecutionStrategy(bool startTransaction)
+            private static void Executes_in_a_transaction_using_ExecutionStrategy(bool startTransaction)
             {
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(1));
@@ -2277,7 +2349,9 @@ namespace System.Data.Entity.Core.Objects
                                                         correctParameters = true;
                                                     }
                                                 });
-
+                parameterCollectionMock
+                   .Setup(m => m.GetEnumerator())
+                   .Returns(new List<DbParameter>().GetEnumerator());
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
                     "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
                              .Returns(
@@ -2315,7 +2389,9 @@ namespace System.Data.Entity.Core.Objects
                                                         correctParameters = true;
                                                     }
                                                 });
-
+                parameterCollectionMock
+                   .Setup(m => m.GetEnumerator())
+                   .Returns(new List<DbParameter>().GetEnumerator());
                 var dataReader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } });
                 // This reader will throw if buffering is on
                 Mock.Get(dataReader).Setup(m => m.ReadAsync(It.IsAny<CancellationToken>())).Throws(new NotImplementedException());
@@ -2347,8 +2423,14 @@ namespace System.Data.Entity.Core.Objects
                              .Setup<Task<DbDataReader>>(
                                  "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
                              .Returns(Task.FromResult(storeDataReaderMock.Object));
+
+                var parameterCollectionMock = new Mock<DbParameterCollection>();
+                parameterCollectionMock
+                    .Setup(m => m.GetEnumerator())
+                    .Returns(new List<DbParameter>().GetEnumerator());
+
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
-                    () => new Mock<DbParameterCollection>().Object);
+                    () => parameterCollectionMock.Object);
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
@@ -2391,8 +2473,14 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
                     "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
                              .Throws(new InvalidOperationException("Foo"));
+
+                var parameterCollectionMock = new Mock<DbParameterCollection>();
+                parameterCollectionMock
+                   .Setup(m => m.GetEnumerator())
+                   .Returns(new List<DbParameter>().GetEnumerator());
+
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
-                    () => new Mock<DbParameterCollection>().Object);
+                    () => parameterCollectionMock.Object);
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
@@ -2414,8 +2502,14 @@ namespace System.Data.Entity.Core.Objects
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
                     "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
                              .Returns(Task.FromResult(dataReader));
+
+                var parameterCollectionMock = new Mock<DbParameterCollection>();
+                parameterCollectionMock
+                   .Setup(m => m.GetEnumerator())
+                   .Returns(new List<DbParameter>().GetEnumerator());
+                
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
-                    () => new Mock<DbParameterCollection>().Object);
+                    () => parameterCollectionMock.Object);
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 

@@ -15,6 +15,22 @@ namespace System.Data.Entity.Utilities
     [DebuggerStepThrough]
     internal static class IEnumerableExtensions
     {
+        public static string Uniquify(this IEnumerable<string> inputStrings, string targetString)
+        {
+            DebugCheck.NotNull(inputStrings);
+            DebugCheck.NotEmpty(targetString);
+
+            var uniqueString = targetString;
+            var i = 0;
+
+            while (inputStrings.Any(n => string.Equals(n, uniqueString, StringComparison.Ordinal)))
+            {
+                uniqueString = targetString + ++i;
+            }
+
+            return uniqueString;
+        }
+
         public static void Each<T>(this IEnumerable<T> ts, Action<T, int> action)
         {
             DebugCheck.NotNull(ts);

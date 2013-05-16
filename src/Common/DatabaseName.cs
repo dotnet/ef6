@@ -8,52 +8,41 @@ namespace System.Data.Entity.SqlServerCompact.Utilities
 namespace System.Data.Entity.Utilities
 #endif
 {
+    using System.Globalization;
+    using System.Text.RegularExpressions;
     using Resources;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
 
-    [SuppressMessage("Microsoft.Contracts", "CC1036",
-        Justification = "Due to a bug in code contracts IsNullOrWhiteSpace isn't recognized as pure.")]
     internal class DatabaseName
     {
+        private const string NamePartRegex
+            = @"(?:(?:\[(?<part{0}>(?:(?:\]\])|[^\]])+)\])|(?<part{0}>[^\.\[\]]+))";
+
+        private static readonly Regex _partExtractor
+            = new Regex(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    @"^{0}(?:\.{1})?$",
+                    string.Format(CultureInfo.InvariantCulture, NamePartRegex, 1),
+                    string.Format(CultureInfo.InvariantCulture, NamePartRegex, 2)),
+                RegexOptions.Compiled);
+
         public static DatabaseName Parse(string name)
         {
             DebugCheck.NotEmpty(name);
 
-            var parts = name.Trim().Split('.');
+            var match = _partExtractor.Match(name.Trim());
 
-            Debug.Assert(parts.Length > 0);
-
-            if (parts.Length > 2)
+            if (!match.Success)
             {
                 throw Error.InvalidDatabaseName(name);
             }
 
-            string schema = null;
-            string objectName;
+            var part1 = match.Groups["part1"].Value.Replace("]]", "]");
+            var part2 = match.Groups["part2"].Value.Replace("]]", "]");
 
-            if (parts.Length == 2)
-            {
-                schema = parts[0];
-
-                if (string.IsNullOrWhiteSpace(schema))
-                {
-                    throw Error.InvalidDatabaseName(name);
-                }
-
-                objectName = parts[1];
-            }
-            else
-            {
-                objectName = parts[0];
-            }
-
-            if (string.IsNullOrWhiteSpace(objectName))
-            {
-                throw Error.InvalidDatabaseName(name);
-            }
-
-            return new DatabaseName(objectName, schema);
+            return !string.IsNullOrWhiteSpace(part2)
+                       ? new DatabaseName(part2, part1)
+                       : new DatabaseName(part1);
         }
 
         // Note: This class is currently immutable. If you make it mutable then you
@@ -86,14 +75,21 @@ namespace System.Data.Entity.Utilities
 
         public override string ToString()
         {
-            var s = _name;
+            var s = Escape(_name);
 
             if (_schema != null)
             {
-                s = _schema + "." + s;
+                s = Escape(_schema) + "." + s;
             }
 
             return s;
+        }
+
+        private static string Escape(string name)
+        {
+            return name.IndexOfAny(new[] { ']', '[', '.' }) != -1
+                       ? "[" + name.Replace("]", "]]") + "]"
+                       : name;
         }
 
         public bool Equals(DatabaseName other)

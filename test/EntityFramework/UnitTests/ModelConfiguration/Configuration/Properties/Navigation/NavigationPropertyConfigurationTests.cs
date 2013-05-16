@@ -242,7 +242,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             navigationPropertyConfiguration.Configure(associationSetMapping, databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 
-            Assert.Equal("Func", associationSetMapping.ModificationFunctionMapping.InsertFunctionMapping.Function.Name);
+            Assert.Equal("Func", associationSetMapping.ModificationFunctionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute);
         }
 
         [Fact]

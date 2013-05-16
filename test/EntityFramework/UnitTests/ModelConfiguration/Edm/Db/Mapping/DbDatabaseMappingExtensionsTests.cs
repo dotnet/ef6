@@ -5,7 +5,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Linq;
     using Xunit;
 
@@ -113,7 +112,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             var databaseMapping = new DbDatabaseMapping()
                 .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
 
-            databaseMapping.AddAssociationSetMapping(new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), new EntitySet());
+            databaseMapping.AddAssociationSetMapping(
+                new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), new EntitySet());
 
             Assert.Equal(1, databaseMapping.GetAssociationSetMappings().Count());
         }

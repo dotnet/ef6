@@ -462,7 +462,7 @@ namespace System.Data.Entity.ModelConfiguration
 
             var clone = configuration.Clone();
             
-            Assert.True(clone.IsMappedToFunctions);
+            Assert.NotNull(clone.ModificationFunctionsConfiguration);
         }
 
         [Fact]

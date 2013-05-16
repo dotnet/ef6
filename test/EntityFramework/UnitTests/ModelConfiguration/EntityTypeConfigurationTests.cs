@@ -67,7 +67,7 @@ namespace System.Data.Entity.ModelConfiguration
 
             entityConfiguration.MapToStoredProcedures(c => { configuration = c; });
             
-            mockEntityTypeConfiguration.Verify(e => e.MapToStoredProcedures(configuration.Configuration));
+            mockEntityTypeConfiguration.Verify(e => e.MapToStoredProcedures(configuration.Configuration, true));
         }
 
         [Fact]

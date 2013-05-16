@@ -34,9 +34,11 @@ namespace System.Data.Entity.Migrations.Model
         {
             get
             {
-                var databaseName = _name.ToDatabaseName();
+                var databaseName = DatabaseName.Parse(_name);
 
-                return new MoveProcedureOperation(NewSchema + '.' + databaseName.Name, databaseName.Schema);
+                return new MoveProcedureOperation(
+                    new DatabaseName(databaseName.Name, NewSchema).ToString(), 
+                    databaseName.Schema);
             }
         }
 

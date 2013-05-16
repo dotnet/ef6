@@ -40,7 +40,6 @@ namespace System.Data.Entity.SqlServerCompact
 
         private DbProviderManifest _providerManifest;
         private List<MigrationStatement> _statements;
-        private HashSet<string> _generatedSchemas;
 
         /// <summary>
         ///     Converts a set of migration operations into Microsoft SQL Server specific SQL.
@@ -55,7 +54,6 @@ namespace System.Data.Entity.SqlServerCompact
             Check.NotNull(providerManifestToken, "providerManifestToken");
 
             _statements = new List<MigrationStatement>();
-            _generatedSchemas = new HashSet<string>();
 
             InitializeProviderServices(providerManifestToken);
 
@@ -119,19 +117,6 @@ namespace System.Data.Entity.SqlServerCompact
         {
             Check.NotNull(createTableOperation, "createTableOperation");
 
-            var databaseName = createTableOperation.Name.ToDatabaseName();
-
-            if (!string.IsNullOrWhiteSpace(databaseName.Schema))
-            {
-                if (!databaseName.Schema.EqualsIgnoreCase("dbo")
-                    && !_generatedSchemas.Contains(databaseName.Schema))
-                {
-                    GenerateCreateSchema(databaseName.Schema);
-
-                    _generatedSchemas.Add(databaseName.Schema);
-                }
-            }
-
             using (var writer = Writer())
             {
                 WriteCreateTable(createTableOperation, writer);
@@ -190,15 +175,6 @@ namespace System.Data.Entity.SqlServerCompact
         /// </summary>
         /// <param name="table"> The table to mark as a system table. </param>
         protected virtual void GenerateMakeSystemTable(CreateTableOperation createTableOperation, IndentedTextWriter writer)
-        {
-        }
-
-        /// <summary>
-        ///     Generates SQL to create a database schema.
-        ///     Generated SQL should be added using the Statement method.
-        /// </summary>
-        /// <param name="createTableOperation"> The name of the schema to create. </param>
-        protected virtual void GenerateCreateSchema(string schema)
         {
         }
 
@@ -536,9 +512,9 @@ namespace System.Data.Entity.SqlServerCompact
             using (var writer = Writer())
             {
                 writer.Write("EXECUTE sp_rename @objname = N'");
-                writer.Write(renameTableOperation.Name.ToDatabaseName().Name);
+                writer.Write(Escape(DatabaseName.Parse(renameTableOperation.Name).Name));
                 writer.Write("', @newname = N'");
-                writer.Write(renameTableOperation.NewName);
+                writer.Write(Escape(renameTableOperation.NewName));
                 writer.Write("', @objtype = N'OBJECT'");
 
                 Statement(writer);
@@ -857,7 +833,7 @@ namespace System.Data.Entity.SqlServerCompact
         {
             Check.NotEmpty(name, "name");
 
-            return Quote(name.ToDatabaseName().Name);
+            return Quote(DatabaseName.Parse(name).Name);
         }
 
         /// <summary>
@@ -869,7 +845,14 @@ namespace System.Data.Entity.SqlServerCompact
         {
             Check.NotEmpty(identifier, "identifier");
 
-            return "[" + identifier + "]";
+            return SqlGenerator.QuoteIdentifier(identifier);
+        }
+
+        private static string Escape(string s)
+        {
+            DebugCheck.NotEmpty(s);
+
+            return s.Replace("'", "''");
         }
 
         /// <summary>

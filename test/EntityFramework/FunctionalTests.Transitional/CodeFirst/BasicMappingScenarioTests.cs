@@ -13,7 +13,6 @@ namespace FunctionalTests
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
-    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Windows.Media;
     using FunctionalTests.Model;

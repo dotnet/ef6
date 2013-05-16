@@ -262,7 +262,7 @@ namespace System.Data.Entity.SqlServer
         {
             Check.NotNull(createTableOperation, "createTableOperation");
 
-            var databaseName = createTableOperation.Name.ToDatabaseName();
+            var databaseName = DatabaseName.Parse(createTableOperation.Name);
 
             if (!string.IsNullOrWhiteSpace(databaseName.Schema))
             {
@@ -340,7 +340,7 @@ namespace System.Data.Entity.SqlServer
             writer.WriteLine("BEGIN TRY");
 
             writer.Indent++;
-            writer.WriteLine("EXEC sp_MS_marksystemobject '" + createTableOperation.Name + "'");
+            writer.WriteLine("EXECUTE sp_MS_marksystemobject '" + Escape(createTableOperation.Name) + "'");
             writer.Indent--;
 
             writer.WriteLine("END TRY");
@@ -360,11 +360,11 @@ namespace System.Data.Entity.SqlServer
             using (var writer = Writer())
             {
                 writer.Write("IF schema_id('");
-                writer.Write(schema);
+                writer.Write(Escape(schema));
                 writer.WriteLine("') IS NULL");
                 writer.Indent++;
                 writer.Write("EXECUTE('CREATE SCHEMA ");
-                writer.Write(Quote(schema));
+                writer.Write(Escape(Quote(schema)));
                 writer.Write("')");
 
                 Statement(writer);
@@ -676,7 +676,7 @@ namespace System.Data.Entity.SqlServer
             writer.WriteLine(" IS NOT NULL");
             writer.Indent++;
             writer.Write("EXECUTE('ALTER TABLE ");
-            writer.Write(Name(table));
+            writer.Write(Escape(Name(table)));
             writer.Write(" DROP CONSTRAINT ' + ");
             writer.Write(variable);
             writer.WriteLine(")");
@@ -725,11 +725,11 @@ namespace System.Data.Entity.SqlServer
             using (var writer = Writer())
             {
                 writer.Write("EXECUTE sp_rename @objname = N'");
-                writer.Write(renameColumnOperation.Table);
+                writer.Write(Escape(renameColumnOperation.Table));
                 writer.Write(".");
-                writer.Write(renameColumnOperation.Name);
+                writer.Write(Escape(renameColumnOperation.Name));
                 writer.Write("', @newname = N'");
-                writer.Write(renameColumnOperation.NewName);
+                writer.Write(Escape(renameColumnOperation.NewName));
                 writer.Write("', @objtype = N'COLUMN'");
 
                 Statement(writer);
@@ -756,9 +756,9 @@ namespace System.Data.Entity.SqlServer
         private static void WriteRenameTable(RenameTableOperation renameTableOperation, IndentedTextWriter writer)
         {
             writer.Write("EXECUTE sp_rename @objname = N'");
-            writer.Write(renameTableOperation.Name);
+            writer.Write(Escape(renameTableOperation.Name));
             writer.Write("', @newname = N'");
-            writer.Write(renameTableOperation.NewName);
+            writer.Write(Escape(renameTableOperation.NewName));
             writer.Write("', @objtype = N'OBJECT'");
         }
 
@@ -769,9 +769,9 @@ namespace System.Data.Entity.SqlServer
             using (var writer = Writer())
             {
                 writer.Write("EXECUTE sp_rename @objname = N'");
-                writer.Write(renameProcedureOperation.Name);
+                writer.Write(Escape(renameProcedureOperation.Name));
                 writer.Write("', @newname = N'");
-                writer.Write(renameProcedureOperation.NewName);
+                writer.Write(Escape(renameProcedureOperation.NewName));
                 writer.Write("', @objtype = N'OBJECT'");
 
                 Statement(writer);
@@ -1176,7 +1176,7 @@ namespace System.Data.Entity.SqlServer
         {
             Check.NotEmpty(name, "name");
 
-            var databaseName = name.ToDatabaseName();
+            var databaseName = DatabaseName.Parse(name);
 
             return new[] { databaseName.Schema, databaseName.Name }.Join(Quote, ".");
         }
@@ -1190,7 +1190,14 @@ namespace System.Data.Entity.SqlServer
         {
             Check.NotEmpty(identifier, "identifier");
 
-            return "[" + identifier + "]";
+            return SqlGenerator.QuoteIdentifier(identifier);
+        }
+
+        private static string Escape(string s)
+        {
+            DebugCheck.NotEmpty(s);
+
+            return s.Replace("'", "''");
         }
 
         /// <summary>
@@ -1296,9 +1303,9 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        /// Creates a shallow copy of the source CreateTableOperation and the associated
-        /// AddPrimaryKeyOperation but renames the table and the primary key in order  
-        /// to avoid name conflicts with existing objects.
+        ///     Creates a shallow copy of the source CreateTableOperation and the associated
+        ///     AddPrimaryKeyOperation but renames the table and the primary key in order
+        ///     to avoid name conflicts with existing objects.
         /// </summary>
         private static CreateTableOperation ResolveNameConflicts(CreateTableOperation source)
         {
@@ -1320,8 +1327,8 @@ namespace System.Data.Entity.SqlServer
             public readonly DropPrimaryKeyOperation DropPrimaryKeyOperation;
 
             private HistoryRebuildOperationSequence(
-                AddColumnOperation addColumnOperation, 
-                DropPrimaryKeyOperation dropPrimaryKeyOperation) 
+                AddColumnOperation addColumnOperation,
+                DropPrimaryKeyOperation dropPrimaryKeyOperation)
                 : base(null)
             {
                 AddColumnOperation = addColumnOperation;

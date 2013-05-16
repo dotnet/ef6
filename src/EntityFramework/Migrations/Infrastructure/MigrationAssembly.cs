@@ -54,15 +54,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         public virtual string UniquifyName(string migrationName)
         {
-            var uniqueName = migrationName;
-            var counter = 1;
-
-            while (_migrations.Any(m => string.Equals(m.GetType().Name, uniqueName, StringComparison.Ordinal)))
-            {
-                uniqueName = migrationName + counter++;
-            }
-
-            return uniqueName;
+            return _migrations.Select(m => m.GetType().Name).Uniquify(migrationName);
         }
 
         public virtual DbMigration GetMigration(string migrationId)

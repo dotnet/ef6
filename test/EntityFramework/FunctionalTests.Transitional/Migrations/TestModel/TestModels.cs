@@ -269,18 +269,6 @@ namespace System.Data.Entity.Migrations
         public string Url { get; set; }
     }
 
-    internal class MappingScenariosContext : DbContext
-    {
-        public DbSet<MigrationsEmployee> Employees { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<MigrationsEmployee>()
-                        .HasOptional(e => e.Manager)
-                        .WithMany(m => m.DirectReports);
-        }
-    }
-
     internal class MigrationsEmployee
     {
         public int Id { get; set; }
