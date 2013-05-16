@@ -666,7 +666,6 @@ function New-AppDomainSetup($Project, $InstallPath)
 
 function New-DomainDispatcher($ToolsPath)
 {
-    [AppDomain]::CurrentDomain.SetShadowCopyFiles()
     $utilityAssembly = [System.Reflection.Assembly]::LoadFrom((Join-Path $ToolsPath EntityFramework.PowerShell.Utility.dll))
     $dispatcher = $utilityAssembly.CreateInstance(
         'System.Data.Entity.Migrations.Utilities.DomainDispatcher',
