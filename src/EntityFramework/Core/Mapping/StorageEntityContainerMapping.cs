@@ -420,12 +420,14 @@ namespace System.Data.Entity.Core.Mapping
 
             StorageMappingItemCollection.GenerateEntitySetViews(this, views, errors);
 
-            return new ContainerMappingViewGroup(
-                StorageEntityContainer.Name,
-                EdmEntityContainer.Name,
-                MetadataMappingHasherVisitor.GetMappingClosureHash(
-                    StorageMappingItemCollection.MappingVersion, this),
-                views);
+            return views.Count > 0
+                       ? new ContainerMappingViewGroup(
+                             StorageEntityContainer.Name,
+                             EdmEntityContainer.Name,
+                             MetadataMappingHasherVisitor.GetMappingClosureHash(
+                                 StorageMappingItemCollection.MappingVersion, this),
+                             views)
+                       : null;
         }
     }
 

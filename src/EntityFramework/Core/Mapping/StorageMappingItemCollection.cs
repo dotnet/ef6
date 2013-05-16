@@ -899,14 +899,11 @@ namespace System.Data.Entity.Core.Mapping
         {
             var esqlViews = new Dictionary<EntitySetBase, string>();
             errors = new List<EdmSchemaError>();
-            foreach (var mapping in GetItems<Map>())
+            foreach (var entityContainerMapping in GetItems<StorageEntityContainerMapping>())
             {
-                var entityContainerMapping = mapping as StorageEntityContainerMapping;
-                if (entityContainerMapping != null)
+                // If there are no entity set maps, don't call the view generation process.
+                if (entityContainerMapping.HasViews)
                 {
-                    // If there are no entity set maps, don't call the view generation process.
-                    if (!entityContainerMapping.HasViews) break;
-
                     GenerateEntitySetViews(entityContainerMapping, esqlViews, errors);
                 }
             }
@@ -1517,17 +1514,14 @@ namespace System.Data.Entity.Core.Mapping
         {
             var viewGroups = new List<ContainerMappingViewGroup>();
 
-            foreach (var item in GetItems<Map>())
+            foreach (var mapping in GetItems<StorageEntityContainerMapping>())
             {
-                var mapping = item as StorageEntityContainerMapping;
-                if (mapping != null)
+                var group = mapping.GenerateViews(errors);
+
+                if (group != null)
                 {
-                    var group = mapping.GenerateViews(errors);
-
-                    if (group == null) break;
-
                     viewGroups.Add(group);
-                }
+                }              
             }
 
             return viewGroups;

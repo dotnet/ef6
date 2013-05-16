@@ -140,13 +140,8 @@ namespace System.Data.Entity.Core.Mapping
         {
             if (m_internalTreeNode == null)
             {
-                var viewGenErrors = new List<EdmSchemaError>();
                 DiscriminatorMap discriminatorMap;
                 var tree = GenerateFunctionView(out discriminatorMap);
-                if (viewGenErrors.Count > 0)
-                {
-                    throw new MappingException(Helper.CombineErrorMessage(viewGenErrors));
-                }
                 Debug.Assert(tree != null, "tree != null");
 
                 // Convert this into an ITree first
@@ -273,23 +268,17 @@ namespace System.Data.Entity.Core.Mapping
             {
                 queryExpression = GenerateStructuralTypeResultMappingView(storeFunctionInvoke, out discriminatorMap);
                 Debug.Assert(
-                    queryExpression == null ||
-                    TypeSemantics.IsPromotableTo(queryExpression.ResultType, FunctionImport.ReturnParameter.TypeUsage),
+                    queryExpression != null
+                    && TypeSemantics.IsPromotableTo(queryExpression.ResultType, FunctionImport.ReturnParameter.TypeUsage),
                     "TypeSemantics.IsPromotableTo(queryExpression.ResultType, this.FunctionImport.ReturnParameter.TypeUsage)");
             }
             else
             {
                 queryExpression = GenerateScalarResultMappingView(storeFunctionInvoke);
                 Debug.Assert(
-                    queryExpression == null ||
-                    TypeSemantics.IsEqual(queryExpression.ResultType, FunctionImport.ReturnParameter.TypeUsage),
+                    queryExpression != null 
+                    && TypeSemantics.IsEqual(queryExpression.ResultType, FunctionImport.ReturnParameter.TypeUsage),
                     "TypeSemantics.IsEqual(queryExpression.ResultType, this.FunctionImport.ReturnParameter.TypeUsage)");
-            }
-
-            if (queryExpression == null)
-            {
-                // In case of errors during view generation, return.
-                return null;
             }
 
             // Generate parameterized command, where command parameters are semantically the c-space function parameters.
@@ -344,10 +333,6 @@ namespace System.Data.Entity.Core.Mapping
 
                 var binding = queryExpression.BindAs("row");
                 var entityTypeMappingView = GenerateStructuralTypeMappingView(type, propertyMappings, binding.Variable);
-                if (entityTypeMappingView == null)
-                {
-                    return null;
-                }
 
                 queryExpression = binding.Project(entityTypeMappingView);
             }
@@ -372,24 +357,11 @@ namespace System.Data.Entity.Core.Mapping
                     var type = mapping.Item1;
                     var propertyMappings = mapping.Item3;
 
-                    var structuralTypeMappingView = GenerateStructuralTypeMappingView(type, propertyMappings, binding.Variable);
-                    if (structuralTypeMappingView == null)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        structuralTypeMappingViews.Add(structuralTypeMappingView);
-                    }
+                    structuralTypeMappingViews.Add(GenerateStructuralTypeMappingView(type, propertyMappings, binding.Variable));
                 }
                 Debug.Assert(
                     structuralTypeMappingViews.Count == structuralTypePredicates.Count,
                     "structuralTypeMappingViews.Count == structuralTypePredicates.Count");
-                if (structuralTypeMappingViews.Count
-                    != m_structuralTypeMappings.Count)
-                {
-                    return null;
-                }
 
                 // Because we are projecting over the closed set, we can convert the last WHEN THEN into ELSE.
                 DbExpression typeConstructors = DbExpressionBuilder.Case(
@@ -419,22 +391,10 @@ namespace System.Data.Entity.Core.Mapping
             {
                 var propertyMapping = propertyMappings[i];
                 Debug.Assert(properties[i].EdmEquals(propertyMapping.EdmProperty), "properties[i].EdmEquals(propertyMapping.EdmProperty)");
-                var propertyMappingView = GeneratePropertyMappingView(propertyMapping, row);
-                if (propertyMappingView != null)
-                {
-                    constructorArgs.Add(propertyMappingView);
-                }
+                constructorArgs.Add(GeneratePropertyMappingView(propertyMapping, row));
             }
-            if (constructorArgs.Count
-                != propertyMappings.Count)
-            {
-                return null;
-            }
-            else
-            {
-                // Return the structural type constructor.
-                return TypeUsage.Create(structuralType).New(constructorArgs);
-            }
+            // Return the structural type constructor.
+            return TypeUsage.Create(structuralType).New(constructorArgs);
         }
 
         private static DbExpression GenerateStructuralTypeConditionsPredicate(
@@ -502,7 +462,7 @@ namespace System.Data.Entity.Core.Mapping
             var rowType = (RowType)collectionType.TypeUsage.EdmType;
             var column = rowType.Properties[0];
 
-            Func<DbExpression, DbExpression> scalarView = (DbExpression row) =>
+            Func<DbExpression, DbExpression> scalarView = row =>
                 {
                     var propertyAccess = row.Property(column);
                     if (TypeSemantics.IsEqual(
@@ -516,8 +476,10 @@ namespace System.Data.Entity.Core.Mapping
                     }
                 };
 
-            queryExpression = queryExpression.Select(row => scalarView(row));
-            return queryExpression;
+// ReSharper disable ConvertClosureToMethodGroup
+            // using Method Group breaks matching the expression in DbExpressionBuilder.ResolveToExpression
+            return queryExpression.Select(row => scalarView(row));
+// ReSharper restore ConvertClosureToMethodGroup
         }
     }
 }

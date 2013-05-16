@@ -32,8 +32,8 @@ namespace System.Data.Entity.Core.Mapping
             "</Schema>";
 
         internal const string Csdl =
-            "<Schema Namespace='AdventureWorksModel' Alias='Self' p1:UseStrongSpatialTypes='false' xmlns:annotation='http://schemas.microsoft.com/ado/2009/02/edm/annotation' xmlns:p1='http://schemas.microsoft.com/ado/2009/02/edm/annotation' xmlns='http://schemas.microsoft.com/ado/2009/11/edm'>" +
-            "   <EntityContainer Name='AdventureWorksEntities3' p1:LazyLoadingEnabled='true' >" +
+            "<Schema Namespace='AdventureWorksModel' Alias='Self' xmlns:annotation='http://schemas.microsoft.com/ado/2009/02/edm/annotation' xmlns='http://schemas.microsoft.com/ado/2009/11/edm'>" +
+            "   <EntityContainer Name='AdventureWorksEntities3'>" +
             "       <EntitySet Name='Entities' EntityType='AdventureWorksModel.Entity' />" +
             "   </EntityContainer>" +
             "   <EntityType Name='Entity'>" +
@@ -58,6 +58,46 @@ namespace System.Data.Entity.Core.Mapping
             "    </EntitySetMapping>" +
             "  </EntityContainerMapping>" +
             "</Mapping>";
+
+        private const string SchoolSsdl =
+            "<Schema Namespace='SchoolModel.Store' Provider='System.Data.SqlClient' ProviderManifestToken='2008' xmlns='http://schemas.microsoft.com/ado/2009/11/edm/ssdl'>" +
+            "  <EntityContainer Name='SchoolStoreContainer'>" +
+            "    <EntitySet Name='Students' EntityType='SchoolModel.Store.Students' Schema='dbo' />" +
+            "  </EntityContainer>" +
+            "  <EntityType Name='Students'>" +
+            "    <Key>" +
+            "      <PropertyRef Name='Id' />" +
+            "    </Key>" +
+            "    <Property Name='Id' Type='int' StoreGeneratedPattern='Identity' Nullable='false' />" +
+            "  </EntityType>" +
+            "</Schema>";
+
+        private const string SchoolCsdl =
+            "<Schema Namespace='SchoolModel' Alias='Self' xmlns:annotation='http://schemas.microsoft.com/ado/2009/02/edm/annotation' xmlns='http://schemas.microsoft.com/ado/2009/11/edm'>" +
+            "   <EntityContainer Name='SchoolContainer'>" +
+            "       <EntitySet Name='Students' EntityType='SchoolModel.Student' />" +
+            "   </EntityContainer>" +
+            "   <EntityType Name='Student'>" +
+            "       <Key>" +
+            "           <PropertyRef Name='Id' />" +
+            "       </Key>" +
+            "       <Property Type='Int32' Name='Id' Nullable='false' annotation:StoreGeneratedPattern='Identity' />" +
+            "   </EntityType>" +
+            "</Schema>";
+
+        private const string SchoolMsl =
+            "<Mapping Space='C-S' xmlns='http://schemas.microsoft.com/ado/2009/11/mapping/cs'>" +
+            "  <EntityContainerMapping StorageEntityContainer='SchoolStoreContainer' CdmEntityContainer='SchoolContainer'>" +
+            "    <EntitySetMapping Name='Students'>" +
+            "      <EntityTypeMapping TypeName='SchoolModel.Student'>" +
+            "        <MappingFragment StoreEntitySet='Students'>" +
+            "          <ScalarProperty Name='Id' ColumnName='Id' />" +
+            "        </MappingFragment>" +
+            "      </EntityTypeMapping>" +
+            "    </EntitySetMapping>" +
+            "  </EntityContainerMapping>" +
+            "</Mapping>";
+
 
         [Fact]
         public void StorageMappingItemCollection_Create_factory_method_throws_for_null_edmItemCollection()
@@ -230,44 +270,28 @@ namespace System.Data.Entity.Core.Mapping
 
         internal static StorageMappingItemCollection CreateStorageMappingItemCollection(string ssdl, string csdl, string msl)
         {
-            StoreItemCollection storeCollection;
-            EdmItemCollection edmCollection;
-            StorageMappingItemCollection mappingCollection;
+            return CreateStorageMappingItemCollection(new[] {ssdl}, new [] {csdl}, new [] { msl });
+        }
 
-            using (var stringReader = new StringReader(ssdl))
-            using (var xmlReader = XmlReader.Create(stringReader))
-            {
-                storeCollection = new StoreItemCollection(new[] { xmlReader });
-            }
-
-            using (var stringReader = new StringReader(csdl))
-            using (var xmlReader = XmlReader.Create(stringReader))
-            {
-                edmCollection = new EdmItemCollection(new[] { xmlReader });
-            }
-
-            using (var stringReader = new StringReader(msl))
-            using (var xmlReader = XmlReader.Create(stringReader))
-            {
-                mappingCollection = new StorageMappingItemCollection(edmCollection, storeCollection, new[] { xmlReader });
-            }
-
-            return mappingCollection;
+        private static StorageMappingItemCollection CreateStorageMappingItemCollection(string[] ssdlArtifacts, string[] csdlArtifacts, string[] mslArtifacts)
+        {
+            return new StorageMappingItemCollection(
+                new EdmItemCollection(csdlArtifacts.Select(csdl => XmlReader.Create(new StringReader(csdl)))),
+                new StoreItemCollection(ssdlArtifacts.Select(ssdl => XmlReader.Create(new StringReader(ssdl)))), 
+                mslArtifacts.Select(msl => XmlReader.Create(new StringReader(msl))));
         }
 
         [Fact]
-        public static void Generate_creates_expected_result()
+        public static void GenerateViews_creates_expected_result()
         {
             var mappingCollection =
-                StorageMappingItemCollectionTests.CreateStorageMappingItemCollection(
-                    StorageMappingItemCollectionTests.Ssdl,
-                    StorageMappingItemCollectionTests.Csdl,
-                    StorageMappingItemCollectionTests.Msl);
+                CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { Msl, SchoolMsl });
 
             var errors = new List<EdmSchemaError>();
             var viewGroups = mappingCollection.GenerateViews(errors);
 
-            Assert.Equal(1, viewGroups.Count);
+            Assert.Empty(errors);
+            Assert.Equal(2, viewGroups.Count);
 
             var group = viewGroups[0];
 
@@ -275,6 +299,63 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Equal("AdventureWorksEntities3", group.ModelContainerName);
             Assert.Equal("e6447993a1b3926723f95dce0a1caccc96ec5774b5ee78bbd28748745ad30db2", group.MappingHash);
             Assert.Equal(2, group.Views.Count);
+        }
+
+        [Fact]
+        public static void GenerateViews_returns_errors_for_invalid_mapping()
+        {
+            var msl = XDocument.Parse(Msl);
+            msl.Descendants("{http://schemas.microsoft.com/ado/2009/11/mapping/cs}ScalarProperty")
+                .Where(e => (string)e.Attribute("Name") == "Name")
+                .Remove();
+
+            var errors = new List<EdmSchemaError>();
+            var views = CreateStorageMappingItemCollection(Ssdl, Csdl, msl.ToString())
+                .GenerateViews(errors);
+
+            Assert.Empty(views);
+            Assert.Equal(1, errors.Count);
+            Assert.Contains(Strings.ViewGen_No_Default_Value("Entities", "Entities.Name"), errors[0].Message);
+        }
+
+        [Fact]
+        public static void GenerateViews_generates_views_for_all_containers_that_contain_mappings()
+        {
+            var storageMappingItemCollection = 
+                CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { SchoolMsl, Msl});
+
+            var containerMapping = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().First();
+            foreach (var entityTypeMapping in containerMapping.EntitySetMappings.SelectMany(m => m.EntityTypeMappings).ToList())
+            {
+                entityTypeMapping.SetMapping.RemoveTypeMapping(entityTypeMapping);
+            }
+
+            var errors = new List<EdmSchemaError>();
+            var viewGroups = storageMappingItemCollection.GenerateViews(errors);
+
+            Assert.Empty(errors);
+            Assert.Equal(1, viewGroups.Count);
+        }
+
+        [Fact]
+        public static void GenerateEntitySetViews_generates_views_for_all_containers_that_contain_mappings()
+        {
+            var storageMappingItemCollection =
+                CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { SchoolMsl, Msl });
+
+            var containerMapping = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().First();
+            foreach (var entityTypeMapping in containerMapping.EntitySetMappings.SelectMany(m => m.EntityTypeMappings).ToList())
+            {
+                entityTypeMapping.SetMapping.RemoveTypeMapping(entityTypeMapping);
+            }
+
+            IList<EdmSchemaError> errors;
+            var views = storageMappingItemCollection.GenerateEntitySetViews(out errors);
+
+            Assert.Empty(errors);
+
+            // expected 2 views - 1 query view and 1 update view
+            Assert.Equal(2, views.Count);
         }
     }
 }
