@@ -44,9 +44,6 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
 
             modelBuilder.Entity<Weapon>().HasOptional(w => w.SynergyWith).WithOptionalPrincipal();
 
-            modelBuilder.Entity<CogTag>().Property(t => t.Id)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-
             modelBuilder.Entity<CogTag>().Property(t => t.Note).HasMaxLength(40);
         }
     }

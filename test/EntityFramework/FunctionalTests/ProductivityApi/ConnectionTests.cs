@@ -12,6 +12,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using SimpleModel;
     using Xunit;
 
@@ -191,6 +192,14 @@ namespace ProductivityApiTests
             {
                 if (initialState == ConnectionState.Open)
                 {
+                    // if connection string contains password (i.e. not Integrated Security)
+                    // this scenairo will not work since it requires connection to master
+                    // and the connection will have been stripped of credentials by then
+                    if (ConnectionStringContainsPassword(connection.ConnectionString))
+                    {
+                        return;
+                    }
+
                     connection.Open();
                 }
                 Assert.Equal(initialState, connection.State);
@@ -215,6 +224,12 @@ namespace ProductivityApiTests
                 Assert.Equal(initialState, connection.State);
                 connection.Close();
             }
+        }
+
+        private bool ConnectionStringContainsPassword(string connectionString)
+        {
+            var regex = new Regex("Password=[^;]*", RegexOptions.IgnoreCase);
+            return regex.IsMatch(connectionString);
         }
 
         [Fact]

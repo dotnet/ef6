@@ -15,7 +15,6 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
@@ -644,16 +643,16 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Executes_in_a_transaction_using_ExecutionStrategy()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy(startTransaction: true);
+                Executes_in_a_transaction_using_ExecutionStrategy_Helper(startTransaction: true);
             }
 
             [Fact]
             public void Executes_without_a_transaction_using_ExecutionStrategy_when_calling_with_DoNotBeginTransaction()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy(startTransaction: false);
+                Executes_in_a_transaction_using_ExecutionStrategy_Helper(startTransaction: false);
             }
 
-            private void Executes_in_a_transaction_using_ExecutionStrategy(bool startTransaction)
+            private void Executes_in_a_transaction_using_ExecutionStrategy_Helper(bool startTransaction)
             {
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQuery()).Returns(1);

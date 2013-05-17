@@ -82,11 +82,13 @@ namespace System.Data.Entity.Migrations
 
         public override void EnsureDatabase()
         {
-            var sql
-                = "IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'" + _name + "') "
-                  + "CREATE DATABASE [" + _name + "]";
-
-            ExecuteNonQuery(sql, ModelHelpers.SimpleConnectionString("master"));
+            var databaseExistsSql = "SELECT Count(*) FROM sys.databases WHERE name = N'" + _name + "'";
+            var databaseExists = ExecuteScalar<int>(databaseExistsSql, ModelHelpers.SimpleConnectionString("master")) == 1;
+            if (!databaseExists)
+            {
+                var createDatabaseSql = "CREATE DATABASE [" + _name + "]";
+                ExecuteNonQuery(createDatabaseSql, ModelHelpers.SimpleConnectionString("master"));
+            }
 
             ResetDatabase();
         }
@@ -132,7 +134,14 @@ namespace System.Data.Entity.Migrations
                   CLOSE constraint_cursor;
                   DEALLOCATE constraint_cursor;
 
-                  EXEC sp_MSforeachtable 'DROP TABLE ?';
+
+                  WHILE(EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES))
+                  BEGIN
+                   DECLARE @drop_table_sql nvarchar(2000)
+                   SELECT TOP 1 @drop_table_sql=('DROP TABLE ' + TABLE_SCHEMA + '.[' + TABLE_NAME + ']')
+                   FROM INFORMATION_SCHEMA.TABLES
+                   EXEC (@drop_table_sql)
+                  END
 
                   DECLARE sproc_cursor CURSOR FOR
                   SELECT 'DROP PROCEDURE ' + SCHEMA_NAME(schema_id) + '.' + object_name(object_id) + ';'

@@ -6,6 +6,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Infrastructure;
     using System.Globalization;
     using System.IO;
+    using System.Text.RegularExpressions;
     using FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns;
     using FunctionalTests.ProductivityApi.TemplateModels.CsMonsterModel;
     using ProductivityApiTests;
@@ -322,5 +323,13 @@ namespace System.Data.Entity
         }
 
         #endregion
+
+        protected static bool IsSqlAzure(string connectionString)
+        {
+            // try to guess if we are targeting SQL Azure
+            // heuristic - connection string contains: "...User ID=user@server..."
+            var isAzureConnectionString = new Regex("User ID.*=.*@", RegexOptions.IgnoreCase);
+            return isAzureConnectionString.IsMatch(connectionString);
+        }
     }
 }

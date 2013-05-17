@@ -6,7 +6,6 @@ namespace System.Data.Entity.Update
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.TestModels.GearsOfWarModel;
-    using System.Data.Entity.Validation;
     using System.Linq;
     using Xunit;
     using Xunit.Extensions;
@@ -105,13 +104,13 @@ namespace System.Data.Entity.Update
                 var cogTagNoteMaxLength = 40;
                 var cogTag = new CogTag
                     {
+                        Id = Guid.NewGuid(),
                         Note = new string('A', cogTagNoteMaxLength + 1),
                     };
 
                 context.Tags.Add(cogTag);
 
-                var exception = Assert.Throws<DbUpdateException>(
-                    () => context.SaveChanges());
+                Assert.Throws<DbUpdateException>(() => context.SaveChanges());
             }
         }
 
@@ -124,6 +123,7 @@ namespace System.Data.Entity.Update
                 var cogTagNoteMaxLength = 40;
                 var cogTag = new CogTag
                     {
+                        Id = Guid.NewGuid(),
                         Note = new string('A', cogTagNoteMaxLength),
                     };
 
@@ -131,8 +131,7 @@ namespace System.Data.Entity.Update
                 context.SaveChanges();
 
                 cogTag.Note = new string('A', cogTagNoteMaxLength + 1);
-                var exception = Assert.Throws<DbUpdateException>(
-                    () => context.SaveChanges());
+                Assert.Throws<DbUpdateException>(() => context.SaveChanges());
             }
         }
 
@@ -169,6 +168,7 @@ namespace System.Data.Entity.Update
 
                 var tag = new CogTag
                     {
+                        Id = Guid.NewGuid(),
                         Note = "Tag",
                     };
 
@@ -302,6 +302,7 @@ namespace System.Data.Entity.Update
             {
                 var nobodysTag = new CogTag
                     {
+                        Id = Guid.NewGuid(),
                         Note = "Owner Unknown",
                     };
 
@@ -320,6 +321,7 @@ namespace System.Data.Entity.Update
             {
                 var tag = new CogTag
                     {
+                        Id = Guid.NewGuid(),
                         Note = "Who's tag is it?",
                     };
 
@@ -359,6 +361,7 @@ namespace System.Data.Entity.Update
                         Nickname = "Gear1",
                         Tag = new CogTag
                             {
+                                Id = Guid.NewGuid(),
                                 Note = "Tag1",
                             },
                     };
@@ -369,6 +372,7 @@ namespace System.Data.Entity.Update
                         Nickname = "Gear2",
                         Tag = new CogTag
                             {
+                                Id = Guid.NewGuid(),
                                 Note = "Tag2",
                             },
                     };
@@ -421,6 +425,7 @@ namespace System.Data.Entity.Update
             {
                 var tag = new CogTag
                     {
+                        Id = Guid.NewGuid(),
                         Note = "Some Note",
                     };
 
@@ -658,6 +663,7 @@ namespace System.Data.Entity.Update
             {
                 var taisTag = new CogTag
                     {
+                        Id = Guid.NewGuid(),
                         Note = "Tai's tag",
                     };
 

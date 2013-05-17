@@ -9,6 +9,7 @@ namespace System.Data.Entity.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Reflection;
@@ -2139,10 +2140,18 @@ namespace System.Data.Entity.Objects
             using (var masterConnection = new SqlConnection(ModelHelpers.SimpleConnectionString("master")))
             {
                 masterConnection.Open();
-                var createDatabaseScript = string.Format(
-                    @"if exists(select * from sys.databases where name = '{0}')
-drop database {0}
-create database {0}", DatabaseName);
+
+                var databaseExistsScript = string.Format(
+                    "SELECT COUNT(*) FROM sys.databases where name = '{0}'", DatabaseName);
+
+                var databaseExists = (int)new SqlCommand(databaseExistsScript, masterConnection).ExecuteScalar() == 1;
+                if (databaseExists)
+                {
+                    var dropDatabaseScript = string.Format("drop database {0}", DatabaseName);
+                    new SqlCommand(dropDatabaseScript, masterConnection).ExecuteNonQuery();
+                }
+
+                var createDatabaseScript = string.Format("create database {0}", DatabaseName);
                 new SqlCommand(createDatabaseScript, masterConnection).ExecuteNonQuery();
             }
 
@@ -2150,13 +2159,14 @@ create database {0}", DatabaseName);
             using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                new SqlCommand(
+
+                var sql =
                     @"CREATE TABLE [dbo].[TransactionLog](
   [ID] [int] IDENTITY(1,1) NOT NULL,
   [TransactionCount] [int] NOT NULL,
-CONSTRAINT [PK_TransactionLog] PRIMARY KEY CLUSTERED ([ID] ASC)
-WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) 
-ON [PRIMARY]", connection).ExecuteNonQuery();
+CONSTRAINT [PK_TransactionLog] PRIMARY KEY CLUSTERED ([ID] ASC))";
+                
+                new SqlCommand(sql, connection).ExecuteNonQuery();
 
                 new SqlCommand(
                     @"CREATE PROCEDURE [dbo].[CreateTransactionLogEntry] 

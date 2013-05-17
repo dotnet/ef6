@@ -5,7 +5,6 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
 
     public class CogTag
     {
-        // auto-generated non-integer key
         public Guid Id { get; set; }
         public string Note { get; set; }
 

@@ -99,31 +99,37 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
 
             var marcusTag = new CogTag
             {
+                Id = Guid.NewGuid(),
                 Note = "Marcus's Tag",
             };
 
             var domsTag = new CogTag
             {
+                Id = Guid.NewGuid(),
                 Note = "Dom's Tag",
             };
 
             var colesTag = new CogTag
             {
+                Id = Guid.NewGuid(),
                 Note = "Cole's Tag",
             };
 
             var bairdsTag = new CogTag
             {
+                Id = Guid.NewGuid(),
                 Note = "Bairds's Tag",
             };
 
             var paduksTag = new CogTag
             {
+                Id = Guid.NewGuid(),
                 Note = "Paduk's Tag",
             };
 
             var kiaTag = new CogTag
             {
+                Id = Guid.NewGuid(),
                 Note = "K.I.A.",
             };
 

@@ -204,6 +204,7 @@
     <Compile Include="TestModels\GearsOfWarModel\Squad.cs" />
     <Compile Include="TestModels\GearsOfWarModel\StandardWeapon.cs" />
     <Compile Include="TestModels\GearsOfWarModel\Weapon.cs" />
+    <Compile Include="Update\GuidIdentityColumnUpdateTests.cs" />
     <Compile Include="Update\TruncationTests.cs" />
     <Compile Include="Update\UpdateTests.cs" />
     <Compile Include="ViewGeneration\PregenContextEdmxViews.cs" />

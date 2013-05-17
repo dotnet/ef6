@@ -5,6 +5,7 @@ namespace System.Data.Entity.Query.StoredProcedures
     using System.Collections.Generic;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
     using Xunit;
@@ -311,10 +312,28 @@ namespace System.Data.Entity.Query.StoredProcedures
             using (var masterConnection = new SqlConnection(ModelHelpers.SimpleConnectionString("master")))
             {
                 masterConnection.Open();
-                var createDatabaseScript = string.Format(
-                    @"if exists(select * from sys.databases where name = '{0}')
-drop database {0}
-create database {0}", "IceAndFireContext2");
+
+                var databaseName = "IceAndFireContext2";
+                var databaseExistsScript = string.Format(
+                    "SELECT COUNT(*) FROM sys.databases where name = '{0}'", databaseName);
+
+                var databaseExists = (int)new SqlCommand(databaseExistsScript, masterConnection).ExecuteScalar() == 1;
+                if (databaseExists)
+                {
+                    var dropDatabaseScript = string.Format("drop database {0}", databaseName);
+                    new SqlCommand(dropDatabaseScript, masterConnection).ExecuteNonQuery();
+                }
+
+                var createDatabaseScript = string.Format("create database {0}", databaseName);
+
+
+//                var createDatabaseScript = string.Format(
+//                    @"if exists(select * from sys.databases where name = '{0}')
+//drop database {0}
+//create database {0}", "IceAndFireContext2");
+                
+                
+                
                 new SqlCommand(createDatabaseScript, masterConnection).ExecuteNonQuery();
             }
 
@@ -322,28 +341,26 @@ create database {0}", "IceAndFireContext2");
             using (var connection = new SqlConnection(storeConnectionString))
             {
                 connection.Open();
+
+                //string partitionSchemeStatement = SqlAzureTestHelpers.IsSqlAzure(storeConnectionString) ? "" : " ON [PRIMARY]";
+
                 new SqlCommand(
                     @"CREATE TABLE [dbo].[Lands](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](max) NULL,
 	[LocationOnMap] [geography] NULL,
- CONSTRAINT [PK_dbo.Lands] PRIMARY KEY CLUSTERED (	[Id] ASC)
- WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) 
- ON [PRIMARY]", connection).ExecuteNonQuery();
+ CONSTRAINT [PK_dbo.Lands] PRIMARY KEY CLUSTERED ([Id] ASC))", connection).ExecuteNonQuery();
 
                 new SqlCommand(
-                    @"CREATE TABLE [dbo].[Houses](
+ @"CREATE TABLE [dbo].[Houses](
 	[Id] [int] NOT NULL,
 	[Name] [nvarchar](max) NULL,
 	[Words] [nvarchar](max) NULL,
 	[Sigil] [geometry] NULL,
- CONSTRAINT [PK_dbo.Houses] PRIMARY KEY CLUSTERED (	[Id] ASC )
-WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) 
-ON [PRIMARY]
-", connection).ExecuteNonQuery();
+ CONSTRAINT [PK_dbo.Houses] PRIMARY KEY CLUSTERED ([Id] ASC))", connection).ExecuteNonQuery();
 
                 new SqlCommand(
-                    @"CREATE TABLE [dbo].[Creatures](
+@"CREATE TABLE [dbo].[Creatures](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](max) NULL,
 	[Size] [int] NOT NULL,
@@ -352,9 +369,7 @@ ON [PRIMARY]
 	[IsDangerous] [bit] NULL,
 	[Discriminator] [nvarchar](128) NOT NULL,
 	[House_Id] [int] NULL,
- CONSTRAINT [PK_dbo.Creatures] PRIMARY KEY CLUSTERED ([Id] ASC)
-WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]) 
-ON [PRIMARY]", connection).ExecuteNonQuery();
+ CONSTRAINT [PK_dbo.Creatures] PRIMARY KEY CLUSTERED ([Id] ASC))", connection).ExecuteNonQuery();
 
                 new SqlCommand(
                     @"ALTER TABLE [dbo].[Creatures]  WITH CHECK ADD  CONSTRAINT [FK_dbo.Creatures_dbo.Houses_House_Id] FOREIGN KEY([House_Id])

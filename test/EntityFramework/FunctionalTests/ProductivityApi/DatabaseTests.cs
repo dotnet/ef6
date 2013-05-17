@@ -5,8 +5,10 @@ namespace ProductivityApiTests
     using System;
     using System.Data;
     using System.Data.Entity;
+    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.IO;
+    using System.Text.RegularExpressions;
     using SimpleModel;
     using Xunit;
 
@@ -33,11 +35,24 @@ namespace ProductivityApiTests
             {
                 connection.Open();
 
-                using (var command = connection.CreateCommand())
+                if (IsSqlAzure(connection.ConnectionString))
                 {
-                    command.CommandText
-                        = string.Format(
-                            @"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = N'EFTestSimpleModelUser')
+                    CreateLoginForSqlAzure(connection);
+                }
+                else
+                {
+                    CreateLoginForSqlServer(connection);
+                }
+            }
+        }
+
+        private void CreateLoginForSqlServer(SqlConnection connection)
+        {
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText
+                    = string.Format(
+@"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = N'EFTestSimpleModelUser')
 BEGIN
   CREATE LOGIN [EFTestSimpleModelUser] WITH PASSWORD=N'Password1', DEFAULT_DATABASE=[{0}],  CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
   DENY VIEW ANY DATABASE TO [EFTestSimpleModelUser]
@@ -45,9 +60,38 @@ BEGIN
   DENY SELECT TO [EFTestSimpleModelUser]
   GRANT CREATE DATABASE TO [EFTestSimpleModelUser]
 END", DefaultDbName<SimpleModelContext>());
+                command.ExecuteNonQuery();
+            }
+        }
+
+        private void CreateLoginForSqlAzure(SqlConnection connection)
+        {
+            bool loginExists = false;
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "SELECT COUNT(*) FROM sys.sql_logins WHERE name = N'EFTestSimpleModelUser'";
+                loginExists = (int)command.ExecuteScalar() == 1;
+            }
+
+            if (!loginExists)
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "CREATE LOGIN [EFTestSimpleModelUser] WITH PASSWORD=N'Password1'";
                     command.ExecuteNonQuery();
                 }
-            }
+
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText =
+@"BEGIN
+  CREATE USER [EFTestSimpleModelUser] FOR LOGIN [EFTestSimpleModelUser]
+  DENY SELECT TO [EFTestSimpleModelUser]
+  GRANT CREATE DATABASE TO [EFTestSimpleModelUser]
+END";
+                    command.ExecuteNonQuery();
+                }
+            }            
         }
 
         #endregion
@@ -66,6 +110,12 @@ END", DefaultDbName<SimpleModelContext>());
         {
             using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>(useInitialCatalog)))
             {
+                // SQL Azure does not support attaching databases
+                if (IsSqlAzure(context.Database.Connection.ConnectionString))
+                {
+                    return;
+                }
+
                 try
                 {
                     // Execute actual test
@@ -259,12 +309,17 @@ END", DefaultDbName<SimpleModelContext>());
             using (var connection = new SqlConnection(SimpleConnectionString<NoMasterPermissionContext>()))
             {
                 connection.Open();
+                if (IsSqlAzure(connection.ConnectionString))
+                {
+                    // Scenario not supported on SqlAzure, need to be connected to master
+                    // in order to view existing users
+                    return;
+                }
 
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText
-                        = string.Format(
-                            @"IF NOT EXISTS (SELECT * FROM sys.sysusers WHERE name= N'EFTestSimpleModelUser')
+                    command.CommandText = string.Format(
+@"IF NOT EXISTS (SELECT * FROM sys.sysusers WHERE name= N'EFTestSimpleModelUser')
 BEGIN
   CREATE USER [EFTestSimpleModelUser] FOR LOGIN [EFTestSimpleModelUser]
 END");
@@ -395,6 +450,12 @@ END";
         {
             using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>()))
             {
+                if (IsSqlAzure(context.Database.Connection.ConnectionString))
+                {
+                    // SQL Azure does not suppot attaching databases
+                    return;
+                }
+
                 // Ensure database is initialized
                 context.Database.Initialize(force: true);
             }
@@ -1007,12 +1068,20 @@ END";
 
                 Assert.Equal(MutatingConnectionContext1.ChangedConnectionString, initializer.ConnectionStringUsed);
                 Assert.Equal(
-                    MutatingConnectionContext1.ChangedConnectionString,
-                    context.Database.Connection.ConnectionString);
+                    RemovePasswordAndSemicolonsFromConnectionString(MutatingConnectionContext1.ChangedConnectionString),
+                    RemovePasswordAndSemicolonsFromConnectionString(context.Database.Connection.ConnectionString));
 
                 Assert.False(Database.Exists(MutatingConnectionContext1.StartingConnectionString));
                 Assert.True(Database.Exists(MutatingConnectionContext1.ChangedConnectionString));
             }
+        }
+
+        private string RemovePasswordAndSemicolonsFromConnectionString(string connectionString)
+        {
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connectionString);
+            builder.Remove("password");
+
+            return builder.ToString().Replace(";", ""); 
         }
 
         public class MutatingConnectionContext2 : MutatingConnectionContext<MutatingConnectionContext2>
@@ -1036,8 +1105,8 @@ END";
 
                 Assert.Equal(MutatingConnectionContext2.ChangedConnectionString, initializer.ConnectionStringUsed);
                 Assert.Equal(
-                    MutatingConnectionContext2.ChangedConnectionString,
-                    context.Database.Connection.ConnectionString);
+                    RemovePasswordAndSemicolonsFromConnectionString(MutatingConnectionContext2.ChangedConnectionString),
+                    RemovePasswordAndSemicolonsFromConnectionString(context.Database.Connection.ConnectionString));
 
                 Assert.False(Database.Exists(MutatingConnectionContext2.StartingConnectionString));
                 Assert.True(Database.Exists(MutatingConnectionContext2.ChangedConnectionString));
@@ -1100,7 +1169,7 @@ END";
             Func<string, DbContext> createContext, string changedConnectionString)
         {
             var startingConnectionString = SimpleConnectionString("MutatingConnectionContext4");
-
+            
             Database.Delete(startingConnectionString);
             Database.Delete(changedConnectionString);
 
@@ -1149,8 +1218,8 @@ END";
                 context.Products.Load();
 
                 Assert.Equal(
-                    MutatingConnectionContext5.ChangedConnectionString,
-                    context.Database.Connection.ConnectionString);
+                    RemovePasswordAndSemicolonsFromConnectionString(MutatingConnectionContext5.ChangedConnectionString),
+                    RemovePasswordAndSemicolonsFromConnectionString(context.Database.Connection.ConnectionString));
                 Assert.True(Database.Exists(MutatingConnectionContext5.ChangedConnectionString));
             }
         }

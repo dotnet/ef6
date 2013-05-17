@@ -6,6 +6,7 @@ namespace ProductivityApiTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Xunit;
     using Xunit.Extensions;
@@ -13,6 +14,8 @@ namespace ProductivityApiTests
     public class ChangeTrackingProxyTests : FunctionalTestBase
     {
         #region Infrastructure/setup
+
+        private readonly bool _isSqlAzure;
 
         public ChangeTrackingProxyTests()
         {
@@ -23,7 +26,11 @@ namespace ProductivityApiTests
 
             using (var context = new HaveToDoContext())
             {
-                context.Database.Initialize(force: false);
+                _isSqlAzure = IsSqlAzure(context.Database.Connection.ConnectionString);
+                if (!_isSqlAzure)
+                {
+                    context.Database.Initialize(force: false);
+                }
             }
         }
 
@@ -126,20 +133,23 @@ namespace ProductivityApiTests
         [AutoRollback]
         public void Deleting_object_when_relationships_have_not_been_all_enumerated_should_not_cause_collection_modified_exception_209773()
         {
-            using (var context = new HaveToDoContext())
+            if (!_isSqlAzure)
             {
-                var group = context.ComplexExams.Where(e => e.Code == "group").Single();
-                var _ = group.Training.Id;
+                using (var context = new HaveToDoContext())
+                {
+                    var group = context.ComplexExams.Where(e => e.Code == "group").Single();
+                    var _ = group.Training.Id;
 
-                context.ComplexExams.Remove(group); // This would previously throw
+                    context.ComplexExams.Remove(group); // This would previously throw
 
-                Assert.Equal(EntityState.Deleted, context.Entry(group).State);
-                Assert.Equal(0, group.Exams.Count);
+                    Assert.Equal(EntityState.Deleted, context.Entry(group).State);
+                    Assert.Equal(0, group.Exams.Count);
 
-                context.SaveChanges();
+                    context.SaveChanges();
 
-                Assert.Equal(EntityState.Detached, context.Entry(group).State);
-                Assert.Equal(0, group.Exams.Count);
+                    Assert.Equal(EntityState.Detached, context.Entry(group).State);
+                    Assert.Equal(0, group.Exams.Count);
+                }
             }
         }
 
