@@ -26,9 +26,12 @@ namespace System.Data.Entity
         #region Fields and constructors
 
         /// <summary>
-        ///     Internal constructor prevents external classes deriving from DbSet.
+        ///     Creates an instance of a <see cref="DbSet" /> when called from the constructor of a derived
+        ///     type that will be used as a test double for DbSets. Methods and properties that will be used by the
+        ///     test double must be implemented by the test double except AsNoTracking, AsStreaming, an Include where
+        ///     the default implementation is a no-op.
         /// </summary>
-        internal DbSet()
+        internal protected DbSet()
         {
         }
 
@@ -54,7 +57,10 @@ namespace System.Data.Entity
         /// <exception cref="InvalidOperationException">Thrown if the type of entity is not part of the data model for this context.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the types of the key values do not match the types of the key values for the entity type to be found.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
-        public abstract object Find(params object[] keyValues);
+        public virtual object Find(params object[] keyValues)
+        {
+            throw new NotImplementedException(Strings.TestDoubleNotImplemented("Find", GetType().Name, typeof(DbSet).Name));
+        }
 
 #if !NET40
 
@@ -78,7 +84,7 @@ namespace System.Data.Entity
         /// <exception cref="InvalidOperationException">Thrown if the type of entity is not part of the data model for this context.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the types of the key values do not match the types of the key values for the entity type to be found.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
-        public Task<object> FindAsync(params object[] keyValues)
+        public virtual Task<object> FindAsync(params object[] keyValues)
         {
             return FindAsync(CancellationToken.None, keyValues);
         }
@@ -106,7 +112,10 @@ namespace System.Data.Entity
         /// <exception cref="InvalidOperationException">Thrown if the type of entity is not part of the data model for this context.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the types of the key values do not match the types of the key values for the entity type to be found.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
-        public abstract Task<object> FindAsync(CancellationToken cancellationToken, params object[] keyValues);
+        public virtual Task<object> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        {
+            throw new NotImplementedException(Strings.TestDoubleNotImplemented("FindAsync", GetType().Name, typeof(DbSet).Name));
+        }
 
 #endif
 
@@ -126,7 +135,11 @@ namespace System.Data.Entity
         ///     directly.  For Windows Forms bind to the result of calling ToBindingList on this property
         /// </remarks>
         /// <value> The local view. </value>
-        public abstract IList Local { get; }
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+        public virtual IList Local
+        {
+            get { throw new NotImplementedException(Strings.TestDoubleNotImplemented("Local", GetType().Name, typeof(DbSet).Name)); }
+        }
 
         #endregion
 
@@ -145,11 +158,11 @@ namespace System.Data.Entity
         ///     Note that entities that are already in the context in some other state will have their state set
         ///     to Unchanged.  Attach is a no-op if the entity is already in the context in the Unchanged state.
         /// </remarks>
-        public object Attach(object entity)
+        public virtual object Attach(object entity)
         {
             Check.NotNull(entity, "entity");
 
-            InternalSet.Attach(entity);
+            GetInternalSetWithCheck("Attach").Attach(entity);
             return entity;
         }
 
@@ -163,11 +176,11 @@ namespace System.Data.Entity
         ///     Note that entities that are already in the context in some other state will have their state set
         ///     to Added.  Add is a no-op if the entity is already in the context in the Added state.
         /// </remarks>
-        public object Add(object entity)
+        public virtual object Add(object entity)
         {
             Check.NotNull(entity, "entity");
 
-            InternalSet.Add(entity);
+            GetInternalSetWithCheck("Add").Add(entity);
             return entity;
         }
 
@@ -187,11 +200,11 @@ namespace System.Data.Entity
         ///     Note that entities that are already in the context in some other state will have their state set to
         ///     Added.  AddRange is a no-op for entities that are already in the context in the Added state.
         /// </remarks>
-        public IEnumerable AddRange(IEnumerable entities)
+        public virtual IEnumerable AddRange(IEnumerable entities)
         {
             Check.NotNull(entities, "entities");
 
-            InternalSet.AddRange(entities);
+            GetInternalSetWithCheck("AddRange").AddRange(entities);
             return entities;
         }
 
@@ -207,11 +220,11 @@ namespace System.Data.Entity
         ///     will cause it to be detached from the context.  This is because an Added entity is assumed not to
         ///     exist in the database such that trying to delete it does not make sense.
         /// </remarks>
-        public object Remove(object entity)
+        public virtual object Remove(object entity)
         {
             Check.NotNull(entity, "entity");
 
-            InternalSet.Remove(entity);
+            GetInternalSetWithCheck("Remove").Remove(entity);
             return entity;
         }
 
@@ -232,11 +245,11 @@ namespace System.Data.Entity
         ///     will cause it to be detached from the context.  This is because an Added entity is assumed not to
         ///     exist in the database such that trying to delete it does not make sense.
         /// </remarks>
-        public IEnumerable RemoveRange(IEnumerable entities)
+        public virtual IEnumerable RemoveRange(IEnumerable entities)
         {
             Check.NotNull(entities, "entities");
 
-            InternalSet.RemoveRange(entities);
+            GetInternalSetWithCheck("RemoveRange").RemoveRange(entities);
             return entities;
         }
 
@@ -251,7 +264,10 @@ namespace System.Data.Entity
         ///     proxies and the entity type meets the requirements for creating a proxy.
         /// </summary>
         /// <returns> The entity instance, which may be a proxy. </returns>
-        public abstract object Create();
+        public virtual object Create()
+        {
+            throw new NotImplementedException(Strings.TestDoubleNotImplemented("Create", GetType().Name, typeof(DbSet).Name));
+        }
 
         /// <summary>
         ///     Creates a new instance of an entity for the type of this set or for a type derived
@@ -261,7 +277,10 @@ namespace System.Data.Entity
         ///     proxies and the entity type meets the requirements for creating a proxy.
         /// </summary>
         /// <returns> The entity instance, which may be a proxy. </returns>
-        public abstract object Create(Type derivedEntityType);
+        public virtual object Create(Type derivedEntityType)
+        {
+            throw new NotImplementedException(Strings.TestDoubleNotImplemented("Create", GetType().Name, typeof(DbSet).Name));
+        }
 
         #endregion
 
@@ -274,8 +293,12 @@ namespace System.Data.Entity
         /// <returns> The generic set object. </returns>
         public new DbSet<TEntity> Cast<TEntity>() where TEntity : class
         {
-            if (typeof(TEntity)
-                != InternalSet.ElementType)
+            if (InternalSet == null)
+            {
+                throw new NotSupportedException(Strings.TestDoublesCannotBeConverted);
+            }
+
+            if (typeof(TEntity) != InternalSet.ElementType)
             {
                 throw Error.DbEntity_BadTypeForCast(
                     typeof(DbSet).Name, typeof(TEntity).Name, InternalSet.ElementType.Name);
@@ -304,7 +327,15 @@ namespace System.Data.Entity
         ///     Gets the underlying internal set.
         /// </summary>
         /// <value> The internal set. </value>
-        internal abstract IInternalSet InternalSet { get; }
+        internal virtual IInternalSet InternalSet
+        {
+            get { return null; }
+        }
+
+        internal virtual IInternalSet GetInternalSetWithCheck(string memberName)
+        {
+            throw new NotImplementedException(Strings.TestDoubleNotImplemented(memberName, GetType().Name, typeof(DbSet).Name));
+        }
 
         #endregion
 
@@ -324,12 +355,15 @@ namespace System.Data.Entity
         /// <returns>
         ///     A <see cref="DbSqlQuery" /> object that will execute the query when it is enumerated.
         /// </returns>
-        public DbSqlQuery SqlQuery(string sql, params object[] parameters)
+        public virtual DbSqlQuery SqlQuery(string sql, params object[] parameters)
         {
             Check.NotEmpty(sql, "sql");
             Check.NotNull(parameters, "parameters");
 
-            return new DbSqlQuery(new InternalSqlSetQuery(InternalSet, sql, /*isNoTracking:*/ false, /*streaming:*/ false, parameters));
+            return new DbSqlQuery(
+                InternalSet == null
+                    ? null
+                    : new InternalSqlSetQuery(InternalSet, sql, /*isNoTracking:*/ false, /*streaming:*/ false, parameters));
         }
 
         #endregion

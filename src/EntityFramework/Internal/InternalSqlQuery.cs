@@ -12,7 +12,7 @@ namespace System.Data.Entity.Internal
     ///     Represents a raw SQL query against the context that may be for entities in an entity set
     ///     or for some other non-entity element type.
     /// </summary>
-    internal abstract class InternalSqlQuery : IEnumerable, IListSource
+    internal abstract class InternalSqlQuery : IEnumerable
 #if !NET40
                                                , IDbAsyncEnumerable
 #endif
@@ -117,30 +117,6 @@ namespace System.Data.Entity.Internal
         public abstract IDbAsyncEnumerator GetAsyncEnumerator();
 
 #endif
-
-        #endregion
-
-        #region IListSource implementation
-
-        /// <summary>
-        ///     Returns <c>false</c>.
-        /// </summary>
-        /// <returns>
-        ///     <c>false</c>.
-        /// </returns>
-        public bool ContainsListCollection
-        {
-            get { return false; }
-        }
-
-        /// <summary>
-        ///     Throws an exception indicating that binding directly to a store query is not supported.
-        /// </summary>
-        /// <returns> Never returns; always throws. </returns>
-        public IList GetList()
-        {
-            throw Error.DbQuery_BindingToDbQueryNotSupported();
-        }
 
         #endregion
 

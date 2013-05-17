@@ -13564,6 +13564,22 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.LightweightPrimitivePropertyConfiguration_NonNullableProperty, p0, p1);
         }
+
+        /// <summary>
+        ///     A string like "The member '{0}' has not been implemented on type '{1}' which inherits from '{2}'. Test doubles for '{2}' must provide implementations of methods and properties that are used."
+        /// </summary>
+        internal static string TestDoubleNotImplemented(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.TestDoubleNotImplemented, p0, p1, p2);
+        }
+
+        /// <summary>
+        ///     A string like "Conversion between generic and non-generic DbSet objects is not supported for test doubles."
+        /// </summary>
+        internal static string TestDoublesCannotBeConverted
+        {
+            get { return EntityRes.GetString(EntityRes.TestDoublesCannotBeConverted); }
+        }
     }
 
     /// <summary>
@@ -16955,6 +16971,8 @@ namespace System.Data.Entity.Resources
         internal const string LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity = "LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity";
         internal const string LightweightNavigationPropertyConfiguration_InvalidMultiplicity = "LightweightNavigationPropertyConfiguration_InvalidMultiplicity";
         internal const string LightweightPrimitivePropertyConfiguration_NonNullableProperty = "LightweightPrimitivePropertyConfiguration_NonNullableProperty";
+        internal const string TestDoubleNotImplemented = "TestDoubleNotImplemented";
+        internal const string TestDoublesCannotBeConverted = "TestDoublesCannotBeConverted";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

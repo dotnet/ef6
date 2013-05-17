@@ -112,14 +112,14 @@ namespace System.Data.Entity.Infrastructure
             var internalQueryMock = new Mock<IInternalQuery<string>>();
             var nonGenericInternalQueryMock = internalQueryMock.As<IInternalQuery>();
             nonGenericInternalQueryMock.Setup(m => m.GetEnumerator()).Returns(new Mock<IEnumerator>().Object);
-            var dbQuery = new DbQuery<string>(internalQueryMock.Object);
+            var dbQuery = new InternalDbQuery<string>(internalQueryMock.Object);
 #if !NET40
-            ((IDbAsyncEnumerable)(DbQuery)dbQuery).GetAsyncEnumerator();
+            ((IDbAsyncEnumerable)dbQuery).GetAsyncEnumerator();
 
             nonGenericInternalQueryMock.Verify(m => m.GetAsyncEnumerator(), Times.Once());
 #endif
 
-            ((IEnumerable)(DbQuery)dbQuery).GetEnumerator();
+            ((IEnumerable)dbQuery).GetEnumerator();
 
             nonGenericInternalQueryMock.Verify(m => m.GetEnumerator(), Times.Once());
         }

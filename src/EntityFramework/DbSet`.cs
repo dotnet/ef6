@@ -7,6 +7,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Internal.Linq;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
@@ -37,9 +38,18 @@ namespace System.Data.Entity
         internal DbSet(InternalSet<TEntity> internalSet)
             : base(internalSet)
         {
-            DebugCheck.NotNull(internalSet);
-
             _internalSet = internalSet;
+        }
+
+        /// <summary>
+        ///     Creates an instance of a <see cref="DbSet{TEntity}" /> when called from the constructor of a derived
+        ///     type that will be used as a test double for DbSets. Methods and properties that will be used by the
+        ///     test double must be implemented by the test double except AsNoTracking, AsStreaming, an Include where
+        ///     the default implementation is a no-op.
+        /// </summary>
+        protected DbSet()
+            : this(null)
+        {
         }
 
         #endregion
@@ -64,9 +74,9 @@ namespace System.Data.Entity
         /// <exception cref="InvalidOperationException">Thrown if the type of entity is not part of the data model for this context.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the types of the key values do not match the types of the key values for the entity type to be found.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
-        public TEntity Find(params object[] keyValues)
+        public virtual TEntity Find(params object[] keyValues)
         {
-            return _internalSet.Find(keyValues);
+            return GetInternalSetWithCheck("Find").Find(keyValues);
         }
 
 #if !NET40
@@ -94,11 +104,31 @@ namespace System.Data.Entity
         /// <exception cref="InvalidOperationException">Thrown if the type of entity is not part of the data model for this context.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the types of the key values do not match the types of the key values for the entity type to be found.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
-        public Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
+        public virtual Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues)
         {
-            return _internalSet.FindAsync(cancellationToken, keyValues);
+            return GetInternalSetWithCheck("FindAsync").FindAsync(cancellationToken, keyValues);
         }
 
+        /// <summary>
+        ///     Asynchronously finds an entity with the given primary key values.
+        ///     If an entity with the given primary key values exists in the context, then it is
+        ///     returned immediately without making a request to the store.  Otherwise, a request
+        ///     is made to the store for an entity with the given primary key values and this entity,
+        ///     if found, is attached to the context and returned.  If no entity is found in the
+        ///     context or the store, then null is returned.
+        /// </summary>
+        /// <remarks>
+        ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
+        ///     the designer, by the Code First fluent API, or by the DataMember attribute.
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="keyValues"> The values of the primary key for the entity to be found. </param>
+        /// <returns> A task that represents the asynchronous find operation. The task result contains the entity found, or null. </returns>
+        public virtual Task<TEntity> FindAsync(params object[] keyValues)
+        {
+            return FindAsync(CancellationToken.None, keyValues);
+        }
 #endif
 
         #endregion
@@ -106,9 +136,9 @@ namespace System.Data.Entity
         #region Data binding/local view
 
         /// <inheritdoc/>
-        public DbLocalView<TEntity> Local
+        public virtual DbLocalView<TEntity> Local
         {
-            get { return _internalSet.Local; }
+            get { return GetInternalSetWithCheck("Local").Local; }
         }
 
         #endregion
@@ -116,20 +146,20 @@ namespace System.Data.Entity
         #region Attach/Add/Remove
 
         /// <inheritdoc/>
-        public TEntity Attach(TEntity entity)
+        public virtual TEntity Attach(TEntity entity)
         {
             Check.NotNull(entity, "entity");
 
-            _internalSet.Attach(entity);
+            GetInternalSetWithCheck("Attach").Attach(entity);
             return entity;
         }
 
         /// <inheritdoc/>
-        public TEntity Add(TEntity entity)
+        public virtual TEntity Add(TEntity entity)
         {
             Check.NotNull(entity, "entity");
 
-            _internalSet.Add(entity);
+            GetInternalSetWithCheck("Add").Add(entity);
             return entity;
         }
 
@@ -149,20 +179,20 @@ namespace System.Data.Entity
         ///     Note that entities that are already in the context in some other state will have their state set to
         ///     Added.  AddRange is a no-op for entities that are already in the context in the Added state.
         /// </remarks>
-        public IEnumerable<TEntity> AddRange(IEnumerable<TEntity> entities)
+        public virtual IEnumerable<TEntity> AddRange(IEnumerable<TEntity> entities)
         {
             Check.NotNull(entities, "entities");
 
-            _internalSet.AddRange(entities);
+            GetInternalSetWithCheck("AddRange").AddRange(entities);
             return entities;
         }
 
         /// <inheritdoc/>
-        public TEntity Remove(TEntity entity)
+        public virtual TEntity Remove(TEntity entity)
         {
             Check.NotNull(entity, "entity");
 
-            _internalSet.Remove(entity);
+            GetInternalSetWithCheck("Remove").Remove(entity);
             return entity;
         }
 
@@ -183,11 +213,11 @@ namespace System.Data.Entity
         ///     will cause it to be detached from the context.  This is because an Added entity is assumed not to
         ///     exist in the database such that trying to delete it does not make sense.
         /// </remarks>
-        public IEnumerable<TEntity> RemoveRange(IEnumerable<TEntity> entities)
+        public virtual IEnumerable<TEntity> RemoveRange(IEnumerable<TEntity> entities)
         {
             Check.NotNull(entities, "entities");
 
-            _internalSet.RemoveRange(entities);
+            GetInternalSetWithCheck("RemoveRange").RemoveRange(entities);
             return entities;
         }
 
@@ -196,14 +226,14 @@ namespace System.Data.Entity
         #region Create
 
         /// <inheritdoc/>
-        public TEntity Create()
+        public virtual TEntity Create()
         {
-            return _internalSet.Create();
+            return GetInternalSetWithCheck("Create").Create();
         }
         /// <inheritdoc/>
-        public TDerivedEntity Create<TDerivedEntity>() where TDerivedEntity : class, TEntity
+        public virtual TDerivedEntity Create<TDerivedEntity>() where TDerivedEntity : class, TEntity
         {
-            return (TDerivedEntity)_internalSet.Create(typeof(TDerivedEntity));
+            return (TDerivedEntity)GetInternalSetWithCheck("Create").Create(typeof(TDerivedEntity));
         }
 
         #endregion
@@ -214,11 +244,17 @@ namespace System.Data.Entity
         ///     Returns the equivalent non-generic <see cref="DbSet" /> object.
         /// </summary>
         /// <returns> The non-generic set object. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         [SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates",
             Justification = "Intentionally just implicit to reduce API clutter.")]
         public static implicit operator DbSet(DbSet<TEntity> entry)
         {
             Check.NotNull(entry, "entry");
+
+            if (entry._internalSet == null)
+            {
+                throw new NotSupportedException(Strings.TestDoublesCannotBeConverted);
+            }
 
             return (DbSet)entry._internalSet.InternalContext.Set(entry._internalSet.ElementType);
         }
@@ -234,6 +270,16 @@ namespace System.Data.Entity
         IInternalSet IInternalSetAdapter.InternalSet
         {
             get { return _internalSet; }
+        }
+
+        private InternalSet<TEntity> GetInternalSetWithCheck(string memberName)
+        {
+            if (_internalSet == null)
+            {
+                throw new NotImplementedException(Strings.TestDoubleNotImplemented(memberName, GetType().Name, typeof(DbSet<>).Name));
+            }
+
+            return _internalSet;
         }
 
         #endregion
@@ -254,14 +300,15 @@ namespace System.Data.Entity
         /// <returns>
         ///     A <see cref="DbSqlQuery{TEntity}" /> object that will execute the query when it is enumerated.
         /// </returns>
-        public DbSqlQuery<TEntity> SqlQuery(string sql, params object[] parameters)
+        public virtual DbSqlQuery<TEntity> SqlQuery(string sql, params object[] parameters)
         {
             Check.NotEmpty(sql, "sql");
             Check.NotNull(parameters, "parameters");
 
-            return
-                new DbSqlQuery<TEntity>(
-                    new InternalSqlSetQuery(_internalSet, sql, /*isNoTracking:*/ false, /*streaming:*/ false, parameters));
+            return new DbSqlQuery<TEntity>(
+                _internalSet != null
+                    ? new InternalSqlSetQuery(_internalSet, sql, /*isNoTracking:*/ false, /*streaming:*/ false, parameters)
+                    : null);
         }
 
         #endregion

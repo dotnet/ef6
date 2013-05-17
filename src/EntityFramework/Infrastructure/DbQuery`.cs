@@ -35,8 +35,6 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="internalQuery"> The backing query. </param>
         internal DbQuery(IInternalQuery<TResult> internalQuery)
         {
-            DebugCheck.NotNull(internalQuery);
-
             _internalQuery = internalQuery;
         }
 
@@ -58,11 +56,11 @@ namespace System.Data.Entity.Infrastructure
         /// <returns>
         ///     A new <see cref="DbQuery{T}" /> with the defined query path.
         /// </returns>
-        public DbQuery<TResult> Include(string path)
+        public virtual DbQuery<TResult> Include(string path)
         {
             Check.NotEmpty(path, "path");
 
-            return new DbQuery<TResult>(_internalQuery.Include(path));
+            return _internalQuery == null ? this : new DbQuery<TResult>(_internalQuery.Include(path));
         }
 
         #endregion
@@ -73,9 +71,9 @@ namespace System.Data.Entity.Infrastructure
         ///     Returns a new query where the entities returned will not be cached in the <see cref="DbContext" />.
         /// </summary>
         /// <returns> A new query with NoTracking applied. </returns>
-        public DbQuery<TResult> AsNoTracking()
+        public virtual DbQuery<TResult> AsNoTracking()
         {
-            return new DbQuery<TResult>(_internalQuery.AsNoTracking());
+            return _internalQuery == null ? this : new DbQuery<TResult>(_internalQuery.AsNoTracking());
         }
 
         #endregion
@@ -86,9 +84,9 @@ namespace System.Data.Entity.Infrastructure
         ///     Returns a new query that will stream the results instead of buffering.
         /// </summary>
         /// <returns> A new query with AsStreaming applied. </returns>
-        public DbQuery<TResult> AsStreaming()
+        public virtual DbQuery<TResult> AsStreaming()
         {
-            return new DbQuery<TResult>(_internalQuery.AsStreaming());
+            return _internalQuery == null ? this : new DbQuery<TResult>(_internalQuery.AsStreaming());
         }
 
         #endregion
@@ -131,7 +129,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator<TResult> IEnumerable<TResult>.GetEnumerator()
         {
-            return _internalQuery.GetEnumerator();
+            return GetInternalQueryWithCheck("IEnumerable<TResult>.GetEnumerator").GetEnumerator();
         }
 
         /// <summary>
@@ -141,7 +139,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _internalQuery.GetEnumerator();
+            return GetInternalQueryWithCheck("IEnumerable.GetEnumerator").GetEnumerator();
         }
 
         #endregion
@@ -157,7 +155,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
         {
-            return _internalQuery.GetAsyncEnumerator();
+            return GetInternalQueryWithCheck("IDbAsyncEnumerable.GetAsyncEnumerator").GetAsyncEnumerator();
         }
 
         /// <summary>
@@ -167,7 +165,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IDbAsyncEnumerator<TResult> IDbAsyncEnumerable<TResult>.GetAsyncEnumerator()
         {
-            return _internalQuery.GetAsyncEnumerator();
+            return GetInternalQueryWithCheck("IDbAsyncEnumerable<TResult>.GetAsyncEnumerator").GetAsyncEnumerator();
         }
 
 #endif
@@ -182,7 +180,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Type IQueryable.ElementType
         {
-            get { return _internalQuery.ElementType; }
+            get { return GetInternalQueryWithCheck("IQueryable.ElementType").ElementType; }
         }
 
         /// <summary>
@@ -191,7 +189,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Expression IQueryable.Expression
         {
-            get { return _internalQuery.Expression; }
+            get { return GetInternalQueryWithCheck("IQueryable.Expression").Expression; }
         }
 
         /// <summary>
@@ -203,8 +201,8 @@ namespace System.Data.Entity.Infrastructure
             get
             {
                 return _provider ?? (_provider = new DbQueryProvider(
-                                                     _internalQuery.InternalContext,
-                                                     _internalQuery.ObjectQueryProvider));
+                                                     GetInternalQueryWithCheck("IQueryable.Provider").InternalContext,
+                                                     GetInternalQueryWithCheck("IQueryable.Provider").ObjectQueryProvider));
             }
         }
 
@@ -228,6 +226,16 @@ namespace System.Data.Entity.Infrastructure
             get { return _internalQuery; }
         }
 
+        private IInternalQuery<TResult> GetInternalQueryWithCheck(string memberName)
+        {
+            if (_internalQuery == null)
+            {
+                throw new NotImplementedException(Strings.TestDoubleNotImplemented(memberName, GetType().Name, typeof(DbSet<>).Name));
+            }
+
+            return _internalQuery;
+        }
+
         #endregion
 
         #region ToString
@@ -238,7 +246,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The query string. </returns>
         public override string ToString()
         {
-            return _internalQuery.ToString();
+            return _internalQuery == null ? base.ToString() : _internalQuery.ToString();
         }
 
         #endregion
@@ -249,10 +257,16 @@ namespace System.Data.Entity.Infrastructure
         ///     Returns a new instance of the non-generic <see cref="DbQuery" /> class for this query.
         /// </summary>
         /// <returns> A non-generic version. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         [SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates",
             Justification = "Intentionally just implicit to reduce API clutter.")]
         public static implicit operator DbQuery(DbQuery<TResult> entry)
         {
+            if (entry._internalQuery == null)
+            {
+                throw new NotSupportedException(Strings.TestDoublesCannotBeConverted);
+            }
+
             return new InternalDbQuery<TResult>(entry._internalQuery);
         }
 

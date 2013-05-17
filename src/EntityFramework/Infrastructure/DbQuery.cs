@@ -71,7 +71,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return InternalQuery.GetEnumerator();
+            return GetInternalQueryWithCheck("IEnumerable.GetEnumerator").GetEnumerator();
         }
 
         #endregion
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
         {
-            return InternalQuery.GetAsyncEnumerator();
+            return GetInternalQueryWithCheck("IDbAsyncEnumerable.GetAsyncEnumerator").GetAsyncEnumerator();
         }
 
 #endif
@@ -99,9 +99,9 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     The IQueryable element type.
         /// </summary>
-        public Type ElementType
+        public virtual Type ElementType
         {
-            get { return InternalQuery.ElementType; }
+            get { return GetInternalQueryWithCheck("ElementType").ElementType; }
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Expression IQueryable.Expression
         {
-            get { return InternalQuery.Expression; }
+            get { return GetInternalQueryWithCheck("IQueryable.Expression").Expression; }
         }
 
         /// <summary>
@@ -122,8 +122,8 @@ namespace System.Data.Entity.Infrastructure
             get
             {
                 return _provider ?? (_provider = new NonGenericDbQueryProvider(
-                                                     InternalQuery.InternalContext,
-                                                     InternalQuery.ObjectQueryProvider));
+                                                     GetInternalQueryWithCheck("IQueryable.Provider").InternalContext,
+                                                     GetInternalQueryWithCheck("IQueryable.Provider").ObjectQueryProvider));
             }
         }
 
@@ -145,7 +145,10 @@ namespace System.Data.Entity.Infrastructure
         /// <returns>
         ///     A new DbQuery&lt;T&gt; with the defined query path.
         /// </returns>
-        public abstract DbQuery Include(string path);
+        public virtual DbQuery Include(string path)
+        {
+            return this;
+        }
 
         #endregion
 
@@ -155,7 +158,10 @@ namespace System.Data.Entity.Infrastructure
         ///     Returns a new query where the entities returned will not be cached in the <see cref="DbContext" />.
         /// </summary>
         /// <returns> A new query with NoTracking applied. </returns>
-        public abstract DbQuery AsNoTracking();
+        public virtual DbQuery AsNoTracking()
+        {
+            return this;
+        }
 
         #endregion
 
@@ -165,7 +171,10 @@ namespace System.Data.Entity.Infrastructure
         ///     Returns a new query that will stream the results instead of buffering.
         /// </summary>
         /// <returns> A new query with AsStreaming applied. </returns>
-        public abstract DbQuery AsStreaming();
+        public virtual DbQuery AsStreaming()
+        {
+            return this;
+        }
 
         #endregion
 
@@ -178,8 +187,12 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The generic set object. </returns>
         public DbQuery<TElement> Cast<TElement>()
         {
-            if (typeof(TElement)
-                != InternalQuery.ElementType)
+            if (InternalQuery == null)
+            {
+                throw new NotSupportedException(Strings.TestDoublesCannotBeConverted);
+            }
+
+            if (typeof(TElement) != InternalQuery.ElementType)
             {
                 throw Error.DbEntity_BadTypeForCast(
                     typeof(DbQuery).Name, typeof(TElement).Name, InternalQuery.ElementType.Name);
@@ -198,7 +211,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> The query string. </returns>
         public override string ToString()
         {
-            return InternalQuery.ToString();
+            return InternalQuery == null ? base.ToString() : InternalQuery.ToString();
         }
 
         #endregion
@@ -209,7 +222,15 @@ namespace System.Data.Entity.Infrastructure
         ///     Gets the underlying internal query object.
         /// </summary>
         /// <value> The internal query. </value>
-        internal abstract IInternalQuery InternalQuery { get; }
+        internal virtual IInternalQuery InternalQuery
+        {
+            get { return null; }
+        }
+
+        internal virtual IInternalQuery GetInternalQueryWithCheck(string memberName)
+        {
+            throw new NotImplementedException(Strings.TestDoubleNotImplemented(memberName, GetType().Name, typeof(DbSet).Name));
+        }
 
         /// <summary>
         ///     The internal query object that is backing this DbQuery

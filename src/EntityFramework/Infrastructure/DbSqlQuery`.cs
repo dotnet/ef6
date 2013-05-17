@@ -27,15 +27,26 @@ namespace System.Data.Entity.Infrastructure
         {
         }
 
+        /// <summary>
+        ///     Creates an instance of a <see cref="DbSqlQuery{TEntity}" /> when called from the constructor of a derived
+        ///     type that will be used as a test double for <see cref="DbSet{TEntity}.SqlQuery"/>. Methods and properties
+        ///     that will be used by the test double must be implemented by the test double except AsNoTracking and
+        ///     AsStreaming where the default implementation is a no-op.
+        /// </summary>
+        protected DbSqlQuery()
+            : this(null)
+        {
+        }
+
         #region AsNoTracking
 
         /// <summary>
         ///     Returns a new query where the entities returned will not be cached in the <see cref="DbContext" />.
         /// </summary>
         /// <returns> A new query with NoTracking applied. </returns>
-        public DbSqlQuery<TEntity> AsNoTracking()
+        public virtual DbSqlQuery<TEntity> AsNoTracking()
         {
-            return new DbSqlQuery<TEntity>(InternalQuery.AsNoTracking());
+            return InternalQuery == null ? this: new DbSqlQuery<TEntity>(InternalQuery.AsNoTracking());
         }
 
         #endregion
@@ -46,9 +57,9 @@ namespace System.Data.Entity.Infrastructure
         ///     Returns a new query that will stream the results instead of buffering.
         /// </summary>
         /// <returns> A new query with AsStreaming applied. </returns>
-        public new DbSqlQuery<TEntity> AsStreaming()
+        public new virtual DbSqlQuery<TEntity> AsStreaming()
         {
-            return new DbSqlQuery<TEntity>(InternalQuery.AsStreaming());
+            return InternalQuery == null ? this : new DbSqlQuery<TEntity>(InternalQuery.AsStreaming());
         }
 
         #endregion

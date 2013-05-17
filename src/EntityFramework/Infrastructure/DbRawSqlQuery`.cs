@@ -6,6 +6,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
@@ -47,9 +48,9 @@ namespace System.Data.Entity.Infrastructure
         ///     Returns a new query that will stream the results instead of buffering.
         /// </summary>
         /// <returns> A new query with AsStreaming applied. </returns>
-        public DbRawSqlQuery<TElement> AsStreaming()
+        public virtual DbRawSqlQuery<TElement> AsStreaming()
         {
-            return new DbRawSqlQuery<TElement>(_internalQuery.AsStreaming());
+            return _internalQuery == null ? this : new DbRawSqlQuery<TElement>(_internalQuery.AsStreaming());
         }
 
         #endregion
@@ -62,9 +63,9 @@ namespace System.Data.Entity.Infrastructure
         /// <returns>
         ///     An <see cref="IEnumerator{TEntity}" /> object that can be used to iterate through the elements.
         /// </returns>
-        public IEnumerator<TElement> GetEnumerator()
+        public virtual IEnumerator<TElement> GetEnumerator()
         {
-            return (IEnumerator<TElement>)_internalQuery.GetEnumerator();
+            return (IEnumerator<TElement>)GetInternalQueryWithCheck("GetEnumerator").GetEnumerator();
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IDbAsyncEnumerator<TElement> IDbAsyncEnumerable<TElement>.GetAsyncEnumerator()
         {
-            return (IDbAsyncEnumerator<TElement>)_internalQuery.GetAsyncEnumerator();
+            return (IDbAsyncEnumerator<TElement>)GetInternalQueryWithCheck("IDbAsyncEnumerable<TElement>.GetAsyncEnumerator").GetAsyncEnumerator();
         }
 
         /// <summary>
@@ -1335,7 +1336,7 @@ namespace System.Data.Entity.Infrastructure
         /// </returns>
         public override string ToString()
         {
-            return _internalQuery.ToString();
+            return _internalQuery == null ? base.ToString() : _internalQuery.ToString();
         }
 
         #endregion
@@ -1351,6 +1352,16 @@ namespace System.Data.Entity.Infrastructure
             get { return _internalQuery; }
         }
 
+        private InternalSqlQuery GetInternalQueryWithCheck(string memberName)
+        {
+            if (_internalQuery == null)
+            {
+                throw new NotImplementedException(Strings.TestDoubleNotImplemented(memberName, GetType().Name, typeof(DbSqlQuery<>).Name));
+            }
+
+            return _internalQuery;
+        }
+
         #endregion
 
         #region IListSource implementation
@@ -1364,11 +1375,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
-            get
-            {
-                // Note that _internalQuery will always return false;
-                return _internalQuery.ContainsListCollection;
-            }
+            get { return false; }
         }
 
         /// <summary>
@@ -1378,8 +1385,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
         {
-            // Note that _internalQuery will always throw;
-            return _internalQuery.GetList();
+            throw Error.DbQuery_BindingToDbQueryNotSupported();
         }
 
         #endregion

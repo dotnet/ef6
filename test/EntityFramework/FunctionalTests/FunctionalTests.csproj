@@ -166,6 +166,17 @@
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\GetHashCodeTests.cs" />
     <Compile Include="ProductivityApi\HasChangesTests.cs" />
+    <Compile Include="TestDoubles\InMemoryDbSetTests.cs" />
+    <Compile Include="TestDoubles\InMemoryNonGenericDbSet.cs" />
+    <Compile Include="TestDoubles\InMemoryNonGenericDbSetTests.cs" />
+    <Compile Include="TestDoubles\InMemoryNonGenericSqlQuery.cs" />
+    <Compile Include="TestDoubles\MockableNonGenericDbSetTests.cs" />
+    <Compile Include="TestDoubles\UnimplementedDbSetTests.cs" />
+    <Compile Include="TestDoubles\InMemoryAsyncQueryable.cs" />
+    <Compile Include="TestDoubles\InMemoryAsyncQueryProvider.cs" />
+    <Compile Include="TestDoubles\InMemoryDbAsyncEnumerator.cs" />
+    <Compile Include="TestDoubles\InMemoryDbSet.cs" />
+    <Compile Include="TestDoubles\MockableDbSetTests.cs" />
     <Compile Include="ProductivityApi\StreamingTests.cs" />
     <Compile Include="ProductivityApi\NamespaceAndNestingTests.cs" />
     <Compile Include="ProductivityApi\TimeoutTests.cs" />
@@ -176,6 +187,8 @@
     <Compile Include="Query\ProductModel.cs" />
     <Compile Include="Query\StoredProcedures\IceAndFireModel.cs" />
     <Compile Include="Query\StoredProcedures\StoredProceduresTests.cs" />
+    <Compile Include="TestDoubles\InMemorySqlQuery.cs" />
+    <Compile Include="TestDoubles\UnimplementedNonGenericDbSetTests.cs" />
     <Compile Include="TestHelpers\StringExtensions.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaAllTypes.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaBaseline.cs" />

@@ -21,7 +21,7 @@ namespace System.Data.Entity.Internal.Linq
         Type ElementType { get; }
         Expression Expression { get; }
         ObjectQueryProvider ObjectQueryProvider { get; }
-
+ 
 #if !NET40
 
         IDbAsyncEnumerator GetAsyncEnumerator();

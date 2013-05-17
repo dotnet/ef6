@@ -97,6 +97,16 @@ namespace System.Data.Entity.Internal.Linq
             return _internalSet.Find(keyValues);
         }
 
+        internal override IInternalQuery GetInternalQueryWithCheck(string memberName)
+        {
+            return _internalSet;
+        }
+
+        internal override IInternalSet GetInternalSetWithCheck(string memberName)
+        {
+            return _internalSet;
+        }
+
 #if !NET40
 
         /// <inheritdoc />

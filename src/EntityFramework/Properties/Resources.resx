@@ -5406,4 +5406,10 @@
   <data name="LightweightPrimitivePropertyConfiguration_NonNullableProperty" xml:space="preserve">
     <value>The property {0} of type {1} cannot be marked as optional because it can't be assigned a null value.</value>
   </data>
+  <data name="TestDoubleNotImplemented" xml:space="preserve">
+    <value>The member '{0}' has not been implemented on type '{1}' which inherits from '{2}'. Test doubles for '{2}' must provide implementations of methods and properties that are used.</value>
+  </data>
+  <data name="TestDoublesCannotBeConverted" xml:space="preserve">
+    <value>Conversion between generic and non-generic DbSet objects is not supported for test doubles.</value>
+  </data>
 </root>

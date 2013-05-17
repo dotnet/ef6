@@ -42,21 +42,24 @@ namespace System.Data.Entity.Migrations
             {
                 var internalSet = (InternalSet<TEntity>)((IInternalSetAdapter)dbSet).InternalSet;
 
-                dbSet.AddOrUpdate(GetKeyProperties(typeof(TEntity), internalSet), entities);
-            }
-            else
-            {
-                var targetType = set.GetType();
-
-                var method = targetType.GetMethod("AddOrUpdate", new[] { typeof(TEntity[]) });
-
-                if (method == null)
+                if (internalSet != null)
                 {
-                    throw Error.UnableToDispatchAddOrUpdate(targetType);
-                }
+                    dbSet.AddOrUpdate(GetKeyProperties(typeof(TEntity), internalSet), internalSet, entities);
 
-                method.Invoke(set, new[] { entities });
+                    return;
+                }
             }
+
+            var targetType = set.GetType();
+
+            var method = targetType.GetMethod("AddOrUpdate", new[] { typeof(TEntity[]) });
+
+            if (method == null)
+            {
+                throw Error.UnableToDispatchAddOrUpdate(targetType);
+            }
+
+            method.Invoke(set, new[] { entities });
         }
 
         /// <summary>
@@ -85,37 +88,42 @@ namespace System.Data.Entity.Migrations
 
             if (dbSet != null)
             {
-                var identifyingProperties = identifierExpression.GetPropertyAccessList();
+                var internalSet = (InternalSet<TEntity>)((IInternalSetAdapter)dbSet).InternalSet;
 
-                dbSet.AddOrUpdate(identifyingProperties, entities);
-            }
-            else
-            {
-                var targetType = set.GetType();
-
-                var method
-                    = targetType.GetMethod(
-                        "AddOrUpdate",
-                        new[] { typeof(Expression<Func<TEntity, object>>), typeof(TEntity[]) });
-
-                if (method == null)
+                if (internalSet != null)
                 {
-                    throw Error.UnableToDispatchAddOrUpdate(targetType);
-                }
+                    var identifyingProperties = identifierExpression.GetPropertyAccessList();
 
-                method.Invoke(set, new object[] { identifierExpression, entities });
+                    dbSet.AddOrUpdate(identifyingProperties, internalSet, entities);
+
+                    return;
+                }
             }
+
+            var targetType = set.GetType();
+
+            var method
+                = targetType.GetMethod(
+                    "AddOrUpdate",
+                    new[] { typeof(Expression<Func<TEntity, object>>), typeof(TEntity[]) });
+
+            if (method == null)
+            {
+                throw Error.UnableToDispatchAddOrUpdate(targetType);
+            }
+
+            method.Invoke(set, new object[] { identifierExpression, entities });
         }
 
         private static void AddOrUpdate<TEntity>(
-            this DbSet<TEntity> set, IEnumerable<PropertyPath> identifyingProperties, params TEntity[] entities)
+            this DbSet<TEntity> set, IEnumerable<PropertyPath> identifyingProperties,
+            InternalSet<TEntity> internalSet, params TEntity[] entities)
             where TEntity : class
         {
             DebugCheck.NotNull(set);
             DebugCheck.NotNull(identifyingProperties);
             DebugCheck.NotNull(entities);
 
-            var internalSet = (InternalSet<TEntity>)((IInternalSetAdapter)set).InternalSet;
             var keyProperties = GetKeyProperties(typeof(TEntity), internalSet);
             var parameter = Expression.Parameter(typeof(TEntity));
 

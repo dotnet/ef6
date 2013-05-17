@@ -2,17 +2,22 @@
 
 namespace System.Data.Entity
 {
-    using System.Collections.ObjectModel;
     using System.Data.Entity.Infrastructure;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     /// <summary>
-    ///     An IDbSet represents the collection of all entities in the context, or that can be queried from the
-    ///     database, of a given type.  DbSet is a concrete implementation of IDbSet.
+    ///     An <see cref="IDbSet{TEntity}"/> represents the collection of all entities in the context, or that
+    ///     can be queried from the database, of a given type.  <see cref="DbSet{TEntity}"/> is a concrete
+    ///     implementation of IDbSet.
     /// </summary>
+    /// <remarks>
+    ///     <see cref="IDbSet{TEntity}"/> was originally intended to allow creation of test doubles (mocks or
+    ///     fakes) for <see cref="DbSet{TEntity}"/>. However, this approach has issues in that adding new members
+    ///     to an interface breaks existing code that already implements the interface without the new members.
+    ///     Therefore, starting with EF6, no new members will be added to this interface and it is recommended
+    ///     that <see cref="DbSet{TEntity}"/> be used as the base class for test doubles.
+    /// </remarks>
     /// <typeparam name="TEntity"> The type that defines the set. </typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
@@ -34,31 +39,6 @@ namespace System.Data.Entity
         /// <param name="keyValues"> The values of the primary key for the entity to be found. </param>
         /// <returns> The entity found, or null. </returns>
         TEntity Find(params object[] keyValues);
-
-#if !NET40
-
-        /// <summary>
-        ///     Asynchronously finds an entity with the given primary key values.
-        ///     If an entity with the given primary key values exists in the context, then it is
-        ///     returned immediately without making a request to the store.  Otherwise, a request
-        ///     is made to the store for an entity with the given primary key values and this entity,
-        ///     if found, is attached to the context and returned.  If no entity is found in the
-        ///     context or the store, then null is returned.
-        /// </summary>
-        /// <remarks>
-        ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
-        ///     the designer, by the Code First fluent API, or by the DataMember attribute.
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
-        /// </remarks>
-        /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
-        /// </param>
-        /// <param name="keyValues"> The values of the primary key for the entity to be found. </param>
-        /// <returns> A task that represents the asynchronous find operation. The task result contains the entity found, or null. </returns>
-        Task<TEntity> FindAsync(CancellationToken cancellationToken, params object[] keyValues);
-
-#endif
 
         /// <summary>
         ///     Adds the given entity to the context underlying the set in the Added state such that it will

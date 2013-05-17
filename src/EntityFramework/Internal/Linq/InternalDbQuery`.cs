@@ -66,6 +66,11 @@ namespace System.Data.Entity.Internal.Linq
             return new InternalDbQuery<TElement>(_internalQuery.AsStreaming());
         }
 
+        internal override IInternalQuery GetInternalQueryWithCheck(string memberName)
+        {
+            return _internalQuery;
+        }
+
         #endregion
 
         #region IEnumerable implementation

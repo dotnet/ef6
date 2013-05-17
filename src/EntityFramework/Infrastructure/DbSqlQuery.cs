@@ -27,6 +27,17 @@ namespace System.Data.Entity.Infrastructure
         {
         }
 
+        /// <summary>
+        ///     Creates an instance of a <see cref="DbSqlQuery" /> when called from the constructor of a derived
+        ///     type that will be used as a test double for <see cref="DbSet.SqlQuery"/>. Methods and properties
+        ///     that will be used by the test double must be implemented by the test double except AsNoTracking
+        ///     and AsStreaming where the default implementation is a no-op.
+        /// </summary>
+        protected DbSqlQuery()
+            : this(null)
+        {
+        }
+
         #region AsNoTracking
 
         /// <summary>
@@ -34,9 +45,9 @@ namespace System.Data.Entity.Infrastructure
         ///     <see cref="DbContext" />.
         /// </summary>
         /// <returns> A new query with NoTracking applied. </returns>
-        public DbSqlQuery AsNoTracking()
+        public virtual DbSqlQuery AsNoTracking()
         {
-            return new DbSqlQuery(InternalQuery.AsNoTracking());
+            return InternalQuery == null ? this : new DbSqlQuery(InternalQuery.AsNoTracking());
         }
 
         #endregion
@@ -47,9 +58,9 @@ namespace System.Data.Entity.Infrastructure
         ///     Returns a new query that will stream the results instead of buffering.
         /// </summary>
         /// <returns> A new query with AsStreaming applied. </returns>
-        public new DbSqlQuery AsStreaming()
+        public new virtual DbSqlQuery AsStreaming()
         {
-            return new DbSqlQuery(InternalQuery.AsStreaming());
+            return InternalQuery == null ? this : new DbSqlQuery(InternalQuery.AsStreaming());
         }
 
         #endregion

@@ -2,8 +2,6 @@
 
 namespace System.Data.Entity.Internal
 {
-    using System.ComponentModel;
-    using System.Data.Entity.Resources;
     using System.Linq.Expressions;
     using Moq;
     using Xunit;
@@ -25,24 +23,6 @@ namespace System.Data.Entity.Internal
                 "select * from Products where Id < {0} and CategoryId = {1}", false, 4, "Beverages");
 
             Assert.Equal("select * from Products where Id < {0} and CategoryId = {1}", query.ToString());
-        }
-
-        [Fact]
-        public void Non_generic_non_entity_SQL_query_ContainsListCollection_returns_false()
-        {
-            var query = MockHelper.CreateInternalSqlNonSetQuery("query");
-
-            Assert.False(((IListSource)query).ContainsListCollection);
-        }
-
-        [Fact]
-        public void Non_generic_non_entity_SQL_query_GetList_throws_indicating_that_binding_to_queries_is_not_allowed()
-        {
-            var query = MockHelper.CreateInternalSqlNonSetQuery("query");
-
-            Assert.Equal(
-                Strings.DbQuery_BindingToDbQueryNotSupported,
-                Assert.Throws<NotSupportedException>(() => ((IListSource)query).GetList()).Message);
         }
 
         [Fact]
