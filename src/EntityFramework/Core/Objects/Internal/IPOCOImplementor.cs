@@ -384,13 +384,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             const MethodAttributes methodAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
             var baseSetter = baseProperty.GetSetMethod(true);
-            ;
             var methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
-
             var specificGetRelatedReference = _getRelatedReferenceMethod.MakeGenericMethod(baseProperty.PropertyType);
             var specificEntityReferenceSetValue = typeof(EntityReference<>).MakeGenericType(baseProperty.PropertyType).GetMethod(
                 "set_Value");
-            ;
 
             var setterBuilder = typeBuilder.DefineMethod(
                 "set_" + baseProperty.Name, methodAccess | methodAttributes, null, new[] { baseProperty.PropertyType });
@@ -413,9 +410,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             const MethodAttributes methodAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
             var baseSetter = baseProperty.GetSetMethod(true);
-            ;
             var methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
-
             var cannotSetException = Strings.EntityProxyTypeInfo_CannotSetEntityCollectionProperty(propertyBuilder.Name, typeBuilder.Name);
             var setterBuilder = typeBuilder.DefineMethod(
                 "set_" + baseProperty.Name, methodAccess | methodAttributes, null, new[] { baseProperty.PropertyType });
@@ -480,15 +475,21 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             // Implement IEntityWithChangeTracker.SetChangeTracker(IEntityChangeTracker changeTracker)
             var setChangeTracker = typeBuilder.DefineMethod(
-                "SetChangeTracker",
-                MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Virtual
+                "IEntityWithChangeTracker.SetChangeTracker",
+                MethodAttributes.Private | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.Virtual
                 | MethodAttributes.Final,
-                typeof(void), new[] { typeof(IEntityChangeTracker) });
+                typeof(void),
+                new Type[] { typeof(IEntityChangeTracker) });
+
             generator = setChangeTracker.GetILGenerator();
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Ldarg_1);
             generator.Emit(OpCodes.Stfld, _changeTrackerField);
             generator.Emit(OpCodes.Ret);
+
+            typeBuilder.DefineMethodOverride(
+                setChangeTracker, 
+                typeof(IEntityWithChangeTracker).GetMethod("SetChangeTracker"));
         }
 
         private void ImplementIEntityWithRelationships(TypeBuilder typeBuilder, Action<FieldBuilder, bool> registerField)
@@ -502,10 +503,12 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             // Implement IEntityWithRelationships.get_RelationshipManager
             _getRelationshipManager = typeBuilder.DefineMethod(
-                "get_RelationshipManager",
-                MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.SpecialName
+                "IEntityWithRelationships.get_RelationshipManager",
+                MethodAttributes.Private | MethodAttributes.HideBySig | MethodAttributes.NewSlot | MethodAttributes.SpecialName
                 | MethodAttributes.Virtual | MethodAttributes.Final,
-                typeof(RelationshipManager), Type.EmptyTypes);
+                typeof(RelationshipManager), 
+                Type.EmptyTypes);
+
             var generator = _getRelationshipManager.GetILGenerator();
             var trueLabel = generator.DefineLabel();
             generator.Emit(OpCodes.Ldarg_0);
@@ -520,6 +523,10 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.Emit(OpCodes.Ldfld, _relationshipManagerField);
             generator.Emit(OpCodes.Ret);
             relationshipManagerProperty.SetGetMethod(_getRelationshipManager);
+
+            typeBuilder.DefineMethodOverride(
+                _getRelationshipManager, 
+                typeof(IEntityWithRelationships).GetMethod("get_RelationshipManager"));
         }
 
         #endregion

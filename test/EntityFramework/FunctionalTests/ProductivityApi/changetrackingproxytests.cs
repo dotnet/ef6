@@ -6,7 +6,7 @@ namespace ProductivityApiTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-    using System.Data.Entity.TestHelpers;
+    using System.Data.Entity.Core.Objects.DataClasses;
     using System.Linq;
     using Xunit;
     using Xunit.Extensions;
@@ -333,5 +333,32 @@ namespace ProductivityApiTests
         }
 
         #endregion
+
+        [Fact]
+        [AutoRollback]
+        public void RelationshipManager_can_be_accessed_by_casting_proxy_entity_to_IEntityWithRelationships()
+        {
+            using (var context = new GranniesContext())
+            {
+                var granny = context.Grannys.Create();
+                context.Grannys.Attach(granny);
+
+                var relationshipManager = ((IEntityWithRelationships)granny).RelationshipManager;
+                Assert.NotNull(relationshipManager);
+            }
+        }
+
+        [Fact]
+        [AutoRollback]
+        public void SetChangeTracker_can_be_called_by_casting_proxy_entity_to_IEntityWithChangeTracker()
+        {
+            using (var context = new GranniesContext())
+            {
+                var granny = context.Grannys.Create();
+                context.Grannys.Attach(granny);
+
+                ((IEntityWithChangeTracker)granny).SetChangeTracker(null);
+            }
+        }
     }
 }
