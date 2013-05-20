@@ -30,20 +30,20 @@ namespace System.Data.Entity.ModelConfiguration
         public void Entities_returns_a_new_object()
         {
             var convention = new Convention();
-            var entities = convention.Entities();
+            var entities = convention.Types();
 
             Assert.NotNull(entities);
-            Assert.NotSame(entities, convention.Entities());
+            Assert.NotSame(entities, convention.Types());
         }
 
         [Fact]
         public void Generic_Entities_returns_a_new_object()
         {
             var convention = new Convention();
-            var entities = convention.Entities<object>();
+            var entities = convention.Types<object>();
 
             Assert.NotNull(entities);
-            Assert.NotSame(entities, convention.Entities<object>());
+            Assert.NotSame(entities, convention.Types<object>());
         }
 
         [Fact]

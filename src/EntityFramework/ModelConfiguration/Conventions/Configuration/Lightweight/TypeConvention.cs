@@ -7,13 +7,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
 
-    internal class EntityConvention : EntityConventionBase
+    internal class TypeConvention : TypeConventionBase
     {
-        private readonly Action<LightweightEntityConfiguration> _entityConfigurationAction;
+        private readonly Action<LightweightTypeConfiguration> _entityConfigurationAction;
 
-        public EntityConvention(
+        public TypeConvention(
             IEnumerable<Func<Type, bool>> predicates,
-            Action<LightweightEntityConfiguration> entityConfigurationAction)
+            Action<LightweightTypeConfiguration> entityConfigurationAction)
             : base(predicates)
         {
             DebugCheck.NotNull(predicates);
@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             _entityConfigurationAction = entityConfigurationAction;
         }
 
-        internal Action<LightweightEntityConfiguration> EntityConfigurationAction
+        internal Action<LightweightTypeConfiguration> EntityConfigurationAction
         {
             get { return _entityConfigurationAction; }
         }
@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(memberInfo);
             DebugCheck.NotNull(modelConfiguration);
 
-            _entityConfigurationAction(new LightweightEntityConfiguration(memberInfo, modelConfiguration));
+            _entityConfigurationAction(new LightweightTypeConfiguration(memberInfo, modelConfiguration));
         }
 
         protected override void ApplyCore(
@@ -42,7 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(configuration);
             DebugCheck.NotNull(modelConfiguration);
 
-            _entityConfigurationAction(new LightweightEntityConfiguration(memberInfo, configuration, modelConfiguration));
+            _entityConfigurationAction(new LightweightTypeConfiguration(memberInfo, configuration, modelConfiguration));
         }
 
         protected override void ApplyCore(
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(configuration);
             DebugCheck.NotNull(modelConfiguration);
 
-            _entityConfigurationAction(new LightweightEntityConfiguration(memberInfo, configuration, modelConfiguration));
+            _entityConfigurationAction(new LightweightTypeConfiguration(memberInfo, configuration, modelConfiguration));
         }
     }
 }

@@ -935,13 +935,13 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void Entities_returns_configuration_object()
         {
-            Assert.NotNull(new DbModelBuilder().Entities());
+            Assert.NotNull(new DbModelBuilder().Types());
         }
 
         [Fact]
         public void Entities_with_type_returns_configuration_object()
         {
-            Assert.NotNull(new DbModelBuilder().Entities<object>());
+            Assert.NotNull(new DbModelBuilder().Types<object>());
         }
 
         [Fact]

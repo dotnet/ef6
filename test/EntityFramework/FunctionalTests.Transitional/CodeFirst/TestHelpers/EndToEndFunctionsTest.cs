@@ -40,7 +40,7 @@ namespace FunctionalTests
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entities().Configure(e => e.MapToStoredProcedures());
+            modelBuilder.Types().Configure(e => e.MapToStoredProcedures());
         }
 
         protected DbContext CreateContext()

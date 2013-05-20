@@ -8,13 +8,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Utilities;
     using System.Linq;
 
-    internal abstract class EntityConventionBase : IConfigurationConvention<Type, EntityTypeConfiguration>,
+    internal abstract class TypeConventionBase : IConfigurationConvention<Type, EntityTypeConfiguration>,
                                                    IConfigurationConvention<Type, ComplexTypeConfiguration>,
                                                    IConfigurationConvention<Type>
     {
         private readonly IEnumerable<Func<Type, bool>> _predicates;
 
-        protected EntityConventionBase(IEnumerable<Func<Type, bool>> predicates)
+        protected TypeConventionBase(IEnumerable<Func<Type, bool>> predicates)
         {
             DebugCheck.NotNull(predicates);
 

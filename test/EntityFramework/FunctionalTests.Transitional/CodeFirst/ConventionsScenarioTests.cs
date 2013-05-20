@@ -93,7 +93,7 @@ namespace FunctionalTests
                 modelBuilder.Entity<LightweightEntity>();
 
                 var lightweightTableConvention = new Convention();
-                lightweightTableConvention.Entities()
+                lightweightTableConvention.Types()
                     .Where(t => t == typeof(LightweightEntity))
                     .Configure(e => e.ToTable("TheTable"));
                 modelBuilder.Conventions.Add(lightweightTableConvention);
@@ -111,7 +111,7 @@ namespace FunctionalTests
                 modelBuilder.Entity<LightweightEntity>();
 
                 var lightweightTableConvention = new Convention();
-                lightweightTableConvention.Entities()
+                lightweightTableConvention.Types()
                     .Where(t => t == typeof(LightweightEntity))
                     .Configure(e => e.ToTable("TheTable"));
                 modelBuilder.Conventions.Add(lightweightTableConvention);
@@ -153,14 +153,14 @@ namespace FunctionalTests
             {
                 public LightweightTableConvention()
                 {
-                    Entities()
+                    Types()
                         .Where(t => t == typeof(LightweightEntity))
                         .Configure(e => e.ToTable("TheTable"));
                 }
             }
         }
 
-        public class LightweightEntityConventions : TestBase
+        public class LightweightTypeConventions : TestBase
         {
             [Fact]
             public void Can_configure_entity_types()
@@ -168,7 +168,7 @@ namespace FunctionalTests
                 var modelBuilder = new DbModelBuilder();
 
                 modelBuilder.Entity<LightweightEntity>();
-                modelBuilder.Entities()
+                modelBuilder.Types()
                     .Where(t => t == typeof(LightweightEntity))
                     .Configure(e => e.ToTable("TheTable"));
 
@@ -183,7 +183,7 @@ namespace FunctionalTests
                 var modelBuilder = new DbModelBuilder();
 
                 modelBuilder.Entity<LightweightEntity>();
-                modelBuilder.Entities<ILightweightEntity>()
+                modelBuilder.Types<ILightweightEntity>()
                     .Configure(c => c.HasKey(e => e.IntProperty));
 
                 var databaseMapping = BuildMapping(modelBuilder);
@@ -199,7 +199,7 @@ namespace FunctionalTests
                 var modelBuilder = new DbModelBuilder();
 
                 modelBuilder.Entity<LightweightEntity>();
-                modelBuilder.Entities<LightweightEntity>()
+                modelBuilder.Types<LightweightEntity>()
                     .Configure(c => c.HasKey(e => e.IntProperty));
 
                 var databaseMapping = BuildMapping(modelBuilder);
@@ -215,7 +215,7 @@ namespace FunctionalTests
                 var modelBuilder = new DbModelBuilder();
 
                 modelBuilder.Entity<LightweightEntity>();
-                modelBuilder.Entities<ILightweightEntity>()
+                modelBuilder.Types<ILightweightEntity>()
                     .Configure(c => c.HasKey(e => new { e.IntProperty, e.IntProperty1 }));
 
                 var databaseMapping = BuildMapping(modelBuilder);
@@ -233,7 +233,7 @@ namespace FunctionalTests
                 var modelBuilder = new DbModelBuilder();
 
                 modelBuilder.Entity<LightweightEntityWithKeyConfiguration>();
-                modelBuilder.Entities<ILightweightEntity>()
+                modelBuilder.Types<ILightweightEntity>()
                     .Configure(c => c.HasKey(e => e.IntProperty));
 
                 var databaseMapping = BuildMapping(modelBuilder);
@@ -250,10 +250,10 @@ namespace FunctionalTests
                 var modelBuilder = new DbModelBuilder();
 
                 modelBuilder.Entity<RelatedLightweightEntity>();
-                modelBuilder.Entities<LightweightEntity>()
+                modelBuilder.Types<LightweightEntity>()
                     .Configure(c => c.Ignore());
 
-                modelBuilder.Entities()
+                modelBuilder.Types()
                     .Where(t => t == typeof(LightweightComplexTypeWithId))
                     .Configure(c => c.Ignore());
 
@@ -268,7 +268,7 @@ namespace FunctionalTests
                 var modelBuilder = new DbModelBuilder();
 
                 modelBuilder.Entity<RelatedLightweightEntity>();
-                modelBuilder.Entities<LightweightComplexTypeWithId>()
+                modelBuilder.Types<LightweightComplexTypeWithId>()
                     .Configure(
                         c =>
                             {
@@ -282,12 +282,12 @@ namespace FunctionalTests
             }
 
             [Fact]
-            public void Can_configure_complex_types()
+            public void Can_configure_as_complex_types()
             {
                 var modelBuilder = new DbModelBuilder();
 
                 modelBuilder.Entity<RelatedLightweightEntity>();
-                modelBuilder.Entities<LightweightComplexTypeWithId>()
+                modelBuilder.Types<LightweightComplexTypeWithId>()
                     .Configure(c => c.IsComplexType());
 
                 var databaseMapping = BuildMapping(modelBuilder);
@@ -302,7 +302,7 @@ namespace FunctionalTests
                 var modelBuilder = new DbModelBuilder();
 
                 modelBuilder.Entity<RelatedLightweightEntity>();
-                modelBuilder.Entities<LightweightComplexTypeWithId>()
+                modelBuilder.Types<LightweightComplexTypeWithId>()
                     .Configure(
                         c =>
                             {
@@ -320,18 +320,20 @@ namespace FunctionalTests
             }
 
             [Fact]
-            public void Can_configure_complex_type_and_its_properties()
+            public void Can_configure_complex_types()
             {
                 var modelBuilder = new DbModelBuilder();
 
                 modelBuilder.Entity<RelatedLightweightEntity>();
                 modelBuilder.ComplexType<LightweightComplexTypeWithId>();
-                modelBuilder.Entities<LightweightComplexTypeWithId>()
+                modelBuilder.Types<LightweightComplexTypeWithId>()
                     .Configure(
                         c =>
                         {
                             c.Ignore(l => l.Id);
                             c.Property(l => l.StringProperty).HasColumnName("foo");
+                            // This will be ignored
+                            c.HasKey(l => l.StringProperty);
                         });
 
                 var databaseMapping = BuildMapping(modelBuilder);
@@ -340,6 +342,41 @@ namespace FunctionalTests
                     new[] { "Id", "foo", typeof(LightweightEntity).Name + "_Id" },
                     databaseMapping.Database.EntityTypes.Single(t => t.Name == typeof(RelatedLightweightEntity).Name)
                         .Properties.Select(p => p.Name));
+                Assert.Equal(
+                    new[] { "StringProperty"},
+                    databaseMapping.Model.ComplexTypes.Single(t => t.Name == typeof(LightweightComplexTypeWithId).Name)
+                    .Properties.Select(p => p.Name));
+            }
+
+            [Fact]
+            public void Implicitly_convert_complex_types_to_entity_types_if_entity_specific_configuration_is_performed()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntity>();
+                modelBuilder.Types()
+                    .Configure(e => e.HasKey("StringProperty"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+                
+                Assert.Equal(2, databaseMapping.Model.EntityTypes.Count());
+                Assert.True(databaseMapping.Model.EntityTypes.All(e => e.KeyProperties.Any(p => p.Name == "StringProperty")));
+                Assert.Equal(0, databaseMapping.Model.ComplexTypes.Count());
+            }
+
+            [Fact]
+            public void Does_not_implicitly_convert_complex_types_to_entity_types_if_only_structural_type_configuration_is_performed()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntity>();
+                modelBuilder.Types()
+                    .Configure(e => e.Property("StringProperty"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                Assert.Equal(1, databaseMapping.Model.EntityTypes.Count());
+                Assert.Equal(1, databaseMapping.Model.ComplexTypes.Count());
             }
 
             [Fact]
@@ -348,7 +385,7 @@ namespace FunctionalTests
                 var modelBuilder = new DbModelBuilder();
 
                 modelBuilder.Entity<RelatedLightweightEntity>();
-                modelBuilder.Entities<LightweightComplexTypeWithId>()
+                modelBuilder.Types<LightweightComplexTypeWithId>()
                     .Configure(
                         c =>
                             {
@@ -516,6 +553,7 @@ namespace FunctionalTests
         public int Id { get; set; }
         public int IntProperty { get; set; }
         public int IntProperty1 { get; set; }
+        public string StringProperty { get; set; }
         public LightweightComplexType ComplexProperty { get; set; }
     }
 

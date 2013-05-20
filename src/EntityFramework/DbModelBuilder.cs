@@ -234,9 +234,9 @@ namespace System.Data.Entity
         ///     the model.
         /// </summary>
         /// <returns> A configuration object for the convention. </returns>
-        public EntityConventionConfiguration Entities()
+        public TypeConventionConfiguration Types()
         {
-            return new EntityConventionConfiguration(_conventionsConfiguration);
+            return new TypeConventionConfiguration(_conventionsConfiguration);
         }
 
         /// <summary>
@@ -246,10 +246,10 @@ namespace System.Data.Entity
         /// </summary>
         /// <typeparam name="T"> The type of the entities that this convention will apply to. </typeparam>
         /// <returns> A configuration object for the convention. </returns>
-        public EntityConventionOfTypeConfiguration<T> Entities<T>()
+        public TypeConventionOfTypeConfiguration<T> Types<T>()
             where T : class
         {
-            return new EntityConventionOfTypeConfiguration<T>(_conventionsConfiguration);
+            return new TypeConventionOfTypeConfiguration<T>(_conventionsConfiguration);
         }
 
         /// <summary>

@@ -14,14 +14,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     ///     the entity types in a model and a captured value.
     /// </summary>
     /// <typeparam name="T"> Type of the captured value. </typeparam>
-    public class EntityConventionWithHavingConfiguration<T>
+    public class TypeConventionWithHavingConfiguration<T>
         where T : class
     {
         private readonly ConventionsConfiguration _conventionsConfiguration;
         private readonly IEnumerable<Func<Type, bool>> _predicates;
         private readonly Func<Type, T> _capturingPredicate;
 
-        internal EntityConventionWithHavingConfiguration(
+        internal TypeConventionWithHavingConfiguration(
             ConventionsConfiguration conventionsConfiguration,
             IEnumerable<Func<Type, bool>> predicates,
             Func<Type, T> capturingPredicate)
@@ -54,15 +54,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Allows configuration of the entity types that this convention applies to.
         /// </summary>
         /// <param name="entityConfigurationAction">
-        ///     An action that performs configuration against a <see cref="LightweightEntityConfiguration" />
+        ///     An action that performs configuration against a <see cref="LightweightTypeConfiguration" />
         ///     using a captured value.
         /// </param>
-        public void Configure(Action<LightweightEntityConfiguration, T> entityConfigurationAction)
+        public void Configure(Action<LightweightTypeConfiguration, T> entityConfigurationAction)
         {
             Check.NotNull(entityConfigurationAction, "entityConfigurationAction");
 
             _conventionsConfiguration.Add(
-                new EntityConventionWithHaving<T>(
+                new TypeConventionWithHaving<T>(
                     _predicates,
                     _capturingPredicate,
                     entityConfigurationAction));

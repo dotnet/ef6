@@ -7,7 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
     using Xunit;
 
-    public class EntityConventionOfTypeWithHavingTests
+    public class TypeConventionWithHavingTests
     {
         public class Apply_EntityTypeConfiguration
         {
@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 var actionInvoked = false;
                 object capturedValue = null;
                 var value = new object();
-                var convention = new EntityConventionOfTypeWithHaving<object, object>(
+                var convention = new TypeConventionWithHaving<object>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     t => value,
                     (c, v) =>
@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                             actionInvoked = true;
                             capturedValue = v;
                         });
-                var type = typeof(object);
+                var type = new MockType();
                 var configuration = new EntityTypeConfiguration(type);
 
                 convention.Apply(type, () => configuration, new ModelConfiguration());
@@ -38,11 +38,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_value_null()
             {
                 var actionInvoked = false;
-                var convention = new EntityConventionOfTypeWithHaving<object, object>(
+                var convention = new TypeConventionWithHaving<object>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     t => null,
                     (c, v) => actionInvoked = true);
-                var type = typeof(object);
+                var type = new MockType();
                 var configuration = new EntityTypeConfiguration(type);
 
                 convention.Apply(type, () => configuration, new ModelConfiguration());
@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 var actionInvoked = false;
                 object capturedValue = null;
                 var value = new object();
-                var convention = new EntityConventionOfTypeWithHaving<object, object>(
+                var convention = new TypeConventionWithHaving<object>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     t => value,
                     (c, v) =>
@@ -67,7 +67,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                             actionInvoked = true;
                             capturedValue = v;
                         });
-                var type = typeof(object);
+                var type = new MockType();
                 var configuration = new ComplexTypeConfiguration(type);
 
                 convention.Apply(type, () => configuration, new ModelConfiguration());
@@ -80,11 +80,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_value_null()
             {
                 var actionInvoked = false;
-                var convention = new EntityConventionOfTypeWithHaving<object, object>(
+                var convention = new TypeConventionWithHaving<object>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     t => null,
                     (c, v) => actionInvoked = true);
-                var type = typeof(object);
+                var type = new MockType();
                 var configuration = new ComplexTypeConfiguration(type);
 
                 convention.Apply(type, () => configuration, new ModelConfiguration());
@@ -101,7 +101,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 var actionInvoked = false;
                 object capturedValue = null;
                 var value = new object();
-                var convention = new EntityConventionOfTypeWithHaving<object, object>(
+                var convention = new TypeConventionWithHaving<object>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     t => value,
                     (c, v) =>
@@ -109,7 +109,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                             actionInvoked = true;
                             capturedValue = v;
                         });
-                var type = typeof(object);
+                var type = new MockType();
                 var configuration = new ModelConfiguration();
 
                 convention.Apply(type, configuration);
@@ -122,11 +122,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_value_null()
             {
                 var actionInvoked = false;
-                var convention = new EntityConventionOfTypeWithHaving<object, object>(
+                var convention = new TypeConventionWithHaving<object>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     t => null,
                     (c, v) => actionInvoked = true);
-                var type = typeof(object);
+                var type = new MockType();
                 var configuration = new ModelConfiguration();
 
                 convention.Apply(type, configuration);

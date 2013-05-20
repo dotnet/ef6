@@ -12,20 +12,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
     /// <summary>
     ///     Allows configuration to be performed for a lightweight convention based on
-    ///     the entity types in a model.
+    ///     the entity types in a model that inherit from a common, specified type.
     /// </summary>
-    public class EntityConventionConfiguration
+    /// <typeparam name="T"> The common type of the entity types that this convention applies to. </typeparam>
+    public class TypeConventionOfTypeConfiguration<T>
+        where T : class
     {
         private readonly ConventionsConfiguration _conventionsConfiguration;
         private readonly IEnumerable<Func<Type, bool>> _predicates;
 
-        internal EntityConventionConfiguration(ConventionsConfiguration conventionsConfiguration)
+        internal TypeConventionOfTypeConfiguration(ConventionsConfiguration conventionsConfiguration)
             : this(conventionsConfiguration, Enumerable.Empty<Func<Type, bool>>())
         {
             DebugCheck.NotNull(conventionsConfiguration);
         }
 
-        private EntityConventionConfiguration(ConventionsConfiguration conventionsConfiguration, IEnumerable<Func<Type, bool>> predicates)
+        private TypeConventionOfTypeConfiguration(
+            ConventionsConfiguration conventionsConfiguration,
+            IEnumerable<Func<Type, bool>> predicates)
         {
             DebugCheck.NotNull(conventionsConfiguration);
             DebugCheck.NotNull(predicates);
@@ -50,33 +54,35 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="predicate"> A function to test each entity type for a condition. </param>
         /// <returns>
-        ///     An <see cref="EntityConventionConfiguration" /> instance so that multiple calls can be chained.
+        ///     An <see cref="TypeConventionOfTypeConfiguration{T}" /> instance so that multiple calls can be chained.
         /// </returns>
-        public EntityConventionConfiguration Where(Func<Type, bool> predicate)
+        public TypeConventionOfTypeConfiguration<T> Where(Func<Type, bool> predicate)
         {
             Check.NotNull(predicate, "predicate");
 
-            return new EntityConventionConfiguration(_conventionsConfiguration, _predicates.Append(predicate));
+            return new TypeConventionOfTypeConfiguration<T>(
+                _conventionsConfiguration,
+                _predicates.Append(predicate));
         }
 
         /// <summary>
         ///     Filters the entity types that this convention applies to based on a predicate
         ///     while capturing a value to use later during configuration.
         /// </summary>
-        /// <typeparam name="T"> Type of the captured value. </typeparam>
+        /// <typeparam name="TValue"> Type of the captured value. </typeparam>
         /// <param name="capturingPredicate">
         ///     A function to capture a value for each entity type. If the value is null, the
         ///     entity type will be filtered out.
         /// </param>
         /// <returns>
-        ///     An <see cref="EntityConventionWithHavingConfiguration{T}" /> instance so that multiple calls can be chained.
+        ///     An <see cref="TypeConventionOfTypeWithHavingConfiguration{T,TValue}" /> instance so that multiple calls can be chained.
         /// </returns>
-        public EntityConventionWithHavingConfiguration<T> Having<T>(Func<Type, T> capturingPredicate)
-            where T : class
+        public TypeConventionOfTypeWithHavingConfiguration<T, TValue> Having<TValue>(Func<Type, TValue> capturingPredicate)
+            where TValue : class
         {
             Check.NotNull(capturingPredicate, "capturingPredicate");
 
-            return new EntityConventionWithHavingConfiguration<T>(
+            return new TypeConventionOfTypeWithHavingConfiguration<T, TValue>(
                 _conventionsConfiguration,
                 _predicates,
                 capturingPredicate);
@@ -88,14 +94,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="entityConfigurationAction">
         ///     An action that performs configuration against a
         ///     <see
-        ///         cref="LightweightEntityConfiguration" />
+        ///         cref="LightweightTypeConfiguration{T}" />
         ///     .
         /// </param>
-        public void Configure(Action<LightweightEntityConfiguration> entityConfigurationAction)
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public void Configure(Action<LightweightTypeConfiguration<T>> entityConfigurationAction)
         {
             Check.NotNull(entityConfigurationAction, "entityConfigurationAction");
 
-            _conventionsConfiguration.Add(new EntityConvention(_predicates, entityConfigurationAction));
+            _conventionsConfiguration.Add(new TypeConventionOfType<T>(_predicates, entityConfigurationAction));
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]

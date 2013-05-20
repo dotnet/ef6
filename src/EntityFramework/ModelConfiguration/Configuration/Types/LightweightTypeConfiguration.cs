@@ -16,11 +16,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     ///     Allows configuration to be performed for an entity type in a model.
     ///     This configuration functionality is available via lightweight conventions.
     /// </summary>
-    public class LightweightEntityConfiguration
+    public class LightweightTypeConfiguration
     {
         private readonly Type _type;
+        private readonly Func<EntityTypeConfiguration> _entityTypeConfiguration;
+        private readonly ModelConfiguration _modelConfiguration;
+        private readonly Func<ComplexTypeConfiguration> _complexTypeConfiguration;
+        private ConfigurationAspect _currentConfigurationAspect;
 
-        internal LightweightEntityConfiguration(
+        internal LightweightTypeConfiguration(
             Type type,
             ModelConfiguration modelConfiguration)
             : this(type, null, null, modelConfiguration)
@@ -28,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             DebugCheck.NotNull(modelConfiguration);
         }
 
-        internal LightweightEntityConfiguration(
+        internal LightweightTypeConfiguration(
             Type type,
             Func<EntityTypeConfiguration> entityTypeConfiguration,
             ModelConfiguration modelConfiguration)
@@ -38,7 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             DebugCheck.NotNull(modelConfiguration);
         }
 
-        internal LightweightEntityConfiguration(
+        internal LightweightTypeConfiguration(
             Type type,
             Func<ComplexTypeConfiguration> complexTypeConfiguration,
             ModelConfiguration modelConfiguration)
@@ -48,7 +52,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             DebugCheck.NotNull(modelConfiguration);
         }
 
-        private LightweightEntityConfiguration(Type type,
+        private LightweightTypeConfiguration(
+            Type type,
             Func<EntityTypeConfiguration> entityTypeConfiguration,
             Func<ComplexTypeConfiguration> complexTypeConfiguration,
             ModelConfiguration modelConfiguration)
@@ -75,12 +80,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="entitySetName"> The name of the entity set. </param>
         /// <returns>
-        ///     The same <see cref="LightweightEntityConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightEntityConfiguration HasEntitySetName(string entitySetName)
+        public LightweightTypeConfiguration HasEntitySetName(string entitySetName)
         {
             Check.NotEmpty(entitySetName, "entitySetName");
             ValidateConfiguration(ConfigurationAspect.EntitySetName);
@@ -97,7 +102,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <summary>
         ///     Excludes this entity type from the model so that it will not be mapped to the database.
         /// </summary>
-        public LightweightEntityConfiguration Ignore()
+        public LightweightTypeConfiguration Ignore()
         {
             ValidateConfiguration(ConfigurationAspect.IgnoreType);
 
@@ -113,7 +118,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <summary>
         ///     Changes this entity type to a complex type.
         /// </summary>
-        public LightweightEntityConfiguration IsComplexType()
+        public LightweightTypeConfiguration IsComplexType()
         {
             ValidateConfiguration(ConfigurationAspect.ComplexType);
 
@@ -133,7 +138,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <remarks>
         ///     Calling this will have no effect if the property does not exist.
         /// </remarks>
-        public LightweightEntityConfiguration Ignore(string propertyName)
+        public LightweightTypeConfiguration Ignore(string propertyName)
         {
             Check.NotEmpty(propertyName, "propertyName");
 
@@ -149,7 +154,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <remarks>
         ///     Calling this will have no effect if the property does not exist.
         /// </remarks>
-        public LightweightEntityConfiguration Ignore(PropertyInfo propertyInfo)
+        public LightweightTypeConfiguration Ignore(PropertyInfo propertyInfo)
         {
             ValidateConfiguration(ConfigurationAspect.IgnoreProperty);
 
@@ -230,13 +235,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="propertyName"> The name of the property to be used as the primary key. </param>
         /// <returns>
-        ///     The same <see cref="LightweightEntityConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured of if the
         ///     property does not exist.
         /// </remarks>
-        public LightweightEntityConfiguration HasKey(string propertyName)
+        public LightweightTypeConfiguration HasKey(string propertyName)
         {
             Check.NotEmpty(propertyName, "propertyName");
 
@@ -248,13 +253,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="propertyInfo"> The property to be used as the primary key. </param>
         /// <returns>
-        ///     The same <see cref="LightweightEntityConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured of if the
         ///     property does not exist.
         /// </remarks>
-        public LightweightEntityConfiguration HasKey(PropertyInfo propertyInfo)
+        public LightweightTypeConfiguration HasKey(PropertyInfo propertyInfo)
         {
             return HasKey(new[] { propertyInfo });
         }
@@ -264,13 +269,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="propertyNames"> The names of the properties to be used as the primary key. </param>
         /// <returns>
-        ///     The same <see cref="LightweightEntityConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if any
         ///     property does not exist.
         /// </remarks>
-        public LightweightEntityConfiguration HasKey(IEnumerable<string> propertyNames)
+        public LightweightTypeConfiguration HasKey(IEnumerable<string> propertyNames)
         {
             Check.NotNull(propertyNames, "propertyNames");
 
@@ -286,13 +291,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="keyProperties"> The properties to be used as the primary key. </param>
         /// <returns>
-        ///     The same <see cref="LightweightEntityConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if any
         ///     property does not exist.
         /// </remarks>
-        public LightweightEntityConfiguration HasKey(IEnumerable<PropertyInfo> keyProperties)
+        public LightweightTypeConfiguration HasKey(IEnumerable<PropertyInfo> keyProperties)
         {
             Check.NotNull(keyProperties, "keyProperties");
             ValidateConfiguration(ConfigurationAspect.Key);
@@ -315,7 +320,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightEntityConfiguration ToTable(string tableName)
+        public LightweightTypeConfiguration ToTable(string tableName)
         {
             Check.NotEmpty(tableName, "tableName");
             ValidateConfiguration(ConfigurationAspect.ToTable);
@@ -339,7 +344,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightEntityConfiguration ToTable(string tableName, string schemaName)
+        public LightweightTypeConfiguration ToTable(string tableName, string schemaName)
         {
             Check.NotEmpty(tableName, "tableName");
             ValidateConfiguration(ConfigurationAspect.ToTable);
@@ -353,7 +358,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return this;
         }
 
-        public LightweightEntityConfiguration MapToStoredProcedures()
+        public LightweightTypeConfiguration MapToStoredProcedures()
         {
             ValidateConfiguration(ConfigurationAspect.MapToStoredProcedures);
 
@@ -365,7 +370,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return this;
         }
 
-        public LightweightEntityConfiguration MapToStoredProcedures(
+        public LightweightTypeConfiguration MapToStoredProcedures(
             Action<LightweightModificationFunctionsConfiguration> modificationFunctionsConfigurationAction)
         {
             Check.NotNull(modificationFunctionsConfigurationAction, "modificationFunctionsConfigurationAction");

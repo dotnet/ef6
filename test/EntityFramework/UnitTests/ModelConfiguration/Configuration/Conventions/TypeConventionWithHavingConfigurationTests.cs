@@ -7,13 +7,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Conventions
     using System.Linq;
     using Xunit;
 
-    public class EntityConventionOfTypeWithHavingConfigurationTests
+    public class TypeConventionWithHavingConfigurationTests
     {
         [Fact]
         public void Configure_evaluates_preconditions()
         {
             var conventions = new ConventionsConfiguration();
-            var entities = new EntityConventionOfTypeConfiguration<object>(conventions);
+            var entities = new TypeConventionConfiguration(conventions);
 
             var ex = Assert.Throws<ArgumentNullException>(
                 () => entities.Having<object>(t => null).Configure(null));
@@ -25,9 +25,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Conventions
         {
             Func<Type, bool> predicate = t => true;
             Func<Type, object> capturingPredicate = t => null;
-            Action<LightweightEntityConfiguration<object>, object> configurationAction = (c, o) => { };
+            Action<LightweightTypeConfiguration, object> configurationAction = (c, o) => { };
             var conventions = new ConventionsConfiguration();
-            var entities = new EntityConventionOfTypeConfiguration<object>(conventions);
+            var entities = new TypeConventionConfiguration(conventions);
 
             entities
                 .Where(predicate)
@@ -36,9 +36,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Conventions
 
             Assert.Equal(36, conventions.Conventions.Count());
 
-            var convention = (EntityConventionOfTypeWithHaving<object, object>)conventions.Conventions.Last();
-            Assert.Equal(2, convention.Predicates.Count());
-            Assert.Same(predicate, convention.Predicates.Last());
+            var convention = (TypeConventionWithHaving<object>)conventions.Conventions.Last();
+            Assert.Equal(1, convention.Predicates.Count());
+            Assert.Same(predicate, convention.Predicates.Single());
             Assert.Same(capturingPredicate, convention.CapturingPredicate);
             Assert.Same(configurationAction, convention.EntityConfigurationAction);
         }

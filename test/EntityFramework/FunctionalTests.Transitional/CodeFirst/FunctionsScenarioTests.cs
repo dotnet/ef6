@@ -1264,7 +1264,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<OrderLine>();
 
                     modelBuilder
-                        .Entities()
+                        .Types()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
@@ -1303,7 +1303,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<OrderLine>();
 
                     modelBuilder
-                        .Entities<OrderLine>()
+                        .Types<OrderLine>()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
@@ -1340,7 +1340,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<OrderLine>();
 
                     modelBuilder
-                        .Entities()
+                        .Types()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
@@ -1376,7 +1376,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Building>();
 
                     modelBuilder
-                        .Entities<IBuilding>()
+                        .Types<IBuilding>()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
@@ -1412,7 +1412,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Engine>();
 
                     modelBuilder
-                        .Entities()
+                        .Types()
                         .Where(t => t == typeof(Engine))
                         .Configure(
                             c => c.MapToStoredProcedures(
@@ -1445,7 +1445,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Engine>();
 
                     modelBuilder
-                        .Entities<Engine>()
+                        .Types<Engine>()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map => map.Update(
@@ -1483,7 +1483,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Engine>();
 
                     modelBuilder
-                        .Entities()
+                        .Types()
                         .Where(t => t == typeof(Engine))
                         .Configure(
                             c => c.MapToStoredProcedures(
@@ -1505,7 +1505,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Engine>();
 
                     modelBuilder
-                        .Entities<Engine>()
+                        .Types<Engine>()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map => map.Update(
@@ -1526,7 +1526,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<OrderLine>();
 
                     modelBuilder
-                        .Entities()
+                        .Types()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map => map.Delete(
@@ -1550,7 +1550,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Order>();
 
                     modelBuilder
-                        .Entities()
+                        .Types()
                         .Where(t => t == typeof(Order))
                         .Configure(
                             c => c.MapToStoredProcedures(
@@ -1584,7 +1584,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Order>();
 
                     modelBuilder
-                        .Entities<Order>()
+                        .Types<Order>()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
@@ -1617,7 +1617,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Engine>();
 
                     modelBuilder
-                        .Entities<Engine>()
+                        .Types<Engine>()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map => map.Update(
@@ -1637,7 +1637,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Order>();
 
                     modelBuilder
-                        .Entities()
+                        .Types()
                         .Where(t => t == typeof(Order))
                         .Configure(
                             c => c.MapToStoredProcedures(
@@ -1657,7 +1657,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Order>();
 
                     modelBuilder
-                        .Entities<Order>()
+                        .Types<Order>()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map => map.Insert(f => f.Result(o => o.Type, "boom"))));
@@ -1676,7 +1676,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Order>();
 
                     modelBuilder
-                        .Entities()
+                        .Types()
                         .Where(t => t == typeof(Order))
                         .Configure(
                             c => c.MapToStoredProcedures(
@@ -1710,7 +1710,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Order>();
 
                     modelBuilder
-                        .Entities<Order>()
+                        .Types<Order>()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
@@ -1743,7 +1743,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<OrderLine>();
 
                     modelBuilder
-                        .Entities()
+                        .Types()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map => map.Update(f => f.RowsAffectedParameter("rows_affected"))));
@@ -1762,7 +1762,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<OrderLine>();
 
                     modelBuilder
-                        .Entities<OrderLine>()
+                        .Types<OrderLine>()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map => map.Update(f => f.RowsAffectedParameter("rows_affected"))));
@@ -1788,7 +1788,7 @@ namespace FunctionalTests
                                      });
 
                     modelBuilder
-                        .Entities<OrderLine>()
+                        .Types<OrderLine>()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
@@ -1863,7 +1863,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Driver>().Ignore(d => d.Name);
 
                     modelBuilder
-                        .Entities<Driver>()
+                        .Types<Driver>()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
@@ -1923,7 +1923,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<Item>();
 
                     modelBuilder
-                        .Entities<Item>()
+                        .Types<Item>()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map =>
@@ -1958,7 +1958,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<OrderLine>();
 
                     modelBuilder
-                        .Entities()
+                        .Types()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map => map.Insert(
@@ -1979,7 +1979,7 @@ namespace FunctionalTests
                     modelBuilder.Entity<OrderLine>();
 
                     modelBuilder
-                        .Entities<OrderLine>()
+                        .Types<OrderLine>()
                         .Configure(
                             c => c.MapToStoredProcedures(
                                 map => map.Insert(
@@ -2268,7 +2268,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+                modelBuilder.Types().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -2276,7 +2276,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+                modelBuilder.Types().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -2289,7 +2289,7 @@ namespace FunctionalTests
 
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+                modelBuilder.Types().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -2297,7 +2297,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+                modelBuilder.Types().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -2305,7 +2305,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+                modelBuilder.Types().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -2313,15 +2313,15 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+                modelBuilder.Types().Configure(c => c.MapToStoredProcedures());
             }
         }
 
-        public class LightweightEntityConventions : ConventionsScenarioTests.LightweightEntityConventions
+        public class LightweightTypeConventions : ConventionsScenarioTests.LightweightTypeConventions
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+                modelBuilder.Types().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -2329,7 +2329,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+                modelBuilder.Types().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -2337,7 +2337,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+                modelBuilder.Types().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -2345,7 +2345,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+                modelBuilder.Types().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -2353,7 +2353,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+                modelBuilder.Types().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -2361,7 +2361,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+                modelBuilder.Types().Configure(c => c.MapToStoredProcedures());
             }
         }
 
@@ -2369,7 +2369,7 @@ namespace FunctionalTests
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entities().Configure(c => c.MapToStoredProcedures());
+                modelBuilder.Types().Configure(c => c.MapToStoredProcedures());
             }
         }
     }

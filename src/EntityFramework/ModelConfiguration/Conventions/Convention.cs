@@ -16,6 +16,9 @@ namespace System.Data.Entity.ModelConfiguration
     {
         private readonly ConventionsConfiguration _conventionsConfiguration = new ConventionsConfiguration(Enumerable.Empty<IConvention>());
 
+        /// <summary>
+        ///     The derived class can use the default constructor to apply a set rule of that change the model configuration.
+        /// </summary>
         public Convention()
         {
         }
@@ -29,26 +32,26 @@ namespace System.Data.Entity.ModelConfiguration
         }
 
         /// <summary>
-        ///     Begins configuration of a lightweight convention that applies to all entities in
+        ///     Begins configuration of a lightweight convention that applies to all mapped types in
         ///     the model.
         /// </summary>
         /// <returns> A configuration object for the convention. </returns>
-        public EntityConventionConfiguration Entities()
+        public TypeConventionConfiguration Types()
         {
-            return new EntityConventionConfiguration(_conventionsConfiguration);
+            return new TypeConventionConfiguration(_conventionsConfiguration);
         }
 
         /// <summary>
-        ///     Begins configuration of a lightweight convention that applies to all entities of
-        ///     the specified type in the model. This method does not register entity types as
-        ///     part of the model.
+        ///     Begins configuration of a lightweight convention that applies to all mapped types in
+        ///     the model that derive from or implement the specified type.
         /// </summary>
         /// <typeparam name="T"> The type of the entities that this convention will apply to. </typeparam>
         /// <returns> A configuration object for the convention. </returns>
-        public EntityConventionOfTypeConfiguration<T> Entities<T>()
+        /// <remarks> This method does not add new types to the model.</remarks>
+        public TypeConventionOfTypeConfiguration<T> Types<T>()
             where T : class
         {
-            return new EntityConventionOfTypeConfiguration<T>(_conventionsConfiguration);
+            return new TypeConventionOfTypeConfiguration<T>(_conventionsConfiguration);
         }
 
         /// <summary>

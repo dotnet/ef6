@@ -15,38 +15,38 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     ///     This configuration functionality is available via lightweight conventions.
     /// </summary>
     /// <typeparam name="T"> A type inherited by the entity type. </typeparam>
-    public class LightweightEntityConfiguration<T>
+    public class LightweightTypeConfiguration<T>
         where T : class
     {
-        private readonly LightweightEntityConfiguration _configuration;
+        private readonly LightweightTypeConfiguration _configuration;
 
-        internal LightweightEntityConfiguration(
+        internal LightweightTypeConfiguration(
             Type type,
             Func<EntityTypeConfiguration> entityTypeConfiguration,
             ModelConfiguration modelConfiguration)
         {
             VerifyType(type);
 
-            _configuration = new LightweightEntityConfiguration(type, entityTypeConfiguration, modelConfiguration);
+            _configuration = new LightweightTypeConfiguration(type, entityTypeConfiguration, modelConfiguration);
         }
 
-        internal LightweightEntityConfiguration(
+        internal LightweightTypeConfiguration(
             Type type,
             Func<ComplexTypeConfiguration> complexTypeConfiguration,
             ModelConfiguration modelConfiguration)
         {
             VerifyType(type);
 
-            _configuration = new LightweightEntityConfiguration(type, complexTypeConfiguration, modelConfiguration);
+            _configuration = new LightweightTypeConfiguration(type, complexTypeConfiguration, modelConfiguration);
         }
 
-        internal LightweightEntityConfiguration(
+        internal LightweightTypeConfiguration(
             Type type,
             ModelConfiguration modelConfiguration)
         {
             VerifyType(type);
 
-            _configuration = new LightweightEntityConfiguration(type, modelConfiguration);
+            _configuration = new LightweightTypeConfiguration(type, modelConfiguration);
         }
 
         [Conditional("DEBUG")]
@@ -72,12 +72,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="entitySetName"> The name of the entity set. </param>
         /// <returns>
-        ///     The same <see cref="LightweightEntityConfiguration{T}" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightTypeConfiguration{T}" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightEntityConfiguration<T> HasEntitySetName(string entitySetName)
+        public LightweightTypeConfiguration<T> HasEntitySetName(string entitySetName)
         {
             _configuration.HasEntitySetName(entitySetName);
 
@@ -87,7 +87,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <summary>
         ///     Excludes this entity type from the model so that it will not be mapped to the database.
         /// </summary>
-        public LightweightEntityConfiguration<T> Ignore()
+        public LightweightTypeConfiguration<T> Ignore()
         {
             _configuration.Ignore();
 
@@ -97,7 +97,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <summary>
         ///     Changes this entity type to a complex type.
         /// </summary>
-        public LightweightEntityConfiguration<T> IsComplexType()
+        public LightweightTypeConfiguration<T> IsComplexType()
         {
             _configuration.IsComplexType();
 
@@ -110,7 +110,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <typeparam name="TProperty"> The type of the property to be ignored. </typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public LightweightEntityConfiguration<T> Ignore<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
+        public LightweightTypeConfiguration<T> Ignore<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
 
@@ -139,13 +139,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <typeparam name="TProperty"> The type of the key. </typeparam>
         /// <param name="keyExpression"> A lambda expression representing the property to be used as the primary key. C#: t => t.Id VB.Net: Function(t) t.Id If the primary key is made up of multiple properties then specify an anonymous type including the properties. C#: t => new { t.Id1, t.Id2 } VB.Net: Function(t) New With { t.Id1, t.Id2 } </param>
         /// <returns>
-        ///     The same <see cref="LightweightEntityConfiguration{T}" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="LightweightTypeConfiguration{T}" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public LightweightEntityConfiguration<T> HasKey<TProperty>(Expression<Func<T, TProperty>> keyExpression)
+        public LightweightTypeConfiguration<T> HasKey<TProperty>(Expression<Func<T, TProperty>> keyExpression)
         {
             Check.NotNull(keyExpression, "keyExpression");
 
@@ -161,7 +161,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightEntityConfiguration<T> ToTable(string tableName)
+        public LightweightTypeConfiguration<T> ToTable(string tableName)
         {
             Check.NotEmpty(tableName, "tableName");
 
@@ -178,7 +178,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightEntityConfiguration<T> ToTable(string tableName, string schemaName)
+        public LightweightTypeConfiguration<T> ToTable(string tableName, string schemaName)
         {
             Check.NotEmpty(tableName, "tableName");
 
@@ -187,7 +187,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return this;
         }
 
-        public LightweightEntityConfiguration<T> MapToStoredProcedures()
+        public LightweightTypeConfiguration<T> MapToStoredProcedures()
         {
             _configuration.MapToStoredProcedures();
 
@@ -195,7 +195,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public LightweightEntityConfiguration<T> MapToStoredProcedures(
+        public LightweightTypeConfiguration<T> MapToStoredProcedures(
             Action<ModificationFunctionsConfiguration<T>> modificationFunctionsConfigurationAction)
         {
             Check.NotNull(modificationFunctionsConfigurationAction, "modificationFunctionsConfigurationAction");

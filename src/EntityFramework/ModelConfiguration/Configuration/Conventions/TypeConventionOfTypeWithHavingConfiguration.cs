@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// </summary>
     /// <typeparam name="T"> The common type of the entity types that this convention applies to. </typeparam>
     /// <typeparam name="TValue"> Type of the captured value. </typeparam>
-    public class EntityConventionOfTypeWithHavingConfiguration<T, TValue>
+    public class TypeConventionOfTypeWithHavingConfiguration<T, TValue>
         where T : class
         where TValue : class
     {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private readonly IEnumerable<Func<Type, bool>> _predicates;
         private readonly Func<Type, TValue> _capturingPredicate;
 
-        internal EntityConventionOfTypeWithHavingConfiguration(
+        internal TypeConventionOfTypeWithHavingConfiguration(
             ConventionsConfiguration conventionsConfiguration,
             IEnumerable<Func<Type, bool>> predicates,
             Func<Type, TValue> capturingPredicate)
@@ -57,16 +57,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Allows configuration of the entity types that this convention applies to.
         /// </summary>
         /// <param name="entityConfigurationAction">
-        ///     An action that performs configuration against a <see cref="LightweightEntityConfiguration{T}" />
+        ///     An action that performs configuration against a <see cref="LightweightTypeConfiguration{T}" />
         ///     using a captured value.
         /// </param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public void Configure(Action<LightweightEntityConfiguration<T>, TValue> entityConfigurationAction)
+        public void Configure(Action<LightweightTypeConfiguration<T>, TValue> entityConfigurationAction)
         {
             Check.NotNull(entityConfigurationAction, "entityConfigurationAction");
 
             _conventionsConfiguration.Add(
-                new EntityConventionOfTypeWithHaving<T, TValue>(
+                new TypeConventionOfTypeWithHaving<T, TValue>(
                     _predicates,
                     _capturingPredicate,
                     entityConfigurationAction));

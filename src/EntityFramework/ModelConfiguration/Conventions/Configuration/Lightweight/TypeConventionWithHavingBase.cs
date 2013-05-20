@@ -7,12 +7,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
 
-    internal abstract class EntityConventionWithHavingBase<T> : EntityConventionBase
+    internal abstract class TypeConventionWithHavingBase<T> : TypeConventionBase
         where T : class
     {
         private readonly Func<Type, T> _capturingPredicate;
 
-        public EntityConventionWithHavingBase(
+        public TypeConventionWithHavingBase(
             IEnumerable<Func<Type, bool>> predicates,
             Func<Type, T> capturingPredicate)
             : base(predicates)

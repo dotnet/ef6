@@ -7,7 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
     using Xunit;
 
-    public class EntityConventionTests
+    public class TypeConventionTests
     {
         public class Apply_EntityTypeConfiguration
         {
@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_no_predicates()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     Enumerable.Empty<Func<Type, bool>>(),
                     c => actionInvoked = true);
                 var type = new MockType();
@@ -30,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_single_predicate_true()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[] { t => true },
                     c => actionInvoked = true);
                 var type = new MockType();
@@ -45,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_all_predicates_true()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[]
                         {
                             t => true,
@@ -64,7 +64,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_single_predicate_false()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[] { t => false },
                     c => actionInvoked = true);
                 var type = new MockType();
@@ -80,7 +80,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             {
                 var lastPredicateInvoked = false;
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[]
                         {
                             t => false,
@@ -100,7 +100,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_last_predicate_false()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[]
                         {
                             t => true,
@@ -122,7 +122,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_no_predicates()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     Enumerable.Empty<Func<Type, bool>>(),
                     c => actionInvoked = true);
                 var type = new MockType();
@@ -137,7 +137,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_single_predicate_true()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[] { t => true },
                     c => actionInvoked = true);
                 var type = new MockType();
@@ -152,7 +152,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_all_predicates_true()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[]
                         {
                             t => true,
@@ -171,7 +171,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_single_predicate_false()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[] { t => false },
                     c => actionInvoked = true);
                 var type = new MockType();
@@ -187,7 +187,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             {
                 var lastPredicateInvoked = false;
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[]
                         {
                             t => false,
@@ -207,7 +207,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_last_predicate_false()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[]
                         {
                             t => true,
@@ -229,7 +229,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_no_predicates()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     Enumerable.Empty<Func<Type, bool>>(),
                     c => actionInvoked = true);
                 var type = new MockType();
@@ -244,7 +244,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_single_predicate_true()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[] { t => true },
                     c => actionInvoked = true);
                 var type = new MockType();
@@ -259,7 +259,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_all_predicates_true()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[]
                         {
                             t => true,
@@ -278,7 +278,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_single_predicate_false()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[] { t => false },
                     c => actionInvoked = true);
                 var type = new MockType();
@@ -294,7 +294,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             {
                 var lastPredicateInvoked = false;
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[]
                         {
                             t => false,
@@ -314,7 +314,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_last_predicate_false()
             {
                 var actionInvoked = false;
-                var convention = new EntityConvention(
+                var convention = new TypeConvention(
                     new Func<Type, bool>[]
                         {
                             t => true,

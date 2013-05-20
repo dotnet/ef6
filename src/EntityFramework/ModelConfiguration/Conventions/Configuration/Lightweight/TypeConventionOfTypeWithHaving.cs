@@ -7,16 +7,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
 
-    internal class EntityConventionWithHaving<T> : EntityConventionWithHavingBase<T>
+    internal class TypeConventionOfTypeWithHaving<T, TValue> : TypeConventionWithHavingBase<TValue>
         where T : class
+        where TValue : class
     {
-        private readonly Action<LightweightEntityConfiguration, T> _entityConfigurationAction;
+        private readonly Action<LightweightTypeConfiguration<T>, TValue> _entityConfigurationAction;
 
-        public EntityConventionWithHaving(
+        public TypeConventionOfTypeWithHaving(
             IEnumerable<Func<Type, bool>> predicates,
-            Func<Type, T> capturingPredicate,
-            Action<LightweightEntityConfiguration, T> entityConfigurationAction)
-            : base(predicates, capturingPredicate)
+            Func<Type, TValue> capturingPredicate,
+            Action<LightweightTypeConfiguration<T>, TValue> entityConfigurationAction)
+            : base(predicates.Prepend(TypeConventionOfType<T>.OfTypePredicate), capturingPredicate)
         {
             DebugCheck.NotNull(predicates);
             DebugCheck.NotNull(capturingPredicate);
@@ -25,40 +26,40 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             _entityConfigurationAction = entityConfigurationAction;
         }
 
-        internal Action<LightweightEntityConfiguration, T> EntityConfigurationAction
+        internal Action<LightweightTypeConfiguration<T>, TValue> EntityConfigurationAction
         {
             get { return _entityConfigurationAction; }
         }
 
-        protected override void InvokeAction(
-            Type memberInfo, ModelConfiguration modelConfiguration, T value)
+        protected override void InvokeAction(Type memberInfo, ModelConfiguration modelConfiguration, TValue value)
         {
             DebugCheck.NotNull(memberInfo);
             DebugCheck.NotNull(modelConfiguration);
             DebugCheck.NotNull(value);
 
-            _entityConfigurationAction(new LightweightEntityConfiguration(memberInfo, modelConfiguration), value);
+            _entityConfigurationAction(new LightweightTypeConfiguration<T>(memberInfo, modelConfiguration), value);
         }
 
         protected override void InvokeAction(
-            Type memberInfo, Func<EntityTypeConfiguration> configuration, ModelConfiguration modelConfiguration, T value)
+            Type memberInfo, Func<EntityTypeConfiguration> configuration, ModelConfiguration modelConfiguration, TValue value)
         {
             DebugCheck.NotNull(memberInfo);
             DebugCheck.NotNull(configuration);
             DebugCheck.NotNull(modelConfiguration);
             DebugCheck.NotNull(value);
 
-            _entityConfigurationAction(new LightweightEntityConfiguration(memberInfo, configuration, modelConfiguration), value);
+            _entityConfigurationAction(new LightweightTypeConfiguration<T>(memberInfo, configuration, modelConfiguration), value);
         }
 
         protected override void InvokeAction(
-            Type memberInfo, Func<ComplexTypeConfiguration> configuration, ModelConfiguration modelConfiguration, T value)
+            Type memberInfo, Func<ComplexTypeConfiguration> configuration, ModelConfiguration modelConfiguration, TValue value)
         {
             DebugCheck.NotNull(memberInfo);
             DebugCheck.NotNull(configuration);
+            DebugCheck.NotNull(modelConfiguration);
             DebugCheck.NotNull(value);
 
-            _entityConfigurationAction(new LightweightEntityConfiguration(memberInfo, configuration, modelConfiguration), value);
+            _entityConfigurationAction(new LightweightTypeConfiguration<T>(memberInfo, configuration, modelConfiguration), value);
         }
     }
 }

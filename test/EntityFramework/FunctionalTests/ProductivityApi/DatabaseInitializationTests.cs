@@ -1580,7 +1580,7 @@ namespace ProductivityApiTests
             {
                 // This intentionally creates a table name that is too long so that SqlClient/SQL Server will
                 // throw when we try to create the table.
-                modelBuilder.Entities().Configure(c => c.ToTable(c.ClrType.Name + new string('X', 400)));
+                modelBuilder.Types().Configure(c => c.ToTable(c.ClrType.Name + new string('X', 400)));
 
                 base.OnModelCreating(modelBuilder);
             }

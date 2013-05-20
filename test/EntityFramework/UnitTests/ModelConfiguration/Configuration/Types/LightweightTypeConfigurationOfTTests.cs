@@ -6,14 +6,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Linq;
     using Xunit;
 
-    public class LightweightEntityConfigurationOfTTests
+    public class LightweightTypeConfigurationOfTTests
     {
         [Fact]
         public void Ignore_evaluates_preconditions()
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<object>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<object>(type, () => innerConfig, new ModelConfiguration());
 
             var ex = Assert.Throws<ArgumentNullException>(
                 () => config.Ignore<object>(null));
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
 
             config.Ignore(t => t.Property1);
 
@@ -39,7 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new ComplexTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
 
             config.Ignore(t => t.Property1);
 
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new ModelConfiguration();
-            var config = new LightweightEntityConfiguration<LocalEntityType>(type, innerConfig);
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, innerConfig);
 
             config.Ignore();
 
@@ -64,7 +64,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new ModelConfiguration();
-            var config = new LightweightEntityConfiguration<LocalEntityType>(type, innerConfig);
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, innerConfig);
 
             config.IsComplexType();
 
@@ -76,7 +76,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<object>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<object>(type, () => innerConfig, new ModelConfiguration());
 
             var ex = Assert.Throws<ArgumentNullException>(
                 () => config.Property<object>(null));
@@ -89,7 +89,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.Property(e => e.Property1);
 
@@ -106,7 +106,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new ComplexTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.Property(e => e.Property1);
 
@@ -123,7 +123,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<object>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<object>(type, () => innerConfig, new ModelConfiguration());
 
             var ex = Assert.Throws<ArgumentNullException>(
                 () => config.HasKey<object>(null));
@@ -136,7 +136,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.HasKey(e => e.Property1);
 
@@ -150,7 +150,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.HasKey(
                 e => new
@@ -170,7 +170,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
 
             config.HasEntitySetName("foo");
 
@@ -182,7 +182,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
 
             config.MapToStoredProcedures();
 
@@ -194,7 +194,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
 
             ModificationFunctionsConfiguration<LocalEntityType> configuration = null;
 
@@ -210,7 +210,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
 
             config.ToTable("foo");
 
@@ -222,7 +222,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightEntityConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
+            var config = new LightweightTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
 
             config.ToTable("foo", "bar");
 
