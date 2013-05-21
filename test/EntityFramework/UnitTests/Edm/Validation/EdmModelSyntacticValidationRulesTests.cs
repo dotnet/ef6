@@ -89,5 +89,39 @@ namespace System.Data.Entity.Edm.Validation
 
             Assert.NotNull(errorEventArgs);
         }
+
+        [Fact]
+        public void EdmModel_NameIsNotAllowed_not_triggered_for_store_entity_types_with_spaces()
+        {
+            var entityType = new EntityType("Entity With Spaces", "N", DataSpace.SSpace);
+
+            var validationContext
+                = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            EdmModelSyntacticValidationRules
+                .EdmModel_NameIsNotAllowed
+                .Evaluate(validationContext, entityType);
+
+            Assert.Null(errorEventArgs);
+        }
+
+        [Fact]
+        public void EdmModel_NameIsNotAllowed_triggered_for_conceptual_entity_types_with_spaces()
+        {
+            var entityType = new EntityType("Entity With Spaces", "N", DataSpace.CSpace);
+
+            var validationContext
+                = new EdmModelValidationContext(new EdmModel(DataSpace.CSpace), true);
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            EdmModelSyntacticValidationRules
+                .EdmModel_NameIsNotAllowed
+                .Evaluate(validationContext, entityType);
+
+            Assert.NotNull(errorEventArgs);
+        }
     }
 }
