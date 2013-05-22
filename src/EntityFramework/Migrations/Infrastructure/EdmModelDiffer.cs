@@ -1069,8 +1069,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private IEnumerable<RenameColumnOperation> FindRenamedDiscriminatorColumns()
         {
-            return from mf1 in _source.Model.Descendants(EdmXNames.Msl.MappingFragmentNames)
-                   from mf2 in _target.Model.Descendants(EdmXNames.Msl.MappingFragmentNames)
+            return from etm1 in _source.Model.Descendants(EdmXNames.Msl.EntityTypeMappingNames)
+                   from etm2 in _target.Model.Descendants(EdmXNames.Msl.EntityTypeMappingNames)
+                   where etm1.TypeNameAttribute().EqualsIgnoreCase(etm2.TypeNameAttribute())
+                   from mf1 in etm1.Descendants(EdmXNames.Msl.MappingFragmentNames)
+                   from mf2 in etm2.Descendants(EdmXNames.Msl.MappingFragmentNames)
                    where mf1.StoreEntitySetAttribute().EqualsIgnoreCase(mf2.StoreEntitySetAttribute())
                    let t = GetQualifiedTableName(_target.Model, mf2.StoreEntitySetAttribute())
                    from cr in FindRenamedDiscriminatorColumns(mf1, mf2, t)

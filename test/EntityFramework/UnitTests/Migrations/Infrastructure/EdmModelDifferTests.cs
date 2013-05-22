@@ -1348,5 +1348,56 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(0, operations.Count());
         }
+
+        [MigrationsTheory]
+        public void CodePlex951_should_not_detect_discriminator_column_diffs()
+        {
+            XDocument model;
+            using (var context = new CodePlex951Context())
+            {
+                model = context.GetModel();
+            }
+
+            var operations = new EdmModelDiffer().Diff(model, model);
+
+            Assert.Equal(0, operations.Count());
+        }
+
+        public class CodePlex951Context : DbContext
+        {
+            public DbSet<Parent> Entities { get; set; }
+
+            static CodePlex951Context()
+            {
+                Database.SetInitializer<CodePlex951Context>(null);
+            }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Child1>().Map(m =>
+                {
+                    m.Requires("Disc1").HasValue(true);
+                    m.Requires("Disc2").HasValue(false);
+                });
+
+                modelBuilder.Entity<Child2>().Map(m =>
+                {
+                    m.Requires("Disc2").HasValue(true);
+                    m.Requires("Disc1").HasValue(false);
+                });
+            }
+        }
+        public abstract class Parent
+        {
+            public int Id { get; set; }
+        }
+
+        public class Child1 : Parent
+        {
+        }
+
+        public class Child2 : Parent
+        {
+        }
     }
 }
