@@ -40,5 +40,7 @@ namespace System.Data.Entity.Migrations.Model
                 return addPrimaryKeyOperation;
             }
         }
+
+        public CreateTableOperation CreateTableOperation { get; internal set; }
     }
 }

@@ -1146,5 +1146,87 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
                 "System.Data.SqlClient",
                 DbProviderNameAttribute.GetFromType(typeof(SqlServerMigrationSqlGenerator)).Single().Name);
         }
+
+        [Fact]
+        public static void Generate_can_output_statement_to_upgrade_primary_key_of_history_table()
+        {
+            const string expectedSql =
+@"CREATE TABLE [dbo].[__MigrationHistory2] (
+    [MigrationId] [nvarchar](255) NOT NULL,
+    [ContextKey] [nvarchar](512) NOT NULL,
+    [Model] [varbinary](max) NOT NULL,
+    [ProductVersion] [nvarchar](32) NOT NULL,
+    CONSTRAINT [PK_dbo.__MigrationHistory2] PRIMARY KEY ([MigrationId], [ContextKey])
+)
+INSERT INTO [dbo].[__MigrationHistory2]
+SELECT [MigrationId], 'DefaultContextKey', [Model], [ProductVersion] FROM [dbo].[__MigrationHistory]
+DROP TABLE [dbo].[__MigrationHistory]
+EXECUTE sp_rename @objname = N'dbo.__MigrationHistory2', @newname = N'__MigrationHistory', @objtype = N'OBJECT'";
+
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var operations = Create_operations_to_upgrade_primary_key_of_history_table();
+            var sql = migrationSqlGenerator.Generate(operations, SqlProviderManifest.TokenAzure11)
+                .Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Equal(expectedSql, sql);
+
+            operations = Create_operations_to_upgrade_primary_key_of_history_table();
+            sql = migrationSqlGenerator.Generate(operations, SqlProviderManifest.TokenSql11)
+                .Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Equal(expectedSql, sql);
+        }
+
+        private static MigrationOperation[] Create_operations_to_upgrade_primary_key_of_history_table()
+        {
+            var tableName = "dbo." + HistoryContext.DefaultTableName;
+
+            CreateTableOperation createTableOperation;
+            using (var context = new HistoryContext())
+            {
+                var emptyModel = new DbModelBuilder()
+                    .Build(context.Database.Connection).GetModel();
+                createTableOperation = (CreateTableOperation)
+                    new EdmModelDiffer().Diff(emptyModel, context.GetModel()).Single();
+            }
+
+            var addColumnOperation =
+                new AddColumnOperation(
+                    tableName,
+                    new ColumnModel(PrimitiveTypeKind.String)
+                        {
+                            MaxLength = 512,
+                            Name = "ContextKey",
+                            IsNullable = false,
+                            DefaultValue = "DefaultContextKey"
+                        });
+
+            var dropPrimaryKeyOperation
+                = new DropPrimaryKeyOperation
+                      {
+                          Table = tableName,
+                          CreateTableOperation = createTableOperation
+                      };
+
+            dropPrimaryKeyOperation.Columns.Add("MigrationId");
+
+            var addPrimaryKeyOperation
+                = new AddPrimaryKeyOperation
+                      {
+                          Table = tableName
+                      };
+
+            addPrimaryKeyOperation.Columns.Add("MigrationId");
+            addPrimaryKeyOperation.Columns.Add("ContextKey");
+
+            return 
+                new MigrationOperation[] 
+                    { 
+                        addColumnOperation,
+                        dropPrimaryKeyOperation, 
+                        addPrimaryKeyOperation 
+                    };
+        }
     }
 }

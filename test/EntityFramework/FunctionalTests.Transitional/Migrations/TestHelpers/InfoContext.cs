@@ -56,6 +56,13 @@ namespace System.Data.Entity.Migrations
             return candidates.Any(c => SchemaEquals(tuple.Item1, c.Table));
         }
 
+        public int GetColumnIndex(string tableName, string columnName)
+        {
+            var tuple = ParseTableName(tableName);
+            var columnNames = Columns.Where(c => c.Table.Name == tuple.Item2).Select(c => c.Name).ToList();
+            return columnNames.IndexOf(columnName);
+        }
+
         public bool TableExists(string name)
         {
             var tuple = ParseTableName(name);

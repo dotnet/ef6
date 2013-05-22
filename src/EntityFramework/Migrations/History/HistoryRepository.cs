@@ -386,6 +386,33 @@ namespace System.Data.Entity.Migrations.History
             {
                 const string tableName = "dbo." + HistoryContext.DefaultTableName;
 
+                using (var context = new LegacyHistoryContext(connection))
+                {
+                    var createdOnExists = false;
+
+                    try
+                    {
+                        InjectInterceptionContext(context);
+
+                        using (new TransactionScope(TransactionScopeOption.Suppress))
+                        {
+                            context.History
+                                    .Select(h => h.CreatedOn)
+                                    .FirstOrDefault();
+                        }
+
+                        createdOnExists = true;
+                    }
+                    catch (EntityException)
+                    {
+                    }
+
+                    if (createdOnExists)
+                    {
+                        yield return new DropColumnOperation(tableName, "CreatedOn");
+                    }
+                }
+
                 using (var context = CreateContext(connection))
                 {
                     var productVersionExists = false;
@@ -432,10 +459,15 @@ namespace System.Data.Entity.Migrations.History
                                     DefaultValue = _contextKey
                                 });
 
+                        var emptyModel = new DbModelBuilder().Build(connection).GetModel();
+                        var createTableOperation = (CreateTableOperation)
+                            new EdmModelDiffer().Diff(emptyModel, context.GetModel()).Single();
+
                         var dropPrimaryKeyOperation
                             = new DropPrimaryKeyOperation
                                   {
-                                      Table = tableName
+                                      Table = tableName,
+                                      CreateTableOperation = createTableOperation
                                   };
 
                         dropPrimaryKeyOperation.Columns.Add("MigrationId");
@@ -452,33 +484,6 @@ namespace System.Data.Entity.Migrations.History
                         addPrimaryKeyOperation.Columns.Add("ContextKey");
 
                         yield return addPrimaryKeyOperation;
-                    }
-                }
-
-                using (var context = new LegacyHistoryContext(connection))
-                {
-                    var createdOnExists = false;
-
-                    try
-                    {
-                        InjectInterceptionContext(context); 
-                        
-                        using (new TransactionScope(TransactionScopeOption.Suppress))
-                        {
-                            context.History
-                                   .Select(h => h.CreatedOn)
-                                   .FirstOrDefault();
-                        }
-
-                        createdOnExists = true;
-                    }
-                    catch (EntityException)
-                    {
-                    }
-
-                    if (createdOnExists)
-                    {
-                        yield return new DropColumnOperation(tableName, "CreatedOn");
                     }
                 }
             }

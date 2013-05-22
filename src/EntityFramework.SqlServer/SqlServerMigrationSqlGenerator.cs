@@ -9,6 +9,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;
@@ -67,7 +68,7 @@ namespace System.Data.Entity.SqlServer
 
             InitializeProviderServices(providerManifestToken);
 
-            migrationOperations.Each<dynamic>(o => Generate(o));
+            DetectHistoryRebuild(migrationOperations).Each<dynamic>(o => Generate(o));
 
             return _statements;
         }
@@ -746,14 +747,19 @@ namespace System.Data.Entity.SqlServer
 
             using (var writer = Writer())
             {
-                writer.Write("EXECUTE sp_rename @objname = N'");
-                writer.Write(renameTableOperation.Name);
-                writer.Write("', @newname = N'");
-                writer.Write(renameTableOperation.NewName);
-                writer.Write("', @objtype = N'OBJECT'");
+                WriteRenameTable(renameTableOperation, writer);
 
                 Statement(writer);
             }
+        }
+
+        private static void WriteRenameTable(RenameTableOperation renameTableOperation, IndentedTextWriter writer)
+        {
+            writer.Write("EXECUTE sp_rename @objname = N'");
+            writer.Write(renameTableOperation.Name);
+            writer.Write("', @newname = N'");
+            writer.Write(renameTableOperation.NewName);
+            writer.Write("', @objtype = N'OBJECT'");
         }
 
         protected virtual void Generate(RenameProcedureOperation renameProcedureOperation)
@@ -1229,6 +1235,130 @@ namespace System.Data.Entity.SqlServer
             Check.NotNull(writer, "writer");
 
             Statement(writer.InnerWriter.ToString(), batchTerminator: batchTerminator);
+        }
+
+        private static IEnumerable<MigrationOperation> DetectHistoryRebuild(
+            IEnumerable<MigrationOperation> operations)
+        {
+            var enumerator = operations.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var sequence = HistoryRebuildOperationSequence.Detect(enumerator);
+                yield return (sequence == null) ? enumerator.Current : sequence;
+            }
+        }
+
+        private void Generate(HistoryRebuildOperationSequence sequence)
+        {
+            var createTableOperationSource = sequence.DropPrimaryKeyOperation.CreateTableOperation;
+            var createTableOperationTarget = ResolveNameConflicts(createTableOperationSource);
+            var renameTableOperation = new RenameTableOperation(
+                createTableOperationTarget.Name, HistoryContext.DefaultTableName);
+
+            using (var writer = Writer())
+            {
+                WriteCreateTable(createTableOperationTarget, writer);
+                writer.WriteLine();
+
+                // Copy the data from the original table into the new table.
+                writer.Write("INSERT INTO ");
+                writer.WriteLine(Name(createTableOperationTarget.Name));
+                writer.Write("SELECT ");
+
+                var first = true;
+                foreach (var column in createTableOperationSource.Columns)
+                {
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        writer.Write(", ");
+                    }
+
+                    writer.Write(
+                        (column.Name == sequence.AddColumnOperation.Column.Name)
+                            ? Generate((string)sequence.AddColumnOperation.Column.DefaultValue)
+                            : Name(column.Name));
+                }
+
+                writer.Write(" FROM ");
+                writer.WriteLine(Name(createTableOperationSource.Name));
+
+                writer.Write("DROP TABLE ");
+                writer.WriteLine(Name(createTableOperationSource.Name));
+
+                WriteRenameTable(renameTableOperation, writer);
+
+                Statement(writer);
+            }
+        }
+
+        /// <summary>
+        /// Creates a shallow copy of the source CreateTableOperation and the associated
+        /// AddPrimaryKeyOperation but renames the table and the primary key in order  
+        /// to avoid name conflicts with existing objects.
+        /// </summary>
+        private static CreateTableOperation ResolveNameConflicts(CreateTableOperation source)
+        {
+            const string suffix = "2";
+
+            var target = new CreateTableOperation(source.Name + suffix);
+            target.PrimaryKey = new AddPrimaryKeyOperation();
+            Debug.Assert(target.PrimaryKey.Name == source.PrimaryKey.Name + suffix);
+
+            source.Columns.Each(c => target.Columns.Add(c));
+            source.PrimaryKey.Columns.Each(c => target.PrimaryKey.Columns.Add(c));
+
+            return target;
+        }
+
+        private class HistoryRebuildOperationSequence : MigrationOperation
+        {
+            public readonly AddColumnOperation AddColumnOperation;
+            public readonly DropPrimaryKeyOperation DropPrimaryKeyOperation;
+
+            private HistoryRebuildOperationSequence(
+                AddColumnOperation addColumnOperation, 
+                DropPrimaryKeyOperation dropPrimaryKeyOperation) 
+                : base(null)
+            {
+                AddColumnOperation = addColumnOperation;
+                DropPrimaryKeyOperation = dropPrimaryKeyOperation;
+            }
+
+            public override bool IsDestructiveChange
+            {
+                get { return false; }
+            }
+
+            public static HistoryRebuildOperationSequence Detect(IEnumerator<MigrationOperation> enumerator)
+            {
+                const string HistoryTableName = "dbo." + HistoryContext.DefaultTableName;
+
+                var addColumnOperation = enumerator.Current as AddColumnOperation;
+                if (addColumnOperation == null
+                    || addColumnOperation.Table != HistoryTableName
+                    || addColumnOperation.Column.Name != "ContextKey")
+                {
+                    return null;
+                }
+
+                Debug.Assert(addColumnOperation.Column.DefaultValue is string);
+
+                enumerator.MoveNext();
+                var dropPrimaryKeyOperation = (DropPrimaryKeyOperation)enumerator.Current;
+                Debug.Assert(dropPrimaryKeyOperation.Table == HistoryTableName);
+                DebugCheck.NotNull(dropPrimaryKeyOperation.CreateTableOperation);
+
+                enumerator.MoveNext();
+                var addPrimaryKeyOperation = (AddPrimaryKeyOperation)enumerator.Current;
+                Debug.Assert(addPrimaryKeyOperation.Table == HistoryTableName);
+
+                return new HistoryRebuildOperationSequence(
+                    addColumnOperation, dropPrimaryKeyOperation);
+            }
         }
     }
 }

@@ -53,5 +53,18 @@ namespace System.Data.Entity.Migrations.Model
             Assert.Equal("Pk", inverse.Name);
             Assert.Equal("pk2", inverse.Columns.Single());
         }
+
+        [Fact]
+        public void Can_get_and_set_create_table_operation()
+        {
+            var createTableOperation = new CreateTableOperation("T");
+
+            var dropPrimaryKeyOperation = new DropPrimaryKeyOperation
+            {
+                CreateTableOperation = createTableOperation
+            };
+
+            Assert.Same(createTableOperation, dropPrimaryKeyOperation.CreateTableOperation);
+        }
     }
 }

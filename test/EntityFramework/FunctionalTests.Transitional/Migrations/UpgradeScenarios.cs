@@ -214,6 +214,14 @@ namespace System.Data.Entity.Migrations
             Assert.True(ColumnExists(HistoryContext.DefaultTableName, "ContextKey"));
             Assert.False(ColumnExists(HistoryContext.DefaultTableName, "Hash"));
             Assert.False(ColumnExists(HistoryContext.DefaultTableName, "CreatedOn"));
+
+            if (ProviderInfo.ProviderInvariantName == "System.Data.SqlClient")
+            {
+                Assert.Equal(0, GetColumnIndex(HistoryContext.DefaultTableName, "MigrationId"));
+                Assert.Equal(1, GetColumnIndex(HistoryContext.DefaultTableName, "ContextKey"));
+                Assert.Equal(2, GetColumnIndex(HistoryContext.DefaultTableName, "Model"));
+                Assert.Equal(3, GetColumnIndex(HistoryContext.DefaultTableName, "ProductVersion"));
+            }
         }
 
         [MigrationsTheory]
@@ -245,6 +253,14 @@ namespace System.Data.Entity.Migrations
             Assert.True(ColumnExists(HistoryContext.DefaultTableName, "ContextKey"));
             Assert.False(ColumnExists(HistoryContext.DefaultTableName, "Hash"));
             Assert.False(ColumnExists(HistoryContext.DefaultTableName, "CreatedOn"));
+
+            if (ProviderInfo.ProviderInvariantName == "System.Data.SqlClient")
+            {
+                Assert.Equal(0, GetColumnIndex(HistoryContext.DefaultTableName, "MigrationId"));
+                Assert.Equal(1, GetColumnIndex(HistoryContext.DefaultTableName, "ContextKey"));
+                Assert.Equal(2, GetColumnIndex(HistoryContext.DefaultTableName, "Model"));
+                Assert.Equal(3, GetColumnIndex(HistoryContext.DefaultTableName, "ProductVersion"));
+            }
         }
 
         private IEnumerable<MigrationOperation> GetLegacyHistoryCreateTableOperations()

@@ -245,6 +245,11 @@ namespace System.Data.Entity.Migrations
             return Info.ColumnExists(table, name);
         }
 
+        public int GetColumnIndex(string table, string name)
+        {
+            return Info.GetColumnIndex(table, name);
+        }
+
         public string ConnectionString
         {
             get { return TestDatabase.ConnectionString; }
