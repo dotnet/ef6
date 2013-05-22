@@ -379,6 +379,7 @@
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\PropertyConventionWithHavingTests.cs" />
     <Compile Include="Infrastructure\Pluralization\CustomPluralizationEntryTests.cs" />
     <Compile Include="Infrastructure\Pluralization\EnglishPluralizationServiceTests.cs" />
+    <Compile Include="ModelConfiguration\ConventionTests.cs" />
     <Compile Include="ModelConfiguration\Edm\FunctionParameterExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\EdmTypeExtensionsTests.cs" />
     <Compile Include="ModelConfiguration\Edm\Services\FunctionParameterMappingGeneratorTests.cs" />

@@ -197,28 +197,56 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        internal void ApplyModelConfiguration(ModelConfiguration modelConfiguration)
+        internal virtual void ApplyModelConfiguration(ModelConfiguration modelConfiguration)
         {
             DebugCheck.NotNull(modelConfiguration);
 
-            foreach (var convention in _conventions.OfType<IConfigurationConvention>())
+            foreach (var convention in _conventions)
             {
-                convention.Apply(modelConfiguration);
+                var configurationConvention
+                    = convention as IConfigurationConvention;
+
+                if (configurationConvention != null)
+                {
+                    configurationConvention.Apply(modelConfiguration);
+                }
+
+                var lightweightConfigurationConvention
+                    = convention as Convention;
+
+                if (lightweightConfigurationConvention != null)
+                {
+                    lightweightConfigurationConvention.ApplyModelConfiguration(modelConfiguration);
+                }
             }
         }
 
-        internal void ApplyModelConfiguration(Type type, ModelConfiguration modelConfiguration)
+        internal virtual void ApplyModelConfiguration(Type type, ModelConfiguration modelConfiguration)
         {
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(modelConfiguration);
 
-            foreach (var convention in _conventions.OfType<IConfigurationConvention<Type, ModelConfiguration>>())
+            foreach (var convention in _conventions)
             {
-                convention.Apply(type, () => modelConfiguration);
+                var modelConfigurationConvention
+                    = convention as IConfigurationConvention<Type, ModelConfiguration>;
+
+                if (modelConfigurationConvention != null)
+                {
+                    modelConfigurationConvention.Apply(type, () => modelConfiguration);
+                }
+
+                var lightweightConfigurationConvention
+                    = convention as Convention;
+
+                if (lightweightConfigurationConvention != null)
+                {
+                    lightweightConfigurationConvention.ApplyModelConfiguration(type, modelConfiguration);
+                }
             }
         }
 
-        internal void ApplyTypeConfiguration<TStructuralTypeConfiguration>(
+        internal virtual void ApplyTypeConfiguration<TStructuralTypeConfiguration>(
             Type type, Func<TStructuralTypeConfiguration> structuralTypeConfiguration)
             where TStructuralTypeConfiguration : StructuralTypeConfiguration
         {
@@ -242,22 +270,43 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     structuralTypeConfigurationConvention.Apply(type, structuralTypeConfiguration);
                 }
+
+                var lightweightConfigurationConvention
+                    = convention as Convention;
+
+                if (lightweightConfigurationConvention != null)
+                {
+                    lightweightConfigurationConvention.ApplyTypeConfiguration(type, structuralTypeConfiguration);
+                }
             }
         }
 
-        internal void ApplyPropertyConfiguration(PropertyInfo propertyInfo, ModelConfiguration modelConfiguration)
+        internal virtual void ApplyPropertyConfiguration(PropertyInfo propertyInfo, ModelConfiguration modelConfiguration)
         {
             DebugCheck.NotNull(propertyInfo);
             DebugCheck.NotNull(modelConfiguration);
 
-            foreach (var convention in _conventions.OfType<IConfigurationConvention<PropertyInfo, ModelConfiguration>>()
-                )
+            foreach (var convention in _conventions)
             {
-                convention.Apply(propertyInfo, () => modelConfiguration);
+                var propertyConfigurationConvention
+                    = convention as IConfigurationConvention<PropertyInfo, ModelConfiguration>;
+
+                if (propertyConfigurationConvention != null)
+                {
+                    propertyConfigurationConvention.Apply(propertyInfo, () => modelConfiguration);
+                }
+
+                var lightweightConfigurationConvention
+                    = convention as Convention;
+
+                if (lightweightConfigurationConvention != null)
+                {
+                    lightweightConfigurationConvention.ApplyPropertyConfiguration(propertyInfo, modelConfiguration);
+                }
             }
         }
 
-        internal void ApplyPropertyConfiguration(
+        internal virtual void ApplyPropertyConfiguration(
             PropertyInfo propertyInfo, Func<PropertyConfiguration> propertyConfiguration)
         {
             DebugCheck.NotNull(propertyInfo);
@@ -271,10 +320,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 new PropertyConfigurationConventionDispatcher(
                     convention, propertyConfigurationType, propertyInfo, propertyConfiguration)
                     .Dispatch();
+
+                var lightweightConfigurationConvention
+                    = convention as Convention;
+
+                if (lightweightConfigurationConvention != null)
+                {
+                    lightweightConfigurationConvention.ApplyPropertyConfiguration(propertyInfo, propertyConfiguration);
+                }
             }
         }
 
-        internal void ApplyPropertyTypeConfiguration<TStructuralTypeConfiguration>(
+        internal virtual void ApplyPropertyTypeConfiguration<TStructuralTypeConfiguration>(
             PropertyInfo propertyInfo, Func<TStructuralTypeConfiguration> structuralTypeConfiguration)
             where TStructuralTypeConfiguration : StructuralTypeConfiguration
         {
@@ -298,15 +355,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     structuralTypeConfigurationConvention.Apply(propertyInfo, structuralTypeConfiguration);
                 }
+
+                var lightweightConfigurationConvention
+                    = convention as Convention;
+
+                if (lightweightConfigurationConvention != null)
+                {
+                    lightweightConfigurationConvention.ApplyPropertyTypeConfiguration(propertyInfo, structuralTypeConfiguration);
+                }
             }
         }
 
         internal void ApplyPluralizingTableNameConvention(EdmModel database)
         {
-            if (database == null)
-            {
-                throw new ArgumentNullException("database");
-            }
+            DebugCheck.NotNull(database);
 
             foreach (var convention in _conventions.Where(c => c is PluralizingTableNameConvention))
             {
