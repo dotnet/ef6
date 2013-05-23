@@ -37,10 +37,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private Lazy<StorageMappingItemCollection> _itemsCSSpace;
         private Lazy<DefaultObjectMappingItemCollection> _itemsOCSpace;
 
-        private List<object> _cacheTokens;
         private bool _foundAssemblyWithAttribute;
         private double _schemaVersion = XmlConstants.UndefinedVersion;
-        private Guid _metadataWorkspaceId = Guid.Empty;
+        private readonly object _schemaVersionLock = new object();
+        private readonly Guid _metadataWorkspaceId = Guid.NewGuid();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> class.
@@ -75,13 +75,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Check.NotNull(csMappingLoader, "csMappingLoader");
             Check.NotNull(oSpaceLoader, "oSpaceLoader");
 
-            _itemsCSpace = new Lazy<EdmItemCollection>(cSpaceLoader, isThreadSafe: true);
-            _itemsSSpace = new Lazy<StoreItemCollection>(sSpaceLoader, isThreadSafe: true);
+            _itemsCSpace = new Lazy<EdmItemCollection>(() => LoadAndCheckItemCollection(cSpaceLoader), isThreadSafe: true);
+            _itemsSSpace = new Lazy<StoreItemCollection>(() => LoadAndCheckItemCollection(sSpaceLoader), isThreadSafe: true);
             _itemsOSpace = new Lazy<ObjectItemCollection>(oSpaceLoader, isThreadSafe: true);
-            _itemsCSSpace = new Lazy<StorageMappingItemCollection>(csMappingLoader, isThreadSafe: true);
+            _itemsCSSpace = new Lazy<StorageMappingItemCollection>(() => LoadAndCheckItemCollection(csMappingLoader), isThreadSafe: true);
             _itemsOCSpace = new Lazy<DefaultObjectMappingItemCollection>(
-                () => new DefaultObjectMappingItemCollection(GetAndCheckValueForItemCollection(_itemsCSpace), _itemsOSpace.Value),
-                isThreadSafe: true);
+                () => new DefaultObjectMappingItemCollection(_itemsCSpace.Value, _itemsOSpace.Value), isThreadSafe: true);
         }
 
         /// <summary>
@@ -105,13 +104,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Check.NotNull(sSpaceLoader, "sSpaceLoader");
             Check.NotNull(csMappingLoader, "csMappingLoader");
 
-            _itemsCSpace = new Lazy<EdmItemCollection>(cSpaceLoader, isThreadSafe: true);
-            _itemsSSpace = new Lazy<StoreItemCollection>(sSpaceLoader, isThreadSafe: true);
+            _itemsCSpace = new Lazy<EdmItemCollection>(() => LoadAndCheckItemCollection(cSpaceLoader), isThreadSafe: true);
+            _itemsSSpace = new Lazy<StoreItemCollection>(() => LoadAndCheckItemCollection(sSpaceLoader), isThreadSafe: true);
             _itemsOSpace = new Lazy<ObjectItemCollection>(() => new ObjectItemCollection(), isThreadSafe: true);
-            _itemsCSSpace = new Lazy<StorageMappingItemCollection>(csMappingLoader, isThreadSafe: true);
+            _itemsCSSpace = new Lazy<StorageMappingItemCollection>(() => LoadAndCheckItemCollection(csMappingLoader), isThreadSafe: true);
             _itemsOCSpace = new Lazy<DefaultObjectMappingItemCollection>(
-                () => new DefaultObjectMappingItemCollection(GetAndCheckValueForItemCollection(_itemsCSpace), _itemsOSpace.Value),
-                isThreadSafe: true);
+                () => new DefaultObjectMappingItemCollection(_itemsCSpace.Value, _itemsOSpace.Value), isThreadSafe: true);
         }
 
         /// <summary>
@@ -187,8 +185,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     && _itemsSSpace != null)
                 {
                     var mapping = new StorageMappingItemCollection(
-                        GetAndCheckValueForItemCollection(_itemsCSpace),
-                        GetAndCheckValueForItemCollection(_itemsSSpace), 
+                        _itemsCSpace.Value,
+                        _itemsSSpace.Value, 
                         csSpaceReaders,
                         composite.GetPaths(DataSpace.CSSpace));
                     _itemsCSSpace = new Lazy<StorageMappingItemCollection>(() => mapping, isThreadSafe: true);
@@ -222,11 +220,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             get
             {
-                if (Equals(Guid.Empty, _metadataWorkspaceId))
-                {
-                    _metadataWorkspaceId = Guid.NewGuid();
-                }
-
                 return _metadataWorkspaceId;
             }
         }
@@ -339,8 +332,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             _itemsOCSpace =
                                 new Lazy<DefaultObjectMappingItemCollection>(
                                     () =>
-                                    new DefaultObjectMappingItemCollection(
-                                        GetAndCheckValueForItemCollection(_itemsCSpace), _itemsOSpace.Value));
+                                    new DefaultObjectMappingItemCollection(_itemsCSpace.Value, _itemsOSpace.Value));
                         }
                         break;
                     case DataSpace.CSSpace:
@@ -361,10 +353,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        private T GetAndCheckValueForItemCollection<T>(Lazy<T> itemCollectionLoader) where T : ItemCollection
+        private T LoadAndCheckItemCollection<T>(Func<T> itemCollectionLoader) where T : ItemCollection
         {
             DebugCheck.NotNull(itemCollectionLoader);
-            var itemCollection = itemCollectionLoader.Value;
+            var itemCollection = itemCollectionLoader();
             if (itemCollection != null)
             {
                 CheckAndSetItemCollectionVersionInWorkSpace(itemCollection);
@@ -396,32 +388,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     break;
             }
 
-            if (versionToRegister != _schemaVersion
-                && versionToRegister != XmlConstants.UndefinedVersion
-                && _schemaVersion != XmlConstants.UndefinedVersion)
+            lock (_schemaVersionLock)
             {
-                Debug.Assert(itemCollectionType != null);
-                throw new MetadataException(
-                    Strings.DifferentSchemaVersionInCollection(itemCollectionType, versionToRegister, _schemaVersion));
+                if (versionToRegister != _schemaVersion
+                    && versionToRegister != XmlConstants.UndefinedVersion
+                    && _schemaVersion != XmlConstants.UndefinedVersion)
+                {
+                    Debug.Assert(itemCollectionType != null);
+                    throw new MetadataException(
+                        Strings.DifferentSchemaVersionInCollection(itemCollectionType, versionToRegister, _schemaVersion));
+                }
+                else
+                {
+                    _schemaVersion = versionToRegister;
+                }
             }
-            else
-            {
-                _schemaVersion = versionToRegister;
-            }
-        }
-
-        /// <summary>
-        ///     Add a token for this MetadataWorkspace just so this metadata workspace holds a reference to it, this
-        ///     is for metadata caching to make the workspace marking a particular cache entry is still in used
-        /// </summary>
-        internal virtual void AddMetadataEntryToken(object token)
-        {
-            if (_cacheTokens == null)
-            {
-                _cacheTokens = new List<object>();
-            }
-
-            _cacheTokens.Add(token);
         }
 
         /// <summary>Loads metadata from the given assembly.</summary>
@@ -936,7 +917,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             switch (dataSpace)
             {
                 case DataSpace.CSpace:
-                    collection = _itemsCSpace == null ? null : GetAndCheckValueForItemCollection(_itemsCSpace);
+                    collection = _itemsCSpace == null ? null : _itemsCSpace.Value;
                     break;
                 case DataSpace.OSpace:
                     Debug.Assert(_itemsOSpace != null);
@@ -946,10 +927,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     collection = _itemsOCSpace == null ? null : _itemsOCSpace.Value;
                     break;
                 case DataSpace.CSSpace:
-                    collection = _itemsCSSpace == null ? null : GetAndCheckValueForItemCollection(_itemsCSSpace);
+                    collection = _itemsCSSpace == null ? null : _itemsCSSpace.Value;
                     break;
                 case DataSpace.SSpace:
-                    collection = _itemsSSpace == null ? null : GetAndCheckValueForItemCollection(_itemsSSpace);
+                    collection = _itemsSSpace == null ? null : _itemsSSpace.Value;
                     break;
                 default:
                     if (required)
@@ -1325,15 +1306,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal virtual ViewLoader GetUpdateViewLoader()
         {
-            if (_itemsCSSpace != null)
-            {
-                var itemsCSSpaceValue = GetAndCheckValueForItemCollection(_itemsCSSpace);
-                if (itemsCSSpaceValue != null)
-                {
-                    return itemsCSSpaceValue.GetUpdateViewLoader();
-                }
-            }
-            return null;
+            return (_itemsCSSpace != null && _itemsCSSpace.Value != null) ? _itemsCSSpace.Value.GetUpdateViewLoader() : null;
         }
 
         /// <summary>
@@ -1555,10 +1528,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal virtual QueryCacheManager GetQueryCacheManager()
         {
-            Debug.Assert(_itemsSSpace != null);
-            var itemsSSpaceValue = GetAndCheckValueForItemCollection(_itemsSSpace);
-            Debug.Assert(itemsSSpaceValue != null);
-            return itemsSSpaceValue.QueryCacheManager;
+            Debug.Assert(_itemsSSpace != null && _itemsSSpace.Value != null);
+            return _itemsSSpace.Value.QueryCacheManager;
         }
 
         internal bool TryDetermineCSpaceModelType<T>(out EdmType modelEdmType)
