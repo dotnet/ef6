@@ -136,42 +136,32 @@ namespace System.Data.Entity.Infrastructure
 
             var task = interceptionContext.IsResultSet ? Task.FromResult(interceptionContext.Result) : operation();
 
-            // This first continuation is setup to always run the "executed" interceptors even
-            // if the task fails or is canceled.
-            var interceptionTask = task.ContinueWith(
+            var tcs = new TaskCompletionSource<TResult>();
+            task.ContinueWith(
                 t =>
                     {
-                        var result = t.IsCanceled || t.IsFaulted ? default(TResult) : t.Result;
-                        
                         var contextToPropagate = updateInterceptionContext(interceptionContext, t);
                         if (t.IsFaulted)
                         {
                             contextToPropagate = (TInterceptionContext)contextToPropagate.WithException(t.Exception.InnerException);
                         }
+                        contextToPropagate.Result = t.IsCanceled || t.IsFaulted ? default(TResult) : t.Result;
 
-                        contextToPropagate.Result = result;
                         _interceptors.Each(i => executed(i, contextToPropagate));
-                        return contextToPropagate.Result;
-                    }, TaskContinuationOptions.ExecuteSynchronously);
 
-            // The second continuation is setup to transfer state from the original task into the
-            // continuation task so that it will be visible to consumers of the task.
-            var tcs = new TaskCompletionSource<TResult>();
-            interceptionTask.ContinueWith(
-                t =>
-                    {
-                        if (task.IsFaulted)
+                        if (t.IsFaulted)
                         {
-                            tcs.SetException(task.Exception.InnerException);
+                            tcs.SetException(t.Exception.InnerException);
                         }
-                        else if (task.IsCanceled)
+                        else if (t.IsCanceled)
                         {
                             tcs.SetCanceled();
                         }
                         else
                         {
-                            tcs.SetResult(t.Result);
+                            tcs.SetResult(contextToPropagate.Result);
                         }
+
                     }, TaskContinuationOptions.ExecuteSynchronously);
 
             return tcs.Task;
