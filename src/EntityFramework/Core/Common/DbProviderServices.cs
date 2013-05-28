@@ -155,8 +155,7 @@ namespace System.Data.Entity.Core.Common
         {
             DebugCheck.NotNull(commandTree);
 
-            if (commandTree.DataSpace
-                != DataSpace.SSpace)
+            if (commandTree.DataSpace != DataSpace.SSpace)
             {
                 throw new ProviderIncompatibleException(Strings.ProviderRequiresStoreCommandTree);
             }

@@ -15,7 +15,7 @@ namespace System.Data.Entity.Migrations.Model
     /// </summary>
     public class HistoryOperation : MigrationOperation
     {
-        private readonly IEnumerable<DbModificationCommandTree> _commandTrees;
+        private readonly IList<DbModificationCommandTree> _commandTrees;
 
         /// <summary>
         ///     Initializes a new instance of the HistoryOperation class.
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Migrations.Model
         /// <param name="commandTrees"> A sequence of command trees representing the operations being applied to the history table. </param>
         /// <param name="anonymousArguments"> Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public HistoryOperation(IEnumerable<DbModificationCommandTree> commandTrees, object anonymousArguments = null)
+        public HistoryOperation(IList<DbModificationCommandTree> commandTrees, object anonymousArguments = null)
             : base(anonymousArguments)
         {
             Check.NotNull(commandTrees, "commandTrees");
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     A sequence of commands representing the operations being applied to the history table.
         /// </summary>
-        public IEnumerable<DbModificationCommandTree> CommandTrees
+        public IList<DbModificationCommandTree> CommandTrees
         {
             get { return _commandTrees; }
         }

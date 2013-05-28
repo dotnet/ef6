@@ -35,7 +35,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var script = migrator.ScriptUpdate(null, null);
 
-            Assert.True(script.Contains("GO\r\nCREATE PROCEDURE"));
+            Assert.True(script.Contains("GO\r\n\r\nCREATE PROCEDURE"));
         }
 
         [MigrationsTheory]

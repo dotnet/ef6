@@ -253,6 +253,7 @@
     <Compile Include="Infrastructure\IEntityConnectionInterceptor.cs" />
     <Compile Include="Migrations\History\HistoryContextFactory.cs" />
     <Compile Include="Migrations\Model\AlterProcedureOperation.cs" />
+    <Compile Include="Migrations\Model\UpdateDatabaseOperation.cs" />
     <Compile Include="Migrations\Model\MoveProcedureOperation.cs" />
     <Compile Include="Migrations\Model\RenameProcedureOperation.cs" />
     <Compile Include="Migrations\Model\ProcedureOperation.cs" />

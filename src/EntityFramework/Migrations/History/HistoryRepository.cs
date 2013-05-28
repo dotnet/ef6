@@ -7,6 +7,7 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.Config;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
@@ -397,8 +398,8 @@ namespace System.Data.Entity.Migrations.History
                         using (new TransactionScope(TransactionScopeOption.Suppress))
                         {
                             context.History
-                                    .Select(h => h.CreatedOn)
-                                    .FirstOrDefault();
+                                .Select(h => h.CreatedOn)
+                                .FirstOrDefault();
                         }
 
                         createdOnExists = true;
@@ -422,8 +423,8 @@ namespace System.Data.Entity.Migrations.History
                         using (new TransactionScope(TransactionScopeOption.Suppress))
                         {
                             context.History
-                                   .Select(h => h.ProductVersion)
-                                   .FirstOrDefault();
+                                .Select(h => h.ProductVersion)
+                                .FirstOrDefault();
                         }
 
                         productVersionExists = true;
@@ -461,7 +462,7 @@ namespace System.Data.Entity.Migrations.History
 
                         var emptyModel = new DbModelBuilder().Build(connection).GetModel();
                         var createTableOperation = (CreateTableOperation)
-                            new EdmModelDiffer().Diff(emptyModel, context.GetModel()).Single();
+                                                   new EdmModelDiffer().Diff(emptyModel, context.GetModel()).Single();
 
                         var dropPrimaryKeyOperation
                             = new DropPrimaryKeyOperation
@@ -512,7 +513,7 @@ namespace System.Data.Entity.Migrations.History
                         context.SaveChanges();
 
                         return new HistoryOperation(
-                            commandTracer.CommandTrees.OfType<DbModificationCommandTree>());
+                            commandTracer.CommandTrees.OfType<DbModificationCommandTree>().ToList());
                     }
                 }
             }
@@ -541,9 +542,89 @@ namespace System.Data.Entity.Migrations.History
                         context.SaveChanges();
 
                         return new HistoryOperation(
-                            commandTracer.CommandTrees.OfType<DbModificationCommandTree>());
+                            commandTracer.CommandTrees.OfType<DbModificationCommandTree>().ToList());
                     }
                 }
+            }
+        }
+
+        public virtual IEnumerable<DbQueryCommandTree> CreateDiscoveryQueryTrees()
+        {
+            using (var connection = CreateConnection())
+            {
+                foreach (var schema in _schemas)
+                {
+                    using (var context = CreateContext(connection, schema))
+                    {
+                        var query
+                            = context.History
+                                .Where(h => h.ContextKey == _contextKey)
+                                .Select(s => s.MigrationId)
+                                .OrderByDescending(s => s)
+                                .AsStreaming();
+
+                        var dbQuery = query as DbQuery<string>;
+
+                        if (dbQuery != null)
+                        {
+                            dbQuery.InternalQuery.ObjectQuery.EnablePlanCaching = false;
+                        }
+
+                        using (var commandTracer = new CommandTracer(context))
+                        {
+                            query.First();
+
+                            var queryTree
+                                = commandTracer
+                                    .CommandTrees
+                                    .OfType<DbQueryCommandTree>()
+                                    .Single(t => t.DataSpace == DataSpace.SSpace);
+
+                            yield return
+                                new DbQueryCommandTree(
+                                    queryTree.MetadataWorkspace,
+                                    queryTree.DataSpace,
+                                    queryTree.Query.Accept(
+                                        new ParameterInliner(
+                                            commandTracer.DbCommands.Single().Parameters)));
+                        }
+                    }
+                }
+            }
+        }
+
+        private class ParameterInliner : DefaultExpressionVisitor
+        {
+            private readonly DbParameterCollection _parameters;
+
+            public ParameterInliner(DbParameterCollection parameters)
+            {
+                DebugCheck.NotNull(parameters);
+
+                _parameters = parameters;
+            }
+
+            public override DbExpression Visit(DbParameterReferenceExpression expression)
+            {
+                // Inline parameters
+                return DbExpressionBuilder.Constant(_parameters[expression.ParameterName].Value);
+            }
+
+            // Removes null parameter checks
+
+            public override DbExpression Visit(DbOrExpression expression)
+            {
+                return expression.Left.Accept(this);
+            }
+
+            public override DbExpression Visit(DbAndExpression expression)
+            {
+                if (expression.Right is DbNotExpression)
+                {
+                    return expression.Left.Accept(this);
+                }
+
+                return base.Visit(expression);
             }
         }
 

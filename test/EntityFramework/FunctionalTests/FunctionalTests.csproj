@@ -261,7 +261,7 @@
     <Compile Include="Migrations\CreateTableScenarios.cs" />
     <Compile Include="Migrations\CrossDatabaseScenarios.cs" />
     <Compile Include="Migrations\CustomSqlScenarios.cs" />
-    <Compile Include="Migrations\DashScriptScenarios.cs" />
+    <Compile Include="Migrations\ScriptingScenarios.cs" />
     <Compile Include="Migrations\DatabaseGeneratedScenarios.cs" />
     <Compile Include="Migrations\DefaultValueScenarios.cs" />
     <Compile Include="Migrations\DropColumnScenarios.cs" />

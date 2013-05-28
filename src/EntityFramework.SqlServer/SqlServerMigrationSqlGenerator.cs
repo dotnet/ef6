@@ -33,6 +33,8 @@ namespace System.Data.Entity.SqlServer
     [DbProviderName("System.Data.SqlClient")]
     public class SqlServerMigrationSqlGenerator : MigrationSqlGenerator
     {
+        private const string BatchTerminator = "GO";
+
         internal const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffK";
         internal const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ss.fffzzz";
 
@@ -43,12 +45,10 @@ namespace System.Data.Entity.SqlServer
 
         private DbProviderManifest _providerManifest;
         private SqlGenerator _sqlGenerator;
-
-        private string _providerManifestToken;
-
         private List<MigrationStatement> _statements;
         private HashSet<string> _generatedSchemas;
 
+        private string _providerManifestToken;
         private int _variableCounter;
 
         /// <summary>
@@ -67,10 +67,16 @@ namespace System.Data.Entity.SqlServer
             _generatedSchemas = new HashSet<string>();
 
             InitializeProviderServices(providerManifestToken);
-
-            DetectHistoryRebuild(migrationOperations).Each<dynamic>(o => Generate(o));
+            GenerateStatements(migrationOperations);
 
             return _statements;
+        }
+
+        private void GenerateStatements(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Check.NotNull(migrationOperations, "migrationOperations");
+
+            DetectHistoryRebuild(migrationOperations).Each<dynamic>(o => Generate(o));
         }
 
         public override string GenerateProcedureBody(
@@ -93,6 +99,8 @@ namespace System.Data.Entity.SqlServer
 
         private void InitializeProviderServices(string providerManifestToken)
         {
+            Check.NotEmpty(providerManifestToken, "providerManifestToken");
+
             _providerManifestToken = providerManifestToken;
 
             using (var connection = CreateConnection())
@@ -124,6 +132,104 @@ namespace System.Data.Entity.SqlServer
             }
 
             return null;
+        }
+
+        protected virtual void Generate(UpdateDatabaseOperation updateDatabaseOperation)
+        {
+            Check.NotNull(updateDatabaseOperation, "updateDatabaseOperation");
+
+            if (!updateDatabaseOperation.Migrations.Any())
+            {
+                return;
+            }
+
+            using (var writer = Writer())
+            {
+                writer.WriteLine("DECLARE @CurrentMigration [nvarchar](max)");
+                writer.WriteLine();
+
+                foreach (var historyQueryTree in updateDatabaseOperation.HistoryQueryTrees)
+                {
+                    HashSet<string> _;
+                    var historyQuery
+                        = _sqlGenerator.GenerateSql(historyQueryTree, out _)
+                            .Replace("\t", IndentedTextWriter.DefaultTabString);
+
+                    writer.Write("IF object_id('");
+                    writer.Write(Escape(_sqlGenerator.Targets.Single()));
+                    writer.WriteLine("') IS NOT NULL");
+                    writer.Indent++;
+                    writer.WriteLine("SELECT @CurrentMigration =");
+                    writer.Indent++;
+                    writer.Write("(");
+                    writer.Write(Indent(historyQuery, writer.Indent));
+                    writer.WriteLine(")");
+                    writer.Indent -= 2;
+                    writer.WriteLine();
+                }
+
+                writer.WriteLine("IF @CurrentMigration IS NULL");
+                writer.Indent++;
+                writer.WriteLine("SET @CurrentMigration = '0'");
+
+                Statement(writer);
+            }
+
+            var existingStatements = _statements;
+
+            foreach (var migration in updateDatabaseOperation.Migrations)
+            {
+                using (var writer = Writer())
+                {
+                    _statements = new List<MigrationStatement>();
+
+                    GenerateStatements(migration.Operations);
+
+                    if (_statements.Count > 0)
+                    {
+                        writer.Write("IF @CurrentMigration < '");
+                        writer.Write(Escape(migration.MigrationId));
+                        writer.WriteLine("'");
+                        writer.Write("BEGIN");
+
+                        using (var blockWriter = Writer())
+                        {
+                            blockWriter.WriteLine();
+                            blockWriter.Indent++;
+
+                            foreach (var migrationStatement in _statements)
+                            {
+                                if (string.IsNullOrWhiteSpace(migrationStatement.BatchTerminator))
+                                {
+                                    migrationStatement.Sql.EachLine(blockWriter.WriteLine);
+                                }
+                                else
+                                {
+                                    blockWriter.WriteLine("EXECUTE('");
+                                    blockWriter.Indent++;
+                                    migrationStatement.Sql.EachLine(l => blockWriter.WriteLine(Escape(l)));
+                                    blockWriter.Indent--;
+                                    blockWriter.WriteLine("')");
+                                }
+                            }
+
+                            writer.WriteLine(blockWriter.InnerWriter.ToString().TrimEnd());
+                        }
+
+                        writer.WriteLine("END");
+
+                        existingStatements.Add(
+                            new MigrationStatement
+                                {
+                                    Sql
+                                        = writer.InnerWriter.ToString()
+                                        .Replace("\t", IndentedTextWriter.DefaultTabString)
+                                });
+                    }
+                }
+            }
+
+            _statements = existingStatements;
         }
 
         /// <summary>
@@ -178,38 +284,26 @@ namespace System.Data.Entity.SqlServer
                     (p, i) =>
                         {
                             Generate(p, writer);
-
-                            if (i < procedureOperation.Parameters.Count - 1)
-                            {
-                                writer.WriteLine(",");
-                            }
+                            writer.WriteLine(
+                                i < procedureOperation.Parameters.Count - 1
+                                    ? ","
+                                    : string.Empty);
                         });
 
-                writer.WriteLine();
                 writer.Indent--;
                 writer.WriteLine("AS");
                 writer.WriteLine("BEGIN");
                 writer.Indent++;
 
-                if (!string.IsNullOrWhiteSpace(procedureOperation.BodySql))
-                {
-                    var indentString
-                        = writer.NewLine
-                          + new string(' ', (writer.Indent * 4));
-
-                    var indentReplacer = new Regex(@"\r?\n *");
-
-                    writer.WriteLine(indentReplacer.Replace(procedureOperation.BodySql, indentString));
-                }
-                else
-                {
-                    writer.WriteLine("RETURN");
-                }
+                writer.WriteLine(
+                    !string.IsNullOrWhiteSpace(procedureOperation.BodySql)
+                        ? Indent(procedureOperation.BodySql, writer.Indent)
+                        : "RETURN");
 
                 writer.Indent--;
                 writer.Write("END");
 
-                Statement(writer, batchTerminator: "GO");
+                Statement(writer, batchTerminator: BatchTerminator);
             }
         }
 
@@ -1195,9 +1289,17 @@ namespace System.Data.Entity.SqlServer
 
         private static string Escape(string s)
         {
-            DebugCheck.NotEmpty(s);
+            DebugCheck.NotNull(s);
 
             return s.Replace("'", "''");
+        }
+
+        private static string Indent(string s, int level)
+        {
+            DebugCheck.NotEmpty(s);
+            Debug.Assert(level >= 0);
+
+            return new Regex(@"\r?\n *").Replace(s, Environment.NewLine + new string(' ', (level * 4)));
         }
 
         /// <summary>
@@ -1248,10 +1350,12 @@ namespace System.Data.Entity.SqlServer
             IEnumerable<MigrationOperation> operations)
         {
             var enumerator = operations.GetEnumerator();
+
             while (enumerator.MoveNext())
             {
                 var sequence = HistoryRebuildOperationSequence.Detect(enumerator);
-                yield return (sequence == null) ? enumerator.Current : sequence;
+
+                yield return sequence ?? enumerator.Current;
             }
         }
 
@@ -1311,8 +1415,11 @@ namespace System.Data.Entity.SqlServer
         {
             const string suffix = "2";
 
-            var target = new CreateTableOperation(source.Name + suffix);
-            target.PrimaryKey = new AddPrimaryKeyOperation();
+            var target = new CreateTableOperation(source.Name + suffix)
+                             {
+                                 PrimaryKey = new AddPrimaryKeyOperation()
+                             };
+
             Debug.Assert(target.PrimaryKey.Name == source.PrimaryKey.Name + suffix);
 
             source.Columns.Each(c => target.Columns.Add(c));

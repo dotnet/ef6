@@ -320,7 +320,7 @@ namespace System.Data.Entity.Internal
 
             public override bool IsDBNull(int ordinal)
             {
-                throw new NotImplementedException();
+                return true;
             }
 
             public override object this[int ordinal]

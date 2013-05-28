@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -18,6 +19,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
     {
         private readonly StringBuilder _sqlBuilder = new StringBuilder();
 
+        private UpdateDatabaseOperation _updateDatabaseOperation;
+
         /// <summary>
         ///     Initializes a new instance of the  MigratorScriptingDecorator class.
         /// </summary>
@@ -31,8 +34,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
         /// <summary>
         ///     Produces a script to update the database.
         /// </summary>
-        /// <param name="sourceMigration"> The migration to update from. If null is supplied, a script to update the current database will be produced. </param>
-        /// <param name="targetMigration"> The migration to update to. If null is supplied, a script to update to the latest migration will be produced. </param>
+        /// <param name="sourceMigration">
+        ///     The migration to update from. If null is supplied, a script to update the
+        ///     current database will be produced.
+        /// </param>
+        /// <param name="targetMigration">
+        ///     The migration to update to. If null is supplied,
+        ///     a script to update to the latest migration will be produced.
+        /// </param>
         /// <returns> The generated SQL script. </returns>
         public string ScriptUpdate(string sourceMigration, string targetMigration)
         {
@@ -71,10 +80,35 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     pendingMigrations = pendingMigrations.Where(m => string.CompareOrdinal(m, targetMigrationId) <= 0);
                 }
 
+                _updateDatabaseOperation
+                    = sourceMigration == DbMigrator.InitialDatabase
+                          ? new UpdateDatabaseOperation(base.CreateDiscoveryQueryTrees().ToList())
+                          : null;
+
                 Upgrade(pendingMigrations, targetMigrationId, sourceMigrationId);
+
+                if (_updateDatabaseOperation != null)
+                {
+                    ExecuteStatements(base.GenerateStatements(new[] { _updateDatabaseOperation }, null));
+                }
             }
 
             return _sqlBuilder.ToString();
+        }
+
+        internal override IEnumerable<MigrationStatement> GenerateStatements(
+            IList<MigrationOperation> operations, string migrationId)
+        {
+            DebugCheck.NotEmpty(migrationId);
+
+            if (_updateDatabaseOperation == null)
+            {
+                return base.GenerateStatements(operations, migrationId);
+            }
+
+            _updateDatabaseOperation.AddMigration(migrationId, operations);
+
+            return Enumerable.Empty<MigrationStatement>();
         }
 
         internal override void EnsureDatabaseExists(Action mustSucceedToKeepDatabase)
@@ -91,6 +125,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     if (!string.IsNullOrWhiteSpace(migrationStatement.BatchTerminator))
                     {
                         _sqlBuilder.AppendLine(migrationStatement.BatchTerminator);
+                        _sqlBuilder.AppendLine();
                     }
 
                     _sqlBuilder.AppendLine(migrationStatement.Sql);

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Design;
@@ -65,7 +66,7 @@ namespace System.Data.Entity.Migrations
         private bool _emptyMigrationNeeded;
 
         /// <summary>
-        /// For testing.
+        ///     For testing.
         /// </summary>
         internal DbMigrator(DbContext usersContext = null, DbProviderFactory providerFactory = null)
             : base(null)
@@ -342,7 +343,7 @@ namespace System.Data.Entity.Migrations
                 = ignoreChanges
                       ? Enumerable.Empty<MigrationOperation>()
                       : _modelDiffer.Diff(sourceModel, _currentModel, _modificationCommandTreeGenerator, SqlGenerator)
-                                    .ToList();
+                            .ToList();
 
             if (!rescaffolding)
             {
@@ -873,20 +874,33 @@ namespace System.Data.Entity.Migrations
             }
 
             var migrationStatements
-                = SqlGenerator.Generate(orderedOperations, _providerManifestToken);
+                = base.GenerateStatements(orderedOperations, migrationId);
 
             if (auto)
             {
                 // Filter duplicates when auto-migrating. Duplicates can be caused by
                 // duplicates in the model such as shared FKs.
-
                 migrationStatements
-                    = migrationStatements.Distinct((m1, m2) => string.Equals(m1.Sql, m2.Sql, StringComparison.Ordinal));
+                    = migrationStatements
+                        .Distinct((m1, m2) => string.Equals(m1.Sql, m2.Sql, StringComparison.Ordinal));
             }
 
             base.ExecuteStatements(migrationStatements);
 
             _historyRepository.ResetExists();
+        }
+
+        internal override IEnumerable<DbQueryCommandTree> CreateDiscoveryQueryTrees()
+        {
+            return _historyRepository.CreateDiscoveryQueryTrees();
+        }
+
+        internal override IEnumerable<MigrationStatement> GenerateStatements(
+            IList<MigrationOperation> operations, string migrationId)
+        {
+            DebugCheck.NotNull(operations);
+
+            return SqlGenerator.Generate(operations, _providerManifestToken);
         }
 
         internal override void ExecuteStatements(IEnumerable<MigrationStatement> migrationStatements)
@@ -937,7 +951,7 @@ namespace System.Data.Entity.Migrations
                     using (var command = ConfigureCommand(connection.CreateCommand(), migrationStatement.Sql))
                     {
                         connection.Open();
-                        
+
                         command.ExecuteNonQuery();
                     }
                 }
@@ -969,20 +983,20 @@ namespace System.Data.Entity.Migrations
 
             foreach (var foreignKeyOperation
                 in operations.OfType<AddForeignKeyOperation>()
-                             .Where(fk => fk.PrincipalTable != null && !fk.PrincipalColumns.Any()))
+                    .Where(fk => fk.PrincipalTable != null && !fk.PrincipalColumns.Any()))
             {
                 var principalTable = GetStandardizedTableName(foreignKeyOperation.PrincipalTable);
                 var entitySetName
                     = (from es in targetModel.Descendants(EdmXNames.Ssdl.EntitySetNames)
                        where new DatabaseName(es.TableAttribute(), es.SchemaAttribute()).ToString()
-                                         .EqualsIgnoreCase(principalTable)
+                           .EqualsIgnoreCase(principalTable)
                        select es.NameAttribute()).SingleOrDefault();
 
                 if (entitySetName != null)
                 {
                     var entityTypeElement
                         = targetModel.Descendants(EdmXNames.Ssdl.EntityTypeNames)
-                                     .Single(et => et.NameAttribute().EqualsIgnoreCase(entitySetName));
+                            .Single(et => et.NameAttribute().EqualsIgnoreCase(entitySetName));
 
                     entityTypeElement
                         .Descendants(EdmXNames.Ssdl.PropertyRefNames).Each(

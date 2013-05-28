@@ -5,6 +5,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
@@ -180,8 +181,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class SqlGenerator : DbExpressionVisitor<ISqlFragment>
     {
-        #region Visitor parameter stacks
-
         /// <summary>
         ///     Every relational node has to pass its SELECT statement to its children
         ///     This allows them (DbVariableReferenceExpression eventually) to update the list of
@@ -214,10 +213,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             // been seen, so we return false in that case.
             get { return isParentAJoinStack.Count != 0 && isParentAJoinStack.Peek(); }
         }
-
-        #endregion
-
-        #region Global lists and state
 
         private Dictionary<string, int> allExtentNames;
 
@@ -268,12 +263,15 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         private bool _ignoreForceNonUnicodeFlag;
 
-        #endregion
-
-        #region Statics
-
         private const byte DefaultDecimalPrecision = 18;
         private static readonly char[] _hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+
+        private List<string> _targets;
+
+        public List<string> Targets
+        {
+            get { return _targets; }
+        }
 
         // Define lists of functions that take string arugments and return strings.
         private static readonly ISet<string> _canonicalAndStoreStringFunctionsOneArg =
@@ -297,10 +295,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     "SqlServer.UPPER",
                     "SqlServer.REVERSE"
                 };
-
-        #endregion
-
-        #region SqlVersion, Metadata, ...
 
         /// <summary>
         ///     The current SQL Server version
@@ -336,10 +330,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             get { return _storeItemCollection; }
         }
 
-        #endregion
-
-        #region Constructor
-
         internal SqlGenerator()
         {
             // Testing only
@@ -355,10 +345,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             _sqlVersion = sqlVersion;
         }
-
-        #endregion
-
-        #region Entry points
 
         /// <summary>
         ///     General purpose static function that can be called from System.Data assembly
@@ -443,10 +429,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
         }
 
-        #endregion
-
-        #region Driver Methods
-
         /// <summary>
         ///     Translate a command tree to a SQL string.
         ///     The input tree could be translated to either a SQL SELECT statement
@@ -457,9 +439,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="tree"> </param>
         /// <returns> The string representing the SQL to be executed. </returns>
-        private string GenerateSql(DbQueryCommandTree tree, out HashSet<string> paramsToForceNonUnicode)
+        internal string GenerateSql(DbQueryCommandTree tree, out HashSet<string> paramsToForceNonUnicode)
         {
             DebugCheck.NotNull(tree.Query);
+
+            _targets = new List<string>();
 
             var targetTree = tree;
 
@@ -484,17 +468,20 @@ namespace System.Data.Entity.SqlServer.SqlGen
             // Literals will not be converted to parameters.
 
             ISqlFragment result;
-            if (BuiltInTypeKind.CollectionType
-                == targetTree.Query.ResultType.EdmType.BuiltInTypeKind)
+
+            if (BuiltInTypeKind.CollectionType == targetTree.Query.ResultType.EdmType.BuiltInTypeKind)
             {
                 var sqlStatement = VisitExpressionEnsureSqlStatement(targetTree.Query);
+                
                 Debug.Assert(sqlStatement != null, "The outer most sql statment is null");
+                
                 sqlStatement.IsTopMost = true;
                 result = sqlStatement;
             }
             else
             {
                 var sqlBuilder = new SqlBuilder();
+
                 sqlBuilder.Append("SELECT ");
                 sqlBuilder.Append(targetTree.Query.Accept(this));
 
@@ -533,10 +520,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             return builder.ToString();
         }
-
-        #endregion
-
-        #region IExpressionVisitor Members
 
         /// <summary>
         ///     Translate(left) AND Translate(right)
@@ -1292,17 +1275,24 @@ namespace System.Data.Entity.SqlServer.SqlGen
             // ISSUE: Should we just return a string all the time, and let
             // VisitInputExpression create the SqlSelectStatement?
 
+            var targetTSql = GetTargetTSql(target);
+
+            if (_targets != null)
+            {
+                _targets.Add(targetTSql);
+            }
+
             if (IsParentAJoin)
             {
                 var result = new SqlBuilder();
-                result.Append(GetTargetTSql(target));
+                result.Append(targetTSql);
 
                 return result;
             }
             else
             {
                 var result = new SqlSelectStatement();
-                result.From.Append(GetTargetTSql(target));
+                result.From.Append(targetTSql);
 
                 return result;
             }
@@ -2174,8 +2164,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
         }
 
-        #region Helper methods and classes for translation into "In"
-
         /// <summary>
         ///     Required by the KeyToListMap to allow certain DbExpression subclasses to be used as a key
         ///     which is not normally possible given their lack of Equals and GetHashCode implementations
@@ -2325,8 +2313,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
         }
 
-        #endregion
-
         /// <summary>
         ///     This method handles the DBParameterReference expressions. If the parameter is in
         ///     a part of the tree, which matches our criteria for forcing to non-unicode, then
@@ -2357,6 +2343,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
 
             var result = new SqlBuilder();
+
             // Do not quote this name.
             // ISSUE: We are not checking that e.Name has no illegal characters. e.g. space
             result.Append("@" + e.ParameterName);
@@ -2805,12 +2792,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             return result;
         }
-
-        #endregion
-
-        #region Visitor Helper Methods
-
-        #region 'Visitor' methods - Shared visitors and methods that do most of the visiting
 
         /// <summary>
         ///     Aggregates are not visited by the normal visitor walk.
@@ -3534,10 +3515,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 return selectStatement;
             }
         }
-
-        #endregion
-
-        #region Other Helpers
 
         /// <summary>
         ///     <see cref="AddDefaultColumns" />
@@ -4562,9 +4539,5 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 throw new NotSupportedException(Strings.SqlGen_CanonicalFunctionNotSupportedPriorSql10(e.Function.Name));
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

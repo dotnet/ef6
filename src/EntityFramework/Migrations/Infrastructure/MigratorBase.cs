@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
@@ -149,6 +150,19 @@ namespace System.Data.Entity.Migrations.Infrastructure
             DebugCheck.NotNull(migrationStatements);
 
             _this.ExecuteStatements(migrationStatements);
+        }
+
+        internal virtual IEnumerable<MigrationStatement> GenerateStatements(
+            IList<MigrationOperation> operations, string migrationId)
+        {
+            DebugCheck.NotNull(operations);
+
+            return _this.GenerateStatements(operations, migrationId);
+        }
+
+        internal virtual IEnumerable<DbQueryCommandTree> CreateDiscoveryQueryTrees()
+        {
+            return _this.CreateDiscoveryQueryTrees();
         }
 
         internal virtual void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement)

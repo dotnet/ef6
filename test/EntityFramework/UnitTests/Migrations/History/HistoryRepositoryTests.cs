@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.History
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Infrastructure;
@@ -22,6 +23,24 @@ namespace System.Data.Entity.Migrations.History
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class HistoryRepositoryTests : DbTestCase
     {
+        [MigrationsTheory]
+        public void Can_create_count_query_command_tree()
+        {
+            ResetDatabase();
+
+            var historyRepository
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+
+            var commandTrees = historyRepository.CreateDiscoveryQueryTrees();
+
+            foreach (var commandTree in commandTrees)
+            {
+                Assert.NotNull(commandTree);
+                Assert.Equal(DataSpace.SSpace, commandTree.DataSpace);
+                Assert.Equal(0, commandTree.Parameters.Count());
+            }
+        }
+
         [MigrationsTheory]
         public void GetUpgradeOperations_should_return_add_product_version_column_when_not_present()
         {

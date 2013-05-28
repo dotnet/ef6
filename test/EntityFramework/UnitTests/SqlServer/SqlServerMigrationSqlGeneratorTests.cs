@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServer
 {
+    using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
@@ -21,6 +22,111 @@ namespace System.Data.Entity.SqlServer
 
     public class SqlServerMigrationSqlGeneratorTests
     {
+        [Fact]
+        public void Generate_can_handle_update_database_operations()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var historyRepository
+                = new HistoryRepository(
+                    new SqlConnectionFactory().CreateConnection("Foo").ConnectionString,
+                    DbProviderFactories.GetFactory(ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName),
+                    "MyKey",
+                    null,
+                    new[] { "dbo", "foo", "bar" });
+
+            var updateDatabaseOperation
+                = new UpdateDatabaseOperation(historyRepository.CreateDiscoveryQueryTrees().ToList());
+
+            updateDatabaseOperation.AddMigration(
+                "V1",
+                new MigrationOperation[]
+                    {
+                        new DropColumnOperation("Customers", "Foo"),
+                        new CreateProcedureOperation("Foo", "Bar")
+                    });
+
+            updateDatabaseOperation.AddMigration(
+                "V2",
+                new MigrationOperation[]
+                    {
+                        new AddColumnOperation("Customers", new ColumnModel(PrimitiveTypeKind.String) { Name = "C" }),
+                        new CreateProcedureOperation("bar", "baz")
+                    });
+
+            var sql = migrationSqlGenerator.Generate(new[] { updateDatabaseOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Equal(@"DECLARE @CurrentMigration [nvarchar](max)
+
+IF object_id('[dbo].[__MigrationHistory]') IS NOT NULL
+    SELECT @CurrentMigration =
+        (SELECT TOP (1) 
+        [Project1].[MigrationId] AS [MigrationId]
+        FROM ( SELECT 
+        [Extent1].[MigrationId] AS [MigrationId]
+        FROM [dbo].[__MigrationHistory] AS [Extent1]
+        WHERE [Extent1].[ContextKey] = N'MyKey'
+        )  AS [Project1]
+        ORDER BY [Project1].[MigrationId] DESC)
+
+IF object_id('[foo].[__MigrationHistory]') IS NOT NULL
+    SELECT @CurrentMigration =
+        (SELECT TOP (1) 
+        [Project1].[MigrationId] AS [MigrationId]
+        FROM ( SELECT 
+        [Extent1].[MigrationId] AS [MigrationId]
+        FROM [foo].[__MigrationHistory] AS [Extent1]
+        WHERE [Extent1].[ContextKey] = N'MyKey'
+        )  AS [Project1]
+        ORDER BY [Project1].[MigrationId] DESC)
+
+IF object_id('[bar].[__MigrationHistory]') IS NOT NULL
+    SELECT @CurrentMigration =
+        (SELECT TOP (1) 
+        [Project1].[MigrationId] AS [MigrationId]
+        FROM ( SELECT 
+        [Extent1].[MigrationId] AS [MigrationId]
+        FROM [bar].[__MigrationHistory] AS [Extent1]
+        WHERE [Extent1].[ContextKey] = N'MyKey'
+        )  AS [Project1]
+        ORDER BY [Project1].[MigrationId] DESC)
+
+IF @CurrentMigration IS NULL
+    SET @CurrentMigration = '0'
+
+IF @CurrentMigration < 'V1'
+BEGIN
+    DECLARE @var0 nvarchar(128)
+    SELECT @var0 = name
+    FROM sys.default_constraints
+    WHERE parent_object_id = object_id(N'Customers')
+    AND col_name(parent_object_id, parent_column_id) = 'Foo';
+    IF @var0 IS NOT NULL
+        EXECUTE('ALTER TABLE [Customers] DROP CONSTRAINT ' + @var0)
+    ALTER TABLE [Customers] DROP COLUMN [Foo]
+    EXECUTE('
+        CREATE PROCEDURE [Foo]
+        AS
+        BEGIN
+            Bar
+        END
+    ')
+END
+
+IF @CurrentMigration < 'V2'
+BEGIN
+    ALTER TABLE [Customers] ADD [C] [nvarchar](max)
+    EXECUTE('
+        CREATE PROCEDURE [bar]
+        AS
+        BEGIN
+            baz
+        END
+    ')
+END
+", sql);
+        }
+
         [Fact]
         public void Generate_should_output_invariant_decimals_when_non_invariant_culture()
         {
@@ -652,7 +758,7 @@ IF NOT EXISTS(SELECT * FROM [dbo].[History])
                     historyContext.SaveChanges();
 
                     var insertHistoryOperation
-                        = new HistoryOperation(commandTracer.CommandTrees.OfType<DbModificationCommandTree>());
+                        = new HistoryOperation(commandTracer.CommandTrees.OfType<DbModificationCommandTree>().ToList());
 
                     var sql
                         = migrationSqlGenerator
@@ -687,7 +793,7 @@ VALUES (N'House Lannister', N'The pointy end',  0x , N'Awesomeness')", sql.Sql.T
                     historyContext.SaveChanges();
 
                     var deleteHistoryOperation
-                        = new HistoryOperation(commandTracer.CommandTrees.OfType<DbModificationCommandTree>());
+                        = new HistoryOperation(commandTracer.CommandTrees.OfType<DbModificationCommandTree>().ToList());
 
                     var sql
                         = migrationSqlGenerator
@@ -736,7 +842,7 @@ WHERE (([MigrationId] = N'House Lannister') AND ([ContextKey] = N'The pointy end
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
             var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, providerManifestToken)
-                                           .Join(s => s.Sql, Environment.NewLine);
+                .Join(s => s.Sql, Environment.NewLine);
 
             Assert.Contains(string.Format("ALTER TABLE [Foo] ADD [Bar] [uniqueidentifier] DEFAULT {0}", expectedGuidDefault), sql);
         }
@@ -1059,7 +1165,7 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
                 }.Each(c => operation.Columns.Add(c));
 
             var sql = new SqlServerMigrationSqlGenerator().Generate(new[] { operation }, "2008")
-                                                          .Join(s => s.Sql, Environment.NewLine);
+                .Join(s => s.Sql, Environment.NewLine);
 
             Assert.Equal(@"CREATE TABLE [T] (
     [A] [geography] NOT NULL DEFAULT 'SRID=4326;POINT (6 7)',
@@ -1151,7 +1257,7 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
         public static void Generate_can_output_statement_to_upgrade_primary_key_of_history_table()
         {
             const string expectedSql =
-@"CREATE TABLE [dbo].[__MigrationHistory2] (
+                @"CREATE TABLE [dbo].[__MigrationHistory2] (
     [MigrationId] [nvarchar](255) NOT NULL,
     [ContextKey] [nvarchar](512) NOT NULL,
     [Model] [varbinary](max) NOT NULL,
@@ -1188,7 +1294,7 @@ EXECUTE sp_rename @objname = N'dbo.__MigrationHistory2', @newname = N'__Migratio
                 var emptyModel = new DbModelBuilder()
                     .Build(context.Database.Connection).GetModel();
                 createTableOperation = (CreateTableOperation)
-                    new EdmModelDiffer().Diff(emptyModel, context.GetModel()).Single();
+                                       new EdmModelDiffer().Diff(emptyModel, context.GetModel()).Single();
             }
 
             var addColumnOperation =
@@ -1220,12 +1326,12 @@ EXECUTE sp_rename @objname = N'dbo.__MigrationHistory2', @newname = N'__Migratio
             addPrimaryKeyOperation.Columns.Add("MigrationId");
             addPrimaryKeyOperation.Columns.Add("ContextKey");
 
-            return 
-                new MigrationOperation[] 
-                    { 
+            return
+                new MigrationOperation[]
+                    {
                         addColumnOperation,
-                        dropPrimaryKeyOperation, 
-                        addPrimaryKeyOperation 
+                        dropPrimaryKeyOperation,
+                        addPrimaryKeyOperation
                     };
         }
     }

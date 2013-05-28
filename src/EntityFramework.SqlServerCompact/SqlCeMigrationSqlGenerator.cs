@@ -31,6 +31,8 @@ namespace System.Data.Entity.SqlServerCompact
     [DbProviderName("System.Data.SqlServerCe.4.0")]
     public class SqlCeMigrationSqlGenerator : MigrationSqlGenerator
     {
+        private const string BatchTerminator = "GO";
+
         internal const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ss.fffzzz";
 
         private const int DefaultMaxLength = 128;
@@ -56,14 +58,22 @@ namespace System.Data.Entity.SqlServerCompact
             _statements = new List<MigrationStatement>();
 
             InitializeProviderServices(providerManifestToken);
-
-            migrationOperations.Each<dynamic>(o => Generate(o));
+            GenerateStatements(migrationOperations);
 
             return _statements;
         }
 
+        private void GenerateStatements(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Check.NotNull(migrationOperations, "migrationOperations");
+
+            migrationOperations.Each<dynamic>(o => Generate(o));
+        }
+
         private void InitializeProviderServices(string providerManifestToken)
         {
+            Check.NotEmpty(providerManifestToken, "providerManifestToken");
+
             using (var connection = CreateConnection())
             {
                 _providerManifest
@@ -71,6 +81,13 @@ namespace System.Data.Entity.SqlServerCompact
                         .GetProviderServices(connection)
                         .GetProviderManifest(providerManifestToken);
             }
+        }
+
+        protected virtual void Generate(UpdateDatabaseOperation updateDatabaseOperation)
+        {
+            Check.NotNull(updateDatabaseOperation, "updateDatabaseOperation");
+
+            GenerateStatements(updateDatabaseOperation.Migrations.SelectMany(m => m.Operations));
         }
 
         /// <summary>
@@ -861,7 +878,7 @@ namespace System.Data.Entity.SqlServerCompact
         /// <param name="sql"> The statement to be executed. </param>
         /// <param name="suppressTransaction"> Gets or sets a value indicating whether this statement should be performed outside of the transaction scope that is used to make the migration process transactional. If set to true, this operation will not be rolled back if the migration process fails. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        protected void Statement(string sql, bool suppressTransaction = false, string batchTerminator = null)
+        protected void Statement(string sql, bool suppressTransaction = false)
         {
             Check.NotEmpty(sql, "sql");
 
@@ -870,7 +887,7 @@ namespace System.Data.Entity.SqlServerCompact
                     {
                         Sql = sql,
                         SuppressTransaction = suppressTransaction,
-                        BatchTerminator = batchTerminator
+                        BatchTerminator = BatchTerminator
                     });
         }
 
@@ -892,11 +909,11 @@ namespace System.Data.Entity.SqlServerCompact
         /// </summary>
         /// <param name="writer"> The writer containing the SQL to be executed. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        protected void Statement(IndentedTextWriter writer, string batchTerminator = null)
+        protected void Statement(IndentedTextWriter writer)
         {
             Check.NotNull(writer, "writer");
 
-            Statement(writer.InnerWriter.ToString(), batchTerminator: batchTerminator);
+            Statement(writer.InnerWriter.ToString());
         }
     }
 }

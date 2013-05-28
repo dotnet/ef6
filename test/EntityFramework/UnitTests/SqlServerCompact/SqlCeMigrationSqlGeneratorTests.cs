@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServerCompact
 {
+    using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
@@ -19,6 +20,30 @@ namespace System.Data.Entity.SqlServerCompact
 
     public class SqlCeMigrationSqlGeneratorTests
     {
+        [Fact]
+        public void Generate_can_handle_update_database_operations()
+        {
+            var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();
+            var providerInvariantName = ProviderRegistry.SqlCe4_ProviderInfo.ProviderInvariantName;
+
+            var historyRepository
+                = new HistoryRepository(
+                    new SqlCeConnectionFactory(providerInvariantName)
+                        .CreateConnection("Foo").ConnectionString,
+                    DbProviderFactories.GetFactory(providerInvariantName),
+                    "MyKey",
+                    null);
+
+            var updateDatabaseOperation
+                = new UpdateDatabaseOperation(historyRepository.CreateDiscoveryQueryTrees().ToList());
+
+            updateDatabaseOperation.AddMigration("M1", new []{ new DropColumnOperation("Customers", "Foo") });
+
+            var sql = migrationSqlGenerator.Generate(new[] { updateDatabaseOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Equal(@"ALTER TABLE [Customers] DROP COLUMN [Foo]", sql);
+        }
+
         [Fact]
         public void Generate_should_throw_when_column_rename()
         {
@@ -78,10 +103,10 @@ namespace System.Data.Entity.SqlServerCompact
             var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();
 
             var column = new ColumnModel(PrimitiveTypeKind.Int32)
-            {
-                Name = "Bar",
-                DefaultValue = 42
-            };
+                             {
+                                 Name = "Bar",
+                                 DefaultValue = 42
+                             };
 
             var alterColumnOperation = new AlterColumnOperation("Foo", column, false);
 
@@ -487,7 +512,7 @@ ALTER TABLE [Foo] ALTER COLUMN [Bar] SET DEFAULT 42", sql);
                     historyContext.SaveChanges();
 
                     var insertHistoryOperation
-                        = new HistoryOperation(commandTracer.CommandTrees.OfType<DbModificationCommandTree>());
+                        = new HistoryOperation(commandTracer.CommandTrees.OfType<DbModificationCommandTree>().ToList());
 
                     var sql
                         = migrationSqlGenerator
@@ -522,7 +547,7 @@ VALUES (N'House Lannister', N'The pointy end',  0x , N'Awesomeness')", sql.Sql.T
                     historyContext.SaveChanges();
 
                     var deleteHistoryOperation
-                        = new HistoryOperation(commandTracer.CommandTrees.OfType<DbModificationCommandTree>());
+                        = new HistoryOperation(commandTracer.CommandTrees.OfType<DbModificationCommandTree>().ToList());
 
                     var sql
                         = migrationSqlGenerator

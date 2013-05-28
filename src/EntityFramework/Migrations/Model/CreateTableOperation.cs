@@ -42,7 +42,7 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Gets the columns to be included in the new table.
         /// </summary>
-        public virtual ICollection<ColumnModel> Columns
+        public virtual IList<ColumnModel> Columns
         {
             get { return _columns; }
         }

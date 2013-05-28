@@ -9,7 +9,7 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
-    public class DashScriptScenarios : DbTestCase
+    public class ScriptingScenarios : DbTestCase
     {
         private string CreateMetadataStatement
         {
@@ -108,6 +108,26 @@ namespace System.Data.Entity.Migrations
             Assert.True(script.Contains("Version3"));
             Assert.False(script.Contains("AutomaticMigration"));
 
+            if (!whenDatabaseExists
+                || DatabaseProvider == DatabaseProvider.SqlClient)
+            {
+                using (var connection = ProviderFactory.CreateConnection())
+                {
+                    connection.ConnectionString = ConnectionString;
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        connection.Open();
+                        
+                        foreach (var batch in script.Split(new[] { "GO\r\n" }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            command.CommandText = batch;
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            
             // 1
             script = scriptingDecorator.ScriptUpdate(DbMigrator.InitialDatabase, version1.MigrationId);
 
@@ -247,10 +267,9 @@ namespace System.Data.Entity.Migrations
                 ResetDatabase();
             }
 
-            // Act
             var script = scriptingDecorator.ScriptUpdate(DbMigrator.InitialDatabase, version1.MigrationId);
 
-            // Assert
+            Assert.NotNull(script);
             Assert.True(script.Contains(CreateMetadataStatement));
             Assert.True(script.Contains("Version1"));
             Assert.False(script.Contains("AutomaticMigration"));

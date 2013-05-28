@@ -25,6 +25,7 @@ namespace System.Data.Entity.Utilities
             = new Regex(@"^" + NameExp + @"$", RegexOptions.Singleline | RegexOptions.Compiled);
 
         private static readonly Regex _migrationIdPattern = new Regex(@"\d{15}_.+");
+        private static readonly string[] _lineEndings = new[] { "\r\n", "\n" };
 
         public static bool EqualsIgnoreCase(this string s1, string s2)
         {
@@ -53,6 +54,14 @@ namespace System.Data.Entity.Utilities
             }
 
             return s.Substring(0, size);
+        }
+
+        public static void EachLine(this string s, Action<string> action)
+        {
+            DebugCheck.NotEmpty(s);
+            DebugCheck.NotNull(action);
+
+            s.Split(_lineEndings, StringSplitOptions.None).Each(action);
         }
 
         public static bool IsValidMigrationId(this string migrationId)

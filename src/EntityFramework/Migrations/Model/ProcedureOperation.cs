@@ -33,7 +33,7 @@ namespace System.Data.Entity.Migrations.Model
             get { return _bodySql; }
         }
 
-        public virtual ICollection<ParameterModel> Parameters
+        public virtual IList<ParameterModel> Parameters
         {
             get { return _parameters; }
         }

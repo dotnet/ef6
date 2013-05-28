@@ -18,6 +18,20 @@ namespace System.Data.Entity.Utilities
 
         }
 
+        public class EachLine
+        {
+            [Fact]
+            public void EachLine_can_slit_lines()
+            {
+                var lines = 0;
+
+                "Foo\nBar\r\nBaz\r\n".EachLine(_ => lines++);
+
+                Assert.Equal(4, lines);
+            }
+
+        }
+
         public class IsValidMigrationId
         {
             [Fact]
