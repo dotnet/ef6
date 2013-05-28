@@ -475,8 +475,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 functionMapping.Function.StoreFunctionNameAttribute
                     = databaseMapping.Database.Functions.Except(new[] { functionMapping.Function })
-                                     .Select(f => f.StoreFunctionNameAttribute)
-                                     .Uniquify(functionMapping.Function.StoreFunctionNameAttribute);
+                                     .Select(f => f.FunctionName)
+                                     .Uniquify(functionMapping.Function.FunctionName);
             }
         }
 

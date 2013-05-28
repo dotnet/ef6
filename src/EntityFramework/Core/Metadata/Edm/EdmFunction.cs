@@ -244,7 +244,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public string StoreFunctionNameAttribute
         {
-            get { return _storeFunctionNameAttribute ?? Name; }
+            get { return _storeFunctionNameAttribute; }
             set
             {
                 Check.NotEmpty(value, "value");
@@ -252,6 +252,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 _storeFunctionNameAttribute = value;
             }
+        }
+
+        internal string FunctionName
+        {
+            get { return StoreFunctionNameAttribute ?? Name; }
         }
 
         [MetadataProperty(typeof(ParameterTypeSemantics), false)]
@@ -367,8 +372,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 builder,
                 FullName,
                 Parameters,
-                (param) => param.TypeUsage,
-                (param) => param.Mode);
+                param => param.TypeUsage,
+                param => param.Mode);
         }
 
         /// <summary>
@@ -386,8 +391,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 identity,
                 functionName,
                 functionParameters,
-                (param) => param,
-                (param) => ParameterMode.In);
+                param => param,
+                param => ParameterMode.In);
 
             return identity.ToString();
         }

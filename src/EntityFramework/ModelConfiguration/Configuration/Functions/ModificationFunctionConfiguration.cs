@@ -163,7 +163,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 if (modificationFunctionMapping.RowsAffectedParameter == null)
                 {
-                    throw Error.NoRowsAffectedParameter(modificationFunctionMapping.Function.StoreFunctionNameAttribute);
+                    throw Error.NoRowsAffectedParameter(modificationFunctionMapping.Function.FunctionName);
                 }
 
                 modificationFunctionMapping.RowsAffectedParameter.Name = _rowsAffectedParameter;
@@ -213,7 +213,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                         {
                             throw Error.ModificationFunctionParameterNotFoundOriginal(
                                 propertyPath,
-                                modificationFunctionMapping.Function.StoreFunctionNameAttribute);
+                                modificationFunctionMapping.Function.FunctionName);
                         }
                     }
 
@@ -242,7 +242,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     throw Error.ModificationFunctionParameterNotFound(
                         propertyPath,
-                        modificationFunctionMapping.Function.StoreFunctionNameAttribute);
+                        modificationFunctionMapping.Function.FunctionName);
                 }
             }
 
@@ -281,7 +281,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     throw Error.ResultBindingNotFound(
                         propertyInfo.Name,
-                        modificationFunctionMapping.Function.StoreFunctionNameAttribute);
+                        modificationFunctionMapping.Function.FunctionName);
                 }
 
                 resultBinding.ColumnName = columnName;
