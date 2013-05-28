@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Has_foreign_key_with_single_property_should_create_constraint_with_dependent_key()
         {
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
 
             new DependentNavigationPropertyConfiguration<D>(navigationPropertyConfiguration)
                 .HasForeignKey(d => d.Fk1);
@@ -24,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Has_foreign_key_with_multiple_properties_should_create_constraint_with_dependent_keys()
         {
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
 
             new DependentNavigationPropertyConfiguration<D>(navigationPropertyConfiguration)
                 .HasForeignKey(
@@ -44,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Has_foreign_key_should_throw_when_invalid_key_expression()
         {
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
 
             Assert.Equal(
                 Strings.InvalidPropertiesExpression("d => d.ToString()"),

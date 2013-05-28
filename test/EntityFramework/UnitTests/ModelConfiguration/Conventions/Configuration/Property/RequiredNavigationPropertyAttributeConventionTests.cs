@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_make_end_kind_required()
         {
-            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
+            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
 
             new RequiredNavigationPropertyAttributeConvention()
                 .Apply(new MockPropertyInfo(), associationConfiguration, new ModelConfiguration(), new RequiredAttribute());
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_ignore_when_end_kind_set()
         {
             var associationConfiguration
-                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"))
                       {
                           RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne
                       };
@@ -41,7 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_ignore_when_end_kind_is_collection()
         {
             var associationConfiguration
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(List<string>), "N"))
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType().AsCollection(), "N"))
                       {
                           RelationshipMultiplicity = RelationshipMultiplicity.Many
                       };

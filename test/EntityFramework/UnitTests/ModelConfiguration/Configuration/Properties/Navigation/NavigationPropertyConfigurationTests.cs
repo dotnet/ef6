@@ -14,11 +14,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Inverse_navigation_property_should_throw_when_self_inverse()
         {
-            var mockPropertyInfo = new MockPropertyInfo();
+            var mockPropertyInfo = new MockPropertyInfo(new MockType(), "N");
             var navigationPropertyConfiguration = new NavigationPropertyConfiguration(mockPropertyInfo);
 
             Assert.Equal(
-                Strings.NavigationInverseItself("P", typeof(object)),
+                Strings.NavigationInverseItself("N", typeof(object)),
                 Assert.Throws<InvalidOperationException>(() => navigationPropertyConfiguration.InverseNavigationProperty = mockPropertyInfo)
                       .Message);
         }
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Configure_should_set_configuration_annotations()
         {
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
             var navigationProperty = new NavigationProperty("N", TypeUsage.Create(new EntityType("E", "N", DataSpace.CSpace)))
                                          {
                                              RelationshipType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
@@ -45,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Configure_should_configure_ends()
         {
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo())
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"))
                                                       {
                                                           RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne,
                                                           InverseEndKind = RelationshipMultiplicity.Many
@@ -69,7 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         public void Configure_should_configure_inverse()
         {
             var inverseMockPropertyInfo = new MockPropertyInfo();
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo())
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"))
                                                       {
                                                           InverseNavigationProperty = inverseMockPropertyInfo
                                                       };
@@ -102,8 +102,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         public void Configure_should_configure_constraint()
         {
             var mockType = new MockType();
-            var mockPropertyInfo = new MockPropertyInfo(typeof(int), "P");
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo())
+            var mockPropertyInfo = new MockPropertyInfo(new MockType(), "P");
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"))
                                                       {
                                                           Constraint =
                                                               new ForeignKeyConstraintConfiguration(new[] { mockPropertyInfo.Object })
@@ -137,7 +137,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         public void Configure_should_configure_delete_action()
         {
             var mockType = new MockType();
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo())
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"))
                                                       {
                                                           DeleteAction = OperationAction.Cascade,
                                                       };
@@ -165,7 +165,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var manyToManyAssociationMappingConfiguration = new ManyToManyAssociationMappingConfiguration();
             manyToManyAssociationMappingConfiguration.ToTable("Foo");
 
-            var mockPropertyInfo = new MockPropertyInfo();
+            var mockPropertyInfo = new MockPropertyInfo(new MockType(), "N");
 
             var navigationPropertyConfiguration
                 = new NavigationPropertyConfiguration(mockPropertyInfo)
@@ -201,7 +201,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             functionConfiguration.HasName("Func");
             functionsConfiguration.Insert(functionConfiguration);
 
-            var mockPropertyInfo = new MockPropertyInfo();
+            var mockPropertyInfo = new MockPropertyInfo(new MockType(), "N");
 
             var navigationPropertyConfiguration
                 = new NavigationPropertyConfiguration(mockPropertyInfo)
@@ -252,19 +252,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             var navigationPropertyConfigurationA
-                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N1"))
                       {
                           InverseEndKind = RelationshipMultiplicity.ZeroOrOne
                       };
             associationType.SetConfiguration(navigationPropertyConfigurationA);
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N2"))
                       {
                           RelationshipMultiplicity = RelationshipMultiplicity.Many
                       };
 
             Assert.Equal(
-                Strings.ConflictingMultiplicities("P", typeof(object)),
+                Strings.ConflictingMultiplicities("N2", typeof(object)),
                 Assert.Throws<InvalidOperationException>(
                     () => navigationPropertyConfigurationB.Configure(
                         new NavigationProperty("N", TypeUsage.Create(associationType.TargetEnd.GetEntityType()))
@@ -280,7 +280,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
-            var mockPropertyInfo = new MockPropertyInfo();
+            var mockPropertyInfo = new MockPropertyInfo(new MockType(), "N1");
             var navigationPropertyConfigurationA
                 = new NavigationPropertyConfiguration(mockPropertyInfo)
                       {
@@ -288,14 +288,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                       };
             associationType.SetConfiguration(navigationPropertyConfigurationA);
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N2"))
                       {
                           InverseEndKind = RelationshipMultiplicity.Many,
                           InverseNavigationProperty = mockPropertyInfo
                       };
 
             Assert.Equal(
-                Strings.ConflictingMultiplicities("P", typeof(object)),
+                Strings.ConflictingMultiplicities("N1", typeof(object)),
                 Assert.Throws<InvalidOperationException>(
                     () => navigationPropertyConfigurationB.Configure(
                         new NavigationProperty("N", TypeUsage.Create(associationType.TargetEnd.GetEntityType()))
@@ -312,19 +312,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             var navigationPropertyConfigurationA
-                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N1"))
                       {
                           DeleteAction = OperationAction.None
                       };
             associationType.SetConfiguration(navigationPropertyConfigurationA);
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N2"))
                       {
                           DeleteAction = OperationAction.Cascade
                       };
 
             Assert.Equal(
-                Strings.ConflictingCascadeDeleteOperation("P", typeof(object)),
+                Strings.ConflictingCascadeDeleteOperation("N2", typeof(object)),
                 Assert.Throws<InvalidOperationException>(
                     () => navigationPropertyConfigurationB.Configure(
                         new NavigationProperty("N", TypeUsage.Create(associationType.TargetEnd.GetEntityType()))
@@ -341,7 +341,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             var navigationPropertyConfigurationA
-                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N1"))
                       {
                           Constraint = new ForeignKeyConstraintConfiguration(
                               new[]
@@ -351,7 +351,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                       };
             associationType.SetConfiguration(navigationPropertyConfigurationA);
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N2"))
                       {
                           Constraint = new ForeignKeyConstraintConfiguration(
                               new[]
@@ -361,7 +361,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                       };
 
             Assert.Equal(
-                Strings.ConflictingConstraint("P", typeof(object)),
+                Strings.ConflictingConstraint("N2", typeof(object)),
                 Assert.Throws<InvalidOperationException>(
                     () => navigationPropertyConfigurationB.Configure(
                         new NavigationProperty("N", TypeUsage.Create(associationType.TargetEnd.GetEntityType()))
@@ -380,7 +380,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var manyToManyAssociationMappingConfiguration1 = new ManyToManyAssociationMappingConfiguration();
             manyToManyAssociationMappingConfiguration1.ToTable("A");
             var navigationPropertyConfigurationA
-                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N1"))
                       {
                           AssociationMappingConfiguration = manyToManyAssociationMappingConfiguration1
                       };
@@ -388,13 +388,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var manyToManyAssociationMappingConfiguration2 = new ManyToManyAssociationMappingConfiguration();
             manyToManyAssociationMappingConfiguration1.ToTable("B");
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N2"))
                       {
                           AssociationMappingConfiguration = manyToManyAssociationMappingConfiguration2
                       };
 
             Assert.Equal(
-                Strings.ConflictingMapping("P", typeof(object)),
+                Strings.ConflictingMapping("N2", typeof(object)),
                 Assert.Throws<InvalidOperationException>(
                     () => navigationPropertyConfigurationB.Configure(
                         new NavigationProperty("N", TypeUsage.Create(associationType.TargetEnd.GetEntityType()))
@@ -426,7 +426,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             functionsConfiguration2.Insert(functionConfiguration2);
 
             var navigationPropertyConfigurationA
-                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N1"))
                       {
                           ModificationFunctionsConfiguration = functionsConfiguration1
                       };
@@ -434,13 +434,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.SetConfiguration(navigationPropertyConfigurationA);
 
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo())
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N2"))
                       {
                           ModificationFunctionsConfiguration = functionsConfiguration2
                       };
 
             Assert.Equal(
-                Strings.ConflictingFunctionsMapping("P", typeof(object)),
+                Strings.ConflictingFunctionsMapping("N2", typeof(object)),
                 Assert.Throws<InvalidOperationException>(
                     () => navigationPropertyConfigurationB.Configure(
                         new NavigationProperty("N", TypeUsage.Create(associationType.TargetEnd.GetEntityType()))
@@ -456,10 +456,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             var navigationPropertyConfigurationA
-                = new NavigationPropertyConfiguration(new MockPropertyInfo());
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
             associationType.SetConfiguration(navigationPropertyConfigurationA);
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo());
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
 
             navigationPropertyConfigurationB.Configure(
                 new NavigationProperty("N", TypeUsage.Create(associationType.TargetEnd.GetEntityType()))

@@ -27,7 +27,7 @@ namespace System.Data.Entity.Migrations
 
             _codeGenerators[ProgrammingLanguage.CSharp] = new CSharpMigrationCodeGenerator();
             _migrationCompilers[ProgrammingLanguage.CSharp] = new MigrationCompiler("cs");
-            ;
+
             _codeGenerators[ProgrammingLanguage.VB] = new VisualBasicMigrationCodeGenerator();
             _migrationCompilers[ProgrammingLanguage.VB] = new MigrationCompiler("vb");
         }

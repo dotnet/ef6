@@ -2254,16 +2254,16 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Executes_in_a_transaction_using_ExecutionStrategy()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy(startTransaction: true);
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: true);
             }
 
             [Fact]
             public void Executes_without_a_transaction_using_ExecutionStrategy_when_calling_with_DoNotBeginTransaction()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy(startTransaction: false);
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: false);
             }
 
-            private static void Executes_in_a_transaction_using_ExecutionStrategy(bool startTransaction)
+            private static void Executes_in_a_transaction_using_ExecutionStrategy_implementation(bool startTransaction)
             {
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(1));

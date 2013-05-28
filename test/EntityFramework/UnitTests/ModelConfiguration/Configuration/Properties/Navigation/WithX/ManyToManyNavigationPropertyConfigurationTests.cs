@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Map_should_set_configuration()
         {
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
             var manyToManyNavigationPropertyConfiguration
                 = new ManyToManyNavigationPropertyConfiguration<string, string>(navigationPropertyConfiguration);
 
@@ -23,7 +23,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void MapToStoredProcedures_when_no_configuration_should_create_empty_configuration()
         {
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
             var manyToManyNavigationPropertyConfiguration
                 = new ManyToManyNavigationPropertyConfiguration<string, string>(navigationPropertyConfiguration);
 
@@ -35,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void MapToStoredProcedures_when_configuration_should_assign_configuration_to_nav_prop_configuration()
         {
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
             var manyToManyNavigationPropertyConfiguration
                 = new ManyToManyNavigationPropertyConfiguration<string, string>(navigationPropertyConfiguration);
 

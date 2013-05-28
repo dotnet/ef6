@@ -369,7 +369,7 @@ namespace System.Data.Entity.ModelConfiguration
         {
             var configuration = new EntityTypeConfiguration(typeof(object));
 
-            var mockNavProp1 = new MockPropertyInfo(typeof(object), "Nav1");
+            var mockNavProp1 = new MockPropertyInfo(new MockType(), "Nav1");
             var navConfig1 = configuration.Navigation(mockNavProp1);
 
             var clone = configuration.Clone();
@@ -377,7 +377,7 @@ namespace System.Data.Entity.ModelConfiguration
             Assert.True(clone.ConfiguredProperties.Contains(mockNavProp1));
             Assert.NotSame(navConfig1, clone.Navigation(mockNavProp1));
 
-            var mockNavProp2 = new MockPropertyInfo(typeof(object), "Nav2");
+            var mockNavProp2 = new MockPropertyInfo(new MockType(), "Nav2");
             configuration.Navigation(mockNavProp2);
 
             Assert.False(clone.ConfiguredProperties.Contains(mockNavProp2));
@@ -661,7 +661,7 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void Cloning_a_navigation_property_configuration_clones_its_property_information()
         {
-            var navProp = new MockPropertyInfo(typeof(int), "P1");
+            var navProp = new MockPropertyInfo(new MockType(), "P1");
             var configuration = new NavigationPropertyConfiguration(navProp);
 
             configuration.RelationshipMultiplicity = RelationshipMultiplicity.Many;
@@ -693,14 +693,14 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void Cloning_a_navigation_property_configuration_clones_its_constraint_information()
         {
-            var navProp = new MockPropertyInfo(typeof(int), "P1");
+            var navProp = new MockPropertyInfo(new MockType(), "P1");
             var configuration = new NavigationPropertyConfiguration(navProp);
 
             configuration.Constraint =
                 new ForeignKeyConstraintConfiguration(
                     new List<PropertyInfo>
                         {
-                            new MockPropertyInfo(typeof(int), "P1")
+                            new MockPropertyInfo(typeof(int), "P2")
                         });
 
             var clone = configuration.Clone();
@@ -712,7 +712,7 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void Cloning_a_navigation_property_configuration_clones_its_association_mapping_configuration()
         {
-            var navProp = new MockPropertyInfo(typeof(int), "P1");
+            var navProp = new MockPropertyInfo(new MockType(), "P1");
             var configuration = new NavigationPropertyConfiguration(navProp);
 
             var mappingConfiguration = new ForeignKeyAssociationMappingConfiguration();
@@ -728,7 +728,7 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void Cloning_a_navigation_property_configuration_clones_its_function_mapping_configuration()
         {
-            var navProp = new MockPropertyInfo(typeof(int), "P1");
+            var navProp = new MockPropertyInfo(new MockType(), "P1");
             var configuration = new NavigationPropertyConfiguration(navProp);
 
             var functionsConfiguration = new ModificationFunctionsConfiguration();

@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         public void Has_independent_key_should_execute_lambda_and_set_configuration()
         {
             var invoked = false;
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo());
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
 
             new ForeignKeyNavigationPropertyConfiguration(navigationPropertyConfiguration)
                 .Map(c => { invoked = true; });
