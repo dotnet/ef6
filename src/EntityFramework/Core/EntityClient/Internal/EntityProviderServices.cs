@@ -7,8 +7,10 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -34,17 +36,33 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             Check.NotNull(providerManifest, "providerManifest");
             Check.NotNull(commandTree, "commandTree");
 
-            var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-            return CreateCommandDefinition(storeMetadata.StoreProviderFactory, commandTree);
+            return CreateDbCommandDefinition(providerManifest, commandTree, new DbInterceptionContext());
         }
 
         internal static EntityCommandDefinition CreateCommandDefinition(
-            DbProviderFactory storeProviderFactory, DbCommandTree commandTree, IDbDependencyResolver resolver = null)
+            DbProviderFactory storeProviderFactory,
+            DbCommandTree commandTree,
+            DbInterceptionContext interceptionContext,
+            IDbDependencyResolver resolver = null)
         {
             DebugCheck.NotNull(storeProviderFactory);
+            DebugCheck.NotNull(interceptionContext);
             DebugCheck.NotNull(commandTree);
 
-            return new EntityCommandDefinition(storeProviderFactory, commandTree, resolver);
+            return new EntityCommandDefinition(storeProviderFactory, commandTree, interceptionContext, resolver);
+        }
+
+        internal override DbCommandDefinition CreateDbCommandDefinition(
+            DbProviderManifest providerManifest,
+            DbCommandTree commandTree,
+            DbInterceptionContext interceptionContext)
+        {
+            DebugCheck.NotNull(providerManifest);
+            DebugCheck.NotNull(commandTree);
+            DebugCheck.NotNull(interceptionContext);
+
+            var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+            return CreateCommandDefinition(storeMetadata.StoreProviderFactory, commandTree, interceptionContext);
         }
 
         /// <summary>

@@ -919,7 +919,7 @@ namespace System.Data.Entity.Core.EntityClient
             }
 
             return EntityProviderServices.CreateCommandDefinition(
-                _connection.StoreProviderFactory, _preparedCommandTree, _dependencyResolver);
+                _connection.StoreProviderFactory, _preparedCommandTree, _interceptionContext, _dependencyResolver);
         }
 
         private void CheckConnectionPresent()

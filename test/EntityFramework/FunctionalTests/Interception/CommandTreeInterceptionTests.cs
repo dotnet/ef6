@@ -17,17 +17,18 @@ namespace System.Data.Entity.Interception
         {
             // Make sure that HistoryContext has been used to ensure test runs consistently regardless of
             // whether or not other tests have run before it.
-            using (var context = new BlogContextNoInit())
+            using (var initContext = new BlogContextNoInit())
             {
-                context.Database.Initialize(force: false);
+                initContext.Database.Initialize(force: false);
             }
 
             var logger = new CommandTreeLogger();
             Interception.AddInterceptor(logger);
 
+            BlogContextLogAll context;
             try
             {
-                using (var context = new BlogContextLogAll())
+                using (context = new BlogContextLogAll())
                 {
                     BlogContext.DoStuff(context);
                 }
@@ -52,6 +53,11 @@ namespace System.Data.Entity.Interception
                                     c => ((DbPropertyExpression)c.Property).Property.Name == "Title"
                                          && (string)((DbConstantExpression)c.Value).Value == "I'm a logger and I'm okay...")));
 #endif
+            
+            foreach (var interceptionContext in logger.LogWithContext.Select(t => t.Item2))
+            {
+                Assert.Contains(context, interceptionContext.DbContexts);
+            }
         }
 
         public class BlogContextLogAll : BlogContext
@@ -87,9 +93,9 @@ namespace System.Data.Entity.Interception
                 }
 
 #if NET40
-                Assert.Equal(4, logger.Log.Count);
+                Assert.Equal(7, logger.Log.Count);
 #else
-                Assert.Equal(5, logger.Log.Count);
+                Assert.Equal(8, logger.Log.Count);
 #endif
 
                 Assert.True(logger.Log.OfType<DbQueryCommandTree>().Any(t => t.DataSpace == DataSpace.CSpace));
@@ -152,7 +158,8 @@ namespace System.Data.Entity.Interception
         public class CommandTreeLogger : IDbCommandTreeInterceptor
         {
             private readonly DbContext _context;
-            private readonly IList<DbCommandTree> _log = new List<DbCommandTree>();
+            private readonly IList<Tuple<DbCommandTree, DbCommandTreeInterceptionContext>> _log 
+                = new List<Tuple<DbCommandTree, DbCommandTreeInterceptionContext>>();
 
             public CommandTreeLogger(DbContext context = null)
             {
@@ -161,15 +168,22 @@ namespace System.Data.Entity.Interception
 
             public IList<DbCommandTree> Log
             {
+                get { return _log.Select(l => l.Item1).ToList(); }
+            }
+
+            public IList<Tuple<DbCommandTree, DbCommandTreeInterceptionContext>> LogWithContext
+            {
                 get { return _log; }
             }
 
             public void TreeCreated(DbCommandTree commandTree, DbCommandTreeInterceptionContext interceptionContext)
             {
+                Assert.NotEmpty(interceptionContext.DbContexts);
+                
                 if (_context == null
                     || interceptionContext.DbContexts.Contains(_context))
                 {
-                    _log.Add(commandTree);
+                    _log.Add(Tuple.Create(commandTree, interceptionContext));
                 }
             }
         }

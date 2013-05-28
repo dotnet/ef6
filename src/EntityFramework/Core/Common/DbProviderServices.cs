@@ -99,7 +99,15 @@ namespace System.Data.Entity.Core.Common
 
             commandTree = _treeDispatcher.Created(commandTree, new DbCommandTreeInterceptionContext(interceptionContext));
 
-            return CreateDbCommandDefinition(storeMetadata.StoreProviderManifest, commandTree);
+            return CreateDbCommandDefinition(storeMetadata.StoreProviderManifest, commandTree, interceptionContext);
+        }
+
+        internal virtual DbCommandDefinition CreateDbCommandDefinition(
+            DbProviderManifest providerManifest,
+            DbCommandTree commandTree, 
+            DbInterceptionContext interceptionContext)
+        {
+            return CreateDbCommandDefinition(providerManifest, commandTree);
         }
 
         /// <summary>Creates command definition from specified manifest and command tree.</summary>

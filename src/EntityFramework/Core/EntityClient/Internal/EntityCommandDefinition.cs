@@ -78,11 +78,16 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// <exception cref="NotSupportedException">The ADO.NET Data Provider you are using does not support CommandTrees.</exception>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal EntityCommandDefinition(
-            DbProviderFactory storeProviderFactory, DbCommandTree commandTree, IDbDependencyResolver resolver = null,
-            BridgeDataReaderFactory bridgeDataReaderFactory = null, ColumnMapFactory columnMapFactory = null)
+            DbProviderFactory storeProviderFactory,
+            DbCommandTree commandTree, 
+            DbInterceptionContext interceptionContext,
+            IDbDependencyResolver resolver = null,
+            BridgeDataReaderFactory bridgeDataReaderFactory = null,
+            ColumnMapFactory columnMapFactory = null)
         {
             DebugCheck.NotNull(storeProviderFactory);
             DebugCheck.NotNull(commandTree);
+            DebugCheck.NotNull(interceptionContext);
 
             _bridgeDataReaderFactory = bridgeDataReaderFactory ?? new BridgeDataReaderFactory();
             _columnMapFactory = columnMapFactory ?? new ColumnMapFactory();
@@ -113,7 +118,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
 
                     foreach (var providerCommandInfo in mappedCommandList)
                     {
-                        var providerCommandDefinition = _storeProviderServices.CreateCommandDefinition(providerCommandInfo.CommandTree);
+                        var providerCommandDefinition = _storeProviderServices.CreateCommandDefinition(
+                            providerCommandInfo.CommandTree, interceptionContext);
 
                         if (null == providerCommandDefinition)
                         {
