@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Collections;
     using System.Data.Common;
     using System.Data.Entity.Resources;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -356,9 +357,12 @@ namespace System.Data.Entity.Infrastructure
                 var lines = GetLines(writer);
                 Assert.Equal("here or there", lines[0]);
                 Assert.Equal("-- Param1: 'value' (Type = String, Size = 4000)", lines[1]);
-                Assert.Equal(
-                    "-- Param2: '7.7' (Type = Decimal, Direction = InputOutput, IsNullable = false, Size = -1, Precision = 18, Scale = 2)",
-                    lines[2]);
+
+                var expected = string.Format(
+                    CultureInfo.CurrentCulture,
+                    "-- Param2: '{0}' (Type = Decimal, Direction = InputOutput, IsNullable = false, Size = -1, Precision = 18, Scale = 2)",
+                    7.7m);
+                Assert.Equal(expected, lines[2]);
             }
 
             [Fact]

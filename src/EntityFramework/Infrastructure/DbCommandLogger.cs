@@ -259,8 +259,8 @@ namespace System.Data.Entity.Infrastructure
             }
 
             Sink(interceptionContext.IsAsync
-                      ? Strings.CommandLogAsync(DateTime.Now, Environment.NewLine)
-                      : Strings.CommandLogNonAsync(DateTime.Now, Environment.NewLine));
+                      ? Strings.CommandLogAsync(DateTimeOffset.Now, Environment.NewLine)
+                      : Strings.CommandLogNonAsync(DateTimeOffset.Now, Environment.NewLine));
         }
 
         /// <summary>
