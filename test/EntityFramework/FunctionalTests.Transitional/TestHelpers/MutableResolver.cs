@@ -38,6 +38,11 @@ namespace System.Data.Entity
             return null;
         }
 
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            return this.GetServiceAsServices(type, key);
+        }
+
         public static MutableResolver Instance
         {
             get { return _instance; }

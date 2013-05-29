@@ -917,6 +917,38 @@ namespace System.Data.Entity.Config
             }
         }
 
+        public class AddInterceptor
+        {
+            [Fact]
+            public void Throws_if_given_a_null_interceptor()
+            {
+                Assert.Equal(
+                    "interceptor",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddInterceptor(null)).ParamName);
+            }
+
+            [Fact]
+            public void Throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("AddInterceptor"),
+                    Assert.Throws<InvalidOperationException>(() => configuration.AddInterceptor(new Mock<IDbInterceptor>().Object)).Message);
+            }
+
+            [Fact]
+            public void Delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var interceptor = new Mock<IDbInterceptor>().Object;
+
+                new DbConfiguration(mockInternalConfiguration.Object).AddInterceptor(interceptor);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(interceptor));
+            }
+        }
+
         private static DbConfiguration CreatedLockedConfiguration()
         {
             var configuration = new DbConfiguration();

@@ -2,7 +2,9 @@
 
 namespace System.Data.Entity.Config
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Utilities;
+    using System.Linq;
 
     internal class WrappingDependencyResolver<TService> : IDbDependencyResolver
     {
@@ -20,12 +22,14 @@ namespace System.Data.Entity.Config
 
         public object GetService(Type type, object key)
         {
-            if (type == typeof(TService))
-            {
-                return _serviceWrapper(_snapshot.GetService<TService>(key), key);
-            }
+            return type == typeof(TService) ? (object)_serviceWrapper(_snapshot.GetService<TService>(key), key) : null;
+        }
 
-            return null;
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            return type == typeof(TService)
+                       ? (IEnumerable<object>)_snapshot.GetServices<TService>(key).Select(s => _serviceWrapper(s, key))
+                       : Enumerable.Empty<object>();
         }
     }
 }

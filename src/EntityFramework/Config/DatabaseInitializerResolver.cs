@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Config
 {
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Data.Entity.Utilities;
 
     internal class DatabaseInitializerResolver : IDbDependencyResolver
@@ -31,6 +32,11 @@ namespace System.Data.Entity.Config
             DebugCheck.NotNull(initializer);
 
             _initializers.AddOrUpdate(contextType, initializer, (c, i) => initializer);
+        }
+
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            return this.GetServiceAsServices(type, key);
         }
     }
 }

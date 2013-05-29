@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Config
 {
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -16,6 +17,10 @@ namespace System.Data.Entity.Config
         private readonly ConcurrentDictionary<Tuple<Type, object>, object> _resolvedDependencies
             = new ConcurrentDictionary<Tuple<Type, object>, object>();
 
+        private readonly ConcurrentDictionary<Tuple<Type, object>, IEnumerable<object>> _resolvedAllDependencies
+            = new ConcurrentDictionary<Tuple<Type, object>, IEnumerable<object>>();
+
+
         public CachingDependencyResolver(IDbDependencyResolver underlyingResolver)
         {
             DebugCheck.NotNull(underlyingResolver);
@@ -28,6 +33,13 @@ namespace System.Data.Entity.Config
             return _resolvedDependencies.GetOrAdd(
                 Tuple.Create(type, key),
                 k => _underlyingResolver.GetService(type, key));
+        }
+
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            return _resolvedAllDependencies.GetOrAdd(
+                Tuple.Create(type, key),
+                k => _underlyingResolver.GetServices(type, key));
         }
     }
 }

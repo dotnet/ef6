@@ -2,7 +2,9 @@
 
 namespace System.Data.Entity.Config
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Utilities;
+    using System.Linq;
 
     /// <summary>
     ///     Implements a Composite pattern for <see cref="IDbDependencyResolver" /> such that if the first
@@ -38,6 +40,11 @@ namespace System.Data.Entity.Config
         public virtual object GetService(Type type, object key)
         {
             return _firstResolver.GetService(type, key) ?? _secondResolver.GetService(type, key);
+        }
+
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            return _firstResolver.GetServices(type, key).Concat(_secondResolver.GetServices(type, key));
         }
     }
 }

@@ -65,5 +65,19 @@ namespace System.Data.Entity.Config
                 .Select(r => r.GetService(type, key))
                 .FirstOrDefault(s => s != null);
         }
+
+        /// <summary>
+        ///     Calls GetServices with the given type and key on each resolver in the chain and concatenates all
+        ///     the results into a single enumeration.
+        /// </summary>
+        /// <param name="type">The type of service to resolve.</param>
+        /// <param name="key">
+        ///     An optional key value which may be used to determine the service instance to create.
+        /// </param>
+        /// <returns>All the resolved services, or an empty enumeration if no resolver in the chain could resolve the service.</returns>
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            return _resolversSnapshot.SelectMany(r => r.GetServices(type, key));
+        }
     }
 }

@@ -692,6 +692,26 @@ namespace System.Data.Entity.Config
             _internalConfiguration.RegisterSingleton(commandLoggerFactory);
         }
 
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to 
+        ///     register an <see cref="IDbInterceptor"/> at application startup. Note that interceptors can also
+        ///     be added and removed at any time using <see cref="Interception"/>.
+        /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="IDbInterceptor" />. This means that, if desired, the same functionality can be achieved using
+        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="interceptor">The interceptor to register.</param>
+        protected internal void AddInterceptor(IDbInterceptor interceptor)
+        {
+            Check.NotNull(interceptor, "interceptor");
+
+            _internalConfiguration.CheckNotLocked("AddInterceptor");
+            _internalConfiguration.RegisterSingleton(interceptor);
+        }
+
         internal virtual InternalConfiguration InternalConfiguration
         {
             get { return _internalConfiguration; }

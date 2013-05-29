@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
+    using System.Data.Entity.Config;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -15,8 +16,9 @@ namespace System.Data.Entity.Infrastructure
         private readonly EntityConnectionDispatcher _entityConnectionDispatcher = new EntityConnectionDispatcher();
         private readonly CancelableDbCommandDispatcher _cancelableCommandDispatcher = new CancelableDbCommandDispatcher();
 
-        internal Dispatchers()
+        internal Dispatchers(IDbDependencyResolver resolver = null)
         {
+            (resolver ?? DbConfiguration.DependencyResolver).GetServices<IDbInterceptor>().Each(AddInterceptor);
         }
 
         internal virtual DbCommandTreeDispatcher CommandTree

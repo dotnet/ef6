@@ -3,13 +3,13 @@
 namespace System.Data.Entity.Core.Common
 {
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Common
     public abstract class DbProviderServices : IDbDependencyResolver
     {
         private readonly Lazy<IDbDependencyResolver> _resolver;
-        private readonly DbCommandTreeDispatcher _treeDispatcher;
+        private readonly Lazy<DbCommandTreeDispatcher> _treeDispatcher;
 
         private static readonly ConcurrentDictionary<DbProviderInfo, DbSpatialServices> _spatialServices =
             new ConcurrentDictionary<DbProviderInfo, DbSpatialServices>();
@@ -56,11 +56,11 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <param name="resolver"> The resolver to use. </param>
         protected DbProviderServices(Func<IDbDependencyResolver> resolver)
-            : this(resolver, Interception.Dispatch.CommandTree)
+            : this(resolver, new Lazy<DbCommandTreeDispatcher>(() => Interception.Dispatch.CommandTree))
         {
         }
 
-        internal DbProviderServices(Func<IDbDependencyResolver> resolver, DbCommandTreeDispatcher treeDispatcher)
+        internal DbProviderServices(Func<IDbDependencyResolver> resolver, Lazy<DbCommandTreeDispatcher> treeDispatcher)
         {
             Check.NotNull(resolver, "resolver");
             DebugCheck.NotNull(treeDispatcher);
@@ -88,7 +88,7 @@ namespace System.Data.Entity.Core.Common
         {
             DebugCheck.NotNull(commandTree);
             DebugCheck.NotNull(interceptionContext);
-            
+
             ValidateDataSpace(commandTree);
 
             var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
@@ -97,14 +97,14 @@ namespace System.Data.Entity.Core.Common
                 storeMetadata.StoreProviderManifest != null,
                 "StoreItemCollection has null StoreProviderManifest?");
 
-            commandTree = _treeDispatcher.Created(commandTree, new DbCommandTreeInterceptionContext(interceptionContext));
+            commandTree = _treeDispatcher.Value.Created(commandTree, new DbCommandTreeInterceptionContext(interceptionContext));
 
             return CreateDbCommandDefinition(storeMetadata.StoreProviderManifest, commandTree, interceptionContext);
         }
 
         internal virtual DbCommandDefinition CreateDbCommandDefinition(
             DbProviderManifest providerManifest,
-            DbCommandTree commandTree, 
+            DbCommandTree commandTree,
             DbInterceptionContext interceptionContext)
         {
             return CreateDbCommandDefinition(providerManifest, commandTree);
@@ -533,7 +533,7 @@ namespace System.Data.Entity.Core.Common
             return XmlReader.Create(stream, null, resourceName);
         }
 
-        /// <summary>Generates a data definition langauge (DDL script that creates schema objects (tables, primary keys, foreign keys) based on the contents of the StoreItemCollection parameter and targeted for the version of the database corresponding to the provider manifest token.</summary>
+        /// <summary>Generates a data definition language (DDL script that creates schema objects (tables, primary keys, foreign keys) based on the contents of the StoreItemCollection parameter and targeted for the version of the database corresponding to the provider manifest token.</summary>
         /// <remarks>
         ///     Individual statements should be separated using database-specific DDL command separator.
         ///     It is expected that the generated script would be executed in the context of existing database with
@@ -551,7 +551,7 @@ namespace System.Data.Entity.Core.Common
             return DbCreateDatabaseScript(providerManifestToken, storeItemCollection);
         }
 
-        /// <summary>Generates a data definition langauge (DDL script that creates schema objects (tables, primary keys, foreign keys) based on the contents of the StoreItemCollection parameter and targeted for the version of the database corresponding to the provider manifest token.</summary>
+        /// <summary>Generates a data definition language (DDL script that creates schema objects (tables, primary keys, foreign keys) based on the contents of the StoreItemCollection parameter and targeted for the version of the database corresponding to the provider manifest token.</summary>
         /// <remarks>
         ///     Individual statements should be separated using database-specific DDL command separator.
         ///     It is expected that the generated script would be executed in the context of existing database with
@@ -716,7 +716,7 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         ///     Adds an <see cref="IDbDependencyResolver" /> that will be used to resolve secondary provider
         ///     services when a derived type is registered as an EF provider either using an entry in the application's
-        ///     config file or through code-based registeration in <see cref="DbConfiguration" />.
+        ///     config file or through code-based registration in <see cref="DbConfiguration" />.
         /// </summary>
         /// <param name="resolver">The resolver to add.</param>
         protected void AddDependencyResolver(IDbDependencyResolver resolver)
@@ -729,7 +729,7 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         ///     Called to resolve secondary provider services when a derived type is registered as an
         ///     EF provider either using an entry in the application's config file or through code-based
-        ///     registeration in <see cref="DbConfiguration" />. The implementation of this method in this
+        ///     registration in <see cref="DbConfiguration" />. The implementation of this method in this
         ///     class uses the resolvers added with the AddDependencyResolver method to resolve
         ///     dependencies.
         /// </summary>
@@ -746,6 +746,21 @@ namespace System.Data.Entity.Core.Common
         public virtual object GetService(Type type, object key)
         {
             return _resolvers.GetService(type, key);
+        }
+
+        /// <summary>
+        ///     Called to resolve secondary provider services when a derived type is registered as an
+        ///     EF provider either using an entry in the application's config file or through code-based
+        ///     registration in <see cref="DbConfiguration" />. The implementation of this method in this
+        ///     class uses the resolvers added with the AddDependencyResolver method to resolve
+        ///     dependencies.
+        /// </summary>
+        /// <param name="type">The type of the service to be resolved.</param>
+        /// <param name="key">An optional key providing additional information for resolving the service.</param>
+        /// <returns>All registered services that satisfy the given type and key, or an empty enumeration if there are none.
+        public virtual IEnumerable<object> GetServices(Type type, object key)
+        {
+            return _resolvers.GetServices(type, key);
         }
     }
 }

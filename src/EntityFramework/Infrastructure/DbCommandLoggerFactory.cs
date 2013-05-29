@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Config;
-    using System.IO;
 
     /// <summary>
     ///     Creates a new instance of <see cref="DbCommandLogger" /> or a type derived from

@@ -116,18 +116,18 @@ namespace System.Data.Entity.Internal
 
         private bool _oSpaceLoadingForced;
         private DbProviderFactory _providerFactory;
-        private readonly Dispatchers _dispatchers;
+        private readonly Lazy<Dispatchers> _dispatchers;
 
         public event EventHandler<EventArgs> OnDisposing;
 
         private DbCommandLogger _commandLogger;
 
-        protected InternalContext(DbContext owner, Dispatchers dispatchers = null)
+        protected InternalContext(DbContext owner, Lazy<Dispatchers> dispatchers = null)
         {
             DebugCheck.NotNull(owner);
 
             _owner = owner;
-            _dispatchers = dispatchers ?? Interception.Dispatch;
+            _dispatchers = dispatchers ?? new Lazy<Dispatchers>(() => Interception.Dispatch);
 
             AutoDetectChangesEnabled = true;
             ValidateOnSaveEnabled = true;
@@ -1453,14 +1453,14 @@ namespace System.Data.Entity.Internal
                 {
                     if (_commandLogger != null)
                     {
-                        _dispatchers.RemoveInterceptor(_commandLogger);
+                        _dispatchers.Value.RemoveInterceptor(_commandLogger);
                         _commandLogger = null;
                     }
 
                     if (value != null)
                     {
                         _commandLogger = DbConfiguration.GetService<DbCommandLoggerFactory>()(Owner, value);
-                        _dispatchers.AddInterceptor(_commandLogger);
+                        _dispatchers.Value.AddInterceptor(_commandLogger);
                     }
                 }
             }

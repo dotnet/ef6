@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Config
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Pluralization;
@@ -11,6 +12,7 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     /// <summary>
     ///     This resolver is always the last resolver in the internal resolver chain and is
@@ -76,6 +78,11 @@ namespace System.Data.Entity.Config
             DebugCheck.NotNull(resolver);
 
             _secondaryResolvers.Add(resolver);
+        }
+
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            return _secondaryResolvers.GetServices(type, key).Concat(_resolvers.GetServices(type, key));
         }
     }
 }

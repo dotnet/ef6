@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Config
 {
+    using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
@@ -59,11 +60,16 @@ namespace System.Data.Entity.Config
         }
 
         /// <summary>
-        ///     Because Equals is overriden; not currently used.
+        ///     Because Equals is overridden; not currently used.
         /// </summary>
         public override int GetHashCode()
         {
             return _invariantName.Name.GetHashCode();
+        }
+
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            return this.GetServiceAsServices(type, key);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     public static class Interception
     {
-        private static readonly Dispatchers _dispatchers = new Dispatchers();
+        private static readonly Lazy<Dispatchers> _dispatchers = new Lazy<Dispatchers>(() => new Dispatchers());
 
         /// <summary>
         ///     Registers a new <see cref="IDbInterceptor" /> to receive notifications. Note that the interceptor
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Infrastructure
         {
             Check.NotNull(interceptor, "interceptor");
 
-            _dispatchers.AddInterceptor(interceptor);
+            _dispatchers.Value.AddInterceptor(interceptor);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Infrastructure
         {
             Check.NotNull(interceptor, "interceptor");
 
-            _dispatchers.RemoveInterceptor(interceptor);
+            _dispatchers.Value.RemoveInterceptor(interceptor);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         public static Dispatchers Dispatch
         {
-            get { return _dispatchers; }
+            get { return _dispatchers.Value; }
         }
     }
 }

@@ -2,12 +2,19 @@
 
 namespace System.Data.Entity.Config
 {
+    using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Resources;
+    using System.Linq;
 
     internal class DefaultProviderFactoryResolver : IDbDependencyResolver
     {
         public virtual object GetService(Type type, object key)
+        {
+            return GetService(type, key, e => { throw new ArgumentException(Strings.EntityClient_InvalidStoreProvider, e); });
+        }
+
+        private static object GetService(Type type, object key, Func<ArgumentException, object> handleFailedLookup)
         {
             if (type == typeof(DbProviderFactory))
             {
@@ -24,11 +31,17 @@ namespace System.Data.Entity.Config
                 }
                 catch (ArgumentException e)
                 {
-                    throw new ArgumentException(Strings.EntityClient_InvalidStoreProvider, e);
+                    return handleFailedLookup(e);
                 }
             }
 
             return null;
+        }
+
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            var service = GetService(type, key, e => null);
+            return service == null ? Enumerable.Empty<object>() : new[] { service };
         }
     }
 }

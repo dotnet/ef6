@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Config
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -53,6 +54,12 @@ namespace System.Data.Entity.Config
                     && (_key == null || Equals(key, _key)))
                        ? _activator()
                        : null;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            return this.GetServiceAsServices(type, key);
         }
     }
 }

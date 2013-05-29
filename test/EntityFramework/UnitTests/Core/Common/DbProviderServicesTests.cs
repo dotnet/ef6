@@ -13,6 +13,7 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
+    using System.Linq;
     using Moq;
     using Moq.Protected;
     using Xunit;
@@ -31,7 +32,7 @@ namespace System.Data.Entity.Core.Common
                 var providerServices
                     = new Mock<DbProviderServices>(
                         (Func<IDbDependencyResolver>)(() => new Mock<IDbDependencyResolver>().Object),
-                        dispatcher)
+                        new Lazy<DbCommandTreeDispatcher>(() => dispatcher))
                           {
                               CallBase = true
                           }.Object;
@@ -488,6 +489,24 @@ namespace System.Data.Entity.Core.Common
                 services.AddDependencyResolver(new SingletonDependencyResolver<string>("Cheese", "Please"));
                 
                 Assert.Equal("Cheese", services.GetService<string>("Please"));
+            }
+        }
+
+        public class GetServices
+        {
+            [Fact]
+            public void GetServices_returns_empty_list()
+            {
+                Assert.Empty(new FakeSqlProviderServices().GetServices(null, null));
+            }
+
+            [Fact]
+            public void GetServices_returns_services_registered_with_AddDependencyResolver()
+            {
+                var services = new FakeSqlProviderServices();
+                services.AddDependencyResolver(new SingletonDependencyResolver<string>("Cheese", "Please"));
+
+                Assert.Equal("Cheese", services.GetServices<string>("Please").Single());
             }
         }
 

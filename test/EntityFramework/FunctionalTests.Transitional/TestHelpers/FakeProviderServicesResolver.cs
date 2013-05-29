@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.TestHelpers
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
 
@@ -19,6 +20,11 @@ namespace System.Data.Entity.TestHelpers
             }
 
             return null;
+        }
+
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            return this.GetServiceAsServices(type, key);
         }
     }
 }

@@ -56,6 +56,12 @@ namespace System.Data.Entity.Config
                 t => GetServiceFactory(type, key as string))();
         }
 
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            // Currently only one of any given service/key combination can be registered in app config
+            return this.GetServiceAsServices(type, key);
+        }
+
         public virtual Func<object> GetServiceFactory(Type type, string name)
         {
             if (!_providersRegistered)

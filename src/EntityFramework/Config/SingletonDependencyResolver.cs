@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Config
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -63,6 +64,12 @@ namespace System.Data.Entity.Config
             return type == typeof(T) && _keyPredicate(key)
                        ? _singletonInstance
                        : null;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<object> GetServices(Type type, object key)
+        {
+            return this.GetServiceAsServices(type, key);
         }
     }
 }

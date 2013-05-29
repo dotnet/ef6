@@ -6,36 +6,71 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
+    using System.Linq;
     using Xunit;
 
     public class DefaultInvariantNameResolverTests
     {
-        [Fact]
-        public void GetService_returns_null_for_non_IProviderInvariantName_types()
+        public class GetService : TestBase
         {
-            Assert.Null(new DefaultInvariantNameResolver().GetService<Random>());
+            [Fact]
+            public void GetService_returns_null_for_non_IProviderInvariantName_types()
+            {
+                Assert.Null(new DefaultInvariantNameResolver().GetService<Random>());
+            }
+
+            [Fact]
+            public void GetService_throws_for_null_or_incorrect_key_type()
+            {
+                Assert.Equal(
+                    Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
+                    Assert.Throws<ArgumentException>(
+                        () => new DefaultInvariantNameResolver().GetService<IProviderInvariantName>(null)).Message);
+
+                Assert.Equal(
+                    Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
+                    Assert.Throws<ArgumentException>(
+                        () => new DefaultInvariantNameResolver().GetService<IProviderInvariantName>("Oh No!")).Message);
+            }
+
+            [Fact]
+            public void GetService_returns_the_invariant_name_obtained_from_the_given_DbProviderFactory()
+            {
+                Assert.Equal(
+                    "System.Data.SqlClient",
+                    new DefaultInvariantNameResolver().GetService<IProviderInvariantName>(SqlClientFactory.Instance).Name);
+            }
         }
 
-        [Fact]
-        public void GetService_throws_for_null_or_incorrect_key_type()
+        public class GetServices : TestBase
         {
-            Assert.Equal(
-                Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
-                Assert.Throws<ArgumentException>(
-                    () => new DefaultInvariantNameResolver().GetService<IProviderInvariantName>(null)).Message);
+            [Fact]
+            public void GetServices_returns_empty_list_for_non_IProviderInvariantName_types()
+            {
+                Assert.Empty(new DefaultInvariantNameResolver().GetServices<Random>());
+            }
 
-            Assert.Equal(
-                Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
-                Assert.Throws<ArgumentException>(
-                    () => new DefaultInvariantNameResolver().GetService<IProviderInvariantName>("Oh No!")).Message);
-        }
+            [Fact]
+            public void GetServices_throws_for_null_or_incorrect_key_type()
+            {
+                Assert.Equal(
+                    Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
+                    Assert.Throws<ArgumentException>(
+                        () => new DefaultInvariantNameResolver().GetServices<IProviderInvariantName>(null)).Message);
 
-        [Fact]
-        public void GetService_returns_the_invariant_name_obtained_from_the_given_DbProviderFactory()
-        {
-            Assert.Equal(
-                "System.Data.SqlClient",
-                new DefaultInvariantNameResolver().GetService<IProviderInvariantName>(SqlClientFactory.Instance).Name);
+                Assert.Equal(
+                    Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
+                    Assert.Throws<ArgumentException>(
+                        () => new DefaultInvariantNameResolver().GetServices<IProviderInvariantName>("Oh No!")).Message);
+            }
+
+            [Fact]
+            public void GetServices_returns_the_invariant_name_obtained_from_the_given_DbProviderFactory()
+            {
+                Assert.Equal(
+                    "System.Data.SqlClient",
+                    new DefaultInvariantNameResolver().GetServices<IProviderInvariantName>(SqlClientFactory.Instance).Single().Name);
+            }
         }
     }
 }
