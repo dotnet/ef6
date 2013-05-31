@@ -7,6 +7,8 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Migrations.Utilities;
+    using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using Moq;
     using Xunit;
@@ -99,6 +101,21 @@ namespace System.Data.Entity.Internal
                 mockContext.Verify(m => m.MarkDatabaseInitialized(), Times.Once());
             }
 
+            [Fact] // CodePlex 1192
+            public void CreateDatabase_throws_if_Migrations_is_configured()
+            {
+                var mockFinder = new Mock<MigrationsConfigurationFinder>();
+                mockFinder.Setup(m => m.FindMigrationsConfiguration(It.IsAny<Type>(), null, null, null, null, null))
+                    .Returns(new DbMigrationsConfiguration());
+
+                var creator = new DatabaseCreator(DbConfiguration.DependencyResolver, new MigrationsChecker(t => mockFinder.Object));
+
+                Assert.Equal(
+                    Strings.DatabaseInitializationStrategy_MigrationsEnabled("FakeContextProxy"),
+                    Assert.Throws<InvalidOperationException>(
+                    () => creator.CreateDatabase(CreateMockContextForMigrator().Object, (_, __) => null, null)).Message);
+            }
+
             [Fact]
             public void CreateDatabase_using_Migrations_configures_a_migrator_appropriately()
             {
@@ -185,21 +202,6 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        public class IsMigrationsConfigured : TestBase
-        {
-            [Fact]
-            public void IsMigrationsConfigured_returns_true_if_DbMigrationsConfiguration_is_discovered()
-            {
-                Assert.True(DatabaseCreator.IsMigrationsConfigured(typeof(ContextWithMigrations)));
-            }
-
-            [Fact]
-            public void IsMigrationsConfigured_returns_false_if_no_DbMigrationsConfiguration_can_be_discovered()
-            {
-                Assert.False(DatabaseCreator.IsMigrationsConfigured(typeof(FakeContext)));
-            }
-        }
-
         public class GetMigrationsConfiguration : TestBase
         {
             [Fact]
@@ -220,18 +222,6 @@ namespace System.Data.Entity.Internal
                 Assert.Equal(typeof(FakeContext).Namespace, configuration.MigrationsNamespace);
                 Assert.Equal("Key", configuration.ContextKey);
                 Assert.Equal(123, configuration.CommandTimeout);
-            }
-        }
-
-        public class DiscoverableConfiguration : DbMigrationsConfiguration<ContextWithMigrations>
-        {
-        }
-
-        public class ContextWithMigrations : DbContext
-        {
-            static ContextWithMigrations()
-            {
-                Database.SetInitializer<ContextWithMigrations>(null);
             }
         }
 

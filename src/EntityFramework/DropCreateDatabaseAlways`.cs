@@ -3,6 +3,7 @@
 namespace System.Data.Entity
 {
     using System.Data.Entity.Config;
+    using System.Data.Entity.Internal;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -14,6 +15,18 @@ namespace System.Data.Entity
     public class DropCreateDatabaseAlways<TContext> : IDatabaseInitializer<TContext>
         where TContext : DbContext
     {
+        private readonly MigrationsChecker _migrationsChecker;
+
+        public DropCreateDatabaseAlways()
+            : this(null)
+        {
+        }
+
+        internal DropCreateDatabaseAlways(MigrationsChecker migrationsChecker)
+        {
+            _migrationsChecker = migrationsChecker ?? new MigrationsChecker();
+        }
+
         #region Strategy implementation
 
         static DropCreateDatabaseAlways()
@@ -34,6 +47,13 @@ namespace System.Data.Entity
         public void InitializeDatabase(TContext context)
         {
             Check.NotNull(context, "context");
+
+            if (_migrationsChecker.IsMigrationsConfigured(
+                context.GetType(), 
+                () => new DatabaseTableChecker().AnyModelTableExists(context.InternalContext)))
+            {
+                return;
+            }
 
             context.Database.Delete();
             context.Database.Create();

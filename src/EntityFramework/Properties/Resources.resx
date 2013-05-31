@@ -640,6 +640,9 @@
     <value>The model backing the '{0}' context has changed since the database was created. Consider using Code First Migrations to update the database (http://go.microsoft.com/fwlink/?LinkId=238269).</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
+  <data name="DatabaseInitializationStrategy_MigrationsEnabled" xml:space="preserve">
+    <value>Migrations is enabled for context '{0}' but the database does not exist or contains no mapped tables. Use Migrations to create the database and its tables, for example by running the 'Update-Database' command from the Package Manager Console.</value>
+  </data>
   <data name="Database_DatabaseAlreadyExists" xml:space="preserve">
     <value>Database '{0}' cannot be created because it already exists.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>

@@ -1118,6 +1118,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        ///     A string like "Migrations is enabled for context '{0}' but the database does not exist or contains no mapped tables. Use Migrations to create the database and its tables, for example by running the 'Update-Database' command from the Package Manager Console."
+        /// </summary>
+        internal static string DatabaseInitializationStrategy_MigrationsEnabled(object p0)
+        {
+            return EntityRes.GetString(EntityRes.DatabaseInitializationStrategy_MigrationsEnabled, p0);
+        }
+
+        /// <summary>
         ///     A string like "Database '{0}' cannot be created because it already exists."
         /// </summary>
         internal static string Database_DatabaseAlreadyExists(object p0)
@@ -15423,6 +15431,7 @@ namespace System.Data.Entity.Resources
         internal const string DbPropertyValues_CannotSetPropertyOnNullCurrentValue = "DbPropertyValues_CannotSetPropertyOnNullCurrentValue";
         internal const string DbPropertyValues_CannotSetPropertyOnNullOriginalValue = "DbPropertyValues_CannotSetPropertyOnNullOriginalValue";
         internal const string DatabaseInitializationStrategy_ModelMismatch = "DatabaseInitializationStrategy_ModelMismatch";
+        internal const string DatabaseInitializationStrategy_MigrationsEnabled = "DatabaseInitializationStrategy_MigrationsEnabled";
         internal const string Database_DatabaseAlreadyExists = "Database_DatabaseAlreadyExists";
         internal const string Database_NonCodeFirstCompatibilityCheck = "Database_NonCodeFirstCompatibilityCheck";
         internal const string Database_NoDatabaseMetadata = "Database_NoDatabaseMetadata";

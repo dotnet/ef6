@@ -7,7 +7,6 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Infrastructure;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -17,75 +16,80 @@ namespace System.Data.Entity.Internal
     {
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public bool AnyModelTableExists(DbContext context)
+        public bool AnyModelTableExists(InternalContext internalContext)
         {
-            try
+            using (var clonedObjectContext = internalContext.CreateObjectContextForDdlOps())
             {
-                var internalContext = context.InternalContext;
+                var exists = internalContext.DatabaseOperations.Exists(clonedObjectContext.ObjectContext);
 
-                if (internalContext.CodeFirstModel == null)
+                if (!exists)
                 {
-                    return true;
+                    return false;
                 }
 
-                var providerName = internalContext.ProviderName;
-                IPseudoProvider provider;
-
-                switch (providerName)
+                try
                 {
-                    case "System.Data.SqlClient":
-                        provider = new SqlPseudoProvider();
-                        break;
-
-                    case "System.Data.SqlServerCe.4.0":
-                        provider = new SqlCePseudoProvider();
-                        break;
-
-                    default:
+                    if (internalContext.CodeFirstModel == null)
+                    {
                         return true;
-                }
+                    }
 
-                // Check for a history entry before we query the DB metadata
-                if (internalContext.HasHistoryTableEntry())
-                {
-                    return true;
-                }
+                    var providerName = internalContext.ProviderName;
+                    IPseudoProvider provider;
 
-                var modelTables = GetModelTables(internalContext.ObjectContext.MetadataWorkspace).ToList();
+                    switch (providerName)
+                    {
+                        case "System.Data.SqlClient":
+                            provider = new SqlPseudoProvider();
+                            break;
 
-                if (!modelTables.Any())
-                {
-                    return true;
-                }
+                        case "System.Data.SqlServerCe.4.0":
+                            provider = new SqlCePseudoProvider();
+                            break;
 
-                IEnumerable<Tuple<string, string>> databaseTables;
-                using (new TransactionScope(TransactionScopeOption.Suppress))
-                {
-                    using (var clonedObjectContext = internalContext.CreateObjectContextForDdlOps())
+                        default:
+                            return true;
+                    }
+
+                    // Check for a history entry before we query the DB metadata
+                    if (internalContext.HasHistoryTableEntry())
+                    {
+                        return true;
+                    }
+
+                    var modelTables = GetModelTables(internalContext.ObjectContext.MetadataWorkspace).ToList();
+
+                    if (!modelTables.Any())
+                    {
+                        return true;
+                    }
+
+                    IEnumerable<Tuple<string, string>> databaseTables;
+                    using (new TransactionScope(TransactionScopeOption.Suppress))
                     {
                         databaseTables = GetDatabaseTables(
                             clonedObjectContext.ObjectContext, clonedObjectContext.Connection, provider).ToList();
                     }
-                }
 
-                if (databaseTables.Any(
-                    t => t.Item2 == EdmMetadataContext.TableName))
+                    if (databaseTables.Any(
+                        t => t.Item2 == EdmMetadataContext.TableName))
+                    {
+                        return true;
+                    }
+
+                    var comparer = provider.SupportsSchemas
+                                       ? EqualityComparer<Tuple<string, string>>.Default
+                                       : (IEqualityComparer<Tuple<string, string>>)new IgnoreSchemaComparer();
+
+                    return databaseTables.Any(databaseTable => modelTables.Contains(databaseTable, comparer));
+                }
+                catch (Exception ex)
                 {
+                    Debug.Fail(ex.Message, ex.ToString());
+
+                    // Revert to previous behavior on error
                     return true;
                 }
-
-                var comparer = provider.SupportsSchemas
-                                   ? EqualityComparer<Tuple<string, string>>.Default
-                                   : (IEqualityComparer<Tuple<string, string>>)new IgnoreSchemaComparer();
-
-                return databaseTables.Any(databaseTable => modelTables.Contains(databaseTable, comparer));
-            }
-            catch (Exception ex)
-            {
-                Debug.Fail(ex.Message, ex.ToString());
-
-                // Revert to previous behavior on error
-                return true;
             }
         }
 

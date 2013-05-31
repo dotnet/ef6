@@ -26,7 +26,11 @@ namespace System.Data.Entity
         private readonly Mock<TInitializer> _mockStrategy;
         private bool _databaseExists;
 
-        public DatabaseInitializerTracker(bool databaseExists, bool modelCompatible = true, bool hasMetadata = true)
+        internal DatabaseInitializerTracker(
+            bool databaseExists, 
+            bool modelCompatible = true, 
+            bool hasMetadata = true,
+            MigrationsChecker checker = null)
         {
             _databaseExists = databaseExists;
             _mockInternalContext = new Mock<InternalContextForMock<TContext>>
@@ -73,7 +77,7 @@ namespace System.Data.Entity
             _mockInternalContext.Setup(c => c.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
             _mockInternalContext.SetupGet(c => c.ProviderName).Returns("Dummy.Data.Provider");
 
-            _mockStrategy = new Mock<TInitializer>
+            _mockStrategy = new Mock<TInitializer>(checker)
                                 {
                                     CallBase = true
                                 };

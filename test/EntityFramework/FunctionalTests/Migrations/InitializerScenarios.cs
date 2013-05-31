@@ -11,14 +11,15 @@ namespace System.Data.Entity.Migrations
     public class InitializerScenarios : FunctionalTestBase
     {
         [Fact] // CodePlex 529
-        public void Creating_database_using_initializer_does_nothing_if_Migrations_configuration_if_available()
+        public void Creating_database_using_initializer_throws_if_Migrations_configuration_is_available()
         {
             // Make sure initializer does nothing...
             using (var context = new UpDownUpContext())
             {
                 context.Database.Delete();
 
-                context.Database.Initialize(force: true); // True not necessary here, but want to given initializer every chance to run!
+                Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: true))
+                    .ValidateMessage("DatabaseInitializationStrategy_MigrationsEnabled", "UpDownUpContext");
 
                 Assert.False(context.Database.Exists());
             }
@@ -59,14 +60,15 @@ namespace System.Data.Entity.Migrations
             public string Extra { get; set; }
         }
 
-        [Fact] // CodePlex 529
-        public void Creating_database_using_initializer_does_nothing_if_Migrations_configuration_is_found_but_not_ready_to_update()
+        [Fact] // CodePlex 529, 1192
+        public void Creating_database_using_throws_if_Migrations_configuration_is_found_but_not_ready_to_update()
         {
             using (var context = new NotReadyContext())
             {
                 context.Database.Delete();
 
-                context.Database.Initialize(force: true);
+                Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: true))
+                    .ValidateMessage("DatabaseInitializationStrategy_MigrationsEnabled", "NotReadyContext");
 
                 Assert.False(context.Database.Exists());
             }

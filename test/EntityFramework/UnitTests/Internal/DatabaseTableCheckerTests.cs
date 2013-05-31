@@ -6,6 +6,7 @@ namespace System.Data.Entity.Internal
     using System.Collections.ObjectModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal.MockingProxies;
     using System.Data.SqlClient;
@@ -16,22 +17,6 @@ namespace System.Data.Entity.Internal
 
     public class DatabaseTableCheckerTests : TestBase
     {
-        public class FakeContext : DbContext
-        {
-            private readonly InternalContext _internalContext;
-
-            internal FakeContext(DbConnection connection, InternalContext internalContext)
-                : base(connection, contextOwnsConnection: false)
-            {
-                _internalContext = internalContext;
-            }
-
-            internal override InternalContext InternalContext
-            {
-                get { return _internalContext; }
-            }
-        }
-
         [Fact]
         public void AnyModelTableExists_uses_ExecutionStrategy()
         {
@@ -40,6 +25,11 @@ namespace System.Data.Entity.Internal
                 CallBase = true
             };
             var internalContextMock = new Mock<InternalContext>();
+
+            var mockOperations = new Mock<DatabaseOperations>();
+            mockOperations.Setup(m => m.Exists(It.IsAny<ObjectContext>())).Returns(true);
+            internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
+
             var dbCommandMock = new Mock<DbCommand>();
 
             SetupMocksForTableChecking(dbCommandMock, connectionMock, internalContextMock);
@@ -61,7 +51,7 @@ namespace System.Data.Entity.Internal
             MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
             try
             {
-                new DatabaseTableChecker().AnyModelTableExists(new FakeContext(connectionMock.Object, internalContextMock.Object));
+                new DatabaseTableChecker().AnyModelTableExists(internalContextMock.Object);
             }
             finally
             {
@@ -82,6 +72,10 @@ namespace System.Data.Entity.Internal
             var internalContextMock = new Mock<InternalContext>();
             var dbCommandMock = new Mock<DbCommand>();
 
+            var mockOperations = new Mock<DatabaseOperations>();
+            mockOperations.Setup(m => m.Exists(It.IsAny<ObjectContext>())).Returns(true);
+            internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
+
             SetupMocksForTableChecking(dbCommandMock, connectionMock, internalContextMock);
 
             var interceptorMock = new Mock<DbCommandInterceptor>
@@ -91,7 +85,7 @@ namespace System.Data.Entity.Internal
             Interception.AddInterceptor(interceptorMock.Object);
             try
             {
-                new DatabaseTableChecker().AnyModelTableExists(new FakeContext(connectionMock.Object, internalContextMock.Object));
+                new DatabaseTableChecker().AnyModelTableExists(internalContextMock.Object);
             }
             finally
             {
@@ -102,6 +96,19 @@ namespace System.Data.Entity.Internal
                 m => m.ReaderExecuting(
                     dbCommandMock.Object,
                     It.Is<DbCommandInterceptionContext<DbDataReader>>(c => c.ObjectContexts.Contains(internalContextMock.Object.ObjectContext))));
+        }
+
+        [Fact]
+        public void AnyModelTableExists_returns_false_if_database_does_not_exist()
+        {
+            var mockOperations = new Mock<DatabaseOperations>();
+            mockOperations.Setup(m => m.Exists(It.IsAny<ObjectContext>())).Returns(false);
+
+            var internalContextMock = new Mock<InternalContext>();
+            internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
+            internalContextMock.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
+
+            Assert.False(new DatabaseTableChecker().AnyModelTableExists(internalContextMock.Object));
         }
 
         private static void SetupMocksForTableChecking(

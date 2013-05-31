@@ -237,6 +237,7 @@
     <Compile Include="Infrastructure\DbCommandLoggerFactory.cs" />
     <Compile Include="Infrastructure\DbCommandTreeInterceptionContext.cs" />
     <Compile Include="Infrastructure\IDbInterceptionContextWithResult.cs" />
+    <Compile Include="Internal\MigrationsChecker.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
     <Compile Include="Infrastructure\CancelableDbCommandDispatcher.cs" />
     <Compile Include="Infrastructure\DbCommandTreeDispatcher.cs" />

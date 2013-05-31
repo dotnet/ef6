@@ -4,6 +4,7 @@ namespace System.Data.Entity
 {
     using System.Data.Entity.Config;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -18,6 +19,18 @@ namespace System.Data.Entity
     public class DropCreateDatabaseIfModelChanges<TContext> : IDatabaseInitializer<TContext>
         where TContext : DbContext
     {
+        private readonly MigrationsChecker _migrationsChecker;
+
+        public DropCreateDatabaseIfModelChanges()
+            : this(null)
+        {
+        }
+
+        internal DropCreateDatabaseIfModelChanges(MigrationsChecker migrationsChecker)
+        {
+            _migrationsChecker = migrationsChecker ?? new MigrationsChecker();
+        }
+
         #region Strategy implementation
 
         static DropCreateDatabaseIfModelChanges()
@@ -39,8 +52,24 @@ namespace System.Data.Entity
         {
             Check.NotNull(context, "context");
 
-            if (context.Database.Exists()
-                && new DatabaseTableChecker().AnyModelTableExists(context))
+            var exists = new DatabaseTableChecker().AnyModelTableExists(context.InternalContext);
+
+            if (_migrationsChecker.IsMigrationsConfigured(
+                context.GetType(), 
+                () =>
+                    {
+                        if (exists && !context.Database.CompatibleWithModel(throwIfNoMetadata: true))
+                        {
+                            throw Error.DatabaseInitializationStrategy_ModelMismatch(context.GetType().Name);
+                        } 
+                        
+                        return exists;
+                    }))
+            {
+                return;
+            }
+
+            if (exists)
             {
                 if (context.Database.CompatibleWithModel(throwIfNoMetadata: true))
                 {

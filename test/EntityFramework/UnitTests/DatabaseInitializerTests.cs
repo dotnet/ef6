@@ -7,6 +7,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
+    using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Xml.Linq;
@@ -110,6 +111,30 @@ namespace System.Data.Entity
             Assert.Equal("DeleteIfExists Exists CreateDatabase Seed", tracker.Result);
         }
 
+        [Fact] // CodePlex 1192
+        public void DropCreateDatabaseAlways_does_nothing_if_Migrations_is_configured_and_database_exists()
+        {
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseAlways<FakeNoRegContext>>(
+                databaseExists: true, modelCompatible: true, checker: CreatePositiveMigrationsChecker());
+
+            tracker.ExecuteStrategy();
+
+            Assert.Equal("Exists", tracker.Result);
+        }
+
+        [Fact] // CodePlex 1192
+        public void DropCreateDatabaseAlways_throws_if_Migrations_is_configured_and_database_does_not_exist()
+        {
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseAlways<FakeNoRegContext>>(
+                databaseExists: false, checker: CreatePositiveMigrationsChecker());
+
+            Assert.Equal(
+                Strings.DatabaseInitializationStrategy_MigrationsEnabled("FakeNoRegContextProxy"),
+                Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
+
+            Assert.Equal("Exists", tracker.Result);
+        }
+
         #endregion
 
         #region Positive CreateDatabaseIfNotExists strategy tests
@@ -152,6 +177,54 @@ namespace System.Data.Entity
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
                 databaseExists: true, modelCompatible: true, hasMetadata: false);
+
+            tracker.ExecuteStrategy();
+
+            Assert.Equal("Exists", tracker.Result);
+        }
+
+        [Fact] // CodePlex 1192
+        public void CreateDatabaseIfNotExists_throws_if_database_does_not_exist_and_Migrations_is_enabled()
+        {
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
+                databaseExists: false, checker: CreatePositiveMigrationsChecker());
+
+            Assert.Equal(
+                Strings.DatabaseInitializationStrategy_MigrationsEnabled("FakeNoRegContextProxy"),
+                Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
+
+            Assert.Equal("Exists", tracker.Result);
+        }
+
+        [Fact] // CodePlex 1192
+        public void CreateDatabaseIfNotExists_throws_if_database_exists_and_model_does_not_match_with_Migrations_enabled()
+        {
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
+                databaseExists: true, modelCompatible: false, checker: CreatePositiveMigrationsChecker());
+
+            Assert.Equal(
+                Strings.DatabaseInitializationStrategy_ModelMismatch(tracker.Context.GetType().Name),
+                Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
+
+            Assert.Equal("Exists", tracker.Result);
+        }
+
+        [Fact] // CodePlex 1192
+        public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_and_model_matches_with_Migrations_enabled()
+        {
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
+                databaseExists: true, modelCompatible: true, checker: CreatePositiveMigrationsChecker());
+
+            tracker.ExecuteStrategy();
+
+            Assert.Equal("Exists", tracker.Result);
+        }
+
+        [Fact] // CodePlex 1192
+        public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_but_has_no_metadata_with_Migrations_enabled()
+        {
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
+                databaseExists: true, modelCompatible: true, hasMetadata: false, checker: CreatePositiveMigrationsChecker());
 
             tracker.ExecuteStrategy();
 
@@ -205,6 +278,57 @@ namespace System.Data.Entity
                     databaseExists: true, modelCompatible: true, hasMetadata: false);
 
             Assert.Equal(Strings.Database_NoDatabaseMetadata, Assert.Throws<NotSupportedException>(() => tracker.ExecuteStrategy()).Message);
+        }
+
+        [Fact] // CodePlex 1192
+        public void DropCreateDatabaseIfModelChanges_throws_if_database_does_not_exist_and_Migrations_is_enabled()
+        {
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
+                databaseExists: false, checker: CreatePositiveMigrationsChecker());
+
+            Assert.Equal(
+                Strings.DatabaseInitializationStrategy_MigrationsEnabled("FakeNoRegContextProxy"),
+                Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
+
+            Assert.Equal("Exists", tracker.Result);
+        }
+
+        [Fact] // CodePlex 1192
+        public void DropCreateDatabaseIfModelChanges_does_nothing_if_database_exists_and_model_is_up_to_date_with_Migrations_enabled()
+        {
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
+                databaseExists: true, modelCompatible: true, checker: CreatePositiveMigrationsChecker());
+
+            tracker.ExecuteStrategy();
+
+            Assert.Equal("Exists", tracker.Result);
+        }
+
+        [Fact] // CodePlex 1192
+        public void DropCreateDatabaseIfModelChanges_throws_if_database_exists_and_model_does_not_match_with_Migrations_enabled()
+        {
+            var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
+                databaseExists: true, modelCompatible: false, checker: CreatePositiveMigrationsChecker());
+
+            Assert.Equal(
+                Strings.DatabaseInitializationStrategy_ModelMismatch(tracker.Context.GetType().Name),
+                Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
+
+            Assert.Equal("Exists", tracker.Result);
+        }
+
+        [Fact] // CodePlex 1192
+        public void DropCreateDatabaseIfModelChanges_throws_if_database_exists_but_has_no_metadata_with_Migrations_enabled()
+        {
+            var tracker =
+                new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
+                    databaseExists: true, modelCompatible: true, hasMetadata: false, checker: CreatePositiveMigrationsChecker());
+
+            Assert.Equal(
+                Strings.Database_NoDatabaseMetadata, 
+                Assert.Throws<NotSupportedException>(() => tracker.ExecuteStrategy()).Message);
+
+            Assert.Equal("Exists", tracker.Result);
         }
 
         #endregion
@@ -842,6 +966,16 @@ namespace System.Data.Entity
 
             new HistoryContext().Database.Initialize(force: true);
             mockInitializer.Verify(i => i.InitializeDatabase(It.IsAny<HistoryContext>()), Times.Never());
+        }
+
+        private static MigrationsChecker CreatePositiveMigrationsChecker()
+        {
+            var mockFinder = new Mock<MigrationsConfigurationFinder>();
+            mockFinder.Setup(m => m.FindMigrationsConfiguration(It.IsAny<Type>(), null, null, null, null, null))
+                .Returns(new DbMigrationsConfiguration());
+
+            var checker = new MigrationsChecker(t => mockFinder.Object);
+            return checker;
         }
     }
 }

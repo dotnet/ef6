@@ -8,10 +8,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
-    using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Handles creating databases either using the core provider or the Migrations pipeline.
@@ -19,26 +16,25 @@ namespace System.Data.Entity.Internal
     internal class DatabaseCreator
     {
         private readonly IDbDependencyResolver _resolver;
+        private readonly MigrationsChecker _migrationsChecker;
 
         public DatabaseCreator()
             : this(DbConfiguration.DependencyResolver)
         {
         }
 
-        public DatabaseCreator(IDbDependencyResolver resolver)
+        public DatabaseCreator(IDbDependencyResolver resolver, MigrationsChecker migrationsChecker = null)
         {
             DebugCheck.NotNull(resolver);
 
             _resolver = resolver;
+            _migrationsChecker = migrationsChecker ?? new MigrationsChecker();
         }
 
         /// <summary>
         ///     Creates a database using the core provider (i.e. ObjectContext.CreateDatabase) or
         ///     by using Code First Migrations <see cref="DbMigrator" /> to create an empty database
         ///     and the perform an automatic migration to the current model.
-        ///     Migrations is used if Code First is being used and the EF provider is for SQL Server
-        ///     or SQL Compact. The core is used for non-Code First models and for other providers even
-        ///     when using Code First.
         /// </summary>
         public virtual void CreateDatabase(
             InternalContext internalContext,
@@ -52,7 +48,7 @@ namespace System.Data.Entity.Internal
             if (internalContext.CodeFirstModel != null
                 && _resolver.GetService<MigrationSqlGenerator>(internalContext.ProviderName) != null)
             {
-                if (!IsMigrationsConfigured(internalContext.Owner.GetType()))
+                if (!_migrationsChecker.IsMigrationsConfigured(internalContext.Owner.GetType(), () => false))
                 {
                     var migrator = createMigrator(
                         GetMigrationsConfiguration(internalContext),
@@ -70,23 +66,6 @@ namespace System.Data.Entity.Internal
             // If the database is created explicitly, then this is treated as overriding the
             // database initialization strategy, so make it as already run.
             internalContext.MarkDatabaseInitialized();
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public static bool IsMigrationsConfigured(Type contextType)
-        {
-            DebugCheck.NotNull(contextType);
-
-            try
-            {
-                return new MigrationsConfigurationFinder(new TypeFinder(contextType.Assembly))
-                           .FindMigrationsConfiguration(contextType, null) != null;
-            }
-            catch (Exception ex)
-            {
-                Debug.Fail("Exception ignored while attempting to create migration configuration: " + ex);
-                return false;
-            }
         }
 
         public static DbMigrationsConfiguration GetMigrationsConfiguration(InternalContext internalContext)

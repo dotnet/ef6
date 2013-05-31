@@ -17,6 +17,13 @@ namespace System.Data.Entity.Migrations.Utilities
     {
         private readonly TypeFinder _typeFinder;
 
+        /// <summary>
+        ///     For testing.
+        /// </summary>
+        public MigrationsConfigurationFinder()
+        {
+        }
+
         public MigrationsConfigurationFinder(TypeFinder typeFinder)
         {
             DebugCheck.NotNull(typeFinder);
@@ -24,7 +31,7 @@ namespace System.Data.Entity.Migrations.Utilities
             _typeFinder = typeFinder;
         }
 
-        public DbMigrationsConfiguration FindMigrationsConfiguration(
+        public virtual DbMigrationsConfiguration FindMigrationsConfiguration(
             Type contextType,
             string configurationTypeName,
             Func<string, Exception> noType = null,
@@ -58,7 +65,7 @@ namespace System.Data.Entity.Migrations.Utilities
             {
                 Debug.Assert(ex.InnerException != null);
 #if !NET40
-                ExceptionDispatchInfo.Capture(ex.InnerException).Throw(); 
+                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
 #endif
                 throw ex.InnerException;
             }

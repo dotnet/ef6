@@ -16,6 +16,18 @@ namespace System.Data.Entity
     public class CreateDatabaseIfNotExists<TContext> : IDatabaseInitializer<TContext>
         where TContext : DbContext
     {
+        private readonly MigrationsChecker _migrationsChecker;
+
+        public CreateDatabaseIfNotExists()
+            : this(null)
+        {
+        }
+
+        internal CreateDatabaseIfNotExists(MigrationsChecker migrationsChecker)
+        {
+            _migrationsChecker = migrationsChecker ?? new MigrationsChecker();
+        }
+
         #region Strategy implementation
 
         static CreateDatabaseIfNotExists()
@@ -31,8 +43,24 @@ namespace System.Data.Entity
         {
             Check.NotNull(context, "context");
 
-            if (context.Database.Exists()
-                && new DatabaseTableChecker().AnyModelTableExists(context))
+            var exists = new DatabaseTableChecker().AnyModelTableExists(context.InternalContext);
+
+            if (_migrationsChecker.IsMigrationsConfigured(
+                context.GetType(), 
+                () =>
+                    {
+                        if (exists && !context.Database.CompatibleWithModel(throwIfNoMetadata: false))
+                        {
+                            throw Error.DatabaseInitializationStrategy_ModelMismatch(context.GetType().Name);
+                        }
+
+                        return exists;
+                    }))
+            {
+                return;
+            }
+
+            if (exists)
             {
                 // If there is no metadata either in the model or in the database, then
                 // we assume that the database matches the model because the common cases for
