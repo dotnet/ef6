@@ -2,47 +2,60 @@
 
 namespace System.Data.Entity.CodeFirst
 {
-    using System.Collections.Generic;    using System.ComponentModel.DataAnnotations;    using System.ComponentModel.DataAnnotations.Schema;    using System.Data.Entity.Infrastructure;    using System.Data.Entity.Core.Metadata.Edm;    using System.Data.Entity.Migrations.Edm;    using System.IO;    using System.Linq;    using System.Xml;    using System.Xml.Linq;    using Xunit;
+    using System.Linq;    using Xunit;
 
     public class TptMappingTests : FunctionalTestBase
     {
-        [Table("A")]
         public abstract class A
         {
             public Guid ID { get; set; }
         }
 
-        [Table("AA")]
         public class AA : A
         {
             public BA BAChild { get; set; }
         }
 
-        [Table("AB")]
         public class AB : A
         {
             public BB BBChild { get; set; }
         }
 
-        [Table("B")]
         public abstract class B
         {
             public Guid ID { get; set; }
         }
 
-        [Table("BA")]
         public class BA : B
         {
             public AA Parent { get; set; }
         }
 
-        [Table("BB")]
         public class BB : B
         {
             public AB Parent { get; set; }
         }
 
-        public class ABContext : DbContext        {            static ABContext()            {                Database.SetInitializer<ABContext>(null);            }
-            protected override void OnModelCreating(DbModelBuilder modelBuilder)            {                modelBuilder.Entity<AA>().HasRequired(o => o.BAChild).WithRequiredPrincipal(o => o.Parent);                modelBuilder.Entity<AB>().HasRequired(o => o.BBChild).WithRequiredPrincipal(o => o.Parent);            }            public DbSet<A> As { get; set; }            public DbSet<B> Bs { get; set; }        }        [Fact]                public static void CodePlex362_ssdl_associations_are_created_correctly()        {            XDocument model;            using (var context = new ABContext())            using (var stream = new MemoryStream())            using (var writer = XmlWriter.Create(stream))            {                EdmxWriter.WriteEdmx(context, writer);                stream.Position = 0;                model = XDocument.Load(stream);            }            var ns = XNamespace.Get("http://schemas.microsoft.com/ado/2009/11/edm/ssdl");            var expected = new List<string>()                 { "A-AA", "A-AB", "B-BA", "B-BB", "AA-BA", "AB-BB" };            var actual =                from a in model.Descendants(ns + "Association")                from p in a.Descendants(ns + "Principal")                from d in a.Descendants(ns + "Dependent")                                select p.Attribute("Role").Value + "-" + d.Attribute("Role").Value;            Assert.Equal(                expected.OrderByDescending(s => s).ToArray(),                actual.OrderByDescending(s => s).ToArray());        }
-    }
+        [Fact]
+        public void CodePlex362_SSpace_associations_are_created_correctly()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<A>().ToTable("A");
+            modelBuilder.Entity<AA>().ToTable("AA").HasRequired(o => o.BAChild).WithRequiredPrincipal(o => o.Parent);            modelBuilder.Entity<AB>().ToTable("AB").HasRequired(o => o.BBChild).WithRequiredPrincipal(o => o.Parent);
+            modelBuilder.Entity<B>().ToTable("B");
+            modelBuilder.Entity<BA>().ToTable("BA");
+            modelBuilder.Entity<BB>().ToTable("BB");
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            Assert.Equal(6, databaseMapping.Database.AssociationTypes.Count());
+            databaseMapping.Assert<AA>("AA").HasForeignKeyColumn("ID", "A");
+            databaseMapping.Assert<AB>("AB").HasForeignKeyColumn("ID", "A");
+            databaseMapping.Assert<BA>("BA").HasForeignKeyColumn("ID", "B");
+            databaseMapping.Assert<BB>("BB").HasForeignKeyColumn("ID", "B");
+            databaseMapping.Assert<BA>("BA").HasForeignKeyColumn("ID", "AA");
+            databaseMapping.Assert<BB>("BB").HasForeignKeyColumn("ID", "AB");
+        }    }
 }
