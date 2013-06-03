@@ -96,7 +96,6 @@ namespace System.Data.Entity.Utilities
                 Assert.False("Rainbow Dash".IsValidUndottedName());
                 Assert.False("Apple-Jack".IsValidUndottedName());
                 Assert.False("Shining\U0001F40EArmor".IsValidUndottedName()); // Other (Horse)
-                Assert.False("Nightmare\u2061Moon".IsValidUndottedName()); // Other, format (Function application)
             }
 
             [Fact]

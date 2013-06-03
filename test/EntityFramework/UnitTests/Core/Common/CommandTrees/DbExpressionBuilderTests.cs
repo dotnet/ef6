@@ -1109,7 +1109,45 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             Assert.True(message.Contains(Strings.Cqt_CommandTree_InvalidParameterName("prm!@#")));
         }
 
+        [Fact]
+        public void Unicode_characters_in_parameter_name_are_validated()
+        {
+            // Allowed categories
+            const string Lu = "\u00d1"; // Latin capital letter N with tilde 
+            const string Ll = "\u056d"; // Armenian small letter xeh
+            const string Lt = "\u1f88"; // Greek capital letter alpha with psili and prosgegrammeni
+            const string Lm = "\u02b6"; // Modifier letter small capital inverter R
+            const string Lo = "\u05d0"; // Hebrew letter alef
+            const string Nl = "\u2160"; // Roman numeral one
+            const string Nd = "\u0660"; // Arabic-indic digit zero
+            const string Mn = "\u0300"; // Hebrew accent etnahta
+            const string Mc = "\u0982"; // Bengali sign anusvara
+            const string Pc = "\u203f"; // Undertie
+            const string Cf = "\u200f"; // Right to left mark
 
+            // Start character
+            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Lu));
+            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Ll));
+            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Lt));
+            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Lm));
+            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Lo));
+            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Nl));
+            
+            Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, Nd));
+            Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, Mn));
+            Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, Mc));
+            Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, Pc));
+            Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, Cf));
+            Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, "_"));
+
+            // Following characters
+            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Nd));
+            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Mn));
+            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Mc));
+            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Pc));
+            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Cf));
+            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "P_"));
+        }
 
         #endregion
 

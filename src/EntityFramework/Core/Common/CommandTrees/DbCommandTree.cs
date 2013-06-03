@@ -178,11 +178,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         internal static bool IsValidParameterName(string name)
         {
             return (!string.IsNullOrWhiteSpace(name)
-                    && _paramNameRegex.IsMatch(name));
+                    && name.IsValidUndottedName());
         }
-
-        private static readonly Regex _paramNameRegex = new Regex("^([A-Za-z])([A-Za-z0-9_])*$");
-
         #endregion
     }
 }

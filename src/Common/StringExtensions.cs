@@ -16,8 +16,8 @@ namespace System.Data.Entity.Utilities
 
     internal static class StringExtensions
     {
-        private const string StartCharacterExp = @"[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}]";
-        private const string OtherCharacterExp = @"[\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}]";
+        private const string StartCharacterExp = @"[\p{L}\p{Nl}]";
+        private const string OtherCharacterExp = @"[\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]";
 
         private const string NameExp = StartCharacterExp + OtherCharacterExp + "{0,}";
 
