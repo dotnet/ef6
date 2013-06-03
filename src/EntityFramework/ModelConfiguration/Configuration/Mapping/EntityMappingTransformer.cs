@@ -202,14 +202,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                             var fk in
                                 tableInfo.Key.ForeignKeyBuilders.Where(
                                     fk => fk.DependentColumns.SequenceEqual(tableInfo.Value)).ToArray(
-                                        
                                     ))
                         {
                             if (removeFks)
                             {
                                 tableInfo.Key.RemoveForeignKey(fk);
                             }
-                            else
+                            else if (fk.GetAssociationType() == null || fk.GetAssociationType() == associationType)
                             {
                                 fk.PrincipalTable = toTable;
                             }
