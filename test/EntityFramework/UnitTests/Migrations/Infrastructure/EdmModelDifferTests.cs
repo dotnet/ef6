@@ -54,14 +54,18 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var commandTreeGenerator
                 = new ModificationCommandTreeGenerator(
-                    context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo));
+                    context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo));
 
             Assert.Throws<InvalidOperationException>(
                 () => new EdmModelDiffer()
                           .Diff(
                               model1.GetModel(),
                               context.GetModel(),
-                              commandTreeGenerator,
+                              new Lazy<ModificationCommandTreeGenerator>(() => commandTreeGenerator),
                               new SqlServerMigrationSqlGenerator())
                           .OfType<CreateProcedureOperation>()
                           .ToList())
@@ -556,7 +560,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .Diff(
                         model1.GetModel(),
                         model2.GetModel(),
-                        commandTreeGenerator,
+                        new Lazy<ModificationCommandTreeGenerator>(() => commandTreeGenerator),
                         new SqlServerMigrationSqlGenerator())
                     .OfType<CreateProcedureOperation>()
                     .ToList();
@@ -579,7 +583,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .Diff(
                         new TestContext().GetModel(),
                         targetModel,
-                        commandTreeGenerator,
+                        new Lazy<ModificationCommandTreeGenerator>(() => commandTreeGenerator),
                         new SqlServerMigrationSqlGenerator())
                     .OfType<AlterProcedureOperation>()
                     .ToList();
@@ -603,7 +607,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .Diff(
                         new TestContext().GetModel(),
                         targetModel,
-                        commandTreeGenerator,
+                        new Lazy<ModificationCommandTreeGenerator>(() => commandTreeGenerator),
                         new SqlServerMigrationSqlGenerator())
                     .OfType<AlterProcedureOperation>()
                     .ToList();
@@ -657,7 +661,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .Diff(
                         new TestContext().GetModel(),
                         targetModel,
-                        commandTreeGenerator,
+                        new Lazy<ModificationCommandTreeGenerator>(() => commandTreeGenerator),
                         new SqlServerMigrationSqlGenerator())
                     .OfType<MoveProcedureOperation>()
                     .ToList();
@@ -680,7 +684,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .Diff(
                         new TestContext().GetModel(),
                         targetModel,
-                        commandTreeGenerator,
+                        new Lazy<ModificationCommandTreeGenerator>(() => commandTreeGenerator),
                         new SqlServerMigrationSqlGenerator())
                     .OfType<RenameProcedureOperation>()
                     .ToList();
@@ -702,7 +706,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .Diff(
                         new TestContext().GetModel(),
                         targetModel,
-                        commandTreeGenerator,
+                        new Lazy<ModificationCommandTreeGenerator>(() => commandTreeGenerator),
                         new SqlServerMigrationSqlGenerator())
                     .OfType<RenameProcedureOperation>()
                     .ToList();

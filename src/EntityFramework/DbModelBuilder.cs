@@ -140,6 +140,26 @@ namespace System.Data.Entity
             }
         }
 
+        internal DbModel BuildDynamicUpdateModel(DbProviderInfo providerInfo)
+        {
+            DebugCheck.NotNull(providerInfo);
+
+            var model = Build(providerInfo);
+
+            var entityContainerMapping
+                = model.DatabaseMapping.EntityContainerMappings.Single();
+
+            entityContainerMapping
+                .EntitySetMappings
+                .Each(esm => esm.ClearModificationFunctionMappings());
+
+            entityContainerMapping
+                .AssociationSetMappings
+                .Each(asm => asm.ModificationFunctionMapping = null);
+
+            return model;
+        }
+
         /// <summary>
         ///     Excludes a type from the model. This is used to remove types from the model that were added
         ///     by convention during initial model discovery.

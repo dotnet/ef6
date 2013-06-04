@@ -13,10 +13,15 @@ namespace System.Data.Entity.Utilities
         {
             var context = new ShopContext_v1();
 
-            var model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            var model
+                = context
+                    .InternalContext
+                    .CodeFirstModel
+                    .CachedModelBuilder
+                    .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.NotNull(model);
-            
+
             var entityContainerMapping = model.DatabaseMapping.EntityContainerMappings.Single();
 
             Assert.False(entityContainerMapping.EntitySetMappings.SelectMany(esm => esm.ModificationFunctionMappings).Any());

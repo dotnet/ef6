@@ -52,7 +52,7 @@ namespace System.Data.Entity.Migrations
         private readonly MigrationAssembly _migrationAssembly;
         private readonly DbContextInfo _usersContextInfo;
         private readonly EdmModelDiffer _modelDiffer;
-        private readonly ModificationCommandTreeGenerator _modificationCommandTreeGenerator;
+        private readonly Lazy<ModificationCommandTreeGenerator> _modificationCommandTreeGenerator;
         private readonly DbContext _contextForInterception;
 
         private readonly bool _calledByCreateDatabase;
@@ -164,13 +164,18 @@ namespace System.Data.Entity.Migrations
                                 .GetService<IManifestTokenService>()
                                 .GetProviderManifestToken(connection);
 
+                var modelBuilder
+                    = context.InternalContext.CodeFirstModel.CachedModelBuilder;
+
                 _modificationCommandTreeGenerator
-                    = new ModificationCommandTreeGenerator(
-                        context.GetDynamicUpdateModel(
-                            new DbProviderInfo(
-                                _usersContextInfo.ConnectionProviderName,
-                                _providerManifestToken)),
-                        CreateConnection());
+                    = new Lazy<ModificationCommandTreeGenerator>(
+                        () =>
+                        new ModificationCommandTreeGenerator(
+                            modelBuilder.BuildDynamicUpdateModel(
+                                new DbProviderInfo(
+                            _usersContextInfo.ConnectionProviderName,
+                            _providerManifestToken)),
+                            CreateConnection()));
 
                 _targetDatabase
                     = Strings.LoggingTargetDatabaseFormat(

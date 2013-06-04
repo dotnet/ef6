@@ -4,7 +4,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
-    using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
 
@@ -58,7 +57,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             using (var context = new WorldContext_Fk())
             {
-                model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
             }
 
             var commandTreeGenerator
@@ -79,7 +83,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             using (var context = new WorldContext_Fk())
             {
-                model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
             }
 
             var commandTreeGenerator
@@ -100,7 +109,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             using (var context = new WorldContext_Fk())
             {
-                model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
             }
 
             var commandTreeGenerator
@@ -121,7 +135,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             using (var context = new WorldContext())
             {
-                model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
             }
 
             var commandTreeGenerator
@@ -142,7 +161,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             using (var context = new WorldContext())
             {
-                model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
             }
 
             var commandTreeGenerator
@@ -163,7 +187,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             using (var context = new WorldContext())
             {
-                model = context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
             }
 
             var commandTreeGenerator

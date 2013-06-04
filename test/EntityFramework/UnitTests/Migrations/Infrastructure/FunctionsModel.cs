@@ -8,7 +8,6 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Utilities;
     using System.Linq;
 
     public class Customer
@@ -96,7 +95,11 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
         {
             using (var context = new TestContext())
             {
-                return context.GetDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+                return context
+                    .InternalContext
+                    .CodeFirstModel
+                    .CachedModelBuilder
+                    .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
             }
         }
 

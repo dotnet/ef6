@@ -328,7 +328,7 @@ END
                     .Diff(
                         model1.GetModel(),
                         model2.GetModel(),
-                        commandTreeGenerator,
+                        new Lazy<ModificationCommandTreeGenerator>(() => commandTreeGenerator),
                         new SqlServerMigrationSqlGenerator())
                     .OfType<CreateProcedureOperation>()
                     .Single(c => c.Name == "dbo.ExtraSpecialOrder_Update");
@@ -397,7 +397,7 @@ END", sql);
                     .Diff(
                         model1.GetModel(),
                         model2.GetModel(),
-                        commandTreeGenerator,
+                        new Lazy<ModificationCommandTreeGenerator>(() => commandTreeGenerator),
                         new SqlServerMigrationSqlGenerator())
                     .OfType<AlterProcedureOperation>()
                     .Single(c => c.Name == "dbo.Order_Update");
@@ -449,7 +449,7 @@ END", sql);
                     .Diff(
                         model1.GetModel(),
                         model2.GetModel(),
-                        commandTreeGenerator,
+                        new Lazy<ModificationCommandTreeGenerator>(() => commandTreeGenerator),
                         new SqlServerMigrationSqlGenerator())
                     .OfType<RenameProcedureOperation>()
                     .Single();

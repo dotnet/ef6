@@ -55,7 +55,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public IEnumerable<MigrationOperation> Diff(
             XDocument sourceModel,
             XDocument targetModel,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator = null,
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator = null,
             MigrationSqlGenerator migrationSqlGenerator = null)
         {
             DebugCheck.NotNull(sourceModel);
@@ -100,7 +100,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public IEnumerable<MigrationOperation> Diff(
             ModelMetadata source,
             ModelMetadata target,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
             DebugCheck.NotNull(source);
@@ -295,7 +295,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private IEnumerable<CreateProcedureOperation> FindAddedModificationFunctions(
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator, MigrationSqlGenerator migrationSqlGenerator)
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator, MigrationSqlGenerator migrationSqlGenerator)
         {
             return
                 (from esm1 in _target.StorageEntityContainerMapping.EntitySetMappings
@@ -413,7 +413,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private IEnumerable<AlterProcedureOperation> FindChangedModificationFunctions(
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator, MigrationSqlGenerator migrationSqlGenerator)
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator, MigrationSqlGenerator migrationSqlGenerator)
         {
             return
                 (from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
@@ -441,7 +441,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private IEnumerable<AlterProcedureOperation> DiffModificationFunctions(
             StorageAssociationSetModificationFunctionMapping sourceModificationFunctionMapping,
             StorageAssociationSetModificationFunctionMapping targetModificationFunctionMapping,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
             DebugCheck.NotNull(sourceModificationFunctionMapping);
@@ -475,7 +475,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private IEnumerable<AlterProcedureOperation> DiffModificationFunctions(
             StorageEntityTypeModificationFunctionMapping sourceModificationFunctionMapping,
             StorageEntityTypeModificationFunctionMapping targetModificationFunctionMapping,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
             DebugCheck.NotNull(sourceModificationFunctionMapping);
@@ -520,7 +520,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private string GenerateInsertFunctionBody(
             StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
@@ -536,7 +536,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private string GenerateInsertFunctionBody(
             StorageAssociationSetModificationFunctionMapping modificationFunctionMapping,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
@@ -551,7 +551,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private string GenerateUpdateFunctionBody(
             StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
@@ -567,7 +567,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private string GenerateDeleteFunctionBody(
             StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
@@ -583,7 +583,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private string GenerateDeleteFunctionBody(
             StorageAssociationSetModificationFunctionMapping modificationFunctionMapping,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
@@ -599,7 +599,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private string GenerateFunctionBody<TCommandTree>(
             StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
             Func<ModificationCommandTreeGenerator, string, IEnumerable<TCommandTree>> treeGenerator,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator,
             string functionName,
             string rowsAffectedParameterName)
@@ -621,7 +621,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 {
                     commandTrees
                         = dynamicToFunctionModificationCommandConverter
-                            .Convert(treeGenerator(modificationCommandTreeGenerator, modificationFunctionMapping.EntityType.Identity))
+                            .Convert(treeGenerator(modificationCommandTreeGenerator.Value, modificationFunctionMapping.EntityType.Identity))
                             .ToArray();
                 }
                 catch (UpdateException e)
@@ -639,7 +639,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private string GenerateFunctionBody<TCommandTree>(
             StorageAssociationSetModificationFunctionMapping modificationFunctionMapping,
             Func<ModificationCommandTreeGenerator, string, IEnumerable<TCommandTree>> treeGenerator,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator,
             string rowsAffectedParameterName)
             where TCommandTree : DbModificationCommandTree
@@ -660,7 +660,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     = dynamicToFunctionModificationCommandConverter
                         .Convert(
                             treeGenerator(
-                                modificationCommandTreeGenerator,
+                                modificationCommandTreeGenerator.Value,
                                 modificationFunctionMapping.AssociationSet.ElementType.Identity))
                         .ToArray();
             }
@@ -769,7 +769,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private IEnumerable<CreateProcedureOperation> BuildCreateProcedureOperations(
             StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
@@ -789,7 +789,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private IEnumerable<CreateProcedureOperation> BuildCreateProcedureOperations(
             StorageAssociationSetModificationFunctionMapping modificationFunctionMapping,
-            ModificationCommandTreeGenerator modificationCommandTreeGenerator,
+            Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
@@ -1119,8 +1119,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
                    where (n1.index == n2.index)
                          && !n1.name.EqualsIgnoreCase(n2.name)
                    let end = a2.Descendants(EdmXNames.Ssdl.EndNames)
-                                .Single(e => e.RoleAttribute().EqualsOrdinal(d2.RoleAttribute()))
-                   let t = GetQualifiedTableName(_target.Model, end.TypeAttribute().Split(new []{'.'}).Last())
+                       .Single(e => e.RoleAttribute().EqualsOrdinal(d2.RoleAttribute()))
+                   let t = GetQualifiedTableName(_target.Model, end.TypeAttribute().Split(new[] { '.' }).Last())
                    select new RenameColumnOperation(t, n1.name, n2.name);
         }
 
