@@ -256,6 +256,22 @@ namespace System.Data.Entity.Migrations
         }
 
         [Fact]
+        public void CreateStoredProcedure_can_build_procedure_without_body()
+        {
+            var migration = new TestMigration();
+
+            migration.CreateStoredProcedure(
+                "Customers_Insert",
+                "");
+
+            var createProcedureOperation
+                = migration.Operations.Cast<CreateProcedureOperation>().Single();
+
+            Assert.Equal("Customers_Insert", createProcedureOperation.Name);
+            Assert.Equal("", createProcedureOperation.BodySql);
+        }
+
+        [Fact]
         public void AlterStoredProcedure_can_build_procedure_with_parameters()
         {
             var migration = new TestMigration();
@@ -302,6 +318,22 @@ namespace System.Data.Entity.Migrations
             Assert.Equal("Customers_Insert", alterProcedureOperation.Name);
             Assert.Equal("insert into customers...", alterProcedureOperation.BodySql);
             Assert.Equal(0, alterProcedureOperation.Parameters.Count());
+        }
+
+        [Fact]
+        public void AlterStoredProcedure_can_build_procedure_without_body()
+        {
+            var migration = new TestMigration();
+
+            migration.CreateStoredProcedure(
+                "Customers_Insert",
+                null);
+
+            var alterProcedureOperation
+                = migration.Operations.Cast<CreateProcedureOperation>().Single();
+
+            Assert.Equal("Customers_Insert", alterProcedureOperation.Name);
+            Assert.Null(alterProcedureOperation.BodySql);
         }
 
         [Fact]

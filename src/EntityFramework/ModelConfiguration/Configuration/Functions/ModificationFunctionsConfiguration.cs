@@ -146,7 +146,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 _insertModificationFunctionConfiguration
                     = modificationFunctionsConfiguration.InsertModificationFunctionConfiguration;
             }
-            else
+            else if (modificationFunctionsConfiguration.InsertModificationFunctionConfiguration != null)
             {
                 _insertModificationFunctionConfiguration
                     .Merge(modificationFunctionsConfiguration.InsertModificationFunctionConfiguration, allowOverride);
@@ -157,7 +157,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 _updateModificationFunctionConfiguration
                     = modificationFunctionsConfiguration.UpdateModificationFunctionConfiguration;
             }
-            else
+            else if (modificationFunctionsConfiguration.UpdateModificationFunctionConfiguration != null)
             {
                 _updateModificationFunctionConfiguration
                     .Merge(modificationFunctionsConfiguration.UpdateModificationFunctionConfiguration, allowOverride);
@@ -168,7 +168,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 _deleteModificationFunctionConfiguration
                     = modificationFunctionsConfiguration.DeleteModificationFunctionConfiguration;
             }
-            else
+            else if (modificationFunctionsConfiguration.DeleteModificationFunctionConfiguration != null)
             {
                 _deleteModificationFunctionConfiguration
                     .Merge(modificationFunctionsConfiguration.DeleteModificationFunctionConfiguration, allowOverride);

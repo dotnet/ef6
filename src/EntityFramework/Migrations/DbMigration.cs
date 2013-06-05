@@ -35,7 +35,6 @@ namespace System.Data.Entity.Migrations
         public void CreateStoredProcedure(string name, string body, object anonymousArguments = null)
         {
             Check.NotEmpty(name, "name");
-            Check.NotEmpty(body, "body");
 
             CreateStoredProcedure<object>(name, _ => new { }, body, anonymousArguments);
         }
@@ -49,7 +48,6 @@ namespace System.Data.Entity.Migrations
         {
             Check.NotEmpty(name, "name");
             Check.NotNull(parametersAction, "parametersAction");
-            Check.NotEmpty(body, "body");
 
             var createProcedureOperation = new CreateProcedureOperation(name, body, anonymousArguments);
 
@@ -79,7 +77,6 @@ namespace System.Data.Entity.Migrations
         public void AlterStoredProcedure(string name, string body, object anonymousArguments = null)
         {
             Check.NotEmpty(name, "name");
-            Check.NotEmpty(body, "body");
 
             AlterStoredProcedure<object>(name, _ => new { }, body, anonymousArguments);
         }
@@ -93,7 +90,6 @@ namespace System.Data.Entity.Migrations
         {
             Check.NotEmpty(name, "name");
             Check.NotNull(parametersAction, "parametersAction");
-            Check.NotEmpty(body, "body");
 
             var alterProcedureOperation = new AlterProcedureOperation(name, body, anonymousArguments);
 

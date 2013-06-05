@@ -6,10 +6,12 @@ namespace FunctionalTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Resources;
     using System.Linq;
+    using System.Xml;
     using ConcurrencyModel;
     using Xunit;
     using Xunit.Extensions;
@@ -1251,6 +1253,29 @@ namespace FunctionalTests
 
                     Assert.NotNull(function.Parameters.Single(p => p.Name == "my_name"));
                     Assert.NotNull(function.Parameters.Single(p => p.Name == "Name_Original"));
+                }
+
+                public class Blog
+                {
+                    public int Id { get; set; }
+                }
+
+                [Fact]
+                public void Can_configure_in_multiple_statements_and_configs_are_merged()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Blog>()
+                        .MapToStoredProcedures(s => s.Update(u => u.HasName("modify_blog")));
+
+                    modelBuilder
+                        .Entity<Blog>()
+                        .MapToStoredProcedures(s => s.Delete(d => d.HasName("delete_blog")));
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
                 }
             }
 

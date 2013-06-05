@@ -110,9 +110,9 @@ namespace System.Data.Entity.SqlServer
         public void GeographyFromProviderValue_returns_null_for_null_value()
         {
             var nullSqlGeography = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeographyType
-                                                               .GetProperty(
-                                                                   "Null",
-                                                                   BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
+                .GetProperty(
+                    "Null",
+                    BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
             var convertedDbGeography = SqlSpatialServices.Instance.GeographyFromProviderValue(nullSqlGeography.GetValue(null, null));
 
             Assert.Same(null, convertedDbGeography);
@@ -134,9 +134,9 @@ namespace System.Data.Entity.SqlServer
         public void GeometryFromProviderValue_returns_null_for_null_value()
         {
             var nullSqlGeometry = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeometryType
-                                                              .GetProperty(
-                                                                  "Null",
-                                                                  BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
+                .GetProperty(
+                    "Null",
+                    BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
             var convertedDbGeometry = SqlSpatialServices.Instance.GeometryFromProviderValue(nullSqlGeometry.GetValue(null, null));
 
             Assert.Same(null, convertedDbGeometry);
@@ -157,9 +157,10 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void SqlSpatialServices_Singleton_uses_SQL_2008_types_on_dev_machine()
         {
-            Assert.Equal(
-                "Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                SqlSpatialServices.Instance.GeometryFromText("POINT (90 50)").ProviderValue.GetType().AssemblyQualifiedName);
+            Assert.True(
+                SqlSpatialServices.Instance.GeometryFromText("POINT (90 50)").ProviderValue.GetType().AssemblyQualifiedName
+                    .StartsWith(
+                        "Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=11."));
         }
 
         [Fact]
@@ -227,9 +228,10 @@ namespace System.Data.Entity.SqlServer
 
                 Assert.Equal(90, geometry.XCoordinate);
                 Assert.Equal(50, geometry.YCoordinate);
-                Assert.Equal(
-                    "Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91",
-                    geometry.ProviderValue.GetType().AssemblyQualifiedName);
+                Assert.True(
+                    geometry.ProviderValue.GetType().AssemblyQualifiedName
+                        .StartsWith(
+                            "Microsoft.SqlServer.Types.SqlGeometry, Microsoft.SqlServer.Types, Version=11."));
             }
         }
     }
