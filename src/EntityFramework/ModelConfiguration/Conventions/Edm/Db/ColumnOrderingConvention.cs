@@ -14,31 +14,31 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///         cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" />
     ///     or the <see cref="DbModelBuilder" /> API.
     /// </summary>
-    public class ColumnOrderingConvention : IDbConvention<EntityType>
+    public class ColumnOrderingConvention : IModelConvention<EntityType>
     {
-        public void Apply(EntityType dbDataModelItem, EdmModel model)
+        public void Apply(EntityType edmDataModelItem, EdmModel model)
         {
-            Check.NotNull(dbDataModelItem, "dbDataModelItem");
+            Check.NotNull(edmDataModelItem, "dbDataModelItem");
             Check.NotNull(model, "model");
 
-            ValidateColumns(dbDataModelItem, model.GetEntitySet(dbDataModelItem).Table);
+            ValidateColumns(edmDataModelItem, model.GetEntitySet(edmDataModelItem).Table);
 
-            OrderColumns(dbDataModelItem.Properties)
+            OrderColumns(edmDataModelItem.Properties)
                 .Each(
                     c =>
                         {
                             var isKey = c.IsPrimaryKeyColumn;
 
-                            dbDataModelItem.RemoveMember(c);
-                            dbDataModelItem.AddMember(c);
+                            edmDataModelItem.RemoveMember(c);
+                            edmDataModelItem.AddMember(c);
 
                             if (isKey)
                             {
-                                dbDataModelItem.AddKeyMember(c);
+                                edmDataModelItem.AddKeyMember(c);
                             }
                         });
 
-            dbDataModelItem.ForeignKeyBuilders
+            edmDataModelItem.ForeignKeyBuilders
                            .Each(fk => fk.DependentColumns = OrderColumns(fk.DependentColumns));
         }
 

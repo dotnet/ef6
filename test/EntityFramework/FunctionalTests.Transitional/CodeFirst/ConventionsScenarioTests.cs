@@ -26,7 +26,7 @@ namespace FunctionalTests
                 var modelBuilder = new AdventureWorksModelBuilder();
 
                 modelBuilder.Entity<Customer>();
-                modelBuilder.Conventions.Add<EntitySetNamingConvention>();
+                modelBuilder.Conventions.Add<EntitySetNamingConvention>(DataSpace.CSpace);
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -36,7 +36,7 @@ namespace FunctionalTests
                         t => t.Name == "CustomersFoo"));
             }
 
-            private sealed class EntitySetNamingConvention : IEdmConvention<EntitySet>
+            private sealed class EntitySetNamingConvention : IModelConvention<EntitySet>
             {
                 public void Apply(EntitySet entitySet, EdmModel model)
                 {
@@ -50,7 +50,7 @@ namespace FunctionalTests
                 var modelBuilder = new AdventureWorksModelBuilder();
 
                 modelBuilder.Entity<CountryRegion>();
-                modelBuilder.Conventions.AddAfter<IdKeyDiscoveryConvention>(new CodeKeyDiscoveryConvention());
+                modelBuilder.Conventions.AddAfter<IdKeyDiscoveryConvention>(DataSpace.CSpace, new CodeKeyDiscoveryConvention());
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -79,7 +79,7 @@ namespace FunctionalTests
                 var modelBuilder = new AdventureWorksModelBuilder();
 
                 modelBuilder.Entity<Customer>();
-                modelBuilder.Conventions.Remove<IdKeyDiscoveryConvention>();
+                modelBuilder.Conventions.Remove<IdKeyDiscoveryConvention>(DataSpace.CSpace);
 
                 Assert.Throws<ModelValidationException>(
                     () => BuildMapping(modelBuilder));

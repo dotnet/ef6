@@ -5,6 +5,7 @@ namespace System.Data.Entity.Internal
     using System.Collections.Concurrent;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -478,7 +479,7 @@ namespace System.Data.Entity.Internal
             var modelContainer = StripInvalidCharacters(Owner.GetType().Name);
             if (!String.IsNullOrWhiteSpace(modelContainer))
             {
-                modelBuilder.Conventions.Add(new ModelContainerConvention(modelContainer));
+                modelBuilder.Conventions.Add(DataSpace.CSpace, new ModelContainerConvention(modelContainer));
             }
 
             new DbSetDiscoveryService(Owner).RegisterSets(modelBuilder);

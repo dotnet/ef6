@@ -184,7 +184,7 @@ namespace System.Data.Entity.ModelConfiguration
             Assert.NotSame(builder.Conventions, clone.Conventions);
 
             Assert.Equal(1, clone.ModelConfiguration.Entities.Count());
-            Assert.True(clone.Conventions.Conventions.Count() > 0);
+            Assert.True(clone.Conventions.ConfigurationConventions.Count() > 0);
         }
 
         [Fact]
@@ -208,32 +208,11 @@ namespace System.Data.Entity.ModelConfiguration
                         typeof(T).Name, expectedCount, actualCount));
             }
         }
-
-        [Fact]
-        public void Cloning_the_conventions_configuration_clones_the_list_of_conventions_but_not_the_conventions_themselves()
-        {
-            var convention1 = new Mock<IConvention>().Object;
-            var conventions = new ConventionsConfiguration(
-                new List<IConvention>
-                    {
-                        convention1
-                    });
-
-            Assert.Same(conventions.Conventions, conventions.Conventions);
-
-            var clone = conventions.Clone();
-            var convention2 = new Mock<IConvention>().Object;
-            conventions.Add(convention2);
-
-            Assert.NotSame(conventions.Conventions, clone.Conventions);
-            Assert.True(clone.Conventions.Contains(convention1));
-            Assert.False(clone.Conventions.Contains(convention2));
-        }
-
+        
         [Fact]
         public void ConventionsConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<ConventionsConfiguration>(1);
+            VerifyFieldCount<ConventionsConfiguration>(4);
         }
 
         [Fact]

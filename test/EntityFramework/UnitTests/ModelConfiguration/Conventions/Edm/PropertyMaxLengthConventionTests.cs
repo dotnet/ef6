@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddMember(property);
 
-            ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
+            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(true, property.IsUnicode);
@@ -31,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
-            ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
+            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(true, property.IsUnicode);
@@ -48,7 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsUnicode = false;
             entityType.AddMember(property);
 
-            ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
+            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(128, property.MaxLength);
@@ -63,7 +63,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property);
             entityType.AddKeyMember(property);
 
-            ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
+            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(128, property.MaxLength);
@@ -76,7 +76,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
             entityType.AddMember(property);
 
-            ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
+            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(property.IsUnicode);
@@ -92,7 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
-            ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
+            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(property.IsUnicode);
@@ -108,7 +108,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property);
             entityType.AddKeyMember(property);
 
-            ((IEdmConvention<EntityType>)new PropertyMaxLengthConvention())
+            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(property.IsUnicode);
@@ -122,7 +122,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddMember(property);
 
-            ((IEdmConvention<ComplexType>)new PropertyMaxLengthConvention())
+            ((IModelConvention<ComplexType>)new PropertyMaxLengthConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(true, property.IsUnicode);
@@ -139,7 +139,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
-            ((IEdmConvention<ComplexType>)new PropertyMaxLengthConvention())
+            ((IModelConvention<ComplexType>)new PropertyMaxLengthConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(true, property.IsUnicode);
@@ -156,7 +156,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsUnicode = false;
             entityType.AddMember(property);
 
-            ((IEdmConvention<ComplexType>)new PropertyMaxLengthConvention())
+            ((IModelConvention<ComplexType>)new PropertyMaxLengthConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(128, property.MaxLength);
@@ -170,7 +170,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
             entityType.AddMember(property);
 
-            ((IEdmConvention<ComplexType>)new PropertyMaxLengthConvention())
+            ((IModelConvention<ComplexType>)new PropertyMaxLengthConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(property.IsUnicode);
@@ -186,7 +186,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
-            ((IEdmConvention<ComplexType>)new PropertyMaxLengthConvention())
+            ((IModelConvention<ComplexType>)new PropertyMaxLengthConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(property.IsUnicode);
@@ -216,7 +216,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     new[] { principalProperty },
                     new[] { dependentProperty });
 
-            ((IEdmConvention<AssociationType>)new PropertyMaxLengthConvention())
+            ((IModelConvention<AssociationType>)new PropertyMaxLengthConvention())
                 .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(23, dependentProperty.MaxLength);

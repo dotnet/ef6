@@ -61,9 +61,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Conventions
                 .Where(predicate)
                 .Configure(configurationAction);
 
-            Assert.Equal(36, conventions.Conventions.Count());
+            Assert.Equal(16, conventions.ConfigurationConventions.Count());
 
-            var convention = (TypeConventionOfType<object>)conventions.Conventions.Last();
+            var convention = (TypeConventionOfType<object>)conventions.ConfigurationConventions.Last();
             Assert.Equal(2, convention.Predicates.Count());
             Assert.Same(predicate, convention.Predicates.Last());
             Assert.Same(configurationAction, convention.EntityConfigurationAction);

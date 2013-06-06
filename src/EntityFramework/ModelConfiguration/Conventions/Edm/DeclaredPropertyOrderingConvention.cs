@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to move primary key properties to appear first.
     /// </summary>
-    public class DeclaredPropertyOrderingConvention : IEdmConvention<EntityType>
+    public class DeclaredPropertyOrderingConvention : IModelConvention<EntityType>
     {
         public void Apply(EntityType edmDataModelItem, EdmModel model)
         {

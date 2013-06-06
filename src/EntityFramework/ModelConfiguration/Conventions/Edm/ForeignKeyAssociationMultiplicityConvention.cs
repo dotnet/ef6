@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to distinguish between optional and required relationships based on CLR nullability of the foreign key property.
     /// </summary>
-    public class ForeignKeyAssociationMultiplicityConvention : IEdmConvention<AssociationType>
+    public class ForeignKeyAssociationMultiplicityConvention : IModelConvention<AssociationType>
     {
         public void Apply(AssociationType edmDataModelItem, EdmModel model)
         {

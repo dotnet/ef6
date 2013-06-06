@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     .Association("A1", "S", RelationshipMultiplicity.ZeroOrOne, "T", "T", RelationshipMultiplicity.Many, null)
                     .Association("A2", "T", RelationshipMultiplicity.Many, "S", "S", RelationshipMultiplicity.ZeroOrOne, null);
 
-            ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
             var navigationProperties
                 = model.EntityTypes.SelectMany(e => e.NavigationProperties);
@@ -60,7 +60,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             
             association2.Constraint = referentialConstraint;
 
-            ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
             Assert.Equal(1, model.Containers.Single().AssociationSets.Count());
@@ -83,7 +83,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     .Association("S", RelationshipMultiplicity.ZeroOrOne, "T", RelationshipMultiplicity.Many)
                     .Association("T", RelationshipMultiplicity.Many, "S", RelationshipMultiplicity.ZeroOrOne);
 
-            ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
             Assert.Equal(1, model.Containers.Single().AssociationSets.Count());
@@ -103,7 +103,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     .Association("S", RelationshipMultiplicity.ZeroOrOne, "T", RelationshipMultiplicity.Many)
                     .Association("T", RelationshipMultiplicity.ZeroOrOne, "S", RelationshipMultiplicity.Many);
 
-            ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
             Assert.Equal(1, model.Containers.Single().AssociationSets.Count());
@@ -123,7 +123,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     .Association("S", RelationshipMultiplicity.Many, "T", RelationshipMultiplicity.ZeroOrOne)
                     .Association("T", RelationshipMultiplicity.Many, "S", RelationshipMultiplicity.ZeroOrOne);
 
-            ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
             Assert.Equal(1, model.Containers.Single().AssociationSets.Count());
@@ -143,7 +143,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     .Association("S", RelationshipMultiplicity.ZeroOrOne, "S", RelationshipMultiplicity.Many)
                     .Association("S", RelationshipMultiplicity.Many, "S", RelationshipMultiplicity.ZeroOrOne);
 
-            ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
             Assert.Equal(1, model.Containers.Single().AssociationSets.Count());
@@ -167,7 +167,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     .Association("U", RelationshipMultiplicity.Many, "S", RelationshipMultiplicity.ZeroOrOne)
                     .Association("S", RelationshipMultiplicity.Many, "U", RelationshipMultiplicity.ZeroOrOne);
 
-            ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
             Assert.Equal(3, model.AssociationTypes.Count());
             Assert.Equal(3, model.Containers.Single().AssociationSets.Count());
@@ -183,7 +183,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     .Association("S", RelationshipMultiplicity.ZeroOrOne, "T", RelationshipMultiplicity.Many)
                     .Association("T", RelationshipMultiplicity.ZeroOrOne, "S", RelationshipMultiplicity.Many);
 
-            ((IEdmConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new AssociationInverseDiscoveryConvention()).Apply(model);
 
             Assert.Equal(3, model.AssociationTypes.Count());
             Assert.Equal(3, model.Containers.Single().AssociationSets.Count());

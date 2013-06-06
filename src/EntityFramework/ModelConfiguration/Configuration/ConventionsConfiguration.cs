@@ -22,26 +22,66 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// </summary>
     public partial class ConventionsConfiguration
     {
-        private readonly List<IConvention> _conventions = new List<IConvention>();
+        private readonly List<IConvention> _configurationConventions = new List<IConvention>();
+        private readonly List<IConvention> _conceptualModelConventions = new List<IConvention>();
+        private readonly List<IConvention> _conceptualToStoreMappingConventions = new List<IConvention>();
+        private readonly List<IConvention> _storeModelConventions = new List<IConvention>();
 
         internal ConventionsConfiguration()
             : this(V2ConventionSet.Conventions)
         {
         }
 
-        internal ConventionsConfiguration(IEnumerable<IConvention> conventionSet)
+        internal ConventionsConfiguration(ConventionSet conventionSet)
         {
             DebugCheck.NotNull(conventionSet);
-            Debug.Assert(conventionSet.All(c => c != null));
+            Debug.Assert(conventionSet.ConfigurationConventions.All(c => c != null && !IsModelConvention(c.GetType())));
+            Debug.Assert(conventionSet.ConceptualModelConventions.All(c => c != null && IsModelConvention(c.GetType())));
+            Debug.Assert(conventionSet.ConceptualToStoreMappingConventions.All(c => c != null && !IsModelConvention(c.GetType())));
+            Debug.Assert(conventionSet.StoreModelConventions.All(c => c != null && IsModelConvention(c.GetType())));
 
-            _conventions.AddRange(conventionSet);
+            _configurationConventions.AddRange(conventionSet.ConfigurationConventions);
+            _conceptualModelConventions.AddRange(conventionSet.ConceptualModelConventions);
+            _conceptualToStoreMappingConventions.AddRange(conventionSet.ConceptualToStoreMappingConventions);
+            _storeModelConventions.AddRange(conventionSet.StoreModelConventions);
         }
 
         private ConventionsConfiguration(ConventionsConfiguration source)
         {
             DebugCheck.NotNull(source);
 
-            _conventions.AddRange(source._conventions);
+            _configurationConventions.AddRange(source._configurationConventions);
+            _conceptualModelConventions.AddRange(source._conceptualModelConventions);
+            _conceptualToStoreMappingConventions.AddRange(source._conceptualToStoreMappingConventions);
+            _storeModelConventions.AddRange(source._storeModelConventions);
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
+        internal IEnumerable<IConvention> ConfigurationConventions
+        {
+            get { return _configurationConventions; }
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
+        internal IEnumerable<IConvention> ConceptualModelConventions
+        {
+            get { return _conceptualModelConventions; }
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
+        internal IEnumerable<IConvention> ConceptualToStoreMappingConventions
+        {
+            get { return _conceptualToStoreMappingConventions; }
+        }
+
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Used by test code.")]
+        internal IEnumerable<IConvention> StoreModelConventions
+        {
+            get { return _storeModelConventions; }
         }
 
         internal virtual ConventionsConfiguration Clone()
@@ -50,15 +90,51 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Enables one or more conventions for the <see cref="DbModelBuilder" />.
+        ///     Enables one or more configuration conventions for the <see cref="DbModelBuilder" />.
         /// </summary>
         /// <param name="conventions"> The conventions to be enabled. </param>
         public void Add(params IConvention[] conventions)
         {
             Check.NotNull(conventions, "conventions");
             Debug.Assert(conventions.All(c => c != null));
+            var modelConvention = conventions.FirstOrDefault(
+                c => !IsConfigurationConvention(c.GetType()));
+            if (modelConvention != null)
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotConfigurationConvention(modelConvention.GetType()));
+            }
 
-            conventions.Each(c => _conventions.Add(c));
+            conventions.Each(c => _configurationConventions.Add(c));
+        }
+
+        /// <summary>
+        ///     Enables one or more model conventions for the <see cref="DbModelBuilder" />.
+        /// </summary>
+        /// <param name="dataSpace"> The data space that the convention affects. </param>
+        /// <param name="conventions"> The conventions to be enabled. </param>
+        public void Add(DataSpace dataSpace, params IConvention[] conventions)
+        {
+            Check.NotNull(conventions, "conventions");
+            Debug.Assert(conventions.All(c => c != null));
+            var configurationConvention = conventions.FirstOrDefault(
+                c => !IsModelConvention(c.GetType()));
+            if (configurationConvention != null)
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotModelConvention(configurationConvention.GetType()));
+            }
+
+            if (dataSpace == DataSpace.CSpace)
+            {
+                conventions.Each(c => _conceptualModelConventions.Add(c));
+            }
+            else if (dataSpace == DataSpace.SSpace)
+            {
+                conventions.Each(c => _storeModelConventions.Add(c));
+            }
+            else
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_InvalidDataSpace(dataSpace));
+            }
         }
 
         /// <summary>
@@ -69,11 +145,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void Add<TConvention>()
             where TConvention : IConvention, new()
         {
+            if (!IsConfigurationConvention(typeof(TConvention)))
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotConfigurationConvention(typeof(TConvention)));
+            }
+
             Add(new TConvention());
         }
 
         /// <summary>
-        ///     Enables a convention for the <see cref="DbModelBuilder" />. This convention
+        ///     Enables a configuration convention for the <see cref="DbModelBuilder" />.
+        /// </summary>
+        /// <param name="dataSpace"> The data space that the convention affects. </param>
+        /// <typeparam name="TConvention"> The type of the convention to be enabled. </typeparam>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+        public void Add<TConvention>(DataSpace dataSpace)
+            where TConvention : IConvention, new()
+        {
+            if (!IsModelConvention(typeof(TConvention)))
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotModelConvention(typeof(TConvention)));
+            }
+
+            Add(dataSpace, new TConvention());
+        }
+
+        /// <summary>
+        ///     Enables a configuration convention for the <see cref="DbModelBuilder" />. This convention
         ///     will run after the one specified.
         /// </summary>
         /// <typeparam name="TExistingConvention"> The type of the convention after which the enabled one will run. </typeparam>
@@ -83,6 +181,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             where TExistingConvention : IConvention
         {
             Check.NotNull(newConvention, "newConvention");
+            if (!IsConfigurationConvention(newConvention.GetType()))
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotConfigurationConvention(newConvention.GetType()));
+            }
+            if (!IsConfigurationConvention(typeof(TExistingConvention)))
+            {
+                throw new InvalidOperationException(
+                    Strings.ConventionsConfiguration_NotConfigurationConvention(typeof(TExistingConvention)));
+            }
 
             var index = IndexOf<TExistingConvention>();
 
@@ -91,11 +198,49 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 throw Error.ConventionNotFound(newConvention.GetType(), typeof(TExistingConvention));
             }
 
-            _conventions.Insert(index + 1, newConvention);
+            _configurationConventions.Insert(index + 1, newConvention);
         }
 
         /// <summary>
-        ///     Enables a convention for the <see cref="DbModelBuilder" />. This convention
+        ///     Enables a model convention for the <see cref="DbModelBuilder" />. This convention
+        ///     will run after the one specified.
+        /// </summary>
+        /// <param name="dataSpace"> The data space that the convention affects. </param>
+        /// <typeparam name="TExistingConvention"> The type of the convention after which the enabled one will run. </typeparam>
+        /// <param name="newConvention"> The convention to enable. </param>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+        public void AddAfter<TExistingConvention>(DataSpace dataSpace, IConvention newConvention)
+            where TExistingConvention : IConvention
+        {
+            Check.NotNull(newConvention, "newConvention");
+            if (!IsModelConvention(newConvention.GetType()))
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotModelConvention(newConvention.GetType()));
+            }
+            if (!IsModelConvention(typeof(TExistingConvention)))
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotModelConvention(typeof(TExistingConvention)));
+            }
+
+            var index = IndexOf<TExistingConvention>(dataSpace);
+
+            if (index < 0)
+            {
+                throw Error.ConventionNotFound(newConvention.GetType(), typeof(TExistingConvention));
+            }
+
+            if (dataSpace == DataSpace.CSpace)
+            {
+                _conceptualModelConventions.Insert(index + 1, newConvention);
+            }
+            else if (dataSpace == DataSpace.SSpace)
+            {
+                _storeModelConventions.Insert(index + 1, newConvention);
+            }
+        }
+
+        /// <summary>
+        ///     Enables a configuration convention for the <see cref="DbModelBuilder" />. This convention
         ///     will run before the one specified.
         /// </summary>
         /// <typeparam name="TExistingConvention"> The type of the convention before which the enabled one will run. </typeparam>
@@ -105,6 +250,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             where TExistingConvention : IConvention
         {
             Check.NotNull(newConvention, "newConvention");
+            if (!IsConfigurationConvention(newConvention.GetType()))
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotConfigurationConvention(newConvention.GetType()));
+            }
+            if (!IsConfigurationConvention(typeof(TExistingConvention)))
+            {
+                throw new InvalidOperationException(
+                    Strings.ConventionsConfiguration_NotConfigurationConvention(typeof(TExistingConvention)));
+            }
 
             var index = IndexOf<TExistingConvention>();
 
@@ -113,17 +267,83 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 throw Error.ConventionNotFound(newConvention.GetType(), typeof(TExistingConvention));
             }
 
-            _conventions.Insert(index, newConvention);
+            _configurationConventions.Insert(index, newConvention);
+        }
+
+        /// <summary>
+        ///     Enables a model convention for the <see cref="DbModelBuilder" />. This convention
+        ///     will run before the one specified.
+        /// </summary>
+        /// <typeparam name="TExistingConvention"> The type of the convention before which the enabled one will run. </typeparam>
+        /// <param name="newConvention"> The convention to enable. </param>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+        public void AddBefore<TExistingConvention>(DataSpace dataSpace, IConvention newConvention)
+            where TExistingConvention : IConvention
+        {
+            Check.NotNull(newConvention, "newConvention");
+            if (!IsModelConvention(newConvention.GetType()))
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotModelConvention(newConvention.GetType()));
+            }
+            if (!IsModelConvention(typeof(TExistingConvention)))
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotModelConvention(typeof(TExistingConvention)));
+            }
+
+            var index = IndexOf<TExistingConvention>(dataSpace);
+
+            if (index < 0)
+            {
+                throw Error.ConventionNotFound(newConvention.GetType(), typeof(TExistingConvention));
+            }
+
+            if (dataSpace == DataSpace.CSpace)
+            {
+                _conceptualModelConventions.Insert(index, newConvention);
+            }
+            else if (dataSpace == DataSpace.SSpace)
+            {
+                _storeModelConventions.Insert(index, newConvention);
+            }
         }
 
         private int IndexOf<TConvention>()
         {
             var index = 0;
 
-            foreach (var c in _conventions)
+            foreach (var c in _configurationConventions)
             {
-                if (c.GetType()
-                    == typeof(TConvention))
+                if (c.GetType() == typeof(TConvention))
+                {
+                    return index;
+                }
+
+                index++;
+            }
+
+            return -1;
+        }
+
+        private int IndexOf<TConvention>(DataSpace dataSpace)
+        {
+            List<IConvention> conventions;
+            if (dataSpace == DataSpace.CSpace)
+            {
+                conventions = _conceptualModelConventions;
+            }
+            else if (dataSpace == DataSpace.SSpace)
+            {
+                conventions = _storeModelConventions;
+            }
+            else
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_InvalidDataSpace(dataSpace));
+            }
+
+            var index = 0;
+            foreach (var c in conventions)
+            {
+                if (c.GetType() == typeof(TConvention))
                 {
                     return index;
                 }
@@ -135,18 +355,53 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Disables one or more conventions for the <see cref="DbModelBuilder" />.
+        ///     Disables one or more configuration conventions for the <see cref="DbModelBuilder" />.
         /// </summary>
         /// <param name="conventions"> The conventions to be disabled. </param>
         public void Remove(params IConvention[] conventions)
         {
             Check.NotNull(conventions, "conventions");
+            var modelConvention = conventions.FirstOrDefault(
+                c => IsModelConvention(c.GetType()));
+            if (modelConvention != null)
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotConfigurationConvention(modelConvention.GetType()));
+            }
 
-            conventions.Each(c => _conventions.Remove(c));
+            conventions.Each(c => _configurationConventions.Remove(c));
         }
 
         /// <summary>
-        ///     Disables a convention for the <see cref="DbModelBuilder" />.
+        ///     Disables one or more model conventions for the <see cref="DbModelBuilder" />.
+        /// </summary>
+        /// <param name="dataSpace"> The data space that the convention affects. </param>
+        /// <param name="conventions"> The conventions to be disabled. </param>
+        public void Remove(DataSpace dataSpace, params IConvention[] conventions)
+        {
+            Check.NotNull(conventions, "conventions");
+            var configurationConvention = conventions.FirstOrDefault(
+                c => !IsModelConvention(c.GetType()));
+            if (configurationConvention != null)
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotModelConvention(configurationConvention.GetType()));
+            }
+
+            if (dataSpace == DataSpace.CSpace)
+            {
+                conventions.Each(c => _conceptualModelConventions.Remove(c));
+            }
+            else if (dataSpace == DataSpace.SSpace)
+            {
+                conventions.Each(c => _storeModelConventions.Remove(c));
+            }
+            else
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_InvalidDataSpace(dataSpace));
+            }
+        }
+
+        /// <summary>
+        ///     Disables a configuration convention for the <see cref="DbModelBuilder" />.
         ///     The default conventions that are available for removal can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
         /// </summary>
         /// <typeparam name="TConvention"> The type of the convention to be disabled. </typeparam>
@@ -154,31 +409,68 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void Remove<TConvention>()
             where TConvention : IConvention
         {
-            _conventions.RemoveAll(c => c.GetType() == typeof(TConvention));
+            if (!IsConfigurationConvention(typeof(TConvention)))
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotConfigurationConvention(typeof(TConvention)));
+            }
+
+            _configurationConventions.RemoveAll(c => c.GetType() == typeof(TConvention));
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Used by test code.")]
-        internal IEnumerable<IConvention> Conventions
+        /// <summary>
+        ///     Disables a model convention for the <see cref="DbModelBuilder" />.
+        ///     The default conventions that are available for removal can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
+        /// </summary>
+        /// <param name="dataSpace"> The data space that the convention affects. </param>
+        /// <typeparam name="TConvention"> The type of the convention to be disabled. </typeparam>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+        public void Remove<TConvention>(DataSpace dataSpace)
+            where TConvention : IConvention
         {
-            get { return _conventions; }
+            if (!IsModelConvention(typeof(TConvention)))
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_NotModelConvention(typeof(TConvention)));
+            }
+
+            if (dataSpace == DataSpace.CSpace)
+            {
+                _conceptualModelConventions.RemoveAll(c => c.GetType() == typeof(TConvention));
+            }
+            else if (dataSpace == DataSpace.SSpace)
+            {
+                _storeModelConventions.RemoveAll(c => c.GetType() == typeof(TConvention));
+            }
+            else
+            {
+                throw new InvalidOperationException(Strings.ConventionsConfiguration_InvalidDataSpace(dataSpace));
+            }
         }
 
         internal void ApplyModel(EdmModel model)
         {
             DebugCheck.NotNull(model);
 
-            foreach (var convention in _conventions)
+            foreach (var convention in _conceptualModelConventions)
             {
-                new EdmConventionDispatcher(convention, model).Dispatch();
+                new ModelConventionDispatcher(convention, model).Dispatch();
             }
         }
 
         internal void ApplyDatabase(EdmModel database)
         {
-            foreach (var convention in _conventions)
+            foreach (var convention in _storeModelConventions)
             {
-                new EdmConventionDispatcher(convention, database, DataSpace.SSpace).Dispatch();
+                new ModelConventionDispatcher(convention, database).Dispatch();
+            }
+        }
+
+        internal void ApplyPluralizingTableNameConvention(EdmModel database)
+        {
+            DebugCheck.NotNull(database);
+
+            foreach (var convention in _storeModelConventions.Where(c => c is PluralizingTableNameConvention))
+            {
+                new ModelConventionDispatcher(convention, database).Dispatch();
             }
         }
 
@@ -186,7 +478,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             DebugCheck.NotNull(databaseMapping);
 
-            foreach (var convention in _conventions)
+            foreach (var convention in _conceptualToStoreMappingConventions)
             {
                 var mappingConvention = convention as IDbMappingConvention;
 
@@ -201,7 +493,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             DebugCheck.NotNull(modelConfiguration);
 
-            foreach (var convention in _conventions)
+            foreach (var convention in _configurationConventions)
             {
                 var configurationConvention
                     = convention as IConfigurationConvention;
@@ -226,7 +518,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(modelConfiguration);
 
-            foreach (var convention in _conventions)
+            foreach (var convention in _configurationConventions)
             {
                 var modelConfigurationConvention
                     = convention as IConfigurationConvention<Type>;
@@ -255,7 +547,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(structuralTypeConfiguration);
 
-            foreach (var convention in _conventions)
+            foreach (var convention in _configurationConventions)
             {
                 var propertyTypeConfigurationConvention
                     = convention as IConfigurationConvention<Type, TStructuralTypeConfiguration>;
@@ -288,7 +580,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(propertyInfo);
             DebugCheck.NotNull(modelConfiguration);
 
-            foreach (var convention in _conventions)
+            foreach (var convention in _configurationConventions)
             {
                 var propertyConfigurationConvention
                     = convention as IConfigurationConvention<PropertyInfo>;
@@ -317,7 +609,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var propertyConfigurationType
                 = StructuralTypeConfiguration.GetPropertyConfigurationType(propertyInfo.PropertyType);
 
-            foreach (var convention in _conventions)
+            foreach (var convention in _configurationConventions)
             {
                 new PropertyConfigurationConventionDispatcher(
                     convention, propertyConfigurationType, propertyInfo, propertyConfiguration, modelConfiguration)
@@ -342,7 +634,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(propertyInfo);
             DebugCheck.NotNull(structuralTypeConfiguration);
 
-            foreach (var convention in _conventions)
+            foreach (var convention in _configurationConventions)
             {
                 var propertyTypeConfigurationConvention
                     = convention as IConfigurationConvention<PropertyInfo, TStructuralTypeConfiguration>;
@@ -371,14 +663,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        internal void ApplyPluralizingTableNameConvention(EdmModel database)
+        private static bool IsConfigurationConvention(Type conventionType)
         {
-            DebugCheck.NotNull(database);
+            return typeof(IConfigurationConvention).IsAssignableFrom(conventionType)
+                   || typeof(Convention).IsAssignableFrom(conventionType)
+                   || conventionType.GetGenericTypeImplementations(typeof(IConfigurationConvention<>)).Any()
+                   || conventionType.GetGenericTypeImplementations(typeof(IConfigurationConvention<,>)).Any();
+        }
 
-            foreach (var convention in _conventions.Where(c => c is PluralizingTableNameConvention))
-            {
-                new EdmConventionDispatcher(convention, database, DataSpace.SSpace).Dispatch();
-            }
+        private static bool IsModelConvention(Type conventionType)
+        {
+            return typeof(IModelConvention).IsAssignableFrom(conventionType)
+                   || conventionType.GetGenericTypeImplementations(
+                       typeof(IModelConvention<>)).Any();
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]

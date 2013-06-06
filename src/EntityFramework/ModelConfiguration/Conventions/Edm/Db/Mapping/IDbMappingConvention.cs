@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
 
-    public interface IDbMappingConvention : IConvention
+    internal interface IDbMappingConvention : IConvention
     {
         void Apply(DbDatabaseMapping databaseMapping);
     }

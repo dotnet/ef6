@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    public abstract class ForeignKeyDiscoveryConvention : IEdmConvention<AssociationType>
+    public abstract class ForeignKeyDiscoveryConvention : IModelConvention<AssociationType>
     {
         protected virtual bool SupportsMultipleAssociations
         {

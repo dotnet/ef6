@@ -12,21 +12,21 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to set the table name to be a pluralized version of the entity type name.
     /// </summary>
-    public class PluralizingTableNameConvention : IDbConvention<EntityType>
+    public class PluralizingTableNameConvention : IModelConvention<EntityType>
     {
         private IPluralizationService _pluralizationService
             = DbConfiguration.GetService<IPluralizationService>();
 
-        public virtual void Apply(EntityType dbDataModelItem, EdmModel model)
+        public virtual void Apply(EntityType edmDataModelItem, EdmModel model)
         {
-            Check.NotNull(dbDataModelItem, "dbDataModelItem");
+            Check.NotNull(edmDataModelItem, "dbDataModelItem");
             Check.NotNull(model, "model");
 
             _pluralizationService = DbConfiguration.GetService<IPluralizationService>();
 
-            if (dbDataModelItem.GetTableName() == null)
+            if (edmDataModelItem.GetTableName() == null)
             {
-                var entitySet = model.GetEntitySet(dbDataModelItem);
+                var entitySet = model.GetEntitySet(edmDataModelItem);
 
                 entitySet.Table
                     = model.GetEntitySets()

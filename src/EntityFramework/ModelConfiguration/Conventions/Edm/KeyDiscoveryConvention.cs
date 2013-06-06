@@ -7,7 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
 
-    public abstract class KeyDiscoveryConvention : IEdmConvention<EntityType>
+    public abstract class KeyDiscoveryConvention : IModelConvention<EntityType>
     {
         public void Apply(EntityType edmDataModelItem, EdmModel model)
         {

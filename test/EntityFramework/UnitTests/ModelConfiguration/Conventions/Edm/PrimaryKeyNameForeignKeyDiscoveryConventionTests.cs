@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             // Foo.PId == Bar.PId
 
-            ((IEdmConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
+            ((IModelConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.NotNull(associationType.Constraint);
@@ -42,7 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             // Foo.PID == Bar.PId
 
-            ((IEdmConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
+            ((IModelConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.NotNull(associationType.Constraint);
@@ -67,7 +67,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             // Foo.PId1 == Bar.PId1 && Foo.PId2 == Bar.PId2
 
-            ((IEdmConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
+            ((IModelConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.NotNull(associationType.Constraint);
@@ -92,7 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             model.AddItem(associationType);
             model.AddItem(associationType);
 
-            ((IEdmConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
+            ((IModelConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, model);
 
             Assert.Null(associationType.Constraint);
@@ -111,7 +111,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             // Foo.PId == Bar.PId
 
-            ((IEdmConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
+            ((IModelConvention<AssociationType>)new PrimaryKeyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(associationType.Constraint);

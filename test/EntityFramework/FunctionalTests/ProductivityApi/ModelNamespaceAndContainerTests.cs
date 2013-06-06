@@ -19,6 +19,7 @@ public class ForMetadataLookup
 
 namespace This.Is.A.Normal.Namespace
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
 
     public class ContextInNormalNamespace : DbContext
@@ -55,7 +56,7 @@ namespace This.Is.A.Normal.Namespace
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Conventions.Remove<ModelContainerConvention>();
+            modelBuilder.Conventions.Remove<ModelContainerConvention>(DataSpace.CSpace);
         }
 
         public DbSet<ForMetadataLookup> ForMetadataLookup { get; set; }

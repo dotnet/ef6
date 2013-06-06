@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to enable cascade delete for any required relationships.
     /// </summary>
-    public class OneToManyCascadeDeleteConvention : IEdmConvention<AssociationType>
+    public class OneToManyCascadeDeleteConvention : IModelConvention<AssociationType>
     {
         public void Apply(AssociationType edmDataModelItem, EdmModel model)
         {

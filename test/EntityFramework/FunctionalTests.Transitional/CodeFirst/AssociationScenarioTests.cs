@@ -2067,7 +2067,7 @@ namespace FunctionalTests
         public void Discover_inverse_navigation_properties_using_annotation()
         {
             var modelBuilder = new AdventureWorksModelBuilder();
-            modelBuilder.Conventions.Remove<AssociationInverseDiscoveryConvention>();
+            modelBuilder.Conventions.Remove<AssociationInverseDiscoveryConvention>(DataSpace.CSpace);
 
             modelBuilder.Entity<ShoppingCartItem>();
             modelBuilder.Entity<Product>();

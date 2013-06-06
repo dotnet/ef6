@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = new EdmModel(DataSpace.CSpace);
             var entitySet = model.AddEntitySet("Cat", new EntityType("E", "N", DataSpace.CSpace));
 
-            ((IEdmConvention<EntitySet>)new PluralizingEntitySetNameConvention())
+            ((IModelConvention<EntitySet>)new PluralizingEntitySetNameConvention())
                 .Apply(entitySet, model);
 
             Assert.Equal("Cats", entitySet.Name);
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = new EdmModel(DataSpace.CSpace);
             var entitySet = model.AddEntitySet("Cats", new EntityType("E", "N", DataSpace.CSpace));
 
-            ((IEdmConvention<EntitySet>)new PluralizingEntitySetNameConvention())
+            ((IModelConvention<EntitySet>)new PluralizingEntitySetNameConvention())
                 .Apply(entitySet, model);
 
             Assert.Equal("Cats", entitySet.Name);
@@ -39,7 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             model.AddEntitySet("Cats", new EntityType("E", "N", DataSpace.CSpace));
             var entitySet = model.AddEntitySet("Cat", new EntityType("E", "N", DataSpace.CSpace));
 
-            ((IEdmConvention<EntitySet>)new PluralizingEntitySetNameConvention())
+            ((IModelConvention<EntitySet>)new PluralizingEntitySetNameConvention())
                 .Apply(entitySet, model);
 
             Assert.Equal("Cats1", entitySet.Name);
@@ -53,10 +53,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entitySet1 = model.AddEntitySet("Cats", new EntityType("E", "N", DataSpace.CSpace));
             var entitySet2 = model.AddEntitySet("Cat", new EntityType("E", "N", DataSpace.CSpace));
 
-            ((IEdmConvention<EntitySet>)new PluralizingEntitySetNameConvention())
+            ((IModelConvention<EntitySet>)new PluralizingEntitySetNameConvention())
                 .Apply(entitySet1, model);
 
-            ((IEdmConvention<EntitySet>)new PluralizingEntitySetNameConvention())
+            ((IModelConvention<EntitySet>)new PluralizingEntitySetNameConvention())
                 .Apply(entitySet2, model);
 
             Assert.Equal("Cats", entitySet1.Name);

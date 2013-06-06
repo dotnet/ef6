@@ -91,7 +91,7 @@ namespace System.Data.Entity
         {
         }
 
-        private static IEnumerable<IConvention> SelectConventionSet(DbModelBuilderVersion modelBuilderVersion)
+        private static ConventionSet SelectConventionSet(DbModelBuilderVersion modelBuilderVersion)
         {
             switch (modelBuilderVersion)
             {

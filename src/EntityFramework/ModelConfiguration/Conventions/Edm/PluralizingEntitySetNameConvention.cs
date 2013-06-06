@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to set the entity set name to be a pluralized version of the entity type name.
     /// </summary>
-    public class PluralizingEntitySetNameConvention : IEdmConvention<EntitySet>
+    public class PluralizingEntitySetNameConvention : IModelConvention<EntitySet>
     {
         private static readonly IPluralizationService _pluralizationService
             = DbConfiguration.GetService<IPluralizationService>();

@@ -1,20 +1,22 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.ModelConfiguration
+namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
-    using System.Data.Entity.ModelConfiguration.Conventions;
+    using System.Data.Entity.ModelConfiguration.Conventions.Sets;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using System.Reflection;
 
+    /// <summary>
+    ///     A convention that doesn't override configuration.
+    /// </summary>
     public class Convention : IConvention
     {
-        private readonly ConventionsConfiguration _conventionsConfiguration = new ConventionsConfiguration(Enumerable.Empty<IConvention>());
+        private readonly ConventionsConfiguration _conventionsConfiguration = new ConventionsConfiguration(new ConventionSet());
 
         /// <summary>
         ///     The derived class can use the default constructor to apply a set rule of that change the model configuration.

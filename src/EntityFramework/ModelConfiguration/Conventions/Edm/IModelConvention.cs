@@ -4,9 +4,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
 
-    public interface IEdmConvention<TEdmDataModelItem> : IConvention
-        where TEdmDataModelItem : MetadataItem
+    public interface IModelConvention : IConvention
     {
-        void Apply(TEdmDataModelItem edmDataModelItem, EdmModel model);
+        void Apply(EdmModel model);
     }
 }

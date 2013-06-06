@@ -12,7 +12,7 @@ namespace System.Data.Entity.Infrastructure
     ///     <see cref="DbContext" /> class as the container for the conceptual model built by
     ///     Code First.
     /// </summary>
-    public class ModelContainerConvention : IEdmConvention
+    public class ModelContainerConvention : IModelConvention
     {
         #region Fields and constructors
 

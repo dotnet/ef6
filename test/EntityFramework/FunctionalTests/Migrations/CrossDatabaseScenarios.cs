@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using Xunit;
@@ -15,7 +16,7 @@ namespace System.Data.Entity.Migrations
 
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>();
+                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>(DataSpace.CSpace);
 
                 base.OnModelCreating(modelBuilder);
             }

@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Infrastructure
 {
-    using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.Utilities;
 
     /// <summary>

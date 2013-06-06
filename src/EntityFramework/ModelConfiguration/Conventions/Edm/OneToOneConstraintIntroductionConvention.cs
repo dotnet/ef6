@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to configure the primary key(s) of the dependent entity type as foreign key(s) in a one:one relationship.
     /// </summary>
-    public class OneToOneConstraintIntroductionConvention : IEdmConvention<AssociationType>
+    public class OneToOneConstraintIntroductionConvention : IModelConvention<AssociationType>
     {
         public void Apply(AssociationType edmDataModelItem, EdmModel model)
         {

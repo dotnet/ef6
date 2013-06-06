@@ -30,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             // Foo.Id == Foo.NavId
 
-            ((IEdmConvention<AssociationType>)new NavigationPropertyNameForeignKeyDiscoveryConvention())
+            ((IModelConvention<AssociationType>)new NavigationPropertyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.NotNull(associationType.Constraint);
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             // Foo.Id == Bar.NavId
 
-            ((IEdmConvention<AssociationType>)new NavigationPropertyNameForeignKeyDiscoveryConvention())
+            ((IModelConvention<AssociationType>)new NavigationPropertyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.NotNull(associationType.Constraint);
@@ -74,7 +74,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             // Foo.ID == Bar.NavId
 
-            ((IEdmConvention<AssociationType>)new NavigationPropertyNameForeignKeyDiscoveryConvention())
+            ((IModelConvention<AssociationType>)new NavigationPropertyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.NotNull(associationType.Constraint);
@@ -100,7 +100,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             // Foo.Id1 == Bar.NavId1 && Foo.Id2 == Bar.NavId2
 
-            ((IEdmConvention<AssociationType>)new NavigationPropertyNameForeignKeyDiscoveryConvention())
+            ((IModelConvention<AssociationType>)new NavigationPropertyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.NotNull(associationType.Constraint);
@@ -126,7 +126,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             model.AddItem(associationType);
             model.AddItem(associationType);
 
-            ((IEdmConvention<AssociationType>)new NavigationPropertyNameForeignKeyDiscoveryConvention())
+            ((IModelConvention<AssociationType>)new NavigationPropertyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, model);
 
             Assert.NotNull(associationType.Constraint);
@@ -146,7 +146,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             // Foo.Id == Bar.NavId
 
-            ((IEdmConvention<AssociationType>)new NavigationPropertyNameForeignKeyDiscoveryConvention())
+            ((IModelConvention<AssociationType>)new NavigationPropertyNameForeignKeyDiscoveryConvention())
                 .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(associationType.Constraint);

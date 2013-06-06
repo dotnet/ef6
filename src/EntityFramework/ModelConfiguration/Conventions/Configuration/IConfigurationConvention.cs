@@ -4,7 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.ModelConfiguration.Configuration;
 
-    public interface IConfigurationConvention : IConvention
+    internal interface IConfigurationConvention : IConvention
     {
         void Apply(ModelConfiguration modelConfiguration);
     }

@@ -40,7 +40,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             associationType.Constraint = associationConstraint;
 
-            ((IEdmConvention<AssociationType>)new ForeignKeyAssociationMultiplicityConvention())
+            ((IModelConvention<AssociationType>)new ForeignKeyAssociationMultiplicityConvention())
                 .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.True(associationType.SourceEnd.IsRequired());

@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
             entityType.AddKeyMember(property);
 
-            ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
+            ((IModelConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(
@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
             entityType.AddKeyMember(property);
 
-            ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
+            ((IModelConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(
@@ -47,7 +47,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
             entityType.AddKeyMember(property);
 
-            ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
+            ((IModelConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(
@@ -76,7 +76,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     new[] { property },
                     new[] { property });
 
-            ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
+            ((IModelConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, model);
 
             Assert.Null(entityType.KeyProperties.Single().GetStoreGeneratedPattern());
@@ -113,7 +113,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     new[] { property },
                     new[] { property });
 
-            ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
+            ((IModelConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, model);
 
             Assert.Equal(
@@ -128,7 +128,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddKeyMember(property);
 
-            ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
+            ((IModelConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(entityType.KeyProperties.Single().GetStoreGeneratedPattern());
@@ -143,7 +143,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddKeyMember(property);
             entityType.AddKeyMember(EdmProperty.Primitive("K", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
-            ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
+            ((IModelConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(
@@ -169,7 +169,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             model.AddAssociationType(associationType);
 
-            ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
+            ((IModelConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, model);
 
             Assert.Null(entityType.KeyProperties.Single().GetStoreGeneratedPattern());
@@ -192,7 +192,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             model.AddAssociationType(associationType);
 
-            ((IEdmConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
+            ((IModelConvention<EntityType>)new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, model);
 
             Assert.NotNull(entityType.KeyProperties.Single().GetStoreGeneratedPattern());

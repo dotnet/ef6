@@ -5,7 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Reflection;
 
-    public interface IConfigurationConvention<TMemberInfo> : IConvention
+    internal interface IConfigurationConvention<TMemberInfo> : IConvention
         where TMemberInfo : MemberInfo
     {
         void Apply(TMemberInfo memberInfo, ModelConfiguration modelConfiguration);

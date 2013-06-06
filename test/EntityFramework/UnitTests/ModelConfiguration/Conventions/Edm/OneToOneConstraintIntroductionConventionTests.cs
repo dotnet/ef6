@@ -23,7 +23,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             associationType.MarkPrincipalConfigured();
 
-            ((IEdmConvention<AssociationType>)new OneToOneConstraintIntroductionConvention())
+            ((IModelConvention<AssociationType>)new OneToOneConstraintIntroductionConvention())
                 .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
             Assert.NotNull(associationType.Constraint);

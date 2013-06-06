@@ -73,11 +73,7 @@ namespace System.Data.Entity.Utilities
 
             if (!type.IsGenericTypeDefinition)
             {
-                var interfaceImpl = (interfaceOrBaseType.IsInterface ? type.GetInterfaces() : type.GetBaseTypes())
-                    .Union(new[] { type })
-                    .SingleOrDefault(
-                        t => t.IsGenericType
-                             && t.GetGenericTypeDefinition() == interfaceOrBaseType);
+                var interfaceImpl = GetGenericTypeImplementations(type, interfaceOrBaseType).SingleOrDefault();
 
                 if (interfaceImpl != null)
                 {
@@ -86,6 +82,32 @@ namespace System.Data.Entity.Utilities
             }
 
             return null;
+        }
+
+        /// <summary>
+        ///     Determine if the given type type implements the given generic interface or derives from the given generic type,
+        ///     and if so return the concrete types implemented.
+        /// </summary>
+        /// <param name="type"> The type to examine. </param>
+        /// <param name="interfaceOrBaseType"> The generic type to be queried for. </param>
+        /// <returns> 
+        ///     The generic types constructed from <paramref name="interfaceOrBaseType"/> and implemented by <paramref name="type"/>.
+        /// </returns>
+        public static IEnumerable<Type> GetGenericTypeImplementations(this Type type, Type interfaceOrBaseType)
+        {
+            DebugCheck.NotNull(type);
+            DebugCheck.NotNull(interfaceOrBaseType);
+
+            if (!type.IsGenericTypeDefinition)
+            {
+                return (interfaceOrBaseType.IsInterface ? type.GetInterfaces() : type.GetBaseTypes())
+                    .Union(new[] { type })
+                    .Where(
+                        t => t.IsGenericType
+                             && t.GetGenericTypeDefinition() == interfaceOrBaseType);
+            }
+
+            return Enumerable.Empty<Type>();
         }
 
         public static IEnumerable<Type> GetBaseTypes(this Type type)

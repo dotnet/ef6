@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             complexEntityType.NamespaceName = "Foo";
 
-            ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
             Assert.Equal("Foo", model.ComplexTypes.Single().NamespaceName);
         }
@@ -30,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             EntityType complexEntityType;
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
 
-            ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
             Assert.Equal(0, model.AssociationTypes.Count());
 
@@ -50,7 +50,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             complexEntityType.AddKeyMember(
                 EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
-            ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -67,7 +67,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             complexEntityType.BaseType = new EntityType("E", "N", DataSpace.CSpace);
 
-            ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -88,7 +88,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         IsExplicitEntity = true
                     });
 
-            ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -111,7 +111,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                       };
             complexEntityType.AddNavigationProperty("N", associationType);
 
-            ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -128,7 +128,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             model.AddItem(model.AssociationTypes.Single());
 
-            ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
             Assert.Equal(0, model.AssociationTypes.Count());
 
@@ -156,7 +156,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     new[] { property },
                     new[] { property });
 
-            ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -173,7 +173,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             model.AssociationTypes.Single().SetConfiguration(42);
 
-            ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -197,7 +197,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             associationType.TargetEnd
                 = new AssociationEndMember("T", complexEntityType);
 
-            ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -214,7 +214,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             model.AssociationTypes.Single().TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 
-            ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -233,7 +233,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             declaringEntityType.AddNavigationProperty("E.C2", model.AssociationTypes.Single());
 
-            ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
             Assert.Equal(0, model.AssociationTypes.Count());
 
@@ -250,7 +250,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             declaringEntityType.NavigationProperties.Single().SetConfiguration(42);
 
-            ((IEdmConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
 
             Assert.Equal(1, model.AssociationTypes.Count());
 

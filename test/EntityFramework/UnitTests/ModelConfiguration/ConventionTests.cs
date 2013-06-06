@@ -5,27 +5,17 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
+    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Linq.Expressions;
     using Moq;
-    using Moq.Protected;
     using Xunit;
     using StringPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.StringPropertyConfiguration
         ;
 
-    internal class ConventionTests
+    public class ConventionTests
     {
-        [Fact]
-        public void Ctor_calls_Apply()
-        {
-            var mockConfigurationConvention = new Mock<Convention>();
-
-            Assert.NotNull(mockConfigurationConvention.Object);
-
-            mockConfigurationConvention.Protected().Verify("Apply", Times.Once());
-        }
-
         [Fact]
         public void Entities_returns_a_new_object()
         {

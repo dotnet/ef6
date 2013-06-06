@@ -8,24 +8,28 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.Sets
 
     internal static class V2ConventionSet
     {
-        private static readonly IConvention[] _conventions;
+        private static readonly ConventionSet _conventions;
 
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static V2ConventionSet()
         {
-            var conventions = new List<IConvention>(V1ConventionSet.Conventions);
+            var dbConventions = new List<IConvention>(V1ConventionSet.Conventions.StoreModelConventions);
 
             var columnOrderingConventionIndex
-                = conventions.FindIndex(c => c.GetType() == typeof(ColumnOrderingConvention));
+                = dbConventions.FindIndex(c => c.GetType() == typeof(ColumnOrderingConvention));
 
             Debug.Assert(columnOrderingConventionIndex != -1);
 
-            conventions[columnOrderingConventionIndex] = new ColumnOrderingConventionStrict();
+            dbConventions[columnOrderingConventionIndex] = new ColumnOrderingConventionStrict();
 
-            _conventions = conventions.ToArray();
+            _conventions = new ConventionSet(
+                V1ConventionSet.Conventions.ConfigurationConventions,
+                V1ConventionSet.Conventions.ConceptualModelConventions,
+                V1ConventionSet.Conventions.ConceptualToStoreMappingConventions,
+                dbConventions);
         }
 
-        public static IConvention[] Conventions
+        public static ConventionSet Conventions
         {
             get { return _conventions; }
         }

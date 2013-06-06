@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to configure a type as a complex type if it has no primary key, no mapped base type and no navigation properties.
     /// </summary>
-    public class ComplexTypeDiscoveryConvention : IEdmConvention
+    public class ComplexTypeDiscoveryConvention : IModelConvention
     {
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]

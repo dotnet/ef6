@@ -34,9 +34,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Conventions
                 .Having(capturingPredicate)
                 .Configure(configurationAction);
 
-            Assert.Equal(36, conventions.Conventions.Count());
+            Assert.Equal(16, conventions.ConfigurationConventions.Count());
 
-            var convention = (TypeConventionOfTypeWithHaving<object, object>)conventions.Conventions.Last();
+            var convention = (TypeConventionOfTypeWithHaving<object, object>)conventions.ConfigurationConventions.Last();
             Assert.Equal(2, convention.Predicates.Count());
             Assert.Same(predicate, convention.Predicates.Last());
             Assert.Same(capturingPredicate, convention.CapturingPredicate);

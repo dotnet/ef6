@@ -34,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                              RelationshipType = associationType
                                          };
 
-            ((IEdmConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
+            ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
                 .Apply(navigationProperty, new EdmModel(DataSpace.CSpace));
 
             Assert.Same(associationConstraint, navigationProperty.Association.Constraint);
@@ -48,7 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                              RelationshipType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                                          };
 
-            ((IEdmConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
+            ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
                 .Apply(navigationProperty, new EdmModel(DataSpace.CSpace));
 
             Assert.Null(navigationProperty.Association.Constraint);
@@ -68,7 +68,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var foreignKeyAnnotation = new ForeignKeyAttribute("AId");
             navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
 
-            ((IEdmConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
+            ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
                 .Apply(navigationProperty, model);
 
             Assert.Null(associationType.Constraint);
@@ -91,7 +91,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var foreignKeyAnnotation = new ForeignKeyAttribute("Fk");
             navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
 
-            ((IEdmConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
+            ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
                 .Apply(navigationProperty, model);
 
             Assert.NotNull(associationType.Constraint);
@@ -119,7 +119,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var foreignKeyAnnotation = new ForeignKeyAttribute("Fk2,Fk1");
             navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
 
-            ((IEdmConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
+            ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
                 .Apply(navigationProperty, model);
 
             Assert.NotNull(associationType.Constraint);
@@ -145,7 +145,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Assert.Equal(
                 Strings.ForeignKeyAttributeConvention_InvalidKey("N", mockType.Object, "_Fk", mockType.Object),
                 Assert.Throws<InvalidOperationException>(
-                    () => ((IEdmConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
+                    () => ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
                               .Apply(navigationProperty, model)).Message);
         }
 
@@ -168,7 +168,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Assert.Equal(
                 Strings.ForeignKeyAttributeConvention_EmptyKey("N", mockType.Object),
                 Assert.Throws<InvalidOperationException>(
-                    () => ((IEdmConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
+                    () => ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
                               .Apply(navigationProperty, model)).Message);
         }
     }

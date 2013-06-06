@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entitySet = database.AddEntitySet("ES", table);
             entitySet.Table = "Customer";
 
-            ((IDbConvention<EntityType>)new PluralizingTableNameConvention()).Apply(table, database);
+            ((IModelConvention<EntityType>)new PluralizingTableNameConvention()).Apply(table, database);
 
             Assert.Equal("Customers", entitySet.Table);
         }
@@ -31,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entitySet = database.AddEntitySet("ES", table);
             entitySet.Table = "Customer";
 
-            ((IDbConvention<EntityType>)new PluralizingTableNameConvention()).Apply(table, database);
+            ((IModelConvention<EntityType>)new PluralizingTableNameConvention()).Apply(table, database);
 
             Assert.Equal("Customer", entitySet.Table);
             Assert.Equal("Foo", table.GetTableName().Name);
@@ -45,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entitySet = database.AddEntitySet("ES", table);
             entitySet.Table = "Customers";
 
-            ((IDbConvention<EntityType>)new PluralizingTableNameConvention()).Apply(table, database);
+            ((IModelConvention<EntityType>)new PluralizingTableNameConvention()).Apply(table, database);
 
             Assert.Equal("Customers", entitySet.Table);
         }
@@ -61,7 +61,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entitySetB = database.AddEntitySet("ESB", tableB);
             entitySetB.Table = "Customer";
 
-            ((IDbConvention<EntityType>)new PluralizingTableNameConvention()).Apply(tableB, database);
+            ((IModelConvention<EntityType>)new PluralizingTableNameConvention()).Apply(tableB, database);
 
             Assert.Equal("Customers1", entitySetB.Table);
         }

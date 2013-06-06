@@ -9,20 +9,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
     public partial class ConventionsConfiguration
     {
-        private class EdmConventionDispatcher : EdmModelVisitor
+        private class ModelConventionDispatcher : EdmModelVisitor
         {
             private readonly IConvention _convention;
             private readonly EdmModel _model;
-            private readonly DataSpace _dataSpace;
 
-            public EdmConventionDispatcher(IConvention convention, EdmModel model, DataSpace dataSpace = DataSpace.CSpace)
+            public ModelConventionDispatcher(IConvention convention, EdmModel model)
             {
                 Check.NotNull(convention, "convention");
                 Check.NotNull(model, "model");
 
                 _convention = convention;
                 _model = model;
-                _dataSpace = dataSpace;
             }
 
             public void Dispatch()
@@ -33,45 +31,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             private void Dispatch<TEdmDataModelItem>(TEdmDataModelItem item)
                 where TEdmDataModelItem : MetadataItem
             {
-                if (_dataSpace == DataSpace.CSpace)
-                {
-                    var convention = _convention as IEdmConvention<TEdmDataModelItem>;
+                var convention = _convention as IModelConvention<TEdmDataModelItem>;
 
-                    if (convention != null)
-                    {
-                        convention.Apply(item, _model);
-                    }
-                }
-                else if (_dataSpace == DataSpace.SSpace)
+                if (convention != null)
                 {
-                    var convention = _convention as IDbConvention<TEdmDataModelItem>;
-
-                    if (convention != null)
-                    {
-                        convention.Apply(item, _model);
-                    }
+                    convention.Apply(item, _model);
                 }
             }
 
             protected internal override void VisitEdmModel(EdmModel item)
             {
-                if (_dataSpace == DataSpace.CSpace)
-                {
-                    var convention = _convention as IEdmConvention;
+                var convention = _convention as IModelConvention;
 
-                    if (convention != null)
-                    {
-                        convention.Apply(item);
-                    }
-                }
-                else if (_dataSpace == DataSpace.SSpace)
+                if (convention != null)
                 {
-                    var convention = _convention as IDbConvention;
-
-                    if (convention != null)
-                    {
-                        convention.Apply(item);
-                    }
+                    convention.Apply(item);
                 }
 
                 base.VisitEdmModel(item);

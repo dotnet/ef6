@@ -20,7 +20,7 @@ namespace System.Data.Entity.Infrastructure
     [Obsolete(
         "The IncludeMetadataConvention is no longer used. EdmMetadata is not included in the model. <see cref=\"EdmModelDiffer\" /> is now used to detect changes in the model."
         )]
-    public class IncludeMetadataConvention : IConfigurationConvention
+    public class IncludeMetadataConvention : Convention
     {
         /// <summary>
         ///     Adds metadata to the given model configuration.

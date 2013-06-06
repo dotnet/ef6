@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property1);
             var property = property1;
 
-            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
+            ((IModelConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.True(entityType.KeyProperties.Contains(property));
         }
@@ -31,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property1);
             var property = property1;
 
-            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
+            ((IModelConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.False(property.Nullable);
         }
@@ -45,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property1);
             var property = property1;
 
-            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
+            ((IModelConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.True(entityType.KeyProperties.Contains(property));
         }
@@ -62,7 +62,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property1);
             var idProperty = property1;
 
-            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
+            ((IModelConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal(1, entityType.KeyProperties.Count);
             Assert.True(entityType.KeyProperties.Contains(idProperty));
@@ -77,7 +77,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property1);
             var property = property1;
 
-            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
+            ((IModelConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.True(entityType.KeyProperties.Contains(property));
         }
@@ -91,7 +91,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property1);
             var property = property1;
 
-            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
+            ((IModelConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.False(entityType.KeyProperties.Contains(property));
         }
@@ -106,7 +106,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = property1;
             entityType.AddKeyMember(EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
-            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
+            ((IModelConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.False(entityType.KeyProperties.Contains(property));
         }
@@ -121,7 +121,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = property1;
             entityType.BaseType = new EntityType("E", "N", DataSpace.CSpace);
 
-            ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
+            ((IModelConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace));
 
             Assert.False(entityType.KeyProperties.Contains(property));
         }
@@ -142,7 +142,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Assert.Equal(
                 Strings.MultiplePropertiesMatchedAsKeys("ID", "Foo"),
                 Assert.Throws<InvalidOperationException>(
-                    () => ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace))).Message);
+                    () => ((IModelConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace))).Message);
         }
 
         [Fact]
@@ -161,7 +161,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Assert.Equal(
                 Strings.MultiplePropertiesMatchedAsKeys("FOOId", "Foo"),
                 Assert.Throws<InvalidOperationException>(
-                    () => ((IEdmConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace))).Message);
+                    () => ((IModelConvention<EntityType>)new IdKeyDiscoveryConvention()).Apply(entityType, new EdmModel(DataSpace.CSpace))).Message);
         }
     }
 }

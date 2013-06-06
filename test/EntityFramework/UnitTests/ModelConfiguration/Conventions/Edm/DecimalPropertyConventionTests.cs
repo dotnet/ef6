@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
 
-            ((IEdmConvention<EdmProperty>)new DecimalPropertyConvention())
+            ((IModelConvention<EdmProperty>)new DecimalPropertyConvention())
                 .Apply(property, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal((byte)18, property.Precision);
@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
             property.Precision = 22;
 
-            ((IEdmConvention<EdmProperty>)new DecimalPropertyConvention())
+            ((IModelConvention<EdmProperty>)new DecimalPropertyConvention())
                 .Apply(property, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal((byte)22, property.Precision);
@@ -38,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
             property.Scale = 4;
 
-            ((IEdmConvention<EdmProperty>)new DecimalPropertyConvention())
+            ((IModelConvention<EdmProperty>)new DecimalPropertyConvention())
                 .Apply(property, new EdmModel(DataSpace.CSpace));
 
             Assert.Equal((byte)18, property.Precision);

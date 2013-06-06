@@ -13598,6 +13598,30 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        ///     A string like "The data space '{0}' cannot be used to add a model convention. The only valid values are 'CSpace' and 'SSpace'"
+        /// </summary>
+        internal static string ConventionsConfiguration_InvalidDataSpace(object p0)
+        {
+            return EntityRes.GetString(EntityRes.ConventionsConfiguration_InvalidDataSpace, p0);
+        }
+
+        /// <summary>
+        ///     A string like "The specified convention of type '{0}' is not a configuration convention, so a data space must be specified."
+        /// </summary>
+        internal static string ConventionsConfiguration_NotConfigurationConvention(object p0)
+        {
+            return EntityRes.GetString(EntityRes.ConventionsConfiguration_NotConfigurationConvention, p0);
+        }
+
+        /// <summary>
+        ///     A string like "The specified convention of type '{0}' is not a model convention, so a data space cannot be specified."
+        /// </summary>
+        internal static string ConventionsConfiguration_NotModelConvention(object p0)
+        {
+            return EntityRes.GetString(EntityRes.ConventionsConfiguration_NotModelConvention, p0);
+        }
+
+        /// <summary>
         ///     A string like "The scale cannot be set on the DateTime property '{0}', only specify the precision."
         /// </summary>
         internal static string LightweightPrimitivePropertyConfiguration_DateTimeScale(object p0)
@@ -17007,6 +17031,9 @@ namespace System.Data.Entity.Resources
         internal const string TestDoubleNotImplemented = "TestDoubleNotImplemented";
         internal const string TestDoublesCannotBeConverted = "TestDoublesCannotBeConverted";
         internal const string InvalidNavigationPropertyComplexType = "InvalidNavigationPropertyComplexType";
+        internal const string ConventionsConfiguration_InvalidDataSpace = "ConventionsConfiguration_InvalidDataSpace";
+        internal const string ConventionsConfiguration_NotConfigurationConvention = "ConventionsConfiguration_NotConfigurationConvention";
+        internal const string ConventionsConfiguration_NotModelConvention = "ConventionsConfiguration_NotModelConvention";
         internal const string LightweightPrimitivePropertyConfiguration_DateTimeScale = "LightweightPrimitivePropertyConfiguration_DateTimeScale";
         internal const string LightweightPrimitivePropertyConfiguration_DecimalNoScale = "LightweightPrimitivePropertyConfiguration_DecimalNoScale";
 
