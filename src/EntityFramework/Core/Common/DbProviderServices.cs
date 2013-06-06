@@ -323,13 +323,7 @@ namespace System.Data.Entity.Core.Common
         {
             try
             {
-                var spatialReader = GetDbSpatialDataReader(fromReader, manifestToken);
-                if (spatialReader == null)
-                {
-                    throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices);
-                }
-
-                return spatialReader;
+                return GetDbSpatialDataReader(fromReader, manifestToken);
             }
             catch (ProviderIncompatibleException)
             {
@@ -355,34 +349,20 @@ namespace System.Data.Entity.Core.Common
             )]
         public DbSpatialServices GetSpatialServices(string manifestToken)
         {
-            return GetSpatialServicesInternal(manifestToken, throwIfNotImplemented: true);
-        }
-
-        private DbSpatialServices GetSpatialServicesInternal(string manifestToken, bool throwIfNotImplemented)
-        {
             DbSpatialServices spatialProvider;
             try
             {
-#pragma warning disable 612,618
+#pragma warning disable 612, 618
                 spatialProvider = DbGetSpatialServices(manifestToken);
-#pragma warning restore 612,618
+#pragma warning restore 612, 618
             }
             catch (ProviderIncompatibleException)
             {
-                if (throwIfNotImplemented)
-                {
-                    throw;
-                }
-                return null;
+                throw;
             }
             catch (Exception e)
             {
                 throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices, e);
-            }
-
-            if (throwIfNotImplemented && spatialProvider == null)
-            {
-                throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices);
             }
 
             return spatialProvider;
@@ -416,12 +396,13 @@ namespace System.Data.Entity.Core.Common
             DebugCheck.NotNull(key);
             DebugCheck.NotNull(providerServices);
 
+#pragma warning disable 612, 618
             var services = _spatialServices.GetOrAdd(
                 key,
-                k =>
-                resolver.GetService<DbSpatialServices>(k)
-                ?? providerServices().GetSpatialServicesInternal(k.ProviderManifestToken, throwIfNotImplemented: false)
-                ?? resolver.GetService<DbSpatialServices>());
+                k => resolver.GetService<DbSpatialServices>(k)
+                     ?? providerServices().GetSpatialServices(k.ProviderManifestToken)
+                     ?? resolver.GetService<DbSpatialServices>());
+#pragma warning restore 612, 618
 
             if (services == null)
             {
@@ -441,7 +422,7 @@ namespace System.Data.Entity.Core.Common
             Check.NotNull(fromReader, "fromReader");
 
             // Must be a virtual method; abstract would break previous implementors of DbProviderServices
-            throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices);
+            return null;
         }
 
         /// <summary>
@@ -454,7 +435,7 @@ namespace System.Data.Entity.Core.Common
         protected virtual DbSpatialServices DbGetSpatialServices(string manifestToken)
         {
             // Must be a virtual method; abstract would break previous implementors of DbProviderServices
-            throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices);
+            return null;
         }
 
         internal void SetParameterValue(DbParameter parameter, TypeUsage parameterType, object value)

@@ -274,17 +274,13 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             var fieldCount = reader.FieldCount;
             var hasSpatialColumns = false;
-            DbSpatialDataReader spatialDataReader = null;
+            var spatialDataReader = providerSerivces.GetSpatialDataReader(reader, providerManifestToken);
             bool[] geographyColumns = null;
             bool[] geometryColumns = null;
-            try
+            if (spatialDataReader != null)
             {
-                spatialDataReader = providerSerivces.GetSpatialDataReader(reader, providerManifestToken);
                 geographyColumns = new bool[fieldCount];
                 geometryColumns = new bool[fieldCount];
-            }
-            catch (ProviderIncompatibleException)
-            {
             }
 
             var dataTypeNames = new string[fieldCount];

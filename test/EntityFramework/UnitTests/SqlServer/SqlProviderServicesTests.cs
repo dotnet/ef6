@@ -5,7 +5,6 @@ namespace System.Data.Entity.SqlServer
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Config;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
@@ -184,13 +183,10 @@ namespace System.Data.Entity.SqlServer
             }
 
             [Fact]
-            public void GetService_throws_for_manifest_tokens_that_dont_support_spatial()
+            public void GetService_returns_null_for_manifest_tokens_that_dont_support_spatial()
             {
                 var key = new DbProviderInfo("System.Data.SqlClient", "2005");
-                Assert.Equal(
-                    Strings.SqlProvider_Sql2008RequiredForSpatial,
-                    Assert.Throws<ProviderIncompatibleException>(() => SqlProviderServices.Instance.GetService<DbSpatialServices>(key))
-                          .Message);
+                Assert.Null(SqlProviderServices.Instance.GetService<DbSpatialServices>(key));
             }
 
             [Fact]
@@ -298,8 +294,8 @@ namespace System.Data.Entity.SqlServer
 
                 Assert.True(
                     interceptor.Commands.Select(c => c.CommandText)
-                               .Single()
-                               .StartsWith("SELECT Count(*) FROM sys.master_files WHERE [physical_name]=N'"));
+                        .Single()
+                        .StartsWith("SELECT Count(*) FROM sys.master_files WHERE [physical_name]=N'"));
             }
         }
 
@@ -375,8 +371,9 @@ namespace System.Data.Entity.SqlServer
 
                     Assert.Equal(1, readerInterceptor.Commands.Count);
 
-                    Assert.True(readerInterceptor.Commands.Select(
-                        c => c.CommandText).Single().StartsWith("SELECT [d].[name] FROM sys.databases "));
+                    Assert.True(
+                        readerInterceptor.Commands.Select(
+                            c => c.CommandText).Single().StartsWith("SELECT [d].[name] FROM sys.databases "));
                 }
             }
         }

@@ -3,7 +3,9 @@
 namespace System.Data.Entity.Spatial
 {
     using System.Data.Common;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Threading;
@@ -55,7 +57,11 @@ namespace System.Data.Entity.Spatial
 
             var providerServices = providerFactory.GetProviderServices();
             var result = providerServices.GetSpatialDataReader(reader, storeItemCollection.StoreProviderManifestToken);
-            Debug.Assert(result != null, "DbProviderServices did not throw ProviderIncompatibleException for null IDbSpatialDataReader");
+
+            if (result == null)
+            {
+                throw new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices);
+            }
 
             return result;
         }

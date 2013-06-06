@@ -76,14 +76,9 @@ namespace System.Data.Entity.SqlServer
                             }
 
                             var asSpatialKey = k as DbProviderInfo;
-                            if (asSpatialKey != null
-                                && asSpatialKey.ProviderInvariantName == ProviderInvariantName)
-                            {
-                                ValidateVersionHint(asSpatialKey.ProviderManifestToken);
-                                return true;
-                            }
-
-                            return false;
+                            return asSpatialKey != null
+                                   && asSpatialKey.ProviderInvariantName == ProviderInvariantName
+                                   && SupportsSpatial(asSpatialKey.ProviderManifestToken);
                         }));
         }
 
@@ -334,27 +329,29 @@ namespace System.Data.Entity.SqlServer
 
         protected override DbSpatialDataReader GetDbSpatialDataReader(DbDataReader fromReader, string versionHint)
         {
-            ValidateVersionHint(versionHint);
-
             var underlyingReader = fromReader as SqlDataReader;
             if (underlyingReader == null)
             {
                 throw new ProviderIncompatibleException(Strings.SqlProvider_NeedSqlDataReader(fromReader.GetType()));
             }
 
-            return new SqlSpatialDataReader(
-                GetSpatialServices(new DbProviderInfo(ProviderInvariantName, versionHint)), new SqlDataReaderWrapper(underlyingReader));
+            return SupportsSpatial(versionHint)
+                       ? new SqlSpatialDataReader(
+                             GetSpatialServices(new DbProviderInfo(ProviderInvariantName, versionHint)),
+                             new SqlDataReaderWrapper(underlyingReader))
+                       : null;
         }
 
         [Obsolete(
             "Return DbSpatialServices from the GetService method. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.")]
         protected override DbSpatialServices DbGetSpatialServices(string versionHint)
         {
-            ValidateVersionHint(versionHint);
-            return SqlSpatialServices.Instance;
+            return SupportsSpatial(versionHint)
+                       ? SqlSpatialServices.Instance
+                       : null;
         }
 
-        private static void ValidateVersionHint(string versionHint)
+        private static bool SupportsSpatial(string versionHint)
         {
             if (string.IsNullOrEmpty(versionHint))
             {
@@ -365,10 +362,7 @@ namespace System.Data.Entity.SqlServer
             var tokenVersion = SqlVersionUtils.GetSqlVersion(versionHint);
 
             // SQL spatial support is only available for SQL Server 2008 and later
-            if (tokenVersion < SqlVersion.Sql10)
-            {
-                throw new ProviderIncompatibleException(Strings.SqlProvider_Sql2008RequiredForSpatial);
-            }
+            return tokenVersion >= SqlVersion.Sql10;
         }
 
         /// <summary>
@@ -1092,7 +1086,7 @@ namespace System.Data.Entity.SqlServer
                         {
                             var rowsAffected = (int)Interception.Dispatch.Command.Scalar(
                                 command, new DbCommandInterceptionContext<object>());
-                         
+
                             databaseExistsInSysTables = (rowsAffected > 0);
                         }
                     });
@@ -1184,12 +1178,12 @@ namespace System.Data.Entity.SqlServer
             {
                 UsingMasterConnection(
                     sqlConnection, conn =>
-                    {
-                        using (var command = CreateCommand(conn, dropDatabaseScript, commandTimeout))
                         {
-                            Interception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext<int>());
-                        }
-                    });
+                            using (var command = CreateCommand(conn, dropDatabaseScript, commandTimeout))
+                            {
+                                Interception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext<int>());
+                            }
+                        });
             }
             catch (SqlException sqlException)
             {
@@ -1276,10 +1270,10 @@ namespace System.Data.Entity.SqlServer
         private static void UsingMasterConnection(DbConnection sqlConnection, Action<DbConnection> act)
         {
             var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString)
-                                        {
-                                            InitialCatalog = "master",
-                                            AttachDBFilename = string.Empty, // any AttachDB path specified is not relevant to master
-                                        };
+                {
+                    InitialCatalog = "master",
+                    AttachDBFilename = string.Empty, // any AttachDB path specified is not relevant to master
+                };
 
             try
             {

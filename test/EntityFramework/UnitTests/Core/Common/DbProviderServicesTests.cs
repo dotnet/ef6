@@ -33,23 +33,23 @@ namespace System.Data.Entity.Core.Common
                     = new Mock<DbProviderServices>(
                         (Func<IDbDependencyResolver>)(() => new Mock<IDbDependencyResolver>().Object),
                         new Lazy<DbCommandTreeDispatcher>(() => dispatcher))
-                          {
-                              CallBase = true
-                          }.Object;
+                        {
+                            CallBase = true
+                        }.Object;
 
                 var mockCommandTree
                     = new Mock<DbCommandTree>
-                          {
-                              DefaultValue = DefaultValue.Mock
-                          };
+                        {
+                            DefaultValue = DefaultValue.Mock
+                        };
 
                 mockCommandTree.SetupGet(m => m.DataSpace).Returns(DataSpace.SSpace);
 
                 var mockStoreItemCollection
                     = new Mock<StoreItemCollection>
-                          {
-                              DefaultValue = DefaultValue.Mock
-                          };
+                        {
+                            DefaultValue = DefaultValue.Mock
+                        };
 
                 mockCommandTree
                     .Setup(m => m.MetadataWorkspace.GetItemCollection(DataSpace.SSpace))
@@ -201,7 +201,7 @@ namespace System.Data.Entity.Core.Common
                 model.ProviderManifest = new SqlProviderManifest("2008");
 
                 var storeItemCollectionMock = new Mock<StoreItemCollection>(model) { CallBase = true };
-                
+
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>();
                 metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(storeItemCollectionMock.Object);
 
@@ -220,7 +220,7 @@ namespace System.Data.Entity.Core.Common
 
                 var providerFactoryServiceMock = new Mock<IDbProviderFactoryService>();
                 providerFactoryServiceMock.Setup(m => m.GetProviderFactory(It.IsAny<DbConnection>()))
-                                          .Returns(FakeSqlProviderFactory.Instance);
+                    .Returns(FakeSqlProviderFactory.Instance);
 
                 MutableResolver.AddResolver<IDbProviderFactoryService>(k => providerFactoryServiceMock.Object);
                 try
@@ -259,8 +259,8 @@ namespace System.Data.Entity.Core.Common
 
                 var testProvider = new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object));
                 testProvider.Protected()
-                            .Setup<DbSpatialServices>("DbGetSpatialServices", "Walk")
-                            .Returns(mockSpatialServices.Object);
+                    .Setup<DbSpatialServices>("DbGetSpatialServices", "Walk")
+                    .Returns(mockSpatialServices.Object);
 
                 Assert.Same(
                     mockSpatialServices.Object,
@@ -277,7 +277,7 @@ namespace System.Data.Entity.Core.Common
                 Assert.Same(
                     mockSpatialServices.Object,
                     new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object)).Object
-                    .GetSpatialServices(new DbProviderInfo("Satellite.Of", "Love")));
+                        .GetSpatialServices(new DbProviderInfo("Satellite.Of", "Love")));
             }
 
             [Fact]
@@ -287,13 +287,14 @@ namespace System.Data.Entity.Core.Common
 
                 var testProvider = new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object));
                 testProvider.Protected()
-                            .Setup<DbSpatialServices>("DbGetSpatialServices", "Love")
-                            .Throws(new Exception("Fail"));
+                    .Setup<DbSpatialServices>("DbGetSpatialServices", "Love")
+                    .Throws(new Exception("Fail"));
 
                 Assert.Equal(
                     Strings.ProviderDidNotReturnSpatialServices,
-                    Assert.Throws<ProviderIncompatibleException>(() => testProvider.Object
-                        .GetSpatialServices(new DbProviderInfo("Andy's.Chest", "Love"))).Message);
+                    Assert.Throws<ProviderIncompatibleException>(
+                        () => testProvider.Object
+                                  .GetSpatialServices(new DbProviderInfo("Andy's.Chest", "Love"))).Message);
             }
 
             [Fact]
@@ -303,13 +304,14 @@ namespace System.Data.Entity.Core.Common
 
                 var testProvider = new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object));
                 testProvider.Protected()
-                            .Setup<DbSpatialServices>("DbGetSpatialServices", "Love")
-                            .Throws(new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices));
+                    .Setup<DbSpatialServices>("DbGetSpatialServices", "Love")
+                    .Throws(new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices));
 
                 Assert.Equal(
                     Strings.ProviderDidNotReturnSpatialServices,
-                    Assert.Throws<ProviderIncompatibleException>(() => testProvider.Object
-                        .GetSpatialServices(new DbProviderInfo("HanginRound", "Love"))).Message);
+                    Assert.Throws<ProviderIncompatibleException>(
+                        () => testProvider.Object
+                                  .GetSpatialServices(new DbProviderInfo("HanginRound", "Love"))).Message);
             }
 
             [Fact]
@@ -319,13 +321,14 @@ namespace System.Data.Entity.Core.Common
 
                 var testProvider = new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object));
                 testProvider.Protected()
-                            .Setup<DbSpatialServices>("DbGetSpatialServices", "Love")
-                            .Returns((DbSpatialServices)null);
+                    .Setup<DbSpatialServices>("DbGetSpatialServices", "Love")
+                    .Returns((DbSpatialServices)null);
 
                 Assert.Equal(
                     Strings.ProviderDidNotReturnSpatialServices,
-                    Assert.Throws<ProviderIncompatibleException>(() => testProvider.Object
-                        .GetSpatialServices(new DbProviderInfo("Make.Up", "Love"))).Message);
+                    Assert.Throws<ProviderIncompatibleException>(
+                        () => testProvider.Object
+                                  .GetSpatialServices(new DbProviderInfo("Make.Up", "Love"))).Message);
             }
 
             [Fact]
@@ -334,14 +337,15 @@ namespace System.Data.Entity.Core.Common
                 var mockResolverServices = new Mock<DbSpatialServices>();
                 var mockResolver = new Mock<IDbDependencyResolver>();
                 mockResolver.Setup(
-                    m => m.GetService(typeof(DbSpatialServices),
+                    m => m.GetService(
+                        typeof(DbSpatialServices),
                         new DbProviderInfo("Wagon.Wheel", "Lou"))).Returns(mockResolverServices.Object);
 
                 var mockProviderServices = new Mock<DbSpatialServices>();
                 var testProvider = new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object));
                 testProvider.Protected()
-                            .Setup<DbSpatialServices>("DbGetSpatialServices", "Lou")
-                            .Returns(mockProviderServices.Object);
+                    .Setup<DbSpatialServices>("DbGetSpatialServices", "Lou")
+                    .Returns(mockProviderServices.Object);
 
 #pragma warning disable 612,618
                 Assert.Same(mockProviderServices.Object, testProvider.Object.GetSpatialServices("Lou"));
@@ -353,8 +357,8 @@ namespace System.Data.Entity.Core.Common
             {
                 var testProvider = new Mock<DbProviderServices>();
                 testProvider.Protected()
-                            .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
-                            .Throws(new Exception("Fail"));
+                    .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
+                    .Throws(new Exception("Fail"));
 
                 Assert.Equal(
                     Strings.ProviderDidNotReturnSpatialServices,
@@ -370,8 +374,8 @@ namespace System.Data.Entity.Core.Common
 
                 var testProvider = new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object));
                 testProvider.Protected()
-                            .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
-                            .Throws(new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices));
+                    .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
+                    .Throws(new ProviderIncompatibleException(Strings.ProviderDidNotReturnSpatialServices));
 
                 Assert.Equal(
                     Strings.ProviderDidNotReturnSpatialServices,
@@ -381,19 +385,17 @@ namespace System.Data.Entity.Core.Common
             }
 
             [Fact]
-            public void Obsolete_GetSpatialServices_throws_if_resolver_returns_null_and_provider_returns_null()
+            public void Obsolete_GetSpatialServices_returns_null_if_resolver_returns_null_and_provider_returns_null()
             {
                 var mockResolver = new Mock<IDbDependencyResolver>();
 
                 var testProvider = new Mock<DbProviderServices>((Func<IDbDependencyResolver>)(() => mockResolver.Object));
                 testProvider.Protected()
-                            .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
-                            .Returns((DbSpatialServices)null);
+                    .Setup<DbSpatialServices>("DbGetSpatialServices", "X")
+                    .Returns((DbSpatialServices)null);
 
-                Assert.Equal(
-                    Strings.ProviderDidNotReturnSpatialServices,
 #pragma warning disable 612,618
-                    Assert.Throws<ProviderIncompatibleException>(() => testProvider.Object.GetSpatialServices("X")).Message);
+                Assert.Null(testProvider.Object.GetSpatialServices("X"));
 #pragma warning restore 612,618
             }
 
@@ -412,8 +414,10 @@ namespace System.Data.Entity.Core.Common
 
                 var mockSpatialServices = new Mock<DbSpatialServices>();
                 var mockResolver = new Mock<IDbDependencyResolver>();
-                mockResolver.Setup(m => m.GetService(typeof(DbSpatialServices),
-                    new DbProviderInfo("New.York", "Conversation"))).Returns(mockSpatialServices.Object);
+                mockResolver.Setup(
+                    m => m.GetService(
+                        typeof(DbSpatialServices),
+                        new DbProviderInfo("New.York", "Conversation"))).Returns(mockSpatialServices.Object);
 
                 Assert.Same(
                     mockSpatialServices.Object,
@@ -487,7 +491,7 @@ namespace System.Data.Entity.Core.Common
             {
                 var services = new FakeSqlProviderServices();
                 services.AddDependencyResolver(new SingletonDependencyResolver<string>("Cheese", "Please"));
-                
+
                 Assert.Equal("Cheese", services.GetService<string>("Please"));
             }
         }

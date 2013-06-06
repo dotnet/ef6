@@ -26,7 +26,6 @@ namespace System.Data.Entity.Spatial
                 return spatialProvider;
             }
 
-            // Note: Manifest token is currently ignored for SQL Server spatial provider
             spatialProvider = _resolver.GetService<DbSpatialServices>(new DbProviderInfo("System.Data.SqlClient", "2012"));
             if (spatialProvider != null && spatialProvider.NativeTypesAvailable)
             {
