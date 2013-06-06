@@ -13,6 +13,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     internal class ModificationCommandTreeGenerator
@@ -23,19 +24,18 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private class TempDbContext : DbContext
         {
-            static TempDbContext()
-            {
-                Database.SetInitializer<TempDbContext>(null);
-            }
-
+            [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
             public TempDbContext(DbCompiledModel model)
                 : base(model)
             {
+                InternalContext.InitializerDisabled = true;
             }
 
+            [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
             public TempDbContext(DbConnection connection, DbCompiledModel model)
                 : base(connection, model, false)
             {
+                InternalContext.InitializerDisabled = true;
             }
         }
 

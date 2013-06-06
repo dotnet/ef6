@@ -21,7 +21,6 @@ namespace System.Data.Entity.Migrations
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Reflection;
     using System.Resources;
     using System.Xml.Linq;
     using DatabaseCreator = System.Data.Entity.Migrations.Utilities.DatabaseCreator;
@@ -40,9 +39,6 @@ namespace System.Data.Entity.Migrations
         public const string InitialDatabase = "0";
 
         private const string DefaultSchemaResourceKey = "DefaultSchema";
-
-        private static readonly MethodInfo _setInitializerMethod
-            = typeof(Database).GetMethod("SetInitializer");
 
         private readonly Lazy<XDocument> _emptyModel;
         private readonly DbMigrationsConfiguration _configuration;
@@ -98,15 +94,6 @@ namespace System.Data.Entity.Migrations
 
             _configuration = configuration;
             _calledByCreateDatabase = usersContext != null;
-
-            // If DbContext CreateDatabase is using Migrations then the user has not opted out of initializers
-            // and if we disable the initializer here then future calls to Initialize the database (for this or
-            // a different connection) will fail. So only disable the initializer if Migrations are being used
-            // explicitly.
-            if (usersContext == null)
-            {
-                DisableInitializer(_configuration.ContextType);
-            }
 
             if (_calledByCreateDatabase)
             {
@@ -234,15 +221,6 @@ namespace System.Data.Entity.Migrations
         public override DbMigrationsConfiguration Configuration
         {
             get { return _configuration; }
-        }
-
-        internal virtual void DisableInitializer(Type contextType)
-        {
-            Check.NotNull(contextType, "contextType");
-
-            _setInitializerMethod
-                .MakeGenericMethod(contextType)
-                .Invoke(null, new object[] { null });
         }
 
         internal override string TargetDatabase

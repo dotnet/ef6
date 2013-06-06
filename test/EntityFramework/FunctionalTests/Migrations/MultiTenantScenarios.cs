@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Common;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.History;
     using Xunit;
@@ -23,6 +24,15 @@ namespace System.Data.Entity.Migrations
 
         public class ContextA : DbContext
         {
+            public ContextA()
+            {
+            }
+
+            public ContextA(DbConnection existingConnection, bool contextOwnsConnection)
+                : base(existingConnection, contextOwnsConnection)
+            {
+            }
+
             public DbSet<TenantA> As { get; set; }
         }
 
@@ -36,6 +46,15 @@ namespace System.Data.Entity.Migrations
 
         public class ContextB : DbContext
         {
+            public ContextB()
+            {
+            }
+
+            public ContextB(DbConnection existingConnection, bool contextOwnsConnection)
+                : base(existingConnection, contextOwnsConnection)
+            {
+            }
+
             public DbSet<TenantB> Bs { get; set; }
         }
 
@@ -119,8 +138,18 @@ namespace System.Data.Entity.Migrations
             Database.SetInitializer(new CreateDatabaseIfNotExists<ContextA>());
             Database.SetInitializer(new CreateDatabaseIfNotExists<ContextB>());
 
-            CreateContext<ContextA>().Database.Initialize(true);
-            CreateContext<ContextB>().Database.Initialize(true);
+            using (var connection = TestDatabase.CreateConnection(TestDatabase.ConnectionString))
+            {
+                using (var context = new ContextA(connection, contextOwnsConnection: false))
+                {
+                    context.Database.Initialize(true);
+                }
+
+                using (var context = new ContextB(connection, contextOwnsConnection: false))
+                {
+                    context.Database.Initialize(true);
+                }
+            }
 
             Assert.True(TableExists("TenantAs"));
             Assert.True(TableExists("TenantBs"));

@@ -513,7 +513,7 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public void PerformDatabaseInitialization()
         {
-            if (Owner is HistoryContext)
+            if (InitializerDisabled)
             {
                 return;
             }
@@ -1220,6 +1220,8 @@ namespace System.Data.Entity.Internal
             get { return null; }
             set { }
         }
+
+        public bool InitializerDisabled { get; set; }
 
         #endregion
 

@@ -696,6 +696,38 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal("Initial Catalog=foo", contextInfo.ConnectionString);
             Assert.Equal("foo", contextInfo.ConnectionStringName);
         }
+
+        [Fact]
+        public void CreateInstance_should_not_cause_database_initializer_to_run()
+        {
+            var contextInfo = new DbContextInfo(typeof(SimpleContext));
+
+            using (var context = contextInfo.CreateInstance())
+            {
+                // Do something that would normally cause initialization
+                Assert.NotNull(((IObjectContextAdapter)context).ObjectContext);
+            }
+
+            Assert.False(InitTestInitializer.HasRun);
+        }
+
+        public class InitTestContext : DbContext
+        {
+            static InitTestContext()
+            {
+                Database.SetInitializer(new InitTestInitializer());
+            }
+        }
+
+        public class InitTestInitializer : IDatabaseInitializer<InitTestContext>
+        {
+            public static bool HasRun { get; set; }
+
+            public void InitializeDatabase(InitTestContext context)
+            {
+                HasRun = true;
+            }
+        }
     }
 
     public class FakeDbContextInfoConnectionFactory : IDbConnectionFactory

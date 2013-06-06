@@ -3,17 +3,15 @@
 namespace System.Data.Entity.Migrations.Utilities
 {
     using System.Data.Common;
+    using System.Diagnostics.CodeAnalysis;
 
     internal class EmptyContext : DbContext
     {
-        static EmptyContext()
-        {
-            Database.SetInitializer<EmptyContext>(null);
-        }
-
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EmptyContext(DbConnection existingConnection)
             : base(existingConnection, false)
         {
+            InternalContext.InitializerDisabled = true;
         }
     }
 }

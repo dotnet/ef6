@@ -302,6 +302,8 @@ namespace System.Data.Entity.Infrastructure
         {
             DebugCheck.NotNull(context);
 
+            context.InternalContext.InitializerDisabled = true;
+
             if (_modelProviderInfo != null)
             {
                 context.InternalContext.ModelProviderInfo = _modelProviderInfo;

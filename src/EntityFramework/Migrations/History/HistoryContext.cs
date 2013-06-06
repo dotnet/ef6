@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.History
 {
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     This class is used by Code First Migrations to read and write migration history
@@ -24,9 +25,13 @@ namespace System.Data.Entity.Migrations.History
 
         private readonly string _defaultSchema;
 
+        /// <summary>
+        ///     For testing
+        /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal HistoryContext()
         {
-            // for testing
+            InternalContext.InitializerDisabled = true;
         }
 
         /// <summary>
@@ -42,12 +47,14 @@ namespace System.Data.Entity.Migrations.History
         ///     The default schema of the model being migrated.
         ///     This schema will be used for the migrations history table unless a different schema is configured in OnModelCreating.
         /// </param>
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public HistoryContext(DbConnection existingConnection, string defaultSchema)
             : base(existingConnection, contextOwnsConnection: false)
         {
             _defaultSchema = defaultSchema;
 
             Configuration.ValidateOnSaveEnabled = false;
+            InternalContext.InitializerDisabled = true;
         }
 
         /// <summary>

@@ -12,14 +12,10 @@ namespace System.Data.Entity.Migrations.History
     /// </summary>
     internal sealed class LegacyHistoryContext : DbContext
     {
-        static LegacyHistoryContext()
-        {
-            Database.SetInitializer<LegacyHistoryContext>(null);
-        }
-
         public LegacyHistoryContext(DbConnection existingConnection)
             : base(existingConnection, false)
         {
+            InternalContext.InitializerDisabled = true;
         }
 
         public IDbSet<LegacyHistoryRow> History { get; set; }

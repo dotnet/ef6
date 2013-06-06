@@ -122,7 +122,7 @@ namespace System.Data.Entity.Migrations
 
                 using (var context = CreateContext<ShopContext_v1>())
                 {
-                    context.Database.Initialize(true);
+                    context.Database.Create();
 
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
@@ -156,7 +156,7 @@ namespace System.Data.Entity.Migrations
 
                 using (var context = CreateContext<ShopContext_v1>())
                 {
-                    context.Database.Initialize(true);
+                    context.Database.Create();
 
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
@@ -202,7 +202,7 @@ namespace System.Data.Entity.Migrations
 
                 using (var context = CreateContext<ShopContext_v1>())
                 {
-                    context.Database.Initialize(true);
+                    context.Database.Create();
 
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
@@ -236,7 +236,7 @@ namespace System.Data.Entity.Migrations
 
                 using (var context = CreateContext<ShopContext_v1>())
                 {
-                    context.Database.Initialize(true);
+                    context.Database.Create();
 
                     DropMigrationHistoryAndAddEdmMetadata(
                         context.Database.Connection,
@@ -392,6 +392,52 @@ namespace System.Data.Entity.Migrations
             migrator.Update();
 
             Assert.True(DatabaseExists());
+        }
+    }
+
+    public class DbMigratorTests_DatabaseInitialization : DbTestCase
+    {
+        public class CustomInitizalzer : IDatabaseInitializer<DoNotInitContext>
+        {
+            public static bool HasRun { get; set; }
+
+            public void InitializeDatabase(DoNotInitContext context)
+            {
+                HasRun = true;
+            }
+        }
+
+        public class DoNotInitContext : DbContext
+        {
+            static DoNotInitContext()
+            {
+                Database.SetInitializer(new CustomInitizalzer());
+            }
+
+            public DoNotInitContext()
+                : base(GetConnection(), contextOwnsConnection: true)
+            {
+            }
+
+            private static DbConnection GetConnection()
+            {
+                return
+                    new SqlConnection(
+                        "Data Source=.\\sqlexpress;Initial Catalog=DbMigratorTests_DatabaseInitialization;Integrated Security=True");
+            }
+        }
+
+        [MigrationsTheory]
+        public void DbMigrator_does_not_cause_database_initializer_to_run()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<DoNotInitContext>();
+
+            migrator.Update();
+
+            Assert.True(DatabaseExists());
+            Assert.False(CustomInitizalzer.HasRun);
         }
     }
 
