@@ -668,7 +668,7 @@ namespace System.Data.Entity.ModelConfiguration
             var inverseNavProp = new MockPropertyInfo(typeof(int), "P2");
             configuration.InverseNavigationProperty = inverseNavProp;
             configuration.InverseEndKind = RelationshipMultiplicity.ZeroOrOne;
-            configuration.DeleteAction = OperationAction.Restrict;
+            configuration.DeleteAction = OperationAction.Cascade;
             configuration.IsNavigationPropertyDeclaringTypePrincipal = true;
 
             var clone = configuration.Clone();
@@ -677,7 +677,7 @@ namespace System.Data.Entity.ModelConfiguration
             Assert.Equal(RelationshipMultiplicity.Many, clone.RelationshipMultiplicity);
             Assert.Equal(inverseNavProp, clone.InverseNavigationProperty);
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, clone.InverseEndKind);
-            Assert.Equal(OperationAction.Restrict, clone.DeleteAction);
+            Assert.Equal(OperationAction.Cascade, clone.DeleteAction);
             Assert.True(clone.IsNavigationPropertyDeclaringTypePrincipal.Value);
 
             Assert.Null(clone.Constraint);

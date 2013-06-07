@@ -126,12 +126,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                     typeof(LightweighEntity).GetProperty("ValidNavigationProperty"));
             var lightweightConfiguration = new LightweightNavigationPropertyConfiguration(configuration, new ModelConfiguration());
 
-            lightweightConfiguration.HasDeleteAction(OperationAction.Restrict);
-            Assert.Equal(OperationAction.Restrict, configuration.DeleteAction);
-
-            configuration.DeleteAction = OperationAction.Cascade;
-            lightweightConfiguration.HasDeleteAction(OperationAction.Restrict);
+            lightweightConfiguration.HasDeleteAction(OperationAction.Cascade);
             Assert.Equal(OperationAction.Cascade, configuration.DeleteAction);
+
+            configuration.DeleteAction = OperationAction.None;
+            lightweightConfiguration.HasDeleteAction(OperationAction.Cascade);
+            Assert.Equal(OperationAction.None, configuration.DeleteAction);
         }
 
         [Fact]

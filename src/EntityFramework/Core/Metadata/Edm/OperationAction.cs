@@ -15,11 +15,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Cascade to other ends
         /// </summary>
-        Cascade,
-
-        /// <summary>
-        ///     Do not allow if other ends are not empty
-        /// </summary>
-        Restrict,
+        Cascade
     }
 }

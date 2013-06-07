@@ -83,7 +83,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         //Enum value of DeleteAction Mode 
         internal const string None = "None";
         internal const string Cascade = "Cascade";
-        internal const string Restrict = "Restrict";
 
         //Enum Value of CollectionKind
         internal const string NoneCollectionKind = "None";

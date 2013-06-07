@@ -4748,7 +4748,7 @@
     <value>OnDelete, OnLock, and other such elements can be specified on only one End of an Association.</value>
   </data>
   <data name="InvalidAction" xml:space="preserve">
-    <value>The Action {0} on {1} is not recognized. Valid actions are: None, Cascade, and Restrict.</value>
+    <value>The Action {0} on {1} is not recognized. Valid actions are 'None' or 'Cascade'.</value>
   </data>
   <data name="DuplicationOperation" xml:space="preserve">
     <value>Only one {0} element is allowed per relationship.</value>
