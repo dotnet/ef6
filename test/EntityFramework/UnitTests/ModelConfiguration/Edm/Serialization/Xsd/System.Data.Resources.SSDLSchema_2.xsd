@@ -346,7 +346,6 @@
     <xs:simpleType name="TAction">
         <xs:restriction base="xs:token">
             <xs:enumeration value="Cascade" />
-            <xs:enumeration value="Restrict" />
             <xs:enumeration value="None" />
         </xs:restriction>
     </xs:simpleType>

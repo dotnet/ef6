@@ -286,7 +286,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             InitializeEnumType(
                 BuiltInTypeKind.OperationAction,
                 EdmConstants.DeleteAction,
-                new[] { EdmConstants.None, EdmConstants.Cascade, EdmConstants.Restrict });
+                new[] { EdmConstants.None, EdmConstants.Cascade });
 
             InitializeEnumType(
                 BuiltInTypeKind.RelationshipMultiplicity,

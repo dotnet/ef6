@@ -28,12 +28,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
 
-            associationType.SourceEnd.DeleteBehavior = OperationAction.Restrict;
+            associationType.SourceEnd.DeleteBehavior = OperationAction.Cascade;
 
             ((IEdmConvention<AssociationType>)new OneToManyCascadeDeleteConvention())
                 .Apply(associationType, new EdmModel(DataSpace.CSpace));
 
-            Assert.Equal(OperationAction.Restrict, associationType.SourceEnd.DeleteBehavior);
+            Assert.Equal(OperationAction.Cascade, associationType.SourceEnd.DeleteBehavior);
             Assert.Equal(OperationAction.None, associationType.TargetEnd.DeleteBehavior);
         }
 

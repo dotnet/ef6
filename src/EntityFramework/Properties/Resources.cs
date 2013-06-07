@@ -11886,7 +11886,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The Action {0} on {1} is not recognized. Valid actions are: None, Cascade, and Restrict."
+        ///     A string like "The Action {0} on {1} is not recognized. Valid actions are 'None' or 'Cascade'."
         /// </summary>
         internal static string InvalidAction(object p0, object p1)
         {
