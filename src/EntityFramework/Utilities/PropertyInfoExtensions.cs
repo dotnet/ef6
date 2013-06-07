@@ -93,14 +93,20 @@ namespace System.Data.Entity.Utilities
         {
             DebugCheck.NotNull(propertyInfo);
 
-            return propertyInfo.CanWrite || GetDeclaredProperty(propertyInfo).CanWrite;
+            if (propertyInfo.CanWrite)
+            {
+                return true;
+            }
+
+            var declaredProperty = GetDeclaredProperty(propertyInfo);
+            return declaredProperty != null && declaredProperty.CanWrite;
         }
 
         public static PropertyInfo GetPropertyInfoForSet(this PropertyInfo propertyInfo)
         {
             DebugCheck.NotNull(propertyInfo);
 
-            return propertyInfo.CanWrite ? propertyInfo : GetDeclaredProperty(propertyInfo);
+            return propertyInfo.CanWrite ? propertyInfo : GetDeclaredProperty(propertyInfo) ?? propertyInfo;
         }
 
         private static PropertyInfo GetDeclaredProperty(PropertyInfo propertyInfo)
@@ -112,7 +118,7 @@ namespace System.Data.Entity.Utilities
                        : propertyInfo
                              .DeclaringType
                              .GetProperties(PropertyFilter.DefaultBindingFlags)
-                             .Single(
+                             .SingleOrDefault(
                                  p => p.Name == propertyInfo.Name
                                       && !p.GetIndexParameters().Any()
                                       && p.PropertyType == propertyInfo.PropertyType);
