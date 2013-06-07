@@ -794,6 +794,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         internal static void CleanupUnmappedArtifacts(DbDatabaseMapping databaseMapping, EntityType table)
         {
             var associationMappings = databaseMapping.EntityContainerMappings
@@ -810,6 +811,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 && !entityFragments.Any())
             {
                 databaseMapping.Database.RemoveEntityType(table);
+
+                databaseMapping.Database.AssociationTypes
+                    .Where(t => t.SourceEnd.GetEntityType() == table
+                        || t.TargetEnd.GetEntityType() == table)
+                    .ToArray()
+                    .Each(t => databaseMapping.Database.RemoveAssociationType(t));
             }
             else
             {

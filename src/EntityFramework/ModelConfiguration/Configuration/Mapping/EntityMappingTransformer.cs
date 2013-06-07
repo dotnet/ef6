@@ -250,7 +250,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             }
         }
 
-        private static void CopyForeignKeyConstraint(EdmModel database, EntityType toTable, ForeignKeyBuilder fk)
+        private static void CopyForeignKeyConstraint(EdmModel database, EntityType toTable, ForeignKeyBuilder fk, 
+            Func<EdmProperty, EdmProperty> selector = null)
         {
             DebugCheck.NotNull(toTable);
             DebugCheck.NotNull(fk);
@@ -264,8 +265,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         DeleteAction = fk.DeleteAction
                     };
 
-            var dependentColumns
-                = GetDependentColumns(fk.DependentColumns, toTable.Properties);
+            var dependentColumns = 
+                GetDependentColumns(
+                    selector != null
+                        ? fk.DependentColumns.Select(selector)
+                        : fk.DependentColumns,
+                    toTable.Properties);
 
             if (!ContainsEquivalentForeignKey(toTable, newFk.PrincipalTable, dependentColumns))
             {
@@ -315,7 +320,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         public static void CopyAllForeignKeyConstraintsForColumn(
             EdmModel database, EntityType fromTable, EntityType toTable,
-            EdmProperty column)
+            EdmProperty column, EdmProperty movedColumn)
         {
             DebugCheck.NotNull(fromTable);
             DebugCheck.NotNull(toTable);
@@ -323,7 +328,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             FindAllForeignKeyConstraintsForColumn(fromTable, toTable, column)
                 .ToArray()
-                .Each(fk => CopyForeignKeyConstraint(database, toTable, fk));
+                .Each(fk => CopyForeignKeyConstraint(database, toTable, fk, 
+                                c => c == column ? movedColumn : c));
         }
 
         public static void MoveAllDeclaredForeignKeyConstraintsForPrimaryKeyColumns(
@@ -420,7 +426,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 if (allowPkConstraintCopy || !movedColumn.IsPrimaryKeyColumn)
                 {
                     ForeignKeyPrimitiveOperations.CopyAllForeignKeyConstraintsForColumn(
-                        database, fromTable, toTable, column);
+                        database, fromTable, toTable, column, movedColumn);
                 }
             }
 
