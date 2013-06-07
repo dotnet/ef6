@@ -693,8 +693,7 @@ namespace System.Data.Entity.Core.Common.Utils
         internal static int GetLowerBoundOfMultiplicity(RelationshipMultiplicity multiplicity)
         {
             if (multiplicity == RelationshipMultiplicity.Many
-                ||
-                multiplicity == RelationshipMultiplicity.ZeroOrOne)
+                || multiplicity == RelationshipMultiplicity.ZeroOrOne)
             {
                 return 0;
             }
@@ -707,8 +706,7 @@ namespace System.Data.Entity.Core.Common.Utils
         internal static int? GetUpperBoundOfMultiplicity(RelationshipMultiplicity multiplicity)
         {
             if (multiplicity == RelationshipMultiplicity.One
-                ||
-                multiplicity == RelationshipMultiplicity.ZeroOrOne)
+                || multiplicity == RelationshipMultiplicity.ZeroOrOne)
             {
                 return 1;
             }

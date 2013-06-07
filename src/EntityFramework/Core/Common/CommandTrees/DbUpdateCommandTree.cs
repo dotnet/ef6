@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     ///     When the <see cref="Returning" /> property is set, the command returns a reader; otherwise,
     ///     it returns a scalar indicating the number of rows affected.
     /// </remarks>
-    public class DbUpdateCommandTree : DbModificationCommandTree
+    public sealed class DbUpdateCommandTree : DbModificationCommandTree
     {
         private readonly DbExpression _predicate;
         private readonly DbExpression _returning;
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
         }
 
-        internal DbUpdateCommandTree(
+        public DbUpdateCommandTree(
             MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, DbExpression predicate,
             ReadOnlyModificationClauses setClauses, DbExpression returning)
             : base(metadata, dataSpace, target)

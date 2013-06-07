@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Utilities;
 
     /// <summary>Represents a single row delete operation expressed as a command tree. This class cannot be inherited.  </summary>
-    public class DbDeleteCommandTree : DbModificationCommandTree
+    public sealed class DbDeleteCommandTree : DbModificationCommandTree
     {
         private readonly DbExpression _predicate;
 
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
         }
 
-        internal DbDeleteCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, DbExpression predicate)
+        public DbDeleteCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, DbExpression predicate)
             : base(metadata, dataSpace, target)
         {
             DebugCheck.NotNull(predicate);

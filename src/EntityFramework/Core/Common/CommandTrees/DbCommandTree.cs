@@ -9,7 +9,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-    using System.Text.RegularExpressions;
 
     /// <summary>An immutable class that implements the basic functionality for the Query, Insert, Update, Delete, and function invocation command tree types. </summary>
     public abstract class DbCommandTree
@@ -159,6 +158,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 #endif
 
+        public override string ToString()
+        {
+            return Print();
+        }
+
         internal string Print()
         {
             return PrintTree(new ExpressionPrinter());
@@ -180,6 +184,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return (!string.IsNullOrWhiteSpace(name)
                     && name.IsValidUndottedName());
         }
+
         #endregion
     }
 }

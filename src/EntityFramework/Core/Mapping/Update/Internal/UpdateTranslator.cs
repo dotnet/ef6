@@ -1397,10 +1397,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         // - the entity is not being modified at all
                         // - the entity is being modified, but not in the way we expect (it's not being added or deleted)
                         if (!m_impliedRelationships.TryGetValue(actualRelationship, out entityEntry)
-                            ||
-                            (isAdd && EntityState.Added != entityEntry.State)
-                            ||
-                            (!isAdd && EntityState.Deleted != entityEntry.State))
+                            || (isAdd && EntityState.Added != entityEntry.State)
+                            || (!isAdd && EntityState.Deleted != entityEntry.State))
                         {
                             var message = Strings.Update_MissingRequiredEntity(
                                 actualRelationship.AssociationSet.Name, actualRelationship.StateEntry.State, actualRelationship.ToEnd.Name);

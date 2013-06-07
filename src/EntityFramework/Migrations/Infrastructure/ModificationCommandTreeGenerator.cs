@@ -4,15 +4,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 var sourceSet = context.Set(sourceEntityType.GetClrType());
                 var sourceEntity = sourceSet.Create();
 
-                InstantiateNullableKeys(sourceEntity, sourceEntityType);
+                SetFakeReferenceKeyValues(sourceEntity, sourceEntityType);
                 InstantiateComplexProperties(sourceEntity, sourceEntityType.Properties);
 
                 sourceSet.Attach(sourceEntity);
@@ -98,7 +98,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 var targetSet = context.Set(targetEntityType.GetClrType());
                 var targetEntity = targetSet.Create();
 
-                InstantiateNullableKeys(targetEntity, targetEntityType);
+                SetFakeReferenceKeyValues(targetEntity, targetEntityType);
                 InstantiateComplexProperties(targetEntity, targetEntityType.Properties);
 
                 targetSet.Attach(targetEntity);
@@ -164,7 +164,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 var set = context.Set(entityType.GetClrType());
                 var entity = set.Create();
 
-                InstantiateNullableKeys(entity, entityType);
+                SetFakeReferenceKeyValues(entity, entityType);
                 InstantiateComplexProperties(entity, entityType.Properties);
 
                 set.Attach(entity);
@@ -186,7 +186,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 using (var commandTracer = new CommandTracer(context))
                 {
                     ((IObjectContextAdapter)context).ObjectContext.SaveChanges(SaveOptions.None);
-                    
+
                     foreach (var commandTree in commandTracer.CommandTrees)
                     {
                         yield return (TCommandTree)commandTree;
@@ -247,9 +247,31 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     {
                         principalStub = set.Create();
 
-                        InstantiateNullableKeys(principalStub, principalEnd.GetEntityType());
+                        SetFakeReferenceKeyValues(principalStub, principalEnd.GetEntityType());
 
                         set.Attach(principalStub);
+                    }
+
+                    if (associationType.IsOneToOne()
+                        && state == EntityState.Modified)
+                    {
+                        // For one-to-one updates, we need to fake delete
+                        // the relationship first.
+
+                        var principalStubForDelete = set.Create();
+
+                        SetFakeKeyValues(principalStubForDelete, principalEnd.GetEntityType());
+
+                        set.Attach(principalStubForDelete);
+
+                    objectStateManager
+                        .ChangeRelationshipState(
+                            entity,
+                                principalStubForDelete,
+                                associationType.FullName,
+                                principalEnd.Name,
+                                EntityState.Deleted
+                            );
                     }
 
                     objectStateManager
@@ -264,7 +286,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             }
         }
 
-        private static void InstantiateNullableKeys(object entity, EntityType entityType)
+        private static void SetFakeReferenceKeyValues(object entity, EntityType entityType)
         {
             DebugCheck.NotNull(entity);
             DebugCheck.NotNull(entityType);
@@ -272,19 +294,113 @@ namespace System.Data.Entity.Migrations.Infrastructure
             foreach (var property in entityType.KeyProperties)
             {
                 var clrPropertyInfo = property.GetClrPropertyInfo();
+                var value = GetFakeReferenceKeyValue(property.PrimitiveType.PrimitiveTypeKind);
 
-                switch (property.PrimitiveType.PrimitiveTypeKind)
+                if (value != null)
                 {
-                    case PrimitiveTypeKind.String:
-                        clrPropertyInfo.SetValue(entity, "tmp", null);
-                        break;
-
-                    case PrimitiveTypeKind.Binary:
-                        clrPropertyInfo.SetValue(entity, new byte[0], null);
-                        break;
+                    clrPropertyInfo.SetValue(entity, value, null);
                 }
             }
         }
+
+        private static object GetFakeReferenceKeyValue(PrimitiveTypeKind primitiveTypeKind)
+        {
+            switch (primitiveTypeKind)
+            {
+                case PrimitiveTypeKind.Binary:
+                    return new byte[0];
+
+                    case PrimitiveTypeKind.String:
+                    return "42";
+
+                case PrimitiveTypeKind.Geometry:
+                    return DefaultSpatialServices.Instance.GeometryFromText("POINT (4 2)");
+
+                case PrimitiveTypeKind.Geography:
+                    return DefaultSpatialServices.Instance.GeographyFromText("POINT (4 2)");
+            }
+
+            return null;
+        }
+
+        private static void SetFakeKeyValues(object entity, EntityType entityType)
+        {
+            DebugCheck.NotNull(entity);
+            DebugCheck.NotNull(entityType);
+
+            foreach (var property in entityType.KeyProperties)
+            {
+                var clrPropertyInfo = property.GetClrPropertyInfo();
+                var value = GetFakeKeyValue(property.PrimitiveType.PrimitiveTypeKind);
+
+                Debug.Assert(value != null);
+
+                clrPropertyInfo.SetValue(entity, value, null);
+            }
+        }
+
+        private static object GetFakeKeyValue(PrimitiveTypeKind primitiveTypeKind)
+        {
+            switch (primitiveTypeKind)
+            {
+                    case PrimitiveTypeKind.Binary:
+                    return new byte[] { 0x42 };
+
+                case PrimitiveTypeKind.Boolean:
+                    return true;
+
+                case PrimitiveTypeKind.Byte:
+                    return (byte)0x42;
+
+                case PrimitiveTypeKind.DateTime:
+                    return DateTime.Now;
+
+                case PrimitiveTypeKind.Decimal:
+                    return 42m;
+
+                case PrimitiveTypeKind.Double:
+                    return 42.0;
+
+                case PrimitiveTypeKind.Guid:
+                    return Guid.NewGuid();
+
+                case PrimitiveTypeKind.Single:
+                    return 42f;
+
+                case PrimitiveTypeKind.SByte:
+                    return (sbyte)42;
+
+                case PrimitiveTypeKind.Int16:
+                    return (short)42;
+
+                case PrimitiveTypeKind.Int32:
+                    return 42;
+
+                case PrimitiveTypeKind.Int64:
+                    return 42L;
+
+                case PrimitiveTypeKind.String:
+                    return "42'";
+
+                case PrimitiveTypeKind.Time:
+                    return TimeSpan.FromMilliseconds(42);
+
+                case PrimitiveTypeKind.DateTimeOffset:
+                    return DateTimeOffset.Now;
+
+                case PrimitiveTypeKind.Geometry:
+                    return DefaultSpatialServices.Instance.GeometryFromText("POINT (4 3)");
+
+                case PrimitiveTypeKind.Geography:
+                    return DefaultSpatialServices.Instance.GeographyFromText("POINT (4 3)");
+
+                default:
+                    Debug.Fail("Unexpected key PrimitiveTypeKind!");
+                        break;
+                }
+
+            return null;
+            }
 
         private static void InstantiateComplexProperties(object structuralObject, IEnumerable<EdmProperty> properties)
         {

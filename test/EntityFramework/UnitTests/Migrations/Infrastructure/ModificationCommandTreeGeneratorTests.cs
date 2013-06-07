@@ -4,11 +4,136 @@ namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
+    using System.Data.Entity.Spatial;
     using System.Linq;
     using Xunit;
 
-    public class ModificationCommandTreeGeneratorTests
+    public class ModificationCommandTreeGeneratorTests : TestBase
     {
+        public class CogTag
+        {
+            public string Key1 { get; set; }
+            public DbGeometry Key2 { get; set; }
+            public DbGeography Key3 { get; set; }
+            public byte[] Key4 { get; set; }
+            public short Key5 { get; set; }
+            public DateTime Key6 { get; set; }
+            public bool Key7 { get; set; }
+            public virtual Gear Gear { get; set; }
+        }
+
+        public class Gear
+        {
+            public int Id { get; set; }
+            public string Nickname { get; set; }
+            public virtual CogTag Tag { get; set; }
+        }
+
+        public class GearsOfWarContextSPBug : DbContext
+        {
+            public GearsOfWarContextSPBug()
+            {
+                Configuration.ValidateOnSaveEnabled = false;
+            }
+
+            static GearsOfWarContextSPBug()
+            {
+                Database.SetInitializer(new DropCreateDatabaseAlways<GearsOfWarContextSPBug>());
+            }
+
+            public DbSet<Gear> Gears { get; set; }
+            public DbSet<CogTag> Tags { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Gear>()
+                    .MapToStoredProcedures()
+                    .HasRequired(g => g.Tag)
+                    .WithOptional(t => t.Gear);
+
+                modelBuilder.Entity<CogTag>()
+                    .HasKey(k => new { k.Key1, k.Key2, k.Key3, k.Key4, k.Key5, k.Key6, k.Key7 });
+            }
+        }
+
+        [Fact]
+        public void Can_generate_insert_tree_when_one_to_one_ia()
+        {
+            DbModel model;
+
+            using (var context = new GearsOfWarContextSPBug())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateInsert(GetType().Namespace + ".Gear")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_update_tree_when_one_to_one_ia()
+        {
+            DbModel model;
+
+            using (var context = new GearsOfWarContextSPBug())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateUpdate(GetType().Namespace + ".Gear")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_delete_tree_when_one_to_one_ia()
+        {
+            DbModel model;
+
+            using (var context = new GearsOfWarContextSPBug())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateDelete(GetType().Namespace + ".Gear")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
         public class WorldContext : DbContext
         {
             static WorldContext()
