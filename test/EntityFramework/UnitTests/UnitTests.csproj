@@ -124,8 +124,10 @@
     </EmbeddedResource>
     <None Include="packages.config" />
     <Compile Include="AssemblyTests.cs" />
+    <Compile Include="CommandLine\CommandLineArgumentInvalidExceptionTests.cs" />
     <Compile Include="CommandLine\CommandLineExceptionTests.cs" />
     <Compile Include="CommandLine\CommandLineParameterAttributeTests.cs" />
+    <Compile Include="CommandLine\CommandLineRequiredArgumentMissingExceptionTests.cs" />
     <Compile Include="CommandLine\TestHelpers\BadPositionArgMissingTwo.cs" />
     <Compile Include="CommandLine\TestHelpers\BadPositionArgNoOne.cs" />
     <Compile Include="CommandLine\CommandLineArgumentsAttributeTest.cs" />

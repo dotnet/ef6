@@ -4,6 +4,7 @@ namespace CmdLine
 {
     using System;
 
+    [Serializable]
     public class CommandLineRequiredArgumentMissingException : CommandLineException
     {
         public CommandLineRequiredArgumentMissingException(Type argumentType, string argumentName, int parameterIndex)

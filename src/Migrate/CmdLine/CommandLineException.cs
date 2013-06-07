@@ -63,7 +63,10 @@ namespace CmdLine
 
             public void CompleteDeserialization(object deserialized)
             {
-                ((CommandLineException)deserialized)._state = this;
+                var commandLineException = (CommandLineException)deserialized;
+
+                commandLineException._state = this;
+                commandLineException.SubscribeToSerializeObjectState();
             }
         }
     }

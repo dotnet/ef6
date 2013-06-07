@@ -81,6 +81,21 @@ namespace CmdLine
             Assert.Equal("Code First Migrations Command Line Utility", exception.ArgumentHelp.Title);
         }
 
+        [Fact] // CodePlex 1107
+        public void Deserialized_exception_can_be_serialized_and_deserialized_again()
+        {
+            var innerException = new Exception("You are so exceptional!");
+            var exception =
+                new migrate::CmdLine.CommandLineException(
+                    new migrate::CmdLine.CommandArgumentHelp(typeof(SomeCommandLineClass), "Look inside."), innerException);
+
+            exception = ExceptionHelpers.SerializeAndDeserialize(ExceptionHelpers.SerializeAndDeserialize(exception));
+
+            Assert.Equal("Look inside.", exception.Message);
+            Assert.Equal(innerException.Message, exception.InnerException.Message);
+            Assert.Equal("Code First Migrations Command Line Utility", exception.ArgumentHelp.Title);
+        }
+
         [Fact]
         public void ArgumentHelp_can_be_read_and_set()
         {

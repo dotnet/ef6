@@ -95,7 +95,10 @@ namespace System.Data.Entity.Core
 
             public void CompleteDeserialization(object deserialized)
             {
-                ((PropertyConstraintException)deserialized)._state = this;
+                var propertyConstraintException = (PropertyConstraintException)deserialized;
+                
+                propertyConstraintException._state = this;
+                propertyConstraintException.SubscribeToSerializeObjectState();
             }
         }
     }

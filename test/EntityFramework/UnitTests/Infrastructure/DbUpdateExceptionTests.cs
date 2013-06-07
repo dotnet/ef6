@@ -65,5 +65,15 @@ namespace System.Data.Entity.Infrastructure
         {
             Assert.True(typeof(DbUpdateException).GetCustomAttributes(typeof(SerializableAttribute), inherit: false).Any());
         }
+
+        [Fact] // CodePlex 1107
+        public void Deserialized_exception_can_be_serialized_and_deserialized_again()
+        {
+            Assert.Equal(
+                "But somehow the vital connection is made",
+                ExceptionHelpers.SerializeAndDeserialize(
+                    ExceptionHelpers.SerializeAndDeserialize(
+                        new DbUpdateException("But somehow the vital connection is made"))).Message);
+        }
     }
 }

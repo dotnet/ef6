@@ -46,5 +46,15 @@ namespace System.Data.Entity.Infrastructure
         {
             Assert.True(typeof(DbUpdateConcurrencyException).GetCustomAttributes(typeof(SerializableAttribute), inherit: false).Any());
         }
+
+        [Fact] // CodePlex 1107
+        public void Deserialized_exception_can_be_serialized_and_deserialized_again()
+        {
+            Assert.Equal(
+                "Riding on any wave",
+                ExceptionHelpers.SerializeAndDeserialize(
+                    ExceptionHelpers.SerializeAndDeserialize(
+                        new DbUpdateConcurrencyException("Riding on any wave"))).Message);
+        }
     }
 }

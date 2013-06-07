@@ -84,6 +84,19 @@ namespace System.Data.Entity.Core
             Assert.Equal(inner.Message, ex.InnerException.Message);
         }
 
+        [Fact] // CodePlex 1107
+        public void Deserialized_exception_can_be_serialized_and_deserialized_again()
+        {
+            var inner = new Exception("The cracks of doom!");
+            var ex = new PropertyConstraintException("Message", "Property", inner);
+
+            ex = ExceptionHelpers.SerializeAndDeserialize(ExceptionHelpers.SerializeAndDeserialize(ex));
+
+            Assert.Equal("Message", ex.Message);
+            Assert.Equal("Property", ex.PropertyName);
+            Assert.Equal(inner.Message, ex.InnerException.Message);
+        }
+
         [Fact]
         public void PropertyConstraintException_string_and_property_name_constructor_throws_if_passed_null_property_name()
         {

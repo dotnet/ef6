@@ -128,7 +128,10 @@ namespace System.Data.Entity.Validation
             /// <param name="deserialized"> The deserialized object. </param>
             public void CompleteDeserialization(object deserialized)
             {
-                ((DbEntityValidationException)deserialized)._state = this;
+                var validationException = (DbEntityValidationException)deserialized;
+                
+                validationException._state = this;
+                validationException.SubscribeToSerializeObjectState();
             }
         }
     }

@@ -158,6 +158,17 @@ namespace System.Data.Entity.Core
             Assert.Equal(4, exception.Column);
         }
 
+        [Fact] // CodePlex 1107
+        public void Deserialized_exception_can_be_serialized_and_deserialized_again()
+        {
+            var exception = ExceptionHelpers.SerializeAndDeserialize(
+                ExceptionHelpers.SerializeAndDeserialize(
+                    new EntitySqlException("What is this eSQL of which you speak?")));
+
+            Assert.Equal("What is this eSQL of which you speak?", exception.Message);
+            Assert.Equal(HResultInvalidQuery, GetHResult(exception));
+        }
+
         private static int GetHResult(Exception ex)
         {
             return (int)_hResultProperty.GetValue(ex, null);

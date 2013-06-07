@@ -139,7 +139,10 @@ namespace System.Data.Entity.Infrastructure
             /// <param name="deserialized"> The deserialized object. </param>
             public void CompleteDeserialization(object deserialized)
             {
-                ((DbUpdateException)deserialized)._state = this;
+                var updateException = (DbUpdateException)deserialized;
+
+                updateException._state = this;
+                updateException.SubscribeToSerializeObjectState();
             }
         }
 

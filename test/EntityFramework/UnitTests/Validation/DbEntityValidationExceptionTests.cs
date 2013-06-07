@@ -182,5 +182,15 @@ namespace System.Data.Entity.Validation
                 }
             }
         }
+
+        [Fact] // CodePlex 1107
+        public void Deserialized_exception_can_be_serialized_and_deserialized_again()
+        {
+            Assert.Equal(
+                "Roundabout and roundabout",
+                ExceptionHelpers.SerializeAndDeserialize(
+                    ExceptionHelpers.SerializeAndDeserialize(
+                        new DbEntityValidationException("Roundabout and roundabout"))).Message);
+        }
     }
 }

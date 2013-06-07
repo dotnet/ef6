@@ -254,7 +254,10 @@ namespace System.Data.Entity.Core
 
             public void CompleteDeserialization(object deserialized)
             {
-                ((EntitySqlException)deserialized)._state = this;
+                var entitySqlException = (EntitySqlException)deserialized;
+                
+                entitySqlException._state = this;
+                entitySqlException.SubscribeToSerializeObjectState();
             }
         }
     }

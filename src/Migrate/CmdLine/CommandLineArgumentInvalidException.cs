@@ -4,6 +4,7 @@ namespace CmdLine
 {
     using System;
 
+    [Serializable]
     public class CommandLineArgumentInvalidException : CommandLineException
     {
         public CommandLineArgumentInvalidException(Type argumentType, CommandArgument argument)
