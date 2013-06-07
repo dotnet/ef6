@@ -403,9 +403,11 @@ namespace System.Data.Entity.Migrations.Design
                 writer.WriteLine();
                 writer.Indent++;
 
+                writer.Indent++;
                 var indentString
                     = writer.NewLine
-                      + new string(' ', (writer.Indent * 4) + 2);
+                      + writer.CurrentIndentation();
+                writer.Indent--;
 
                 writer.Write("@");
                 writer.WriteLine(
@@ -413,7 +415,6 @@ namespace System.Data.Entity.Migrations.Design
                         procedureOperation
                             .BodySql
                             .Replace(Environment.NewLine, indentString)));
-
                 writer.Indent--;
             }
             else

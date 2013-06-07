@@ -368,7 +368,9 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 {
                     throw ADP1.InvalidOperation(ADP1.Update_NotSupportedIdentityType(member.Name, member.TypeUsage.ToString()));
                 }
-                commandText.AppendFormat("CAST (@@IDENTITY AS {0})", member.TypeUsage.EdmType.Name);
+                commandText.Append("CAST (@@IDENTITY AS ")
+                    .Append(member.TypeUsage.EdmType.Name)
+                    .Append(")");
                 flag = true;
             }
             return flag;
@@ -566,7 +568,10 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 }
                 else
                 {
-                    _commandText.Append(_sqlGenerator.WriteSql(expression.Accept(_sqlGenerator)));
+                    using (var writer = new SqlWriter(_commandText.InnerBuilder))
+                    {
+                        _sqlGenerator.WriteSql(writer, expression.Accept(_sqlGenerator));
+                    }
                 }
             }
 

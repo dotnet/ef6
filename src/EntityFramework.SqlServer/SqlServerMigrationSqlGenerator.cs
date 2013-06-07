@@ -153,7 +153,7 @@ namespace System.Data.Entity.SqlServer
                     HashSet<string> _;
                     var historyQuery
                         = _sqlGenerator.GenerateSql(historyQueryTree, out _)
-                            .Replace("\t", IndentedTextWriter.DefaultTabString);
+                            .Replace(IndentedTextWriter.HardTabString, IndentedTextWriter.DefaultTabString);
 
                     writer.Write("IF object_id('");
                     writer.Write(Escape(_sqlGenerator.Targets.Single()));
@@ -162,7 +162,7 @@ namespace System.Data.Entity.SqlServer
                     writer.WriteLine("SELECT @CurrentMigration =");
                     writer.Indent++;
                     writer.Write("(");
-                    writer.Write(Indent(historyQuery, writer.Indent));
+                    writer.Write(Indent(historyQuery, writer.CurrentIndentation()));
                     writer.WriteLine(")");
                     writer.Indent -= 2;
                     writer.WriteLine();
@@ -223,7 +223,7 @@ namespace System.Data.Entity.SqlServer
                                 {
                                     Sql
                                         = writer.InnerWriter.ToString()
-                                        .Replace("\t", IndentedTextWriter.DefaultTabString)
+                                        .Replace(IndentedTextWriter.HardTabString, IndentedTextWriter.DefaultTabString)
                                 });
                     }
                 }
@@ -297,7 +297,7 @@ namespace System.Data.Entity.SqlServer
 
                 writer.WriteLine(
                     !string.IsNullOrWhiteSpace(procedureOperation.BodySql)
-                        ? Indent(procedureOperation.BodySql, writer.Indent)
+                        ? Indent(procedureOperation.BodySql, writer.CurrentIndentation())
                         : "RETURN");
 
                 writer.Indent--;
@@ -1294,12 +1294,12 @@ namespace System.Data.Entity.SqlServer
             return s.Replace("'", "''");
         }
 
-        private static string Indent(string s, int level)
+        private static string Indent(string s, string indentation)
         {
             DebugCheck.NotEmpty(s);
-            Debug.Assert(level >= 0);
+            DebugCheck.NotNull(s);
 
-            return new Regex(@"\r?\n *").Replace(s, Environment.NewLine + new string(' ', (level * 4)));
+            return new Regex(@"\r?\n *").Replace(s, Environment.NewLine + indentation);
         }
 
         /// <summary>

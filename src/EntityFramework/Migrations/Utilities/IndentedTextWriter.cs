@@ -8,7 +8,9 @@ namespace System.Data.Entity.Migrations.Utilities
     using System.Text;
 
     /// <summary>
-    ///     The same as <see cref="System.CodeDom.Compiler.IndentedTextWriter" /> but works in partial trust.
+    ///     The same as <see cref="System.CodeDom.Compiler.IndentedTextWriter" /> but works in partial trust and adds explicit caching of
+    ///     generated indentation string and also recognizes writing a string that contains just \r\n or \n as a write-line to ensure
+    ///     we indent the next line properly.
     /// </summary>
     public class IndentedTextWriter : TextWriter
     {
@@ -17,10 +19,22 @@ namespace System.Data.Entity.Migrations.Utilities
         /// </summary>
         public const string DefaultTabString = "    ";
 
+        /// <summary>
+        ///     Specifies the tab string to use when hard-tabs are desired. This field is constant.
+        /// </summary>
+        public const string HardTabString = "\t";
+
+        /// <summary>
+        ///     Specifies the culture what will be used by the underlying TextWriter. This static property is readonly.
+        /// </summary>
+        public static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
+
         private readonly TextWriter _writer;
         private int _indentLevel;
         private bool _tabsPending;
         private readonly string _tabString;
+
+        private readonly string[] _cachedIndents = new string[32];
 
         /// <summary>
         ///     Gets the encoding for the text writer to use.
@@ -91,7 +105,7 @@ namespace System.Data.Entity.Migrations.Utilities
         /// <param name="tabString"> The tab string to use for indentation. </param>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
         public IndentedTextWriter(TextWriter writer, string tabString)
-            : base(CultureInfo.InvariantCulture)
+            : base(Culture)
         {
             _writer = writer;
             _tabString = tabString;
@@ -127,11 +141,55 @@ namespace System.Data.Entity.Migrations.Utilities
             {
                 return;
             }
-            for (var index = 0; index < _indentLevel; ++index)
-            {
-                _writer.Write(_tabString);
-            }
+
+            _writer.Write(CurrentIndentation());
             _tabsPending = false;
+        }
+
+        /// <summary>
+        ///     Builds a string representing the current indentation level for a new line.
+        /// </summary>
+        /// <remarks>Does NOT check if tabs are currently pending, just returns a string that would be
+        /// useful in replacing embedded <see cref="System.Environment.NewLine">newline characters</see>.</remarks>
+        /// <returns>An empty string, or a string that contains .Indent level's worth of specified tab-string.</returns>
+        public virtual string CurrentIndentation()
+        {
+            if (_indentLevel <= 0 || String.IsNullOrEmpty(_tabString))
+            {
+                return String.Empty;
+            }
+
+            if (_indentLevel == 1)
+            {
+                return _tabString;
+            }
+
+            // since _indentLevel is known > 2, we can safely subtract two to index the array
+            var cacheIndex = _indentLevel - 2;
+            var cached = _cachedIndents[cacheIndex];
+
+            if (cached == null)
+            {
+                cached = BuildIndent(_indentLevel);
+
+                // we COULD grow the cache here...
+                if (cacheIndex < _cachedIndents.Length)
+                    _cachedIndents[cacheIndex] = cached;
+            }
+
+            return cached;
+        }
+
+        private string BuildIndent(int numberOfIndents)
+        {
+            var sb = new StringBuilder(numberOfIndents * _tabString.Length);
+
+            for (var index = 0; index < numberOfIndents; ++index)
+            {
+                sb.Append(_tabString);
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>
@@ -142,6 +200,13 @@ namespace System.Data.Entity.Migrations.Utilities
         {
             OutputTabs();
             _writer.Write(value);
+
+            // specifically recognise the end of a line when passed an explicit string by someone
+            if (value != null &&
+                (value.Equals("\r\n", StringComparison.Ordinal) || value.Equals("\n", StringComparison.Ordinal)))
+            {
+                _tabsPending = true;
+            }
         }
 
         /// <summary>

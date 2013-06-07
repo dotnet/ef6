@@ -40,7 +40,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         /// <summary>
-        ///     This is to pretty print the SQL.  The writer <see cref="SqlWriter.Write" />
+        ///     This is to pretty print the SQL.  The writer <see cref="SqlWriter" />
         ///     needs to know about new lines so that it can add the right amount of
         ///     indentation at the beginning of lines.
         /// </summary>

@@ -181,7 +181,7 @@ namespace System.Data.Entity.Interception
                         CultureInfo.CurrentCulture,
                         "Context '{0}' is executing command '{1}'{2}",
                         Context.GetType().Name,
-                        command.CommandText.Replace(Environment.NewLine, ""), Environment.NewLine));
+                        command.CommandText.Replace(Environment.NewLine, String.Empty).Replace("\t", String.Empty), Environment.NewLine));
             }
 
             public override void LogResult(DbCommand command, object result, DbCommandInterceptionContext interceptionContext)

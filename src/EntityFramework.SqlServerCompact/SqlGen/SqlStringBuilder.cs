@@ -21,6 +21,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         public bool UpperCaseKeywords { get; set; }
+        internal StringBuilder InnerBuilder { get { return _sql; } }
 
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public SqlStringBuilder AppendKeyWord(string keyword)
@@ -52,15 +53,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         public SqlStringBuilder Append(string s)
         {
             _sql.Append(s);
-
-            return this;
-        }
-
-        [SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider",
-            MessageId = "System.Text.StringBuilder.AppendFormat(System.String,System.Object[])")]
-        public SqlStringBuilder AppendFormat(string format, params object[] args)
-        {
-            _sql.AppendFormat(format, args);
 
             return this;
         }

@@ -5,7 +5,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
-    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
@@ -501,24 +500,25 @@ namespace System.Data.Entity.SqlServer.SqlGen
             paramsToForceNonUnicode =
                 new HashSet<string>(_candidateParametersToForceNonUnicode.Where(p => p.Value).Select(q => q.Key).ToList());
 
-            return WriteSql(result);
-        }
-
-        /// <summary>
-        ///     Convert the SQL fragments to a string.
-        ///     We have to setup the Stream for writing.
-        /// </summary>
-        /// <param name="sqlStatement"> </param>
-        /// <returns> A string representing the SQL to be executed. </returns>
-        internal string WriteSql(ISqlFragment sqlStatement)
-        {
             var builder = new StringBuilder(1024);
             using (var writer = new SqlWriter(builder))
             {
-                sqlStatement.WriteSql(writer, this);
+                WriteSql(writer, result);
             }
 
             return builder.ToString();
+        }
+
+        /// <summary>
+        ///     Convert the SQL fragments to a string. Writes a string representing the SQL to be executed
+        ///     into the specified writer.
+        /// </summary>
+        /// <param name="sqlStatement">The fragment to be emitted</param>
+        /// <returns>The writer specified for fluent continuations. </returns>
+        internal SqlWriter WriteSql(SqlWriter writer, ISqlFragment sqlStatement)
+        {
+            sqlStatement.WriteSql(writer, this);
+            return writer;
         }
 
         /// <summary>

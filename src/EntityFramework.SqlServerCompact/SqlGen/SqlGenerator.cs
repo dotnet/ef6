@@ -511,25 +511,26 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             Debug.Assert(selectStatementStack.Count == 0);
             Debug.Assert(isParentAJoinStack.Count == 0);
 
-            var commandTexts = new[] { WriteSql(result) };
+            var builder = new StringBuilder(1024);
+            using (var writer = new SqlWriter(builder))
+            {
+                WriteSql(writer, result);
+            }
+
+            var commandTexts = new[] { builder.ToString() };
             return commandTexts;
         }
 
         /// <summary>
-        ///     Convert the SQL fragments to a string.
-        ///     We have to setup the Stream for writing.
+        ///     Convert the SQL fragments to a string. Writes a string representing the SQL to be executed
+        ///     into the specified writer.
         /// </summary>
-        /// <param name="sqlStatement"> </param>
-        /// <returns> A string representing the SQL to be executed. </returns>
-        public string WriteSql(ISqlFragment sqlStatement)
+        /// <param name="sqlStatement">The fragment to be emitted</param>
+        /// <returns>The writer specified for fluent continuations. </returns>
+        public SqlWriter WriteSql(SqlWriter writer, ISqlFragment sqlStatement)
         {
-            var builder = new StringBuilder(1024);
-            using (var writer = new SqlWriter(builder))
-            {
-                sqlStatement.WriteSql(writer, this);
-            }
-
-            return builder.ToString();
+            sqlStatement.WriteSql(writer, this);
+            return writer;
         }
 
         #endregion

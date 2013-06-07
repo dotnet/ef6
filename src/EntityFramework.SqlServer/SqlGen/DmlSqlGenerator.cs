@@ -693,7 +693,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 }
                 else
                 {
-                    _commandText.Append(_sqlGenerator.WriteSql(expression.Accept(_sqlGenerator)));
+                    using (var writer = new SqlWriter(_commandText.InnerBuilder))
+                    {
+                        _sqlGenerator.WriteSql(writer, expression.Accept(_sqlGenerator));
+                    }
                 }
             }
 

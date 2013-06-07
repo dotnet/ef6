@@ -3,6 +3,7 @@
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Data.Entity.SqlServer.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     internal class SqlStringBuilder
@@ -20,8 +21,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         public bool UpperCaseKeywords { get; set; }
+        internal StringBuilder InnerBuilder { get { return _sql; } }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public SqlStringBuilder AppendKeyWord(string keyword)
         {
             DebugCheck.NotNull(keyword);
