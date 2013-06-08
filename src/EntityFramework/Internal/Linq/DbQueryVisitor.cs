@@ -99,32 +99,6 @@ namespace System.Data.Entity.Internal.Linq
             return base.VisitMember(node);
         }
 
-        /// <summary>
-        ///     Processes the fields in each constant expression and replaces <see cref="DbQuery" /> instances with
-        ///     the underlying ObjectQuery instance.  This handles cases where the query has a closure
-        ///     containing <see cref="DbQuery" /> values.
-        /// </summary>
-        protected override Expression VisitConstant(ConstantExpression node)
-        {
-            Check.NotNull(node, "node");
-
-            var value = node.Value;
-            if (value != null)
-            {
-                var fields = value.GetType().GetFields();
-                foreach (var field in fields.Where(f => typeof(IQueryable).IsAssignableFrom(f.FieldType)))
-                {
-                    var objectQuery = ExtractObjectQuery(field.GetValue(value));
-                    if (objectQuery != null)
-                    {
-                        field.SetValue(value, objectQuery);
-                    }
-                }
-            }
-
-            return base.VisitConstant(node);
-        }
-
         #endregion
 
         #region Helpers

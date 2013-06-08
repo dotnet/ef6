@@ -10,7 +10,6 @@ namespace ProductivityApiTests
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Text.RegularExpressions;
     using ConcurrencyModel;
     using SimpleModel;
     using Xunit;
@@ -12352,6 +12351,46 @@ namespace ProductivityApiTests
             Verify142979Results(
                 new ClassWithContextPropertyAndOtherProperties().
                     Query_with_top_level_nested_query_using_Set_method_obtained_from_static_context_property_in_select_works());
+        }
+
+        [Fact] // CodePlex 396
+        public void Query_with_DbSet_in_closure_is_translated_to_ObjectQuery_correctly()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products = context.Set<Product>();
+
+                var query = from x in context.Set<Category>()
+                            from y in products
+                            select new { x, y };
+
+                var results = query.ToList();
+
+                Assert.Equal(28, results.Count);
+                Assert.True(results.All(r => r.x != null && r.y != null && r.y.Category != null));
+            }
+        }
+
+        [Fact] // CodePlex 396
+        public void Query_with_multiple_DbSets_or_DbQueries_in_closure_is_translated_to_ObjectQuery_correctly()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products = context.Set<Product>();
+                var someProducts = (DbQuery<Product>)context.Set<Product>().Where(p => p.Name.StartsWith("M"));
+                var productIds = (DbQuery<int>)context.Set<Product>().Select(p => p.Id);
+
+                var query = from c in context.Categories
+                            from p1 in products
+                            from p2 in someProducts
+                            from p3 in productIds
+                            select new { c, p1, p2, p3 };
+
+                var results = query.ToList();
+
+                Assert.Equal(196, results.Count);
+                Assert.True(results.All(r => r.c != null && r.p1 != null && r.p2 != null && r.p3 > 0));
+            }
         }
 
         #endregion

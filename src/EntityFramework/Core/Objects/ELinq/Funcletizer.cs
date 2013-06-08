@@ -514,7 +514,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 var inlineQuery = (value as IQueryable).TryGetObjectQuery();
                 if (inlineQuery != null)
                 {
-                    result = InlineObjectQuery(inlineQuery, expression.Type);
+                    result = InlineObjectQuery(inlineQuery, inlineQuery.GetType());
                 }
                 else
                 {
