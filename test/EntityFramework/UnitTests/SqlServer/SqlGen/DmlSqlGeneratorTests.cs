@@ -41,9 +41,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         [Fact]
         public void Visit_DbScanExpression_throws_if_a_defining_query_is_set()
         {
-            DbScanExpressionThrowsTest("UpdateFunction", new Mock<DbUpdateCommandTree>().Object);
-            DbScanExpressionThrowsTest("DeleteFunction", new Mock<DbDeleteCommandTree>().Object);
-            DbScanExpressionThrowsTest("InsertFunction", new Mock<DbInsertCommandTree>().Object);
+            DbScanExpressionThrowsTest("UpdateFunction", new DbUpdateCommandTree());
+            DbScanExpressionThrowsTest("DeleteFunction", new DbDeleteCommandTree());
+            DbScanExpressionThrowsTest("InsertFunction", new DbInsertCommandTree());
         }
 
         private static void DbScanExpressionThrowsTest(string functionName, DbModificationCommandTree commandTree)
@@ -60,8 +60,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
         public void Visit_DbScanExpression_appends_SQL_if_defining_query_is_not_set()
         {
             var builder = new SqlStringBuilder();
+            var insertTree = new DbInsertCommandTree();
+
             new DmlSqlGenerator.ExpressionTranslator(
-                builder, new Mock<DbInsertCommandTree>().Object, true, new SqlGenerator(SqlVersion.Sql10))
+                builder, insertTree, true, new SqlGenerator(SqlVersion.Sql10))
                 .Visit(CreateMockScanExpression(null).Object);
 
             Assert.Equal("[Kontainer].[Binky]", builder.ToString());
