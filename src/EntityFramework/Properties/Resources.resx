@@ -5418,4 +5418,10 @@
   <data name="InvalidNavigationPropertyComplexType" xml:space="preserve">
     <value>The property '{0}' on type '{1}' cannot be configured as a navigation property because type '{2}' was configured as a complex type.</value>
   </data>
+  <data name="LightweightPrimitivePropertyConfiguration_DateTimeScale" xml:space="preserve">
+    <value>The scale cannot be set on the DateTime property '{0}', only specify the precision.</value>
+  </data>
+  <data name="LightweightPrimitivePropertyConfiguration_DecimalNoScale" xml:space="preserve">
+    <value>To set the precision on the decimal property '{0}' the scale must also be specified.</value>
+  </data>
 </root>

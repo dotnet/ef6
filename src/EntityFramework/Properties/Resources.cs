@@ -13596,6 +13596,22 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.InvalidNavigationPropertyComplexType, p0, p1, p2);
         }
+
+        /// <summary>
+        ///     A string like "The scale cannot be set on the DateTime property '{0}', only specify the precision."
+        /// </summary>
+        internal static string LightweightPrimitivePropertyConfiguration_DateTimeScale(object p0)
+        {
+            return EntityRes.GetString(EntityRes.LightweightPrimitivePropertyConfiguration_DateTimeScale, p0);
+        }
+
+        /// <summary>
+        ///     A string like "To set the precision on the decimal property '{0}' the scale must also be specified."
+        /// </summary>
+        internal static string LightweightPrimitivePropertyConfiguration_DecimalNoScale(object p0)
+        {
+            return EntityRes.GetString(EntityRes.LightweightPrimitivePropertyConfiguration_DecimalNoScale, p0);
+        }
     }
 
     /// <summary>
@@ -16991,6 +17007,8 @@ namespace System.Data.Entity.Resources
         internal const string TestDoubleNotImplemented = "TestDoubleNotImplemented";
         internal const string TestDoublesCannotBeConverted = "TestDoublesCannotBeConverted";
         internal const string InvalidNavigationPropertyComplexType = "InvalidNavigationPropertyComplexType";
+        internal const string LightweightPrimitivePropertyConfiguration_DateTimeScale = "LightweightPrimitivePropertyConfiguration_DateTimeScale";
+        internal const string LightweightPrimitivePropertyConfiguration_DecimalNoScale = "LightweightPrimitivePropertyConfiguration_DecimalNoScale";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

@@ -24,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         private readonly Lazy<DecimalPropertyConfiguration> _decimalConfiguration;
         private readonly Lazy<LengthPropertyConfiguration> _lengthConfiguration;
         private readonly Lazy<StringPropertyConfiguration> _stringConfiguration;
-        
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="LightweightPrimitivePropertyConfiguration" /> class.
         /// </summary>
@@ -231,9 +231,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             {
                 if (!_propertyInfo.PropertyType.IsNullable())
                 {
-                    throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonNullableProperty(
-                        _propertyInfo.DeclaringType + "." + _propertyInfo.Name,
-                        _propertyInfo.PropertyType));
+                    throw new InvalidOperationException(
+                        Strings.LightweightPrimitivePropertyConfiguration_NonNullableProperty(
+                            _propertyInfo.DeclaringType + "." + _propertyInfo.Name,
+                            _propertyInfo.PropertyType));
                 }
 
                 _configuration().IsNullable = true;
@@ -415,10 +416,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if the
-        ///     property is not a <see cref="DateTime" />.
+        ///     property is not a <see cref="DateTime" />. But it will throw is the property is a <see cref="Decimal" />.
         /// </remarks>
         public virtual LightweightPrimitivePropertyConfiguration HasPrecision(byte value)
         {
+            if (_decimalConfiguration.Value != null)
+            {
+                throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_DecimalNoScale(_propertyInfo.Name));
+            }
+
             if (_dateTimeConfiguration.Value != null
                 && _dateTimeConfiguration.Value.Precision == null)
             {
@@ -438,10 +444,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if the
-        ///     property is not a <see cref="Decimal" />.
+        ///     property is not a <see cref="Decimal" />. But it will throw is the property is a <see cref="DateTime" />.
         /// </remarks>
         public virtual LightweightPrimitivePropertyConfiguration HasPrecision(byte precision, byte scale)
         {
+            if (_dateTimeConfiguration.Value != null)
+            {
+                throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_DateTimeScale(_propertyInfo.Name));
+            }
+
             if (_decimalConfiguration.Value != null
                 && _decimalConfiguration.Value.Precision == null
                 && _decimalConfiguration.Value.Scale == null)

@@ -716,6 +716,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
+        public void HasPrecision_throws_on_Decimal()
+        {
+            var innerConfig = new DecimalPropertyConfiguration();
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            Assert.Equal(
+                Strings.LightweightPrimitivePropertyConfiguration_DecimalNoScale("P"),
+                Assert.Throws<InvalidOperationException>(() => config.HasPrecision(8)).Message);
+        }
+
+        [Fact]
         public void HasPrecision_with_scale_configures_when_unset()
         {
             var innerConfig = new DecimalPropertyConfiguration();
@@ -769,6 +780,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             var result = config.HasPrecision(8, 2);
 
             Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasPrecision_with_scale_throws_on_DateTime()
+        {
+            var innerConfig = new DateTimePropertyConfiguration();
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            Assert.Equal(
+                Strings.LightweightPrimitivePropertyConfiguration_DateTimeScale("P"),
+                Assert.Throws<InvalidOperationException>(() => config.HasPrecision(8, 2)).Message);
         }
 
         [Fact]
