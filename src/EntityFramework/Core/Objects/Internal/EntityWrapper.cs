@@ -34,8 +34,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         protected EntityWrapper(
             TEntity entity, RelationshipManager relationshipManager,
             Func<object, IPropertyAccessorStrategy> propertyStrategy, Func<object, IChangeTrackingStrategy> changeTrackingStrategy,
-            Func<object, IEntityKeyStrategy> keyStrategy)
-            : base(entity, relationshipManager)
+            Func<object, IEntityKeyStrategy> keyStrategy, bool overridesEquals)
+            : base(entity, relationshipManager, overridesEquals)
         {
             if (relationshipManager == null)
             {
@@ -70,8 +70,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             TEntity entity, RelationshipManager relationshipManager, EntityKey key, EntitySet set, ObjectContext context,
             MergeOption mergeOption, Type identityType,
             Func<object, IPropertyAccessorStrategy> propertyStrategy, Func<object, IChangeTrackingStrategy> changeTrackingStrategy,
-            Func<object, IEntityKeyStrategy> keyStrategy)
-            : base(entity, relationshipManager, set, context, mergeOption, identityType)
+            Func<object, IEntityKeyStrategy> keyStrategy, bool overridesEquals)
+            : base(entity, relationshipManager, set, context, mergeOption, identityType, overridesEquals)
         {
             if (relationshipManager == null)
             {

@@ -829,21 +829,30 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
             if (value != null)
             {
-                var enumerable = value as IEnumerable;
-                if (enumerable == null)
+                // It would be good to be able to always use ICollection<T>.Contains here. The problem
+                // is if the entity has overridden Equals/GetHashcode such that it makes use of the
+                // primary key value then this will break when an Added object with an Identity key that
+                // is contained in a navigation collection has its primary key set after it is saved.
+                // Therefore, we only use this optimization if we know for sure that the nav prop is
+                // using reference equality or if neither Equals or GetHashCode are overridden.
+
+                var collection = value as ICollection<TEntity>;
+                if (collection == null)
                 {
                     throw new EntityException(
                         Strings.ObjectStateEntry_UnableToEnumerateCollection(
                             TargetAccessor.PropertyName, WrappedOwner.Entity.GetType().FullName));
                 }
 
-                foreach (var o in enumerable)
+                var hashSet = value as HashSet<TEntity>;
+                if (!wrapper.OverridesEqualsOrGetHashCode
+                    || (hashSet != null
+                        && hashSet.Comparer is ObjectReferenceEqualityComparer))
                 {
-                    if (ReferenceEquals(o, wrapper.Entity))
-                    {
-                        return true;
-                    }
+                    return collection.Contains((TEntity)wrapper.Entity);
                 }
+
+                return collection.Any(o => ReferenceEquals(o, wrapper.Entity));
             }
             return false;
         }

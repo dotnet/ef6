@@ -2589,7 +2589,7 @@
     <value>The change cannot be tracked because the state of the object changed from '{0}' to '{1}' since the previous call to EntityMemberChanging or EntityComplexMemberChanging on the same change tracker with the same property name. For information about properly reporting changes, see the Entity Framework documentation. </value>
   </data>
   <data name="ObjectStateEntry_UnableToEnumerateCollection" xml:space="preserve">
-    <value>The navigation property '{0}' on entity of type '{1}' must implement IEnumerable in order for Entity Framework to be able to track changes in collections.</value>
+    <value>The navigation property '{0}' on entity of type '{1}' must implement ICollection&lt;T&gt; in order for Entity Framework to be able to track changes in collections.</value>
   </data>
   <data name="ObjectStateEntry_RelationshipAndKeyEntriesDoNotHaveRelationshipManagers" xml:space="preserve">
     <value>A RelationshipManager object cannot be returned for this ObjectStateEntry instance. Only an ObjectStateEntry that represents an entity has an associated RelationshipManager.</value>

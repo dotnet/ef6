@@ -189,5 +189,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     DetectChanges is required to do this.
         /// </summary>
         bool RequiresRelationshipChangeTracking { get; }
+
+        bool OverridesEqualsOrGetHashCode { get; }
     }
 }

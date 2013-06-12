@@ -40,7 +40,6 @@ namespace LazyUnicorns
 
         public bool Contains(T item)
         {
-            LazyLoad();
             return _collection.Contains(item);
         }
 

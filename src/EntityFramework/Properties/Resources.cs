@@ -6206,7 +6206,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The navigation property '{0}' on entity of type '{1}' must implement IEnumerable in order for Entity Framework to be able to track changes in collections."
+        ///     A string like "The navigation property '{0}' on entity of type '{1}' must implement ICollection<T> in order for Entity Framework to be able to track changes in collections."
         /// </summary>
         internal static string ObjectStateEntry_UnableToEnumerateCollection(object p0, object p1)
         {

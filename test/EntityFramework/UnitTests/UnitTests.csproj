@@ -245,6 +245,7 @@
     <Compile Include="Core\Objects\Internal\BufferedDataReaderTests.cs" />
     <Compile Include="Core\Objects\Internal\EntityProxyFactoryTests.cs" />
     <Compile Include="Core\Objects\Internal\EntityProxyTypeInfoTests.cs" />
+    <Compile Include="Core\Objects\Internal\EntityWrapperFactoryTests.cs" />
     <Compile Include="Core\Objects\Internal\ObjectQueryExecutionPlanFactoryTests.cs" />
     <Compile Include="Core\Objects\Internal\ObjectQueryExecutionPlanTests.cs" />
     <Compile Include="Core\Objects\Internal\TestHelpers\MockHelper.cs" />

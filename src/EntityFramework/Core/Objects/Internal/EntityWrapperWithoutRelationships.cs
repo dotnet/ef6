@@ -33,9 +33,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal EntityWrapperWithoutRelationships(
             TEntity entity, EntityKey key, EntitySet entitySet, ObjectContext context, MergeOption mergeOption, Type identityType,
             Func<object, IPropertyAccessorStrategy> propertyStrategy, Func<object, IChangeTrackingStrategy> changeTrackingStrategy,
-            Func<object, IEntityKeyStrategy> keyStrategy)
+            Func<object, IEntityKeyStrategy> keyStrategy, bool overridesEquals)
             : base(entity, RelationshipManager.Create(), key, entitySet, context, mergeOption, identityType,
-                propertyStrategy, changeTrackingStrategy, keyStrategy)
+                propertyStrategy, changeTrackingStrategy, keyStrategy, overridesEquals)
         {
         }
 
@@ -49,8 +49,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <param name="keyStrategy"> A delegate to create the entity key strategy object </param>
         internal EntityWrapperWithoutRelationships(
             TEntity entity, Func<object, IPropertyAccessorStrategy> propertyStrategy,
-            Func<object, IChangeTrackingStrategy> changeTrackingStrategy, Func<object, IEntityKeyStrategy> keyStrategy)
-            : base(entity, RelationshipManager.Create(), propertyStrategy, changeTrackingStrategy, keyStrategy)
+            Func<object, IChangeTrackingStrategy> changeTrackingStrategy, Func<object, IEntityKeyStrategy> keyStrategy, 
+            bool overridesEquals)
+            : base(entity, RelationshipManager.Create(), propertyStrategy, changeTrackingStrategy, keyStrategy, overridesEquals)
         {
         }
 

@@ -428,6 +428,140 @@ namespace System.Data.Entity.Utilities
                 Assert.Equal("NoNamespaceClass.Nested", typeof(NoNamespaceClass.Nested).FullNameWithNesting());
             }
         }
+
+        public class OverridesEqualsOrGetHashCode
+        {
+            [Fact]
+            public void Check_returns_false_for_object()
+            {
+                Assert.False(typeof(object).OverridesEqualsOrGetHashCode());
+            }
+
+            public class NoOverride
+            {
+            }
+
+            [Fact]
+            public void Check_returns_false_for_class_that_does_not_override_Equals_or_GetHashCode()
+            {
+                Assert.False(typeof(NoOverride).OverridesEqualsOrGetHashCode());
+            }
+
+            public class NewMethods
+            {
+                public virtual new bool Equals(object obj)
+                {
+                    return base.Equals(obj);
+                }
+
+                public virtual new int GetHashCode()
+                {
+                    return base.GetHashCode();
+                }
+            }
+
+            [Fact]
+            public void Check_returns_false_for_class_that_has_new_Equals_and_GetHashCode()
+            {
+                Assert.False(typeof(NewMethods).OverridesEqualsOrGetHashCode());
+            }
+
+            public class OverrideNewMethods : NewMethods
+            {
+                public override bool Equals(object obj)
+                {
+                    return base.Equals(obj);
+                }
+
+                public override int GetHashCode()
+                {
+                    return base.GetHashCode();
+                }
+            }
+
+            [Fact]
+            public void Check_returns_false_for_class_that_overrides_new_Equals_and_GetHashCode()
+            {
+                Assert.False(typeof(OverrideNewMethods).OverridesEqualsOrGetHashCode());
+            }
+
+            public class DifferentMethods : NewMethods
+            {
+                public bool Equals(DifferentMethods obj)
+                {
+                    return base.Equals(obj);
+                }
+
+                public int GetHashCode(int foo)
+                {
+                    return base.GetHashCode();
+                }
+            }
+
+            [Fact]
+            public void Check_returns_false_for_class_that_has_differnt_Equals_and_GetHashCode_signatures()
+            {
+                Assert.False(typeof(DifferentMethods).OverridesEqualsOrGetHashCode());
+            }
+
+#pragma warning disable 659
+            public class OverridesEquals
+            {
+                public override bool Equals(object obj)
+                {
+                    return base.Equals(obj);
+                }
+            }
+#pragma warning restore 659
+
+            [Fact]
+            public void Check_returns_true_for_class_that_overrides_Equals()
+            {
+                Assert.True(typeof(OverridesEquals).OverridesEqualsOrGetHashCode());
+            }
+
+            public class OverridesGetHashCode
+            {
+                public override int GetHashCode()
+                {
+                    return base.GetHashCode();
+                }
+            }
+
+            [Fact]
+            public void Check_returns_true_for_class_that_overrides_GetHashCode()
+            {
+                Assert.True(typeof(OverridesGetHashCode).OverridesEqualsOrGetHashCode());
+            }
+
+            public class HidesEquals : OverridesEquals
+            {
+                public new bool Equals(object obj)
+                {
+                    return base.Equals(obj);
+                }
+            }
+
+            [Fact]
+            public void Check_returns_true_for_class_that_overrides_Equals_but_then_hides_it()
+            {
+                Assert.True(typeof(HidesEquals).OverridesEqualsOrGetHashCode());
+            }
+
+            public class HidesGetHashCode : OverridesGetHashCode
+            {
+                public new int GetHashCode()
+                {
+                    return base.GetHashCode();
+                }
+            }
+
+            [Fact]
+            public void Check_returns_true_for_class_that_overrides_GetHashCode_but_then_hides_it()
+            {
+                Assert.True(typeof(HidesGetHashCode).OverridesEqualsOrGetHashCode());
+            }
+        }
     }
 }
 

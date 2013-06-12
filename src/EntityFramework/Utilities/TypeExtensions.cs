@@ -272,5 +272,26 @@ namespace System.Data.Entity.Utilities
 
             return type.FullName.Replace('+', '.');
         }
+
+
+        public static bool OverridesEqualsOrGetHashCode(this Type type)
+        {
+            DebugCheck.NotNull(type);
+
+            while (type != typeof(object))
+            {
+                if (type.GetMethods()
+                    .Any(m => (m.Name == "Equals" || m.Name == "GetHashCode")
+                        && m.DeclaringType != typeof(object)
+                        && m.GetBaseDefinition().DeclaringType == typeof(object)))
+                {
+                    return true;
+                }
+
+                type = type.BaseType;
+            }
+
+            return false;
+        }
     }
 }

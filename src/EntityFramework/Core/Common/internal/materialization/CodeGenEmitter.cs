@@ -336,9 +336,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             bool isProxy)
         {
             Expression result;
+
+            var overridesEquals = actualType.OverridesEqualsOrGetHashCode();
             var isIEntityWithKey = typeof(IEntityWithKey).IsAssignableFrom(actualType);
             var isIEntityWithRelationships = typeof(IEntityWithRelationships).IsAssignableFrom(actualType);
             var isIEntityWithChangeTracker = typeof(IEntityWithChangeTracker).IsAssignableFrom(actualType);
+
             if (isIEntityWithRelationships
                 && isIEntityWithChangeTracker
                 && isIEntityWithKey
@@ -349,11 +352,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 var genericType = typeof(LightweightEntityWrapper<>).MakeGenericType(actualType);
                 var ci = genericType.GetConstructor(
                     BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.CreateInstance, null,
-                    new[] { actualType, typeof(EntityKey), typeof(EntitySet), typeof(ObjectContext), typeof(MergeOption), typeof(Type) },
+                    new[] { actualType, typeof(EntityKey), typeof(EntitySet), typeof(ObjectContext), typeof(MergeOption), typeof(Type), typeof(bool) },
                     null);
                 result = Expression.New(
                     ci, input, keyReader, entitySetReader, Shaper_Context, Expression.Constant(mergeOption, typeof(MergeOption)),
-                    Expression.Constant(identityType, typeof(Type)));
+                    Expression.Constant(identityType, typeof(Type)), Expression.Constant(overridesEquals, typeof(bool)));
             }
             else
             {
@@ -383,12 +386,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         {
                             actualType, typeof(EntityKey), typeof(EntitySet), typeof(ObjectContext), typeof(MergeOption), typeof(Type),
                             typeof(Func<object, IPropertyAccessorStrategy>), typeof(Func<object, IChangeTrackingStrategy>),
-                            typeof(Func<object, IEntityKeyStrategy>)
+                            typeof(Func<object, IEntityKeyStrategy>), typeof(bool)
                         }, null);
                 result = Expression.New(
                     ci, input, keyReader, entitySetReader, Shaper_Context, Expression.Constant(mergeOption, typeof(MergeOption)),
                     Expression.Constant(identityType, typeof(Type)),
-                    propertyAccessorStrategy, changeTrackingStrategy, keyStrategy);
+                    propertyAccessorStrategy, changeTrackingStrategy, keyStrategy,
+                    Expression.Constant(overridesEquals, typeof(bool)));
             }
             result = Expression.Convert(result, typeof(IEntityWrapper));
             return result;

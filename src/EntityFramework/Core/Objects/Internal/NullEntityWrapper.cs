@@ -188,5 +188,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             get { return false; }
         }
+
+        public bool OverridesEqualsOrGetHashCode
+        {
+            get { return false; }
+        }
     }
 }

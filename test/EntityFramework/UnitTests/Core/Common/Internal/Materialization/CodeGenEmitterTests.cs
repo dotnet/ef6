@@ -2,6 +2,11 @@
 
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
+    using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Core.Objects.Internal;
+    using System.Data.Entity.Infrastructure;
+    using System.Linq;
     using Xunit;
 
     public class CodeGenEmitterTests
@@ -66,6 +71,198 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             Assert.NotNull(CodeGenEmitter.Shaper_Context);
             Assert.NotNull(CodeGenEmitter.Shaper_Context_Options);
             Assert.NotNull(CodeGenEmitter.Shaper_ProxyCreationEnabled);
+        }
+
+        /// <summary>
+        ///     Not really a unit test because of the complexity of setting up everything the materializer needs.
+        /// </summary>
+        [Fact]
+        public void Materialized_entities_have_override_Equals_flag_set_appropriately()
+        {
+            using (var context = new EntityTypesContext())
+            {
+                var stateManager = ((IObjectContextAdapter)context).ObjectContext.ObjectStateManager;
+
+                var wrappedEntity = ((EntityEntry)stateManager.GetObjectStateEntry(context.IPocos.First())).WrappedEntity;
+                Assert.IsType<LightweightEntityWrapper<IPocoEntity>>(wrappedEntity);
+                Assert.False(wrappedEntity.OverridesEqualsOrGetHashCode);
+
+                wrappedEntity = ((EntityEntry)stateManager.GetObjectStateEntry(context.IPocosWithEquals.First())).WrappedEntity;
+                Assert.IsType<LightweightEntityWrapper<IPocoEntityWithEquals>>(wrappedEntity);
+                Assert.True(wrappedEntity.OverridesEqualsOrGetHashCode);
+
+                wrappedEntity = ((EntityEntry)stateManager.GetObjectStateEntry(context.WithRels.First())).WrappedEntity;
+                Assert.IsType<EntityWrapperWithRelationships<EntityWithRelationships>>(wrappedEntity);
+                Assert.False(wrappedEntity.OverridesEqualsOrGetHashCode);
+
+                wrappedEntity = ((EntityEntry)stateManager.GetObjectStateEntry(context.WithRelsAndEquals.First())).WrappedEntity;
+                Assert.IsType<EntityWrapperWithRelationships<EntityWithRelationshipsAndEquals>>(wrappedEntity);
+                Assert.True(wrappedEntity.OverridesEqualsOrGetHashCode);
+
+                wrappedEntity = ((EntityEntry)stateManager.GetObjectStateEntry(context.Pocos.First())).WrappedEntity;
+                Assert.IsType<EntityWrapperWithoutRelationships<PocoEntity>>(wrappedEntity);
+                Assert.False(wrappedEntity.OverridesEqualsOrGetHashCode);
+
+                wrappedEntity = ((EntityEntry)stateManager.GetObjectStateEntry(context.PocosWithEquals.First())).WrappedEntity;
+                Assert.IsType<EntityWrapperWithoutRelationships<PocoEntityWithEquals>>(wrappedEntity);
+                Assert.True(wrappedEntity.OverridesEqualsOrGetHashCode);
+            }
+        }
+
+        public class EntityTypesInitializer : DropCreateDatabaseIfModelChanges<EntityTypesContext>
+        {
+            protected override void Seed(EntityTypesContext context)
+            {
+                context.IPocos.Add(new IPocoEntity());
+                context.IPocosWithEquals.Add(new IPocoEntityWithEquals());
+                context.WithRels.Add(new EntityWithRelationships());
+                context.WithRelsAndEquals.Add(new EntityWithRelationshipsAndEquals());
+                context.Pocos.Add(new PocoEntity());
+                context.PocosWithEquals.Add(new PocoEntityWithEquals());
+            }
+        }
+
+        public class EntityTypesContext : DbContext
+        {
+            static EntityTypesContext()
+            {
+                Database.SetInitializer(new EntityTypesInitializer());
+            }
+
+            public DbSet<IPocoEntity> IPocos { get; set; }
+            public DbSet<IPocoEntityWithEquals> IPocosWithEquals { get; set; }
+            public DbSet<EntityWithRelationships> WithRels { get; set; }
+            public DbSet<EntityWithRelationshipsAndEquals> WithRelsAndEquals { get; set; }
+            public DbSet<PocoEntity> Pocos { get; set; }
+            public DbSet<PocoEntityWithEquals> PocosWithEquals { get; set; }
+        }
+
+        public class ChangeTracker : EntityObject
+        {
+        }
+
+        public class IPocoEntity : IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
+        {
+            private readonly ChangeTracker _changeTracker = new ChangeTracker();
+            private readonly RelationshipManager _relationshipManager;
+
+            public IPocoEntity()
+            {
+                _relationshipManager = RelationshipManager.Create(this);
+            }
+
+            public int Id { get; set; }
+
+            public RelationshipManager RelationshipManager
+            {
+                get { return _relationshipManager; }
+            }
+
+            public EntityKey EntityKey { get; set; }
+
+            public void SetChangeTracker(IEntityChangeTracker changeTracker)
+            {
+                ((IEntityWithChangeTracker)_changeTracker).SetChangeTracker(changeTracker);
+            }
+        }
+
+        public class IPocoEntityWithEquals : IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
+        {
+            private readonly ChangeTracker _changeTracker = new ChangeTracker();
+            private readonly RelationshipManager _relationshipManager;
+
+            public IPocoEntityWithEquals()
+            {
+                _relationshipManager = RelationshipManager.Create(this);
+            }
+
+            public int Id { get; set; }
+
+            public RelationshipManager RelationshipManager
+            {
+                get { return _relationshipManager; }
+            }
+
+            public EntityKey EntityKey { get; set; }
+
+            public void SetChangeTracker(IEntityChangeTracker changeTracker)
+            {
+                ((IEntityWithChangeTracker)_changeTracker).SetChangeTracker(changeTracker);
+            }
+
+            public override bool Equals(object obj)
+            {
+                return base.Equals(obj);
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
+        }
+
+        public class EntityWithRelationships : IEntityWithRelationships
+        {
+            private readonly RelationshipManager _relationshipManager;
+
+            public EntityWithRelationships()
+            {
+                _relationshipManager = RelationshipManager.Create(this);
+            }
+
+            public int Id { get; set; }
+
+            public RelationshipManager RelationshipManager
+            {
+                get { return _relationshipManager; }
+            }
+        }
+
+        public class EntityWithRelationshipsAndEquals : IEntityWithRelationships
+        {
+            private readonly RelationshipManager _relationshipManager;
+
+            public EntityWithRelationshipsAndEquals()
+            {
+                _relationshipManager = RelationshipManager.Create(this);
+            }
+
+            public int Id { get; set; }
+
+            public RelationshipManager RelationshipManager
+            {
+                get { return _relationshipManager; }
+            }
+
+            public override bool Equals(object obj)
+            {
+                return base.Equals(obj);
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
+        }
+
+        public class PocoEntity
+        {
+            public int Id { get; set; }
+        }
+
+        public class PocoEntityWithEquals
+        {
+            public int Id { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                return base.Equals(obj);
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
         }
     }
 }

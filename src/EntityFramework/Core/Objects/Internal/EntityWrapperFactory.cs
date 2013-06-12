@@ -6,7 +6,9 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -99,13 +101,17 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static Func<object, IEntityWrapper> CreateWrapperDelegateTypedLightweight<TEntity>()
             where TEntity : class, IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
         {
-            return (entity) => new LightweightEntityWrapper<TEntity>((TEntity)entity);
+            var overridesEquals = typeof(TEntity).OverridesEqualsOrGetHashCode();
+
+            return (entity) => new LightweightEntityWrapper<TEntity>((TEntity)entity, overridesEquals);
         }
 
         // Returns a delegate that creates a strategy-based wrapper for entities that implement IEntityWithRelationships
         private static Func<object, IEntityWrapper> CreateWrapperDelegateTypedWithRelationships<TEntity>()
             where TEntity : class, IEntityWithRelationships
         {
+            var overridesEquals = typeof(TEntity).OverridesEqualsOrGetHashCode();
+
             Func<object, IPropertyAccessorStrategy> propertyAccessorStrategy;
             Func<object, IEntityKeyStrategy> keyStrategy;
             Func<object, IChangeTrackingStrategy> changeTrackingStrategy;
@@ -113,13 +119,15 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             return
                 (entity) =>
-                new EntityWrapperWithRelationships<TEntity>((TEntity)entity, propertyAccessorStrategy, changeTrackingStrategy, keyStrategy);
+                new EntityWrapperWithRelationships<TEntity>((TEntity)entity, propertyAccessorStrategy, changeTrackingStrategy, keyStrategy, overridesEquals);
         }
 
         // Returns a delegate that creates a strategy-based wrapper for entities that do not implement IEntityWithRelationships
         private static Func<object, IEntityWrapper> CreateWrapperDelegateTypedWithoutRelationships<TEntity>()
             where TEntity : class
         {
+            var overridesEquals = typeof(TEntity).OverridesEqualsOrGetHashCode();
+
             Func<object, IPropertyAccessorStrategy> propertyAccessorStrategy;
             Func<object, IEntityKeyStrategy> keyStrategy;
             Func<object, IChangeTrackingStrategy> changeTrackingStrategy;
@@ -128,7 +136,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             return
                 (entity) =>
                 new EntityWrapperWithoutRelationships<TEntity>(
-                    (TEntity)entity, propertyAccessorStrategy, changeTrackingStrategy, keyStrategy);
+                    (TEntity)entity, propertyAccessorStrategy, changeTrackingStrategy, keyStrategy, overridesEquals);
         }
 
         // Creates delegates that create strategy objects appropriate for the type of entity.

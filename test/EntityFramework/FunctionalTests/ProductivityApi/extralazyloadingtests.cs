@@ -317,9 +317,8 @@ namespace ProductivityApiTests
                     .Load();
                 post.Comments.SetLoaded(true);
 
-                // Results are 3 because DetectChanges caused Load
-                Assert.Equal(3, post.Comments.Count); // Doesn't trigger further loading
-                Assert.Equal(3, context.ChangeTracker.Entries<LazyComment>().Count());
+                Assert.Equal(2, post.Comments.Count); // Doesn't trigger further loading
+                Assert.Equal(2, context.ChangeTracker.Entries<LazyComment>().Count());
             }
         }
 

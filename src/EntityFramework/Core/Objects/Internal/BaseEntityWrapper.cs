@@ -27,6 +27,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             None = 0,
             NoTracking = 1,
             InitializingRelatedEnds = 2,
+            OverridesEquals = 4,
         }
 
         private readonly RelationshipManager _relationshipManager;
@@ -39,15 +40,21 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <param name="entity"> The entity to be wrapped </param>
         /// <param name="relationshipManager"> the RelationshipManager associated with this entity </param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "entity")]
-        protected BaseEntityWrapper(TEntity entity, RelationshipManager relationshipManager)
+        protected BaseEntityWrapper(TEntity entity, RelationshipManager relationshipManager, bool overridesEquals)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             DebugCheck.NotNull(entity);
+            
             if (relationshipManager == null)
             {
                 throw new InvalidOperationException(Strings.RelationshipManager_UnexpectedNull);
             }
             _relationshipManager = relationshipManager;
+
+            if (overridesEquals)
+            {
+                _flags = WrapperFlags.OverridesEquals;
+            }
         }
 
         /// <summary>
@@ -65,17 +72,26 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <param name="identityType"> The type of the entity ignoring any possible proxy type </param>
         protected BaseEntityWrapper(
             TEntity entity, RelationshipManager relationshipManager, EntitySet entitySet, ObjectContext context, MergeOption mergeOption,
-            Type identityType)
+            Type identityType, bool overridesEquals)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
             DebugCheck.NotNull(entity);
+
             if (relationshipManager == null)
             {
                 throw new InvalidOperationException(Strings.RelationshipManager_UnexpectedNull);
             }
+
             _identityType = identityType;
             _relationshipManager = relationshipManager;
+
+            if (overridesEquals)
+            {
+                _flags = WrapperFlags.OverridesEquals;
+            }
+
             RelationshipManager.SetWrappedOwner(this, entity);
+            
             if (entitySet != null)
             {
                 Context = context;
@@ -195,6 +211,11 @@ namespace System.Data.Entity.Core.Objects.Internal
                 }
                 return _identityType;
             }
+        }
+
+        public bool OverridesEqualsOrGetHashCode
+        {
+            get { return (_flags & WrapperFlags.OverridesEquals) != 0; }
         }
 
         // All these methods defined by IEntityWrapper

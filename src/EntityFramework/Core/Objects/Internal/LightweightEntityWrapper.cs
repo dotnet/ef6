@@ -22,8 +22,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         ///     Note: use EntityWrapperFactory instead of calling this constructor directly.
         /// </summary>
         /// <param name="entity"> The entity to wrap </param>
-        internal LightweightEntityWrapper(TEntity entity)
-            : base(entity, entity.RelationshipManager)
+        internal LightweightEntityWrapper(TEntity entity, bool overridesEquals)
+            : base(entity, entity.RelationshipManager, overridesEquals)
         {
             Debug.Assert(
                 entity is IEntityWithChangeTracker,
@@ -34,6 +34,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             Debug.Assert(entity is IEntityWithKey, "LightweightEntityWrapper only works with entities that implement IEntityWithKey");
             Debug.Assert(
                 !EntityProxyFactory.IsProxyType(entity.GetType()), "LightweightEntityWrapper only works with entities that are not proxies");
+            
             _entity = entity;
         }
 
@@ -51,8 +52,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <param name="mergeOption"> NoTracking for non-tracked entities, AppendOnly otherwise </param>
         /// <param name="identityType"> The type of the entity ignoring any possible proxy type </param>
         internal LightweightEntityWrapper(
-            TEntity entity, EntityKey key, EntitySet entitySet, ObjectContext context, MergeOption mergeOption, Type identityType)
-            : base(entity, entity.RelationshipManager, entitySet, context, mergeOption, identityType)
+            TEntity entity, EntityKey key, EntitySet entitySet, ObjectContext context, MergeOption mergeOption, Type identityType, bool overridesEquals)
+            : base(entity, entity.RelationshipManager, entitySet, context, mergeOption, identityType, overridesEquals)
         {
             Debug.Assert(
                 entity is IEntityWithChangeTracker,
