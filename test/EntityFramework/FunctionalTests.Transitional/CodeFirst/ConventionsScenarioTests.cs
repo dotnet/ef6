@@ -61,15 +61,17 @@ namespace FunctionalTests
             {
                 private const string Code = "Code";
 
-                protected override EdmProperty MatchKeyProperty(
+                protected override IEnumerable<EdmProperty> MatchKeyProperty(
                     EntityType entityType,
                     IEnumerable<EdmProperty> primitiveProperties)
                 {
-                    return primitiveProperties
-                               .SingleOrDefault(p => Code.Equals(p.Name, StringComparison.OrdinalIgnoreCase))
-                           ?? primitiveProperties
-                                  .SingleOrDefault(
-                                      p => (entityType.Name + Code).Equals(p.Name, StringComparison.OrdinalIgnoreCase));
+                    var codeProperties = primitiveProperties
+                        .Where(p => Code.Equals(p.Name, StringComparison.OrdinalIgnoreCase));
+                    return codeProperties.Any()
+                               ? codeProperties
+                               : primitiveProperties
+                                     .Where(
+                                         p => (entityType.Name + Code).Equals(p.Name, StringComparison.OrdinalIgnoreCase));
                 }
             }
 
@@ -329,12 +331,12 @@ namespace FunctionalTests
                 modelBuilder.Types<LightweightComplexTypeWithId>()
                     .Configure(
                         c =>
-                        {
-                            c.Ignore(l => l.Id);
-                            c.Property(l => l.StringProperty).HasColumnName("foo");
-                            // This will be ignored
-                            c.HasKey(l => l.StringProperty);
-                        });
+                            {
+                                c.Ignore(l => l.Id);
+                                c.Property(l => l.StringProperty).HasColumnName("foo");
+                                // This will be ignored
+                                c.HasKey(l => l.StringProperty);
+                            });
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -343,9 +345,9 @@ namespace FunctionalTests
                     databaseMapping.Database.EntityTypes.Single(t => t.Name == typeof(RelatedLightweightEntity).Name)
                         .Properties.Select(p => p.Name));
                 Assert.Equal(
-                    new[] { "StringProperty"},
+                    new[] { "StringProperty" },
                     databaseMapping.Model.ComplexTypes.Single(t => t.Name == typeof(LightweightComplexTypeWithId).Name)
-                    .Properties.Select(p => p.Name));
+                        .Properties.Select(p => p.Name));
             }
 
             [Fact]
@@ -358,7 +360,7 @@ namespace FunctionalTests
                     .Configure(e => e.HasKey("StringProperty"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
-                
+
                 Assert.Equal(2, databaseMapping.Model.EntityTypes.Count());
                 Assert.True(databaseMapping.Model.EntityTypes.All(e => e.KeyProperties.Any(p => p.Name == "StringProperty")));
                 Assert.Equal(0, databaseMapping.Model.ComplexTypes.Count());

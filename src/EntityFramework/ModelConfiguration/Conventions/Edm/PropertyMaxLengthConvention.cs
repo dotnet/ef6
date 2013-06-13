@@ -5,18 +5,42 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Linq;
 
     /// <summary>
-    ///     Convention to set a default maximum length of 128 for properties whose type supports length facets.
+    ///     Convention to set a maximum length for properties whose type supports length facets. The default value is 128.
     /// </summary>
     public class PropertyMaxLengthConvention : IModelConvention<EntityType>,
                                                IModelConvention<ComplexType>,
                                                IModelConvention<AssociationType>
     {
         private const int DefaultLength = 128;
+        private readonly int _length;
 
+        /// <summary>
+        ///     Initializes a new instance of <see cref="PropertyMaxLengthConvention"/> with the default length.
+        /// </summary>
+        public PropertyMaxLengthConvention()
+            : this(DefaultLength)
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of <see cref="PropertyMaxLengthConvention"/> with the specified length.
+        /// </summary>
+        public PropertyMaxLengthConvention(int length)
+        {
+            if (length <= 0)
+            {
+                throw new ArgumentOutOfRangeException("length", Strings.InvalidMaxLengthSize);
+            }
+
+            _length = length;
+        }
+
+        /// <inheritdoc/>
         public void Apply(EntityType edmDataModelItem, EdmModel model)
         {
             Check.NotNull(edmDataModelItem, "edmDataModelItem");
@@ -25,6 +49,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             SetLength(edmDataModelItem.DeclaredProperties, edmDataModelItem.KeyProperties);
         }
 
+        /// <inheritdoc/>
         public void Apply(ComplexType edmDataModelItem, EdmModel model)
         {
             Check.NotNull(edmDataModelItem, "edmDataModelItem");
@@ -33,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             SetLength(edmDataModelItem.Properties, new List<EdmProperty>());
         }
 
-        private static void SetLength(IEnumerable<EdmProperty> properties, ICollection<EdmProperty> keyProperties)
+        private void SetLength(IEnumerable<EdmProperty> properties, ICollection<EdmProperty> keyProperties)
         {
             foreach (var property in properties)
             {
@@ -56,6 +81,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
         }
 
+        /// <inheritdoc/>
         public void Apply(AssociationType edmDataModelItem, EdmModel model)
         {
             Check.NotNull(edmDataModelItem, "edmDataModelItem");
@@ -93,7 +119,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
         }
 
-        private static void SetStringDefaults(EdmProperty property, bool isKey)
+        private void SetStringDefaults(EdmProperty property, bool isKey)
         {
             DebugCheck.NotNull(property);
 
@@ -105,7 +131,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             SetBinaryDefaults(property, isKey);
         }
 
-        private static void SetBinaryDefaults(EdmProperty property, bool isKey)
+        private void SetBinaryDefaults(EdmProperty property, bool isKey)
         {
             DebugCheck.NotNull(property);
 
@@ -119,7 +145,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             {
                 if (isKey || (property.IsFixedLength == true))
                 {
-                    property.MaxLength = DefaultLength;
+                    property.MaxLength = _length;
                 }
                 else
                 {

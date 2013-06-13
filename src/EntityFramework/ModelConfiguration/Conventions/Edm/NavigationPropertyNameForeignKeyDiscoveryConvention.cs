@@ -13,6 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class NavigationPropertyNameForeignKeyDiscoveryConvention : ForeignKeyDiscoveryConvention
     {
+        /// <inheritdoc/>
         protected override bool MatchDependentKeyProperty(
             AssociationType associationType,
             AssociationEndMember dependentAssociationEnd,
@@ -42,6 +43,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <inheritdoc/>
         protected override bool SupportsMultipleAssociations
         {
             get { return true; }

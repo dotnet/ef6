@@ -8,6 +8,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public sealed class PropertyMaxLengthConventionTests
     {
         [Fact]
+        public void Ctor_evaluates_preconditions()
+        {
+            Assert.Equal(
+                "length",
+                Assert.Throws<ArgumentOutOfRangeException>(() => new PropertyMaxLengthConvention(-1)).ParamName);
+        }
+
+        [Fact]
         public void Apply_should_set_correct_defaults_for_unconfigured_strings()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);

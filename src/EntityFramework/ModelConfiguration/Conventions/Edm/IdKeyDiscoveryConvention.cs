@@ -19,7 +19,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         private const string Id = "Id";
 
-        protected override EdmProperty MatchKeyProperty(
+        /// <inheritdoc/>
+        protected override IEnumerable<EdmProperty> MatchKeyProperty(
             EntityType entityType, IEnumerable<EdmProperty> primitiveProperties)
         {
             Check.NotNull(entityType, "entityType");
@@ -42,7 +43,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 throw Error.MultiplePropertiesMatchedAsKeys(matches.First().Name, entityType.Name);
             }
 
-            return matches.SingleOrDefault();
+            return matches;
         }
     }
 }

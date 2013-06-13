@@ -11,6 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class TypeNameForeignKeyDiscoveryConvention : ForeignKeyDiscoveryConvention
     {
+        /// <inheritdoc/>
         protected override bool MatchDependentKeyProperty(
             AssociationType associationType,
             AssociationEndMember dependentAssociationEnd,

@@ -10,6 +10,29 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class DecimalPropertyConvention : IModelConvention<EdmProperty>
     {
+        private readonly byte _precision;
+        private readonly byte _scale;
+
+        /// <summary>
+        ///     Initializes a new instance of <see cref="DecimalPropertyConvention"/> with the default precision and scale.
+        /// </summary>
+        public DecimalPropertyConvention()
+            : this(18, 2)
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of <see cref="DecimalPropertyConvention"/> with the specified precision and scale.
+        /// </summary>
+        /// <param name="precision"> Precision </param>
+        /// <param name="scale"> Scale </param>
+        public DecimalPropertyConvention(byte precision, byte scale)
+        {
+            _precision = precision;
+            _scale = scale;
+        }
+
+        /// <inheritdoc/>
         public void Apply(EdmProperty edmDataModelItem, EdmModel model)
         {
             Check.NotNull(edmDataModelItem, "edmDataModelItem");
@@ -19,12 +42,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             {
                 if (edmDataModelItem.Precision == null)
                 {
-                    edmDataModelItem.Precision = 18;
+                    edmDataModelItem.Precision = _precision;
                 }
 
                 if (edmDataModelItem.Scale == null)
                 {
-                    edmDataModelItem.Scale = 2;
+                    edmDataModelItem.Scale = _scale;
                 }
             }
         }

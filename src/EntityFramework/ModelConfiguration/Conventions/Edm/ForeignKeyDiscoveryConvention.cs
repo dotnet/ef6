@@ -9,13 +9,28 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
+    /// <summary>
+    ///     Base class for conventions that discover foreign key properties.
+    /// </summary>
     public abstract class ForeignKeyDiscoveryConvention : IModelConvention<AssociationType>
     {
+        /// <summary>
+        ///     Returns <c>true</c> if the convention supports pairs of entity types that have multiple associations defined between them.
+        /// </summary>
         protected virtual bool SupportsMultipleAssociations
         {
             get { return false; }
         }
 
+        /// <summary>
+        ///     When overriden returns <c>true</c> if <paramref name="dependentProperty"/> should be part of the foreign key.
+        /// </summary>
+        /// <param name="associationType"> The association type being configured. </param>
+        /// <param name="dependentAssociationEnd"> The dependent end. </param>
+        /// <param name="dependentProperty"> The candidate property on the dependent end. </param>
+        /// <param name="principalEntityType"> The principal end entity type. </param>
+        /// <param name="principalKeyProperty"> A key property on the principal end that is a candidate target for the foreign key. </param>
+        /// <returns></returns>
         protected abstract bool MatchDependentKeyProperty(
             AssociationType associationType,
             AssociationEndMember dependentAssociationEnd,
@@ -23,6 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             EntityType principalEntityType,
             EdmProperty principalKeyProperty);
 
+        /// <inheritdoc/>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public void Apply(AssociationType edmDataModelItem, EdmModel model)
         {
