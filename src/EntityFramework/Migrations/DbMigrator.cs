@@ -888,6 +888,8 @@ namespace System.Data.Entity.Migrations
 
         internal override void ExecuteStatements(IEnumerable<MigrationStatement> migrationStatements)
         {
+            DebugCheck.NotNull(migrationStatements);
+
             using (var connection = CreateConnection())
             {
                 DbProviderServices.GetExecutionStrategy(connection).Execute(
@@ -897,6 +899,9 @@ namespace System.Data.Entity.Migrations
 
         private void ExecuteStatementsInternal(IEnumerable<MigrationStatement> migrationStatements, DbConnection connection)
         {
+            DebugCheck.NotNull(migrationStatements);
+            DebugCheck.NotNull(connection);
+
             connection.Open();
 
             using (var transaction = connection.BeginTransaction(IsolationLevel.Serializable))
@@ -913,6 +918,9 @@ namespace System.Data.Entity.Migrations
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         internal override void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement)
         {
+            DebugCheck.NotNull(transaction);
+            DebugCheck.NotNull(migrationStatement);
+
             if (string.IsNullOrWhiteSpace(migrationStatement.Sql))
             {
                 return;

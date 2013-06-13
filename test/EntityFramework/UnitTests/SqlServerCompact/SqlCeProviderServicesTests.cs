@@ -9,14 +9,40 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
-    using System.Data.Entity.SqlServer;
     using System.Data.Entity.SqlServerCompact.Resources;
+    using System.Data.SqlClient;
+    using System.Data.SqlServerCe;
     using System.Linq;
     using SimpleModel;
     using Xunit;
 
     public class SqlCeProviderServicesTests : TestBase
     {
+        public class RegisterInfoMessageHandler : TestBase
+        {
+            [Fact]
+            public void Validates_pre_conditions()
+            {
+                Assert.Equal(
+                    "connection",
+                    Assert.Throws<ArgumentNullException>(
+                        () => SqlCeProviderServices.Instance.RegisterInfoMessageHandler(null, null)).ParamName);
+                Assert.Equal(
+                    "handler",
+                    Assert.Throws<ArgumentNullException>(
+                        () => SqlCeProviderServices.Instance.RegisterInfoMessageHandler(new SqlCeConnection(), null)).ParamName);
+            }
+
+            [Fact]
+            public void Throws_when_wrong_connection_type()
+            {
+                Assert.Equal(
+                    Strings.Mapping_Provider_WrongConnectionType(typeof(SqlCeConnection)),
+                    Assert.Throws<ArgumentException>(
+                        () => SqlCeProviderServices.Instance.RegisterInfoMessageHandler(new SqlConnection(), _ => { })).Message);
+            }
+        }
+
         [Fact]
         public void GetProviderManifest_throws_when_empty()
         {
@@ -27,7 +53,7 @@ namespace System.Data.Entity.SqlServerCompact
             var baseException = ex.GetBaseException();
 
             Assert.IsType<ArgumentException>(baseException);
-            Assert.Equal(Strings.UnableToDetermineStoreVersion, baseException.Message);
+            Assert.Equal(Resources.Strings.UnableToDetermineStoreVersion, baseException.Message);
         }
 
         [Fact]
@@ -102,7 +128,6 @@ namespace System.Data.Entity.SqlServerCompact
                 public DdlDatabaseContext(DbConnection connection)
                     : base(connection, contextOwnsConnection: true)
                 {
-
                 }
             }
 

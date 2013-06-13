@@ -309,6 +309,29 @@ namespace System.Data.Entity.SqlServerCompact
 
         #endregion
 
+        public override void RegisterInfoMessageHandler(DbConnection connection, Action<string> handler)
+        {
+            Check.NotNull(connection, "connection");
+            Check.NotNull(handler, "handler");
+
+            var sqlCeConnection = (connection as SqlCeConnection);
+
+            if (sqlCeConnection == null)
+            {
+                throw new ArgumentException(Strings.Mapping_Provider_WrongConnectionType(typeof(SqlCeConnection)));
+            }
+
+            sqlCeConnection.InfoMessage
+                += (_, e)
+                   =>
+                       {
+                           if (!string.IsNullOrWhiteSpace(e.Message))
+                           {
+                               handler(e.Message);
+                           }
+                       };
+        }
+
         /// <summary>
         ///     Create a Command Definition object, given the connection and command tree
         /// </summary>

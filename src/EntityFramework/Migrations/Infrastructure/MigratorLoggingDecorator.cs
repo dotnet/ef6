@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
@@ -17,6 +18,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     public class MigratorLoggingDecorator : MigratorBase
     {
         private readonly MigrationsLogger _logger;
+        private string _lastInfoMessage;
 
         /// <summary>
         ///     Initializes a new instance of the MigratorLoggingDecorator class.
@@ -36,6 +38,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         internal override void AutoMigrate(
             string migrationId, XDocument sourceModel, XDocument targetModel, bool downgrading)
         {
+            DebugCheck.NotEmpty(migrationId);
+
             _logger.Info(
                 downgrading
                     ? Strings.LoggingRevertAutoMigrate(migrationId)
@@ -46,7 +50,29 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         internal override void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement)
         {
+            DebugCheck.NotNull(transaction);
+            DebugCheck.NotNull(migrationStatement);
+
             _logger.Verbose(migrationStatement.Sql);
+
+            var providerServices
+                = DbProviderServices.GetProviderServices(transaction.Connection);
+
+            if (providerServices != null)
+            {
+                providerServices.RegisterInfoMessageHandler(
+                    transaction.Connection,
+                    message =>
+                        {
+                            if (!string.Equals(message, _lastInfoMessage, StringComparison.OrdinalIgnoreCase))
+                            {
+                                _logger.Warning(message);
+
+                                // simple duplicate filtering
+                                _lastInfoMessage = message;
+                            }
+                        });
+            }
 
             base.ExecuteSql(transaction, migrationStatement);
         }
@@ -54,6 +80,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         internal override void Upgrade(
             IEnumerable<string> pendingMigrations, string targetMigrationId, string lastMigrationId)
         {
+            DebugCheck.NotNull(pendingMigrations);
+
             var count = pendingMigrations.Count();
 
             _logger.Info(
@@ -68,6 +96,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         internal override void Downgrade(IEnumerable<string> pendingMigrations)
         {
+            DebugCheck.NotNull(pendingMigrations);
+
             var loggableMigrations
                 = pendingMigrations.Take(pendingMigrations.Count() - 1);
 
@@ -81,6 +111,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         internal override void ApplyMigration(DbMigration migration, DbMigration lastMigration)
         {
+            DebugCheck.NotNull(migration);
+
             _logger.Info(Strings.LoggingApplyMigration(((IMigrationMetadata)migration).Id));
 
             base.ApplyMigration(migration, lastMigration);
@@ -88,6 +120,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         internal override void RevertMigration(string migrationId, DbMigration migration, XDocument targetModel)
         {
+            DebugCheck.NotEmpty(migrationId);
+
             _logger.Info(Strings.LoggingRevertMigration(migrationId));
 
             base.RevertMigration(migrationId, migration, targetModel);

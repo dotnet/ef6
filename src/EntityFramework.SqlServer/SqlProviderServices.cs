@@ -114,6 +114,29 @@ namespace System.Data.Entity.SqlServer
             set { _truncateDecimalsToScale = value; }
         }
 
+        public override void RegisterInfoMessageHandler(DbConnection connection, Action<string> handler)
+        {
+            Check.NotNull(connection, "connection");
+            Check.NotNull(handler, "handler");
+
+            var sqlConnection = (connection as SqlConnection);
+
+            if (sqlConnection == null)
+            {
+                throw new ArgumentException(Strings.Mapping_Provider_WrongConnectionType(typeof(SqlConnection)));
+            }
+
+            sqlConnection.InfoMessage
+                += (_, e)
+                   =>
+                       {
+                           if (!string.IsNullOrWhiteSpace(e.Message))
+                           {
+                               handler(e.Message);
+                           }
+                       };
+        }
+
         /// <summary>
         ///     Create a Command Definition object, given the connection and command tree
         /// </summary>

@@ -11,6 +11,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.SqlClient;
+    using System.Data.SqlServerCe;
     using System.Linq;
     using Moq;
     using Moq.Protected;
@@ -19,6 +20,31 @@ namespace System.Data.Entity.SqlServer
 
     public class SqlProviderServicesTests
     {
+        public class RegisterInfoMessageHandler : TestBase
+        {
+            [Fact]
+            public void Validates_pre_conditions()
+            {
+                Assert.Equal(
+                    "connection",
+                    Assert.Throws<ArgumentNullException>(
+                        () => SqlProviderServices.Instance.RegisterInfoMessageHandler(null, null)).ParamName);
+                Assert.Equal(
+                    "handler",
+                    Assert.Throws<ArgumentNullException>(
+                        () => SqlProviderServices.Instance.RegisterInfoMessageHandler(new SqlConnection(), null)).ParamName);
+            }
+
+            [Fact]
+            public void Throws_when_wrong_connection_type()
+            {
+                Assert.Equal(
+                    Strings.Mapping_Provider_WrongConnectionType(typeof(SqlConnection)),
+                    Assert.Throws<ArgumentException>(
+                        () => SqlProviderServices.Instance.RegisterInfoMessageHandler(new SqlCeConnection(), _ => { })).Message);
+            }
+        }
+
         public class ProviderInvariantNameAttribute : TestBase
         {
             [Fact]

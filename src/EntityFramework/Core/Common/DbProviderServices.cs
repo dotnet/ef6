@@ -69,6 +69,10 @@ namespace System.Data.Entity.Core.Common
             _treeDispatcher = treeDispatcher;
         }
 
+        public virtual void RegisterInfoMessageHandler(DbConnection connection, Action<string> handler)
+        {
+        }
+
         /// <summary>
         ///     Create a Command Definition object given a command tree.
         /// </summary>
