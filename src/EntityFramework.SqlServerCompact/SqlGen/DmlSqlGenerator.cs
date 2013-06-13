@@ -79,13 +79,13 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             var translator = new ExpressionTranslator(commandText, tree, null != tree.Returning, isLocalProvider);
 
             // update [schemaName].[tableName]
-            commandText.AppendKeyWord("update ");
+            commandText.AppendKeyword("update ");
             tree.Target.Expression.Accept(translator);
             commandText.AppendLine();
 
             // set c1 = ..., c2 = ..., ...
             var first = true;
-            commandText.AppendKeyWord("set ");
+            commandText.AppendKeyword("set ");
             foreach (DbSetClause setClause in tree.SetClauses)
             {
                 if (first)
@@ -137,7 +137,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             commandText.AppendLine();
 
             // where c1 = ..., c2 = ...
-            commandText.AppendKeyWord("where ");
+            commandText.AppendKeyword("where ");
             tree.Predicate.Accept(translator);
             commandText.AppendLine();
 
@@ -181,12 +181,12 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                     createParameters);
 
             // delete [schemaName].[tableName]
-            commandText.AppendKeyWord("delete ");
+            commandText.AppendKeyword("delete ");
             tree.Target.Expression.Accept(translator);
             commandText.AppendLine();
 
             // where c1 = ... AND c2 = ...
-            commandText.AppendKeyWord("where ");
+            commandText.AppendKeyword("where ");
             tree.Predicate.Accept(translator);
 
             commandTexts.Add(commandText.ToString());
@@ -220,7 +220,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                     createParameters);
 
             // insert [schemaName].[tableName]
-            commandText.AppendKeyWord("insert ");
+            commandText.AppendKeyword("insert ");
             tree.Target.Expression.Accept(translator);
 
             if (0 < tree.SetClauses.Count)
@@ -244,7 +244,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
 
                 // values c1, c2, ...
                 first = true;
-                commandText.AppendKeyWord("values (");
+                commandText.AppendKeyword("values (");
                 foreach (DbSetClause setClause in tree.SetClauses)
                 {
                     if (first)
@@ -317,13 +317,13 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         {
             if (returning != null)
             {
-                commandText.AppendKeyWord("select ");
+                commandText.AppendKeyword("select ");
                 returning.Accept(translator);
                 commandText.AppendLine();
-                commandText.AppendKeyWord("from ");
+                commandText.AppendKeyword("from ");
                 tree.Target.Expression.Accept(translator);
                 commandText.AppendLine();
-                commandText.AppendKeyWord("where ");
+                commandText.AppendKeyword("where ");
                 var target = ((DbScanExpression)tree.Target.Expression).Target;
                 var flag = false;
                 var isFirst = true;
@@ -331,7 +331,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 {
                     if (!isFirst)
                     {
-                        commandText.AppendKeyWord(" and ");
+                        commandText.AppendKeyword(" and ");
                     }
                     else
                     {
@@ -544,14 +544,14 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 Check.NotNull(expression, "expression");
 
                 expression.Argument.Accept(this);
-                _commandText.AppendKeyWord(" is null");
+                _commandText.AppendKeyword(" is null");
             }
 
             public override void Visit(DbNotExpression expression)
             {
                 Check.NotNull(expression, "expression");
 
-                _commandText.AppendKeyWord("not (");
+                _commandText.AppendKeyword("not (");
                 expression.Accept(this);
                 _commandText.Append(")");
             }
@@ -634,7 +634,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             {
                 Check.NotNull(expression, "expression");
 
-                _commandText.AppendKeyWord("null");
+                _commandText.AppendKeyword("null");
             }
 
             public override void Visit(DbNewInstanceExpression expression)
@@ -662,7 +662,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             {
                 _commandText.Append("(");
                 expression.Left.Accept(this);
-                _commandText.AppendKeyWord(separator);
+                _commandText.AppendKeyword(separator);
                 expression.Right.Accept(this);
                 _commandText.Append(")");
             }

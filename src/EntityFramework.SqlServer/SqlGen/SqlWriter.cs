@@ -3,6 +3,7 @@
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     using System.Data.Entity.Migrations.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
 
@@ -15,8 +16,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         /// </summary>
         /// <param name="b"> </param>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification="Transferring ownership")]
         public SqlWriter(StringBuilder b)
-            : base(new StringWriter(b, Culture), HardTabString)
+            : base(new StringWriter(b, Culture))
             // Culture must match what is used by underlying IndentedTextWriter
         {
         }

@@ -152,8 +152,7 @@ namespace System.Data.Entity.SqlServer
                 {
                     HashSet<string> _;
                     var historyQuery
-                        = _sqlGenerator.GenerateSql(historyQueryTree, out _)
-                            .Replace(IndentedTextWriter.HardTabString, IndentedTextWriter.DefaultTabString);
+                        = _sqlGenerator.GenerateSql(historyQueryTree, out _);
 
                     writer.Write("IF object_id('");
                     writer.Write(Escape(_sqlGenerator.Targets.Single()));
@@ -223,7 +222,6 @@ namespace System.Data.Entity.SqlServer
                                 {
                                     Sql
                                         = writer.InnerWriter.ToString()
-                                        .Replace(IndentedTextWriter.HardTabString, IndentedTextWriter.DefaultTabString)
                                 });
                     }
                 }

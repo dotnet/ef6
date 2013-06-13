@@ -11,6 +11,19 @@ namespace System.Data.Entity.Interception
     using System.Threading;
     using Xunit;
 
+    internal static partial class TestHelper
+    {
+        internal static string CollapseWhitespace(this string value)
+        {
+            value = value.Replace(Environment.NewLine, " ").Replace("\t", " ");
+
+            while (value.Contains("  "))
+                value = value.Replace("  ", " ");
+
+            return value;
+        }
+    }
+
     public class DbCommandLoggerTests : FunctionalTestBase
     {
         private readonly StringResourceVerifier _resourceVerifier = new StringResourceVerifier(
@@ -159,7 +172,7 @@ namespace System.Data.Entity.Interception
             Assert.Equal(3, logLines.Length);
 
             Assert.Equal(
-                "Context 'BlogContextNoInit' is executing command 'SELECT TOP (2) [c].[Id] AS [Id], [c].[Title] AS [Title]FROM [dbo].[Blogs] AS [c]'",
+                "Context 'BlogContextNoInit' is executing command 'SELECT TOP (2) [c].[Id] AS [Id], [c].[Title] AS [Title] FROM [dbo].[Blogs] AS [c]'",
                 logLines[0]);
 
             Assert.Equal(
@@ -169,6 +182,7 @@ namespace System.Data.Entity.Interception
 
         public class TestDbCommandLogger : DbCommandLogger
         {
+
             public TestDbCommandLogger(DbContext context, Action<string> sink)
                 : base(context, sink)
             {
@@ -181,7 +195,7 @@ namespace System.Data.Entity.Interception
                         CultureInfo.CurrentCulture,
                         "Context '{0}' is executing command '{1}'{2}",
                         Context.GetType().Name,
-                        command.CommandText.Replace(Environment.NewLine, String.Empty).Replace("\t", String.Empty), Environment.NewLine));
+                        command.CommandText.CollapseWhitespace(), Environment.NewLine));
             }
 
             public override void LogResult(DbCommand command, object result, DbCommandInterceptionContext interceptionContext)

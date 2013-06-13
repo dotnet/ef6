@@ -23,8 +23,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
         public bool UpperCaseKeywords { get; set; }
         internal StringBuilder InnerBuilder { get { return _sql; } }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
-        public SqlStringBuilder AppendKeyWord(string keyword)
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification="Keywords are known safe for lowercasing")]
+        public SqlStringBuilder AppendKeyword(string keyword)
         {
             DebugCheck.NotNull(keyword);
 

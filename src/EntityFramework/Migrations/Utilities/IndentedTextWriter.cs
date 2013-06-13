@@ -20,13 +20,9 @@ namespace System.Data.Entity.Migrations.Utilities
         public const string DefaultTabString = "    ";
 
         /// <summary>
-        ///     Specifies the tab string to use when hard-tabs are desired. This field is constant.
-        /// </summary>
-        public const string HardTabString = "\t";
-
-        /// <summary>
         ///     Specifies the culture what will be used by the underlying TextWriter. This static property is readonly.
         /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification="CultureInfo.InvariantCulture is readonly")]
         public static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
 
         private readonly TextWriter _writer;

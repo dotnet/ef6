@@ -11,13 +11,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             var sqlStringBuilder = new SqlStringBuilder();
 
-            sqlStringBuilder.AppendKeyWord("select");
+            sqlStringBuilder.AppendKeyword("select");
 
             Assert.Equal("select", sqlStringBuilder.ToString());
 
             sqlStringBuilder.UpperCaseKeywords = true;
 
-            sqlStringBuilder.AppendKeyWord(" from");
+            sqlStringBuilder.AppendKeyword(" from");
 
             Assert.Equal("select FROM", sqlStringBuilder.ToString());
         }
