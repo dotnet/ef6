@@ -32,6 +32,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Returns_number_of_enties_affected()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
+                entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
                 var entityStateEntryMock = new Mock<ObjectStateEntry>();
                 entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
@@ -66,6 +67,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Update_throws_if_no_connection_set()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
+                entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
                 var entityStateEntryMock = new Mock<ObjectStateEntry>();
                 entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
@@ -84,6 +86,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Throws_if_no_store_connection_set()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
+                entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
                 var entityStateEntryMock = new Mock<ObjectStateEntry>();
                 entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
@@ -107,6 +110,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Throws_if_no_store_provider_factory_set()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
+                entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
                 var entityStateEntryMock = new Mock<ObjectStateEntry>();
                 entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
@@ -130,6 +134,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Throws_if_connection_is_closed()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
+                entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
                 var entityStateEntryMock = new Mock<ObjectStateEntry>();
                 entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
@@ -154,6 +159,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Does_not_throw_invalid_operation_if_connection_is_closed_but_exception_suppressed()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
+                entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
                 var entityStateEntryMock = new Mock<ObjectStateEntry>();
                 entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
@@ -197,6 +203,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Returns_number_of_enties_affected()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
+                entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
                 var entityStateEntryMock = new Mock<ObjectStateEntry>();
                 entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
@@ -232,6 +239,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Update_throws_if_no_connection_set()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
+                entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
                 var entityStateEntryMock = new Mock<ObjectStateEntry>();
                 entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
@@ -251,6 +259,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Throws_if_no_store_connection_set()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
+                entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
                 var entityStateEntryMock = new Mock<ObjectStateEntry>();
                 entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
@@ -275,6 +284,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Throws_if_no_store_provider_factory_set()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
+                entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
                 var entityStateEntryMock = new Mock<ObjectStateEntry>();
                 entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });
@@ -299,6 +309,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Throws_if_connection_is_closed()
             {
                 var entityStateManagerMock = new Mock<ObjectStateManager>();
+                entityStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
                 var entityStateEntryMock = new Mock<ObjectStateEntry>();
                 entityStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()))
                     .Returns(new[] { entityStateEntryMock.Object });

@@ -1825,6 +1825,15 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
+        internal virtual bool HasChanges()
+        {
+            return (_addedRelationshipStore != null && _addedRelationshipStore.Count > 0)
+                || (_addedEntityStore != null && _addedEntityStore.Count > 0)
+                || (_modifiedEntityStore != null && _modifiedEntityStore.Count > 0)
+                || (_deletedRelationshipStore != null && _deletedRelationshipStore.Count > 0)
+                || (_deletedEntityStore != null && _deletedEntityStore.Count > 0);
+        }
+
         internal virtual int GetObjectStateEntriesCount(EntityState state)
         {
             var size = 0;

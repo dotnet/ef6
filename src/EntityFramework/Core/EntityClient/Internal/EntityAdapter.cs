@@ -125,13 +125,11 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         /// </summary>
         /// <param name="entityCache"> ObjectStateManager to check. Must not be null. </param>
         /// <returns> true if cache contains changes entries; false otherwise </returns>
-        private static bool IsStateManagerDirty(IEntityStateManager entityCache)
+        private static bool IsStateManagerDirty(ObjectStateManager entityCache)
         {
             DebugCheck.NotNull(entityCache);
-
-            // this call to GetCacheEntries is constant time (the ObjectStateManager implementation
-            // maintains an explicit list of entries in each state)
-            return entityCache.GetEntityStateEntries(EntityState.Added | EntityState.Deleted | EntityState.Modified).Any();
+            
+            return entityCache.HasChanges();
         }
     }
 }

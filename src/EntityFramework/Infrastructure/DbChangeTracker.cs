@@ -80,11 +80,7 @@ namespace System.Data.Entity.Infrastructure
         {
             _internalContext.DetectChanges();
 
-            var objectStateManager = _internalContext.ObjectContext.ObjectStateManager;
-
-            DebugCheck.NotNull(objectStateManager);
-
-            return objectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified) > 0;
+            return _internalContext.ObjectContext.ObjectStateManager.HasChanges();
         }
 
         /// <summary>

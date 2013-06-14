@@ -128,8 +128,11 @@ namespace System.Data.Entity.Core.Objects
             public void If_local_transaction_is_necessary_it_gets_created_commited()
             {
                 var objectStateManagerMock = new Mock<ObjectStateManager>();
-                objectStateManagerMock.Setup(
-                    m => m.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified)).Returns(1);
+                var hasChangesCount = 0;
+                objectStateManagerMock
+                    .Setup(m => m.HasChanges())
+                    .Callback(() => hasChangesCount++)
+                    .Returns(() => hasChangesCount == 1);
 
                 var dbTransaction = new Mock<DbTransaction>();
                 var entityTransactionMock = new Mock<EntityTransaction>(new EntityConnection(), dbTransaction.Object);
@@ -162,10 +165,11 @@ namespace System.Data.Entity.Core.Objects
             public void AcceptAllChanges_called_if_SaveOptions_are_set_to_AcceptAllChangesAfterSave()
             {
                 var objectStateManagerMock = new Mock<ObjectStateManager>();
-                objectStateManagerMock.Setup(
-                    m => m.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified)).Returns(1);
-                objectStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>())).Returns(
-                    Enumerable.Empty<ObjectStateEntry>());
+                var hasChangesCount = 0;
+                objectStateManagerMock
+                    .Setup(m => m.HasChanges())
+                    .Callback(() => hasChangesCount++)
+                    .Returns(() => hasChangesCount == 1);
 
                 var connectionState = ConnectionState.Closed;
                 var storeConnectionMock = new Mock<DbConnection>();
@@ -180,18 +184,19 @@ namespace System.Data.Entity.Core.Objects
                 var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
                 objectContext.SaveChanges(SaveOptions.AcceptAllChangesAfterSave);
 
-                objectStateManagerMock.Verify(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()), Times.AtLeastOnce());
+                objectStateManagerMock.Verify(m => m.GetObjectStateEntries(It.IsAny<EntityState>()), Times.AtLeastOnce());
             }
 
             [Fact]
             public void Exception_thrown_during_AcceptAllChanges_is_wrapped()
             {
                 var objectStateManagerMock = new Mock<ObjectStateManager>();
-                objectStateManagerMock.Setup(
-                    m => m.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified)).Returns(1);
+                var hasChangesCount = 0;
+                objectStateManagerMock
+                    .Setup(m => m.HasChanges())
+                    .Callback(() => hasChangesCount++)
+                    .Returns(() => hasChangesCount == 1);
                 objectStateManagerMock.Setup(m => m.GetObjectStateEntries(It.IsAny<EntityState>())).Throws<NotSupportedException>();
-                objectStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>())).Returns(
-                    Enumerable.Empty<ObjectStateEntry>());
 
                 var connectionState = ConnectionState.Closed;
                 var storeConnectionMock = new Mock<DbConnection>();
@@ -253,6 +258,7 @@ namespace System.Data.Entity.Core.Objects
             public void Uses_ExecutionStrategy()
             {
                 var objectStateManagerMock = new Mock<ObjectStateManager>();
+                objectStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
                 objectStateManagerMock.Setup(
                     m => m.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified)).Returns(1);
 
@@ -1651,8 +1657,11 @@ namespace System.Data.Entity.Core.Objects
             public void If_local_transaction_is_necessary_it_gets_created_commited()
             {
                 var objectStateManagerMock = new Mock<ObjectStateManager>();
-                objectStateManagerMock.Setup(
-                    m => m.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified)).Returns(1);
+                var hasChangesCount = 0;
+                objectStateManagerMock
+                    .Setup(m => m.HasChanges())
+                    .Callback(() => hasChangesCount++)
+                    .Returns(() => hasChangesCount == 1);
 
                 var dbTransaction = new Mock<DbTransaction>();
                 var entityTransactionMock = new Mock<EntityTransaction>(new EntityConnection(), dbTransaction.Object);
@@ -1690,10 +1699,11 @@ namespace System.Data.Entity.Core.Objects
             public void AcceptAllChanges_called_if_SaveOptions_are_set_to_AcceptAllChangesAfterSave()
             {
                 var objectStateManagerMock = new Mock<ObjectStateManager>();
-                objectStateManagerMock.Setup(
-                    m => m.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified)).Returns(1);
-                objectStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>())).Returns(
-                    Enumerable.Empty<ObjectStateEntry>());
+                var hasChangesCount = 0;
+                objectStateManagerMock
+                    .Setup(m => m.HasChanges())
+                    .Callback(() => hasChangesCount++)
+                    .Returns(() => hasChangesCount == 1);
 
                 var connectionState = ConnectionState.Closed;
                 var storeConnectionMock = new Mock<DbConnection>();
@@ -1721,18 +1731,19 @@ namespace System.Data.Entity.Core.Objects
                 var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock, metadataWorkspaceMock);
                 objectContext.SaveChangesAsync(SaveOptions.AcceptAllChangesAfterSave).Wait();
 
-                objectStateManagerMock.Verify(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>()), Times.AtLeastOnce());
+                objectStateManagerMock.Verify(m => m.GetObjectStateEntries(It.IsAny<EntityState>()), Times.AtLeastOnce());
             }
 
             [Fact]
             public void Exception_thrown_during_AcceptAllChanges_is_wrapped()
             {
                 var objectStateManagerMock = new Mock<ObjectStateManager>();
-                objectStateManagerMock.Setup(
-                    m => m.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified)).Returns(1);
+                var hasChangesCount = 0;
+                objectStateManagerMock
+                    .Setup(m => m.HasChanges())
+                    .Callback(() => hasChangesCount++)
+                    .Returns(() => hasChangesCount == 1);
                 objectStateManagerMock.Setup(m => m.GetObjectStateEntries(It.IsAny<EntityState>())).Throws<NotSupportedException>();
-                objectStateManagerMock.Setup(m => m.GetObjectStateEntriesInternal(It.IsAny<EntityState>())).Returns(
-                    Enumerable.Empty<ObjectStateEntry>());
 
                 var connectionState = ConnectionState.Closed;
                 var storeConnectionMock = new Mock<DbConnection>();
@@ -1803,6 +1814,7 @@ namespace System.Data.Entity.Core.Objects
             public void Uses_ExecutionStrategy()
             {
                 var objectStateManagerMock = new Mock<ObjectStateManager>();
+                objectStateManagerMock.Setup(m => m.HasChanges()).Returns(true);
                 objectStateManagerMock.Setup(
                     m => m.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified)).Returns(1);
 

@@ -2930,11 +2930,10 @@ namespace System.Data.Entity.Core.Objects
 
             PrepareToSaveChanges(options);
 
-            var entriesAffected =
-                ObjectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified);
+            var entriesAffected = 0;
 
             // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
-            if (0 < entriesAffected)
+            if (ObjectStateManager.HasChanges())
             {
                 var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
                 entriesAffected = executionStrategy.Execute(
@@ -2996,11 +2995,10 @@ namespace System.Data.Entity.Core.Objects
             {
                 PrepareToSaveChanges(options);
 
-                var entriesAffected =
-                    ObjectStateManager.GetObjectStateEntriesCount(EntityState.Added | EntityState.Deleted | EntityState.Modified);
+                var entriesAffected = 0;
 
                 // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
-                if (0 < entriesAffected)
+                if (ObjectStateManager.HasChanges())
                 {
                     var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
                     entriesAffected = await executionStrategy.ExecuteAsync(
