@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     This class represents the metadata for all the end property map elements in the
     ///     above example. EndPropertyMaps provide mapping for each end of the association.
     /// </example>
-    public class StorageEndPropertyMapping : StoragePropertyMapping
+    internal class StorageEndPropertyMapping : StoragePropertyMapping
     {
         /// <summary>
         ///     Construct a new End Property mapping object

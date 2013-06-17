@@ -16,12 +16,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public EdmModel Model { get; set; }
         public EdmModel Database { get; set; }
 
-        public ReadOnlyCollection<StorageEntityContainerMapping> EntityContainerMappings
+        internal ReadOnlyCollection<StorageEntityContainerMapping> EntityContainerMappings
         {
             get { return _entityContainerMappings.AsReadOnly(); }
         }
 
-        public void AddEntityContainerMapping(StorageEntityContainerMapping entityContainerMapping)
+        internal void AddEntityContainerMapping(StorageEntityContainerMapping entityContainerMapping)
         {
             Check.NotNull(entityContainerMapping, "entityContainerMapping");
 

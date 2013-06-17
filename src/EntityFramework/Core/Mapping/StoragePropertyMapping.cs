@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     above example. This includes the scalar property maps, complex property maps
     ///     and end property maps.
     /// </example>
-    public abstract class StoragePropertyMapping
+    internal abstract class StoragePropertyMapping
     {
         /// <summary>
         ///     Construct a new EdmProperty mapping object

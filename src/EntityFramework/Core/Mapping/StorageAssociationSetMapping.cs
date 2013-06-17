@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     above example. And it is possible to access the AssociationTypeMap underneath it.
     ///     There will be only one TypeMap under AssociationSetMap.
     /// </example>
-    public class StorageAssociationSetMapping : StorageSetMapping
+    internal class StorageAssociationSetMapping : StorageSetMapping
     {
         private readonly List<DataModelAnnotation> _annotationsList = new List<DataModelAnnotation>();
 

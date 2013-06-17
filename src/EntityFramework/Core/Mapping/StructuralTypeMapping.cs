@@ -4,7 +4,7 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.ObjectModel;
 
-    public abstract class StructuralTypeMapping
+    internal abstract class StructuralTypeMapping
     {
         public abstract ReadOnlyCollection<StoragePropertyMapping> Properties { get; }
 

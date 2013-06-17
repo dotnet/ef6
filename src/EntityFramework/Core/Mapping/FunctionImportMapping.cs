@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     ///     Represents a mapping from a model function import to a store composable or non-composable function.
     /// </summary>
-    public abstract class FunctionImportMapping
+    internal abstract class FunctionImportMapping
     {
         internal FunctionImportMapping(EdmFunction functionImport, EdmFunction targetFunction)
         {

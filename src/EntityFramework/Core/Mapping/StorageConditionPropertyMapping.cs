@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     This class represents the metadata for all the condition property map elements in the
     ///     above example.
     /// </example>
-    public class StorageConditionPropertyMapping : StoragePropertyMapping
+    internal class StorageConditionPropertyMapping : StoragePropertyMapping
     {
         /// <summary>
         ///     Construct a new condition Property mapping object

@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     The SetMapping elements that are children of the EntityContainerMapping element
     ///     can be accessed through the properties on this type.
     /// </example>
-    public abstract class StorageSetMapping
+    internal abstract class StorageSetMapping
     {
         /// <summary>
         ///     Construct the new StorageSetMapping object.

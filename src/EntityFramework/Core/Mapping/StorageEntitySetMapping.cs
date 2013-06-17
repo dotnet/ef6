@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     This class represents the metadata for the EntitySetMapping elements in the
     ///     above example. And it is possible to access the EntityTypeMaps underneath it.
     /// </example>
-    public class StorageEntitySetMapping : StorageSetMapping
+    internal class StorageEntitySetMapping : StorageSetMapping
     {
         /// <summary>
         ///     Construct a EntitySet mapping object

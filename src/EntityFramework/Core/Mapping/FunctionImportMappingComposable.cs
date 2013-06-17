@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     ///     Represents a mapping from a model function import to a store composable function.
     /// </summary>
-    public class FunctionImportMappingComposable : FunctionImportMapping
+    internal class FunctionImportMappingComposable : FunctionImportMapping
     {
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]

@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     MappingFragment element like EntityKey map, Property Maps, Discriminator
     ///     property through this mapping fragment class.
     /// </example>
-    public class StorageMappingFragment : StructuralTypeMapping
+    internal class StorageMappingFragment : StructuralTypeMapping
     {
         private readonly List<ColumnMappingBuilder> _columnMappings = new List<ColumnMappingBuilder>();
         private readonly List<DataModelAnnotation> _annotationsList = new List<DataModelAnnotation>();

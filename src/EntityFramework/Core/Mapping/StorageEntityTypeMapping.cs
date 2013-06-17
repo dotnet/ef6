@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     above example. Users can access the table mapping fragments under the
     ///     entity type mapping through this class.
     /// </example>
-    public class StorageEntityTypeMapping : StorageTypeMapping
+    internal class StorageEntityTypeMapping : StorageTypeMapping
     {
         /// <summary>
         ///     Construct the new EntityTypeMapping object.

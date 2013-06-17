@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     ///     Describes modification function binding for change processing of entities or associations.
     /// </summary>
-    public sealed class StorageModificationFunctionMapping
+    internal sealed class StorageModificationFunctionMapping
     {
         private readonly FunctionParameter _rowsAffectedParameter;
         private readonly EdmFunction _function;

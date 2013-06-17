@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     ///     Represents the base item class for all the mapping metadata
     /// </summary>
-    public abstract class Map : GlobalItem
+    internal abstract class Map : GlobalItem
     {
         protected Map()
             : base(MetadataFlags.Readonly)

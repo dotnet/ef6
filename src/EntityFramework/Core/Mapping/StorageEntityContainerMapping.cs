@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Mapping
     ///         is mapped to a single Entity Container in the S - space.
     ///     </remarks>
     /// </summary>
-    public class StorageEntityContainerMapping : Map
+    internal class StorageEntityContainerMapping : Map
     {
         /// <summary>
         ///     Construct a new EntityContainer mapping object

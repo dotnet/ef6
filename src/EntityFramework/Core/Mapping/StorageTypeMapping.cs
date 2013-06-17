@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     above example namely EntityTypeMapping, AssociationTypeMapping and CompositionTypeMapping.
     ///     The TypeMapping elements contain TableMappingFragments which in turn contain the property maps.
     /// </example>
-    public abstract class StorageTypeMapping
+    internal abstract class StorageTypeMapping
     {
         /// <summary>
         ///     Construct the new StorageTypeMapping object.

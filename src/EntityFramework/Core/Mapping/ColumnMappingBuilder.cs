@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
 
-    public class ColumnMappingBuilder
+    internal class ColumnMappingBuilder
     {
         private EdmProperty _columnProperty;
         private readonly IList<EdmProperty> _propertyPath;
