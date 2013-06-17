@@ -1,8 +1,8 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal.Linq
 {
-    using System.Data.Entity.Infrastructure;
+    using System.Collections.ObjectModel;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -22,6 +22,6 @@ namespace System.Data.Entity.Internal.Linq
 
         TEntity Create();
         TEntity Create(Type derivedEntityType);
-        DbLocalView<TEntity> Local { get; }
+        ObservableCollection<TEntity> Local { get; }
     }
 }

@@ -1560,7 +1560,7 @@
     <Compile Include="Internal\DatabaseOperations.cs" />
     <Compile Include="Internal\DbContextTypesInitializersPair.cs" />
     <Compile Include="Internal\DbHelpers.cs" />
-    <Compile Include="Infrastructure\DbLocalView`.cs" />
+    <Compile Include="Internal\DbLocalView`.cs" />
     <Compile Include="Internal\DbSetDiscoveryService.cs" />
     <Compile Include="Internal\EagerInternalConnection.cs" />
     <Compile Include="Internal\EagerInternalContext.cs" />

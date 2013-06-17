@@ -4,6 +4,7 @@ namespace System.Data.Entity.TestDoubles
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
@@ -114,9 +115,9 @@ namespace System.Data.Entity.TestDoubles
             return _data.GetEnumerator();
         }
 
-        public override DbLocalView<T> Local
+        public override ObservableCollection<T> Local
         {
-            get { return new DbLocalView<T>(_data); }
+            get { return new ObservableListSource<T>(_data); }
         }
 
         public override T Create()

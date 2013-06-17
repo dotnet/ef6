@@ -6,13 +6,14 @@ namespace System.Data.Entity
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Internal;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     In-memory implementation of IDbSet based on a <see cref="HashSet" />
+    ///     In-memory implementation of IDbSet based on a <see cref="HashSet{T}" />
     /// </summary>
     /// <typeparam name="T"> Type of elements to be stored in the set </typeparam>
     public class HashSetBasedDbSet<T> : IDbSet<T>
@@ -92,7 +93,7 @@ namespace System.Data.Entity
             return _data.GetEnumerator();
         }
 
-        public DbLocalView<T> Local
+        public ObservableCollection<T> Local
         {
             get { return new DbLocalView<T>(_data); }
         }

@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity
 {
-    using System.Data.Entity.Infrastructure;
+    using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
@@ -82,7 +82,7 @@ namespace System.Data.Entity
         TEntity Attach(TEntity entity);
 
         /// <summary>
-        ///     Gets an <see cref="DbLocalView{T}" /> that represents a local view of all Added, Unchanged,
+        ///     Gets an <see cref="ObservableCollection{T}" /> that represents a local view of all Added, Unchanged,
         ///     and Modified entities in this set.  This local view will stay in sync as entities are added or
         ///     removed from the context.  Likewise, entities added to or removed from the local view will automatically
         ///     be added to or removed from the context.
@@ -93,7 +93,7 @@ namespace System.Data.Entity
         ///     directly.  For Windows Forms bind to the result of calling ToBindingList on this property
         /// </remarks>
         /// <value> The local view. </value>
-        DbLocalView<TEntity> Local { get; }
+        ObservableCollection<TEntity> Local { get; }
 
         /// <summary>
         ///     Creates a new instance of an entity for the type of this set.

@@ -112,7 +112,7 @@ namespace System.Data.Entity.TestDoubles
 
         public override IList Local
         {
-            get { return new DbLocalView<T>(_data); }
+            get { return new ObservableListSource<T>(_data); }
         }
 
         public override object Create()

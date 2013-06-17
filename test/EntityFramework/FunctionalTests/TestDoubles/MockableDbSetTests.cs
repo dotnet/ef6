@@ -3,6 +3,7 @@
 namespace System.Data.Entity.TestDoubles
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Linq;
@@ -190,7 +191,7 @@ namespace System.Data.Entity.TestDoubles
         public void Moq_DbSet_can_be_used_for_Local()
         {
             var mockSet = new Mock<DbSet<Product>>();
-            var mockLocal = new Mock<DbLocalView<Product>>();
+            var mockLocal = new Mock<ObservableCollection<Product>>();
             mockSet.Setup(m => m.Local).Returns(mockLocal.Object);
 
             Assert.Same(mockLocal.Object, mockSet.Object.Local);

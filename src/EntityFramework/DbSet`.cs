@@ -3,6 +3,7 @@
 namespace System.Data.Entity
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
@@ -136,7 +137,7 @@ namespace System.Data.Entity
         #region Data binding/local view
 
         /// <inheritdoc/>
-        public virtual DbLocalView<TEntity> Local
+        public virtual ObservableCollection<TEntity> Local
         {
             get { return GetInternalSetWithCheck("Local").Local; }
         }

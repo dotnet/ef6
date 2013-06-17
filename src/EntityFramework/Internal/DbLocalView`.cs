@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Internal
 {
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
-    using System.Data.Entity.Internal;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Infrastructure
     /// <typeparam name="TEntity"> The type of the entity. </typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
-    public class DbLocalView<TEntity> : ObservableCollection<TEntity>, ICollection<TEntity>, IList
+    internal class DbLocalView<TEntity> : ObservableCollection<TEntity>, ICollection<TEntity>, IList
         where TEntity : class
     {
         #region Fields and constructors
@@ -32,7 +32,6 @@ namespace System.Data.Entity.Infrastructure
 
         public DbLocalView()
         {
-
         }
 
         public DbLocalView(IEnumerable<TEntity> collection)
@@ -40,7 +39,7 @@ namespace System.Data.Entity.Infrastructure
             Check.NotNull(collection, "collection");
 
             collection.Each(Add);
-        } 
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="DbLocalView{TEntity}" /> class for entities
@@ -105,7 +104,8 @@ namespace System.Data.Entity.Infrastructure
             // Avoid recursively reacting to changes made to this list while already processing state manager changes.
             // That is, the ObservableCollection only changed because we made a change based on the state manager.
             // We therefore don't want to try to repeat that change in the state manager.
-            if (!_inStateManagerChanged && _internalContext != null)
+            if (!_inStateManagerChanged
+                && _internalContext != null)
             {
                 if (e.Action == NotifyCollectionChangedAction.Remove
                     || e.Action == NotifyCollectionChangedAction.Replace)
