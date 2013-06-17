@@ -60,7 +60,7 @@ Namespace Foo
                     },
                 body :=
                     ""SELECT ShinyHead"" & vbCrLf & _
-                        ""FROM Pilkingtons""
+                    ""FROM Pilkingtons""
             )
             
         End Sub
@@ -120,7 +120,7 @@ Namespace Foo
                     },
                 body :=
                     ""SELECT ShinyHead"" & vbCrLf & _
-                        ""FROM Pilkingtons""
+                    ""FROM Pilkingtons""
             )
             
         End Sub

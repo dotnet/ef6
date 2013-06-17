@@ -419,14 +419,12 @@ namespace System.Data.Entity.Migrations.Design
                 writer.WriteLine();
                 writer.Indent++;
 
-                writer.Indent++;
                 var indentString
                     = "\" & vbCrLf & _"
                       + writer.NewLine
                       + writer.CurrentIndentation()
                       + "\"";
-                writer.Indent--;
-
+                
                 writer.WriteLine(
                     Generate(
                         procedureOperation

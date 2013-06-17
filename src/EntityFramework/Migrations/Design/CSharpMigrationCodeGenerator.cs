@@ -403,11 +403,9 @@ namespace System.Data.Entity.Migrations.Design
                 writer.WriteLine();
                 writer.Indent++;
 
-                writer.Indent++;
                 var indentString
                     = writer.NewLine
-                      + writer.CurrentIndentation();
-                writer.Indent--;
+                      + writer.CurrentIndentation() + "  ";
 
                 writer.Write("@");
                 writer.WriteLine(

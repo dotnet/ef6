@@ -60,7 +60,7 @@ namespace System.Data.Entity.Migrations.Design
                     },
                 body:
                     @""SELECT ShinyHead
-                        FROM Pilkingtons""
+                      FROM Pilkingtons""
             );
             
         }
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Migrations.Design
                     },
                 body:
                     @""SELECT ShinyHead
-                        FROM Pilkingtons""
+                      FROM Pilkingtons""
             );
             
         }
