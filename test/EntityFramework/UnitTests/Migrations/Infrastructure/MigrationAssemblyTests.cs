@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Data.Entity.Migrations.Design;
+    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Model;
     using System.Linq;
     using System.Reflection;
@@ -70,6 +71,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var migrationId = MigrationAssembly.CreateMigrationId("Foo");
 
             Assert.True(new Regex(@"^\d{15}_[\w ]+$").IsMatch(migrationId));
+        }
+
+        [Fact]
+        public void CreateMigrationId_should_restrict_id_to_max_length()
+        {
+            var migrationId = MigrationAssembly.CreateMigrationId(new string('a', 400));
+
+            Assert.Equal(HistoryContext.MigrationIdMaxLength, migrationId.Length);
         }
 
         [Fact]

@@ -1017,7 +1017,7 @@ namespace System.Data.Entity.SqlServer
         {
             get
             {
-                return (_providerManifestToken != "2012.Azure"
+                return (_providerManifestToken != SqlProviderManifest.TokenAzure11
                         && _providerManifestToken != "2000")
                            ? "newsequentialid()"
                            : "newid()";

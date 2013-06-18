@@ -81,7 +81,7 @@ namespace System.Data.Entity.Migrations.History
 
             Assert.Equal("ContextKey", addColumnOperation.Column.Name);
             Assert.Equal("MyKey", addColumnOperation.Column.DefaultValue);
-            Assert.Equal(512, addColumnOperation.Column.MaxLength);
+            Assert.Equal(300, addColumnOperation.Column.MaxLength);
             Assert.False(addColumnOperation.Column.IsNullable.Value);
         }
 

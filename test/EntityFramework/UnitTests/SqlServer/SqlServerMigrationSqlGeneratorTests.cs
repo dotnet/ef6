@@ -1258,8 +1258,8 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
         {
             const string expectedSql =
                 @"CREATE TABLE [dbo].[__MigrationHistory2] (
-    [MigrationId] [nvarchar](255) NOT NULL,
-    [ContextKey] [nvarchar](512) NOT NULL,
+    [MigrationId] [nvarchar](150) NOT NULL,
+    [ContextKey] [nvarchar](300) NOT NULL,
     [Model] [varbinary](max) NOT NULL,
     [ProductVersion] [nvarchar](32) NOT NULL,
     CONSTRAINT [PK_dbo.__MigrationHistory2] PRIMARY KEY ([MigrationId], [ContextKey])

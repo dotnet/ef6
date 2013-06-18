@@ -454,7 +454,7 @@ namespace System.Data.Entity.Migrations.History
                             tableName,
                             new ColumnModel(PrimitiveTypeKind.String)
                                 {
-                                    MaxLength = 512,
+                                    MaxLength = HistoryContext.ContextKeyMaxLength,
                                     Name = "ContextKey",
                                     IsNullable = false,
                                     DefaultValue = _contextKey

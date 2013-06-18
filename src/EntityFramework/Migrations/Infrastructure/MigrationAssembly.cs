@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -15,12 +16,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             DebugCheck.NotEmpty(migrationName);
 
-            return UtcNowGenerator.UtcNowAsMigrationIdTimestamp() + "_" + migrationName;
+            return (UtcNowGenerator.UtcNowAsMigrationIdTimestamp() + "_" + migrationName)
+                .RestrictTo(HistoryContext.MigrationIdMaxLength);
         }
 
         public static string CreateBootstrapMigrationId()
         {
-            return new String('0', 15) + "_" + Strings.BootstrapMigration;
+            return new string('0', 15) + "_" + Strings.BootstrapMigration;
         }
 
         private readonly IList<IMigrationMetadata> _migrations;

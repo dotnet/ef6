@@ -21,7 +21,8 @@ namespace System.Data.Entity.Migrations.History
         /// </summary>
         public const string DefaultTableName = "__MigrationHistory";
 
-        internal const int ContextKeyMaxLength = 512;
+        internal const int ContextKeyMaxLength = 300;
+        internal const int MigrationIdMaxLength = 150;
 
         private readonly string _defaultSchema;
 
@@ -103,7 +104,7 @@ namespace System.Data.Entity.Migrations.History
                         h.MigrationId,
                         h.ContextKey
                     });
-            modelBuilder.Entity<HistoryRow>().Property(h => h.MigrationId).HasMaxLength(255).IsRequired();
+            modelBuilder.Entity<HistoryRow>().Property(h => h.MigrationId).HasMaxLength(MigrationIdMaxLength).IsRequired();
             modelBuilder.Entity<HistoryRow>().Property(h => h.ContextKey).HasMaxLength(ContextKeyMaxLength).IsRequired();
             modelBuilder.Entity<HistoryRow>().Property(h => h.Model).IsRequired().IsMaxLength();
             modelBuilder.Entity<HistoryRow>().Property(h => h.ProductVersion).HasMaxLength(32).IsRequired();
