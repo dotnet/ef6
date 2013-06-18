@@ -321,9 +321,9 @@ namespace System.Data.Entity
             [Fact]
             public void On_IQueryable_with_AsStreaming_method_calls_that_method()
             {
-                var mockQueryable = new Mock<IAsStreamable<FakeEntity>>(MockBehavior.Strict);
-                IQueryable<FakeEntity> source = mockQueryable.Object;
-                var result = new Mock<IAsStreamable<FakeEntity>>().Object;
+                var mockQueryable = new Mock<IAsStreamable<int>>(MockBehavior.Strict);
+                var source = mockQueryable.Object;
+                var result = new Mock<IAsStreamable<int>>().Object;
                 mockQueryable.Setup(i => i.AsStreaming()).Returns(result);
 
                 var afterAsStreaming = source.AsStreaming();

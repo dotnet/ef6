@@ -16,12 +16,6 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
                 Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("", "b")).Message);
-            Assert.Equal(
-                Strings.ArgumentIsNullOrWhitespace("serverName"),
-                Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("a", null)).Message);
-            Assert.Equal(
-                Strings.ArgumentIsNullOrWhitespace("serverName"),
-                Assert.Throws<ArgumentException>(() => new ExecutionStrategyKey("a", "")).Message);
         }
 
         [Fact]
@@ -42,9 +36,17 @@ namespace System.Data.Entity.Infrastructure
                 equals(
                     new ExecutionStrategyKey("a", "b"),
                     new ExecutionStrategyKey("a", "b")));
+            Assert.True(
+                equals(
+                    new ExecutionStrategyKey("a", null),
+                    new ExecutionStrategyKey("a", null)));
             Assert.False(
                 equals(
                     new ExecutionStrategyKey("a", "b1"),
+                    new ExecutionStrategyKey("a", "b2")));
+            Assert.False(
+                equals(
+                    new ExecutionStrategyKey("a", null),
                     new ExecutionStrategyKey("a", "b2")));
             Assert.False(
                 equals(
@@ -62,6 +64,9 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal(
                 new ExecutionStrategyKey("a", "b").GetHashCode(),
                 new ExecutionStrategyKey("a", "b").GetHashCode());
+            Assert.Equal(
+                new ExecutionStrategyKey("a", null).GetHashCode(),
+                new ExecutionStrategyKey("a", null).GetHashCode());
             Assert.NotEqual(
                 new ExecutionStrategyKey("a1", "b").GetHashCode(),
                 new ExecutionStrategyKey("a2", "b").GetHashCode());

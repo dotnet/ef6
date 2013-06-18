@@ -69,7 +69,7 @@ namespace System.Data.Entity.Config
                 }
 
                 if (_serverName != null
-                    && !executionStrategyKey.ServerName.Equals(_serverName, StringComparison.Ordinal))
+                    && !_serverName.Equals(executionStrategyKey.ServerName, StringComparison.Ordinal))
                 {
                     return null;
                 }

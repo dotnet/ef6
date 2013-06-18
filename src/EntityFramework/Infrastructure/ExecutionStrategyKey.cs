@@ -14,11 +14,10 @@ namespace System.Data.Entity.Infrastructure
         ///     Initializes a new instance of <see cref="ExecutionStrategyKey" />
         /// </summary>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this execution strategy will be used. </param>
-        /// <param name="serverName">A string that will be matched against the server name in the connection string.</param>
+        /// <param name="serverName"> A string that will be matched against the server name in the connection string. </param>
         public ExecutionStrategyKey(string providerInvariantName, string serverName)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
-            Check.NotEmpty(serverName, "serverName");
 
             ProviderInvariantName = providerInvariantName;
             ServerName = serverName;
@@ -36,12 +35,18 @@ namespace System.Data.Entity.Infrastructure
             }
 
             return ProviderInvariantName.Equals(otherKey.ProviderInvariantName, StringComparison.Ordinal)
-                   && ServerName.Equals(otherKey.ServerName, StringComparison.Ordinal);
+                   && ((ServerName == null && otherKey.ServerName == null) ||
+                       (ServerName != null && ServerName.Equals(otherKey.ServerName, StringComparison.Ordinal)));
         }
 
         public override int GetHashCode()
         {
-            return ProviderInvariantName.GetHashCode() ^ ServerName.GetHashCode();
+            if (ServerName != null)
+            {
+                return ProviderInvariantName.GetHashCode() ^ ServerName.GetHashCode();
+            }
+
+            return ProviderInvariantName.GetHashCode();
         }
     }
 }

@@ -657,7 +657,7 @@ namespace System.Data.Entity
         ///     An <see cref="IQueryable{T}" /> to apply AsStreaming to.
         /// </param>
         /// <returns> A new query with AsStreaming applied, or the source query if AsStreaming is not supported. </returns>
-        public static IQueryable<T> AsStreaming<T>(this IQueryable<T> source) where T : class
+        public static IQueryable<T> AsStreaming<T>(this IQueryable<T> source)
         {
             Check.NotNull(source, "source");
 

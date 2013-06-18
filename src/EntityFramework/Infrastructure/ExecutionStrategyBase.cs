@@ -60,7 +60,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Creates a new instance of <see cref="ExecutionStrategyBase" />.
         /// </summary>
         /// <remarks>
-        ///     The default retry limit is 5, which means that the total amout of time spent between retries is 26 seconds plus the random factor.
+        ///     The default retry limit is 5, which means that the total amount of time spent between retries is 26 seconds plus the random factor.
         /// </remarks>
         protected ExecutionStrategyBase()
             : this(DefaultMaxRetryCount, DefaultMaxDelay)
