@@ -2,12 +2,12 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Entity.Config;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
-    using Moq;
     using Xunit;
 
     public class DbMigrationsConfigurationTests : TestBase
@@ -20,11 +20,11 @@ namespace System.Data.Entity.Migrations
         public void Can_get_and_set_migration_context_properties()
         {
             var migrationsConfiguration = new TestMigrationsConfiguration
-                {
-                    AutomaticMigrationsEnabled = false,
-                    CodeGenerator = new CSharpMigrationCodeGenerator(),
-                    ContextType = typeof(ShopContext_v1)
-                };
+                                              {
+                                                  AutomaticMigrationsEnabled = false,
+                                                  CodeGenerator = new CSharpMigrationCodeGenerator(),
+                                                  ContextType = typeof(ShopContext_v1)
+                                              };
 
             Assert.False(migrationsConfiguration.AutomaticMigrationsEnabled);
             Assert.NotNull(migrationsConfiguration.CodeGenerator);
@@ -53,6 +53,49 @@ namespace System.Data.Entity.Migrations
         }
 
         [Fact]
+        public void Can_get_and_set_local_history_context_factory()
+        {
+            var migrationsConfiguration = new TestMigrationsConfiguration();
+
+            HistoryContextFactory factory = (c, s) => new HistoryContext(c, s);
+
+            migrationsConfiguration.SetHistoryContextFactory("Foo", factory);
+
+            Assert.Same(factory, migrationsConfiguration.GetHistoryContextFactory("Foo"));
+        }
+
+        [Fact]
+        public void GetHistoryContextFactory_should_return_root_service_when_not_locally_registered()
+        {
+            var migrationsConfiguration = new TestMigrationsConfiguration();
+            var historyContextFactory
+                = migrationsConfiguration
+                    .GetHistoryContextFactory(ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName);
+
+            Assert.NotNull(historyContextFactory);
+            Assert.Same(DbConfiguration.GetService<HistoryContextFactory>(), historyContextFactory);
+        }
+
+        [Fact]
+        public void GetHistoryContextFactory_should_return_per_provider_service_when_not_locally_registered()
+        {
+            var migrationsConfiguration = new TestMigrationsConfiguration();
+
+            try
+            {
+                HistoryContextFactory factory = (c, s) => new HistoryContext(c, s);
+
+                MutableResolver.AddResolver<HistoryContextFactory>(_ => factory);
+
+                Assert.Same(factory, migrationsConfiguration.GetHistoryContextFactory("Foo"));
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
+        }
+
+        [Fact]
         public void Providers_are_assigned_by_default()
         {
             var migrationsConfiguration = new TestMigrationsConfiguration();
@@ -75,9 +118,9 @@ namespace System.Data.Entity.Migrations
         {
             var migrationsConfiguration
                 = new TestMigrationsConfiguration
-                    {
-                        ContextKey = "Foo"
-                    };
+                      {
+                          ContextKey = "Foo"
+                      };
 
             Assert.Equal("Foo", migrationsConfiguration.ContextKey);
         }
@@ -87,9 +130,9 @@ namespace System.Data.Entity.Migrations
         {
             var migrationsConfiguration
                 = new TestMigrationsConfiguration
-                    {
-                        ContextKey = new string('a', 600)
-                    };
+                      {
+                          ContextKey = new string('a', 600)
+                      };
 
             Assert.Equal(new string('a', HistoryContext.ContextKeyMaxLength), migrationsConfiguration.ContextKey);
         }
@@ -155,24 +198,10 @@ namespace System.Data.Entity.Migrations
         }
 
         [Fact]
-        public void Setting_HistoryContextFactory_to_null_results_in_default_factory_being_used()
-        {
-            var config = new TestMigrationsConfiguration();
-
-            HistoryContextFactory factory = (e, c) => { throw new NotImplementedException(); };
-            config.HistoryContextFactory = factory;
-            Assert.Same(factory, config.HistoryContextFactory);
-
-            config.HistoryContextFactory = null;
-            Assert.IsType<HistoryContextFactory>(config.HistoryContextFactory);
-            Assert.NotSame(factory, config.HistoryContextFactory);
-        }
-
-        [Fact]
         public void CommandTimeout_throws_for_negative_values()
         {
             var config = new TestMigrationsConfiguration();
-            
+
             Assert.Equal(
                 Strings.ObjectContext_InvalidCommandTimeout,
                 Assert.Throws<ArgumentException>(

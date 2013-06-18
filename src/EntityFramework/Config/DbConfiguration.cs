@@ -103,7 +103,7 @@ namespace System.Data.Entity.Config
             Check.NotNull(resolver, "resolver");
 
             _internalConfiguration.CheckNotLocked("AddDependencyResolver");
-            _internalConfiguration.AddDependencyResolver(resolver, overrideConfigFile: false);
+            _internalConfiguration.AddDependencyResolver(resolver);
         }
 
         /// <summary>
@@ -527,20 +527,17 @@ namespace System.Data.Entity.Config
         ///     <see cref="HistoryContextFactory" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
+        /// <param name="providerInvariantName"> The invariant name of the ADO.NET provider for which this generator should be used. </param>
         /// <param name="historyContextFactory">
         ///     The <see cref="HistoryContext" /> factory.
         /// </param>
-        /// <typeparam name="TMigrationsConfiguration">
-        ///     The <see cref="DbMigrationsConfiguration" /> that this factory will apply to.
-        /// </typeparam>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
-        protected internal void SetHistoryContextFactory<TMigrationsConfiguration>(HistoryContextFactory historyContextFactory)
-            where TMigrationsConfiguration : DbMigrationsConfiguration
+        protected internal void AddHistoryContextFactory(string providerInvariantName, HistoryContextFactory historyContextFactory)
         {
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
             Check.NotNull(historyContextFactory, "historyContextFactory");
 
-            _internalConfiguration.CheckNotLocked("SetHistoryContextFactory");
-            _internalConfiguration.RegisterSingleton(historyContextFactory, typeof(TMigrationsConfiguration));
+            _internalConfiguration.CheckNotLocked("AddHistoryContextFactory");
+            _internalConfiguration.RegisterSingleton(historyContextFactory, providerInvariantName);
         }
 
         /// <summary>
@@ -579,7 +576,9 @@ namespace System.Data.Entity.Config
         ///     <see cref="DbSpatialServices" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
-        /// <param name="key"> The <see cref="DbProviderInfo" /> indicating the type of ADO.NET connection for which this spatial provider will be used. </param>
+        /// <param name="key">
+        ///     The <see cref="DbProviderInfo" /> indicating the type of ADO.NET connection for which this spatial provider will be used.
+        /// </param>
         /// <param name="spatialProvider"> The spatial provider. </param>
         protected internal void AddDbSpatialServices(DbProviderInfo key, DbSpatialServices spatialProvider)
         {
@@ -642,10 +641,10 @@ namespace System.Data.Entity.Config
             _internalConfiguration.RegisterSingleton(
                 spatialProvider,
                 k =>
-                {
-                    var asSpatialKey = k as DbProviderInfo;
-                    return asSpatialKey != null && asSpatialKey.ProviderInvariantName == providerInvariantName;
-                });
+                    {
+                        var asSpatialKey = k as DbProviderInfo;
+                        return asSpatialKey != null && asSpatialKey.ProviderInvariantName == providerInvariantName;
+                    });
         }
 
         /// <summary>
@@ -693,9 +692,9 @@ namespace System.Data.Entity.Config
         }
 
         /// <summary>
-        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to 
-        ///     register an <see cref="IDbInterceptor"/> at application startup. Note that interceptors can also
-        ///     be added and removed at any time using <see cref="Interception"/>.
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to
+        ///     register an <see cref="IDbInterceptor" /> at application startup. Note that interceptors can also
+        ///     be added and removed at any time using <see cref="Interception" />.
         /// </summary>
         /// <remarks>
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.

@@ -14,8 +14,8 @@ namespace System.Data.Entity.Migrations.History
     ///     to read and write migrations history data.
     ///     To customize the definition of the migrations history table you can derive from
     ///     <see cref="HistoryContext" /> and override OnModelCreating. Derived instances can either be registered
-    ///     on a per migrations configuration basis using <see cref="DbMigrationsConfiguration.HistoryContextFactory" />,
-    ///     or globally using <see cref="DbConfiguration.SetHistoryContextFactory{TMigrationsConfiguration}" />.
+    ///     on a per migrations configuration basis using <see cref="DbMigrationsConfiguration.SetHistoryContextFactory" />,
+    ///     or globally using <see cref="DbConfiguration.AddHistoryContextFactory" />.
     /// </remarks>
     /// <param name="existingConnection">
     ///     An existing connection to use for the new context.

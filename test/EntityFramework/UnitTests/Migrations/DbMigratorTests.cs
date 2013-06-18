@@ -499,8 +499,7 @@ namespace System.Data.Entity.Migrations
             {
                 ContextType = typeof(ShopContext_v1),
                 MigrationsAssembly = SystemComponentModelDataAnnotationsAssembly,
-                MigrationsNamespace = typeof(ShopContext_v1).Namespace,
-                HistoryContextFactory = (e, d) => new HistoryContext(e, d)
+                MigrationsNamespace = typeof(ShopContext_v1).Namespace
             };
 
             var migrator = new DbMigrator(configuration);

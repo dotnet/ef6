@@ -15,6 +15,45 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class CustomHistoryScenarios : DbTestCase
     {
+        [MigrationsTheory]
+        public void Can_use_per_provider_factory()
+        {
+            ResetDatabase();
+
+            try
+            {
+                MutableResolver.AddResolver<HistoryContextFactory>(_ => _testHistoryContextFactoryA);
+
+                var migrator = CreateMigrator<ShopContext_v1>();
+
+                var generatedMigration
+                    = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
+
+                migrator
+                    = CreateMigrator<ShopContext_v1>(
+                        automaticMigrationsEnabled: false,
+                        scaffoldedMigrations: generatedMigration);
+
+                migrator.Update();
+
+                Assert.True(TableExists("MigrationsCustomers"));
+                Assert.True(TableExists("__Migrations"));
+
+                migrator.Update("0");
+
+                Assert.False(TableExists("MigrationsCustomers"));
+                Assert.False(TableExists("__Migrations"));
+
+                var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+
+                Assert.Null(historyRepository.GetLastModel());
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
+        }
+
         private class TestHistoryContextA : HistoryContext
         {
             public TestHistoryContextA(DbConnection existingConnection, string defaultSchema)

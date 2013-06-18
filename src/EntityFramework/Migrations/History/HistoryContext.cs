@@ -11,7 +11,7 @@ namespace System.Data.Entity.Migrations.History
     ///     from the database. 
     ///     To customize the definition of the migrations history table you can derive from 
     ///     this class and override OnModelCreating. Derived instances can either be registered 
-    ///     on a per migrations configuration basis using <see cref="DbMigrationsConfiguration.HistoryContextFactory"/>,
+    ///     on a per migrations configuration basis using <see cref="DbMigrationsConfiguration.SetHistoryContextFactory"/>,
     ///     or globally using <see cref="System.Data.Entity.Config.DbConfiguration"/>.
     /// </summary>
     public class HistoryContext : DbContext, IDbModelCacheKeyProvider

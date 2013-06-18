@@ -164,9 +164,13 @@ namespace System.Data.Entity.Migrations
                           AutomaticMigrationDataLossAllowed = automaticDataLossEnabled,
                           ContextType = typeof(TContext),
                           MigrationsAssembly = SystemComponentModelDataAnnotationsAssembly,
-                          MigrationsNamespace = typeof(TContext).Namespace,
-                          HistoryContextFactory = historyContextFactory
+                          MigrationsNamespace = typeof(TContext).Namespace
                       };
+
+            if (historyContextFactory != null)
+            {
+                migrationsConfiguration.SetHistoryContextFactory(TestDatabase.ProviderName, historyContextFactory);
+            }
 
             if (!string.IsNullOrWhiteSpace(contextKey))
             {

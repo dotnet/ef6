@@ -27,6 +27,9 @@ namespace System.Data.Entity.Migrations
         private readonly Dictionary<string, MigrationSqlGenerator> _sqlGenerators
             = new Dictionary<string, MigrationSqlGenerator>();
 
+        private readonly Dictionary<string, HistoryContextFactory> _historyContextFactories
+            = new Dictionary<string, HistoryContextFactory>();
+
         private MigrationCodeGenerator _codeGenerator;
         private Type _contextType;
         private Assembly _migrationsAssembly;
@@ -34,7 +37,6 @@ namespace System.Data.Entity.Migrations
         private DbConnectionInfo _connectionInfo;
         private string _migrationsDirectory = DefaultMigrationsDirectory;
         private readonly Lazy<IDbDependencyResolver> _resolver;
-        private HistoryContextFactory _historyContextFactory;
         private string _contextKey;
         private int? _commandTimeout;
 
@@ -59,7 +61,7 @@ namespace System.Data.Entity.Migrations
         public bool AutomaticMigrationsEnabled { get; set; }
 
         /// <summary>
-        ///     Gets or sets the string used to distinguish migrations belonging to this configuration 
+        ///     Gets or sets the string used to distinguish migrations belonging to this configuration
         ///     from migrations belonging to other configurations using the same database.
         ///     This property enables migrations from multiple different models to be applied to applied to a single database.
         /// </summary>
@@ -116,6 +118,40 @@ namespace System.Data.Entity.Migrations
             }
 
             return migrationSqlGenerator;
+        }
+
+        /// <summary>
+        ///     Adds a new <see cref="HistoryContextFactory"/> to be used for a given database provider.
+        /// </summary>
+        /// <param name="providerInvariantName"> Name of the database provider to set the SQL generator for. </param>
+        /// <param name="historyContextFactory"> The <see cref="HistoryContextFactory"/> to be used. </param>
+        public void SetHistoryContextFactory(string providerInvariantName, HistoryContextFactory historyContextFactory)
+        {
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
+            Check.NotNull(historyContextFactory, "historyContextFactory");
+
+            _historyContextFactories[providerInvariantName] = historyContextFactory;
+        }
+
+        /// <summary>
+        ///     Gets the <see cref="HistoryContextFactory"/> that is set to be used with a given database provider.
+        /// </summary>
+        /// <param name="providerInvariantName"> Name of the database provider to get the <see cref="HistoryContextFactory"/> for. </param>
+        /// <returns> The <see cref="HistoryContextFactory"/> that is set for the database provider. </returns>
+        public HistoryContextFactory GetHistoryContextFactory(string providerInvariantName)
+        {
+            Check.NotEmpty(providerInvariantName, "providerInvariantName");
+
+            HistoryContextFactory historyContextFactory;
+
+            if (!_historyContextFactories.TryGetValue(providerInvariantName, out historyContextFactory))
+            {
+                return
+                    _resolver.Value.GetService<HistoryContextFactory>(providerInvariantName)
+                    ?? _resolver.Value.GetService<HistoryContextFactory>();
+            }
+
+            return historyContextFactory;
         }
 
         /// <summary>
@@ -179,24 +215,6 @@ namespace System.Data.Entity.Migrations
 
                 _codeGenerator = value;
             }
-        }
-
-        /// <summary>
-        ///     Gets or sets the factory used to create <see cref="HistoryContext"/> instances for this configuration.
-        ///     <see cref="HistoryContext"/> is used to customize the migrations history table definition. 
-        ///     
-        ///     If <c>null</c> is provided, the history context registered with <see cref="System.Data.Entity.Config.DbConfiguration"/>
-        ///     will be used (by default this is <see cref="HistoryContext"/>).
-        /// </summary>
-        public HistoryContextFactory HistoryContextFactory
-        {
-            get
-            {
-                return _historyContextFactory
-                       ?? _resolver.Value.GetService<HistoryContextFactory>(GetType())
-                       ?? _resolver.Value.GetService<HistoryContextFactory>();
-            }
-            set { _historyContextFactory = value; } // Allowed to be null
         }
 
         /// <summary>

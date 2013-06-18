@@ -50,6 +50,7 @@ namespace System.Data.Entity.Migrations
         private readonly EdmModelDiffer _modelDiffer;
         private readonly Lazy<ModificationCommandTreeGenerator> _modificationCommandTreeGenerator;
         private readonly DbContext _contextForInterception;
+        private readonly HistoryContextFactory _historyContextFactory;
 
         private readonly bool _calledByCreateDatabase;
 
@@ -134,6 +135,10 @@ namespace System.Data.Entity.Migrations
                     = context.InternalContext.DefaultSchema
                       ?? EdmModelExtensions.DefaultSchema;
 
+                _historyContextFactory
+                    = _configuration
+                        .GetHistoryContextFactory(_usersContextInfo.ConnectionProviderName);
+
                 _historyRepository
                     = new HistoryRepository(
                         _usersContextInfo.ConnectionString,
@@ -142,7 +147,7 @@ namespace System.Data.Entity.Migrations
                         _configuration.CommandTimeout,
                         new[] { _defaultSchema }.Concat(GetHistorySchemas()),
                         _contextForInterception,
-                        _configuration.HistoryContextFactory);
+                        _historyContextFactory);
 
                 _providerManifestToken
                     = context.InternalContext.ModelProviderInfo != null
@@ -200,7 +205,7 @@ namespace System.Data.Entity.Migrations
 
             using (var connection = CreateConnection())
             {
-                using (var historyContext = _configuration.HistoryContextFactory(connection, defaultSchema))
+                using (var historyContext = _historyContextFactory(connection, defaultSchema))
                 {
                     return historyContext.GetModel();
                 }

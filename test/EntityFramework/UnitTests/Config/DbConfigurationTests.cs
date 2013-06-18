@@ -9,7 +9,6 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;
-    using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
@@ -244,7 +243,7 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     "getExecutionStrategy",
                     Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddExecutionStrategy<IExecutionStrategy>(null))
-                          .ParamName);
+                        .ParamName);
 
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("serverName"),
@@ -261,7 +260,7 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     "getExecutionStrategy",
                     Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddExecutionStrategy<IExecutionStrategy>(null, "a"))
-                          .ParamName);
+                        .ParamName);
 
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
@@ -476,7 +475,7 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     "sqlGenerator",
                     Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddMigrationSqlGenerator<MigrationSqlGenerator>(null))
-                          .ParamName);
+                        .ParamName);
 
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
@@ -629,15 +628,24 @@ namespace System.Data.Entity.Config
             }
         }
 
-        public class SetHistoryContextFactory
+        public class AddHistoryContextFactory
         {
+            [Fact]
+            public void Throws_if_given_a_null_provider()
+            {
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().AddHistoryContextFactory(null, null)).Message);
+            }
+
             [Fact]
             public void Throws_if_given_a_null_factory()
             {
                 Assert.Equal(
                     "historyContextFactory",
                     Assert.Throws<ArgumentNullException>(
-                        () => new DbConfiguration().SetHistoryContextFactory<DbMigrationsConfiguration>(null)).ParamName);
+                        () => new DbConfiguration().AddHistoryContextFactory("Foo", null)).ParamName);
             }
 
             [Fact]
@@ -646,9 +654,9 @@ namespace System.Data.Entity.Config
                 var configuration = CreatedLockedConfiguration();
 
                 Assert.Equal(
-                    Strings.ConfigurationLocked("SetHistoryContextFactory"),
+                    Strings.ConfigurationLocked("AddHistoryContextFactory"),
                     Assert.Throws<InvalidOperationException>(
-                        () => configuration.SetHistoryContextFactory<DbMigrationsConfiguration>((e, d) => null)).Message);
+                        () => configuration.AddHistoryContextFactory("Foo", (e, d) => null)).Message);
             }
 
             [Fact]
@@ -658,9 +666,9 @@ namespace System.Data.Entity.Config
                 HistoryContextFactory factory = (e, d) => null;
 
                 new DbConfiguration(mockInternalConfiguration.Object)
-                    .SetHistoryContextFactory<DbMigrationsConfiguration>(factory);
+                    .AddHistoryContextFactory("Foo", factory);
 
-                mockInternalConfiguration.Verify(m => m.RegisterSingleton(factory, typeof(DbMigrationsConfiguration)));
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(factory, "Foo"));
             }
         }
 
@@ -719,7 +727,7 @@ namespace System.Data.Entity.Config
                     "key",
                     Assert.Throws<ArgumentNullException>(
                         () => new DbConfiguration().AddDbSpatialServices((DbProviderInfo)null, new Mock<DbSpatialServices>().Object))
-                          .ParamName);
+                        .ParamName);
 
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
