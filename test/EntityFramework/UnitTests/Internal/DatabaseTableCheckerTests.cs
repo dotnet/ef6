@@ -34,7 +34,7 @@ namespace System.Data.Entity.Internal
 
             SetupMocksForTableChecking(dbCommandMock, connectionMock, internalContextMock);
 
-            var executionStrategyMock = new Mock<IExecutionStrategy>();
+            var executionStrategyMock = new Mock<IDbExecutionStrategy>();
             // Verify that ExecutionStrategy.Execute calls DbCommand.ExecuteDataReader
             executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<List<Tuple<string, string>>>>()))
                                  .Returns<Func<List<Tuple<string, string>>>>(
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Internal
                                          return result;
                                      });
 
-            MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+            MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
             try
             {
                 new DatabaseTableChecker().AnyModelTableExists(internalContextMock.Object);

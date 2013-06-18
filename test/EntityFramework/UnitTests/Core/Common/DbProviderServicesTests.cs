@@ -208,14 +208,14 @@ namespace System.Data.Entity.Core.Common
                 var entityConnection = new EntityConnection(
                     workspace: null, connection: connectionMock.Object, skipInitialization: true, entityConnectionOwnsStoreConnection: false);
 
-                var mockExecutionStrategy = new Mock<IExecutionStrategy>().Object;
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(
+                var mockExecutionStrategy = new Mock<IDbExecutionStrategy>().Object;
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
                     k =>
                         {
                             var key = k as ExecutionStrategyKey;
                             Assert.Equal("System.Data.FakeSqlClient", key.ProviderInvariantName);
                             Assert.Equal("FooSource", key.ServerName);
-                            return (Func<IExecutionStrategy>)(() => mockExecutionStrategy);
+                            return (Func<IDbExecutionStrategy>)(() => mockExecutionStrategy);
                         });
 
                 var providerFactoryServiceMock = new Mock<IDbProviderFactoryService>();

@@ -22,11 +22,11 @@ namespace System.Data.Entity.SqlServer
             var executionStrategy = new DefaultSqlExecutionStrategy();
 
             Assert.Equal(
-                "action",
+                "operation",
                 Assert.Throws<ArgumentNullException>(() => executionStrategy.Execute(null)).ParamName);
 
             Assert.Equal(
-                "func",
+                "operation",
                 Assert.Throws<ArgumentNullException>(() => executionStrategy.Execute((Func<object>)null)).ParamName);
         }
 
@@ -42,7 +42,7 @@ namespace System.Data.Entity.SqlServer
             Execute_doesnt_retry_on_transient_exceptions((e, a) => e.Execute(a));
         }
 
-        private void Execute_doesnt_retry_on_transient_exceptions(Action<IExecutionStrategy, Func<int>> execute)
+        private void Execute_doesnt_retry_on_transient_exceptions(Action<IDbExecutionStrategy, Func<int>> execute)
         {
             var executionStrategy = new DefaultSqlExecutionStrategy();
             var executionCount = 0;
@@ -75,7 +75,7 @@ namespace System.Data.Entity.SqlServer
             Execute_doesnt_retry_on_nontransient_exceptions((e, a) => e.Execute(a));
         }
 
-        private void Execute_doesnt_retry_on_nontransient_exceptions(Action<IExecutionStrategy, Func<int>> execute)
+        private void Execute_doesnt_retry_on_nontransient_exceptions(Action<IDbExecutionStrategy, Func<int>> execute)
         {
             var executionStrategy = new DefaultSqlExecutionStrategy();
             var executionCount = 0;
@@ -100,11 +100,11 @@ namespace System.Data.Entity.SqlServer
             var executionStrategy = new DefaultSqlExecutionStrategy();
 
             Assert.Equal(
-                "func",
+                "operation",
                 Assert.Throws<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null, CancellationToken.None)).ParamName);
 
             Assert.Equal(
-                "func",
+                "operation",
                 Assert.Throws<ArgumentNullException>(() => executionStrategy.ExecuteAsync((Func<Task<object>>)null, CancellationToken.None)).ParamName);
         }
         [Fact]
@@ -119,7 +119,7 @@ namespace System.Data.Entity.SqlServer
             ExecuteAsync_doesnt_retry_on_transient_exceptions((e, f) => e.ExecuteAsync(f, CancellationToken.None));
         }
 
-        private void ExecuteAsync_doesnt_retry_on_transient_exceptions(Func<IExecutionStrategy, Func<Task<int>>, Task> executeAsync)
+        private void ExecuteAsync_doesnt_retry_on_transient_exceptions(Func<IDbExecutionStrategy, Func<Task<int>>, Task> executeAsync)
         {
             var executionStrategy = new DefaultSqlExecutionStrategy();
             var executionCount = 0;
@@ -155,7 +155,7 @@ namespace System.Data.Entity.SqlServer
             ExecuteAsync_doesnt_retry_on_nontransient_exceptions((e, f) => e.ExecuteAsync(f, CancellationToken.None));
         }
 
-        private void ExecuteAsync_doesnt_retry_on_nontransient_exceptions(Func<IExecutionStrategy, Func<Task<int>>, Task> executeAsync)
+        private void ExecuteAsync_doesnt_retry_on_nontransient_exceptions(Func<IDbExecutionStrategy, Func<Task<int>>, Task> executeAsync)
         {
             var executionStrategy = new DefaultSqlExecutionStrategy();
             var executionCount = 0;

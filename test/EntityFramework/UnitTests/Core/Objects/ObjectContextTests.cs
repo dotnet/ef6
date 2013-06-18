@@ -269,10 +269,10 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<int>>())).Returns<Func<int>>(f => 2);
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     Assert.Equal(2, objectContext.SaveChanges());
@@ -370,8 +370,8 @@ namespace System.Data.Entity.Core.Objects
                 // Verify that ExecuteInTransaction calls ObjectQueryExecutionPlan.Execute
                 objectContextMock.Setup(
                     m =>
-                    m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                                 .Returns<Func<ObjectResult<object>>, bool, bool, bool>(
+                    m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                                 .Returns<Func<ObjectResult<object>>, IDbExecutionStrategy, bool, bool>(
                                      (f, t, s, r) =>
                                          {
                                              executionPlanMock.Verify(
@@ -387,7 +387,7 @@ namespace System.Data.Entity.Core.Objects
                                          });
 
                 // Verify that ExecutionStrategy.Execute calls ExecuteInTransaction
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<ObjectResult<object>>>()))
                                      .Returns<Func<ObjectResult<object>>>(
                                          f =>
@@ -395,18 +395,18 @@ namespace System.Data.Entity.Core.Objects
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransaction(
-                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), false, true),
+                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), false, true),
                                                      Times.Never());
                                                  var result = f();
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransaction(
-                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), false, true),
+                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), false, true),
                                                      Times.Once());
                                                  return result;
                                              });
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     objectContextMock.Object.Refresh(RefreshMode.StoreWins, new object());
@@ -680,28 +680,28 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Executes_in_a_transaction_using_ExecutionStrategy()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy_Helper(startTransaction: true);
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: true);
             }
 
             [Fact]
             public void Executes_without_a_transaction_using_ExecutionStrategy_when_calling_with_DoNotBeginTransaction()
             {
-                Executes_in_a_transaction_using_ExecutionStrategy_Helper(startTransaction: false);
+                Executes_in_a_transaction_using_ExecutionStrategy_implementation(startTransaction: false);
             }
 
-            private void Executes_in_a_transaction_using_ExecutionStrategy_Helper(bool startTransaction)
+            private void Executes_in_a_transaction_using_ExecutionStrategy_implementation(bool startTransaction)
             {
                 var dbCommandMock = new Mock<DbCommand>();
                 dbCommandMock.Setup(m => m.ExecuteNonQuery()).Returns(1);
 
                 var objectContextMock = Mock.Get(CreateObjectContext(dbCommandMock.Object));
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
 
                 // Verify that ExecuteInTransaction calls DbCommand.ExecuteNonQuery
                 objectContextMock.Setup(
-                    m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                                 .Returns<Func<int>, bool, bool, bool>(
+                    m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                                 .Returns<Func<int>, IDbExecutionStrategy, bool, bool>(
                                      (f, t, s, r) =>
                                          {
                                              dbCommandMock.Verify(m => m.ExecuteNonQuery(), Times.Never());
@@ -718,17 +718,17 @@ namespace System.Data.Entity.Core.Objects
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransaction(
-                                                         It.IsAny<Func<int>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>()),
+                                                         It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>()),
                                                      Times.Never());
                                                  var result = f();
                                                  objectContextMock.Verify(
                                                      m =>
-                                                     m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), startTransaction, true),
+                                                     m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), startTransaction, true),
                                                      Times.Once());
                                                  return result;
                                              });
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     objectContextMock.Object.ExecuteStoreCommand(
@@ -855,14 +855,14 @@ namespace System.Data.Entity.Core.Objects
             {
                 var objectContext = CreateObjectContext(new Mock<DbCommand>().Object);
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     Assert.Equal(
-                        Strings.ExecutionStrategy_StreamingNotSupported,
+                        Strings.ExecutionStrategy_StreamingNotSupported(executionStrategyMock.Object.GetType().Name),
                         Assert.Throws<InvalidOperationException>(
                             () =>
                             objectContext.ExecuteStoreQuery<object>(
@@ -941,13 +941,13 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContextMock = Mock.Get(CreateObjectContext(dbCommandMock.Object));
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
 
                 // Verify that ExecuteInTransaction calls DbCommand.ExecuteDataReader
                 objectContextMock.Setup(
                     m =>
-                    m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                                 .Returns<Func<ObjectResult<object>>, bool, bool, bool>(
+                    m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                                 .Returns<Func<ObjectResult<object>>, IDbExecutionStrategy, bool, bool>(
                                      (f, t, s, r) =>
                                          {
                                              dbCommandMock.Protected().Verify<DbDataReader>(
@@ -966,18 +966,18 @@ namespace System.Data.Entity.Core.Objects
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransaction(
-                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), false, It.IsAny<bool>()),
+                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), false, It.IsAny<bool>()),
                                                      Times.Never());
                                                  var result = f();
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransaction(
-                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), false, It.IsAny<bool>()),
+                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), false, It.IsAny<bool>()),
                                                      Times.Once());
                                                  return result;
                                              });
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     objectContextMock.Object.ExecuteStoreQuery<object>("Foo");
@@ -1004,9 +1004,12 @@ namespace System.Data.Entity.Core.Objects
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
                 entityConnectionMock.Setup(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+
                 var executed = false;
                 Assert.Equal(
-                    Strings.ExecutionStrategy_ExistingTransaction,
+                    Strings.ExecutionStrategy_ExistingTransaction(executionStrategyMock.Object.GetType().Name),
                     Assert.Throws<InvalidOperationException>(
                         () =>
                         objectContext.ExecuteInTransaction(
@@ -1014,7 +1017,7 @@ namespace System.Data.Entity.Core.Objects
                                 {
                                     executed = true;
                                     return executed;
-                                }, throwOnExistingTransaction: true, startLocalTransaction: false, releaseConnectionOnSuccess: false))
+                                }, executionStrategyMock.Object, startLocalTransaction: false, releaseConnectionOnSuccess: false))
                           .Message);
 
                 Assert.False(executed);
@@ -1029,10 +1032,13 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
                 entityConnectionMock.Setup(m => m.EnlistedInUserTransaction).Returns(true);
+                
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
                 var executed = false;
                 Assert.Equal(
-                    Strings.ExecutionStrategy_ExistingTransaction,
+                    Strings.ExecutionStrategy_ExistingTransaction(executionStrategyMock.Object.GetType().Name),
                     Assert.Throws<InvalidOperationException>(
                         () =>
                         objectContext.ExecuteInTransaction(
@@ -1040,7 +1046,7 @@ namespace System.Data.Entity.Core.Objects
                                 {
                                     executed = true;
                                     return executed;
-                                }, throwOnExistingTransaction: true, startLocalTransaction: false, releaseConnectionOnSuccess: false))
+                                }, executionStrategyMock.Object, startLocalTransaction: false, releaseConnectionOnSuccess: false))
                           .Message);
 
                 Assert.False(executed);
@@ -1053,11 +1059,14 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+
                 var executed = false;
                 using (new TransactionScope())
                 {
                     Assert.Equal(
-                        Strings.ExecutionStrategy_ExistingTransaction,
+                        Strings.ExecutionStrategy_ExistingTransaction(executionStrategyMock.Object.GetType().Name),
                         Assert.Throws<InvalidOperationException>(
                             () =>
                             objectContext.ExecuteInTransaction(
@@ -1065,7 +1074,7 @@ namespace System.Data.Entity.Core.Objects
                                     {
                                         executed = true;
                                         return executed;
-                                    }, throwOnExistingTransaction: true, startLocalTransaction: false, releaseConnectionOnSuccess: false))
+                                    }, executionStrategyMock.Object, startLocalTransaction: false, releaseConnectionOnSuccess: false))
                               .Message);
                 }
 
@@ -1080,6 +1089,9 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
                 entityConnectionMock.Setup(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
+                
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
 
                 var executed = false;
                 Assert.True(
@@ -1088,7 +1100,7 @@ namespace System.Data.Entity.Core.Objects
                             {
                                 executed = true;
                                 return executed;
-                            }, throwOnExistingTransaction: false, startLocalTransaction: true, releaseConnectionOnSuccess: false));
+                            }, executionStrategyMock.Object, startLocalTransaction: true, releaseConnectionOnSuccess: false));
 
                 Assert.True(executed);
                 entityConnectionMock.Verify(m => m.BeginTransaction(), Times.Never());
@@ -1103,6 +1115,9 @@ namespace System.Data.Entity.Core.Objects
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
                 entityConnectionMock.Setup(m => m.EnlistedInUserTransaction).Returns(true);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
+
                 var executed = false;
                 Assert.True(
                     objectContext.ExecuteInTransaction(
@@ -1110,7 +1125,7 @@ namespace System.Data.Entity.Core.Objects
                             {
                                 executed = true;
                                 return executed;
-                            }, throwOnExistingTransaction: false, startLocalTransaction: true, releaseConnectionOnSuccess: false));
+                            }, executionStrategyMock.Object, startLocalTransaction: true, releaseConnectionOnSuccess: false));
 
                 Assert.True(executed);
                 entityConnectionMock.Verify(m => m.BeginTransaction(), Times.Never());
@@ -1124,6 +1139,9 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
+
                 var executed = false;
                 using (new TransactionScope())
                 {
@@ -1133,7 +1151,7 @@ namespace System.Data.Entity.Core.Objects
                                 {
                                     executed = true;
                                     return executed;
-                                }, throwOnExistingTransaction: false, startLocalTransaction: true, releaseConnectionOnSuccess: false));
+                                }, executionStrategyMock.Object, startLocalTransaction: true, releaseConnectionOnSuccess: false));
                 }
 
                 Assert.True(executed);
@@ -1149,6 +1167,9 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+
                 var executed = false;
                 Assert.True(
                     objectContext.ExecuteInTransaction(
@@ -1157,7 +1178,7 @@ namespace System.Data.Entity.Core.Objects
                                 objectContextMock.Verify(m => m.EnsureConnection(), Times.Once());
                                 executed = true;
                                 return executed;
-                            }, throwOnExistingTransaction: true, startLocalTransaction: true, releaseConnectionOnSuccess: false));
+                            }, executionStrategyMock.Object, startLocalTransaction: true, releaseConnectionOnSuccess: false));
 
                 Assert.True(executed);
                 entityConnectionMock.Verify(m => m.BeginTransaction(), Times.Once());
@@ -1173,6 +1194,9 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+
                 var executed = false;
                 Assert.True(
                     objectContext.ExecuteInTransaction(
@@ -1181,7 +1205,7 @@ namespace System.Data.Entity.Core.Objects
                                 objectContextMock.Verify(m => m.EnsureConnection(), Times.Once());
                                 executed = true;
                                 return executed;
-                            }, throwOnExistingTransaction: false, startLocalTransaction: true, releaseConnectionOnSuccess: false));
+                            }, executionStrategyMock.Object, startLocalTransaction: true, releaseConnectionOnSuccess: false));
 
                 Assert.True(executed);
                 entityConnectionMock.Verify(m => m.BeginTransaction(), Times.Once());
@@ -1197,6 +1221,9 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
+
                 var executed = false;
                 Assert.True(
                     objectContext.ExecuteInTransaction(
@@ -1205,7 +1232,7 @@ namespace System.Data.Entity.Core.Objects
                                 objectContextMock.Verify(m => m.EnsureConnection(), Times.Once());
                                 executed = true;
                                 return executed;
-                            }, throwOnExistingTransaction: false, startLocalTransaction: false, releaseConnectionOnSuccess: false));
+                            }, executionStrategyMock.Object, startLocalTransaction: false, releaseConnectionOnSuccess: false));
 
                 Assert.True(executed);
                 entityConnectionMock.Verify(m => m.BeginTransaction(), Times.Never());
@@ -1230,6 +1257,9 @@ namespace System.Data.Entity.Core.Objects
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
                 var objectContextMock = Mock.Get(objectContext);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
+
                 var executed = false;
                 Assert.Throws<NotImplementedException>(
                     () =>
@@ -1239,7 +1269,7 @@ namespace System.Data.Entity.Core.Objects
                                 objectContextMock.Verify(m => m.EnsureConnection(), Times.Once());
                                 executed = true;
                                 throw new NotImplementedException();
-                            }, /*throwOnExistingTransaction:*/ false, /*startLocalTransaction:*/ false, releaseConnectionOnSuccess));
+                            }, executionStrategyMock.Object, /*startLocalTransaction:*/ false, releaseConnectionOnSuccess));
 
                 Assert.True(executed);
                 objectContextMock.Verify(m => m.ReleaseConnection(), Times.Once());
@@ -1263,6 +1293,9 @@ namespace System.Data.Entity.Core.Objects
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
                 var objectContextMock = Mock.Get(objectContext);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
+
                 var executed = false;
                 objectContext.ExecuteInTransaction<object>(
                     () =>
@@ -1270,7 +1303,7 @@ namespace System.Data.Entity.Core.Objects
                             objectContextMock.Verify(m => m.EnsureConnection(), Times.Once());
                             executed = true;
                             return null;
-                        }, /*throwOnExistingTransaction:*/ false, /*startLocalTransaction:*/ false, releaseConnectionOnSuccess);
+                        }, executionStrategyMock.Object, /*startLocalTransaction:*/ false, releaseConnectionOnSuccess);
 
                 Assert.True(executed);
                 objectContextMock.Verify(m => m.ReleaseConnection(), releaseConnectionOnSuccess ? Times.Once() : Times.Never());
@@ -1316,14 +1349,14 @@ namespace System.Data.Entity.Core.Objects
                 var objectContext = CreateObjectContext(new Mock<DbCommand>().Object);
                 SetupFooFunction(objectContext.MetadataWorkspace);
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     Assert.Equal(
-                        Strings.ExecutionStrategy_StreamingNotSupported,
+                        Strings.ExecutionStrategy_StreamingNotSupported(executionStrategyMock.Object.GetType().Name),
                         Assert.Throws<InvalidOperationException>(
                             () =>
                             objectContext.ExecuteFunction<object>(
@@ -1356,13 +1389,13 @@ namespace System.Data.Entity.Core.Objects
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContextMock.Object.Connection);
                 entityConnectionMock.Setup(m => m.StoreProviderFactory).Returns(new FakeSqlProviderFactory());
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
 
                 // Verify that ExecuteInTransaction calls DbCommand.ExecuteDataReader
                 objectContextMock.Setup(
                     m =>
-                    m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                                 .Returns<Func<ObjectResult<object>>, bool, bool, bool>(
+                    m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                                 .Returns<Func<ObjectResult<object>>, IDbExecutionStrategy, bool, bool>(
                                      (f, t, s, r) =>
                                          {
                                              entityCommandMock.Protected().Verify<DbDataReader>(
@@ -1381,19 +1414,19 @@ namespace System.Data.Entity.Core.Objects
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransaction(
-                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), true, It.IsAny<bool>()),
+                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), true, It.IsAny<bool>()),
                                                      Times.Never());
                                                  var result = f();
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransaction(
-                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), true, It.IsAny<bool>()),
+                                                         It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), true, It.IsAny<bool>()),
                                                      Times.Once());
                                                  return result;
                                              });
 
                 FakeSqlProviderServices.Instance.EntityCommandDefinition = entityCommandDefinition;
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     objectContextMock.Object.ExecuteFunction<object>("Foo");
@@ -1422,12 +1455,12 @@ namespace System.Data.Entity.Core.Objects
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContextMock.Object.Connection);
                 entityConnectionMock.Setup(m => m.StoreProviderFactory).Returns(new FakeSqlProviderFactory());
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
 
                 // Verify that ExecuteInTransaction calls DbCommand.ExecuteNonQuery
                 objectContextMock.Setup(
-                    m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                                 .Returns<Func<int>, bool, bool, bool>(
+                    m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                                 .Returns<Func<int>, IDbExecutionStrategy, bool, bool>(
                                      (f, t, s, r) =>
                                          {
                                              dataReaderMock.Verify(m => m.Read(), Times.Never());
@@ -1442,17 +1475,17 @@ namespace System.Data.Entity.Core.Objects
                                          f =>
                                              {
                                                  objectContextMock.Verify(
-                                                     m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), true, true),
+                                                     m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), true, true),
                                                      Times.Never());
                                                  var result = f();
                                                  objectContextMock.Verify(
-                                                     m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<bool>(), true, true),
+                                                     m => m.ExecuteInTransaction(It.IsAny<Func<int>>(), It.IsAny<IDbExecutionStrategy>(), true, true),
                                                      Times.Once());
                                                  return result;
                                              });
 
                 FakeSqlProviderServices.Instance.EntityCommandDefinition = entityCommandDefinition;
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     objectContextMock.Object.ExecuteFunction("Foo");
@@ -1825,12 +1858,12 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContext = CreateObjectContext(entityConnectionMock, objectStateManagerMock);
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.ExecuteAsync(It.IsAny<Func<Task<int>>>(), It.IsAny<CancellationToken>()))
                                      .Returns<Func<Task<int>>, CancellationToken>(
                                          (f, c) => Task.FromResult(2));
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     Assert.Equal(2, objectContext.SaveChangesAsync(SaveOptions.AcceptAllChangesAfterSave).Result);
@@ -1930,9 +1963,9 @@ namespace System.Data.Entity.Core.Objects
                 objectContextMock.Setup(
                     m =>
                     m.ExecuteInTransactionAsync(
-                        It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(),
+                        It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>(),
                         It.IsAny<CancellationToken>()))
-                                 .Returns<Func<Task<ObjectResult<object>>>, bool, bool, bool, CancellationToken>(
+                                 .Returns<Func<Task<ObjectResult<object>>>, IDbExecutionStrategy, bool, bool, CancellationToken>(
                                      (f, t, s, r, ct) =>
                                          {
                                              executionPlanMock.Verify(
@@ -1952,7 +1985,7 @@ namespace System.Data.Entity.Core.Objects
                                          });
 
                 // Verify that ExecutionStrategy.Execute calls ExecuteInTransaction
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
                 executionStrategyMock.Setup(
                     m => m.ExecuteAsync(It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<CancellationToken>()))
                                      .Returns<Func<Task<ObjectResult<object>>>, CancellationToken>(
@@ -1961,20 +1994,20 @@ namespace System.Data.Entity.Core.Objects
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransactionAsync(
-                                                         It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<bool>(), false, true,
+                                                         It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<IDbExecutionStrategy>(), false, true,
                                                          It.IsAny<CancellationToken>()),
                                                      Times.Never());
                                                  var result = f().Result;
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransactionAsync(
-                                                         It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<bool>(), false, true,
+                                                         It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<IDbExecutionStrategy>(), false, true,
                                                          It.IsAny<CancellationToken>()),
                                                      Times.Once());
                                                  return Task.FromResult(result);
                                              });
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     objectContextMock.Object.RefreshAsync(RefreshMode.StoreWins, new object()).Wait();
@@ -2282,14 +2315,14 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContextMock = Mock.Get(CreateObjectContext(dbCommandMock.Object));
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
 
                 // Verify that ExecuteInTransactionAsync calls DbCommand.ExecuteNonQueryAsync
                 objectContextMock.Setup(
                     m => m.ExecuteInTransactionAsync(
                         It.IsAny<Func<Task<int>>>(),
-                        It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
-                                 .Returns<Func<Task<int>>, bool, bool, bool, CancellationToken>(
+                        It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+                                 .Returns<Func<Task<int>>, IDbExecutionStrategy, bool, bool, CancellationToken>(
                                      (f, t, s, r, c) =>
                                          {
                                              dbCommandMock.Verify(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>()), Times.Never());
@@ -2307,20 +2340,20 @@ namespace System.Data.Entity.Core.Objects
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransactionAsync(
-                                                         It.IsAny<Func<Task<int>>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(),
+                                                         It.IsAny<Func<Task<int>>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>(),
                                                          It.IsAny<CancellationToken>()),
                                                      Times.Never());
                                                  var result = f().Result;
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransactionAsync(
-                                                         It.IsAny<Func<Task<int>>>(), It.IsAny<bool>(), startTransaction, true,
+                                                         It.IsAny<Func<Task<int>>>(), It.IsAny<IDbExecutionStrategy>(), startTransaction, true,
                                                          It.IsAny<CancellationToken>()),
                                                      Times.Once());
                                                  return Task.FromResult(result);
                                              });
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     Assert.NotNull(
@@ -2457,14 +2490,14 @@ namespace System.Data.Entity.Core.Objects
             {
                 var objectContext = CreateObjectContext(new Mock<DbCommand>().Object);
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     Assert.Equal(
-                        Strings.ExecutionStrategy_StreamingNotSupported,
+                        Strings.ExecutionStrategy_StreamingNotSupported(executionStrategyMock.Object.GetType().Name),
                         Assert.Throws<InvalidOperationException>(
                             () =>
                             objectContext.ExecuteStoreQueryAsync<object>(
@@ -2550,14 +2583,14 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContextMock = Mock.Get(CreateObjectContext(dbCommandMock.Object));
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
 
                 // Verify that ExecuteInTransaction calls DbCommand.ExecuteDataReader
                 objectContextMock.Setup(
                     m => m.ExecuteInTransactionAsync(
                         It.IsAny<Func<Task<ObjectResult<object>>>>(),
-                        It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
-                                 .Returns<Func<Task<ObjectResult<object>>>, bool, bool, bool, CancellationToken>(
+                        It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+                                 .Returns<Func<Task<ObjectResult<object>>>, IDbExecutionStrategy, bool, bool, CancellationToken>(
                                      (f, t, s, r, c) =>
                                          {
                                              dbCommandMock.Protected().Verify<Task<DbDataReader>>(
@@ -2579,7 +2612,7 @@ namespace System.Data.Entity.Core.Objects
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransactionAsync(
-                                                         It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<bool>(), false,
+                                                         It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<IDbExecutionStrategy>(), false,
                                                          It.IsAny<bool>(),
                                                          It.IsAny<CancellationToken>()),
                                                      Times.Never());
@@ -2587,14 +2620,14 @@ namespace System.Data.Entity.Core.Objects
                                                  objectContextMock.Verify(
                                                      m =>
                                                      m.ExecuteInTransactionAsync(
-                                                         It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<bool>(), false,
+                                                         It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<IDbExecutionStrategy>(), false,
                                                          It.IsAny<bool>(),
                                                          It.IsAny<CancellationToken>()),
                                                      Times.Once());
                                                  return Task.FromResult(result);
                                              });
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     Assert.NotNull(objectContextMock.Object.ExecuteStoreQueryAsync<object>("Foo").Result);
@@ -2622,9 +2655,12 @@ namespace System.Data.Entity.Core.Objects
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
                 entityConnectionMock.Setup(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+
                 var executed = false;
                 Assert.Equal(
-                    Strings.ExecutionStrategy_ExistingTransaction,
+                    Strings.ExecutionStrategy_ExistingTransaction(executionStrategyMock.Object.GetType().Name),
                     Assert.Throws<InvalidOperationException>(
                         () =>
                         ExceptionHelpers.UnwrapAggregateExceptions(
@@ -2634,7 +2670,7 @@ namespace System.Data.Entity.Core.Objects
                                     {
                                         executed = true;
                                         return Task.FromResult(executed);
-                                    }, /*throwOnExistingTransaction:*/ true, /*startLocalTransaction:*/ false,
+                                    }, executionStrategyMock.Object, /*startLocalTransaction:*/ false,
                                 /*releaseConnectionOnSuccess:*/ false, CancellationToken.None).Result)).Message);
 
                 Assert.False(executed);
@@ -2649,10 +2685,13 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
                 entityConnectionMock.Setup(m => m.EnlistedInUserTransaction).Returns(true);
+                
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
                 var executed = false;
                 Assert.Equal(
-                    Strings.ExecutionStrategy_ExistingTransaction,
+                    Strings.ExecutionStrategy_ExistingTransaction(executionStrategyMock.Object.GetType().Name),
                     Assert.Throws<InvalidOperationException>(
                         () => ExceptionHelpers.UnwrapAggregateExceptions(
                             () =>
@@ -2661,7 +2700,7 @@ namespace System.Data.Entity.Core.Objects
                                     {
                                         executed = true;
                                         return Task.FromResult(executed);
-                                    }, /*throwOnExistingTransaction:*/ true, /*startLocalTransaction:*/ false,
+                                    }, executionStrategyMock.Object, /*startLocalTransaction:*/ false,
                                 /*releaseConnectionOnSuccess:*/ false, CancellationToken.None).Result)).Message);
 
                 Assert.False(executed);
@@ -2674,11 +2713,14 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+
                 var executed = false;
                 using (new TransactionScope())
                 {
                     Assert.Equal(
-                        Strings.ExecutionStrategy_ExistingTransaction,
+                        Strings.ExecutionStrategy_ExistingTransaction(executionStrategyMock.Object.GetType().Name),
                         Assert.Throws<InvalidOperationException>(
                             () =>
                             ExceptionHelpers.UnwrapAggregateExceptions(
@@ -2688,7 +2730,7 @@ namespace System.Data.Entity.Core.Objects
                                         {
                                             executed = true;
                                             return Task.FromResult(executed);
-                                        }, /*throwOnExistingTransaction:*/ true, /*startLocalTransaction:*/ false,
+                                        }, executionStrategyMock.Object, /*startLocalTransaction:*/ false,
                                     /*releaseConnectionOnSuccess:*/ false, CancellationToken.None).Result)).Message);
                 }
 
@@ -2703,6 +2745,9 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
                 entityConnectionMock.Setup(m => m.CurrentTransaction).Returns(new Mock<EntityTransaction>().Object);
+                
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
 
                 var executed = false;
 
@@ -2712,7 +2757,7 @@ namespace System.Data.Entity.Core.Objects
                             {
                                 executed = true;
                                 return Task.FromResult(executed);
-                            }, /*throwOnExistingTransaction:*/ false, /*startLocalTransaction:*/ true, false, CancellationToken.None).Result);
+                            }, executionStrategyMock.Object, /*startLocalTransaction:*/ true, false, CancellationToken.None).Result);
 
                 Assert.True(executed);
                 entityConnectionMock.Verify(m => m.BeginTransaction(), Times.Never());
@@ -2727,6 +2772,9 @@ namespace System.Data.Entity.Core.Objects
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
                 entityConnectionMock.Setup(m => m.EnlistedInUserTransaction).Returns(true);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
+
                 var executed = false;
 
                 Assert.True(
@@ -2735,7 +2783,7 @@ namespace System.Data.Entity.Core.Objects
                             {
                                 executed = true;
                                 return Task.FromResult(executed);
-                            }, /*throwOnExistingTransaction:*/ false, /*startLocalTransaction:*/ true, false, CancellationToken.None).Result
+                            }, executionStrategyMock.Object, /*startLocalTransaction:*/ true, false, CancellationToken.None).Result
                     );
 
                 Assert.True(executed);
@@ -2750,6 +2798,9 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
+
                 var executed = false;
                 using (new TransactionScope())
                 {
@@ -2759,7 +2810,7 @@ namespace System.Data.Entity.Core.Objects
                                 {
                                     executed = true;
                                     return Task.FromResult(executed);
-                                }, /*throwOnExistingTransaction:*/ false, /*startLocalTransaction:*/ true, false, CancellationToken.None)
+                                }, executionStrategyMock.Object, /*startLocalTransaction:*/ true, false, CancellationToken.None)
                                      .Result);
                 }
 
@@ -2776,6 +2827,9 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+
                 var executed = false;
                 Assert.True(
                     objectContext.ExecuteInTransactionAsync(
@@ -2784,7 +2838,7 @@ namespace System.Data.Entity.Core.Objects
                                 objectContextMock.Verify(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>()), Times.Once());
                                 executed = true;
                                 return Task.FromResult(executed);
-                            }, /*throwOnExistingTransaction:*/ true, /*startLocalTransaction:*/ true, false, CancellationToken.None).Result);
+                            }, executionStrategyMock.Object, /*startLocalTransaction:*/ true, false, CancellationToken.None).Result);
 
                 Assert.True(executed);
                 entityConnectionMock.Verify(m => m.BeginTransaction(), Times.Once());
@@ -2800,6 +2854,9 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
+
                 var executed = false;
                 Assert.True(
                     objectContext.ExecuteInTransactionAsync(
@@ -2808,7 +2865,7 @@ namespace System.Data.Entity.Core.Objects
                                 objectContextMock.Verify(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>()), Times.Once());
                                 executed = true;
                                 return Task.FromResult(executed);
-                            }, /*throwOnExistingTransaction:*/ false, /*startLocalTransaction:*/ true, false, CancellationToken.None).Result);
+                            }, executionStrategyMock.Object, /*startLocalTransaction:*/ true, false, CancellationToken.None).Result);
 
                 Assert.True(executed);
                 entityConnectionMock.Verify(m => m.BeginTransaction(), Times.Once());
@@ -2824,6 +2881,9 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityConnectionMock = Mock.Get((EntityConnection)objectContext.Connection);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
+
                 var executed = false;
                 Assert.True(
                     objectContext.ExecuteInTransactionAsync(
@@ -2832,7 +2892,7 @@ namespace System.Data.Entity.Core.Objects
                                 objectContextMock.Verify(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>()), Times.Once());
                                 executed = true;
                                 return Task.FromResult(executed);
-                            }, /*throwOnExistingTransaction:*/ false, /*startLocalTransaction:*/ false, false, CancellationToken.None)
+                            }, executionStrategyMock.Object, /*startLocalTransaction:*/ false, false, CancellationToken.None)
                                  .Result);
 
                 Assert.True(executed);
@@ -2858,6 +2918,9 @@ namespace System.Data.Entity.Core.Objects
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
                 var objectContextMock = Mock.Get(objectContext);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
+
                 var executed = false;
                 Assert.Throws<NotImplementedException>(
                     () => ExceptionHelpers.UnwrapAggregateExceptions(
@@ -2868,7 +2931,7 @@ namespace System.Data.Entity.Core.Objects
                                     objectContextMock.Verify(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>()), Times.Once());
                                     executed = true;
                                     throw new NotImplementedException();
-                                }, /*throwOnExistingTransaction:*/ false, /*startLocalTransaction:*/ false, releaseConnectionOnSuccess,
+                                }, executionStrategyMock.Object, /*startLocalTransaction:*/ false, releaseConnectionOnSuccess,
                             CancellationToken.None).Result));
 
                 Assert.True(executed);
@@ -2893,6 +2956,9 @@ namespace System.Data.Entity.Core.Objects
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
                 var objectContextMock = Mock.Get(objectContext);
 
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+                executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(false);
+
                 var executed = false;
                 objectContext.ExecuteInTransactionAsync(
                     () =>
@@ -2900,7 +2966,7 @@ namespace System.Data.Entity.Core.Objects
                             objectContextMock.Verify(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>()), Times.Once());
                             executed = true;
                             return Task.FromResult<object>(null);
-                        }, /*throwOnExistingTransaction:*/ false, /*startLocalTransaction:*/ false, releaseConnectionOnSuccess,
+                        }, executionStrategyMock.Object, /*startLocalTransaction:*/ false, releaseConnectionOnSuccess,
                     CancellationToken.None).Wait();
 
                 Assert.True(executed);

@@ -13,10 +13,9 @@ namespace System.Data.Entity.Infrastructure
     public sealed class RetryLimitExceededException : EntityException
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="RetryLimitExceededException" /> class with a default error message.
+        ///     Initializes a new instance of the <see cref="RetryLimitExceededException" /> class with no error message.
         /// </summary>
         public RetryLimitExceededException()
-            : this(Strings.ExecutionStrategy_RetryLimitExceeded)
         {
         }
 
@@ -26,16 +25,6 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="message">The message that describes the error.</param>
         public RetryLimitExceededException(string message)
             : base(message)
-        {
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="RetryLimitExceededException" /> class with a reference to the inner exception
-        ///     that is the cause of this exception.
-        /// </summary>
-        /// <param name="innerException">The exception that is the cause of the current exception.</param>
-        public RetryLimitExceededException(Exception innerException)
-            : base(Strings.ExecutionStrategy_RetryLimitExceeded, innerException)
         {
         }
 

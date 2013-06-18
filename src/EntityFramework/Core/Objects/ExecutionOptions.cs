@@ -20,7 +20,14 @@ namespace System.Data.Entity.Core.Objects
             Streaming = streaming;
         }
 
+        /// <summary>
+        ///     Merge option to use for entity results.
+        /// </summary>
         public MergeOption MergeOption { get; private set; }
+
+        /// <summary>
+        ///     Whether the query is streaming or buffering.
+        /// </summary>
         public bool Streaming { get; private set; }
 
         public static bool operator ==(ExecutionOptions left, ExecutionOptions right)
@@ -38,11 +45,13 @@ namespace System.Data.Entity.Core.Objects
             return left.Equals(right);
         }
 
+        /// <inheritdoc/>
         public static bool operator !=(ExecutionOptions left, ExecutionOptions right)
         {
             return !(left == right);
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             var otherOptions = obj as ExecutionOptions;
@@ -55,6 +64,7 @@ namespace System.Data.Entity.Core.Objects
                    Streaming == otherOptions.Streaming;
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return MergeOption.GetHashCode() ^ Streaming.GetHashCode();

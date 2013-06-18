@@ -1254,7 +1254,7 @@ namespace System.Data.Entity.SqlServer
             var openingConnection = sqlConnection.State == ConnectionState.Closed;
             if (openingConnection)
             {
-                DbConfiguration.GetService<Func<IExecutionStrategy>>(
+                DbConfiguration.GetService<Func<IDbExecutionStrategy>>(
                     new ExecutionStrategyKey(ProviderInvariantName, sqlConnection.DataSource))()
                     .Execute(
                         () =>

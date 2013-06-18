@@ -20,8 +20,8 @@ namespace System.Data.Entity.Config
             [Fact]
             public void GetService_returns_execution_strategy()
             {
-                Assert.IsType<NonRetryingExecutionStrategy>(
-                    new DefaultExecutionStrategyResolver().GetService<Func<IExecutionStrategy>>(
+                Assert.IsType<DefaultExecutionStrategy>(
+                    new DefaultExecutionStrategyResolver().GetService<Func<IDbExecutionStrategy>>(
                         new ExecutionStrategyKey("FooClient", "foo"))());
             }
 
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     "key",
                     Assert.Throws<ArgumentNullException>(
-                        () => new DefaultExecutionStrategyResolver().GetService<Func<IExecutionStrategy>>(null)).ParamName);
+                        () => new DefaultExecutionStrategyResolver().GetService<Func<IDbExecutionStrategy>>(null)).ParamName);
             }
 
             [Fact]
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, "Func<IExecutionStrategy>"),
                     Assert.Throws<ArgumentException>(
-                        () => new DefaultExecutionStrategyResolver().GetService<Func<IExecutionStrategy>>("a")).Message);
+                        () => new DefaultExecutionStrategyResolver().GetService<Func<IDbExecutionStrategy>>("a")).Message);
             }
         }
 
@@ -55,8 +55,8 @@ namespace System.Data.Entity.Config
             [Fact]
             public void GetServices_returns_execution_strategy()
             {
-                Assert.IsType<NonRetryingExecutionStrategy>(
-                    new DefaultExecutionStrategyResolver().GetServices<Func<IExecutionStrategy>>(
+                Assert.IsType<DefaultExecutionStrategy>(
+                    new DefaultExecutionStrategyResolver().GetServices<Func<IDbExecutionStrategy>>(
                         new ExecutionStrategyKey("FooClient", "foo")).Single()());
             }
 
@@ -66,7 +66,7 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     "key",
                     Assert.Throws<ArgumentNullException>(
-                        () => new DefaultExecutionStrategyResolver().GetServices<Func<IExecutionStrategy>>(null)).ParamName);
+                        () => new DefaultExecutionStrategyResolver().GetServices<Func<IDbExecutionStrategy>>(null)).ParamName);
             }
 
             [Fact]
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, "Func<IExecutionStrategy>"),
                     Assert.Throws<ArgumentException>(
-                        () => new DefaultExecutionStrategyResolver().GetServices<Func<IExecutionStrategy>>("a")).Message);
+                        () => new DefaultExecutionStrategyResolver().GetServices<Func<IDbExecutionStrategy>>("a")).Message);
             }
         }
     }

@@ -5266,18 +5266,16 @@
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ExecutionStrategy_ExistingTransaction" xml:space="preserve">
-    <value>Existing transactions are not supported by the current execution strategy.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
+    <value>The configured execution strategy '{0}' does not support user initiated transactions. See http://go.microsoft.com/fwlink/?LinkId=309381 for additional information.</value>
   </data>
   <data name="ExecutionStrategy_MinimumMustBeLessThanMaximum" xml:space="preserve">
-    <value>The minimum delay must be less than or equal to the maximum delay.</value>
+    <value>The minimum delay of '{0}' must be less than or equal to the maximum delay of '{1}'.</value>
   </data>
   <data name="ExecutionStrategy_NegativeDelay" xml:space="preserve">
-    <value>Negative delays are invalid.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
+    <value>The delay '{0}' is invalid. Delay must be greater than or equal to zero.</value>
   </data>
   <data name="ExecutionStrategy_RetryLimitExceeded" xml:space="preserve">
-    <value>Retry limit exceeded.</value>
+    <value>Maximum number of retries ({0}) exceeded while executing database operations with '{1}'. See inner exception for the most recent failure.</value>
   </data>
   <data name="BaseTypeNotMappedToFunctions" xml:space="preserve">
     <value>The base type '{0}' must be mapped to functions because its derived type '{1}' is mapped to functions. When mapping an inheritance hierarchy to functions, ensure that the root type of the hierarchy is also mapped to functions.</value>
@@ -5324,7 +5322,7 @@
     <value>The connection is already enlisted in a user transaction. The first transaction should be completed before attempting to engage the connection in another transaction.</value>
   </data>
   <data name="ExecutionStrategy_StreamingNotSupported" xml:space="preserve">
-    <value>Streaming queries are not supported by the current execution strategy.</value>
+    <value>Streaming queries are not supported by the configured execution strategy '{0}'. See http://go.microsoft.com/fwlink/?LinkId=309381 for additional information.</value>
   </data>
   <data name="DbProviderNameAttributeNotFound" xml:space="preserve">
     <value>The type '{0}' doesn't have DbProviderNameAttribute, please use an overload that has a provider invariant name string parameter.</value>

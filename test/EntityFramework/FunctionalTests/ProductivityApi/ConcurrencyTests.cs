@@ -842,7 +842,7 @@ namespace ProductivityApiTests
         /// <summary>
         /// An IExecutionStrategy that blocks the execution of async actions until it is signaled
         /// </summary>
-        public class BlockingStrategy : IExecutionStrategy
+        public class BlockingStrategy : IDbExecutionStrategy
         {
             private readonly Task _signalTask;
 
@@ -856,26 +856,26 @@ namespace ProductivityApiTests
                 get { return false; }
             }
 
-            public void Execute(Action action)
+            public void Execute(Action operation)
             {
-                action();
+                operation();
             }
 
-            public TResult Execute<TResult>(Func<TResult> func)
+            public TResult Execute<TResult>(Func<TResult> operation)
             {
-                return func();
+                return operation();
             }
 
-            public async Task ExecuteAsync(Func<Task> func, CancellationToken cancellationToken)
+            public async Task ExecuteAsync(Func<Task> operation, CancellationToken cancellationToken)
             {
                 await _signalTask;
-                await func();
+                await operation();
             }
 
-            public async Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> func, CancellationToken cancellationToken)
+            public async Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> operation, CancellationToken cancellationToken)
             {
                 await _signalTask;
-                return await func();
+                return await operation();
             }
         }
 
@@ -1162,7 +1162,7 @@ namespace ProductivityApiTests
         private void VerifyConcurrency(Action<SimpleModelContext, List<Task>> execute, bool shouldThrow)
         {
             var taskCompletionSource = new TaskCompletionSource<object>();
-            MutableResolver.AddResolver<Func<IExecutionStrategy>>(k => (Func<IExecutionStrategy>)(() => new BlockingStrategy(taskCompletionSource.Task)));
+            MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(k => (Func<IDbExecutionStrategy>)(() => new BlockingStrategy(taskCompletionSource.Task)));
 
             // The returned tasks need to be awaited on before the test ends in case they are faulted
             var tasks = new List<Task>();

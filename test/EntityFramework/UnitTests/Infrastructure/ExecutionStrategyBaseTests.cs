@@ -16,7 +16,7 @@ namespace System.Data.Entity.Infrastructure
 
     public class ExecutionStrategyBaseTests
     {
-        private class TestExecutionStrategy : ExecutionStrategyBase
+        private class TestExecutionStrategy : DbExecutionStrategy
         {
             public TestExecutionStrategy(int maxRetryCount, TimeSpan maxDelay)
                 : base(maxRetryCount, maxDelay)
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void GetNextDelay_returns_the_expected_default_sequence()
         {
-            var strategy = new Mock<ExecutionStrategyBase>
+            var strategy = new Mock<DbExecutionStrategy>
                                {
                                    CallBase = true
                                }.Object;
@@ -82,7 +82,7 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void RetriesOnFailure_returns_true()
         {
-            var mockExecutionStrategy = new Mock<ExecutionStrategyBase>
+            var mockExecutionStrategy = new Mock<DbExecutionStrategy>
                                             {
                                                 CallBase = true
                                             }.Object;
@@ -104,17 +104,17 @@ namespace System.Data.Entity.Infrastructure
                 Execute_throws_for_an_existing_transaction(e => e.Execute(() => 1));
             }
 
-            private void Execute_throws_for_an_existing_transaction(Action<ExecutionStrategyBase> executeAsync)
+            private void Execute_throws_for_an_existing_transaction(Action<DbExecutionStrategy> executeAsync)
             {
                 var mockExecutionStrategy =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         }.Object;
                 using (new TransactionScope())
                 {
                     Assert.Equal(
-                        Strings.ExecutionStrategy_ExistingTransaction,
+                        Strings.ExecutionStrategy_ExistingTransaction(mockExecutionStrategy.GetType().Name),
                         Assert.Throws<InvalidOperationException>(
                             () =>
                             executeAsync(mockExecutionStrategy)).Message);
@@ -133,10 +133,10 @@ namespace System.Data.Entity.Infrastructure
                 Execute_throws_when_invoked_twice(e => e.Execute(() => 1));
             }
 
-            private void Execute_throws_when_invoked_twice(Action<ExecutionStrategyBase> Execute)
+            private void Execute_throws_when_invoked_twice(Action<DbExecutionStrategy> Execute)
             {
                 var mockExecutionStrategy =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         }.Object;
@@ -153,13 +153,13 @@ namespace System.Data.Entity.Infrastructure
             public void Execute_Action_throws_on_null_parameters()
             {
                 var mockExecutionStrategy =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         }.Object;
 
                 Assert.Equal(
-                    "action",
+                    "operation",
                     Assert.Throws<ArgumentNullException>(() => mockExecutionStrategy.Execute(null)).ParamName);
             }
 
@@ -167,13 +167,13 @@ namespace System.Data.Entity.Infrastructure
             public void Execute_Func_throws_on_null_parameters()
             {
                 var mockExecutionStrategy =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         }.Object;
 
                 Assert.Equal(
-                    "func",
+                    "operation",
                     Assert.Throws<ArgumentNullException>(() => mockExecutionStrategy.Execute((Func<int>)null)).ParamName);
             }
 
@@ -189,10 +189,10 @@ namespace System.Data.Entity.Infrastructure
                 Execute_throws_on_invalid_delay((e, f) => e.Execute(f));
             }
 
-            private void Execute_throws_on_invalid_delay(Action<ExecutionStrategyBase, Func<int>> execute)
+            private void Execute_throws_on_invalid_delay(Action<DbExecutionStrategy, Func<int>> execute)
             {
                 var executionStrategyMock =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         };
@@ -205,7 +205,7 @@ namespace System.Data.Entity.Infrastructure
                 var executionCount = 0;
 
                 Assert.Equal(
-                    Strings.ExecutionStrategy_NegativeDelay,
+                    Strings.ExecutionStrategy_NegativeDelay(TimeSpan.FromTicks(-1)),
                     Assert.Throws<InvalidOperationException>(
                         () =>
                         execute(
@@ -237,10 +237,10 @@ namespace System.Data.Entity.Infrastructure
                 Execute_doesnt_retry_if_succesful((e, f) => e.Execute(f));
             }
 
-            private void Execute_doesnt_retry_if_succesful(Action<ExecutionStrategyBase, Func<int>> execute)
+            private void Execute_doesnt_retry_if_succesful(Action<DbExecutionStrategy, Func<int>> execute)
             {
                 var executionStrategyMock =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         };
@@ -276,10 +276,10 @@ namespace System.Data.Entity.Infrastructure
                 Execute_retries_until_succesful((e, f) => e.Execute(f));
             }
 
-            private void Execute_retries_until_succesful(Action<ExecutionStrategyBase, Func<int>> execute)
+            private void Execute_retries_until_succesful(Action<DbExecutionStrategy, Func<int>> execute)
             {
                 var executionStrategyMock =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         };
@@ -317,10 +317,10 @@ namespace System.Data.Entity.Infrastructure
                 Execute_retries_until_not_retrieable_exception_is_thrown((e, f) => e.Execute(f));
             }
 
-            private void Execute_retries_until_not_retrieable_exception_is_thrown(Action<ExecutionStrategyBase, Func<int>> execute)
+            private void Execute_retries_until_not_retrieable_exception_is_thrown(Action<DbExecutionStrategy, Func<int>> execute)
             {
                 var executionStrategyMock =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         };
@@ -362,12 +362,12 @@ namespace System.Data.Entity.Infrastructure
                 Execute_retries_until_limit_is_reached((e, f) => e.Execute(f));
             }
 
-            private void Execute_retries_until_limit_is_reached(Action<ExecutionStrategyBase, Func<int>> execute)
+            private void Execute_retries_until_limit_is_reached(Action<DbExecutionStrategy, Func<int>> execute)
             {
                 var executionCount = 0;
 
                 var executionStrategyMock =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         };
@@ -414,10 +414,10 @@ namespace System.Data.Entity.Infrastructure
                 ExecuteAsync_throws_for_an_existing_transaction(e => e.ExecuteAsync(() => Task.FromResult(1), CancellationToken.None));
             }
 
-            private void ExecuteAsync_throws_for_an_existing_transaction(Func<ExecutionStrategyBase, Task> executeAsync)
+            private void ExecuteAsync_throws_for_an_existing_transaction(Func<DbExecutionStrategy, Task> executeAsync)
             {
                 var mockExecutionStrategy =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         }.Object;
@@ -425,7 +425,7 @@ namespace System.Data.Entity.Infrastructure
                 using (new TransactionScope())
                 {
                     Assert.Equal(
-                        Strings.ExecutionStrategy_ExistingTransaction,
+                        Strings.ExecutionStrategy_ExistingTransaction(mockExecutionStrategy.GetType().Name),
                         Assert.Throws<InvalidOperationException>(
                             () =>
                             executeAsync(mockExecutionStrategy)).Message);
@@ -444,10 +444,10 @@ namespace System.Data.Entity.Infrastructure
                 ExecuteAsync_throws_when_invoked_twice(e => e.ExecuteAsync(() => Task.FromResult(1), CancellationToken.None));
             }
 
-            private void ExecuteAsync_throws_when_invoked_twice(Func<ExecutionStrategyBase, Task> executeAsync)
+            private void ExecuteAsync_throws_when_invoked_twice(Func<DbExecutionStrategy, Task> executeAsync)
             {
                 var mockExecutionStrategy =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         }.Object;
@@ -467,13 +467,13 @@ namespace System.Data.Entity.Infrastructure
             public void ExecuteAsync_Action_throws_on_null_parameters()
             {
                 var mockExecutionStrategy =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         }.Object;
 
                 Assert.Equal(
-                    "func",
+                    "operation",
                     Assert.Throws<ArgumentNullException>(() => mockExecutionStrategy.ExecuteAsync(null, CancellationToken.None).Wait())
                           .ParamName);
             }
@@ -482,13 +482,13 @@ namespace System.Data.Entity.Infrastructure
             public void ExecuteAsync_Func_throws_on_null_parameters()
             {
                 var mockExecutionStrategy =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         }.Object;
 
                 Assert.Equal(
-                    "func",
+                    "operation",
                     Assert.Throws<ArgumentNullException>(
                         () => mockExecutionStrategy.ExecuteAsync((Func<Task<int>>)null, CancellationToken.None).Wait()).ParamName);
             }
@@ -505,10 +505,10 @@ namespace System.Data.Entity.Infrastructure
                 ExecuteAsync_throws_on_invalid_delay((e, f) => e.ExecuteAsync(f, CancellationToken.None));
             }
 
-            private void ExecuteAsync_throws_on_invalid_delay(Func<ExecutionStrategyBase, Func<Task<int>>, Task> executeAsync)
+            private void ExecuteAsync_throws_on_invalid_delay(Func<DbExecutionStrategy, Func<Task<int>>, Task> executeAsync)
             {
                 var executionStrategyMock =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         };
@@ -520,7 +520,7 @@ namespace System.Data.Entity.Infrastructure
 
                 var executionCount = 0;
                 Assert.Equal(
-                    Strings.ExecutionStrategy_NegativeDelay,
+                    Strings.ExecutionStrategy_NegativeDelay(TimeSpan.FromTicks(-1)),
                     Assert.Throws<InvalidOperationException>(
                         () =>
                         ExceptionHelpers.UnwrapAggregateExceptions(
@@ -554,10 +554,10 @@ namespace System.Data.Entity.Infrastructure
                 ExecuteAsync_doesnt_retry_if_succesful((e, f) => e.ExecuteAsync(f, CancellationToken.None));
             }
 
-            private void ExecuteAsync_doesnt_retry_if_succesful(Func<ExecutionStrategyBase, Func<Task<int>>, Task> executeAsync)
+            private void ExecuteAsync_doesnt_retry_if_succesful(Func<DbExecutionStrategy, Func<Task<int>>, Task> executeAsync)
             {
                 var executionStrategyMock =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         };
@@ -593,10 +593,10 @@ namespace System.Data.Entity.Infrastructure
                 ExecuteAsync_retries_until_succesful((e, f) => e.ExecuteAsync(f, CancellationToken.None));
             }
 
-            private void ExecuteAsync_retries_until_succesful(Func<ExecutionStrategyBase, Func<Task<int>>, Task> executeAsync)
+            private void ExecuteAsync_retries_until_succesful(Func<DbExecutionStrategy, Func<Task<int>>, Task> executeAsync)
             {
                 var executionStrategyMock =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         };
@@ -636,10 +636,10 @@ namespace System.Data.Entity.Infrastructure
             }
 
             private void ExecuteAsync_retries_until_not_retrieable_exception_is_thrown(
-                Func<ExecutionStrategyBase, Func<Task<int>>, Task> executeAsync)
+                Func<DbExecutionStrategy, Func<Task<int>>, Task> executeAsync)
             {
                 var executionStrategyMock =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         };
@@ -683,12 +683,12 @@ namespace System.Data.Entity.Infrastructure
                 ExecuteAsync_retries_until_limit_is_reached((e, f) => e.ExecuteAsync(f, CancellationToken.None));
             }
 
-            private void ExecuteAsync_retries_until_limit_is_reached(Func<ExecutionStrategyBase, Func<Task<int>>, Task> executeAsync)
+            private void ExecuteAsync_retries_until_limit_is_reached(Func<DbExecutionStrategy, Func<Task<int>>, Task> executeAsync)
             {
                 var executionCount = 0;
 
                 var executionStrategyMock =
-                    new Mock<ExecutionStrategyBase>
+                    new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
                         };
@@ -730,7 +730,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 var innerException = new TimeoutException();
                 Assert.True(
-                    ExecutionStrategyBase.UnwrapAndHandleException(
+                    DbExecutionStrategy.UnwrapAndHandleException(
                         new EntityException("", innerException),
                         ex =>
                             {
@@ -744,7 +744,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 var innerException = new TimeoutException();
                 Assert.True(
-                    ExecutionStrategyBase.UnwrapAndHandleException(
+                    DbExecutionStrategy.UnwrapAndHandleException(
                         new DbUpdateException("", innerException),
                         ex =>
                             {
@@ -758,7 +758,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 var innerException = new TimeoutException();
                 Assert.True(
-                    ExecutionStrategyBase.UnwrapAndHandleException(
+                    DbExecutionStrategy.UnwrapAndHandleException(
                         new UpdateException("", innerException),
                         ex =>
                             {
@@ -772,7 +772,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 Exception innerException = null;
                 Assert.True(
-                    ExecutionStrategyBase.UnwrapAndHandleException(
+                    DbExecutionStrategy.UnwrapAndHandleException(
                         new UpdateException("", innerException),
                         ex =>
                             {
@@ -786,7 +786,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 var innerException = new TimeoutException("", new EntityException("", new DbUpdateException("", new UpdateException(""))));
                 Assert.True(
-                    ExecutionStrategyBase.UnwrapAndHandleException(
+                    DbExecutionStrategy.UnwrapAndHandleException(
                         new EntityException("", new DbUpdateException("", new UpdateException("", innerException))),
                         ex =>
                             {

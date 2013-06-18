@@ -85,14 +85,14 @@ namespace System.Data.Entity.Core.Objects
             var objectQuery = MockHelper.CreateMockObjectQuery((object)null).Object;
             objectQuery.Streaming = true;
 
-            var executionStrategyMock = new Mock<IExecutionStrategy>();
+            var executionStrategyMock = new Mock<IDbExecutionStrategy>();
             executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
-            MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+            MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
             try
             {
                 Assert.Equal(
-                    Strings.ExecutionStrategy_StreamingNotSupported,
+                    Strings.ExecutionStrategy_StreamingNotSupported(executionStrategyMock.Object.GetType().Name),
                     Assert.Throws<InvalidOperationException>(() => objectQuery.Execute(MergeOption.NoTracking)).Message);
             }
             finally
@@ -109,14 +109,14 @@ namespace System.Data.Entity.Core.Objects
             var objectQuery = MockHelper.CreateMockObjectQuery((object)null).Object;
             objectQuery.Streaming = true;
 
-            var executionStrategyMock = new Mock<IExecutionStrategy>();
+            var executionStrategyMock = new Mock<IDbExecutionStrategy>();
             executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
 
-            MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+            MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
             try
             {
                 Assert.Equal(
-                    Strings.ExecutionStrategy_StreamingNotSupported,
+                    Strings.ExecutionStrategy_StreamingNotSupported(executionStrategyMock.Object.GetType().Name),
                     Assert.Throws<InvalidOperationException>(() => objectQuery.ExecuteAsync(MergeOption.NoTracking).Wait()).Message);
             }
             finally
@@ -152,7 +152,7 @@ namespace System.Data.Entity.Core.Objects
             var objectQuery = MockHelper.CreateMockObjectQuery((object)null).Object;
             var executionPlanMock = Mock.Get(objectQuery.QueryState.GetExecutionPlan(MergeOption.AppendOnly));
 
-            var executionStrategyMock = new Mock<IExecutionStrategy>();
+            var executionStrategyMock = new Mock<IDbExecutionStrategy>();
             var objectContextMock = Mock.Get((ObjectContextForMock)objectQuery.QueryState.ObjectContext);
 
             // Verify that ExecuteInTransaction calls ObjectQueryExecutionPlan.Execute
@@ -162,42 +162,46 @@ namespace System.Data.Entity.Core.Objects
                 objectContextMock.Setup(
                     m =>
                     m.ExecuteInTransactionAsync(
-                        It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
-                                 .Returns<Func<Task<ObjectResult<object>>>, bool, bool, bool, CancellationToken>(
-                                     (f, t, s, r, c) =>
-                                         {
-                                             executionPlanMock.Verify(
-                                                 m =>
-                                                 m.ExecuteAsync<object>(
-                                                     It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>(),
-                                                     It.IsAny<CancellationToken>()), Times.Never());
-                                             var result = f().Result;
-                                             executionPlanMock.Verify(
-                                                 m =>
-                                                 m.ExecuteAsync<object>(
-                                                     It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>(),
-                                                     It.IsAny<CancellationToken>()), Times.Once());
-                                             return Task.FromResult(result);
-                                         });
+                        It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>(),
+                        It.IsAny<CancellationToken>()))
+                    .Returns<Func<Task<ObjectResult<object>>>, IDbExecutionStrategy, bool, bool, CancellationToken>(
+                        (f, t, s, r, c) =>
+                            {
+                                executionPlanMock.Verify(
+                                    m =>
+                                    m.ExecuteAsync<object>(
+                                        It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>(),
+                                        It.IsAny<CancellationToken>()), Times.Never());
+                                var result = f().Result;
+                                executionPlanMock.Verify(
+                                    m =>
+                                    m.ExecuteAsync<object>(
+                                        It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>(),
+                                        It.IsAny<CancellationToken>()), Times.Once());
+                                return Task.FromResult(result);
+                            });
 #endif
             }
             else
             {
-                objectContextMock.Setup(m => m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<bool>()))
-                                 .Returns<Func<ObjectResult<object>>, bool, bool, bool>(
-                                     (f, t, s, r) =>
-                                         {
-                                             executionPlanMock.Verify(
-                                                 m =>
-                                                 m.Execute<object>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()),
-                                                 Times.Never());
-                                             var result = f();
-                                             executionPlanMock.Verify(
-                                                 m =>
-                                                 m.Execute<object>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()),
-                                                 Times.Once());
-                                             return result;
-                                         });
+                objectContextMock.Setup(
+                    m =>
+                    m.ExecuteInTransaction(
+                        It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                    .Returns<Func<ObjectResult<object>>, IDbExecutionStrategy, bool, bool>(
+                        (f, t, s, r) =>
+                            {
+                                executionPlanMock.Verify(
+                                    m =>
+                                    m.Execute<object>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()),
+                                    Times.Never());
+                                var result = f();
+                                executionPlanMock.Verify(
+                                    m =>
+                                    m.Execute<object>(It.IsAny<ObjectContext>(), It.IsAny<ObjectParameterCollection>()),
+                                    Times.Once());
+                                return result;
+                            });
             }
 
             // Verify that ExecutionStrategy.Execute calls ExecuteInTransaction
@@ -206,44 +210,48 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
                 executionStrategyMock.Setup(
                     m => m.ExecuteAsync(It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<CancellationToken>()))
-                                     .Returns<Func<Task<ObjectResult<object>>>, CancellationToken>(
-                                         (f, c) =>
-                                             {
-                                                 objectContextMock.Verify(
-                                                     m =>
-                                                     m.ExecuteInTransactionAsync(
-                                                         It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<bool>(),
-                                                         false, It.IsAny<bool>(), It.IsAny<CancellationToken>()),
-                                                     Times.Never());
-                                                 var result = f().Result;
-                                                 objectContextMock.Verify(
-                                                     m =>
-                                                     m.ExecuteInTransactionAsync(
-                                                         It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<bool>(),
-                                                         false, It.IsAny<bool>(), It.IsAny<CancellationToken>()),
-                                                     Times.Once());
-                                                 return Task.FromResult(result);
-                                             });
+                    .Returns<Func<Task<ObjectResult<object>>>, CancellationToken>(
+                        (f, c) =>
+                            {
+                                objectContextMock.Verify(
+                                    m =>
+                                    m.ExecuteInTransactionAsync(
+                                        It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<IDbExecutionStrategy>(),
+                                        false, It.IsAny<bool>(), It.IsAny<CancellationToken>()),
+                                    Times.Never());
+                                var result = f().Result;
+                                objectContextMock.Verify(
+                                    m =>
+                                    m.ExecuteInTransactionAsync(
+                                        It.IsAny<Func<Task<ObjectResult<object>>>>(), It.IsAny<IDbExecutionStrategy>(),
+                                        false, It.IsAny<bool>(), It.IsAny<CancellationToken>()),
+                                    Times.Once());
+                                return Task.FromResult(result);
+                            });
 #endif
             }
             else
             {
                 executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<ObjectResult<object>>>()))
-                                     .Returns<Func<ObjectResult<object>>>(
-                                         f =>
-                                             {
-                                                 objectContextMock.Verify(
-                                                     m => m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), false, It.IsAny<bool>()),
-                                                     Times.Never());
-                                                 var result = f();
-                                                 objectContextMock.Verify(
-                                                     m => m.ExecuteInTransaction(It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<bool>(), false, It.IsAny<bool>()),
-                                                     Times.Once());
-                                                 return result;
-                                             });
+                    .Returns<Func<ObjectResult<object>>>(
+                        f =>
+                            {
+                                objectContextMock.Verify(
+                                    m =>
+                                    m.ExecuteInTransaction(
+                                        It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), false, It.IsAny<bool>()),
+                                    Times.Never());
+                                var result = f();
+                                objectContextMock.Verify(
+                                    m =>
+                                    m.ExecuteInTransaction(
+                                        It.IsAny<Func<ObjectResult<object>>>(), It.IsAny<IDbExecutionStrategy>(), false, It.IsAny<bool>()),
+                                    Times.Once());
+                                return result;
+                            });
             }
 
-            MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+            MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
             try
             {
                 execute(objectQuery);

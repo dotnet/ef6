@@ -30,7 +30,7 @@ namespace System.Data.Entity.SqlServer
             Execute_retries_until_succesful((e, f) => e.Execute(f));
         }
 
-        private void Execute_retries_until_succesful(Action<ExecutionStrategyBase, Func<int>> execute)
+        private void Execute_retries_until_succesful(Action<DbExecutionStrategy, Func<int>> execute)
         {
             var executionStrategy = new SqlAzureExecutionStrategy();
             var executionCount = 0;
@@ -63,7 +63,7 @@ namespace System.Data.Entity.SqlServer
             ExecuteAsync_retries_until_succesful((e, f) => e.ExecuteAsync(f, CancellationToken.None));
         }
 
-        private void ExecuteAsync_retries_until_succesful(Func<ExecutionStrategyBase, Func<Task<int>>, Task> executeAsync)
+        private void ExecuteAsync_retries_until_succesful(Func<DbExecutionStrategy, Func<Task<int>>, Task> executeAsync)
         {
             var executionStrategy = new SqlAzureExecutionStrategy();
 

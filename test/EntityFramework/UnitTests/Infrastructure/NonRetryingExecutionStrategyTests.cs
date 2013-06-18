@@ -13,7 +13,7 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void RetriesOnFailure_returns_false()
         {
-            Assert.False(new NonRetryingExecutionStrategy().RetriesOnFailure);
+            Assert.False(new DefaultExecutionStrategy().RetriesOnFailure);
         }
 
         [Fact]
@@ -27,9 +27,9 @@ namespace System.Data.Entity.Infrastructure
             Execute_doesnt_retry((e, a) => e.Execute(a));
         }
 
-        private void Execute_doesnt_retry(Action<IExecutionStrategy, Func<int>> execute)
+        private void Execute_doesnt_retry(Action<IDbExecutionStrategy, Func<int>> execute)
         {
-            var executionStrategy = new NonRetryingExecutionStrategy();
+            var executionStrategy = new DefaultExecutionStrategy();
             var executionCount = 0;
             Assert.Throws<TimeoutException>(
                 () =>
@@ -57,9 +57,9 @@ namespace System.Data.Entity.Infrastructure
             ExecuteAsync_doesnt_retry((e, f) => e.ExecuteAsync(f, CancellationToken.None));
         }
 
-        private void ExecuteAsync_doesnt_retry(Func<IExecutionStrategy, Func<Task<int>>, Task> executeAsync)
+        private void ExecuteAsync_doesnt_retry(Func<IDbExecutionStrategy, Func<Task<int>>, Task> executeAsync)
         {
-            var executionStrategy = new NonRetryingExecutionStrategy();
+            var executionStrategy = new DefaultExecutionStrategy();
             var executionCount = 0;
             Assert.Throws<TimeoutException>(
                 () =>
