@@ -22,7 +22,8 @@ namespace System.Data.Entity.Migrations.Utilities
         /// <summary>
         ///     Specifies the culture what will be used by the underlying TextWriter. This static property is readonly.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification="CultureInfo.InvariantCulture is readonly")]
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
+            Justification = "CultureInfo.InvariantCulture is readonly")]
         public static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
 
         private readonly TextWriter _writer;
@@ -145,12 +146,15 @@ namespace System.Data.Entity.Migrations.Utilities
         /// <summary>
         ///     Builds a string representing the current indentation level for a new line.
         /// </summary>
-        /// <remarks>Does NOT check if tabs are currently pending, just returns a string that would be
-        /// useful in replacing embedded <see cref="System.Environment.NewLine">newline characters</see>.</remarks>
+        /// <remarks>
+        ///     Does NOT check if tabs are currently pending, just returns a string that would be
+        ///     useful in replacing embedded <see cref="System.Environment.NewLine">newline characters</see>.
+        /// </remarks>
         /// <returns>An empty string, or a string that contains .Indent level's worth of specified tab-string.</returns>
         public virtual string CurrentIndentation()
         {
-            if (_indentLevel <= 0 || String.IsNullOrEmpty(_tabString))
+            if (_indentLevel <= 0
+                || String.IsNullOrEmpty(_tabString))
             {
                 return String.Empty;
             }
@@ -170,7 +174,9 @@ namespace System.Data.Entity.Migrations.Utilities
 
                 // we COULD grow the cache here...
                 if (cacheIndex < _cachedIndents.Length)
+                {
                     _cachedIndents[cacheIndex] = cached;
+                }
             }
 
             return cached;
@@ -198,7 +204,8 @@ namespace System.Data.Entity.Migrations.Utilities
             _writer.Write(value);
 
             // specifically recognise the end of a line when passed an explicit string by someone
-            if (value != null &&
+            if (value != null
+                &&
                 (value.Equals("\r\n", StringComparison.Ordinal) || value.Equals("\n", StringComparison.Ordinal)))
             {
                 _tabsPending = true;
