@@ -657,6 +657,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                             value.ExpressionKind == DbExpressionKind.Constant
                             || value.ExpressionKind == DbExpressionKind.ParameterReference,
                             "value must either constant or null");
+
                         // retrieve the last parameter added (which describes the parameter)
                         _memberValues[property] = _parameters[_parameters.Count - 1];
                     }
@@ -684,11 +685,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 Check.NotNull(expression, "expression");
 
-                if (_createParameters
-                    && !_commandTree.Parameters.Any())
-                {
-                    var parameter = CreateParameter(expression.Value, expression.ResultType);
+                var parameter = CreateParameter(expression.Value, expression.ResultType);
 
+                if (_createParameters)
+                {
                     _commandText.Append(parameter.ParameterName);
                 }
                 else

@@ -10,6 +10,172 @@ namespace System.Data.Entity.SqlServer.SqlGen
     public class DmlFunctionSqlGeneratorTests
     {
         [Fact]
+        public void Insert_simple_tph_entity_base()
+        {
+            var modificationFunctionMapping
+                = TestContext.GetModificationFunctionMapping("Vehicle");
+
+            var commandTrees
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel())
+                    .GenerateInsert(modificationFunctionMapping.Item1.EntityType.FullName);
+
+            var convertedTrees
+                = new DynamicToFunctionModificationCommandConverter(
+                    modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
+                    .Convert(commandTrees)
+                    .ToList();
+
+            var functionSqlGenerator
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
+
+            Assert.Equal(
+                @"INSERT [dbo].[Vehicles]([Name], [Discriminator])
+VALUES (NULL, N'Vehicle')
+
+DECLARE @Id int
+SELECT @Id = [Id]
+FROM [dbo].[Vehicles]
+WHERE @@ROWCOUNT > 0 AND [Id] = scope_identity()
+
+SELECT t0.[Id]
+FROM [dbo].[Vehicles] AS t0
+WHERE @@ROWCOUNT > 0 AND t0.[Id] = @Id",
+                functionSqlGenerator.GenerateInsert(convertedTrees));
+        }
+
+        [Fact]
+        public void Insert_simple_tph_entity_derived()
+        {
+            var modificationFunctionMapping
+                = TestContext.GetModificationFunctionMapping("Car");
+
+            var commandTrees
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel())
+                    .GenerateInsert(modificationFunctionMapping.Item1.EntityType.FullName);
+
+            var convertedTrees
+                = new DynamicToFunctionModificationCommandConverter(
+                    modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
+                    .Convert(commandTrees)
+                    .ToList();
+
+            var functionSqlGenerator
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
+
+            Assert.Equal(
+                @"INSERT [dbo].[Vehicles]([Name], [Discriminator])
+VALUES (@Name, N'Car')
+
+DECLARE @Id int
+SELECT @Id = [Id]
+FROM [dbo].[Vehicles]
+WHERE @@ROWCOUNT > 0 AND [Id] = scope_identity()
+
+SELECT t0.[Id]
+FROM [dbo].[Vehicles] AS t0
+WHERE @@ROWCOUNT > 0 AND t0.[Id] = @Id",
+                functionSqlGenerator.GenerateInsert(convertedTrees));
+        }
+
+        [Fact]
+        public void Update_simple_entity_with_tph_base()
+        {
+            var modificationFunctionMapping
+                = TestContext.GetModificationFunctionMapping("Vehicle");
+
+            var commandTrees
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel())
+                    .GenerateUpdate(modificationFunctionMapping.Item1.EntityType.FullName);
+
+            var convertedTrees
+                = new DynamicToFunctionModificationCommandConverter(
+                    modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
+                    .Convert(commandTrees)
+                    .ToList();
+
+            var functionSqlGenerator
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
+
+            Assert.Null(functionSqlGenerator.GenerateUpdate(convertedTrees, null));
+        }
+
+        [Fact]
+        public void Update_simple_entity_with_tph_derived()
+        {
+            var modificationFunctionMapping
+                = TestContext.GetModificationFunctionMapping("Car");
+
+            var commandTrees
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel())
+                    .GenerateUpdate(modificationFunctionMapping.Item1.EntityType.FullName);
+
+            var convertedTrees
+                = new DynamicToFunctionModificationCommandConverter(
+                    modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
+                    .Convert(commandTrees)
+                    .ToList();
+
+            var functionSqlGenerator
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
+
+            Assert.Equal(
+                @"UPDATE [dbo].[Vehicles]
+SET [Name] = @Name
+WHERE ([Id] = @Id)",
+                functionSqlGenerator.GenerateUpdate(convertedTrees, null));
+        }
+
+        [Fact]
+        public void Delete_simple_entity_with_tph_base()
+        {
+            var modificationFunctionMapping
+                = TestContext.GetModificationFunctionMapping("Vehicle");
+
+            var commandTrees
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel())
+                    .GenerateDelete(modificationFunctionMapping.Item1.EntityType.FullName);
+
+            var convertedTrees
+                = new DynamicToFunctionModificationCommandConverter(
+                    modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
+                    .Convert(commandTrees)
+                    .ToList();
+
+            var functionSqlGenerator
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
+
+            Assert.Equal(
+                @"DELETE [dbo].[Vehicles]
+WHERE ([Id] = @Id)",
+                functionSqlGenerator.GenerateDelete(convertedTrees, null));
+        }
+
+        [Fact]
+        public void Delete_simple_entity_with_tph_derived()
+        {
+            var modificationFunctionMapping
+                = TestContext.GetModificationFunctionMapping("Car");
+
+            var commandTrees
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel())
+                    .GenerateDelete(modificationFunctionMapping.Item1.EntityType.FullName);
+
+            var convertedTrees
+                = new DynamicToFunctionModificationCommandConverter(
+                    modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
+                    .Convert(commandTrees)
+                    .ToList();
+
+            var functionSqlGenerator
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
+
+            Assert.Equal(
+                @"DELETE [dbo].[Vehicles]
+WHERE ([Id] = @Id)",
+                functionSqlGenerator.GenerateDelete(convertedTrees, null));
+        }
+
+        [Fact]
         public void Insert_simple_entity()
         {
             var modificationFunctionMapping

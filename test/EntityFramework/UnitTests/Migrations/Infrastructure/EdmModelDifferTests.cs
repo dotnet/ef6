@@ -565,7 +565,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .OfType<CreateProcedureOperation>()
                     .ToList();
 
-            Assert.Equal(14, createProcedureOperations.Count);
+            Assert.Equal(20, createProcedureOperations.Count);
             Assert.True(createProcedureOperations.All(c => c.Name.Any()));
             Assert.True(createProcedureOperations.All(c => c.BodySql.Any()));
         }
@@ -731,7 +731,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .OfType<DropProcedureOperation>()
                     .ToList();
 
-            Assert.Equal(14, dropProcedureOperations.Count);
+            Assert.Equal(20, dropProcedureOperations.Count);
             Assert.True(dropProcedureOperations.All(c => c.Name.Any()));
         }
 

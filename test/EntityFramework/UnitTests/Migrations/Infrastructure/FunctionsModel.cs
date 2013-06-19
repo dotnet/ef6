@@ -84,6 +84,16 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
         public string Name { get; set; }
     }
 
+    public class Vehicle
+    {
+        public int Id { get; set; }
+    }
+
+    public class Car : Vehicle
+    {
+        public string Name { get; set; }
+    }
+
     public class TestContext : DbContext
     {
         static TestContext()
@@ -246,6 +256,10 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
 
             modelBuilder
                 .Entity<Customer>()
+                .MapToStoredProcedures();
+
+            modelBuilder
+                .Entity<Vehicle>()
                 .MapToStoredProcedures();
         }
     }

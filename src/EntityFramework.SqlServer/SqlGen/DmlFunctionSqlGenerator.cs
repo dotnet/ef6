@@ -37,7 +37,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     firstCommandTree,
                     _sqlGenerator,
                     out _,
-                    generateReturningSql: false));
+                    generateReturningSql: false,
+                    createParameters: false));
 
             sql.AppendLine();
 
@@ -52,8 +53,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     DmlSqlGenerator.GenerateInsertSql(
                         commandTree,
                         _sqlGenerator,
-                        out _, 
-                        generateReturningSql: false));
+                        out _,
+                        generateReturningSql: false,
+                        createParameters: false));
 
                 sql.AppendLine();
             }
@@ -150,6 +152,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
         public string GenerateUpdate(ICollection<DbUpdateCommandTree> commandTrees, string rowsAffectedParameter)
         {
             DebugCheck.NotNull(commandTrees);
+
+            if (!commandTrees.Any())
+            {
+                return null;
+            }
 
             List<SqlParameter> _;
 
