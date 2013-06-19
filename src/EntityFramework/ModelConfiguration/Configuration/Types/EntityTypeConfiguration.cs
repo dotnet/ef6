@@ -630,7 +630,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
                 if (modificationFunctionMapping != null)
                 {
-                    _modificationFunctionsConfiguration.Configure(modificationFunctionMapping);
+                    _modificationFunctionsConfiguration.Configure(modificationFunctionMapping, providerManifest);
                 }
             }
         }

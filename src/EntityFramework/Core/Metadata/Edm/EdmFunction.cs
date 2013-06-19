@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _returnParameters = new ReadOnlyMetadataCollection<FunctionParameter>(
                 returnParameters
                     .Select(
-                        (returnParameter) =>
+                        returnParameter =>
                         SafeLink<EdmFunction>.BindChild(this, FunctionParameter.DeclaringFunctionLinker, returnParameter))
                     .ToList());
 
@@ -180,6 +180,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public ReadOnlyMetadataCollection<FunctionParameter> Parameters
         {
             get { return _parameters; }
+        }
+
+        public void AddParameter(FunctionParameter functionParameter)
+        {
+            Check.NotNull(functionParameter, "functionParameter");
+            Util.ThrowIfReadOnly(this);
+
+            if (functionParameter.Mode == ParameterMode.ReturnValue)
+            {
+                throw new ArgumentException(Strings.ReturnParameterInInputParameterCollection);
+            }
+
+            _parameters.Source.Add(functionParameter);
         }
 
         /// <summary>
@@ -457,7 +470,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Flags]
         private enum FunctionAttributes : byte
         {
-            None = 0,
             Aggregate = 1,
             BuiltIn = 2,
             NiladicFunction = 4,

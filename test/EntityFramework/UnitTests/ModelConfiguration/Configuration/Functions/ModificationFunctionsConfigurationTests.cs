@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using Moq;
@@ -14,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         {
             var modificationFunctionsConfigurationA = new ModificationFunctionsConfiguration();
             var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
-            
+
             modificationFunctionsConfigurationA.Insert(modificationFunctionConfiguration);
             modificationFunctionsConfigurationA.Update(modificationFunctionConfiguration);
             modificationFunctionsConfigurationA.Delete(modificationFunctionConfiguration);
@@ -75,10 +76,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                     new EntityType("E", "N", DataSpace.CSpace),
                     storageModificationFunctionMapping,
                     storageModificationFunctionMapping,
-                    storageModificationFunctionMapping));
+                    storageModificationFunctionMapping),
+                ProviderRegistry.Sql2008_ProviderManifest);
 
             mockModificationFunctionConfiguration
-                .Verify(m => m.Configure(storageModificationFunctionMapping), Times.Exactly(3));
+                .Verify(
+                    m => m.Configure(storageModificationFunctionMapping, It.IsAny<DbProviderManifest>()),
+                    Times.Exactly(3));
         }
 
         [Fact]
@@ -107,10 +111,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 new StorageAssociationSetModificationFunctionMapping(
                     new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)),
                     storageModificationFunctionMapping,
-                    storageModificationFunctionMapping));
+                    storageModificationFunctionMapping),
+                ProviderRegistry.Sql2008_ProviderManifest);
 
             mockModificationFunctionConfiguration
-                .Verify(m => m.Configure(storageModificationFunctionMapping), Times.Exactly(2));
+                .Verify(
+                    m => m.Configure(storageModificationFunctionMapping, It.IsAny<DbProviderManifest>()),
+                    Times.Exactly(2));
         }
 
         [Fact]

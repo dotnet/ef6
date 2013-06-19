@@ -363,32 +363,6 @@ namespace FunctionalTests
                 }
 
                 [Fact]
-                public void Rows_affected_parameter_name_uniquified_when_parameter_configured()
-                {
-                    var modelBuilder = new DbModelBuilder();
-
-                    modelBuilder.Entity<Engine>()
-                        .MapToStoredProcedures(map => map.Update(f => f.Parameter(e => e.Name, "RowsAffected")));
-
-                    modelBuilder.Ignore<Team>();
-
-                    var databaseMapping = BuildMapping(modelBuilder);
-
-                    databaseMapping.AssertValid();
-
-                    var functionMapping
-                        = databaseMapping
-                            .EntityContainerMappings
-                            .Single()
-                            .EntitySetMappings
-                            .SelectMany(esm => esm.ModificationFunctionMappings)
-                            .Single();
-
-                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "RowsAffected1"));
-                    Assert.NotNull(functionMapping.UpdateFunctionMapping.Function.Parameters.Single(p => p.Name == "RowsAffected"));
-                }
-
-                [Fact]
                 public void Entity_function_names_are_uniquified_when_name_configured()
                 {
                     var modelBuilder = new DbModelBuilder();
@@ -687,7 +661,7 @@ namespace FunctionalTests
                 }
 
                 [Fact]
-                public void Configuring_missing_rows_affected_parameter_should_throw()
+                public void Configuring_rows_affected_parameter_should_introduce_parameter()
                 {
                     var modelBuilder = new DbModelBuilder();
 
@@ -696,10 +670,19 @@ namespace FunctionalTests
                         .MapToStoredProcedures(
                             map => map.Update(f => f.RowsAffectedParameter("rows_affected")));
 
-                    Assert.Equal(
-                        Strings.NoRowsAffectedParameter("OrderLine_Update"),
-                        Assert.Throws<InvalidOperationException>(
-                            () => BuildMapping(modelBuilder)).Message);
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .EntitySetMappings
+                            .SelectMany(esm => esm.ModificationFunctionMappings)
+                            .Single();
+
+                    Assert.Equal("rows_affected", functionMapping.UpdateFunctionMapping.RowsAffectedParameterName);
                 }
 
                 [Fact]
@@ -1758,44 +1741,6 @@ namespace FunctionalTests
 
                     Assert.Equal("rows_affected1", functionMapping.UpdateFunctionMapping.RowsAffectedParameter.Name);
                     Assert.Equal("rows_affected2", functionMapping.DeleteFunctionMapping.RowsAffectedParameter.Name);
-                }
-
-                [Fact]
-                public void Configuring_missing_rows_affected_parameter_should_throw()
-                {
-                    var modelBuilder = new DbModelBuilder();
-
-                    modelBuilder.Entity<OrderLine>();
-
-                    modelBuilder
-                        .Types()
-                        .Configure(
-                            c => c.MapToStoredProcedures(
-                                map => map.Update(f => f.RowsAffectedParameter("rows_affected"))));
-
-                    Assert.Equal(
-                        Strings.NoRowsAffectedParameter("OrderLine_Update"),
-                        Assert.Throws<InvalidOperationException>(
-                            () => BuildMapping(modelBuilder)).Message);
-                }
-
-                [Fact]
-                public void Configuring_missing_rows_affected_parameter_should_throw_when_type_specified()
-                {
-                    var modelBuilder = new DbModelBuilder();
-
-                    modelBuilder.Entity<OrderLine>();
-
-                    modelBuilder
-                        .Types<OrderLine>()
-                        .Configure(
-                            c => c.MapToStoredProcedures(
-                                map => map.Update(f => f.RowsAffectedParameter("rows_affected"))));
-
-                    Assert.Equal(
-                        Strings.NoRowsAffectedParameter("OrderLine_Update"),
-                        Assert.Throws<InvalidOperationException>(
-                            () => BuildMapping(modelBuilder)).Message);
                 }
 
                 [Fact]

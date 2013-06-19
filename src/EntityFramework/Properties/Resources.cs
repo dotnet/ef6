@@ -13310,14 +13310,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "A rows affected parameter was not found on the modification function '{0}'. Ensure that the target entity has at least one concurrency token."
-        /// </summary>
-        internal static string NoRowsAffectedParameter(object p0)
-        {
-            return EntityRes.GetString(EntityRes.NoRowsAffectedParameter, p0);
-        }
-
-        /// <summary>
         ///     A string like "The navigation property '{0}' declared on type '{1}' has been configured with conflicting modification function mapping information."
         /// </summary>
         internal static string ConflictingFunctionsMapping(object p0, object p1)
@@ -15277,14 +15269,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     InvalidOperationException with message like "A rows affected parameter was not found on the modification function '{0}'. Ensure that the target entity has at least one concurrency token."
-        /// </summary>
-        internal static Exception NoRowsAffectedParameter(object p0)
-        {
-            return new InvalidOperationException(Strings.NoRowsAffectedParameter(p0));
-        }
-
-        /// <summary>
         ///     InvalidOperationException with message like "The navigation property '{0}' declared on type '{1}' has been configured with conflicting modification function mapping information."
         /// </summary>
         internal static Exception ConflictingFunctionsMapping(object p0, object p1)
@@ -16995,7 +16979,6 @@ namespace System.Data.Entity.Resources
         internal const string SqlServerMigrationSqlGenerator_UnknownOperation = "SqlServerMigrationSqlGenerator_UnknownOperation";
         internal const string ModificationFunctionParameterNotFoundOriginal = "ModificationFunctionParameterNotFoundOriginal";
         internal const string ResultBindingNotFound = "ResultBindingNotFound";
-        internal const string NoRowsAffectedParameter = "NoRowsAffectedParameter";
         internal const string ConflictingFunctionsMapping = "ConflictingFunctionsMapping";
         internal const string DbContext_InvalidTransactionForConnection = "DbContext_InvalidTransactionForConnection";
         internal const string DbContext_InvalidTransactionNoConnection = "DbContext_InvalidTransactionNoConnection";

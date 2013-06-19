@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
@@ -64,7 +65,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             entityTypeConfiguration.Configure(entityType, databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 
             modificationFunctionsConfigurationMock
-                .Verify(m => m.Configure(It.IsAny<StorageEntityTypeModificationFunctionMapping>()), Times.Once());
+                .Verify(
+                    m => m.Configure(
+                        It.IsAny<StorageEntityTypeModificationFunctionMapping>(), It.IsAny<DbProviderManifest>()),
+                    Times.Once());
         }
 
         [Fact]

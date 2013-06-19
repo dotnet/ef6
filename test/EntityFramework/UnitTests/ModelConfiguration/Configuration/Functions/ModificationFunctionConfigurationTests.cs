@@ -235,7 +235,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                                 false)
                         },
                     null,
-                    null));
+                    null),
+                ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal("Foo", function.StoreFunctionNameAttribute);
             Assert.Equal("Bar", function.Schema);
@@ -302,7 +303,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                                 false)
                         },
                     null,
-                    null));
+                    null),
+                ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal("Foo", functionParameter1.Name);
         }
@@ -330,7 +332,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                               new EdmFunction("F", "N", DataSpace.SSpace),
                               new StorageModificationFunctionParameterBinding[0],
                               null,
-                              null))).Message);
+                              null),
+                        ProviderRegistry.Sql2008_ProviderManifest)).Message);
         }
 
         [Fact]
@@ -367,7 +370,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                                           true)
                                   },
                               null,
-                              null))).Message);
+                              null),
+                        ProviderRegistry.Sql2008_ProviderManifest)).Message);
         }
 
         [Fact]
@@ -393,7 +397,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                               new EdmFunction("F", "N", DataSpace.SSpace),
                               new StorageModificationFunctionParameterBinding[0],
                               null,
-                              null))).Message);
+                              null),
+                        ProviderRegistry.Sql2008_ProviderManifest)).Message);
         }
 
         [Fact]
@@ -430,7 +435,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                                 new StorageModificationFunctionMemberPath(new[] { property }, null), false)
                         },
                     null,
-                    new[] { resultBinding }));
+                    new[] { resultBinding }),
+                ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal("Foo", resultBinding.ColumnName);
         }
@@ -468,32 +474,36 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                                 new StorageModificationFunctionMemberPath(new[] { property }, null), false)
                         },
                     rowsAffectedParameter,
-                    null));
+                    null),
+                ProviderRegistry.Sql2008_ProviderManifest);
 
             Assert.Equal("Foo", rowsAffectedParameter.Name);
         }
 
         [Fact]
-        public void Configure_should_throw_when_rows_affected_parameter_not_found()
+        public void Configure_should_introduce_rows_affected_parameter_when_configured()
         {
             var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
 
-            modificationFunctionConfiguration.RowsAffectedParameter("boom");
+            modificationFunctionConfiguration.RowsAffectedParameter("rows_affected");
 
             var entitySet = new EntitySet();
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
-            Assert.Equal(
-                Strings.NoRowsAffectedParameter("F"),
-                Assert.Throws<InvalidOperationException>(
-                    () => modificationFunctionConfiguration.Configure(
-                        new StorageModificationFunctionMapping(
-                              entitySet,
-                              new EntityType("E", "N", DataSpace.CSpace),
-                              new EdmFunction("F", "N", DataSpace.SSpace),
-                              new StorageModificationFunctionParameterBinding[0],
-                              null,
-                              null))).Message);
+            var storageModificationFunctionMapping 
+                = new StorageModificationFunctionMapping(
+                    entitySet, 
+                    new EntityType("E", "N", DataSpace.CSpace),
+                    new EdmFunction("F", "N", DataSpace.SSpace), 
+                    new StorageModificationFunctionParameterBinding[0], 
+                    null, 
+                    null);
+
+            modificationFunctionConfiguration.Configure(
+                storageModificationFunctionMapping,
+                ProviderRegistry.Sql2008_ProviderManifest);
+
+            Assert.Equal("rows_affected", storageModificationFunctionMapping.RowsAffectedParameterName);
         }
 
         [Fact]

@@ -355,8 +355,7 @@ END
     @OtherAddress_Country_Name [nvarchar](max),
     @TheSpecialist [int],
     @Customer_CustomerId [int],
-    @OtherCustomer_CustomerId [int],
-    @RowsAffected [int] OUT
+    @OtherCustomer_CustomerId [int]
 AS
 BEGIN
     UPDATE [dbo].[Orders]
@@ -378,8 +377,6 @@ BEGIN
     JOIN [dbo].[special_orders] AS t1 ON t1.[order_id] = t0.[order_id] AND t1.[so_key] = t0.[Key] AND t1.[Code] = t0.[Code] AND t1.[Signature] = t0.[Signature]
     JOIN [dbo].[xspecial_orders] AS t2 ON t2.[xid] = t0.[order_id] AND t2.[so_key] = t0.[Key] AND t2.[Code] = t0.[Code] AND t2.[Signature] = t0.[Signature]
     WHERE @@ROWCOUNT > 0 AND t0.[order_id] = @xid AND t0.[Key] = @key_for_update AND t0.[Code] = @Code AND t0.[Signature] = @Signature
-    
-    SET @RowsAffected = @@ROWCOUNT
 END", sql);
         }
 
@@ -419,8 +416,7 @@ END", sql);
     @Address_Country_Name [nvarchar](max),
     @OrderGroupId [int],
     @RowVersion_Original [rowversion],
-    @Customer_CustomerId [int],
-    @RowsAffected [int] OUT
+    @Customer_CustomerId [int]
 AS
 BEGIN
     UPDATE [dbo].[Orders]
@@ -430,8 +426,6 @@ BEGIN
     SELECT t0.[OrderNo], t0.[RowVersion]
     FROM [dbo].[Orders] AS t0
     WHERE @@ROWCOUNT > 0 AND t0.[order_id] = @order_id AND t0.[Key] = @key_for_update2 AND t0.[Code] = @Code AND t0.[Signature] = @Signature
-    
-    SET @RowsAffected = @@ROWCOUNT
 END", sql);
         }
 

@@ -5307,10 +5307,6 @@
     <value>A result binding for the property '{0}' was not found on the modification function '{1}'. Ensure that the property is database generated.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
-  <data name="NoRowsAffectedParameter" xml:space="preserve">
-    <value>A rows affected parameter was not found on the modification function '{0}'. Ensure that the target entity has at least one concurrency token.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
-  </data>
   <data name="ConflictingFunctionsMapping" xml:space="preserve">
     <value>The navigation property '{0}' declared on type '{1}' has been configured with conflicting modification function mapping information.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>

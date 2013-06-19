@@ -221,7 +221,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                         .Generate(associationSetMapping, databaseMapping);
                 }
 
-                _modificationFunctionsConfiguration.Configure(associationSetMapping.ModificationFunctionMapping);
+                _modificationFunctionsConfiguration
+                    .Configure(associationSetMapping.ModificationFunctionMapping, providerManifest);
             }
         }
 

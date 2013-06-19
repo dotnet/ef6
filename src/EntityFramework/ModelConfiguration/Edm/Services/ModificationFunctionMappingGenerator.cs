@@ -257,43 +257,24 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                             .Generate(iaFkProperties, useOriginalValues))
                     .ToList();
 
-            FunctionParameter rowsAffectedParameter = null;
-
             var parameters
                 = parameterBindings.Select(b => b.Parameter).ToList();
-
-            if (parameterBindings
-                .Any(
-                    pb => !pb.IsCurrent
-                          && pb.MemberPath.AssociationSetEnd == null
-                          && ((EdmProperty)pb.MemberPath.Members.Last()).ConcurrencyMode == ConcurrencyMode.Fixed))
-            {
-                rowsAffectedParameter
-                    = new FunctionParameter(
-                        "RowsAffected",
-                        _providerManifest.GetStoreType(
-                            TypeUsage.CreateDefaultTypeUsage(
-                                PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))),
-                        ParameterMode.Out);
-
-                parameters.Add(rowsAffectedParameter);
-            }
 
             UniquifyParameterNames(parameters);
 
             var functionPayload
                 = new EdmFunctionPayload
-                    {
-                        ReturnParameters = new FunctionParameter[0],
-                        Parameters = parameters.ToArray(),
-                        IsComposable = false
-                    };
+                      {
+                          ReturnParameters = new FunctionParameter[0],
+                          Parameters = parameters.ToArray(),
+                          IsComposable = false
+                      };
 
             var function
                 = databaseMapping.Database
-                                 .AddFunction(
-                                     (functionNamePrefix ?? entityTypeBase.Name) + "_" + modificationOperator.ToString(),
-                                     functionPayload);
+                    .AddFunction(
+                        (functionNamePrefix ?? entityTypeBase.Name) + "_" + modificationOperator.ToString(),
+                        functionPayload);
 
             var functionMapping
                 = new StorageModificationFunctionMapping(
@@ -301,7 +282,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     entityTypeBase,
                     function,
                     parameterBindings,
-                    rowsAffectedParameter,
+                    null,
                     resultProperties != null
                         ? resultProperties.Select(
                             p => new StorageModificationFunctionResultBinding(

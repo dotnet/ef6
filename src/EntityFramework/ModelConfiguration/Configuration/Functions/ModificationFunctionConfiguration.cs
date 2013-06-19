@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -122,15 +123,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _resultBindings[propertyPath.Single()] = columnName;
         }
 
-        public virtual void Configure(StorageModificationFunctionMapping modificationFunctionMapping)
+        public virtual void Configure(
+            StorageModificationFunctionMapping modificationFunctionMapping, DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
+            DebugCheck.NotNull(providerManifest);
 
             _configuredParameters = new List<FunctionParameter>();
 
             ConfigureName(modificationFunctionMapping);
             ConfigureSchema(modificationFunctionMapping);
-            ConfigureRowsAffectedParameter(modificationFunctionMapping);
+            ConfigureRowsAffectedParameter(modificationFunctionMapping, providerManifest);
             ConfigureParameters(modificationFunctionMapping);
             ConfigureResultBindings(modificationFunctionMapping);
         }
@@ -155,19 +158,30 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        private void ConfigureRowsAffectedParameter(StorageModificationFunctionMapping modificationFunctionMapping)
+        private void ConfigureRowsAffectedParameter(
+            StorageModificationFunctionMapping modificationFunctionMapping, DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
+            DebugCheck.NotNull(providerManifest);
 
             if (!string.IsNullOrWhiteSpace(_rowsAffectedParameter))
             {
                 if (modificationFunctionMapping.RowsAffectedParameter == null)
                 {
-                    throw Error.NoRowsAffectedParameter(modificationFunctionMapping.Function.FunctionName);
+                    var rowsAffectedParameter
+                        = new FunctionParameter(
+                            "_RowsAffected_",
+                            providerManifest.GetStoreType(
+                                TypeUsage.CreateDefaultTypeUsage(
+                                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))),
+                            ParameterMode.Out);
+
+                    modificationFunctionMapping.Function.AddParameter(rowsAffectedParameter);
+                    modificationFunctionMapping.RowsAffectedParameter = rowsAffectedParameter;
                 }
-
+                
                 modificationFunctionMapping.RowsAffectedParameter.Name = _rowsAffectedParameter;
-
+                
                 _configuredParameters.Add(modificationFunctionMapping.RowsAffectedParameter);
             }
         }
@@ -331,7 +345,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             if (allowOverride || string.IsNullOrWhiteSpace(_rowsAffectedParameter))
             {
-                _rowsAffectedParameter 
+                _rowsAffectedParameter
                     = modificationFunctionConfiguration.RowsAffectedParameterName ?? _rowsAffectedParameter;
             }
 

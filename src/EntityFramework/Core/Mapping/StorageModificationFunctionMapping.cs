@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     internal sealed class StorageModificationFunctionMapping
     {
-        private readonly FunctionParameter _rowsAffectedParameter;
+        private FunctionParameter _rowsAffectedParameter;
         private readonly EdmFunction _function;
 
         internal StorageModificationFunctionMapping(
@@ -57,6 +57,12 @@ namespace System.Data.Entity.Core.Mapping
         public FunctionParameter RowsAffectedParameter
         {
             get { return _rowsAffectedParameter; }
+            set
+            {
+                DebugCheck.NotNull(value);
+
+                _rowsAffectedParameter = value;
+            }
         }
 
         internal string RowsAffectedParameterName

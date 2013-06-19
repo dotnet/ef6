@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Utilities;
 
@@ -76,43 +77,49 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             get { return _deleteModificationFunctionConfiguration; }
         }
 
-        public virtual void Configure(StorageEntityTypeModificationFunctionMapping modificationFunctionMapping)
+        public virtual void Configure(
+            StorageEntityTypeModificationFunctionMapping modificationFunctionMapping, 
+            DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
+            DebugCheck.NotNull(providerManifest);
 
             if (_insertModificationFunctionConfiguration != null)
             {
                 _insertModificationFunctionConfiguration
-                    .Configure(modificationFunctionMapping.InsertFunctionMapping);
+                    .Configure(modificationFunctionMapping.InsertFunctionMapping, providerManifest);
             }
 
             if (_updateModificationFunctionConfiguration != null)
             {
                 _updateModificationFunctionConfiguration
-                    .Configure(modificationFunctionMapping.UpdateFunctionMapping);
+                    .Configure(modificationFunctionMapping.UpdateFunctionMapping, providerManifest);
             }
 
             if (_deleteModificationFunctionConfiguration != null)
             {
                 _deleteModificationFunctionConfiguration
-                    .Configure(modificationFunctionMapping.DeleteFunctionMapping);
+                    .Configure(modificationFunctionMapping.DeleteFunctionMapping, providerManifest);
             }
         }
 
-        public void Configure(StorageAssociationSetModificationFunctionMapping modificationFunctionMapping)
+        public void Configure(
+            StorageAssociationSetModificationFunctionMapping modificationFunctionMapping, 
+            DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
+            DebugCheck.NotNull(providerManifest);
 
             if (_insertModificationFunctionConfiguration != null)
             {
                 _insertModificationFunctionConfiguration
-                    .Configure(modificationFunctionMapping.InsertFunctionMapping);
+                    .Configure(modificationFunctionMapping.InsertFunctionMapping, providerManifest);
             }
 
             if (_deleteModificationFunctionConfiguration != null)
             {
                 _deleteModificationFunctionConfiguration
-                    .Configure(modificationFunctionMapping.DeleteFunctionMapping);
+                    .Configure(modificationFunctionMapping.DeleteFunctionMapping, providerManifest);
             }
         }
 
