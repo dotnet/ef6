@@ -296,10 +296,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             return sourceColumns
                 .Select(
                     sc =>
+                    destinationColumns.SingleOrDefault(
+                        dc => string.Equals(dc.Name, sc.Name, StringComparison.Ordinal))
+                    ??
                     destinationColumns.Single(
-                        dc =>
-                        string.Equals(dc.Name, sc.Name, StringComparison.Ordinal)
-                        || string.Equals(dc.GetUnpreferredUniqueName(), sc.Name, StringComparison.Ordinal))
+                        dc => string.Equals(dc.GetUnpreferredUniqueName(), sc.Name, StringComparison.Ordinal))
                 )
                 .ToList();
         }

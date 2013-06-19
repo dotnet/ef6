@@ -348,7 +348,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 databaseMapping.Database, fromTable, fragment, !isTableSharing);
 
             // Configure Conditions for the fragment
-            ConfigureDefaultDiscriminator(entityType, fragment, isSharingTableWithBase);
+            ConfigureDefaultDiscriminator(entityType, fragment);
             ConfigureConditions(databaseMapping, entityType, fragment, providerManifest);
 
             // Ensure all conditions refer to columns on the table in the fragment
@@ -393,12 +393,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private void ConfigureDefaultDiscriminator(
-            EntityType entityType, StorageMappingFragment fragment, bool isSharingTableWithBase)
+            EntityType entityType, StorageMappingFragment fragment)
         {
-            if ((entityType.BaseType != null && !isSharingTableWithBase)
-                || ValueConditions.Any()
-                || NullabilityConditions.Any())
-            {
+            if (ValueConditions.Any() || NullabilityConditions.Any())            {
                 var discriminator = fragment.RemoveDefaultDiscriminatorCondition();
                 if (discriminator != null
                     && entityType.BaseType != null)

@@ -86,8 +86,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             {
                 Debug.Assert(entityTypeMappingFragment.ColumnConditions.Count() == 1);
 
-                entityTypeMappingFragment.RemoveConditionProperty(
-                    entityTypeMappingFragment.ColumnConditions.Single());
+                entityTypeMappingFragment.ClearConditions();
             }
 
             entityTypeMappingFragment.RemoveDefaultDiscriminatorAnnotation();

@@ -92,5 +92,100 @@ namespace System.Data.Entity.CodeFirst
             databaseMapping.Assert<E3>("T2")
                 .HasColumn("Id");
         }
+
+        [Table("A")]
+        public class A
+        {
+            public virtual int Id { get; set; }
+        }
+
+        [Table("B")]
+        public class B : A
+        {
+            [ForeignKey("Y")]
+            public virtual int YId { get; set; }
+
+            public virtual Y Y { get; set; }
+        }
+
+        [Table("B")]
+        public class B1 : B
+        {
+        }
+
+        [Table("C")]
+        public class C : A
+        {
+            [ForeignKey("Y")]
+            public virtual int YId { get; set; }
+
+            public virtual Y Y { get; set; }
+        }
+
+        [Table("C")]
+        public class C1 : C
+        {
+        }
+
+        public class Y
+        {
+            public virtual int Id { get; set; }
+
+            [InverseProperty("Y")]
+            public virtual ICollection<B> Bs { get; set; }
+
+            [InverseProperty("Y")]
+            public virtual ICollection<C> Cs { get; set; }
+        }
+
+        [Fact]
+        public void CodePlex677_entities_are_configured_correctly()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<A>();
+            modelBuilder.Entity<B>();
+            modelBuilder.Entity<B1>();
+            modelBuilder.Entity<C>();
+            modelBuilder.Entity<C1>();
+            modelBuilder.Entity<Y>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            databaseMapping.Assert<A>("A")
+                .HasColumn("Id");
+
+            databaseMapping.Assert<B>("B")
+                .HasColumn("Id")
+                .HasColumn("YId")
+                .HasColumn("Discriminator")
+                .HasForeignKeyColumn("YId", "Y")
+                .HasForeignKeyColumn("Id", "A");
+
+            databaseMapping.Assert<B1>("B")
+                .HasColumn("Id")
+                .HasColumn("YId")
+                .HasColumn("Discriminator")
+                .HasForeignKeyColumn("YId", "Y")
+                .HasForeignKeyColumn("Id", "A");
+
+            databaseMapping.Assert<C>("C")
+                .HasColumn("Id")
+                .HasColumn("YId")
+                .HasColumn("Discriminator")
+                .HasForeignKeyColumn("YId", "Y")
+                .HasForeignKeyColumn("Id", "A");
+
+            databaseMapping.Assert<C1>("C")
+                .HasColumn("Id")
+                .HasColumn("YId")
+                .HasColumn("Discriminator")
+                .HasForeignKeyColumn("YId", "Y")
+                .HasForeignKeyColumn("Id", "A");
+
+            databaseMapping.Assert<Y>("Y")
+                .HasColumn("Id");
+        }
     }
 }
