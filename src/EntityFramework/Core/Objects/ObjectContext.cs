@@ -3433,7 +3433,7 @@ namespace System.Data.Entity.Core.Objects
             string functionName, MergeOption mergeOption, params ObjectParameter[] parameters)
         {
             Check.NotNull(parameters, "parameters");
-            Check.NotEmpty(functionName, "function");
+            Check.NotEmpty(functionName, "functionName");
             return ExecuteFunction<TElement>(functionName, new ExecutionOptions(mergeOption, streaming: false), parameters);
         }
 
@@ -3455,7 +3455,7 @@ namespace System.Data.Entity.Core.Objects
             string functionName, ExecutionOptions executionOptions, params ObjectParameter[] parameters)
         {
             Check.NotNull(parameters, "parameters");
-            Check.NotEmpty(functionName, "function");
+            Check.NotEmpty(functionName, "functionName");
 
             AsyncMonitor.EnsureNotEntered();
 

@@ -234,7 +234,7 @@ namespace System.Data.Entity.Migrations.Design
         {
             Check.NotNull(writer, "writer");
             Check.NotEmpty(className, "className");
-            Check.NotEmpty(@base, "@base");
+            Check.NotEmpty(@base, "base");
 
             (namespaces ?? GetDefaultNamespaces(designer)).Each(n => writer.WriteLine("Imports " + n));
 

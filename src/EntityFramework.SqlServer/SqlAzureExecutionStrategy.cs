@@ -11,7 +11,7 @@ namespace System.Data.Entity.SqlServer
     /// <remarks>
     ///     This execution strategy will retry the operation on <see cref="TimeoutException"/> and <see cref="SqlException"/>
     ///     if the <see cref="SqlException.Errors"/> contains any of the following error numbers:
-    ///     40627, 40613, 40545, 40540, 40501, 40197, 10929, 10928, 10060, 10054, 10053, 233, 64 and 20
+    ///     40613, 40501, 40197, 10929, 10928, 10060, 10054, 10053, 233, 64 and 20
     /// </remarks>
     [DbProviderName("System.Data.SqlClient")]
     public class SqlAzureExecutionStrategy : DbExecutionStrategy
