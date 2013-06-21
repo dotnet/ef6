@@ -597,11 +597,6 @@ namespace System.Data.Entity.Core.EntityClient
                 throw Error.EntityClient_CannotOpenBrokenConnection();
             }
 
-            if (State == ConnectionState.Open)
-            {
-                throw Error.EntityClient_CannotReopenConnection();
-            }
-
             if (_storeConnection.State != ConnectionState.Open)
             {
                 var metadataWorkspace = GetMetadataWorkspace();
@@ -652,11 +647,6 @@ namespace System.Data.Entity.Core.EntityClient
             if (State == ConnectionState.Broken)
             {
                 throw Error.EntityClient_CannotOpenBrokenConnection();
-            }
-
-            if (State == ConnectionState.Open)
-            {
-                throw Error.EntityClient_CannotReopenConnection();
             }
 
             if (_storeConnection.State != ConnectionState.Open)

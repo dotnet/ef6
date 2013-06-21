@@ -187,7 +187,7 @@ namespace System.Data.Entity.Core.EntityClient
             }
 
             [Fact]
-            public void Exception_is_thrown_when_trying_to_open_already_opened_connection()
+            public void Exception_is_not_thrown_when_trying_to_open_already_opened_connection()
             {
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
@@ -196,9 +196,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var metadataWorkspace = CreateMetadataWorkspaceMock().Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
-                Assert.Equal(
-                    Strings.EntityClient_CannotReopenConnection,
-                    Assert.Throws<InvalidOperationException>(() => entityConnection.Open()).Message);
+                Assert.DoesNotThrow(() => entityConnection.Open());
             }
 
             [Fact]
@@ -233,7 +231,7 @@ namespace System.Data.Entity.Core.EntityClient
             }
 
             [Fact]
-            public void Underlying_dbConnection_is_not_being_closed_if_it_was_initially_opened_such_that_it_cannot_be_reopend()
+            public void Underlying_dbConnection_is_not_being_closed_if_it_was_initially_open_and_attempt_is_made_to_reopen_it()
             {
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 dbConnectionMock.Setup(m => m.Open()).Verifiable();
@@ -243,13 +241,9 @@ namespace System.Data.Entity.Core.EntityClient
 
                 var entityConnection = new EntityConnection(
                     new Mock<MetadataWorkspace>(MockBehavior.Strict).Object, dbConnectionMock.Object, true, true);
-
-                Assert.Equal(
-                    Strings.EntityClient_CannotReopenConnection,
-                    Assert.Throws<InvalidOperationException>(() => entityConnection.Open()).Message);
+                entityConnection.Open();
 
                 dbConnectionMock.Verify(m => m.Close(), Times.Never());
-
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
             }
 
@@ -619,7 +613,7 @@ namespace System.Data.Entity.Core.EntityClient
             }
 
             [Fact]
-            public void Exception_is_thrown_when_trying_to_open_already_opened_connection()
+            public void Exception_is_not_thrown_when_trying_to_open_already_opened_connection()
             {
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 dbConnectionMock.SetupGet(m => m.State).Returns(ConnectionState.Open);
@@ -628,12 +622,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var metadataWorkspace = CreateMetadataWorkspaceMock().Object;
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
-                Assert.Equal(
-                    Strings.EntityClient_CannotReopenConnection,
-                    Assert.Throws<InvalidOperationException>(
-                        () => ExceptionHelpers.UnwrapAggregateExceptions(
-                            () =>
-                            entityConnection.OpenAsync().Wait())).Message);
+                Assert.DoesNotThrow(() => entityConnection.OpenAsync().Wait());
             }
 
             [Fact]
@@ -674,7 +663,7 @@ namespace System.Data.Entity.Core.EntityClient
             }
 
             [Fact]
-            public void Underlying_dbConnection_is_not_being_closed_if_it_was_initially_open_such_that_it_cannot_be_reopend()
+            public void Underlying_dbConnection_is_not_being_closed_if_it_was_initially_open_and_attempt_is_made_to_reopen_it()
             {
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
                 dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(1));
@@ -688,14 +677,9 @@ namespace System.Data.Entity.Core.EntityClient
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
-                Assert.Equal(
-                    Strings.EntityClient_CannotReopenConnection,
-                    Assert.Throws<InvalidOperationException>(
-                        () => ExceptionHelpers.UnwrapAggregateExceptions(
-                            () => entityConnection.OpenAsync().Wait())).Message);
+                entityConnection.OpenAsync().Wait();
 
                 dbConnectionMock.Verify(m => m.Close(), Times.Never());
-
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
             }

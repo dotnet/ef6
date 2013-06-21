@@ -13198,14 +13198,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The connection could not be opened because it is already open. Only closed connections can be opened and an already open connection must be closed before it can be opened again."
-        /// </summary>
-        internal static string EntityClient_CannotReopenConnection
-        {
-            get { return EntityRes.GetString(EntityRes.EntityClient_CannotReopenConnection); }
-        }
-
-        /// <summary>
         ///     A string like "Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration."
         /// </summary>
         internal static string MigrationsPendingException(object p0)
@@ -15173,14 +15165,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     InvalidOperationException with message like "The connection could not be opened because it is already open. Only closed connections can be opened and an already open connection must be closed before it can be opened again."
-        /// </summary>
-        internal static Exception EntityClient_CannotReopenConnection()
-        {
-            return new InvalidOperationException(Strings.EntityClient_CannotReopenConnection);
-        }
-
-        /// <summary>
         ///     Migrations.Infrastructure.MigrationsPendingException with message like "Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration."
         /// </summary>
         internal static Exception MigrationsPendingException(object p0)
@@ -16965,7 +16949,6 @@ namespace System.Data.Entity.Resources
         internal const string ModelBuilder_PropertyFilterTypeMustBePrimitive = "ModelBuilder_PropertyFilterTypeMustBePrimitive";
         internal const string LightweightEntityConfiguration_TypeMismatch = "LightweightEntityConfiguration_TypeMismatch";
         internal const string LightweightEntityConfiguration_NonScalarProperty = "LightweightEntityConfiguration_NonScalarProperty";
-        internal const string EntityClient_CannotReopenConnection = "EntityClient_CannotReopenConnection";
         internal const string MigrationsPendingException = "MigrationsPendingException";
         internal const string ExecutionStrategy_AlreadyExecuted = "ExecutionStrategy_AlreadyExecuted";
         internal const string ExecutionStrategy_ExistingTransaction = "ExecutionStrategy_ExistingTransaction";
