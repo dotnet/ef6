@@ -5,48 +5,46 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Core;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.SqlServer.Resources;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     An <see cref="IExecutionStrategy"/> that doesn't affect the execution but will throw a more helpful exception if a transient failure is detected.
+    ///     An <see cref="IDbExecutionStrategy"/> that doesn't affect the execution but will throw a more helpful exception if a transient failure is detected.
     /// </summary>
-    internal sealed class DefaultSqlExecutionStrategy : IExecutionStrategy
+    internal sealed class DefaultSqlExecutionStrategy : IDbExecutionStrategy
     {
         public bool RetriesOnFailure
         {
             get { return false; }
         }
         
-        public void Execute(Action action)
+        public void Execute(Action operation)
         {
-            if (action == null)
+            if (operation == null)
             {
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException("operation");
             }
 
             Execute(
                 () =>
                 {
-                    action();
+                    operation();
                     return (object)null;
                 });
         }
 
-        public TResult Execute<TResult>(Func<TResult> func)
+        public TResult Execute<TResult>(Func<TResult> operation)
         {
-            if (func == null)
-            {
-                throw new ArgumentNullException("func");
-            }
+            Check.NotNull(operation, "operation");
             
             try
             {
-                return func();
+                return operation();
             }
             catch (Exception ex)
             {
-                if (ExecutionStrategyBase.UnwrapAndHandleException(ex, SqlAzureRetriableExceptionDetector.ShouldRetryOn))
+                if (DbExecutionStrategy.UnwrapAndHandleException(ex, SqlAzureRetriableExceptionDetector.ShouldRetryOn))
                 {
                     throw new EntityException(Strings.TransientExceptionDetected, ex);
                 }
@@ -57,29 +55,23 @@ namespace System.Data.Entity.SqlServer
 
 #if !NET40
 
-        public Task ExecuteAsync(Func<Task> func, CancellationToken cancellationToken)
+        public Task ExecuteAsync(Func<Task> operation, CancellationToken cancellationToken)
         {
-            if (func == null)
-            {
-                throw new ArgumentNullException("func");
-            }
+            Check.NotNull(operation, "operation");
 
             return ExecuteAsyncImplementation(
                 async () =>
                           {
-                              await func().ConfigureAwait(continueOnCapturedContext: false);
+                              await operation().ConfigureAwait(continueOnCapturedContext: false);
                               return true;
                           });
         }
 
-        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> func, CancellationToken cancellationToken)
+        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> operation, CancellationToken cancellationToken)
         {
-            if (func == null)
-            {
-                throw new ArgumentNullException("func");
-            }
+            Check.NotNull(operation, "operation");
 
-            return ExecuteAsyncImplementation(func);
+            return ExecuteAsyncImplementation(operation);
         }
 
         private async Task<TResult> ExecuteAsyncImplementation<TResult>(Func<Task<TResult>> func)
@@ -90,7 +82,7 @@ namespace System.Data.Entity.SqlServer
             }
             catch (Exception ex)
             {
-                if (ExecutionStrategyBase.UnwrapAndHandleException(ex, SqlAzureRetriableExceptionDetector.ShouldRetryOn))
+                if (DbExecutionStrategy.UnwrapAndHandleException(ex, SqlAzureRetriableExceptionDetector.ShouldRetryOn))
                 {
                     throw new EntityException(Strings.TransientExceptionDetected, ex);
                 }

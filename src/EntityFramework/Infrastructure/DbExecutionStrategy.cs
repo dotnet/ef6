@@ -12,17 +12,17 @@ namespace System.Data.Entity.Infrastructure
     using System.Transactions;
 
     /// <summary>
-    ///     Provides the base implementation of the retry mechanism for unreliable actions and transient conditions that uses
+    ///     Provides the base implementation of the retry mechanism for unreliable operations and transient conditions that uses
     ///     exponentially increasing delays between retries.
     /// </summary>
     /// <remarks>
-    ///     A new instance will be created each time an action is executed.
+    ///     A new instance will be created each time an operation is executed.
     ///     The following formula is used to calculate the delay after <c>retryCount</c> number of attempts:
     ///     <code>min(random(1, 1.1) * (2 ^ retryCount - 1), maxDelay)</code>
     ///     The <c>retryCount</c> starts at 0.
-    ///     The random factor distributes uniformly the retry attempts from multiple parallel actions failing simultaneously.
+    ///     The random factor distributes uniformly the retry attempts from multiple simultaneous operations failing simultaneously.
     /// </remarks>
-    public abstract class ExecutionStrategyBase : IExecutionStrategy
+    public abstract class DbExecutionStrategy : IDbExecutionStrategy
     {
         private bool _hasExecuted;
         private readonly List<Exception> _exceptionsEncountered = new List<Exception>();
@@ -57,22 +57,22 @@ namespace System.Data.Entity.Infrastructure
         private static readonly TimeSpan DefaultMaxDelay = TimeSpan.FromSeconds(30);
 
         /// <summary>
-        ///     Creates a new instance of <see cref="ExecutionStrategyBase" />.
+        ///     Creates a new instance of <see cref="DbExecutionStrategy" />.
         /// </summary>
         /// <remarks>
         ///     The default retry limit is 5, which means that the total amount of time spent between retries is 26 seconds plus the random factor.
         /// </remarks>
-        protected ExecutionStrategyBase()
+        protected DbExecutionStrategy()
             : this(DefaultMaxRetryCount, DefaultMaxDelay)
         {
         }
 
         /// <summary>
-        ///     Creates a new instance of <see cref="ExecutionStrategyBase" /> with the specified limits for number of retries and the delay between retries.
+        ///     Creates a new instance of <see cref="DbExecutionStrategy" /> with the specified limits for number of retries and the delay between retries.
         /// </summary>
         /// <param name="maxRetryCount"> The maximum number of retry attempts. </param>
         /// <param name="maxDelay"> The maximum delay in milliseconds between retries. </param>
-        protected ExecutionStrategyBase(int maxRetryCount, TimeSpan maxDelay)
+        protected DbExecutionStrategy(int maxRetryCount, TimeSpan maxDelay)
         {
             if (maxRetryCount < 0)
             {
@@ -87,48 +87,50 @@ namespace System.Data.Entity.Infrastructure
             _maxDelay = maxDelay;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Returns <c>true</c> to indicate that <see cref="DbExecutionStrategy" /> might retry the execution after a failure.
+        /// </summary>
         public bool RetriesOnFailure
         {
             get { return true; }
         }
 
         /// <summary>
-        ///     Repetitively executes the specified action while it satisfies the current retry policy.
+        ///     Repetitively executes the specified operation while it satisfies the current retry policy.
         /// </summary>
-        /// <param name="action">A delegate representing an executable action that doesn't return any results.</param>
-        /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the action shouldn't be retried anymore</exception>
+        /// <param name="operation">A delegate representing an executable operation that doesn't return any results.</param>
+        /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the operation shouldn't be retried anymore</exception>
         /// <exception cref="InvalidOperationException">if an existing transaction is detected and the execution strategy doesn't support it</exception>
-        /// <exception cref="InvalidOperationException">if this instance was already used to execute an action</exception>
-        public void Execute(Action action)
+        /// <exception cref="InvalidOperationException">if this instance was already used to execute an operation</exception>
+        public void Execute(Action operation)
         {
-            Check.NotNull(action, "action");
+            Check.NotNull(operation, "operation");
 
             Execute(
                 () =>
                 {
-                    action();
+                    operation();
                     return (object)null;
                 });
         }
 
         /// <summary>
-        ///     Repetitively executes the specified action while it satisfies the current retry policy.
+        ///     Repetitively executes the specified operation while it satisfies the current retry policy.
         /// </summary>
-        /// <typeparam name="TResult">The type of result expected from the executable action.</typeparam>
-        /// <param name="func">
-        ///     A delegate representing an executable action that returns the result of type <typeparamref name="TResult" />.
+        /// <typeparam name="TResult">The type of result expected from the executable operation.</typeparam>
+        /// <param name="operation">
+        ///     A delegate representing an executable operation that returns the result of type <typeparamref name="TResult" />.
         /// </param>
-        /// <returns>The result from the action.</returns>
-        /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the action shouldn't be retried anymore</exception>
+        /// <returns>The result from the operation.</returns>
+        /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the operation shouldn't be retried anymore</exception>
         /// <exception cref="InvalidOperationException">if an existing transaction is detected and the execution strategy doesn't support it</exception>
-        /// <exception cref="InvalidOperationException">if this instance was already used to execute an action</exception>
-        public TResult Execute<TResult>(Func<TResult> func)
+        /// <exception cref="InvalidOperationException">if this instance was already used to execute an operation</exception>
+        public TResult Execute<TResult>(Func<TResult> operation)
         {
-            Check.NotNull(func, "func");
+            Check.NotNull(operation, "operation");
             EnsurePreexecutionState();
 
-            return ProtectedExecute(func);
+            return ProtectedExecute(operation);
         }
 
         protected virtual TResult ProtectedExecute<TResult>(Func<TResult> func)
@@ -151,13 +153,13 @@ namespace System.Data.Entity.Infrastructure
                     delay = GetNextDelay(ex);
                     if (delay == null)
                     {
-                        throw new RetryLimitExceededException(ex);
+                        throw new RetryLimitExceededException(Strings.ExecutionStrategy_RetryLimitExceeded(_maxRetryCount, GetType().Name), ex);
                     }
                 }
 
                 if (delay < TimeSpan.Zero)
                 {
-                    throw Error.ExecutionStrategy_NegativeDelay();
+                    throw new InvalidOperationException(Strings.ExecutionStrategy_NegativeDelay(delay));
                 }
 
                 Thread.Sleep(delay.Value);
@@ -167,9 +169,9 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
 
         /// <summary>
-        ///     Repetitively executes the specified asynchronous task while it satisfies the current retry policy.
+        ///     Repetitively executes the specified asynchronous operation while it satisfies the current retry policy.
         /// </summary>
-        /// <param name="func">A function that returns a started task.</param>
+        /// <param name="operation">A function that returns a started task.</param>
         /// <param name="cancellationToken">
         ///     A cancellation token used to cancel the retry operation, but not operations that are already in flight
         ///     or that already completed successfully.
@@ -179,29 +181,29 @@ namespace System.Data.Entity.Infrastructure
         ///     first time or after retrying transient failures). If the task fails with a non-transient error or
         ///     the retry limit is reached, the returned task will become faulted and the exception must be observed.
         /// </returns>
-        /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the action shouldn't be retried anymore</exception>
+        /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the operation shouldn't be retried anymore</exception>
         /// <exception cref="InvalidOperationException">if an existing transaction is detected and the execution strategy doesn't support it</exception>
-        /// <exception cref="InvalidOperationException">if this instance was already used to execute an action</exception>
-        public Task ExecuteAsync(Func<Task> func, CancellationToken cancellationToken)
+        /// <exception cref="InvalidOperationException">if this instance was already used to execute an operation</exception>
+        public Task ExecuteAsync(Func<Task> operation, CancellationToken cancellationToken)
         {
-            Check.NotNull(func, "func");
+            Check.NotNull(operation, "operation");
             EnsurePreexecutionState();
 
             return ProtectedExecuteAsync(
                 async () =>
                 {
-                    await func().ConfigureAwait(continueOnCapturedContext: false);
+                    await operation().ConfigureAwait(continueOnCapturedContext: false);
                     return true;
                 }, cancellationToken);
         }
 
         /// <summary>
-        ///     Repeatedly executes the specified asynchronous task while it satisfies the current retry policy.
+        ///     Repeatedly executes the specified asynchronous operation while it satisfies the current retry policy.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The result type of the <see cref="Task{T}" /> returned by <paramref name="func" />.
+        ///     The result type of the <see cref="Task{T}" /> returned by <paramref name="operation" />.
         /// </typeparam>
-        /// <param name="func">
+        /// <param name="operation">
         ///     A function that returns a started task of type <typeparamref name="TResult" />.
         /// </param>
         /// <param name="cancellationToken">
@@ -213,16 +215,16 @@ namespace System.Data.Entity.Infrastructure
         ///     first time or after retrying transient failures). If the task fails with a non-transient error or
         ///     the retry limit is reached, the returned task will become faulted and the exception must be observed.
         /// </returns>
-        /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the action shouldn't be retried anymore</exception>
+        /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the operation shouldn't be retried anymore</exception>
         /// <exception cref="InvalidOperationException">if an existing transaction is detected and the execution strategy doesn't support it</exception>
-        /// <exception cref="InvalidOperationException">if this instance was already used to execute an action</exception>
+        /// <exception cref="InvalidOperationException">if this instance was already used to execute an operation</exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> func, CancellationToken cancellationToken)
+        public Task<TResult> ExecuteAsync<TResult>(Func<Task<TResult>> operation, CancellationToken cancellationToken)
         {
-            Check.NotNull(func, "func");
+            Check.NotNull(operation, "operation");
             EnsurePreexecutionState();
 
-            return ProtectedExecuteAsync(func, cancellationToken);
+            return ProtectedExecuteAsync(operation, cancellationToken);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -247,13 +249,13 @@ namespace System.Data.Entity.Infrastructure
                     delay = GetNextDelay(ex);
                     if (delay == null)
                     {
-                        throw new RetryLimitExceededException(ex);
+                        throw new RetryLimitExceededException(Strings.ExecutionStrategy_RetryLimitExceeded(_maxRetryCount, GetType().Name), ex);
                     }
                 }
 
                 if (delay < TimeSpan.Zero)
                 {
-                    throw Error.ExecutionStrategy_NegativeDelay();
+                    throw new InvalidOperationException(Strings.ExecutionStrategy_NegativeDelay(delay));
                 }
 
                 await Task.Delay(delay.Value, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -266,7 +268,7 @@ namespace System.Data.Entity.Infrastructure
         {
             if (Transaction.Current != null)
             {
-                throw Error.ExecutionStrategy_ExistingTransaction();
+                throw new InvalidOperationException(Strings.ExecutionStrategy_ExistingTransaction(GetType().Name));
             }
 
             if (_hasExecuted)
@@ -278,11 +280,11 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Determines whether the action should be retried and the delay before the next attempt.
+        ///     Determines whether the operation should be retried and the delay before the next attempt.
         /// </summary>
         /// <param name="lastException">The exception thrown during the last execution attempt.</param>
         /// <returns>
-        ///     Returns the delay indicating how long to wait for before the next execution attempt if the action should be retried;
+        ///     Returns the delay indicating how long to wait for before the next execution attempt if the operation should be retried;
         ///     <c>null</c> otherwise
         /// </returns>
         protected internal virtual TimeSpan? GetNextDelay(Exception lastException)

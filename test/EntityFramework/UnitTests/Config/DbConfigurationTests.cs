@@ -242,38 +242,38 @@ namespace System.Data.Entity.Config
             {
                 Assert.Equal(
                     "getExecutionStrategy",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddExecutionStrategy<IExecutionStrategy>(null))
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddExecutionStrategy<IDbExecutionStrategy>(null))
                         .ParamName);
 
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("serverName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddExecutionStrategy(() => new Mock<IExecutionStrategy>().Object, null)).Message);
+                        () => new DbConfiguration().AddExecutionStrategy(() => new Mock<IDbExecutionStrategy>().Object, null)).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("serverName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddExecutionStrategy(() => new Mock<IExecutionStrategy>().Object, "")).Message);
+                        () => new DbConfiguration().AddExecutionStrategy(() => new Mock<IDbExecutionStrategy>().Object, "")).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("serverName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddExecutionStrategy(() => new Mock<IExecutionStrategy>().Object, " ")).Message);
+                        () => new DbConfiguration().AddExecutionStrategy(() => new Mock<IDbExecutionStrategy>().Object, " ")).Message);
                 Assert.Equal(
                     "getExecutionStrategy",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddExecutionStrategy<IExecutionStrategy>(null, "a"))
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddExecutionStrategy<IDbExecutionStrategy>(null, "a"))
                         .ParamName);
 
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddExecutionStrategy(null, () => new Mock<IExecutionStrategy>().Object)).Message);
+                        () => new DbConfiguration().AddExecutionStrategy(null, () => new Mock<IDbExecutionStrategy>().Object)).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddExecutionStrategy("", () => new Mock<IExecutionStrategy>().Object)).Message);
+                        () => new DbConfiguration().AddExecutionStrategy("", () => new Mock<IDbExecutionStrategy>().Object)).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddExecutionStrategy(" ", () => new Mock<IExecutionStrategy>().Object)).Message);
+                        () => new DbConfiguration().AddExecutionStrategy(" ", () => new Mock<IDbExecutionStrategy>().Object)).Message);
                 Assert.Equal(
                     "getExecutionStrategy",
                     Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddExecutionStrategy("a", null)).ParamName);
@@ -281,27 +281,27 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddExecutionStrategy(null, () => new Mock<IExecutionStrategy>().Object, "a")).Message);
+                        () => new DbConfiguration().AddExecutionStrategy(null, () => new Mock<IDbExecutionStrategy>().Object, "a")).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddExecutionStrategy("", () => new Mock<IExecutionStrategy>().Object, "a")).Message);
+                        () => new DbConfiguration().AddExecutionStrategy("", () => new Mock<IDbExecutionStrategy>().Object, "a")).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("providerInvariantName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddExecutionStrategy(" ", () => new Mock<IExecutionStrategy>().Object, "a")).Message);
+                        () => new DbConfiguration().AddExecutionStrategy(" ", () => new Mock<IDbExecutionStrategy>().Object, "a")).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("serverName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddExecutionStrategy("a", () => new Mock<IExecutionStrategy>().Object, null)).Message);
+                        () => new DbConfiguration().AddExecutionStrategy("a", () => new Mock<IDbExecutionStrategy>().Object, null)).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("serverName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddExecutionStrategy("a", () => new Mock<IExecutionStrategy>().Object, "")).Message);
+                        () => new DbConfiguration().AddExecutionStrategy("a", () => new Mock<IDbExecutionStrategy>().Object, "")).Message);
                 Assert.Equal(
                     Strings.ArgumentIsNullOrWhitespace("serverName"),
                     Assert.Throws<ArgumentException>(
-                        () => new DbConfiguration().AddExecutionStrategy("a", () => new Mock<IExecutionStrategy>().Object, " ")).Message);
+                        () => new DbConfiguration().AddExecutionStrategy("a", () => new Mock<IDbExecutionStrategy>().Object, " ")).Message);
                 Assert.Equal(
                     "getExecutionStrategy",
                     Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddExecutionStrategy("a", null, "b")).ParamName);
@@ -315,31 +315,31 @@ namespace System.Data.Entity.Config
                 Assert.Equal(
                     Strings.ConfigurationLocked("AddExecutionStrategy"),
                     Assert.Throws<InvalidOperationException>(
-                        () => configuration.AddExecutionStrategy("a", () => new Mock<IExecutionStrategy>().Object, "b")).Message);
+                        () => configuration.AddExecutionStrategy("a", () => new Mock<IDbExecutionStrategy>().Object, "b")).Message);
             }
 
             [Fact]
             public void Delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
-                var executionStrategy = new Func<IExecutionStrategy>(() => new Mock<IExecutionStrategy>().Object);
+                var executionStrategy = new Func<IDbExecutionStrategy>(() => new Mock<IDbExecutionStrategy>().Object);
 
                 new DbConfiguration(mockInternalConfiguration.Object).AddExecutionStrategy("a", executionStrategy, "b");
 
                 mockInternalConfiguration.Verify(
-                    m => m.AddDependencyResolver(It.IsAny<ExecutionStrategyResolver<IExecutionStrategy>>(), false));
+                    m => m.AddDependencyResolver(It.IsAny<ExecutionStrategyResolver<IDbExecutionStrategy>>(), false));
             }
 
             [Fact]
             public void Throws_if_no_ProviderInvariantNameAttribute()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
-                var executionStrategy = new Func<IExecutionStrategy>(() => new Mock<IExecutionStrategy>().Object);
+                var executionStrategy = new Func<IDbExecutionStrategy>(() => new Mock<IDbExecutionStrategy>().Object);
 
                 var configuration = new DbConfiguration(mockInternalConfiguration.Object);
 
                 Assert.Equal(
-                    Strings.DbProviderNameAttributeNotFound(typeof(IExecutionStrategy).FullName),
+                    Strings.DbProviderNameAttributeNotFound(typeof(IDbExecutionStrategy).FullName),
                     Assert.Throws<InvalidOperationException>(
                         () => configuration.AddExecutionStrategy(executionStrategy, "a")).Message);
             }

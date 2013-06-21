@@ -234,21 +234,21 @@ namespace System.Data.Entity.Config
 
         /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add an
-        ///     <see cref="IExecutionStrategy" /> for use with the associated provider.
+        ///     <see cref="IDbExecutionStrategy" /> for use with the associated provider.
         /// </summary>
         /// <remarks>
         ///     The <typeparamref name="T" /> type should have a <see cref="DbProviderNameAttribute" /> applied to it.
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
-        ///     <see cref="IExecutionStrategy" />. This means that, if desired, the same functionality can be achieved using
+        ///     <see cref="IDbExecutionStrategy" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <typeparam name="T">
-        ///     The type that implements <see cref="IExecutionStrategy" />.
+        ///     The type that implements <see cref="IDbExecutionStrategy" />.
         /// </typeparam>
         /// <param name="getExecutionStrategy"> A function that returns a new instance of an execution strategy. </param>
         protected internal void AddExecutionStrategy<T>(Func<T> getExecutionStrategy)
-            where T : IExecutionStrategy
+            where T : IDbExecutionStrategy
         {
             Check.NotNull(getExecutionStrategy, "getExecutionStrategy");
 
@@ -263,22 +263,22 @@ namespace System.Data.Entity.Config
 
         /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add an
-        ///     <see cref="IExecutionStrategy" /> for use with the associated provider for the specified server name.
+        ///     <see cref="IDbExecutionStrategy" /> for use with the associated provider for the specified server name.
         /// </summary>
         /// <remarks>
         ///     The <typeparamref name="T" /> type should have a <see cref="DbProviderNameAttribute" /> applied to it.
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
-        ///     <see cref="IExecutionStrategy" />. This means that, if desired, the same functionality can be achieved using
+        ///     <see cref="IDbExecutionStrategy" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <typeparam name="T">
-        ///     The type that implements <see cref="IExecutionStrategy" />.
+        ///     The type that implements <see cref="IDbExecutionStrategy" />.
         /// </typeparam>
         /// <param name="getExecutionStrategy"> A function that returns a new instance of an execution strategy. </param>
         /// <param name="serverName"> A string that will be matched against the server name in the connection string. </param>
         protected internal void AddExecutionStrategy<T>(Func<T> getExecutionStrategy, string serverName)
-            where T : IExecutionStrategy
+            where T : IDbExecutionStrategy
         {
             Check.NotEmpty(serverName, "serverName");
             Check.NotNull(getExecutionStrategy, "getExecutionStrategy");
@@ -293,41 +293,41 @@ namespace System.Data.Entity.Config
 
         /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add an
-        ///     <see cref="IExecutionStrategy" /> for use with the provider represented by the given invariant name.
+        ///     <see cref="IDbExecutionStrategy" /> for use with the provider represented by the given invariant name.
         /// </summary>
         /// <remarks>
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
-        ///     <see cref="IExecutionStrategy" />. This means that, if desired, the same functionality can be achieved using
+        ///     <see cref="IDbExecutionStrategy" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this execution strategy will be used. </param>
         /// <param name="getExecutionStrategy"> A function that returns a new instance of an execution strategy. </param>
-        protected internal void AddExecutionStrategy(string providerInvariantName, Func<IExecutionStrategy> getExecutionStrategy)
+        protected internal void AddExecutionStrategy(string providerInvariantName, Func<IDbExecutionStrategy> getExecutionStrategy)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
             Check.NotNull(getExecutionStrategy, "getExecutionStrategy");
 
             _internalConfiguration.CheckNotLocked("AddExecutionStrategy");
             _internalConfiguration.AddDependencyResolver(
-                new ExecutionStrategyResolver<IExecutionStrategy>(providerInvariantName, /*serverName:*/ null, getExecutionStrategy));
+                new ExecutionStrategyResolver<IDbExecutionStrategy>(providerInvariantName, /*serverName:*/ null, getExecutionStrategy));
         }
 
         /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add an
-        ///     <see cref="IExecutionStrategy" /> for use with the provider represented by the given invariant name and for a given server name.
+        ///     <see cref="IDbExecutionStrategy" /> for use with the provider represented by the given invariant name and for a given server name.
         /// </summary>
         /// <remarks>
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
-        ///     <see cref="IExecutionStrategy" />. This means that, if desired, the same functionality can be achieved using
+        ///     <see cref="IDbExecutionStrategy" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this execution strategy will be used. </param>
         /// <param name="getExecutionStrategy"> A function that returns a new instance of an execution strategy. </param>
         /// <param name="serverName"> A string that will be matched against the server name in the connection string. </param>
         protected internal void AddExecutionStrategy(
-            string providerInvariantName, Func<IExecutionStrategy> getExecutionStrategy, string serverName)
+            string providerInvariantName, Func<IDbExecutionStrategy> getExecutionStrategy, string serverName)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
             Check.NotEmpty(serverName, "serverName");
@@ -335,7 +335,7 @@ namespace System.Data.Entity.Config
 
             _internalConfiguration.CheckNotLocked("AddExecutionStrategy");
             _internalConfiguration.AddDependencyResolver(
-                new ExecutionStrategyResolver<IExecutionStrategy>(providerInvariantName, serverName, getExecutionStrategy));
+                new ExecutionStrategyResolver<IDbExecutionStrategy>(providerInvariantName, serverName, getExecutionStrategy));
         }
 
         /// <summary>

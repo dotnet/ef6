@@ -180,7 +180,7 @@ namespace System.Data.Entity.SqlServer
             public void GetService_resolves_the_default_SQL_Server_execution_strategy_factory_for_any_server()
             {
                 Assert.IsType<DefaultSqlExecutionStrategy>(
-                    SqlProviderServices.Instance.GetService<Func<IExecutionStrategy>>(
+                    SqlProviderServices.Instance.GetService<Func<IDbExecutionStrategy>>(
                         new ExecutionStrategyKey("System.Data.SqlClient", "Elmo"))());
             }
 
@@ -188,7 +188,7 @@ namespace System.Data.Entity.SqlServer
             public void GetService_returns_null_for_execution_strategy_factory_for_other_invariant_names()
             {
                 Assert.Null(
-                    SqlProviderServices.Instance.GetService<Func<IExecutionStrategy>>(
+                    SqlProviderServices.Instance.GetService<Func<IDbExecutionStrategy>>(
                         new ExecutionStrategyKey("System.Data.SqlServerCe.4.0", "Elmo")));
             }
 

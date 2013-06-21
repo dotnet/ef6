@@ -16,10 +16,10 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void DatabaseExists_uses_ExecutionStrategy()
         {
-            var executionStrategyMock = new Mock<IExecutionStrategy>();
+            var executionStrategyMock = new Mock<IDbExecutionStrategy>();
             executionStrategyMock.Setup(m => m.Execute(It.IsAny<Action>())).Callback<Action>(a => a());
 
-            MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+            MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
             try
             {
                 var connection = new SqlConnection(SimpleConnectionString(("master")));
@@ -39,7 +39,7 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void GetSpatialDataReader_throws_on_non_SqlDataReader()
         {
-            var executionStrategyMock = new Mock<IExecutionStrategy>();
+            var executionStrategyMock = new Mock<IDbExecutionStrategy>();
             executionStrategyMock.Setup(m => m.Execute(It.IsAny<Action>())).Callback<Action>(a => a());
 
             var connection = new SqlConnection(SimpleConnectionString(("master")));

@@ -13214,35 +13214,35 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "Existing transactions are not supported by the current execution strategy."
+        ///     A string like "The configured execution strategy '{0}' does not support user initiated transactions. See http://go.microsoft.com/fwlink/?LinkId=309381 for additional information."
         /// </summary>
-        internal static string ExecutionStrategy_ExistingTransaction
+        internal static string ExecutionStrategy_ExistingTransaction(object p0)
         {
-            get { return EntityRes.GetString(EntityRes.ExecutionStrategy_ExistingTransaction); }
+            return EntityRes.GetString(EntityRes.ExecutionStrategy_ExistingTransaction, p0);
         }
 
         /// <summary>
-        ///     A string like "The minimum delay must be less than or equal to the maximum delay."
+        ///     A string like "The minimum delay of '{0}' must be less than or equal to the maximum delay of '{1}'."
         /// </summary>
-        internal static string ExecutionStrategy_MinimumMustBeLessThanMaximum
+        internal static string ExecutionStrategy_MinimumMustBeLessThanMaximum(object p0, object p1)
         {
-            get { return EntityRes.GetString(EntityRes.ExecutionStrategy_MinimumMustBeLessThanMaximum); }
+            return EntityRes.GetString(EntityRes.ExecutionStrategy_MinimumMustBeLessThanMaximum, p0, p1);
         }
 
         /// <summary>
-        ///     A string like "Negative delays are invalid."
+        ///     A string like "The delay '{0}' is invalid. Delay must be greater than or equal to zero."
         /// </summary>
-        internal static string ExecutionStrategy_NegativeDelay
+        internal static string ExecutionStrategy_NegativeDelay(object p0)
         {
-            get { return EntityRes.GetString(EntityRes.ExecutionStrategy_NegativeDelay); }
+            return EntityRes.GetString(EntityRes.ExecutionStrategy_NegativeDelay, p0);
         }
 
         /// <summary>
-        ///     A string like "Retry limit exceeded."
+        ///     A string like "Maximum number of retries ({0}) exceeded while executing database operations with '{1}'. See inner exception for the most recent failure."
         /// </summary>
-        internal static string ExecutionStrategy_RetryLimitExceeded
+        internal static string ExecutionStrategy_RetryLimitExceeded(object p0, object p1)
         {
-            get { return EntityRes.GetString(EntityRes.ExecutionStrategy_RetryLimitExceeded); }
+            return EntityRes.GetString(EntityRes.ExecutionStrategy_RetryLimitExceeded, p0, p1);
         }
 
         /// <summary>
@@ -13342,11 +13342,11 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "Streaming queries are not supported by the current execution strategy."
+        ///     A string like "Streaming queries are not supported by the configured execution strategy '{0}'. See http://go.microsoft.com/fwlink/?LinkId=309381 for additional information."
         /// </summary>
-        internal static string ExecutionStrategy_StreamingNotSupported
+        internal static string ExecutionStrategy_StreamingNotSupported(object p0)
         {
-            get { return EntityRes.GetString(EntityRes.ExecutionStrategy_StreamingNotSupported); }
+            return EntityRes.GetString(EntityRes.ExecutionStrategy_StreamingNotSupported, p0);
         }
 
         /// <summary>
@@ -15178,22 +15178,6 @@ namespace System.Data.Entity.Resources
         internal static Exception ExecutionStrategy_AlreadyExecuted()
         {
             return new InvalidOperationException(Strings.ExecutionStrategy_AlreadyExecuted);
-        }
-
-        /// <summary>
-        ///     InvalidOperationException with message like "Existing transactions are not supported by the current execution strategy."
-        /// </summary>
-        internal static Exception ExecutionStrategy_ExistingTransaction()
-        {
-            return new InvalidOperationException(Strings.ExecutionStrategy_ExistingTransaction);
-        }
-
-        /// <summary>
-        ///     InvalidOperationException with message like "Negative delays are invalid."
-        /// </summary>
-        internal static Exception ExecutionStrategy_NegativeDelay()
-        {
-            return new InvalidOperationException(Strings.ExecutionStrategy_NegativeDelay);
         }
 
         /// <summary>

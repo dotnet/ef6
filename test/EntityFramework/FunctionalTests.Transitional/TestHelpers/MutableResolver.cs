@@ -58,7 +58,7 @@ namespace System.Data.Entity
         /// <param name="resolver">A delegate that takes a key object and returns a dependency instance.</param>
         public static void AddResolver<TResolver>(Func<object, object> resolver)
         {
-            if (typeof(TResolver) == typeof(Func<IExecutionStrategy>))
+            if (typeof(TResolver) == typeof(Func<IDbExecutionStrategy>))
             {
                 ClearCache();
             }
@@ -88,7 +88,7 @@ namespace System.Data.Entity
 
         private static void ClearCache()
         {
-            var executionStrategyFactories = (ConcurrentDictionary<ExecutionStrategyKey, Func<IExecutionStrategy>>)_executionStrategyFactoriesField.GetValue(null);
+            var executionStrategyFactories = (ConcurrentDictionary<ExecutionStrategyKey, Func<IDbExecutionStrategy>>)_executionStrategyFactoriesField.GetValue(null);
             executionStrategyFactories.Clear();
         }
     }

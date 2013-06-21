@@ -11,7 +11,7 @@ namespace System.Data.Entity.Config
     {
         public object GetService(Type type, object key)
         {
-            if (type == typeof(Func<IExecutionStrategy>))
+            if (type == typeof(Func<IDbExecutionStrategy>))
             {
                 Check.NotNull(key, "key");
 
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Config
                         Strings.DbDependencyResolver_InvalidKey(typeof(ExecutionStrategyKey).Name, "Func<IExecutionStrategy>"));
                 }
 
-                return (Func<IExecutionStrategy>)(() => new NonRetryingExecutionStrategy());
+                return (Func<IDbExecutionStrategy>)(() => new DefaultExecutionStrategy());
             }
 
             return null;

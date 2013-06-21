@@ -34,9 +34,9 @@ namespace System.Data.Entity.Core.Common
         private static readonly ConcurrentDictionary<DbProviderInfo, DbSpatialServices> _spatialServices =
             new ConcurrentDictionary<DbProviderInfo, DbSpatialServices>();
 
-        private static readonly ConcurrentDictionary<ExecutionStrategyKey, Func<IExecutionStrategy>>
+        private static readonly ConcurrentDictionary<ExecutionStrategyKey, Func<IDbExecutionStrategy>>
             _executionStrategyFactories =
-                new ConcurrentDictionary<ExecutionStrategyKey, Func<IExecutionStrategy>>();
+                new ConcurrentDictionary<ExecutionStrategyKey, Func<IDbExecutionStrategy>>();
 
         private readonly ResolverChain _resolvers = new ResolverChain();
 
@@ -266,26 +266,26 @@ namespace System.Data.Entity.Core.Common
         protected abstract DbProviderManifest GetDbProviderManifest(string manifestToken);
 
         /// <summary>
-        ///     Gets the <see cref="IExecutionStrategy" /> that will be used to execute methods that use the specified connection.
+        ///     Gets the <see cref="IDbExecutionStrategy" /> that will be used to execute methods that use the specified connection.
         /// </summary>
         /// <param name="connection">The database connection</param>
         /// <returns>
-        ///     A new instance of <see cref="ExecutionStrategyBase" />
+        ///     A new instance of <see cref="DbExecutionStrategy" />
         /// </returns>
-        public static IExecutionStrategy GetExecutionStrategy(DbConnection connection)
+        public static IDbExecutionStrategy GetExecutionStrategy(DbConnection connection)
         {
             return GetExecutionStrategy(connection, GetProviderFactory(connection));
         }
 
         /// <summary>
-        ///     Gets the <see cref="IExecutionStrategy" /> that will be used to execute methods that use the specified connection.
+        ///     Gets the <see cref="IDbExecutionStrategy" /> that will be used to execute methods that use the specified connection.
         ///     Uses MetadataWorkspace for faster lookup.
         /// </summary>
         /// <param name="connection">The database connection</param>
         /// <returns>
-        ///     A new instance of <see cref="ExecutionStrategyBase" />
+        ///     A new instance of <see cref="DbExecutionStrategy" />
         /// </returns>
-        internal static IExecutionStrategy GetExecutionStrategy(
+        internal static IDbExecutionStrategy GetExecutionStrategy(
             DbConnection connection,
             MetadataWorkspace metadataWorkspace)
         {
@@ -294,7 +294,7 @@ namespace System.Data.Entity.Core.Common
             return GetExecutionStrategy(connection, storeMetadata.StoreProviderFactory);
         }
 
-        private static IExecutionStrategy GetExecutionStrategy(
+        private static IDbExecutionStrategy GetExecutionStrategy(
             DbConnection connection,
             DbProviderFactory providerFactory)
         {
@@ -310,7 +310,7 @@ namespace System.Data.Entity.Core.Common
             var factory = _executionStrategyFactories.GetOrAdd(
                 cacheKey,
                 k =>
-                DbConfiguration.GetService<Func<IExecutionStrategy>>(
+                DbConfiguration.GetService<Func<IDbExecutionStrategy>>(
                     new ExecutionStrategyKey(
                     DbConfiguration.GetService<IProviderInvariantName>(providerFactory).Name,
                     connection.DataSource)));

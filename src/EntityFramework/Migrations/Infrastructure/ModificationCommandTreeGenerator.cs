@@ -85,23 +85,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             using (var context = CreateContext())
             {
-                var sourceEntityType = associationType.SourceEnd.GetEntityType();
-                var sourceSet = context.Set(sourceEntityType.GetClrType());
-                var sourceEntity = sourceSet.Create();
-
-                SetFakeReferenceKeyValues(sourceEntity, sourceEntityType);
-                InstantiateComplexProperties(sourceEntity, sourceEntityType.Properties);
-
-                sourceSet.Attach(sourceEntity);
-
-                var targetEntityType = associationType.TargetEnd.GetEntityType();
-                var targetSet = context.Set(targetEntityType.GetClrType());
-                var targetEntity = targetSet.Create();
-
-                SetFakeReferenceKeyValues(targetEntity, targetEntityType);
-                InstantiateComplexProperties(targetEntity, targetEntityType.Properties);
-
-                targetSet.Attach(targetEntity);
+                var sourceEntity = AttachAssociationEnd(associationType.SourceEnd, context);
+                var targetEntity = AttachAssociationEnd(associationType.TargetEnd, context);
 
                 var objectStateManager
                     = ((IObjectContextAdapter)context)
@@ -127,6 +112,39 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     }
                 }
             }
+        }
+
+        private object AttachAssociationEnd(AssociationEndMember associationEndMember, DbContext context)
+        {
+            DebugCheck.NotNull(associationEndMember);
+            DebugCheck.NotNull(context);
+
+            var entityType = associationEndMember.GetEntityType();
+            var clrType = entityType.GetClrType();
+            var set = context.Set(clrType);
+
+            object entity;
+
+            if (!clrType.IsAbstract)
+            {
+                entity = set.Create();
+            }
+            else
+            {
+                var derivedEntityType
+                    = _metadataWorkspace
+                        .GetItems<EntityType>(DataSpace.CSpace)
+                        .First(et => entityType.IsAncestorOf(et) && !et.Abstract);
+
+                entity = context.Set(derivedEntityType.GetClrType()).Create();
+            }
+
+            SetFakeReferenceKeyValues(entity, entityType);
+            InstantiateComplexProperties(entity, entityType.Properties);
+
+            set.Attach(entity);
+
+            return entity;
         }
 
         public IEnumerable<DbInsertCommandTree> GenerateInsert(string entityIdentity)
@@ -264,9 +282,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
                         set.Attach(principalStubForDelete);
 
-                    objectStateManager
-                        .ChangeRelationshipState(
-                            entity,
+                        objectStateManager
+                            .ChangeRelationshipState(
+                                entity,
                                 principalStubForDelete,
                                 associationType.FullName,
                                 principalEnd.Name,
@@ -310,7 +328,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 case PrimitiveTypeKind.Binary:
                     return new byte[0];
 
-                    case PrimitiveTypeKind.String:
+                case PrimitiveTypeKind.String:
                     return "42";
 
                 case PrimitiveTypeKind.Geometry:
@@ -343,7 +361,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             switch (primitiveTypeKind)
             {
-                    case PrimitiveTypeKind.Binary:
+                case PrimitiveTypeKind.Binary:
                     return new byte[] { 0x42 };
 
                 case PrimitiveTypeKind.Boolean:
@@ -396,11 +414,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
                 default:
                     Debug.Fail("Unexpected key PrimitiveTypeKind!");
-                        break;
-                }
+                    break;
+            }
 
             return null;
-            }
+        }
 
         private static void InstantiateComplexProperties(object structuralObject, IEnumerable<EdmProperty> properties)
         {

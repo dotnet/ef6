@@ -9,16 +9,16 @@ namespace System.Data.Entity.Config
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     An <see cref="IDbDependencyResolver" /> implementation used for resolving <see cref="IExecutionStrategy" />
+    ///     An <see cref="IDbDependencyResolver" /> implementation used for resolving <see cref="IDbExecutionStrategy" />
     ///     factories.
     /// </summary>
     /// <remarks>
     ///     This class can be used by <see cref="DbProviderServices" /> to aid in the resoloving
-    ///     of <see cref="IExecutionStrategy" /> factories as a secondary service.
+    ///     of <see cref="IDbExecutionStrategy" /> factories as a secondary service.
     /// </remarks>
     /// <typeparam name="T">The type of execution strategy that is resolved.</typeparam>
     public class ExecutionStrategyResolver<T> : IDbDependencyResolver
-        where T : IExecutionStrategy
+        where T : IDbExecutionStrategy
     {
         private readonly Func<T> _getExecutionStrategy;
         private readonly string _providerInvariantName;
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Config
         /// </returns>
         public object GetService(Type type, object key)
         {
-            if (type == typeof(Func<IExecutionStrategy>))
+            if (type == typeof(Func<IDbExecutionStrategy>))
             {
                 var executionStrategyKey = key as ExecutionStrategyKey;
                 if (executionStrategyKey == null)

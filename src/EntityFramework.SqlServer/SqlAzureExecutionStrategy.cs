@@ -3,12 +3,18 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Infrastructure;
+    using System.Data.SqlClient;
 
     /// <summary>
-    ///     An <see cref="IExecutionStrategy"/> that retries actions that throw exceptions caused by SQL Azure transient failures.
+    ///     An <see cref="IDbExecutionStrategy"/> that retries actions that throw exceptions caused by SQL Azure transient failures.
     /// </summary>
+    /// <remarks>
+    ///     This execution strategy will retry the operation on <see cref="TimeoutException"/> and <see cref="SqlException"/>
+    ///     if the <see cref="SqlException.Errors"/> contains any of the following error numbers:
+    ///     40627, 40613, 40545, 40540, 40501, 40197, 10929, 10928, 10060, 10054, 10053, 233, 64 and 20
+    /// </remarks>
     [DbProviderName("System.Data.SqlClient")]
-    public class SqlAzureExecutionStrategy : ExecutionStrategyBase
+    public class SqlAzureExecutionStrategy : DbExecutionStrategy
     {
         /// <summary>
         ///     Creates a new instance of <see cref="SqlAzureExecutionStrategy" />.
@@ -21,7 +27,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Creates a new instance of <see cref="SqlAzureExecutionStrategy" /> with the specified limits for number of retries and the delay between retries.
+        ///     Creates a new instance of <see cref="SqlAzureExecutionStrategy" /> with the specified limits for
+        ///     number of retries and the delay between retries.
         /// </summary>
         /// <param name="maxRetryCount"> The maximum number of retry attempts. </param>
         /// <param name="maxDelay"> The maximum delay in milliseconds between retries. </param>

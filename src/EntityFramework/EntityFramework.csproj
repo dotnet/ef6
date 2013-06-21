@@ -432,8 +432,8 @@
     <Compile Include="Infrastructure\DefaultDbProviderFactoryService.cs" />
     <Compile Include="Infrastructure\DbConcurrencyException.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenService.cs" />
-    <Compile Include="Infrastructure\IExecutionStrategy.cs" />
-    <Compile Include="Infrastructure\ExecutionStrategyBase.cs" />
+    <Compile Include="Infrastructure\IDbExecutionStrategy.cs" />
+    <Compile Include="Infrastructure\DbExecutionStrategy.cs" />
     <Compile Include="Infrastructure\ExecutionStrategyKey.cs" />
     <Compile Include="Infrastructure\IDbModelCacheKeyProvider.cs" />
     <Compile Include="Infrastructure\IDbProviderFactoryService.cs" />
@@ -445,7 +445,7 @@
     <Compile Include="Infrastructure\Pluralization\PluralizationServiceUtil.cs" />
     <Compile Include="Infrastructure\ProviderInvariantName.cs" />
     <Compile Include="Infrastructure\RetryLimitExceededException.cs" />
-    <Compile Include="Infrastructure\NonRetryingExecutionStrategy.cs" />
+    <Compile Include="Infrastructure\DefaultExecutionStrategy.cs" />
     <Compile Include="Internal\CommandTracer.cs" />
     <Compile Include="Internal\ConfigFile\MigrationSqlGeneratorElement.cs" />
     <Compile Include="Infrastructure\IDbAsyncEnumerable.cs" />

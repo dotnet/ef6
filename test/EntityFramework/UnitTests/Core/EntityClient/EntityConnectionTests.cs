@@ -277,7 +277,7 @@ namespace System.Data.Entity.Core.EntityClient
 
                 var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.Execute(It.IsAny<Action>())).Callback<Action>(
                     a =>
                         {
@@ -286,7 +286,7 @@ namespace System.Data.Entity.Core.EntityClient
                             storeConnectionMock.Verify(m => m.Open(), Times.Once());
                         });
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     entityConnection.Open();
@@ -744,7 +744,7 @@ namespace System.Data.Entity.Core.EntityClient
 
                 var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.ExecuteAsync(It.IsAny<Func<Task>>(), It.IsAny<CancellationToken>()))
                                      .Returns<Func<Task>, CancellationToken>(
                                          (f, c) =>
@@ -755,7 +755,7 @@ namespace System.Data.Entity.Core.EntityClient
                                                  return Task.FromResult(true);
                                              });
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     entityConnection.OpenAsync().Wait();
@@ -1007,7 +1007,7 @@ namespace System.Data.Entity.Core.EntityClient
 
                 var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, storeConnectionMock.Object, true, true);
 
-                var executionStrategyMock = new Mock<IExecutionStrategy>();
+                var executionStrategyMock = new Mock<IDbExecutionStrategy>();
                 executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<DbTransaction>>())).Returns<Func<DbTransaction>>(
                     a =>
                         {
@@ -1030,7 +1030,7 @@ namespace System.Data.Entity.Core.EntityClient
                             return result;
                         });
 
-                MutableResolver.AddResolver<Func<IExecutionStrategy>>(key => (Func<IExecutionStrategy>)(() => executionStrategyMock.Object));
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
                 try
                 {
                     entityConnection.BeginTransaction();

@@ -2533,7 +2533,7 @@ namespace System.Data.Entity.Core.Objects
             var results = executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => queryPlanAndNextPosition.Item1.Execute<object>(this, null),
-                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: false,
+                    executionStrategy, startLocalTransaction: false,
                     releaseConnectionOnSuccess: true));
 
             ProcessRefreshedEntities(trackedEntities, results);
@@ -2682,7 +2682,7 @@ namespace System.Data.Entity.Core.Objects
             var results = await executionStrategy.ExecuteAsync(
                 () => ExecuteInTransactionAsync(
                     () => queryPlanAndNextPosition.Item1.ExecuteAsync<object>(this, null, cancellationToken),
-                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: false,
+                    executionStrategy, startLocalTransaction: false,
                     releaseConnectionOnSuccess: true, cancellationToken: cancellationToken), cancellationToken)
                                                  .ConfigureAwait(continueOnCapturedContext: false);
 
@@ -2937,8 +2937,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
                 entriesAffected = executionStrategy.Execute(
-                    () => SaveChangesToStore(
-                        options, throwOnExistingTransaction: executionStrategy.RetriesOnFailure));
+                    () => SaveChangesToStore(options, executionStrategy));
             }
 
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
@@ -3002,11 +3001,8 @@ namespace System.Data.Entity.Core.Objects
                 {
                     var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
                     entriesAffected = await executionStrategy.ExecuteAsync(
-                        () => SaveChangesToStoreAsync(
-                            options,
-                            /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure, cancellationToken),
-                        cancellationToken)
-                                                             .ConfigureAwait(continueOnCapturedContext: false);
+                        () => SaveChangesToStoreAsync(options, executionStrategy, cancellationToken),
+                        cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                 }
 
                 ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
@@ -3042,7 +3038,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        private int SaveChangesToStore(SaveOptions options, bool throwOnExistingTransaction)
+        private int SaveChangesToStore(SaveOptions options, IDbExecutionStrategy executionStrategy)
         {
             // only accept changes after the local transaction commits
             _adapter.AcceptChangesDuringUpdate = false;
@@ -3052,7 +3048,7 @@ namespace System.Data.Entity.Core.Objects
             var entriesAffected
                 = ExecuteInTransaction(
                     () => _adapter.Update(),
-                    throwOnExistingTransaction,
+                    executionStrategy,
                     startLocalTransaction: true,
                     releaseConnectionOnSuccess: true);
 
@@ -3076,7 +3072,7 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         private async Task<int> SaveChangesToStoreAsync(
-            SaveOptions options, bool throwOnExistingTransaction, CancellationToken cancellationToken)
+            SaveOptions options, IDbExecutionStrategy executionStrategy, CancellationToken cancellationToken)
         {
             // only accept changes after the local transaction commits
             _adapter.AcceptChangesDuringUpdate = false;
@@ -3084,7 +3080,7 @@ namespace System.Data.Entity.Core.Objects
             _adapter.CommandTimeout = CommandTimeout;
 
             var entriesAffected = await ExecuteInTransactionAsync(
-                () => _adapter.UpdateAsync(cancellationToken), throwOnExistingTransaction,
+                () => _adapter.UpdateAsync(cancellationToken), executionStrategy,
                 /*startLocalTransaction:*/ true, /*releaseConnectionOnSuccess:*/ true, cancellationToken)
                                             .ConfigureAwait(continueOnCapturedContext: false);
 
@@ -3120,14 +3116,14 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <typeparam name="T"> Type of the result. </typeparam>
         /// <param name="func"> The function to invoke. </param>
-        /// <param name="throwOnExistingTransaction"> Whether to throw on an existing transaction. </param>
+        /// <param name="executionStrategy"> The execution strategy used for this operation. </param>
         /// <param name="startLocalTransaction"> Whether should start a new local transaction when there's no existing one. </param>
         /// <param name="releaseConnectionOnSuccess"> Whether the connection will also be released when no exceptions are thrown. </param>
         /// <returns>
         ///     The result from invoking <paramref name="func" />.
         /// </returns>
         internal virtual T ExecuteInTransaction<T>(
-            Func<T> func, bool throwOnExistingTransaction, bool startLocalTransaction, bool releaseConnectionOnSuccess)
+            Func<T> func, IDbExecutionStrategy executionStrategy, bool startLocalTransaction, bool releaseConnectionOnSuccess)
         {
             EnsureConnection();
 
@@ -3139,9 +3135,9 @@ namespace System.Data.Entity.Core.Objects
             {
                 needLocalTransaction = startLocalTransaction;
             }
-            else if (throwOnExistingTransaction)
+            else if (executionStrategy.RetriesOnFailure)
             {
-                throw Error.ExecutionStrategy_ExistingTransaction();
+                throw new InvalidOperationException(Strings.ExecutionStrategy_ExistingTransaction(executionStrategy.GetType().Name));
             }
             // else the caller already has his own local transaction going; caller will do the abort or commit.
 
@@ -3200,7 +3196,7 @@ namespace System.Data.Entity.Core.Objects
         /// </remarks>
         /// <typeparam name="T"> Type of the result. </typeparam>
         /// <param name="func"> The function to invoke. </param>
-        /// <param name="throwOnExistingTransaction"> Whether to throw on an existing transaction. </param>
+        /// <param name="executionStrategy"> The execution strategy used for this operation. </param>
         /// <param name="startLocalTransaction"> Whether should start a new local transaction when there's no existing one. </param>
         /// <param name="releaseConnectionOnSuccess"> Whether the connection will also be released when no exceptions are thrown. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
@@ -3208,7 +3204,7 @@ namespace System.Data.Entity.Core.Objects
         ///     A task containing the result from invoking <paramref name="func" />.
         /// </returns>
         internal virtual async Task<T> ExecuteInTransactionAsync<T>(
-            Func<Task<T>> func, bool throwOnExistingTransaction,
+            Func<Task<T>> func, IDbExecutionStrategy executionStrategy,
             bool startLocalTransaction, bool releaseConnectionOnSuccess, CancellationToken cancellationToken)
         {
             await EnsureConnectionAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -3221,9 +3217,9 @@ namespace System.Data.Entity.Core.Objects
             {
                 needLocalTransaction = startLocalTransaction;
             }
-            else if (throwOnExistingTransaction)
+            else if (executionStrategy.RetriesOnFailure)
             {
-                throw Error.ExecutionStrategy_ExistingTransaction();
+                throw new InvalidOperationException(Strings.ExecutionStrategy_ExistingTransaction(executionStrategy.GetType().Name));
             }
             // else the caller already has his own local transaction going; caller will do the abort or commit.
 
@@ -3471,13 +3467,13 @@ namespace System.Data.Entity.Core.Objects
             if (executionStrategy.RetriesOnFailure
                 && executionOptions.Streaming)
             {
-                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
             }
 
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => CreateFunctionObjectResult<TElement>(entityCommand, functionImport.EntitySets, expectedEdmTypes, executionOptions),
-                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: true,
+                    executionStrategy, startLocalTransaction: true,
                     releaseConnectionOnSuccess: !executionOptions.Streaming));
         }
 
@@ -3492,7 +3488,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual int ExecuteFunction(string functionName, params ObjectParameter[] parameters)
         {
             Check.NotNull(parameters, "parameters");
-            Check.NotEmpty(functionName, "function");
+            Check.NotEmpty(functionName, "functionName");
 
             AsyncMonitor.EnsureNotEntered();
 
@@ -3502,7 +3498,7 @@ namespace System.Data.Entity.Core.Objects
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
-                    () => ExecuteFunctionCommand(entityCommand), throwOnExistingTransaction: executionStrategy.RetriesOnFailure,
+                    () => ExecuteFunctionCommand(entityCommand), executionStrategy,
                     startLocalTransaction: true, releaseConnectionOnSuccess: true));
         }
 
@@ -3940,7 +3936,7 @@ namespace System.Data.Entity.Core.Objects
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => CreateStoreCommand(commandText, parameters).ExecuteNonQuery(),
-                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure,
+                    executionStrategy,
                     startLocalTransaction: transactionalBehavior != TransactionalBehavior.DoNotEnsureTransaction,
                     releaseConnectionOnSuccess: true));
         }
@@ -4051,7 +4047,7 @@ namespace System.Data.Entity.Core.Objects
                 return await executionStrategy.ExecuteAsync(
                     () => ExecuteInTransactionAsync(
                         () => CreateStoreCommand(commandText, parameters).ExecuteNonQueryAsync(cancellationToken),
-                        /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
+                        executionStrategy,
                         /*startLocalTransaction:*/ transactionalBehavior != TransactionalBehavior.DoNotEnsureTransaction,
                         /*releaseConnectionOnSuccess:*/ true, cancellationToken),
                     cancellationToken);
@@ -4152,14 +4148,14 @@ namespace System.Data.Entity.Core.Objects
             if (executionStrategy.RetriesOnFailure
                 && executionOptions.Streaming)
             {
-                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
             }
 
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => ExecuteStoreQueryInternal<TElement>(
                         commandText, entitySetName, executionOptions, parameters),
-                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: false,
+                    executionStrategy, startLocalTransaction: false,
                     releaseConnectionOnSuccess: !executionOptions.Streaming));
         }
 
@@ -4267,7 +4263,7 @@ namespace System.Data.Entity.Core.Objects
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             if (executionStrategy.RetriesOnFailure)
             {
-                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
             }
 
             return ExecuteStoreQueryReliablyAsync<TElement>(
@@ -4300,7 +4296,7 @@ namespace System.Data.Entity.Core.Objects
             if (executionStrategy.RetriesOnFailure
                 && executionOptions.Streaming)
             {
-                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
             }
 
             return ExecuteStoreQueryReliablyAsync<TElement>(
@@ -4336,7 +4332,7 @@ namespace System.Data.Entity.Core.Objects
             if (executionStrategy.RetriesOnFailure
                 && executionOptions.Streaming)
             {
-                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
             }
 
             return ExecuteStoreQueryReliablyAsync<TElement>(
@@ -4399,7 +4395,7 @@ namespace System.Data.Entity.Core.Objects
             if (executionStrategy.RetriesOnFailure
                 && executionOptions.Streaming)
             {
-                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
             }
 
             return ExecuteStoreQueryReliablyAsync<TElement>(
@@ -4408,7 +4404,7 @@ namespace System.Data.Entity.Core.Objects
 
         private async Task<ObjectResult<TElement>> ExecuteStoreQueryReliablyAsync<TElement>(
             string commandText, string entitySetName, ExecutionOptions executionOptions, CancellationToken cancellationToken,
-            IExecutionStrategy executionStrategy, params object[] parameters)
+            IDbExecutionStrategy executionStrategy, params object[] parameters)
         {
             if (executionOptions.MergeOption != MergeOption.NoTracking)
             {
@@ -4431,7 +4427,7 @@ namespace System.Data.Entity.Core.Objects
                     () => ExecuteInTransactionAsync(
                         () => ExecuteStoreQueryInternalAsync<TElement>(
                             commandText, entitySetName, executionOptions, cancellationToken, parameters),
-                        /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
+                        executionStrategy,
                         /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !executionOptions.Streaming,
                         cancellationToken),
                     cancellationToken);

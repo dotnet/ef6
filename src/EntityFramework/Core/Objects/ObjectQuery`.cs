@@ -723,14 +723,14 @@ namespace System.Data.Entity.Core.Objects
             if (executionStrategy.RetriesOnFailure
                 && QueryState.EffectiveStreamingBehaviour)
             {
-                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
             }
 
             return executionStrategy.Execute(
                 () => QueryState.ObjectContext.ExecuteInTransaction(
                     () => QueryState.GetExecutionPlan(forMergeOption)
                                     .Execute<T>(QueryState.ObjectContext, QueryState.Parameters),
-                    throwOnExistingTransaction: executionStrategy.RetriesOnFailure, startLocalTransaction: false,
+                    executionStrategy, startLocalTransaction: false,
                     releaseConnectionOnSuccess: !QueryState.EffectiveStreamingBehaviour));
         }
 
@@ -745,14 +745,14 @@ namespace System.Data.Entity.Core.Objects
             if (executionStrategy.RetriesOnFailure
                 && QueryState.EffectiveStreamingBehaviour)
             {
-                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported);
+                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
             }
 
             return GetResultsAsync(forMergeOption, executionStrategy, cancellationToken);
         }
 
         private async Task<ObjectResult<T>> GetResultsAsync(
-            MergeOption? forMergeOption, IExecutionStrategy executionStrategy, CancellationToken cancellationToken)
+            MergeOption? forMergeOption, IDbExecutionStrategy executionStrategy, CancellationToken cancellationToken)
         {
             var mergeOption = forMergeOption.HasValue
                                   ? forMergeOption.Value
@@ -768,7 +768,7 @@ namespace System.Data.Entity.Core.Objects
                     () => QueryState.ObjectContext.ExecuteInTransactionAsync(
                         () => QueryState.GetExecutionPlan(forMergeOption)
                                         .ExecuteAsync<T>(QueryState.ObjectContext, QueryState.Parameters, cancellationToken),
-                              /*throwOnExistingTransaction:*/ executionStrategy.RetriesOnFailure,
+                              executionStrategy,
                               /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !QueryState.EffectiveStreamingBehaviour,
                         cancellationToken),
                     cancellationToken).ConfigureAwait(continueOnCapturedContext: false);

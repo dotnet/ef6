@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations.Infrastructure
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Spatial;
@@ -10,6 +11,91 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
     public class ModificationCommandTreeGeneratorTests : TestBase
     {
+        public abstract class GearBase
+        {
+            public int Id { get; set; }
+            public virtual ICollection<Weapon> Weapons { get; set; }
+        }
+
+        public class AdvancedGear : GearBase
+        {
+        }
+
+        public abstract class Weapon
+        {
+            public int Id { get; set; }
+        }
+
+        public abstract class HeavyWeapon : Weapon
+        {
+            public bool Overheats { get; set; }
+        }
+
+        public class TheBfg : HeavyWeapon
+        {
+        }
+
+        public class GearsModelManyToMany : DbContext
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Weapon>();
+                modelBuilder.Entity<GearBase>().HasMany(g => g.Weapons).WithMany().MapToStoredProcedures();
+            }
+        }
+
+        [Fact]
+        public void Can_generate_insert_association_tree_when_many_to_many_with_abstract_target_end()
+        {
+            DbModel model;
+
+            using (var context = new GearsModelManyToMany())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateAssociationInsert(GetType().Namespace + ".GearBase_Weapons")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_delete_association_tree_when_many_to_many_with_abstract_end()
+        {
+            DbModel model;
+
+            using (var context = new GearsModelManyToMany())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateAssociationDelete(GetType().Namespace + ".GearBase_Weapons")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
         public class CogTag
         {
             public string Key1 { get; set; }
@@ -31,19 +117,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         public class GearsOfWarContextSPBug : DbContext
         {
-            public GearsOfWarContextSPBug()
-            {
-                Configuration.ValidateOnSaveEnabled = false;
-            }
-
-            static GearsOfWarContextSPBug()
-            {
-                Database.SetInitializer(new DropCreateDatabaseAlways<GearsOfWarContextSPBug>());
-            }
-
-            public DbSet<Gear> Gears { get; set; }
-            public DbSet<CogTag> Tags { get; set; }
-
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
                 modelBuilder.Entity<Gear>()
