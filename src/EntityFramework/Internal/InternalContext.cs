@@ -1438,7 +1438,7 @@ namespace System.Data.Entity.Internal
 
         public string ContextKey
         {
-            get { return OwnerShortTypeName.RestrictTo(HistoryContext.ContextKeyMaxLength); }
+            get { return OwnerShortTypeName; }
         }
 
         internal virtual string OwnerShortTypeName

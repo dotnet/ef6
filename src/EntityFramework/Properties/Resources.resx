@@ -5423,4 +5423,8 @@
   <data name="LightweightPrimitivePropertyConfiguration_DecimalNoScale" xml:space="preserve">
     <value>To set the precision on the decimal property '{0}' the scale must also be specified.</value>
   </data>
+  <data name="UnableToUpgradeHistoryWhenCustomFactory" xml:space="preserve">
+    <value>An existing EF5 migrations history table was detected but could not be upgraded because a custom history context factory has been configured. To upgrade an existing EF5 database, ensure there is no custom history context factory configured.</value>
+    <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
+  </data>
 </root>

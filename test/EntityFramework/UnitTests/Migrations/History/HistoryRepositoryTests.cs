@@ -24,6 +24,64 @@ namespace System.Data.Entity.Migrations.History
     public class HistoryRepositoryTests : DbTestCase
     {
         [MigrationsTheory]
+        public void Should_throw_when_upgrading_5_6_and_custom_history_context_factory_specified()
+        {
+            ResetDatabase();
+
+            var historyRepository
+                = new HistoryRepository(
+                    ConnectionString,
+                    ProviderFactory,
+                    "MyKey",
+                    null,
+                    historyContextFactory: (c, s) => new HistoryContext(c, s));
+
+            var createTableOperation = GetCreateHistoryTableOperation();
+
+            createTableOperation.Columns.Remove(createTableOperation.Columns.Single(c => c.Name == "ContextKey"));
+            createTableOperation.PrimaryKey.Columns.RemoveAt(1);
+
+            ExecuteOperations(createTableOperation);
+
+            Assert.Equal(
+                Strings.UnableToUpgradeHistoryWhenCustomFactory,
+                Assert.Throws<MigrationsException>(() => historyRepository.GetUpgradeOperations().ToList()).Message);
+        }
+
+        [MigrationsTheory]
+        public void GetUpgradeOperations_should_return_alter_migration_id_column_when_5_to_6()
+        {
+            ResetDatabase();
+
+            var historyRepository
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+
+            var createTableOperation = GetCreateHistoryTableOperation();
+
+            createTableOperation.Columns.Remove(createTableOperation.Columns.Single(c => c.Name == "ContextKey"));
+            createTableOperation.PrimaryKey.Columns.RemoveAt(1);
+
+            ExecuteOperations(createTableOperation);
+
+            var alterColumnOperation = historyRepository.GetUpgradeOperations().OfType<AlterColumnOperation>().Single();
+
+            Assert.Equal("MigrationId", alterColumnOperation.Column.Name);
+            Assert.Equal(150, alterColumnOperation.Column.MaxLength);
+        }
+
+        [MigrationsTheory]
+        public void Should_discover_column_max_lengths_from_model()
+        {
+            ResetDatabase();
+
+            var historyRepository
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+
+            Assert.Equal(150, historyRepository.MigrationIdMaxLength);
+            Assert.Equal(300, historyRepository.ContextKeyMaxLength);
+        }
+
+        [MigrationsTheory]
         public void Can_create_count_query_command_tree()
         {
             ResetDatabase();

@@ -1259,7 +1259,7 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
     CONSTRAINT [PK_dbo.__MigrationHistory2] PRIMARY KEY ([MigrationId], [ContextKey])
 )
 INSERT INTO [dbo].[__MigrationHistory2]
-SELECT [MigrationId], 'DefaultContextKey', [Model], [ProductVersion] FROM [dbo].[__MigrationHistory]
+SELECT LEFT([MigrationId], 150), 'DefaultContextKey', [Model], LEFT([ProductVersion], 32) FROM [dbo].[__MigrationHistory]
 DROP TABLE [dbo].[__MigrationHistory]
 EXECUTE sp_rename @objname = N'dbo.__MigrationHistory2', @newname = N'__MigrationHistory', @objtype = N'OBJECT'";
 
@@ -1280,7 +1280,7 @@ EXECUTE sp_rename @objname = N'dbo.__MigrationHistory2', @newname = N'__Migratio
 
         private static MigrationOperation[] Create_operations_to_upgrade_primary_key_of_history_table()
         {
-            var tableName = "dbo." + HistoryContext.DefaultTableName;
+            const string tableName = "dbo." + HistoryContext.DefaultTableName;
 
             CreateTableOperation createTableOperation;
             using (var context = new HistoryContext())
@@ -1311,6 +1311,17 @@ EXECUTE sp_rename @objname = N'dbo.__MigrationHistory2', @newname = N'__Migratio
 
             dropPrimaryKeyOperation.Columns.Add("MigrationId");
 
+            var alterColumnOperation
+                = new AlterColumnOperation(
+                    tableName,
+                    new ColumnModel(PrimitiveTypeKind.String)
+                        {
+                            MaxLength = 150,
+                            Name = "MigrationId",
+                            IsNullable = false
+                        },
+                    isDestructiveChange: false);
+
             var addPrimaryKeyOperation
                 = new AddPrimaryKeyOperation
                       {
@@ -1325,6 +1336,7 @@ EXECUTE sp_rename @objname = N'dbo.__MigrationHistory2', @newname = N'__Migratio
                     {
                         addColumnOperation,
                         dropPrimaryKeyOperation,
+                        alterColumnOperation,
                         addPrimaryKeyOperation
                     };
         }

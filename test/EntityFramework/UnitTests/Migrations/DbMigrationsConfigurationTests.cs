@@ -126,18 +126,6 @@ namespace System.Data.Entity.Migrations
         }
 
         [Fact]
-        public void ContextKey_restricts_length_to_context_key_max_length()
-        {
-            var migrationsConfiguration
-                = new TestMigrationsConfiguration
-                      {
-                          ContextKey = new string('a', 600)
-                      };
-
-            Assert.Equal(new string('a', HistoryContext.ContextKeyMaxLength), migrationsConfiguration.ContextKey);
-        }
-
-        [Fact]
         public void Properties_check_for_bad_arguments()
         {
             var config = new TestMigrationsConfiguration();

@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Data.Entity.Migrations.Design;
-    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Model;
     using System.Linq;
     using System.Reflection;
@@ -12,6 +11,29 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
     public class MigrationAssemblyTests
     {
+        [Fact]
+        public void GetMigration_should_perform_pr()
+        {
+            var codeGenerator = new CSharpMigrationCodeGenerator();
+
+            const string @namespace = "Migrations";
+
+            var generatedMigration
+                = codeGenerator.Generate(
+                    "201108162311111_Migration",
+                    new MigrationOperation[] { },
+                    "Source",
+                    "Target",
+                    @namespace,
+                    "Migration");
+
+            var migrationAssembly = new MigrationAssembly(
+                new MigrationCompiler("cs").Compile(@namespace, generatedMigration),
+                @namespace);
+
+            Assert.NotNull(migrationAssembly.GetMigration("201108162311111_M"));
+        }
+
         [Fact]
         public void UniquifyName_should_return_name_when_already_unique()
         {
@@ -25,7 +47,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             var codeGenerator = new CSharpMigrationCodeGenerator();
 
-            var @namespace = "Migrations";
+            const string @namespace = "Migrations";
 
             var generatedMigration1
                 = codeGenerator.Generate(
@@ -74,19 +96,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         [Fact]
-        public void CreateMigrationId_should_restrict_id_to_max_length()
-        {
-            var migrationId = MigrationAssembly.CreateMigrationId(new string('a', 400));
-
-            Assert.Equal(HistoryContext.MigrationIdMaxLength, migrationId.Length);
-        }
-
-        [Fact]
         public void MigrationIds_should_return_id_when_migration_is_valid()
         {
             var codeGenerator = new CSharpMigrationCodeGenerator();
 
-            var @namespace = "Migrations";
+            const string @namespace = "Migrations";
 
             var generatedMigration
                 = codeGenerator.Generate(
@@ -109,7 +123,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             var codeGenerator = new CSharpMigrationCodeGenerator();
 
-            var @namespace = "Migrations";
+            const string @namespace = "Migrations";
 
             var generatedMigration1
                 = codeGenerator.Generate(
@@ -158,7 +172,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             var codeGenerator = new CSharpMigrationCodeGenerator();
 
-            var @namespace = "CorrectNamespace";
+            const string @namespace = "CorrectNamespace";
 
             var generatedMigration
                 = codeGenerator.Generate(

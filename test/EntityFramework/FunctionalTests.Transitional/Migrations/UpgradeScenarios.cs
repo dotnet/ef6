@@ -75,7 +75,8 @@ namespace System.Data.Entity.Migrations
             migrator.Update();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, migrationsConfiguration.ContextKey, migrationsConfiguration.CommandTimeout);
+                = new HistoryRepository(
+                    ConnectionString, ProviderFactory, migrationsConfiguration.ContextKey, migrationsConfiguration.CommandTimeout);
 
             ExecuteOperations(
                 new MigrationOperation[]
@@ -263,7 +264,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        private IEnumerable<MigrationOperation> GetLegacyHistoryCreateTableOperations()
+        private static IEnumerable<MigrationOperation> GetLegacyHistoryCreateTableOperations()
         {
             const string tableName = "dbo." + HistoryContext.DefaultTableName;
 

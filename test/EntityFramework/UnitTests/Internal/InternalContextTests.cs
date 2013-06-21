@@ -39,27 +39,6 @@ namespace System.Data.Entity.Internal
             Assert.Equal(genericFuncy.GetType().ToString(), internalContext.ContextKey);
         }
 
-        private class LongTypeNameInternalContext : EagerInternalContext
-        {
-            public LongTypeNameInternalContext(DbContext owner)
-                : base(owner)
-            {
-            }
-
-            internal override string OwnerShortTypeName
-            {
-                get { return new string('a', 600); }
-            }
-        }
-
-        [Fact]
-        public void ContextKey_restricts_value_to_max_length()
-        {
-            var internalContext = new LongTypeNameInternalContext(new Mock<DbContext>().Object);
-
-            Assert.Equal(new string('a', HistoryContext.ContextKeyMaxLength), internalContext.ContextKey);
-        }
-
         [Fact]
         public void Generic_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery_with_buffering()
         {
@@ -72,7 +51,7 @@ namespace System.Data.Entity.Internal
             Generic_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery(true);
         }
 
-        private void Generic_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery(bool streaming)
+        private static void Generic_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery(bool streaming)
         {
             var internalContext = new Mock<InternalContextForMock<DbContext>>
                 {
@@ -114,7 +93,7 @@ namespace System.Data.Entity.Internal
             NonGeneric_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery(true);
         }
 
-        private void NonGeneric_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery(bool streaming)
+        private static void NonGeneric_ExecuteSqlQuery_delegates_lazily_to_ExecuteStoreQuery(bool streaming)
         {
             var internalContext = new Mock<InternalContextForMock<DbContext>>
                 {
@@ -158,7 +137,7 @@ namespace System.Data.Entity.Internal
             Generic_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery(true);
         }
 
-        private void Generic_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery(bool streaming)
+        private static void Generic_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery(bool streaming)
         {
             var internalContext = new Mock<InternalContextForMock<DbContext>>
                 {
@@ -202,7 +181,7 @@ namespace System.Data.Entity.Internal
             NonGeneric_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery(true);
         }
 
-        private void NonGeneric_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery(bool streaming)
+        private static void NonGeneric_ExecuteSqlQueryAsync_delegates_lazily_to_ExecuteStoreQuery(bool streaming)
         {
             var internalContext = new Mock<InternalContextForMock<DbContext>>
                 {

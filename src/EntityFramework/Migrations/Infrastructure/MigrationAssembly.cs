@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -16,8 +15,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             DebugCheck.NotEmpty(migrationName);
 
-            return (UtcNowGenerator.UtcNowAsMigrationIdTimestamp() + "_" + migrationName)
-                .RestrictTo(HistoryContext.MigrationIdMaxLength);
+            return (UtcNowGenerator.UtcNowAsMigrationIdTimestamp() + "_" + migrationName);
         }
 
         public static string CreateBootstrapMigrationId()
@@ -65,7 +63,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var migration
                 = (DbMigration)_migrations
-                                   .SingleOrDefault(m => string.Equals(m.Id, migrationId, StringComparison.Ordinal));
+                                   .SingleOrDefault(m => m.Id.StartsWith(migrationId, StringComparison.Ordinal));
 
             if (migration != null)
             {

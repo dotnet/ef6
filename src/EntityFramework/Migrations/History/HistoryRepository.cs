@@ -25,14 +25,16 @@ namespace System.Data.Entity.Migrations.History
 
     internal class HistoryRepository : RepositoryBase
     {
-        private static readonly string _productVersion =
-            Assembly.GetExecutingAssembly().GetInformationalVersion();
+        private static readonly string _productVersion
+            = Assembly.GetExecutingAssembly().GetInformationalVersion();
 
         private readonly string _contextKey;
         private readonly int? _commandTimeout;
         private readonly IEnumerable<string> _schemas;
         private readonly HistoryContextFactory _historyContextFactory;
         private readonly DbContext _contextForInterception;
+        private readonly int _contextKeyMaxLength;
+        private readonly int _migrationIdMaxLength;
 
         private string _currentSchema;
         private bool? _exists;
@@ -50,7 +52,6 @@ namespace System.Data.Entity.Migrations.History
         {
             DebugCheck.NotEmpty(contextKey);
 
-            _contextKey = contextKey;
             _commandTimeout = commandTimeout;
 
             _schemas
@@ -63,6 +64,52 @@ namespace System.Data.Entity.Migrations.History
             _historyContextFactory
                 = historyContextFactory
                   ?? DbConfiguration.GetService<HistoryContextFactory>();
+
+            using (var connection = CreateConnection())
+            {
+                using (var context = CreateContext(connection))
+                {
+                    var historyRowEntity
+                        = ((IObjectContextAdapter)context).ObjectContext
+                            .MetadataWorkspace
+                            .GetItems<EntityType>(DataSpace.CSpace)
+                            .Single(et => et.GetClrType() == typeof(HistoryRow));
+
+                    var maxLength
+                        = historyRowEntity
+                            .Properties
+                            .Single(p => p.GetClrPropertyInfo().IsSameAs(typeof(HistoryRow).GetProperty("MigrationId")))
+                            .MaxLength;
+
+                    _migrationIdMaxLength
+                        = maxLength.HasValue
+                              ? maxLength.Value
+                              : HistoryContext.MigrationIdMaxLength;
+
+                    maxLength
+                        = historyRowEntity
+                            .Properties
+                            .Single(p => p.GetClrPropertyInfo().IsSameAs(typeof(HistoryRow).GetProperty("ContextKey")))
+                            .MaxLength;
+
+                    _contextKeyMaxLength
+                        = maxLength.HasValue
+                              ? maxLength.Value
+                              : HistoryContext.ContextKeyMaxLength;
+                }
+            }
+
+            _contextKey = contextKey.RestrictTo(_contextKeyMaxLength);
+        }
+
+        public int ContextKeyMaxLength
+        {
+            get { return _contextKeyMaxLength; }
+        }
+
+        public int MigrationIdMaxLength
+        {
+            get { return _migrationIdMaxLength; }
         }
 
         public string CurrentSchema
@@ -130,6 +177,8 @@ namespace System.Data.Entity.Migrations.History
                 return null;
             }
 
+            migrationId = migrationId.RestrictTo(_migrationIdMaxLength);
+
             using (var connection = CreateConnection())
             {
                 using (var context = CreateContext(connection))
@@ -165,6 +214,11 @@ namespace System.Data.Entity.Migrations.History
                             .ToList();
                     }
 
+                    localMigrations
+                        = localMigrations
+                            .Select(m => m.RestrictTo(_migrationIdMaxLength))
+                            .ToArray();
+
                     var pendingMigrations = localMigrations.Except(databaseMigrations);
                     var firstDatabaseMigration = databaseMigrations.FirstOrDefault();
                     var firstLocalMigration = localMigrations.FirstOrDefault();
@@ -199,6 +253,8 @@ namespace System.Data.Entity.Migrations.History
                 using (var context = CreateContext(connection))
                 {
                     var query = CreateHistoryQuery(context);
+
+                    migrationId = migrationId.RestrictTo(_migrationIdMaxLength);
 
                     if (migrationId != DbMigrator.InitialDatabase)
                     {
@@ -261,7 +317,10 @@ namespace System.Data.Entity.Migrations.History
         {
             IQueryable<HistoryRow> q = context.History;
 
-            contextKey = contextKey ?? _contextKey;
+            contextKey
+                = !string.IsNullOrWhiteSpace(contextKey)
+                      ? contextKey.RestrictTo(_contextKeyMaxLength)
+                      : _contextKey;
 
             if (_contextKeyColumnExists)
             {
@@ -321,6 +380,8 @@ namespace System.Data.Entity.Migrations.History
 
         private bool QueryExists(string contextKey)
         {
+            DebugCheck.NotNull(contextKey);
+
             using (var connection = CreateConnection())
             {
                 using (var context = CreateContext(connection))
@@ -349,6 +410,8 @@ namespace System.Data.Entity.Migrations.History
                             {
                                 using (new TransactionScope(TransactionScopeOption.Suppress))
                                 {
+                                    contextKey = contextKey.RestrictTo(_contextKeyMaxLength);
+
                                     if (context.History.Any(hr => hr.ContextKey == contextKey))
                                     {
                                         return true;
@@ -450,11 +513,16 @@ namespace System.Data.Entity.Migrations.History
 
                     if (!_contextKeyColumnExists)
                     {
+                        if (_historyContextFactory != HistoryContext.DefaultFactory)
+                        {
+                            throw Error.UnableToUpgradeHistoryWhenCustomFactory();
+                        }
+
                         yield return new AddColumnOperation(
                             tableName,
                             new ColumnModel(PrimitiveTypeKind.String)
                                 {
-                                    MaxLength = HistoryContext.ContextKeyMaxLength,
+                                    MaxLength = _contextKeyMaxLength,
                                     Name = "ContextKey",
                                     IsNullable = false,
                                     DefaultValue = _contextKey
@@ -474,6 +542,16 @@ namespace System.Data.Entity.Migrations.History
                         dropPrimaryKeyOperation.Columns.Add("MigrationId");
 
                         yield return dropPrimaryKeyOperation;
+
+                        yield return new AlterColumnOperation(
+                            tableName,
+                            new ColumnModel(PrimitiveTypeKind.String)
+                                {
+                                    MaxLength = _migrationIdMaxLength,
+                                    Name = "MigrationId",
+                                    IsNullable = false
+                                },
+                            isDestructiveChange: false);
 
                         var addPrimaryKeyOperation
                             = new AddPrimaryKeyOperation
@@ -502,7 +580,7 @@ namespace System.Data.Entity.Migrations.History
                     context.History.Add(
                         new HistoryRow
                             {
-                                MigrationId = migrationId,
+                                MigrationId = migrationId.RestrictTo(_migrationIdMaxLength),
                                 ContextKey = _contextKey,
                                 Model = new ModelCompressor().Compress(model),
                                 ProductVersion = _productVersion
@@ -530,7 +608,7 @@ namespace System.Data.Entity.Migrations.History
                     var historyRow
                         = new HistoryRow
                               {
-                                  MigrationId = migrationId,
+                                  MigrationId = migrationId.RestrictTo(_migrationIdMaxLength),
                                   ContextKey = _contextKey
                               };
 
@@ -642,7 +720,9 @@ namespace System.Data.Entity.Migrations.History
                     context.History.Add(
                         new HistoryRow
                             {
-                                MigrationId = MigrationAssembly.CreateMigrationId(Strings.InitialCreate),
+                                MigrationId = MigrationAssembly
+                                    .CreateMigrationId(Strings.InitialCreate)
+                                    .RestrictTo(_migrationIdMaxLength),
                                 ContextKey = _contextKey,
                                 Model = new ModelCompressor().Compress(model),
                                 ProductVersion = Assembly.GetExecutingAssembly().GetInformationalVersion()
@@ -671,7 +751,9 @@ namespace System.Data.Entity.Migrations.History
             if (_contextForInterception != null)
             {
                 var objectContext = context.InternalContext.ObjectContext;
-                objectContext.InterceptionContext = objectContext.InterceptionContext.WithDbContext(_contextForInterception);
+
+                objectContext.InterceptionContext
+                    = objectContext.InterceptionContext.WithDbContext(_contextForInterception);
             }
         }
     }

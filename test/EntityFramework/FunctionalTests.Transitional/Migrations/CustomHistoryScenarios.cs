@@ -9,12 +9,67 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.SqlClient;
     using System.Data.SqlServerCe;
+    using System.Linq;
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class CustomHistoryScenarios : DbTestCase
     {
+        private class NonStandardColumnWidthsContext : HistoryContext
+        {
+            public NonStandardColumnWidthsContext(DbConnection existingConnection, string defaultSchema)
+                : base(existingConnection, defaultSchema)
+            {
+            }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                base.OnModelCreating(modelBuilder);
+
+                modelBuilder.Entity<HistoryRow>().Property(h => h.MigrationId).HasMaxLength(20);
+                modelBuilder.Entity<HistoryRow>().Property(h => h.ContextKey).HasMaxLength(10);
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_set_non_standard_history_column_lengths()
+        {
+            ResetDatabase();
+
+            HistoryContextFactory historyContextFactory = (c, s) => new NonStandardColumnWidthsContext(c, s);
+
+            const string contextKey = "This context key is longer than 10 chars";
+
+            var migrator
+                = CreateMigrator<ShopContext_v1>(
+                    contextKey: contextKey,
+                    historyContextFactory: historyContextFactory);
+
+            var generatedMigration
+                = new MigrationScaffolder(migrator.Configuration)
+                    .Scaffold("MigrationWithASomewhatLongName");
+
+            migrator
+                = CreateMigrator<ShopContext_v1>(
+                    contextKey: contextKey,
+                    automaticMigrationsEnabled: false,
+                    scaffoldedMigrations: generatedMigration,
+                    historyContextFactory: historyContextFactory);
+
+            migrator.Update();
+
+            var migrationIdColumn = TestDatabase.Info.Columns.Single(c => c.Name == "MigrationId");
+
+            Assert.Equal(20, migrationIdColumn.MaxLength);
+
+            var contextKeyColumn = TestDatabase.Info.Columns.Single(c => c.Name == "ContextKey");
+
+            Assert.Equal(10, contextKeyColumn.MaxLength);
+
+            migrator.Update("0");
+        }
+
         [MigrationsTheory]
         public void Can_use_per_provider_factory()
         {
@@ -240,7 +295,7 @@ namespace System.Data.Entity.Migrations
             migrator = CreateMigrator<ShopContext_v5>();
 
             Assert.Throws<MigrationsException>(() => migrator.Update())
-                  .ValidateMessage("UnableToMoveHistoryTableWithAuto");
+                .ValidateMessage("UnableToMoveHistoryTableWithAuto");
         }
 
         [MigrationsTheory]

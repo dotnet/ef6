@@ -1347,6 +1347,8 @@ namespace System.Data.Entity.SqlServer
         private static IEnumerable<MigrationOperation> DetectHistoryRebuild(
             IEnumerable<MigrationOperation> operations)
         {
+            DebugCheck.NotNull(operations);
+
             var enumerator = operations.GetEnumerator();
 
             while (enumerator.MoveNext())
@@ -1359,6 +1361,8 @@ namespace System.Data.Entity.SqlServer
 
         private void Generate(HistoryRebuildOperationSequence sequence)
         {
+            DebugCheck.NotNull(sequence);
+
             var createTableOperationSource = sequence.DropPrimaryKeyOperation.CreateTableOperation;
             var createTableOperationTarget = ResolveNameConflicts(createTableOperationSource);
             var renameTableOperation = new RenameTableOperation(
@@ -1389,7 +1393,9 @@ namespace System.Data.Entity.SqlServer
                     writer.Write(
                         (column.Name == sequence.AddColumnOperation.Column.Name)
                             ? Generate((string)sequence.AddColumnOperation.Column.DefaultValue)
-                            : Name(column.Name));
+                            : (column.Type == PrimitiveTypeKind.String)
+                                  ? "LEFT(" + Name(column.Name) + ", " + column.MaxLength + ")"
+                                  : Name(column.Name));
                 }
 
                 writer.Write(" FROM ");
@@ -1411,6 +1417,8 @@ namespace System.Data.Entity.SqlServer
         /// </summary>
         private static CreateTableOperation ResolveNameConflicts(CreateTableOperation source)
         {
+            DebugCheck.NotNull(source);
+
             const string suffix = "2";
 
             var target = new CreateTableOperation(source.Name + suffix)
@@ -1463,6 +1471,10 @@ namespace System.Data.Entity.SqlServer
                 var dropPrimaryKeyOperation = (DropPrimaryKeyOperation)enumerator.Current;
                 Debug.Assert(dropPrimaryKeyOperation.Table == HistoryTableName);
                 DebugCheck.NotNull(dropPrimaryKeyOperation.CreateTableOperation);
+
+                enumerator.MoveNext();
+                var alterColumnOperation = (AlterColumnOperation)enumerator.Current;
+                Debug.Assert(alterColumnOperation.Table == HistoryTableName);
 
                 enumerator.MoveNext();
                 var addPrimaryKeyOperation = (AddPrimaryKeyOperation)enumerator.Current;

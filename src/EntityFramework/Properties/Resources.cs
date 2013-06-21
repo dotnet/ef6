@@ -13620,6 +13620,14 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.LightweightPrimitivePropertyConfiguration_DecimalNoScale, p0);
         }
+
+        /// <summary>
+        ///     A string like "An existing EF5 migrations history table was detected but could not be upgraded because a custom history context factory has been configured. To upgrade an existing EF5 database, ensure there is no custom history context factory configured."
+        /// </summary>
+        internal static string UnableToUpgradeHistoryWhenCustomFactory
+        {
+            get { return EntityRes.GetString(EntityRes.UnableToUpgradeHistoryWhenCustomFactory); }
+        }
     }
 
     /// <summary>
@@ -15250,6 +15258,14 @@ namespace System.Data.Entity.Resources
         internal static Exception AutomaticStaleFunctions(object p0)
         {
             return new Migrations.Infrastructure.MigrationsException(Strings.AutomaticStaleFunctions(p0));
+        }
+
+        /// <summary>
+        ///     Migrations.Infrastructure.MigrationsException with message like "An existing EF5 migrations history table was detected but could not be upgraded because a custom history context factory has been configured. To upgrade an existing EF5 database, ensure there is no custom history context factory configured."
+        /// </summary>
+        internal static Exception UnableToUpgradeHistoryWhenCustomFactory()
+        {
+            return new Migrations.Infrastructure.MigrationsException(Strings.UnableToUpgradeHistoryWhenCustomFactory);
         }
 
         /// <summary>
@@ -16986,6 +17002,7 @@ namespace System.Data.Entity.Resources
         internal const string ConventionsConfiguration_NotModelConvention = "ConventionsConfiguration_NotModelConvention";
         internal const string LightweightPrimitivePropertyConfiguration_DateTimeScale = "LightweightPrimitivePropertyConfiguration_DateTimeScale";
         internal const string LightweightPrimitivePropertyConfiguration_DecimalNoScale = "LightweightPrimitivePropertyConfiguration_DecimalNoScale";
+        internal const string UnableToUpgradeHistoryWhenCustomFactory = "UnableToUpgradeHistoryWhenCustomFactory";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

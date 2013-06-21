@@ -122,7 +122,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             {
                 if (!string.IsNullOrWhiteSpace(migrationStatement.Sql))
                 {
-                    if (!string.IsNullOrWhiteSpace(migrationStatement.BatchTerminator))
+                    if (!string.IsNullOrWhiteSpace(migrationStatement.BatchTerminator)
+                        && (_sqlBuilder.Length > 0))
                     {
                         _sqlBuilder.AppendLine(migrationStatement.BatchTerminator);
                         _sqlBuilder.AppendLine();

@@ -72,7 +72,7 @@ namespace System.Data.Entity.Migrations
             {
                 Check.NotEmpty(value, "value");
 
-                _contextKey = value.RestrictTo(HistoryContext.ContextKeyMaxLength);
+                _contextKey = value;
             }
         }
 
