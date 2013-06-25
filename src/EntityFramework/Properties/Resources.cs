@@ -13598,7 +13598,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The scale cannot be set on the DateTime property '{0}', only specify the precision."
+        ///     A string like "The scale cannot be set on the DateTime property '{0}', only the precision should be specified."
         /// </summary>
         internal static string LightweightPrimitivePropertyConfiguration_DateTimeScale(object p0)
         {
@@ -13611,6 +13611,46 @@ namespace System.Data.Entity.Resources
         internal static string LightweightPrimitivePropertyConfiguration_DecimalNoScale(object p0)
         {
             return EntityRes.GetString(EntityRes.LightweightPrimitivePropertyConfiguration_DecimalNoScale, p0);
+        }
+
+        /// <summary>
+        ///     A string like "The property '{0}' is not of DateTime type. Precision can only be set on DateTime properties."
+        /// </summary>
+        internal static string LightweightPrimitivePropertyConfiguration_HasPrecisionNonDateTime(object p0)
+        {
+            return EntityRes.GetString(EntityRes.LightweightPrimitivePropertyConfiguration_HasPrecisionNonDateTime, p0);
+        }
+
+        /// <summary>
+        ///     A string like "The property '{0}' is not of Decimal type. Precision and scale can only be set on Decimal properties."
+        /// </summary>
+        internal static string LightweightPrimitivePropertyConfiguration_HasPrecisionNonDecimal(object p0)
+        {
+            return EntityRes.GetString(EntityRes.LightweightPrimitivePropertyConfiguration_HasPrecisionNonDecimal, p0);
+        }
+
+        /// <summary>
+        ///     A string like "The property '{0}' is not of byte[] type. IsRowVersion can only be called on byte[] properties."
+        /// </summary>
+        internal static string LightweightPrimitivePropertyConfiguration_IsRowVersionNonBinary(object p0)
+        {
+            return EntityRes.GetString(EntityRes.LightweightPrimitivePropertyConfiguration_IsRowVersionNonBinary, p0);
+        }
+
+        /// <summary>
+        ///     A string like "The property '{0}' is not of String type. IsUnicode can only be called on String properties."
+        /// </summary>
+        internal static string LightweightPrimitivePropertyConfiguration_IsUnicodeNonString(object p0)
+        {
+            return EntityRes.GetString(EntityRes.LightweightPrimitivePropertyConfiguration_IsUnicodeNonString, p0);
+        }
+
+        /// <summary>
+        ///     A string like "Length cannot be set for the property '{0}'. Length can only be set for properties of String or byte[] types."
+        /// </summary>
+        internal static string LightweightPrimitivePropertyConfiguration_NonLength(object p0)
+        {
+            return EntityRes.GetString(EntityRes.LightweightPrimitivePropertyConfiguration_NonLength, p0);
         }
 
         /// <summary>
@@ -16985,6 +17025,11 @@ namespace System.Data.Entity.Resources
         internal const string ConventionsConfiguration_NotModelConvention = "ConventionsConfiguration_NotModelConvention";
         internal const string LightweightPrimitivePropertyConfiguration_DateTimeScale = "LightweightPrimitivePropertyConfiguration_DateTimeScale";
         internal const string LightweightPrimitivePropertyConfiguration_DecimalNoScale = "LightweightPrimitivePropertyConfiguration_DecimalNoScale";
+        internal const string LightweightPrimitivePropertyConfiguration_HasPrecisionNonDateTime = "LightweightPrimitivePropertyConfiguration_HasPrecisionNonDateTime";
+        internal const string LightweightPrimitivePropertyConfiguration_HasPrecisionNonDecimal = "LightweightPrimitivePropertyConfiguration_HasPrecisionNonDecimal";
+        internal const string LightweightPrimitivePropertyConfiguration_IsRowVersionNonBinary = "LightweightPrimitivePropertyConfiguration_IsRowVersionNonBinary";
+        internal const string LightweightPrimitivePropertyConfiguration_IsUnicodeNonString = "LightweightPrimitivePropertyConfiguration_IsUnicodeNonString";
+        internal const string LightweightPrimitivePropertyConfiguration_NonLength = "LightweightPrimitivePropertyConfiguration_NonLength";
         internal const string UnableToUpgradeHistoryWhenCustomFactory = "UnableToUpgradeHistoryWhenCustomFactory";
 
         private static EntityRes loader;

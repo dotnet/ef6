@@ -271,8 +271,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured or if the
-        ///     property is not a <see cref="String" />.
+        ///     Calling this will have no effect once it has been configured.
+        ///     This method throws if the property is not a <see cref="String" />.
         /// </remarks>
         public virtual LightweightPrimitivePropertyConfiguration IsUnicode()
         {
@@ -287,11 +287,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured or if the
-        ///     property is not a <see cref="String" />.
+        ///     Calling this will have no effect once it has been configured.
+        ///     This method throws if the property is not a <see cref="String" />.
         /// </remarks>
         public virtual LightweightPrimitivePropertyConfiguration IsUnicode(bool unicode)
         {
+            if (_dateTimeConfiguration.Value != null
+                || _decimalConfiguration.Value != null
+                || _binaryConfiguration.Value != null)
+            {
+                throw new InvalidOperationException(
+                    Strings.LightweightPrimitivePropertyConfiguration_IsUnicodeNonString(_propertyInfo.Name));
+            }
+
             if (_stringConfiguration.Value != null
                 && _stringConfiguration.Value.IsUnicode == null)
             {
@@ -309,11 +317,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured or if the
-        ///     property does not have length facets.
+        ///     Calling this will have no effect once it has been configured.
+        ///     This method throws if the property does not have length facets.
         /// </remarks>
         public virtual LightweightPrimitivePropertyConfiguration IsFixedLength()
         {
+            if (_dateTimeConfiguration.Value != null
+                || _decimalConfiguration.Value != null)
+            {
+                throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonLength(_propertyInfo.Name));
+            }
+
             if (_lengthConfiguration.Value != null
                 && _lengthConfiguration.Value.IsFixedLength == null)
             {
@@ -331,11 +345,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured or if the
-        ///     property does not have length facets.
+        ///     Calling this will have no effect once it has been configured.
+        ///     This method throws if the property does not have length facets.
         /// </remarks>
         public virtual LightweightPrimitivePropertyConfiguration IsVariableLength()
         {
+            if (_dateTimeConfiguration.Value != null
+                || _decimalConfiguration.Value != null)
+            {
+                throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonLength(_propertyInfo.Name));
+            }
+
             if (_lengthConfiguration.Value != null
                 && _lengthConfiguration.Value.IsFixedLength == null)
             {
@@ -353,14 +373,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured or if the
-        ///     property does not have length facets.
+        ///     Calling this will have no effect once it has been configured.
+        ///     This method throws if the property does not have length facets.
         /// </remarks>
         public virtual LightweightPrimitivePropertyConfiguration HasMaxLength(int maxLength)
         {
             if (maxLength < 1)
             {
                 throw new ArgumentOutOfRangeException("maxLength");
+            }
+
+            if (_dateTimeConfiguration.Value != null
+                || _decimalConfiguration.Value != null)
+            {
+                throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonLength(_propertyInfo.Name));
             }
 
             if (_lengthConfiguration.Value != null
@@ -391,11 +417,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured or if the
-        ///     property does not have length facets.
+        ///     Calling this will have no effect once it has been configured.
+        ///     This method throws if the property does not have length facets.
         /// </remarks>
         public virtual LightweightPrimitivePropertyConfiguration IsMaxLength()
         {
+            if (_dateTimeConfiguration.Value != null
+                || _decimalConfiguration.Value != null)
+            {
+                throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonLength(_propertyInfo.Name));
+            }
+
             if (_lengthConfiguration.Value != null
                 && _lengthConfiguration.Value.IsMaxLength == null
                 && _lengthConfiguration.Value.MaxLength == null)
@@ -415,14 +447,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured or if the
-        ///     property is not a <see cref="DateTime" />. But it will throw is the property is a <see cref="Decimal" />.
+        ///     Calling this will have no effect once it has been configured.
+        ///     This method will throw if the property is not a <see cref="DateTime" />.
         /// </remarks>
         public virtual LightweightPrimitivePropertyConfiguration HasPrecision(byte value)
         {
             if (_decimalConfiguration.Value != null)
             {
-                throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_DecimalNoScale(_propertyInfo.Name));
+                throw new InvalidOperationException(
+                    Strings.LightweightPrimitivePropertyConfiguration_DecimalNoScale(_propertyInfo.Name));
+            }
+
+            if (_binaryConfiguration.Value != null
+                || _lengthConfiguration.Value != null
+                || _stringConfiguration.Value != null)
+            {
+                throw new InvalidOperationException(
+                    Strings.LightweightPrimitivePropertyConfiguration_HasPrecisionNonDateTime(_propertyInfo.Name));
             }
 
             if (_dateTimeConfiguration.Value != null
@@ -443,14 +484,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured or if the
-        ///     property is not a <see cref="Decimal" />. But it will throw is the property is a <see cref="DateTime" />.
+        ///     Calling this will have no effect once it has been configured.
+        ///     This method will throw if the property is not a <see cref="Decimal" />.
         /// </remarks>
         public virtual LightweightPrimitivePropertyConfiguration HasPrecision(byte precision, byte scale)
         {
             if (_dateTimeConfiguration.Value != null)
             {
-                throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_DateTimeScale(_propertyInfo.Name));
+                throw new InvalidOperationException(
+                    Strings.LightweightPrimitivePropertyConfiguration_DateTimeScale(_propertyInfo.Name));
+            }
+
+            if (_binaryConfiguration.Value != null
+                || _lengthConfiguration.Value != null
+                || _stringConfiguration.Value != null)
+            {
+                throw new InvalidOperationException(
+                    Strings.LightweightPrimitivePropertyConfiguration_HasPrecisionNonDecimal(_propertyInfo.Name));
             }
 
             if (_decimalConfiguration.Value != null
@@ -474,11 +524,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured or if the
-        ///     property is not a <see cref="T:Byte[]" />.
+        ///     Calling this will have no effect once it has been configured.
+        ///     This method throws if the property is not a <see cref="T:Byte[]" />.
         /// </remarks>
         public virtual LightweightPrimitivePropertyConfiguration IsRowVersion()
         {
+            if (_dateTimeConfiguration.Value != null
+                || _decimalConfiguration.Value != null
+                || _stringConfiguration.Value != null)
+            {
+                throw new InvalidOperationException(
+                    Strings.LightweightPrimitivePropertyConfiguration_IsRowVersionNonBinary(_propertyInfo.Name));
+            }
+
             if (_binaryConfiguration.Value != null
                 && _binaryConfiguration.Value.IsRowVersion == null)
             {

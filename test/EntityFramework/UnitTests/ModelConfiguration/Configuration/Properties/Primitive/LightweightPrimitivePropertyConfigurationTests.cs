@@ -394,14 +394,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void IsUnicode_is_noop_when_not_string()
+        public void IsUnicode_throws_when_not_string()
         {
-            var innerConfig = new PrimitivePropertyConfiguration();
+            var innerConfig = new DateTimePropertyConfiguration();
             var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            var result = config.IsUnicode();
-
-            Assert.Same(config, result);
+            Assert.Equal(
+               Strings.LightweightPrimitivePropertyConfiguration_IsUnicodeNonString("P"),
+               Assert.Throws<InvalidOperationException>(() => config.IsUnicode()).Message);
         }
 
         [Fact]
@@ -469,14 +469,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void IsFixedLength_is_noop_when_not_length()
+        public void IsFixedLength_throws_when_not_length()
         {
-            var innerConfig = new PrimitivePropertyConfiguration();
+            var innerConfig = new DateTimePropertyConfiguration();
             var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            var result = config.IsFixedLength();
-
-            Assert.Same(config, result);
+            Assert.Equal(
+               Strings.LightweightPrimitivePropertyConfiguration_NonLength("P"),
+               Assert.Throws<InvalidOperationException>(() => config.IsFixedLength()).Message);
         }
 
         [Fact]
@@ -506,14 +506,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void IsVariableLength_is_noop_when_not_length()
+        public void IsVariableLength_throws_when_not_length()
         {
-            var innerConfig = new PrimitivePropertyConfiguration();
+            var innerConfig = new DecimalPropertyConfiguration();
             var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            var result = config.IsVariableLength();
-
-            Assert.Same(config, result);
+            Assert.Equal(
+               Strings.LightweightPrimitivePropertyConfiguration_NonLength("P"),
+               Assert.Throws<InvalidOperationException>(() => config.IsVariableLength()).Message);
         }
 
         [Fact]
@@ -604,14 +604,26 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void HasMaxLength_is_noop_when_not_length()
+        public void HasMaxLength_throws_when_not_length()
         {
-            var innerConfig = new PrimitivePropertyConfiguration();
+            var innerConfig = new DecimalPropertyConfiguration();
             var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            var result = config.HasMaxLength(256);
+            Assert.Equal(
+               Strings.LightweightPrimitivePropertyConfiguration_NonLength("P"),
+               Assert.Throws<InvalidOperationException>(() => config.HasMaxLength(256)).Message);
+        }
 
-            Assert.Same(config, result);
+        [Fact]
+        public void HasMaxLength_evaluates_preconditions()
+        {
+            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
+            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(
+                () => config.HasMaxLength(0));
+
+            Assert.Equal("maxLength", ex.ParamName);
         }
 
         [Fact]
@@ -655,26 +667,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void IsMaxLength_is_noop_when_not_length()
+        public void IsMaxLength_throws_when_not_length()
         {
-            var innerConfig = new PrimitivePropertyConfiguration();
+            var innerConfig = new DateTimePropertyConfiguration();
             var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            var result = config.IsMaxLength();
-
-            Assert.Same(config, result);
-        }
-
-        [Fact]
-        public void HasMaxLength_evaluates_preconditions()
-        {
-            var innerConfig = new Mock<LengthPropertyConfiguration>().Object;
-            var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
-
-            var ex = Assert.Throws<ArgumentOutOfRangeException>(
-                () => config.HasMaxLength(0));
-
-            Assert.Equal("maxLength", ex.ParamName);
+            Assert.Equal(
+               Strings.LightweightPrimitivePropertyConfiguration_NonLength("P"),
+               Assert.Throws<InvalidOperationException>(() => config.IsMaxLength()).Message);
         }
 
         [Fact]
@@ -705,14 +705,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void HasPrecision_is_noop_when_not_DateTime()
+        public void HasPrecision_throws_when_not_DateTime()
         {
-            var innerConfig = new PrimitivePropertyConfiguration();
+            var innerConfig = new StringPropertyConfiguration();
             var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            var result = config.HasPrecision(8);
-
-            Assert.Same(config, result);
+             Assert.Equal(
+                Strings.LightweightPrimitivePropertyConfiguration_HasPrecisionNonDateTime("P"),
+                Assert.Throws<InvalidOperationException>(() => config.HasPrecision(8)).Message);
         }
 
         [Fact]
@@ -772,14 +772,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void HasPrecision_with_scale_is_noop_when_not_decimal()
+        public void HasPrecision_with_scale_throws_when_not_decimal()
         {
-            var innerConfig = new PrimitivePropertyConfiguration();
+            var innerConfig = new StringPropertyConfiguration();
             var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            var result = config.HasPrecision(8, 2);
-
-            Assert.Same(config, result);
+            Assert.Equal(
+                Strings.LightweightPrimitivePropertyConfiguration_HasPrecisionNonDecimal("P"),
+                Assert.Throws<InvalidOperationException>(() => config.HasPrecision(8, 2)).Message);
         }
 
         [Fact]
@@ -821,14 +821,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         [Fact]
-        public void IsRowVersion_is_noop_when_not_binary()
+        public void IsRowVersion_throws_when_not_binary()
         {
-            var innerConfig = new PrimitivePropertyConfiguration();
+            var innerConfig = new StringPropertyConfiguration();
             var config = new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            var result = config.IsRowVersion();
-
-            Assert.Same(config, result);
+            Assert.Equal(
+               Strings.LightweightPrimitivePropertyConfiguration_IsRowVersionNonBinary("P"),
+               Assert.Throws<InvalidOperationException>(() => config.IsRowVersion()).Message);
         }
 
         [Fact]

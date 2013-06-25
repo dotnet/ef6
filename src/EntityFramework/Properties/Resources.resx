@@ -5414,10 +5414,25 @@
     <value>The specified convention of type '{0}' is not a model convention, so a data space cannot be specified.</value>
   </data>
   <data name="LightweightPrimitivePropertyConfiguration_DateTimeScale" xml:space="preserve">
-    <value>The scale cannot be set on the DateTime property '{0}', only specify the precision.</value>
+    <value>The scale cannot be set on the DateTime property '{0}', only the precision should be specified.</value>
   </data>
   <data name="LightweightPrimitivePropertyConfiguration_DecimalNoScale" xml:space="preserve">
     <value>To set the precision on the decimal property '{0}' the scale must also be specified.</value>
+  </data>
+  <data name="LightweightPrimitivePropertyConfiguration_HasPrecisionNonDateTime" xml:space="preserve">
+    <value>The property '{0}' is not of DateTime type. Precision can only be set on DateTime properties.</value>
+  </data>
+  <data name="LightweightPrimitivePropertyConfiguration_HasPrecisionNonDecimal" xml:space="preserve">
+    <value>The property '{0}' is not of Decimal type. Precision and scale can only be set on Decimal properties.</value>
+  </data>
+  <data name="LightweightPrimitivePropertyConfiguration_IsRowVersionNonBinary" xml:space="preserve">
+    <value>The property '{0}' is not of byte[] type. IsRowVersion can only be called on byte[] properties.</value>
+  </data>
+  <data name="LightweightPrimitivePropertyConfiguration_IsUnicodeNonString" xml:space="preserve">
+    <value>The property '{0}' is not of String type. IsUnicode can only be called on String properties.</value>
+  </data>
+  <data name="LightweightPrimitivePropertyConfiguration_NonLength" xml:space="preserve">
+    <value>Length cannot be set for the property '{0}'. Length can only be set for properties of String or byte[] types.</value>
   </data>
   <data name="UnableToUpgradeHistoryWhenCustomFactory" xml:space="preserve">
     <value>An existing EF5 migrations history table was detected but could not be upgraded because a custom history context factory has been configured. To upgrade an existing EF5 database, ensure there is no custom history context factory configured.</value>
