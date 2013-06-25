@@ -8,7 +8,7 @@ namespace System.Data.Entity.Infrastructure
 #endif
     using Xunit;
 
-    public class NonRetryingExecutionStrategyTests
+    public class DefaultExecutionStrategyTests
     {
         [Fact]
         public void RetriesOnFailure_returns_false()

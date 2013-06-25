@@ -24,7 +24,6 @@ namespace System.Data.Entity.Infrastructure
     /// </remarks>
     public abstract class DbExecutionStrategy : IDbExecutionStrategy
     {
-        private bool _hasExecuted;
         private readonly List<Exception> _exceptionsEncountered = new List<Exception>();
         private readonly Random _random = new Random();
 
@@ -130,18 +129,13 @@ namespace System.Data.Entity.Infrastructure
             Check.NotNull(operation, "operation");
             EnsurePreexecutionState();
 
-            return ProtectedExecute(operation);
-        }
-
-        protected virtual TResult ProtectedExecute<TResult>(Func<TResult> func)
-        {
             while (true)
             {
                 TimeSpan? delay;
 
                 try
                 {
-                    return func();
+                    return operation();
                 }
                 catch (Exception ex)
                 {
@@ -228,8 +222,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected virtual async Task<TResult> ProtectedExecuteAsync<TResult>(
-            Func<Task<TResult>> func, CancellationToken cancellationToken)
+        private async Task<TResult> ProtectedExecuteAsync<TResult>(
+            Func<Task<TResult>> operation, CancellationToken cancellationToken)
         {
             while (true)
             {
@@ -237,7 +231,7 @@ namespace System.Data.Entity.Infrastructure
 
                 try
                 {
-                    return await func().ConfigureAwait(continueOnCapturedContext: false);
+                    return await operation().ConfigureAwait(continueOnCapturedContext: false);
                 }
                 catch (Exception ex)
                 {
@@ -271,12 +265,7 @@ namespace System.Data.Entity.Infrastructure
                 throw new InvalidOperationException(Strings.ExecutionStrategy_ExistingTransaction(GetType().Name));
             }
 
-            if (_hasExecuted)
-            {
-                throw Error.ExecutionStrategy_AlreadyExecuted();
-            }
-
-            _hasExecuted = true;
+            _exceptionsEncountered.Clear();
         }
 
         /// <summary>
@@ -347,6 +336,6 @@ namespace System.Data.Entity.Infrastructure
         /// <returns>
         ///     <c>true</c> if the specified exception is considered as transient, otherwise <c>false</c>.
         /// </returns>
-        protected abstract bool ShouldRetryOn(Exception exception);
+        protected internal abstract bool ShouldRetryOn(Exception exception);
     }
 }

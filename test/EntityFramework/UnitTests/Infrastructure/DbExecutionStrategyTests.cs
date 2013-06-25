@@ -14,7 +14,7 @@ namespace System.Data.Entity.Infrastructure
     using Moq.Protected;
     using Xunit;
 
-    public class ExecutionStrategyBaseTests
+    public class DbExecutionStrategyTests
     {
         private class TestExecutionStrategy : DbExecutionStrategy
         {
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Infrastructure
             {
             }
 
-            protected override bool ShouldRetryOn(Exception exception)
+            protected internal override bool ShouldRetryOn(Exception exception)
             {
                 throw new NotImplementedException();
             }
@@ -122,31 +122,49 @@ namespace System.Data.Entity.Infrastructure
             }
 
             [Fact]
-            public void Execute_Action_throws_when_invoked_twice()
+            public void Execute_Action_does_not_throw_when_invoked_twice()
             {
-                Execute_throws_when_invoked_twice(e => e.Execute(() => { }));
+                Execute_does_not_throw_when_invoked_twice((e, f) => e.Execute(() => { f(); }));
             }
 
             [Fact]
-            public void Execute_Func_throws_when_invoked_twice()
+            public void Execute_Func_does_not_throw_when_invoked_twice()
             {
-                Execute_throws_when_invoked_twice(e => e.Execute(() => 1));
+                Execute_does_not_throw_when_invoked_twice((e, f) => e.Execute(f));
             }
 
-            private void Execute_throws_when_invoked_twice(Action<DbExecutionStrategy> Execute)
+            private void Execute_does_not_throw_when_invoked_twice(Action<DbExecutionStrategy, Func<int>> execute)
             {
-                var mockExecutionStrategy =
+                var executed = false;
+
+                var executionStrategyMock =
                     new Mock<DbExecutionStrategy>
                         {
                             CallBase = true
-                        }.Object;
-                Execute(mockExecutionStrategy);
+                        };
 
-                Assert.Equal(
-                    Strings.ExecutionStrategy_AlreadyExecuted,
-                    Assert.Throws<InvalidOperationException>(
-                        () =>
-                        Execute(mockExecutionStrategy)).Message);
+                executionStrategyMock.Setup(m => m.ShouldRetryOn(It.IsAny<Exception>())).Returns<Exception>(
+                    e => e is ExternalException);
+
+                for (int i = 0; i < 2; i++)
+                {
+                    execute(
+                        executionStrategyMock.Object, () =>
+                            {
+                                if (!executed)
+                                {
+                                    executed = true;
+                                    throw new ExternalException();
+                                }
+                                else
+                                {
+                                    return 0;
+                                }
+                            });
+
+                    Assert.True(executed);
+                    executed = false;
+                }
             }
 
             [Fact]
@@ -433,34 +451,49 @@ namespace System.Data.Entity.Infrastructure
             }
 
             [Fact]
-            public void ExecuteAsync_Action_throws_when_invoked_twice()
+            public void ExecuteAsync_Action_does_not_throw_when_invoked_twice()
             {
-                ExecuteAsync_throws_when_invoked_twice(e => e.ExecuteAsync(() => (Task)Task.FromResult(1), CancellationToken.None));
+                ExecuteAsync_does_not_throw_when_invoked_twice((e, f) => e.ExecuteAsync(() => (Task)f(), CancellationToken.None));
             }
 
             [Fact]
-            public void ExecuteAsync_Func_throws_when_invoked_twice()
+            public void ExecuteAsync_Func_does_not_throw_when_invoked_twice()
             {
-                ExecuteAsync_throws_when_invoked_twice(e => e.ExecuteAsync(() => Task.FromResult(1), CancellationToken.None));
+                ExecuteAsync_does_not_throw_when_invoked_twice((e, f) => e.ExecuteAsync(f, CancellationToken.None));
             }
 
-            private void ExecuteAsync_throws_when_invoked_twice(Func<DbExecutionStrategy, Task> executeAsync)
+            private void ExecuteAsync_does_not_throw_when_invoked_twice(Func<DbExecutionStrategy, Func<Task<int>>, Task> executeAsync)
             {
-                var mockExecutionStrategy =
+                var executed = false;
+
+                var executionStrategyMock =
                     new Mock<DbExecutionStrategy>
+                    {
+                        CallBase = true
+                    };
+
+                executionStrategyMock.Setup(m => m.ShouldRetryOn(It.IsAny<Exception>())).Returns<Exception>(
+                    e => e is ExternalException);
+
+                for (int i = 0; i < 2; i++)
+                {
+                    executeAsync(
+                        executionStrategyMock.Object, () =>
                         {
-                            CallBase = true
-                        }.Object;
+                            if (!executed)
+                            {
+                                executed = true;
+                                throw new ExternalException();
+                            }
+                            else
+                            {
+                                return Task.FromResult(0);
+                            }
+                        });
 
-                executeAsync(mockExecutionStrategy).Wait();
-
-                Assert.Equal(
-                    Strings.ExecutionStrategy_AlreadyExecuted,
-                    Assert.Throws<InvalidOperationException>(
-                        () =>
-                        ExceptionHelpers.UnwrapAggregateExceptions(
-                            () =>
-                            executeAsync(mockExecutionStrategy).Wait())).Message);
+                    Assert.True(executed);
+                    executed = false;
+                }
             }
 
             [Fact]

@@ -300,11 +300,11 @@
     <Compile Include="Infrastructure\DefaultManifestTokenServiceTests.cs" />
     <Compile Include="Infrastructure\DispatchersTests.cs" />
     <Compile Include="Infrastructure\EntityConnectionDispatcherTests.cs" />
-    <Compile Include="Infrastructure\ExecutionStrategyBaseTests.cs" />
+    <Compile Include="Infrastructure\DbExecutionStrategyTests.cs" />
     <Compile Include="Infrastructure\InterceptionTests.cs" />
     <Compile Include="Infrastructure\InternalDispatcherTests.cs" />
     <Compile Include="Infrastructure\Net40DefaultDbProviderFactoryServiceTests.cs" />
-    <Compile Include="Infrastructure\NonRetryingExecutionStrategyTests.cs" />
+    <Compile Include="Infrastructure\DefaultExecutionStrategyTests.cs" />
     <Compile Include="Infrastructure\ModelNamespaceConventionTests.cs" />
     <Compile Include="Infrastructure\DbProviderNameAttributeTests.cs" />
     <Compile Include="Infrastructure\ProviderInvariantNameTests.cs" />

@@ -13206,14 +13206,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "Already called Execute on this instance."
-        /// </summary>
-        internal static string ExecutionStrategy_AlreadyExecuted
-        {
-            get { return EntityRes.GetString(EntityRes.ExecutionStrategy_AlreadyExecuted); }
-        }
-
-        /// <summary>
         ///     A string like "The configured execution strategy '{0}' does not support user initiated transactions. See http://go.microsoft.com/fwlink/?LinkId=309381 for additional information."
         /// </summary>
         internal static string ExecutionStrategy_ExistingTransaction(object p0)
@@ -15181,14 +15173,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     InvalidOperationException with message like "Already called Execute on this instance."
-        /// </summary>
-        internal static Exception ExecutionStrategy_AlreadyExecuted()
-        {
-            return new InvalidOperationException(Strings.ExecutionStrategy_AlreadyExecuted);
-        }
-
-        /// <summary>
         ///     InvalidOperationException with message like "The base type '{0}' must be mapped to functions because its derived type '{1}' is mapped to functions. When mapping an inheritance hierarchy to functions, ensure that the root type of the hierarchy is also mapped to functions."
         /// </summary>
         internal static Exception BaseTypeNotMappedToFunctions(object p0, object p1)
@@ -16950,7 +16934,6 @@ namespace System.Data.Entity.Resources
         internal const string LightweightEntityConfiguration_TypeMismatch = "LightweightEntityConfiguration_TypeMismatch";
         internal const string LightweightEntityConfiguration_NonScalarProperty = "LightweightEntityConfiguration_NonScalarProperty";
         internal const string MigrationsPendingException = "MigrationsPendingException";
-        internal const string ExecutionStrategy_AlreadyExecuted = "ExecutionStrategy_AlreadyExecuted";
         internal const string ExecutionStrategy_ExistingTransaction = "ExecutionStrategy_ExistingTransaction";
         internal const string ExecutionStrategy_MinimumMustBeLessThanMaximum = "ExecutionStrategy_MinimumMustBeLessThanMaximum";
         internal const string ExecutionStrategy_NegativeDelay = "ExecutionStrategy_NegativeDelay";

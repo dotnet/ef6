@@ -5257,10 +5257,6 @@
     <value>Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration.</value>
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsPendingException</comment>
   </data>
-  <data name="ExecutionStrategy_AlreadyExecuted" xml:space="preserve">
-    <value>Already called Execute on this instance.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
-  </data>
   <data name="ExecutionStrategy_ExistingTransaction" xml:space="preserve">
     <value>The configured execution strategy '{0}' does not support user initiated transactions. See http://go.microsoft.com/fwlink/?LinkId=309381 for additional information.</value>
   </data>
