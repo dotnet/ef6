@@ -85,8 +85,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             using (var context = CreateContext())
             {
-                var sourceEntity = AttachAssociationEnd(associationType.SourceEnd, context);
-                var targetEntity = AttachAssociationEnd(associationType.TargetEnd, context);
+                var sourceEntity = InstantiateAndAttachEntity(associationType.SourceEnd.GetEntityType(), context);
+                var targetEntity = InstantiateAndAttachEntity(associationType.TargetEnd.GetEntityType(), context);
 
                 var objectStateManager
                     = ((IObjectContextAdapter)context)
@@ -114,14 +114,29 @@ namespace System.Data.Entity.Migrations.Infrastructure
             }
         }
 
-        private object AttachAssociationEnd(AssociationEndMember associationEndMember, DbContext context)
+        private object InstantiateAndAttachEntity(EntityType entityType, DbContext context)
         {
-            DebugCheck.NotNull(associationEndMember);
+            DebugCheck.NotNull(entityType);
             DebugCheck.NotNull(context);
 
-            var entityType = associationEndMember.GetEntityType();
             var clrType = entityType.GetClrType();
             var set = context.Set(clrType);
+
+            var entity = InstantiateEntity(entityType, context, clrType, set);
+
+            SetFakeReferenceKeyValues(entity, entityType);
+            
+            set.Attach(entity);
+
+            return entity;
+        }
+
+        private object InstantiateEntity(EntityType entityType, DbContext context, Type clrType, DbSet set)
+        {
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(context);
+            DebugCheck.NotNull(clrType);
+            DebugCheck.NotNull(set);
 
             object entity;
 
@@ -139,10 +154,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 entity = context.Set(derivedEntityType.GetClrType()).Create();
             }
 
-            SetFakeReferenceKeyValues(entity, entityType);
             InstantiateComplexProperties(entity, entityType.Properties);
-
-            set.Attach(entity);
 
             return entity;
         }
@@ -179,13 +191,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             using (var context = CreateContext())
             {
-                var set = context.Set(entityType.GetClrType());
-                var entity = set.Create();
-
-                SetFakeReferenceKeyValues(entity, entityType);
-                InstantiateComplexProperties(entity, entityType.Properties);
-
-                set.Attach(entity);
+                var entity = InstantiateAndAttachEntity(entityType, context);
 
                 if (state != EntityState.Deleted)
                 {
@@ -252,20 +258,19 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
                 if (dependentEnd.GetEntityType().IsAssignableFrom(entityType))
                 {
-                    var principalClrType
-                        = principalEnd.GetEntityType().GetClrType();
-
+                    var principalEntityType = principalEnd.GetEntityType();
+                    var principalClrType = principalEntityType.GetClrType();
                     var set = context.Set(principalClrType);
-
                     var principalStub = set.Local.Cast<object>().SingleOrDefault();
 
                     if ((principalStub == null)
                         || (ReferenceEquals(entity, principalStub)
                             && state == EntityState.Added))
                     {
-                        principalStub = set.Create();
+                        principalStub 
+                            = InstantiateEntity(principalEntityType, context, principalClrType, set);
 
-                        SetFakeReferenceKeyValues(principalStub, principalEnd.GetEntityType());
+                        SetFakeReferenceKeyValues(principalStub, principalEntityType);
 
                         set.Attach(principalStub);
                     }
@@ -276,9 +281,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         // For one-to-one updates, we need to fake delete
                         // the relationship first.
 
-                        var principalStubForDelete = set.Create();
+                        var principalStubForDelete
+                            = InstantiateEntity(principalEntityType, context, principalClrType, set);
 
-                        SetFakeKeyValues(principalStubForDelete, principalEnd.GetEntityType());
+                        SetFakeKeyValues(principalStubForDelete, principalEntityType);
 
                         set.Attach(principalStubForDelete);
 

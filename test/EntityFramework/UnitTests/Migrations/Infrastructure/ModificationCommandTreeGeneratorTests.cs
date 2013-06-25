@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Spatial;
@@ -11,6 +12,115 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
     public class ModificationCommandTreeGeneratorTests : TestBase
     {
+        public abstract class WeaponBase
+        {
+            public int Id { get; set; }
+
+            // 1 - 1 self reference
+            public virtual WeaponBase SynergyWith { get; set; }
+
+            public Ammo Ammo { get; set; }
+        }
+
+        public class HeavyishWeapon : WeaponBase
+        {
+            public bool Overheats { get; set; }
+        }
+
+        [ComplexType]
+        public class Ammo
+        {
+            public string MagazineType { get; set; }
+        }
+
+        public class GearsModelOneToOneSelfRef : DbContext
+        {
+            public DbSet<WeaponBase> Weapons { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<WeaponBase>().HasOptional(w => w.SynergyWith).WithOptionalPrincipal();
+            }
+        }
+
+        [Fact]
+        public void Can_generate_insert_tree_when_one_to_one_self_ref()
+        {
+            DbModel model;
+
+            using (var context = new GearsModelOneToOneSelfRef())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateInsert(GetType().Namespace + ".WeaponBase")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_update_tree_when_one_to_one_self_ref()
+        {
+            DbModel model;
+
+            using (var context = new GearsModelOneToOneSelfRef())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateUpdate(GetType().Namespace + ".WeaponBase")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_delete_tree_when_one_to_one_self_ref()
+        {
+            DbModel model;
+
+            using (var context = new GearsModelOneToOneSelfRef())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateDelete(GetType().Namespace + ".WeaponBase")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
         public abstract class GearBase
         {
             public int Id { get; set; }
