@@ -85,8 +85,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             using (var context = CreateContext())
             {
-                var sourceEntity = InstantiateAndAttachEntity(associationType.SourceEnd.GetEntityType(), context);
-                var targetEntity = InstantiateAndAttachEntity(associationType.TargetEnd.GetEntityType(), context);
+                var sourceEntityType = associationType.SourceEnd.GetEntityType();
+                var sourceEntity = InstantiateAndAttachEntity(sourceEntityType, context);
+
+                var targetEntityType = associationType.TargetEnd.GetEntityType();
+                var targetEntity
+                    = sourceEntityType.GetRootType() == targetEntityType.GetRootType()
+                          ? sourceEntity
+                          : InstantiateAndAttachEntity(targetEntityType, context);
 
                 var objectStateManager
                     = ((IObjectContextAdapter)context)
@@ -125,7 +131,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var entity = InstantiateEntity(entityType, context, clrType, set);
 
             SetFakeReferenceKeyValues(entity, entityType);
-            
+
             set.Attach(entity);
 
             return entity;
@@ -267,7 +273,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         || (ReferenceEquals(entity, principalStub)
                             && state == EntityState.Added))
                     {
-                        principalStub 
+                        principalStub
                             = InstantiateEntity(principalEntityType, context, principalClrType, set);
 
                         SetFakeReferenceKeyValues(principalStub, principalEntityType);

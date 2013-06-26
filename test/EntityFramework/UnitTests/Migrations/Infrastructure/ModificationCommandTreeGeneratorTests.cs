@@ -12,6 +12,76 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
     public class ModificationCommandTreeGeneratorTests : TestBase
     {
+        public class ArubaPerson
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public ArubaPerson Partner { get; set; }
+            public ICollection<ArubaPerson> Children { get; set; }
+            public ICollection<ArubaPerson> Parents { get; set; }
+        }
+
+        public class ManyToManySelfRef : DbContext
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<ArubaPerson>().HasOptional(p => p.Partner).WithOptionalPrincipal();
+                modelBuilder.Entity<ArubaPerson>().HasMany(p => p.Children).WithMany(p => p.Parents);
+            }
+        }
+
+        [Fact]
+        public void Can_generate_insert_association_tree_when_many_to_many_self_ref()
+        {
+            DbModel model;
+
+            using (var context = new ManyToManySelfRef())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateAssociationInsert(GetType().Namespace + ".ArubaPerson_Children")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_delete_association_tree_when_many_to_many_self_ref()
+        {
+            DbModel model;
+
+            using (var context = new ManyToManySelfRef())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateAssociationDelete(GetType().Namespace + ".ArubaPerson_Children")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
         public abstract class WeaponBase
         {
             public int Id { get; set; }
