@@ -413,6 +413,27 @@ namespace System.Data.Entity.Migrations
         }
 
         [Fact]
+        public void CreateTable_can_build_table_pk_with_custom_column_name()
+        {
+            var migration = new TestMigration();
+
+            migration.CreateTable(
+                "Customers",
+                cs => new
+                {
+                    Id = cs.Int(name: "Customer Id")
+                })
+                .PrimaryKey(t => t.Id);
+
+            var createTableOperation 
+                = migration.Operations
+                    .Cast<CreateTableOperation>()
+                    .Single();
+
+            Assert.Equal("Customer Id", createTableOperation.PrimaryKey.Columns.Single());
+        }
+
+        [Fact]
         public void CreateTable_can_build_table_with_index()
         {
             var migration = new TestMigration();

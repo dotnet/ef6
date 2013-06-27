@@ -8,6 +8,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Globalization;
+    using System.Reflection;
 
     /// <summary>
     ///     Represents information about a column.
@@ -16,6 +17,7 @@ namespace System.Data.Entity.Migrations.Model
     {
         private readonly Type _clrType;
         private readonly object _clrDefaultValue;
+        private PropertyInfo _apiPropertyInfo;
 
         /// <summary>
         ///     Initializes a new instance of the ColumnModel class.
@@ -92,6 +94,17 @@ namespace System.Data.Entity.Migrations.Model
         ///     Gets or sets a value indicating if this property model should be configured as a timestamp.
         /// </summary>
         public virtual bool IsTimestamp { get; set; }
+
+        internal PropertyInfo ApiPropertyInfo
+        {
+            get { return _apiPropertyInfo; }
+            set
+            {
+                DebugCheck.NotNull(value);
+
+                _apiPropertyInfo = value;
+            }
+        }
 
         private static readonly Dictionary<PrimitiveTypeKind, int> _typeSize // in bytes
             = new Dictionary<PrimitiveTypeKind, int>

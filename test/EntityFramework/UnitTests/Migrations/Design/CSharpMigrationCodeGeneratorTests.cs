@@ -739,7 +739,7 @@ namespace System.Data.Entity.Migrations.Design
             var createTableOperation = new CreateTableOperation("Customers");
             var idColumn = new ColumnModel(PrimitiveTypeKind.Int32)
                                {
-                                   Name = "Id",
+                                   Name = "I.d",
                                    IsNullable = true,
                                    IsIdentity = true
                                };
@@ -764,7 +764,7 @@ namespace System.Data.Entity.Migrations.Design
                                                  PrincipalTable = "Blogs",
                                                  CascadeDelete = true
                                              };
-            addForeignKeyOperation.DependentColumns.Add("Blog_Id");
+            addForeignKeyOperation.DependentColumns.Add("Blog.Id");
             addForeignKeyOperation.PrincipalColumns.Add("Id");
 
             var generatedMigration
@@ -795,19 +795,19 @@ namespace System.Data.Entity.Migrations.Design
                 ""Customers"",
                 c => new
                     {
-                        Id = c.Int(identity: true),
+                        Id = c.Int(name: ""I.d"", identity: true),
                         Name = c.String(nullable: false),
                     })
                 .PrimaryKey(t => t.Id, name: ""MyPK"")
-                .ForeignKey(""Blogs"", t => t.Blog_Id, cascadeDelete: true)
-                .Index(t => t.Blog_Id);
+                .ForeignKey(""Blogs"", t => t.BlogId, cascadeDelete: true)
+                .Index(t => t.BlogId);
             
         }
         
         public override void Down()
         {
-            DropIndex(""Customers"", new[] { ""Blog_Id"" });
-            DropForeignKey(""Customers"", ""Blog_Id"", ""Blogs"");
+            DropIndex(""Customers"", new[] { ""Blog.Id"" });
+            DropForeignKey(""Customers"", ""Blog.Id"", ""Blogs"");
             DropTable(""Customers"");
         }
     }

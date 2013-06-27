@@ -154,6 +154,8 @@ namespace System.Data.Entity.Migrations
 
                         if (columnModel != null)
                         {
+                            columnModel.ApiPropertyInfo = p;
+                            
                             if (string.IsNullOrWhiteSpace(columnModel.Name))
                             {
                                 columnModel.Name = p.Name;

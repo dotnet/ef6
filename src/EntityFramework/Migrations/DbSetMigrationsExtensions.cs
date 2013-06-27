@@ -92,7 +92,8 @@ namespace System.Data.Entity.Migrations
 
                 if (internalSet != null)
                 {
-                    var identifyingProperties = identifierExpression.GetPropertyAccessList();
+                    var identifyingProperties 
+                        = identifierExpression.GetSimplePropertyAccessList();
 
                     dbSet.AddOrUpdate(identifyingProperties, internalSet, entities);
 
@@ -132,7 +133,7 @@ namespace System.Data.Entity.Migrations
                 var matchExpression
                     = identifyingProperties.Select(
                         pi => Expression.Equal(
-                            Expression.Property(parameter, pi.Last()),
+                            Expression.Property(parameter, pi.Single()),
                             Expression.Constant(pi.Last().GetValue(entity, null))))
                                            .Aggregate<BinaryExpression, Expression>(
                                                null,

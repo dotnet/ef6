@@ -657,11 +657,11 @@ namespace System.Data.Entity.Migrations.Design
 
             if (columns.Count() == 1)
             {
-                writer.Write("t." + columns.Single());
+                writer.Write("t." + ScrubName(columns.Single()));
             }
             else
             {
-                writer.Write("New With { " + columns.Join(c => "t." + c) + " }");
+                writer.Write("New With { " + columns.Join(c => "t." + ScrubName(c)) + " }");
             }
         }
 

@@ -12,21 +12,6 @@ namespace System.Data.Entity.Utilities
 
     internal static class ExpressionExtensions
     {
-        public static IEnumerable<PropertyPath> GetPropertyAccessList(this LambdaExpression propertyAccessExpression)
-        {
-            DebugCheck.NotNull(propertyAccessExpression);
-
-            var propertyPaths
-                = MatchPropertyAccessList(propertyAccessExpression, (p, e) => MatchPropertyAccess(e, p));
-
-            if (propertyPaths == null)
-            {
-                throw Error.InvalidPropertiesExpression(propertyAccessExpression);
-            }
-
-            return propertyPaths;
-        }
-
         public static PropertyPath GetSimplePropertyAccess(this LambdaExpression propertyAccessExpression)
         {
             DebugCheck.NotNull(propertyAccessExpression);

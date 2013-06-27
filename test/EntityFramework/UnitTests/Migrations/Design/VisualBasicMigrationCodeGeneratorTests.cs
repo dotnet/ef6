@@ -725,7 +725,7 @@ End Namespace
             var createTableOperation = new CreateTableOperation("Customers");
             var idColumn = new ColumnModel(PrimitiveTypeKind.Int32)
                                {
-                                   Name = "Id",
+                                   Name = "I.d",
                                    IsNullable = true,
                                    IsIdentity = true
                                };
@@ -750,7 +750,7 @@ End Namespace
                                                  PrincipalTable = "Blogs",
                                                  CascadeDelete = true
                                              };
-            addForeignKeyOperation.DependentColumns.Add("Blog_Id");
+            addForeignKeyOperation.DependentColumns.Add("Blog.Id");
             addForeignKeyOperation.PrincipalColumns.Add("Id");
 
             var generatedMigration
@@ -781,18 +781,18 @@ Namespace Foo
                 ""Customers"",
                 Function(c) New With
                     {
-                        .Id = c.Int(identity := True),
+                        .Id = c.Int(name := ""I.d"", identity := True),
                         .Name = c.String(nullable := False)
                     }) _
                 .PrimaryKey(Function(t) t.Id, name := ""MyPK"") _
-                .ForeignKey(""Blogs"", Function(t) t.Blog_Id, cascadeDelete := True) _
-                .Index(Function(t) t.Blog_Id)
+                .ForeignKey(""Blogs"", Function(t) t.BlogId, cascadeDelete := True) _
+                .Index(Function(t) t.BlogId)
             
         End Sub
         
         Public Overrides Sub Down()
-            DropIndex(""Customers"", New String() { ""Blog_Id"" })
-            DropForeignKey(""Customers"", ""Blog_Id"", ""Blogs"")
+            DropIndex(""Customers"", New String() { ""Blog.Id"" })
+            DropForeignKey(""Customers"", ""Blog.Id"", ""Blogs"")
             DropTable(""Customers"")
         End Sub
     End Class

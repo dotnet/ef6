@@ -31,18 +31,52 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         [Fact]
+        public void PrimaryKey_should_resolve_names_from_column()
+        {
+            var createTableOperation = new CreateTableOperation("T");
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.Guid)
+                    {
+                        Name = "Foo",
+                        ApiPropertyInfo = typeof(Columns).GetProperty("Foo")
+                    });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.Guid)
+                    {
+                        Name = "Bar",
+                        ApiPropertyInfo = typeof(Columns).GetProperty("Bar")
+                    });
+            createTableOperation.Columns.Add(
+                new ColumnModel(PrimitiveTypeKind.Guid)
+                    {
+                        Name = "Baz"
+                    });
+
+            var tableBuilder = new TableBuilder<Columns>(createTableOperation, new TestMigration());
+
+            tableBuilder.PrimaryKey(
+                c => new
+                         {
+                             c.Bar,
+                             c.Foo
+                         }, name: "PK_Custom", clustered: false);
+        }
+
+        [Fact]
         public void PrimaryKey_should_set_key_columns_name_and_clustered()
         {
             var createTableOperation = new CreateTableOperation("T");
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
-                        Name = "Foo"
+                        Name = "Foo",
+                        ApiPropertyInfo = typeof(Columns).GetProperty("Foo")
                     });
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
-                        Name = "Bar"
+                        Name = "Bar",
+                        ApiPropertyInfo = typeof(Columns).GetProperty("Bar")
                     });
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Guid)
@@ -73,12 +107,14 @@ namespace System.Data.Entity.Migrations.Builders
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
-                        Name = "Foo"
+                        Name = "Foo",
+                        ApiPropertyInfo = typeof(Columns).GetProperty("Foo")
                     });
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
-                        Name = "Bar"
+                        Name = "Bar",
+                        ApiPropertyInfo = typeof(Columns).GetProperty("Bar")
                     });
 
             var migration = new TestMigration();
@@ -106,15 +142,19 @@ namespace System.Data.Entity.Migrations.Builders
         public void Index_should_add_create_index_operation_to_model()
         {
             var createTableOperation = new CreateTableOperation("T");
+
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
-                        Name = "Foo"
+                        Name = "Foo",
+                        ApiPropertyInfo = typeof(Columns).GetProperty("Foo")
                     });
+            
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
-                        Name = "Bar"
+                        Name = "Bar",
+                        ApiPropertyInfo = typeof(Columns).GetProperty("Bar")
                     });
 
             var migration = new TestMigration();
@@ -125,7 +165,7 @@ namespace System.Data.Entity.Migrations.Builders
                          {
                              c.Foo,
                              c.Bar
-                         }, unique: true, clustered: false);
+                         }, unique: true);
 
             Assert.Equal(1, migration.Operations.Count());
 

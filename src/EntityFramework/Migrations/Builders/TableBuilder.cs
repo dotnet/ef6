@@ -60,9 +60,9 @@ namespace System.Data.Entity.Migrations.Builders
                     };
 
             keyExpression
-                .GetPropertyAccessList()
-                .Select(p => p.Last().Name)
-                .Each(c => addPrimaryKeyOperation.Columns.Add(c));
+                .GetSimplePropertyAccessList()
+                .Select(p => _createTableOperation.Columns.Single(c => c.ApiPropertyInfo == p.Single()))
+                .Each(c => addPrimaryKeyOperation.Columns.Add(c.Name));
 
             _createTableOperation.PrimaryKey = addPrimaryKeyOperation;
 
@@ -97,9 +97,9 @@ namespace System.Data.Entity.Migrations.Builders
                     };
 
             indexExpression
-                .GetPropertyAccessList()
-                .Select(p => p.Last().Name)
-                .Each(c => createIndexOperation.Columns.Add(c));
+                .GetSimplePropertyAccessList()
+                .Select(p => _createTableOperation.Columns.Single(c => c.ApiPropertyInfo == p.Single()))
+                .Each(c => createIndexOperation.Columns.Add(c.Name));
 
             _migration.AddOperation(createIndexOperation);
 
@@ -137,9 +137,9 @@ namespace System.Data.Entity.Migrations.Builders
                 };
 
             dependentKeyExpression
-                .GetPropertyAccessList()
-                .Select(p => p.Last().Name)
-                .Each(c => addForeignKeyOperation.DependentColumns.Add(c));
+                .GetSimplePropertyAccessList()
+                .Select(p => _createTableOperation.Columns.Single(c => c.ApiPropertyInfo == p.Single()))
+                .Each(c => addForeignKeyOperation.DependentColumns.Add(c.Name));
 
             _migration.AddOperation(addForeignKeyOperation);
 
