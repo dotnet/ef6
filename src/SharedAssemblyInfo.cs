@@ -11,3 +11,6 @@ using System.Runtime.InteropServices;
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(false)]
 [assembly: NeutralResourcesLanguage("en-US")]
+#if !NET40
+[assembly: AssemblyMetadata("Servicing", "true")]
+#endif
