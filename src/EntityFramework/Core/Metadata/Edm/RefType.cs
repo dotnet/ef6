@@ -73,5 +73,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             builder.Append("]");
             return builder.ToString();
         }
+
+        public override int GetHashCode()
+        {
+            return (_elementType.GetHashCode() * 397) ^ typeof(RefType).GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as RefType;
+            return other != null && ReferenceEquals(other._elementType, _elementType);
+        }
     }
 }

@@ -226,6 +226,7 @@
     <Compile Include="ViewGeneration\PregenContextEdmxViews.cs" />
     <Compile Include="ViewGeneration\PregenContextViews.cs" />
     <Compile Include="ViewGeneration\PregeneratedViewsTests.cs" />
+    <Compile Include="ViewGeneration\ViewGenerationTests.cs" />
     <Compile Include="WrappingProvider\LogItem.cs" />
     <Compile Include="WrappingProvider\WrappingAdoNetProvider.cs" />
     <Compile Include="WrappingProvider\WrappingCommand.cs">
