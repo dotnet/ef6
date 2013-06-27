@@ -167,6 +167,7 @@
     <Compile Include="Core\Common\CommandTrees\DbCommandTreeTests.cs" />
     <Compile Include="Core\Common\CommandTrees\DbExpressionBuilderTests.cs" />
     <Compile Include="Core\Common\CommandTrees\DbExpressionVisitorTests.cs" />
+    <Compile Include="Core\Common\CommandTrees\Internal\ExpressionKeyGenTests.cs" />
     <Compile Include="Core\Common\Internal\Materialization\CodeGenEmitterTests.cs" />
     <Compile Include="Core\Common\Internal\Materialization\ShaperTests.cs" />
     <Compile Include="Core\Common\Internal\Materialization\TestHelpers\MockHelper.cs" />

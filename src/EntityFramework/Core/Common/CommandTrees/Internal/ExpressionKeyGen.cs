@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
             }
         }
 
-        private ExpressionKeyGen()
+        internal ExpressionKeyGen()
         {
         }
 
@@ -88,6 +88,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 
         #endregion
+
+        internal string Key
+        {
+            get { return _key.ToString(); }
+        }
 
         private void VisitVariableName(string varName)
         {
@@ -229,7 +234,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
                 case PrimitiveTypeKind.Boolean:
                 case PrimitiveTypeKind.Byte:
-                case PrimitiveTypeKind.DateTime:
                 case PrimitiveTypeKind.Decimal:
                 case PrimitiveTypeKind.Double:
                 case PrimitiveTypeKind.Guid:
@@ -239,8 +243,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 case PrimitiveTypeKind.Int32:
                 case PrimitiveTypeKind.Int64:
                 case PrimitiveTypeKind.Time:
-                case PrimitiveTypeKind.DateTimeOffset:
                     _key.AppendFormat(CultureInfo.InvariantCulture, "{0}", e.Value);
+                    break;
+
+                case PrimitiveTypeKind.DateTime:
+                    _key.Append(((DateTime)e.Value).ToString("o", CultureInfo.InvariantCulture));
+                    break;
+
+                case PrimitiveTypeKind.DateTimeOffset:
+                    _key.Append(((DateTimeOffset)e.Value).ToString("o", CultureInfo.InvariantCulture));
                     break;
 
                 case PrimitiveTypeKind.Geometry:
