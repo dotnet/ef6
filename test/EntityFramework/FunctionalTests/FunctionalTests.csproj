@@ -168,6 +168,7 @@
     <Compile Include="PlanCompiler\AnonymousTypeTests.cs" />
     <Compile Include="PlanCompiler\LinqGroupByTests.cs" />
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
+    <Compile Include="ProductivityApi\DeadlockTests.cs" />
     <Compile Include="ProductivityApi\GetHashCodeTests.cs" />
     <Compile Include="ProductivityApi\HasChangesTests.cs" />
     <Compile Include="TestDoubles\InMemoryDbSetTests.cs" />

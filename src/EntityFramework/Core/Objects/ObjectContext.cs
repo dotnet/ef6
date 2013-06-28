@@ -4050,7 +4050,7 @@ namespace System.Data.Entity.Core.Objects
                         executionStrategy,
                         /*startLocalTransaction:*/ transactionalBehavior != TransactionalBehavior.DoNotEnsureTransaction,
                         /*releaseConnectionOnSuccess:*/ true, cancellationToken),
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
             finally
             {
@@ -4450,7 +4450,7 @@ namespace System.Data.Entity.Core.Objects
                         executionStrategy,
                         /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !executionOptions.Streaming,
                         cancellationToken),
-                    cancellationToken);
+                    cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
             finally
             {
