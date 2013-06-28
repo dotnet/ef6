@@ -12,6 +12,106 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
     public class ModificationCommandTreeGeneratorTests : TestBase
     {
+        public enum MilitaryRank
+        {
+            Private,
+            Major,
+            Colonel,
+            General,
+        };
+
+        public class EnumKey
+        {
+            public MilitaryRank Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class EnumKeyContext : DbContext
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<EnumKey>().MapToStoredProcedures();
+            }
+        }
+
+        [Fact]
+        public void Can_generate_insert_tree_when_enum_key()
+        {
+            DbModel model;
+
+            using (var context = new EnumKeyContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateInsert(GetType().Namespace + ".EnumKey")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_update_tree_when_enum_key()
+        {
+            DbModel model;
+
+            using (var context = new EnumKeyContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateUpdate(GetType().Namespace + ".EnumKey")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_delete_tree_when_enum_key()
+        {
+            DbModel model;
+
+            using (var context = new EnumKeyContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateDelete(GetType().Namespace + ".EnumKey")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
         public class ArubaPerson
         {
             public int Id { get; set; }

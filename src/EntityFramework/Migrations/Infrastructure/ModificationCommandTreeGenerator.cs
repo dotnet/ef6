@@ -324,7 +324,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             foreach (var property in entityType.KeyProperties)
             {
                 var clrPropertyInfo = property.GetClrPropertyInfo();
-                var value = GetFakeReferenceKeyValue(property.PrimitiveType.PrimitiveTypeKind);
+                var value = GetFakeReferenceKeyValue(property.UnderlyingPrimitiveType.PrimitiveTypeKind);
 
                 if (value != null)
                 {
@@ -361,7 +361,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             foreach (var property in entityType.KeyProperties)
             {
                 var clrPropertyInfo = property.GetClrPropertyInfo();
-                var value = GetFakeKeyValue(property.PrimitiveType.PrimitiveTypeKind);
+                var value = GetFakeKeyValue(property.UnderlyingPrimitiveType.PrimitiveTypeKind);
 
                 Debug.Assert(value != null);
 
