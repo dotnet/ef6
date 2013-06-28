@@ -2214,16 +2214,17 @@ namespace System.Data.Entity.Core.Objects
 
         #region Refresh
 
-        /// <summary>Updates a collection of objects in the object context with data from the data source. </summary>
+        /// <summary>Updates a collection of objects in the object context with data from the database. </summary>
         /// <param name="refreshMode">
-        ///     A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether property changes in the object context are overwritten with property values from the data source.
+        ///     A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
+        ///     property changes in the object context are overwritten with property values from the database.
         /// </param>
         /// <param name="collection">
         ///     An <see cref="T:System.Collections.IEnumerable" /> collection of objects to refresh.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"> collection  is null.</exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException"> refreshMode  is not valid.</exception>
-        /// <exception cref="T:System.ArgumentException"> collection  is empty or an object is not attached to the context. </exception>
+        /// <exception cref="T:System.ArgumentException"> collection is empty or an object is not attached to the context. </exception>
         public virtual void Refresh(RefreshMode refreshMode, IEnumerable collection)
         {
             Check.NotNull(collection, "collection");
@@ -2235,17 +2236,15 @@ namespace System.Data.Entity.Core.Objects
             RefreshEntities(refreshMode, collection);
         }
 
-        /// <summary>Updates an object in the object context with data from the data source. </summary>
+        /// <summary>Updates an object in the object context with data from the database. </summary>
         /// <param name="refreshMode">
-        ///     One of the <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> values that specifies which mode to use for refreshing the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
-        ///     .
+        ///     A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
+        ///     property changes in the object context are overwritten with property values from the database.
         /// </param>
         /// <param name="entity">The object to be refreshed. </param>
-        /// <exception cref="T:System.ArgumentNullException"> collection  is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException"> entity  is null.</exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException"> refreshMode  is not valid.</exception>
-        /// <exception cref="T:System.ArgumentException"> collection  is empty or an object is not attached to the context. </exception>
+        /// <exception cref="T:System.ArgumentException"> entity is not attached to the context. </exception>
         public virtual void Refresh(RefreshMode refreshMode, object entity)
         {
             Check.NotNull(entity, "entity");
@@ -2259,46 +2258,50 @@ namespace System.Data.Entity.Core.Objects
 
 #if !NET40
 
-        /// <summary>
-        ///     Asynchronously refreshes cache data with store data for specific entities.
-        ///     The order in which entites are refreshed is non-deterministic.
-        /// </summary>
+        /// <summary>Asynchronously updates a collection of objects in the object context with data from the database. </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
-        /// <param name="collection"> The entities to refresh. Must not be null and all entities must be attached to this context. May be empty. </param>
+        /// <param name="refreshMode">
+        ///     A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
+        ///     property changes in the object context are overwritten with property values from the database.
+        /// </param>
+        /// <param name="collection">
+        ///     An <see cref="T:System.Collections.IEnumerable" /> collection of objects to refresh.
+        /// </param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
         /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
-        /// <exception cref="ArgumentNullException">collection is null</exception>
-        /// <exception cref="ArgumentException">collection contains null or non entities or entities not attached to this context</exception>
+        /// <exception cref="T:System.ArgumentNullException"> collection  is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException"> refreshMode  is not valid.</exception>
+        /// <exception cref="T:System.ArgumentException"> collection is empty or an object is not attached to the context. </exception>
         public Task RefreshAsync(RefreshMode refreshMode, IEnumerable collection)
         {
             return RefreshAsync(refreshMode, collection, CancellationToken.None);
         }
 
-        /// <summary>
-        ///     Asynchronously refreshes cache data with store data for specific entities.
-        ///     The order in which entites are refreshed is non-deterministic.
-        /// </summary>
+        /// <summary>Asynchronously updates a collection of objects in the object context with data from the database. </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
-        /// <param name="collection"> The entities to refresh. Must not be null and all entities must be attached to this context. May be empty. </param>
-        /// <param name="cancellationToken">
+        /// <param name="refreshMode">
+        ///     A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
+        ///     property changes in the object context are overwritten with property values from the database.
+        /// </param>
+        /// <param name="collection">
+        ///     An <see cref="T:System.Collections.IEnumerable" /> collection of objects to refresh.
+        /// </param>
+        ///  <param name="cancellationToken">
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
         /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
-        /// <exception cref="ArgumentNullException">collection is null</exception>
-        /// <exception cref="ArgumentException">collection contains null or non entities or entities not attached to this context</exception>
+        /// <exception cref="T:System.ArgumentNullException"> collection  is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException"> refreshMode  is not valid.</exception>
+        /// <exception cref="T:System.ArgumentException"> collection is empty or an object is not attached to the context. </exception>
         public virtual Task RefreshAsync(RefreshMode refreshMode, IEnumerable collection, CancellationToken cancellationToken)
         {
             Check.NotNull(collection, "collection");
@@ -2310,44 +2313,46 @@ namespace System.Data.Entity.Core.Objects
             return RefreshEntitiesAsync(refreshMode, collection, cancellationToken);
         }
 
-        /// <summary>
-        ///     Asynchronously refreshes cache data with store data for a specific entity.
-        /// </summary>
+        /// <summary>Asynchronously updates an object in the object context with data from the database. </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
-        /// <param name="entity"> The entity to refresh. This must be a non-null entity that is attached to this context </param>
+        /// <param name="refreshMode">
+        ///     A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
+        ///     property changes in the object context are overwritten with property values from the database.
+        /// </param>
+        /// <param name="entity">The object to be refreshed. </param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
         /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
-        /// <exception cref="ArgumentNullException">entity is null</exception>
-        /// <exception cref="ArgumentException">entity is not attached to this context</exception>
+        /// <exception cref="T:System.ArgumentNullException"> entity  is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException"> refreshMode  is not valid.</exception>
+        /// <exception cref="T:System.ArgumentException"> entity is not attached to the context. </exception>
         public Task RefreshAsync(RefreshMode refreshMode, object entity)
         {
             return RefreshAsync(refreshMode, entity, CancellationToken.None);
         }
 
-        /// <summary>
-        ///     Asynchronously refreshes cache data with store data for a specific entity.
-        /// </summary>
+        /// <summary>Asynchronously updates an object in the object context with data from the database. </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="refreshMode"> Determines how the entity retrieved from the store is merged with the entity in the cache </param>
-        /// <param name="entity"> The entity to refresh. This must be a non-null entity that is attached to this context </param>
+        /// <param name="refreshMode">
+        ///     A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
+        ///     property changes in the object context are overwritten with property values from the database.
+        /// </param>
+        /// <param name="entity">The object to be refreshed. </param>
         /// <param name="cancellationToken">
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
         /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException">if refreshMode is not valid</exception>
-        /// <exception cref="ArgumentNullException">entity is null</exception>
-        /// <exception cref="ArgumentException">entity is not attached to this context</exception>
+        /// <exception cref="T:System.ArgumentNullException"> entity  is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException"> refreshMode  is not valid.</exception>
+        /// <exception cref="T:System.ArgumentException"> entity is not attached to the context. </exception>
         public virtual Task RefreshAsync(RefreshMode refreshMode, object entity, CancellationToken cancellationToken)
         {
             Check.NotNull(entity, "entity");
@@ -2814,15 +2819,12 @@ namespace System.Data.Entity.Core.Objects
 
         #region SaveChanges
 
-        /// <summary>Persists all updates to the data source and resets change tracking in the object context.</summary>
+        /// <summary>Persists all updates to the database and resets change tracking in the object context.</summary>
         /// <returns>
         ///     The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Modified" />
-        ///     , or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        ///     <see
-        ///         cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" />
-        ///     was called.
+        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public int SaveChanges()
@@ -2832,26 +2834,25 @@ namespace System.Data.Entity.Core.Objects
 
 #if !NET40
 
-        /// <summary>
-        ///     Asynchronously persists all updates to the store.
-        /// </summary>
+        /// <summary>Asynchronously persists all updates to the database and resets change tracking in the object context.</summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <returns>
         ///     A task that represents the asynchronous operation.
-        ///     The task result contains The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
-        ///     in the ObjectStateManager when SaveChanges was called.
+        ///     The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
+        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
+        /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public Task<Int32> SaveChangesAsync()
         {
             return SaveChangesAsync(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave, CancellationToken.None);
         }
 
-        /// <summary>
-        ///     Asynchronously persists all updates to the store.
-        /// </summary>
+        /// <summary>Asynchronously persists all updates to the database and resets change tracking in the object context.</summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
@@ -2861,9 +2862,12 @@ namespace System.Data.Entity.Core.Objects
         /// </param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
-        ///     The task result contains The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
-        ///     in the ObjectStateManager when SaveChanges was called.
+        ///     The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
+        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
+        /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public Task<Int32> SaveChangesAsync(CancellationToken cancellationToken)
         {
             return SaveChangesAsync(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave, cancellationToken);
@@ -2871,29 +2875,20 @@ namespace System.Data.Entity.Core.Objects
 
 #endif
 
-        /// <summary>Persists all updates to the data source and optionally resets change tracking in the object context.</summary>
-        /// <returns>
-        ///     The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Modified" />
-        ///     , or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        ///     <see
-        ///         cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" />
-        ///     was called.
-        /// </returns>
+        /// <summary>Persists all updates to the database and optionally resets change tracking in the object context.</summary>
         /// <param name="acceptChangesDuringSave">
         ///     This parameter is needed for client-side transaction support. If true, the change tracking on all objects is reset after
-        ///     <see
-        ///         cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(System.Boolean)" />
-        ///     finishes. If false, you must call the
-        ///     <see
-        ///         cref="M:System.Data.Entity.Core.Objects.ObjectContext.AcceptAllChanges" />
-        ///     method after
-        ///     <see
-        ///         cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(System.Boolean)" />
-        ///     .
+        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(System.Boolean)" />
+        ///     finishes. If false, you must call the <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.AcceptAllChanges" />
+        ///     method after <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(System.Boolean)" />.
         /// </param>
-        /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving data.</exception>
+        /// <returns>
+        ///     The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
+        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// </returns>
+        /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
         [Obsolete("Use SaveChanges(SaveOptions options) instead.")]
@@ -2905,25 +2900,17 @@ namespace System.Data.Entity.Core.Objects
                     : SaveOptions.DetectChangesBeforeSave);
         }
 
-        /// <summary>
-        ///     Persists all updates to the data source with the specified
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.SaveOptions" />
-        ///     .
-        /// </summary>
-        /// <returns>
-        ///     The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Modified" />
-        ///     , or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        ///     <see
-        ///         cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" />
-        ///     was called.
-        /// </returns>
+        /// <summary>Persists all updates to the database and optionally resets change tracking in the object context.</summary>
         /// <param name="options">
         ///     A <see cref="T:System.Data.Entity.Core.Objects.SaveOptions" /> value that determines the behavior of the operation.
         /// </param>
-        /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving data.</exception>
+        /// <returns>
+        ///     The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
+        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// </returns>
+        /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual int SaveChanges(SaveOptions options)
         {
             AsyncMonitor.EnsureNotEntered();
@@ -2946,40 +2933,46 @@ namespace System.Data.Entity.Core.Objects
 
 #if !NET40
 
-        /// <summary>
-        ///     Asynchronously persists all updates to the store.
-        /// </summary>
+        /// <summary>Asynchronously persists all updates to the database and optionally resets change tracking in the object context.</summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="options"> Describes behavior options of SaveChanges </param>
+        /// <param name="options">
+        ///     A <see cref="T:System.Data.Entity.Core.Objects.SaveOptions" /> value that determines the behavior of the operation.
+        /// </param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
-        ///     The task result contains The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
-        ///     in the ObjectStateManager when SaveChanges was called.
+        ///     The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
+        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
+        /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public Task<Int32> SaveChangesAsync(SaveOptions options)
         {
             return SaveChangesAsync(options, CancellationToken.None);
         }
 
-        /// <summary>
-        ///     Asynchronously persists all updates to the store.
-        /// </summary>
+        /// <summary>Asynchronously persists all updates to the database and optionally resets change tracking in the object context.</summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="options"> Describes behavior options of SaveChanges </param>
+        /// <param name="options">
+        ///     A <see cref="T:System.Data.Entity.Core.Objects.SaveOptions" /> value that determines the behavior of the operation.
+        /// </param>
         /// <param name="cancellationToken">
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
-        ///     The task result contains The number of dirty (i.e., Added, Modified, or Deleted) ObjectStateEntries
-        ///     in the ObjectStateManager when SaveChanges was called.
+        ///     The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
+        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
+        /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual Task<Int32> SaveChangesAsync(SaveOptions options, CancellationToken cancellationToken)
         {
             AsyncMonitor.EnsureNotEntered();
@@ -3911,23 +3904,30 @@ namespace System.Data.Entity.Core.Objects
             return instance;
         }
 
-        /// <summary>Executes an arbitrary command directly against the data source using the existing connection.</summary>
+        /// <summary>
+        ///     Executes an arbitrary command directly against the data source using the existing connection.
+        ///     The command is specified using the server's native query language, such as SQL.
+        /// </summary>
+        /// <remarks>
+        ///     If there isn't an existing local transaction a new transaction will be used
+        ///     to execute the command.
+        /// </remarks>
+        /// <param name="commandText">The command specified in the server's native query language.</param>
+        /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>The number of rows affected.</returns>
-        /// <param name="commandText">The command to execute, in the native language of the data source.</param>
-        /// <param name="parameters">An array of parameters to pass to the command.</param>
         public virtual int ExecuteStoreCommand(string commandText, params object[] parameters)
         {
             return ExecuteStoreCommand(TransactionalBehavior.EnsureTransaction, commandText, parameters);
         }
 
         /// <summary>
-        ///     Execute a command against the database server that does not return a sequence of objects.
+        ///     Executes an arbitrary command directly against the data source using the existing connection.
         ///     The command is specified using the server's native query language, such as SQL.
         /// </summary>
         /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
-        /// <param name="commandText"> The command specified in the server's native query language. </param>
+        /// <param name="commandText">The command specified in the server's native query language.</param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
-        /// <returns> A single integer return value </returns>
+        /// <returns>The number of rows affected.</returns>
         public virtual int ExecuteStoreCommand(TransactionalBehavior transactionalBehavior, string commandText, params object[] parameters)
         {
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
@@ -3944,7 +3944,7 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously executes a command against the database server that does not return a sequence of objects.
+        ///     Asynchronously executes an arbitrary command directly against the data source using the existing connection.
         ///     The command is specified using the server's native query language, such as SQL.
         /// </summary>
         /// <remarks>
@@ -3954,11 +3954,11 @@ namespace System.Data.Entity.Core.Objects
         ///     If there isn't an existing local transaction a new transaction will be used
         ///     to execute the command.
         /// </remarks>
-        /// <param name="commandText"> The command specified in the server's native query language. </param>
+        /// <param name="commandText">The command specified in the server's native query language.</param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains a single integer return value.
+        ///      A task that represents the asynchronous operation.
+        ///     The task result contains the number of rows affected.
         /// </returns>
         public Task<int> ExecuteStoreCommandAsync(string commandText, params object[] parameters)
         {
@@ -3966,7 +3966,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes a command against the database server that does not return a sequence of objects.
+        ///     Asynchronously executes an arbitrary command directly against the data source using the existing connection.
         ///     The command is specified using the server's native query language, such as SQL.
         /// </summary>
         /// <remarks>
@@ -3974,11 +3974,11 @@ namespace System.Data.Entity.Core.Objects
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
-        /// <param name="commandText"> The command specified in the server's native query language. </param>
+        /// <param name="commandText">The command specified in the server's native query language.</param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains a single integer return value.
+        ///      A task that represents the asynchronous operation.
+        ///     The task result contains the number of rows affected.
         /// </returns>
         public Task<int> ExecuteStoreCommandAsync(TransactionalBehavior transactionalBehavior, string commandText, params object[] parameters)
         {
@@ -3986,7 +3986,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes a command against the database server that does not return a sequence of objects.
+        ///     Asynchronously executes an arbitrary command directly against the data source using the existing connection.
         ///     The command is specified using the server's native query language, such as SQL.
         /// </summary>
         /// <remarks>
@@ -3996,14 +3996,14 @@ namespace System.Data.Entity.Core.Objects
         ///     If there isn't an existing local transaction a new transaction will be used
         ///     to execute the command.
         /// </remarks>
-        /// <param name="commandText"> The command specified in the server's native query language. </param>
+        /// <param name="commandText">The command specified in the server's native query language.</param>
         /// <param name="cancellationToken">
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains a single integer return value.
+        ///      A task that represents the asynchronous operation.
+        ///     The task result contains the number of rows affected.
         /// </returns>
         public virtual Task<int> ExecuteStoreCommandAsync(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
@@ -4012,7 +4012,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes a command against the database server that does not return a sequence of objects.
+        ///     Asynchronously executes an arbitrary command directly against the data source using the existing connection.
         ///     The command is specified using the server's native query language, such as SQL.
         /// </summary>
         /// <remarks>
@@ -4020,14 +4020,14 @@ namespace System.Data.Entity.Core.Objects
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
-        /// <param name="commandText"> The command specified in the server's native query language. </param>
+        /// <param name="commandText">The command specified in the server's native query language.</param>
         /// <param name="cancellationToken">
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains a single integer return value.
+        ///      A task that represents the asynchronous operation.
+        ///     The task result contains the number of rows affected.
         /// </returns>
         public virtual Task<int> ExecuteStoreCommandAsync(
             TransactionalBehavior transactionalBehavior, string commandText, CancellationToken cancellationToken, params object[] parameters)
@@ -4060,10 +4060,17 @@ namespace System.Data.Entity.Core.Objects
 
 #endif
 
-        /// <summary>Executes a query directly against the data source that returns a sequence of typed results. </summary>
-        /// <returns>An enumeration of objects of type  TResult .</returns>
-        /// <param name="commandText">The command to execute, in the native language of the data source.</param>
-        /// <param name="parameters">An array of parameters to pass to the command.</param>
+        /// <summary>
+        ///     Executes a query directly against the data source and returns a sequence of typed results. 
+        ///     The query is specified using the server's native query language, such as SQL.
+        ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
+        /// </summary>
+        /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
+        /// <param name="commandText"> The query specified in the server's native query language. </param>
+        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <returns>
+        ///     An enumeration of objects of type <typeparamref name="TElement" /> .
+        /// </returns>
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, params object[] parameters)
         {
             return ExecuteStoreQueryReliably<TElement>(
@@ -4071,8 +4078,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Execute the sequence returning query against the database server.
+        ///     Executes a query directly against the data source and returns a sequence of typed results. 
         ///     The query is specified using the server's native query language, such as SQL.
+        ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         /// </summary>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
@@ -4088,17 +4096,22 @@ namespace System.Data.Entity.Core.Objects
                 commandText, /*entitySetName:*/null, executionOptions, parameters);
         }
 
-        /// <summary>Executes a query directly against the data source and returns a sequence of typed results. Specify the entity set and the merge option so that query results can be tracked as entities. </summary>
-        /// <returns>An enumeration of objects of type  TResult .</returns>
-        /// <param name="commandText">The command to execute, in the native language of the data source.</param>
+        /// <summary>
+        ///     Executes a query directly against the data source and returns a sequence of typed results. 
+        ///     The query is specified using the server's native query language, such as SQL.
+        ///     If an entity set name is specified, results are tracked by the context.
+        /// </summary>
+        /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
+        /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="entitySetName">The entity set of the  TResult  type. If an entity set name is not provided, the results are not going to be tracked.</param>
         /// <param name="mergeOption">
         ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. The default is
-        ///     <see
-        ///         cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />
-        ///     .
+        ///     <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
         /// </param>
-        /// <param name="parameters">An array of parameters to pass to the command.</param>
+        /// <param name="parameters"> The parameter values to use for the query. </param>
+        /// <returns>
+        ///     An enumeration of objects of type <typeparamref name="TElement" /> .
+        /// </returns>
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
         {
@@ -4108,12 +4121,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Execute the sequence returning query against the database server.
+        ///     Executes a query directly against the data source and returns a sequence of typed results. 
         ///     The query is specified using the server's native query language, such as SQL.
+        ///     If an entity set name is specified, results are tracked by the context.
         /// </summary>
-        /// <typeparam name="TElement"> The element type of the resulting sequence </typeparam>
-        /// <param name="commandText"> The DbDataReader to translate </param>
-        /// <param name="entitySetName"> The entity set in which results should be tracked. Null indicates there is no entity set. </param>
+        /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
+        /// <param name="commandText"> The query specified in the server's native query language. </param>
+        /// <param name="entitySetName">The entity set of the  TResult  type. If an entity set name is not provided, the results are not going to be tracked.</param>
         /// <param name="executionOptions"> The options for executing this query. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
@@ -4216,8 +4230,9 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously executes the sequence returning query against the database server.
+        ///     Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
         ///     The query is specified using the server's native query language, such as SQL.
+        ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
@@ -4237,8 +4252,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes the sequence returning query against the database server.
+        ///     Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
         ///     The query is specified using the server's native query language, such as SQL.
+        ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
@@ -4271,8 +4287,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes the sequence returning query against the database server.
+        ///     Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
         ///     The query is specified using the server's native query language, such as SQL.
+        ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
@@ -4304,8 +4321,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes the sequence returning query against the database server.
+        ///     Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
         ///     The query is specified using the server's native query language, such as SQL.
+        ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
@@ -4340,16 +4358,17 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes the sequence returning query against the database server.
+        ///     Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
         ///     The query is specified using the server's native query language, such as SQL.
+        ///     If an entity set name is specified, results are tracked by the context.
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TElement"> The element type of the resulting sequence. </typeparam>
+        /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
-        /// <param name="entitySetName"> The entity set in which results should be tracked. Null indicates there is no entity set. </param>
+        /// <param name="entitySetName">The entity set of the  TResult  type. If an entity set name is not provided, the results are not going to be tracked.</param>
         /// <param name="executionOptions"> The options for executing this query. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
@@ -4364,16 +4383,17 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes the sequence returning query against the database server.
+        ///     Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
         ///     The query is specified using the server's native query language, such as SQL.
+        ///     If an entity set name is specified, results are tracked by the context.
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <typeparam name="TElement"> The element type of the resulting sequence. </typeparam>
+        /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
-        /// <param name="entitySetName"> The entity set in which results should be tracked. Null indicates there is no entity set. </param>
+        /// <param name="entitySetName">The entity set of the  TResult  type. If an entity set name is not provided, the results are not going to be tracked.</param>
         /// <param name="executionOptions"> The options for executing this query. </param>
         /// <param name="cancellationToken">
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.

@@ -242,15 +242,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>Executes the untyped object query with the specified merge option.</summary>
+        /// <param name="mergeOption">
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
+        ///     The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
+        /// </param>
         /// <returns>
         ///     An <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> that contains a collection of entity objects returned by the query.
         /// </returns>
-        /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. The default is
-        ///     <see
-        ///         cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />
-        ///     .
-        /// </param>
         public ObjectResult Execute(MergeOption mergeOption)
         {
             EntityUtil.CheckArgumentMergeOption(mergeOption);
@@ -260,17 +258,20 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously allows explicit query evaluation with a specified merge
-        ///     option which will override the merge option property.
+        ///     Asynchronously executes the untyped object query with the specified merge option.
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
+        /// <param name="mergeOption">
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
+        ///     The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
+        /// </param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
-        ///     The task result contains an enumerable for the ObjectQuery results.
+        ///     The task result contains an an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
+        ///     that contains a collection of entity objects returned by the query.
         /// </returns>
         public Task<ObjectResult> ExecuteAsync(MergeOption mergeOption)
         {
@@ -278,20 +279,23 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously allows explicit query evaluation with a specified merge
-        ///     option which will override the merge option property.
+        ///     Asynchronously executes the untyped object query with the specified merge option.
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
+        /// <param name="mergeOption">
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
+        ///     The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
+        /// </param>
         /// <param name="cancellationToken">
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
-        ///     The task result contains an enumerable for the ObjectQuery results.
+        ///     The task result contains an an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
+        ///     that contains a collection of entity objects returned by the query.
         /// </returns>
         public Task<ObjectResult> ExecuteAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {

@@ -722,7 +722,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Methods
         // -------
 
-        /// <summary>When overridden in a derived class, loads the related object or objects into the related end with the default merge option.</summary>
+        /// <summary>
+        ///     Loads the related object or objects into the related end with the default merge option.
+        /// </summary>
         /// <exception cref="T:System.InvalidOperationException">
         ///     When the source object was retrieved by using a <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" /> query 
         ///     and the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> is not <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />
@@ -743,7 +745,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously loads the related entity or entities into the related end using the default merge option.
+        ///     Asynchronously loads the related object or objects into the related end with the default merge option.
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
@@ -755,6 +757,17 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>
         ///     A task that represents the asynchronous operation.
         /// </returns>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     When the source object was retrieved by using a <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" /> query 
+        ///     and the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> is not <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />
+        ///     or the related objects are already loaded
+        ///     or when the source object is not attached to the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        ///     or when the source object is being tracked but is in the
+        ///     <see cref="F:System.Data.Entity.EntityState.Added" /> or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state
+        ///     or the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
+        ///     used for <see cref="M:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd.Load" />
+        ///     is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
+        /// </exception>
         public Task LoadAsync(CancellationToken cancellationToken)
         {
             return LoadAsync(DefaultMergeOption, cancellationToken);
@@ -762,12 +775,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
 #endif
 
-        /// <summary>When overridden in a derived class, loads an object or objects from the related end with the specified merge option.</summary>
+        /// <summary>
+        ///     Loads an object or objects from the related end with the specified merge option.
+        /// </summary>
         /// <param name="mergeOption">
         ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when merging objects into an existing
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
-        ///     .
+        ///     <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />.
         /// </param>
         /// <exception cref="T:System.InvalidOperationException">
         ///     When the source object was retrieved by using a <see  cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />  query 
@@ -786,19 +799,34 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously loads the related entity or entities into the related end using the supplied merge option.
+        ///     Asynchronously loads an object or objects from the related end with the specified merge option.
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="mergeOption"> Merge option to use for loaded entity or entities. </param>
+        /// <param name="mergeOption">
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when merging objects into an existing
+        ///     <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />.
+        /// </param>
         /// <param name="cancellationToken">
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
         /// </returns>
+        /// <exception cref="T:System.InvalidOperationException">
+        ///     When the source object was retrieved by using a <see  cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />  query 
+        ///     and the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
+        ///     is not <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />
+        ///     or the related objects are already loaded
+        ///     or when the source object is not attached to the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        ///     or when the source object is being tracked but is in the
+        ///     <see cref="F:System.Data.Entity.EntityState.Added" />  or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state 
+        ///     or the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
+        ///     used for <see cref="M:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd.Load" />
+        ///     is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
+        /// </exception>
         public abstract Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken);
 
 #endif

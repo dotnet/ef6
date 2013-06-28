@@ -51,9 +51,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
 #if !NET40
 
-        /// <summary>
-        ///     Asynchronously loads the related entity or entities into the related end using the default merge option.
-        /// </summary>
+        /// <summary>Asynchronously loads the related object or objects into this related end with the default merge option.</summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
@@ -71,22 +69,21 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>Loads the related object or objects into the related end with the specified merge option.</summary>
         /// <param name="mergeOption">
         ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when merging objects into an existing
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
-        ///     .
+        ///     <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />.
         /// </param>
         void Load(MergeOption mergeOption);
 
 #if !NET40
 
-        /// <summary>
-        ///     Asynchronously loads the related entity or entities into the related end using the specified merge option.
-        /// </summary>
+        /// <summary>Asynchronously loads the related object or objects into the related end with the specified merge option.</summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
         ///     that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
-        /// <param name="mergeOption"> Merge option to use for loaded entity or entities. </param>
+        /// <param name="mergeOption">
+        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when merging objects into an existing
+        ///     <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />.
+        /// </param>
         /// <param name="cancellationToken">
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
