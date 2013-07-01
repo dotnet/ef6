@@ -236,6 +236,7 @@
     <Compile Include="Edm\Serialization\MetadataItemHelper.cs" />
     <Compile Include="Edm\Serialization\MslSerializer.cs" />
     <Compile Include="Edm\Serialization\SsdlSerializer.cs" />
+    <Compile Include="Infrastructure\CommitFailedException.cs" />
     <Compile Include="Infrastructure\DbCommandInterceptionContext.cs" />
     <Compile Include="Infrastructure\DbCommandInterceptionContext`.cs" />
     <Compile Include="Infrastructure\DbCommandLogger.cs" />

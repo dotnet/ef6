@@ -3148,7 +3148,14 @@ namespace System.Data.Entity.Core.Objects
                 if (localTransaction != null)
                 {
                     // we started the local transaction; so we also commit it
-                    localTransaction.Commit();
+                    try
+                    {
+                        localTransaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new CommitFailedException(Strings.CommitFailed, ex);
+                    }
                 }
                 // else on success with no exception is thrown, caller generally commits the transaction
 
@@ -3230,7 +3237,14 @@ namespace System.Data.Entity.Core.Objects
                 if (localTransaction != null)
                 {
                     // we started the local transaction; so we also commit it
-                    localTransaction.Commit();
+                    try
+                    {
+                        localTransaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new CommitFailedException(Strings.CommitFailed, ex);
+                    }
                 }
                 // else on success with no exception is thrown, caller generally commits the transaction
 

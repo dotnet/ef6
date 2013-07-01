@@ -5438,4 +5438,7 @@
     <value>An existing EF5 migrations history table was detected but could not be upgraded because a custom history context factory has been configured. To upgrade an existing EF5 database, ensure there is no custom history context factory configured.</value>
     <comment>## ExceptionType=Migrations.Infrastructure.MigrationsException</comment>
   </data>
+  <data name="CommitFailed" xml:space="preserve">
+    <value>An error was reported while committing a database transaction but it could not be determined whether the transaction succeeded or failed on the database server. See the inner exception and http://go.microsoft.com/fwlink/?LinkId=313468 for more information.</value>
+  </data>
 </root>

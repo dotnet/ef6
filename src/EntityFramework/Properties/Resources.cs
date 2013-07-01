@@ -13660,6 +13660,14 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.UnableToUpgradeHistoryWhenCustomFactory); }
         }
+
+        /// <summary>
+        ///     A string like "An error was reported while committing a database transaction but it could not be determined whether the transaction succeeded or failed on the database server. See the inner exception and http://go.microsoft.com/fwlink/?LinkId=313468 for more information."
+        /// </summary>
+        internal static string CommitFailed
+        {
+            get { return EntityRes.GetString(EntityRes.CommitFailed); }
+        }
     }
 
     /// <summary>
@@ -17031,6 +17039,7 @@ namespace System.Data.Entity.Resources
         internal const string LightweightPrimitivePropertyConfiguration_IsUnicodeNonString = "LightweightPrimitivePropertyConfiguration_IsUnicodeNonString";
         internal const string LightweightPrimitivePropertyConfiguration_NonLength = "LightweightPrimitivePropertyConfiguration_NonLength";
         internal const string UnableToUpgradeHistoryWhenCustomFactory = "UnableToUpgradeHistoryWhenCustomFactory";
+        internal const string CommitFailed = "CommitFailed";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

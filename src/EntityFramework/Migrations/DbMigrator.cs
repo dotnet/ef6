@@ -916,7 +916,14 @@ namespace System.Data.Entity.Migrations
                     base.ExecuteSql(transaction, migrationStatement);
                 }
 
-                transaction.Commit();
+                try
+                {
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    throw new CommitFailedException(Strings.CommitFailed, ex);
+                }
             }
         }
 
