@@ -232,6 +232,11 @@
     <Compile Include="Core\Metadata\Edm\DbModelExtensions.cs" />
     <Compile Include="Core\Metadata\Edm\IEdmModelAdapter.cs" />
     <Compile Include="Core\Metadata\Edm\RelationshipMultiplicityConverter.cs" />
+    <Compile Include="Design\Executor.cs" />
+    <Compile Include="Design\ForwardingProxy.cs" />
+    <Compile Include="Design\HandlerBase.cs" />
+    <Compile Include="Design\IResultHandler.cs" />
+    <Compile Include="Design\WrappedHandler.cs" />
     <Compile Include="Edm\Serialization\CsdlSerializer.cs" />
     <Compile Include="Edm\Serialization\MetadataItemHelper.cs" />
     <Compile Include="Edm\Serialization\MslSerializer.cs" />

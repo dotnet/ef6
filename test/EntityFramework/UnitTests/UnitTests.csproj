@@ -273,6 +273,10 @@
     <Compile Include="DbContextTransactionTests.cs" />
     <Compile Include="DbFunctionAttributeTests.cs" />
     <Compile Include="DbFunctionsTests.cs" />
+    <Compile Include="Design\ExecutorTests.cs" />
+    <Compile Include="Design\ForwardingProxyTests.cs" />
+    <Compile Include="Design\HandlerBaseTests.cs" />
+    <Compile Include="Design\WrappedHandlerTests.cs" />
     <Compile Include="Edm\EdmModelVisitorTests.cs" />
     <Compile Include="Edm\Serialization\CsdlSerializerTests.cs" />
     <Compile Include="Edm\Serialization\EdmSerializationVisitorTests.cs" />
