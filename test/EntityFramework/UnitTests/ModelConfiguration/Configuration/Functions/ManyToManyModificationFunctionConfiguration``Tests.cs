@@ -46,22 +46,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 "Foo",
                 new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
-                    .LeftKeyParameter(e => e.Int, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .LeftKeyParameter(e => e.Int, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
-                    .LeftKeyParameter(e => e.Nullable, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .LeftKeyParameter(e => e.Nullable, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
-                    .LeftKeyParameter(e => e.String, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .LeftKeyParameter(e => e.String, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
-                    .LeftKeyParameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .LeftKeyParameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Item1);
         }
 
         [Fact]
@@ -92,22 +92,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 "Foo",
                 new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
-                    .RightKeyParameter(e => e.Int, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .RightKeyParameter(e => e.Int, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
-                    .RightKeyParameter(e => e.Nullable, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .RightKeyParameter(e => e.Nullable, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
-                    .RightKeyParameter(e => e.String, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .RightKeyParameter(e => e.String, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
-                    .RightKeyParameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .RightKeyParameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Item1);
         }
 
         [Fact]

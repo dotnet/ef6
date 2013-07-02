@@ -28,8 +28,8 @@ namespace System.Data.Entity.TestModels.ArubaModel
             //    .MapToStoredProcedures();
 
             // issue 1343
-            ////modelBuilder.Entity<ArubaPerson>().HasMany(p => p.Children).WithMany(p => p.Parents)
-            ////    .MapToStoredProcedures(m => m.Insert(d => d.LeftKeyParameter(l => l.Id, "Left_id").RightKeyParameter(r => r.Id, "Right_Id")));
+            modelBuilder.Entity<ArubaPerson>().HasMany(p => p.Children).WithMany(p => p.Parents)
+                .MapToStoredProcedures(m => m.Insert(d => d.LeftKeyParameter(l => l.Id, "Left_id").RightKeyParameter(r => r.Id, "Right_Id")));
         }
     }
 }

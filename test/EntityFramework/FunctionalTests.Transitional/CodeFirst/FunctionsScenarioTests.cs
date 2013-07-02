@@ -6,12 +6,10 @@ namespace FunctionalTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Resources;
     using System.Linq;
-    using System.Xml;
     using ConcurrencyModel;
     using Xunit;
     using Xunit.Extensions;
@@ -785,6 +783,55 @@ namespace FunctionalTests
                     Assert.NotNull(functionMapping.InsertFunctionMapping.Function.Parameters.Single(p => p.Name == "tag_id"));
                     Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "tag_id"));
                     Assert.NotNull(functionMapping.DeleteFunctionMapping.Function.Parameters.Single(p => p.Name == "product_id"));
+                }
+
+                public class Person
+                {
+                    public int Id { get; set; }
+                    public string Name { get; set; }
+                    public ICollection<Person> Children { get; set; }
+                    public ICollection<Person> Parents { get; set; }
+                }
+
+                [Fact]
+                public void Can_configure_many_to_many_self_ref()
+                {
+                    var modelBuilder = new DbModelBuilder();
+
+                    modelBuilder
+                        .Entity<Person>()
+                        .HasMany(p => p.Children)
+                        .WithMany(p => p.Parents)
+                        .MapToStoredProcedures(
+                            m =>
+                                {
+                                    m.Insert(
+                                        f => f.LeftKeyParameter(l => l.Id, "insert_left")
+                                                 .RightKeyParameter(r => r.Id, "insert_right"));
+                                    m.Delete(
+                                        f => f.RightKeyParameter(r => r.Id, "delete_right"));
+                                });
+
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    Assert.Equal(2, databaseMapping.Database.Functions.Count());
+
+                    var functionMapping
+                        = databaseMapping
+                            .EntityContainerMappings
+                            .Single()
+                            .AssociationSetMappings
+                            .Select(asm => asm.ModificationFunctionMapping)
+                            .Single();
+
+                    Assert.Equal("PersonPerson_Insert", functionMapping.InsertFunctionMapping.Function.StoreFunctionNameAttribute);
+                    Assert.Equal("PersonPerson_Delete", functionMapping.DeleteFunctionMapping.Function.StoreFunctionNameAttribute);
+                    Assert.Equal("insert_left", functionMapping.InsertFunctionMapping.Function.Parameters.First().Name);
+                    Assert.Equal("insert_right", functionMapping.InsertFunctionMapping.Function.Parameters.Last().Name);
+                    Assert.Equal("Person_Id", functionMapping.DeleteFunctionMapping.Function.Parameters.First().Name);
+                    Assert.Equal("delete_right", functionMapping.DeleteFunctionMapping.Function.Parameters.Last().Name);
                 }
 
                 [Fact]

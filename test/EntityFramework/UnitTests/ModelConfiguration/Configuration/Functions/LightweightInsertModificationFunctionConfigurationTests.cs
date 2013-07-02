@@ -43,12 +43,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 "Foo",
                 new LightweightInsertModificationFunctionConfiguration(typeof(Entity))
-                    .Parameter("Int", "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter("Int", "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new LightweightInsertModificationFunctionConfiguration(typeof(Entity))
-                    .Parameter(typeof(Entity).GetProperty("String"), "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(typeof(Entity).GetProperty("String"), "Foo").Configuration.ParameterNames.Single().Item1);
         }
 
         [Fact]

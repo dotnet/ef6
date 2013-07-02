@@ -49,37 +49,37 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 "Foo",
                 new DeleteModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Int, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.Int, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new DeleteModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Nullable, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.Nullable, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new DeleteModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.String, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.String, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new DeleteModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new DeleteModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Geography, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.Geography, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new DeleteModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Geometry, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.Geometry, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new DeleteModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.ComplexType.Int, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.ComplexType.Int, "Foo").Configuration.ParameterNames.Single().Item1);
         }
 
         [Fact]

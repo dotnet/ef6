@@ -94,7 +94,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(parameterName, "parameterName");
 
-            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
+            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName, rightKey: true);
 
             return this;
         }
@@ -107,7 +107,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(parameterName, "parameterName");
 
-            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
+            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName, rightKey: true);
 
             return this;
         }
@@ -119,7 +119,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(parameterName, "parameterName");
 
-            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
+            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName, rightKey: true);
 
             return this;
         }
@@ -131,7 +131,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(parameterName, "parameterName");
 
-            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName);
+            Configuration.Parameter(propertyExpression.GetSimplePropertyAccess(), parameterName, rightKey: true);
 
             return this;
         }

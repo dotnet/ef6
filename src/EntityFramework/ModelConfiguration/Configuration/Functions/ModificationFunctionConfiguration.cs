@@ -16,8 +16,58 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
     internal class ModificationFunctionConfiguration
     {
-        private readonly Dictionary<PropertyPath, Tuple<string, string>> _parameterNames
-            = new Dictionary<PropertyPath, Tuple<string, string>>();
+        private sealed class ParameterKey
+        {
+            private readonly PropertyPath _propertyPath;
+            private readonly bool _rightKey;
+
+            public ParameterKey(PropertyPath propertyPath, bool rightKey)
+            {
+                DebugCheck.NotNull(propertyPath);
+
+                _propertyPath = propertyPath;
+                _rightKey = rightKey;
+            }
+
+            public PropertyPath PropertyPath
+            {
+                get { return _propertyPath; }
+            }
+
+            public bool IsRightKey
+            {
+                get { return _rightKey; }
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+
+                var other = (ParameterKey)obj;
+
+                return (_propertyPath.Equals(other._propertyPath)
+                        && _rightKey.Equals(other._rightKey));
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (_propertyPath.GetHashCode() * 397) ^ _rightKey.GetHashCode();
+                }
+            }
+        }
+
+        private readonly Dictionary<ParameterKey, Tuple<string, string>> _parameterNames
+            = new Dictionary<ParameterKey, Tuple<string, string>>();
 
         private readonly Dictionary<PropertyInfo, string> _resultBindings
             = new Dictionary<PropertyInfo, string>();
@@ -93,9 +143,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             get { return _rowsAffectedParameter; }
         }
 
-        public Dictionary<PropertyPath, Tuple<string, string>> ParameterNames
+        public IEnumerable<Tuple<string, string>> ParameterNames
         {
-            get { return _parameterNames; }
+            get { return _parameterNames.Values; }
+        }
+
+        public void ClearParameterNames()
+        {
+            _parameterNames.Clear();
         }
 
         public Dictionary<PropertyInfo, string> ResultBindings
@@ -106,12 +161,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void Parameter(
             PropertyPath propertyPath,
             string parameterName,
-            string originalValueParameterName = null)
+            string originalValueParameterName = null,
+            bool rightKey = false)
         {
             DebugCheck.NotNull(propertyPath);
             DebugCheck.NotEmpty(parameterName);
 
-            _parameterNames[propertyPath]
+            _parameterNames[new ParameterKey(propertyPath, rightKey)]
                 = Tuple.Create(parameterName, originalValueParameterName);
         }
 
@@ -179,9 +235,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     modificationFunctionMapping.Function.AddParameter(rowsAffectedParameter);
                     modificationFunctionMapping.RowsAffectedParameter = rowsAffectedParameter;
                 }
-                
+
                 modificationFunctionMapping.RowsAffectedParameter.Name = _rowsAffectedParameter;
-                
+
                 _configuredParameters.Add(modificationFunctionMapping.RowsAffectedParameter);
             }
         }
@@ -192,7 +248,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             foreach (var keyValue in _parameterNames)
             {
-                var propertyPath = keyValue.Key;
+                var propertyPath = keyValue.Key.PropertyPath;
                 var parameterName = keyValue.Value.Item1;
                 var originalValueParameterName = keyValue.Value.Item2;
 
@@ -237,7 +293,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 }
                 else if (parameterBindings.Count == 2)
                 {
-                    var parameterBinding = parameterBindings.Single(pb => pb.IsCurrent);
+                    var parameterBinding
+                        = ((parameterBindings
+                                .Select(pb => pb.IsCurrent)
+                                .Distinct()
+                                .Count() == 1) // same value for both
+                           && parameterBindings
+                                  .All(pb => pb.MemberPath.AssociationSetEnd != null))
+                              ? !keyValue.Key.IsRightKey
+                                    ? parameterBindings.First()
+                                    : parameterBindings.Last()
+                              : parameterBindings.Single(pb => pb.IsCurrent);
 
                     parameterBinding.Parameter.Name = parameterName;
 
@@ -349,7 +415,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     = modificationFunctionConfiguration.RowsAffectedParameterName ?? _rowsAffectedParameter;
             }
 
-            foreach (var parameterName in modificationFunctionConfiguration.ParameterNames
+            foreach (var parameterName in modificationFunctionConfiguration._parameterNames
                 .Where(parameterName => allowOverride || !_parameterNames.ContainsKey(parameterName.Key)))
             {
                 _parameterNames[parameterName.Key] = parameterName.Value;

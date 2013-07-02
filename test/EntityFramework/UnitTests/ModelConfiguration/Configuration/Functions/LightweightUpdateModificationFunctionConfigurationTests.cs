@@ -43,12 +43,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 "Foo",
                 new LightweightUpdateModificationFunctionConfiguration(typeof(Entity))
-                    .Parameter("Int", "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter("Int", "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new LightweightUpdateModificationFunctionConfiguration(typeof(Entity))
-                    .Parameter(typeof(Entity).GetProperty("String"), "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(typeof(Entity).GetProperty("String"), "Foo").Configuration.ParameterNames.Single().Item1);
         }
 
         [Fact]
@@ -66,12 +66,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 "Bar",
                 new LightweightUpdateModificationFunctionConfiguration(typeof(Entity))
-                    .Parameter("Int", "Foo", "Bar").Configuration.ParameterNames.Single().Value.Item2);
+                    .Parameter("Int", "Foo", "Bar").Configuration.ParameterNames.Single().Item2);
 
             Assert.Equal(
                 "Bar",
                 new LightweightUpdateModificationFunctionConfiguration(typeof(Entity))
-                    .Parameter(typeof(Entity).GetProperty("String"), "Foo", "Bar").Configuration.ParameterNames.Single().Value.Item2);
+                    .Parameter(typeof(Entity).GetProperty("String"), "Foo", "Bar").Configuration.ParameterNames.Single().Item2);
         }
 
         [Fact]

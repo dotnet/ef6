@@ -37,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             Assert.Equal("Foo", modificationFunctionConfigurationA.Name);
             Assert.Equal("baz", modificationFunctionConfigurationA.Schema);
-            Assert.Equal(1, modificationFunctionConfigurationA.ParameterNames.Count(p => p.Value.Item1 == "baz"));
+            Assert.Equal(1, modificationFunctionConfigurationA.ParameterNames.Count(p => p.Item1 == "baz"));
             Assert.Equal(1, modificationFunctionConfigurationA.ResultBindings.Count(p => p.Value == "foo"));
             Assert.Equal("bar", modificationFunctionConfigurationA.RowsAffectedParameterName);
         }
@@ -67,7 +67,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             Assert.Equal("2", modificationFunctionConfigurationA.Name);
             Assert.Equal("2", modificationFunctionConfigurationA.Schema);
-            Assert.Equal(1, modificationFunctionConfigurationA.ParameterNames.Count(p => p.Value.Item1 == "2"));
+            Assert.Equal(1, modificationFunctionConfigurationA.ParameterNames.Count(p => p.Item1 == "2"));
             Assert.Equal(1, modificationFunctionConfigurationA.ResultBindings.Count(p => p.Value == "2"));
             Assert.Equal("2", modificationFunctionConfigurationA.RowsAffectedParameterName);
         }
@@ -90,7 +90,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.NotSame(modificationFunctionConfiguration, clone);
             Assert.Equal("Foo", clone.Name);
             Assert.Equal("baz", clone.Schema);
-            Assert.Equal(1, clone.ParameterNames.Count);
+            Assert.Equal(1, clone.ParameterNames.Count());
             Assert.Equal(1, clone.ResultBindings.Count);
             Assert.Equal("bar", clone.RowsAffectedParameterName);
         }
@@ -126,7 +126,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             modificationFunctionConfiguration.Parameter(new PropertyPath(mockPropertyInfo), "baz");
 
-            Assert.Equal("baz", modificationFunctionConfiguration.ParameterNames.Single().Value.Item1);
+            Assert.Equal("baz", modificationFunctionConfiguration.ParameterNames.Single().Item1);
         }
 
         [Fact]

@@ -48,27 +48,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 
             configuration.Parameter(e => e.Int, "Foo");
 
-            Assert.Equal("Foo", modificationFunctionConfiguration.ParameterNames.Single().Value.Item1);
+            Assert.Equal("Foo", modificationFunctionConfiguration.ParameterNames.Single().Item1);
 
-            modificationFunctionConfiguration.ParameterNames.Clear();
+            modificationFunctionConfiguration.ClearParameterNames();
 
             configuration.Parameter(e => e.Nullable, "Foo");
 
-            Assert.Equal("Foo", modificationFunctionConfiguration.ParameterNames.Single().Value.Item1);
+            Assert.Equal("Foo", modificationFunctionConfiguration.ParameterNames.Single().Item1);
 
-            modificationFunctionConfiguration.ParameterNames.Clear();
+            modificationFunctionConfiguration.ClearParameterNames();
 
             configuration.Parameter(e => e.String, "Foo");
 
-            Assert.Equal("Foo", modificationFunctionConfiguration.ParameterNames.Single().Value.Item1);
+            Assert.Equal("Foo", modificationFunctionConfiguration.ParameterNames.Single().Item1);
 
-            modificationFunctionConfiguration.ParameterNames.Clear();
+            modificationFunctionConfiguration.ClearParameterNames();
 
             configuration.Parameter(e => e.Bytes, "Foo");
 
-            Assert.Equal("Foo", modificationFunctionConfiguration.ParameterNames.Single().Value.Item1);
-
-            modificationFunctionConfiguration.ParameterNames.Clear();
+            Assert.Equal("Foo", modificationFunctionConfiguration.ParameterNames.Single().Item1);
         }
     }
 }

@@ -49,37 +49,37 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 "Foo",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Int, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.Int, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Nullable, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.Nullable, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.String, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.String, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Geography, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.Geography, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Geometry, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.Geometry, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.ComplexType.Int, "Foo").Configuration.ParameterNames.Single().Value.Item1);
+                    .Parameter(e => e.ComplexType.Int, "Foo").Configuration.ParameterNames.Single().Item1);
         }
 
         [Fact]
@@ -102,37 +102,37 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 "Bar",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Int, "Foo", "Bar").Configuration.ParameterNames.Single().Value.Item2);
+                    .Parameter(e => e.Int, "Foo", "Bar").Configuration.ParameterNames.Single().Item2);
 
             Assert.Equal(
                 "Bar",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Nullable, "Foo", "Bar").Configuration.ParameterNames.Single().Value.Item2);
+                    .Parameter(e => e.Nullable, "Foo", "Bar").Configuration.ParameterNames.Single().Item2);
 
             Assert.Equal(
                 "Bar",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.String, "Foo", "Bar").Configuration.ParameterNames.Single().Value.Item2);
+                    .Parameter(e => e.String, "Foo", "Bar").Configuration.ParameterNames.Single().Item2);
 
             Assert.Equal(
                 "Bar",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Bytes, "Foo", "Bar").Configuration.ParameterNames.Single().Value.Item2);
+                    .Parameter(e => e.Bytes, "Foo", "Bar").Configuration.ParameterNames.Single().Item2);
 
             Assert.Equal(
                 "Bar",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Geography, "Foo", "Bar").Configuration.ParameterNames.Single().Value.Item2);
+                    .Parameter(e => e.Geography, "Foo", "Bar").Configuration.ParameterNames.Single().Item2);
 
             Assert.Equal(
                 "Bar",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.Geometry, "Foo", "Bar").Configuration.ParameterNames.Single().Value.Item2);
+                    .Parameter(e => e.Geometry, "Foo", "Bar").Configuration.ParameterNames.Single().Item2);
 
             Assert.Equal(
                 "Bar",
                 new UpdateModificationFunctionConfiguration<Entity>()
-                    .Parameter(e => e.ComplexType.Int, "Foo", "Bar").Configuration.ParameterNames.Single().Value.Item2);
+                    .Parameter(e => e.ComplexType.Int, "Foo", "Bar").Configuration.ParameterNames.Single().Item2);
         }
 
         [Fact]
