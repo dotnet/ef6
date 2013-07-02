@@ -84,10 +84,10 @@
     </Target>
 
     <Target Name="Package" DependsOnTargets="UpdateVersionNumber;Rebuild">
-        <MSBuild Targets="Build"
+        <MSBuild Targets="Rebuild"
                  Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
                  Properties="Configuration=$(Configuration);$(BuildProperties);Platform=AnyCPU;InternalsInvisble=true;RunCodeAnalysis=false" />
-        <MSBuild Targets="Build"
+        <MSBuild Targets="Rebuild"
                  Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
                  Properties="Configuration=ReleaseNet40;$(BuildProperties);Platform=AnyCPU;InternalsInvisble=true;RunCodeAnalysis=false" />
     </Target>
