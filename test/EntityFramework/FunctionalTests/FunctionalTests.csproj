@@ -152,6 +152,7 @@
     <Compile Include="CodeFirst\EntitySplittingTests.cs" />
     <Compile Include="CodeFirst\NonPublicPropertyTests.cs" />
     <Compile Include="CodeFirst\QueryCachingTests.cs" />
+    <Compile Include="CodeFirst\StoredProceduresCUDTests.cs" />
     <Compile Include="CodeFirst\TableSplittingTests.cs" />
     <Compile Include="CodeFirst\TptMappingTests.cs" />
     <Compile Include="Interception\BlogContextNoInit.cs" />
@@ -200,12 +201,15 @@
     <Compile Include="TestModels\ArubaModel\ArubaBug.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaConfig.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaContext.cs" />
+    <Compile Include="TestModels\ArubaModel\ArubaDatabaseSeeder.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaFailure.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaInitializer.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaMachineConfig.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaOwner.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaPerson.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaRun.cs" />
+    <Compile Include="TestModels\ArubaModel\ArubaStoredProceduresContext.cs" />
+    <Compile Include="TestModels\ArubaModel\ArubaStoredProceduresInitializer.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaTask.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaTaskInfo.cs" />
     <Compile Include="TestModels\ArubaModel\ArubaTestFailure.cs" />
@@ -216,7 +220,10 @@
     <Compile Include="TestModels\GearsOfWarModel\CogTag.cs" />
     <Compile Include="TestModels\GearsOfWarModel\Gear.cs" />
     <Compile Include="TestModels\GearsOfWarModel\GearsOfWarContext.cs" />
+    <Compile Include="TestModels\GearsOfWarModel\GearsOfWarDatabaseSeeder.cs" />
     <Compile Include="TestModels\GearsOfWarModel\GearsOfWarInitializer.cs" />
+    <Compile Include="TestModels\GearsOfWarModel\GearsOfWarStoredProceduresContext.cs" />
+    <Compile Include="TestModels\GearsOfWarModel\GearsOfWarStoredProceduresInitializer.cs" />
     <Compile Include="TestModels\GearsOfWarModel\HeavyWeapon.cs" />
     <Compile Include="TestModels\GearsOfWarModel\MilitaryRank.cs" />
     <Compile Include="TestModels\GearsOfWarModel\Squad.cs" />

@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.TestModels.GearsOfWarModel
 {
-    using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.Spatial;
 
     public class City
