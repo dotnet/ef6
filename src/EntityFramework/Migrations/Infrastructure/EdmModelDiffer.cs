@@ -119,6 +119,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var addedColumns = FindAddedColumns(renamedColumns).ToList();
             var alteredColumns = FindChangedColumns().ToList();
             var removedColumns = FindRemovedColumns(renamedColumns).ToList();
+            var orphanedColumns = FindOrphanedColumns(renamedColumns).ToList();
             var renamedTables = FindRenamedTables().ToList();
             var movedTables = FindMovedTables().ToList();
             var addedTables = FindAddedTables(renamedTables).ToList();
@@ -146,6 +147,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Concat<MigrationOperation>(movedTables)
                 .Concat(removedForeignKeys)
                 .Concat(removedForeignKeys.Select(fko => fko.CreateDropIndexOperation()))
+                .Concat(orphanedColumns)
                 .Concat(renamedColumns)
                 .Concat(addedTables)
                 .Concat(addedColumns)
@@ -1020,6 +1022,26 @@ namespace System.Data.Entity.Migrations.Infrastructure
                        t,
                        c.NameAttribute(),
                        new AddColumnOperation(t, BuildColumnModel(c, t1.NameAttribute(), _source)));
+        }
+
+        private IEnumerable<DropColumnOperation> FindOrphanedColumns(IEnumerable<RenameColumnOperation> renamedColumns)
+        {
+            return from rc in renamedColumns
+                   from et in _source.Model.Descendants(EdmXNames.Ssdl.EntityTypeNames)
+                   let t = GetQualifiedTableName(_source.Model, et.NameAttribute())
+                   where rc.Table.EqualsIgnoreCase(t)
+                         && _source.Model
+                                .Descendants(EdmXNames.Msl.AssociationSetMappingNames)
+                                .Where(asm => asm.StoreEntitySetAttribute().EqualsIgnoreCase(et.NameAttribute()))
+                                .Descendants(EdmXNames.Msl.ScalarPropertyNames)
+                                .Any(sp => sp.ColumnNameAttribute().EqualsIgnoreCase(rc.Name))
+                   let oc = et.Descendants(EdmXNames.Ssdl.PropertyNames)
+                       .SingleOrDefault(c => rc.NewName.EqualsIgnoreCase(c.NameAttribute()))
+                   where oc != null
+                   select new DropColumnOperation(
+                       t,
+                       oc.NameAttribute(),
+                       new AddColumnOperation(t, BuildColumnModel(oc, et.NameAttribute(), _source)));
         }
 
         private IEnumerable<RenameColumnOperation> FindRenamedColumns()

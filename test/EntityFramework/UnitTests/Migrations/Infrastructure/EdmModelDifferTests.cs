@@ -72,6 +72,45 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .ValidateMessage("ErrorGeneratingCommandTree", "Thing_Insert", "Thing");
         }
 
+        public class ClassA
+        {
+            public string Id { get; set; }
+        }
+
+        public class ClassB
+        {
+            public int Id { get; set; }
+            public string ClassAId { get; set; }
+            public ClassA ClassA { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_orphaned_columns()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder
+                .Entity<ClassB>()
+                .HasOptional(b => b.ClassA)
+                .WithMany()
+                .Map(_ => { }); // IA
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<ClassB>();
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(
+                DatabaseProvider == DatabaseProvider.SqlClient ? 3 : 2, // SQL column's max length changes too
+                operations.Count());
+        }
+
         [MigrationsTheory]
         public void Can_diff_identical_models_at_different_edm_versions_and_no_diffs_produced()
         {
@@ -1185,7 +1224,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations 
+            var operations
                 = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(5, operations.Count());
@@ -1381,19 +1420,22 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<Child1>().Map(m =>
-                {
-                    m.Requires("Disc1").HasValue(true);
-                    m.Requires("Disc2").HasValue(false);
-                });
+                modelBuilder.Entity<Child1>().Map(
+                    m =>
+                        {
+                            m.Requires("Disc1").HasValue(true);
+                            m.Requires("Disc2").HasValue(false);
+                        });
 
-                modelBuilder.Entity<Child2>().Map(m =>
-                {
-                    m.Requires("Disc2").HasValue(true);
-                    m.Requires("Disc1").HasValue(false);
-                });
+                modelBuilder.Entity<Child2>().Map(
+                    m =>
+                        {
+                            m.Requires("Disc2").HasValue(true);
+                            m.Requires("Disc1").HasValue(false);
+                        });
             }
         }
+
         public abstract class Parent
         {
             public int Id { get; set; }
