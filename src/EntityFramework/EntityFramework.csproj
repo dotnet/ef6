@@ -1485,7 +1485,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="Core\Metadata\Edm\DataModelAnnotation.cs" />
     <Compile Include="Edm\Validation\DataModelErrorEventArgs.cs" />
     <Compile Include="Core\Mapping\ColumnMappingBuilder.cs" />
     <Compile Include="Core\Metadata\Edm\EdmModel.cs" />
@@ -1723,7 +1722,6 @@
     <Compile Include="ModelConfiguration\Conventions\IConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Sets\V1ConventionSet.cs" />
     <Compile Include="Infrastructure\Pluralization\BidirectionalDictionary.cs" />
-    <Compile Include="ModelConfiguration\Edm\DataModelAnnotationExtensions.cs" />
     <Compile Include="ModelConfiguration\Edm\DataModelErrorEventArgsExtensions.cs" />
     <Compile Include="ModelConfiguration\Edm\INamedDataModelItemExtensions.cs" />
     <Compile Include="ModelConfiguration\Edm\ForeignKeyBuilderExtensions.cs" />

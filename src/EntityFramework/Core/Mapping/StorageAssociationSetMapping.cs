@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     internal class StorageAssociationSetMapping : StorageSetMapping
     {
-        private readonly List<DataModelAnnotation> _annotationsList = new List<DataModelAnnotation>();
+        private readonly List<MetadataProperty> _annotationsList = new List<MetadataProperty>();
 
         /// <summary>
         ///     Construct a new AssociationSetMapping object
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        internal virtual IList<DataModelAnnotation> Annotations
+        internal virtual IList<MetadataProperty> Annotations
         {
             get { return _annotationsList; }
         }

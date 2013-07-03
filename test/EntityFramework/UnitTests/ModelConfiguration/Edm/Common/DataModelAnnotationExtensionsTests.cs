@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
         [Fact]
         public void Can_get_and_set_configuration_facet()
         {
-            var annotations = new List<DataModelAnnotation>();
+            var annotations = new List<MetadataProperty>();
 
             annotations.SetConfiguration(42);
 
@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
         [Fact]
         public void Can_get_and_set_clr_type_annotation()
         {
-            var annotations = new List<DataModelAnnotation>();
+            var annotations = new List<MetadataProperty>();
 
             annotations.SetClrType(typeof(int));
 
@@ -31,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Common
         [Fact]
         public void Can_get_and_set_custom_annotation()
         {
-            var annotations = new List<DataModelAnnotation>();
+            var annotations = new List<MetadataProperty>();
 
             Assert.Null(annotations.GetAnnotation("Foo"));
 

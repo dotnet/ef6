@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Mapping
     internal class StorageMappingFragment : StructuralTypeMapping
     {
         private readonly List<ColumnMappingBuilder> _columnMappings = new List<ColumnMappingBuilder>();
-        private readonly List<DataModelAnnotation> _annotationsList = new List<DataModelAnnotation>();
+        private readonly List<MetadataProperty> _annotationsList = new List<MetadataProperty>();
 
         /// <summary>
         ///     Construct a new Mapping Fragment object
@@ -196,7 +196,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        internal IList<DataModelAnnotation> Annotations
+        internal IList<MetadataProperty> Annotations
         {
             get { return _annotationsList; }
         }

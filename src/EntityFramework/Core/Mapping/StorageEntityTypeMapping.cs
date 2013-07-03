@@ -56,9 +56,9 @@ namespace System.Data.Entity.Core.Mapping
         {
         }
 
-        private readonly List<DataModelAnnotation> _annotationsList = new List<DataModelAnnotation>();
+        private readonly List<MetadataProperty> _annotationsList = new List<MetadataProperty>();
 
-        internal IList<DataModelAnnotation> Annotations
+        internal IList<MetadataProperty> Annotations
         {
             get { return _annotationsList; }
         }

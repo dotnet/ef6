@@ -106,5 +106,31 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 annotation.Value = value;
             }
         }
+
+        public static void RemoveAnnotation(this ICollection<MetadataProperty> metadataProperties, string name)
+        {
+            DebugCheck.NotNull(metadataProperties);
+            DebugCheck.NotEmpty(name);
+
+            var annotationToRemove =
+                metadataProperties.SingleOrDefault(a => a.Name.Equals(name, StringComparison.Ordinal));
+
+            if (annotationToRemove != null)
+            {
+                metadataProperties.Remove(annotationToRemove);
+            }
+        }
+
+        public static void Copy(
+            this ICollection<MetadataProperty> sourceAnnotations, ICollection<MetadataProperty> targetAnnotations)
+        {
+            DebugCheck.NotNull(sourceAnnotations);
+            DebugCheck.NotNull(targetAnnotations);
+
+            foreach (var annotation in sourceAnnotations)
+            {
+                targetAnnotations.SetAnnotation(annotation.Name, annotation.Value);
+            }
+        }
     }
 }
