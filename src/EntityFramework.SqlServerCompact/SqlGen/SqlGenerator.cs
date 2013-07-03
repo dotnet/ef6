@@ -5,6 +5,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServerCompact.Resources;
     using System.Data.Entity.SqlServerCompact.Utilities;
@@ -1667,6 +1668,11 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         public override ISqlFragment Visit(DbInExpression e)
         {
             Check.NotNull(e, "e");
+
+            if (e.List.Count == 0)
+            {
+                return Visit(DbExpressionBuilder.False);
+            }
 
             var result = new SqlBuilder();
 

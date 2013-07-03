@@ -911,8 +911,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="expression"> A DbExpression to be matched. </param>
         /// <param name="list"> A list of DbConstantExpression to test for a match. </param>
         /// <returns>
-        ///     A new DbInExpression with the specified arguments if the DbConstantExpression list
-        ///     is not empty, otherwise a false constant expression.
+        ///     A new DbInExpression with the specified arguments.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="expression" />
@@ -926,15 +925,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         ///     is different than the result type of an expression from
         ///     <paramref name="list" />.
         /// </exception>
-        public static DbExpression In(this DbExpression expression, IList<DbConstantExpression> list)
+        public static DbInExpression In(this DbExpression expression, IList<DbConstantExpression> list)
         {
             Check.NotNull(expression, "expression");
             Check.NotNull(list, "list");
-
-            if (list.Count == 0)
-            {
-                return False;
-            }
 
             // Shallow copy the input expression list to ensure DbInExpression immutability.
             var internalList = new List<DbExpression>(list.Count);

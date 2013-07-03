@@ -2,6 +2,8 @@
 
 namespace System.Data.Entity.SqlServerCompact.SqlGen
 {
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServerCompact.SqlGen;
@@ -104,6 +106,28 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             }
 
             Assert.Equal("@parameterName IS NULL", builder.ToString());
+        }
+
+        [Fact]
+        public void Visit_In_expression_with_empty_list_and_Visit_Constant_expression_false_generate_same_sql()
+        {
+            var generator = new SqlGenerator();
+            var inExpression = DbExpressionBuilder.In(
+                DbExpressionBuilder.Constant(5), new List<DbConstantExpression>());
+            var builder1 = new StringBuilder();
+            var builder2 = new StringBuilder();
+
+            using (var writer = new SqlWriter(builder1))
+            {
+                generator.Visit(DbExpressionBuilder.False).WriteSql(writer, null);
+            }
+
+            using (var writer = new SqlWriter(builder2))
+            {
+                generator.Visit(inExpression).WriteSql(writer, null);
+            }
+
+            Assert.Equal(builder1.ToString(), builder2.ToString());
         }
     }
 }

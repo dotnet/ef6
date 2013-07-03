@@ -23,7 +23,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             DebugCheck.NotNull(item);
             DebugCheck.NotNull(list);
             Debug.Assert(TypeSemantics.IsBooleanType(booleanResultType), "DbInExpression must have a Boolean result type");
-            Debug.Assert(list.Count > 0, "DbInExpression list must not be empy");
             Debug.Assert(
                 list.All(e => TypeSemantics.IsEqual(e.ResultType, item.ResultType)),
                 "DbInExpression requires the same result type for the input expressions");

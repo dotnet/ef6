@@ -2107,13 +2107,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         #region In
 
         [Fact]
-        public void In_returns_false_constant_expression_for_empty_enumerable()
+        public void In_returns_correct_expression_for_empty_enumerable()
         {
             var expression = DbExpressionBuilder.Constant(0);
             var list = new List<DbConstantExpression>();
             var result = expression.In(list);
 
-            Assert.Equal(DbExpressionBuilder.False, result);
+            Assert.Equal(expression, result.Item);
+            Assert.Equal(0, result.List.Count);
         }
 
         [Fact]
@@ -2126,9 +2127,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                                DbExpressionBuilder.Constant(1),
                                DbExpressionBuilder.Constant(2),
                            };
-            var result = expression.In(list) as DbInExpression;
+            var result = expression.In(list);
 
-            Assert.NotEqual(null, result);
             Assert.Equal(expression, result.Item);
             Assert.Equal(list.Count, result.List.Count);
 

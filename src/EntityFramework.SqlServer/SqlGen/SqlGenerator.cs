@@ -5,6 +5,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
@@ -1979,6 +1980,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
         public override ISqlFragment Visit(DbInExpression e)
         {
             Check.NotNull(e, "e");
+
+            if (e.List.Count == 0)
+            {
+                return Visit(DbExpressionBuilder.False);
+            }
 
             var result = new SqlBuilder();
 
