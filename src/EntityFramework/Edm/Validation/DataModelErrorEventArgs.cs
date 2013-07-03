@@ -18,15 +18,15 @@ namespace System.Data.Entity.Edm.Validation
         public string ErrorMessage { get; internal set; }
 
         /// <summary>
-        ///     Gets a value indicating the <see cref="IMetadataItem" /> that caused the event to be raised.
+        ///     Gets a value indicating the <see cref="MetadataItem" /> that caused the event to be raised.
         /// </summary>
-        public IMetadataItem Item
+        public MetadataItem Item
         {
             get { return _item; }
             set { _item = value; }
         }
 
         [NonSerialized]
-        private IMetadataItem _item;
+        private MetadataItem _item;
     }
 }

@@ -192,7 +192,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         private void MapStructuralElements<TStructuralTypeConfiguration>(
             Type type,
-            ICollection<DataModelAnnotation> annotations,
+            ICollection<MetadataProperty> annotations,
             Action<PropertyMapper, PropertyInfo> propertyMappingAction,
             bool mapDeclaredPropertiesOnly,
             Func<TStructuralTypeConfiguration> structuralTypeConfiguration)

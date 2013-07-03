@@ -283,6 +283,7 @@
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\TypeConventionWithHaving.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\TypeConventionWithHavingBase.cs" />
     <Compile Include="ModelConfiguration\Conventions\Sets\ConventionSet.cs" />
+    <Compile Include="ModelConfiguration\Edm\MetadataPropertyExtensions.cs" />
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="TransactionalBehavior.cs" />
     <Compile Include="Internal\InterceptableDbCommand.cs">
@@ -299,7 +300,6 @@
     <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyScanner.cs" />
     <Compile Include="Core\Metadata\Edm\DbDatabaseMapping.cs" />
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilder.cs" />
-    <Compile Include="Core\Metadata\Edm\IMetadataItem.cs" />
     <Compile Include="Core\Metadata\Edm\INamedDataModelItem.cs" />
     <Compile Include="Core\Metadata\Edm\ExpensiveOSpaceLoader.cs" />
     <Compile Include="Core\Metadata\ObjectLayer\CodeFirstOSpaceLoader.cs" />

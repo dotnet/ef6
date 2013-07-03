@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             _attributeProvider = attributeProvider;
         }
 
-        public void Map(PropertyInfo propertyInfo, ICollection<DataModelAnnotation> annotations)
+        public void Map(PropertyInfo propertyInfo, ICollection<MetadataProperty> annotations)
         {
             DebugCheck.NotNull(propertyInfo);
             DebugCheck.NotNull(annotations);
@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             annotations.SetClrAttributes(_attributeProvider.GetAttributes(propertyInfo).ToList());
         }
 
-        public void Map(Type type, ICollection<DataModelAnnotation> annotations)
+        public void Map(Type type, ICollection<MetadataProperty> annotations)
         {
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(annotations);

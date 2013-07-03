@@ -15,38 +15,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         private const string ClrAttributesAnnotation = "ClrAttributes";
         private const string ConfiguationAnnotation = "Configuration";
 
-        public static IList<Attribute> GetClrAttributes(this IEnumerable<DataModelAnnotation> dataModelAnnotations)
-        {
-            DebugCheck.NotNull(dataModelAnnotations);
-
-            return (IList<Attribute>)dataModelAnnotations.GetAnnotation(ClrAttributesAnnotation);
-        }
-
-        public static void SetClrAttributes(
-            this ICollection<DataModelAnnotation> dataModelAnnotations, IList<Attribute> attributes)
-        {
-            DebugCheck.NotNull(dataModelAnnotations);
-            DebugCheck.NotNull(attributes);
-
-            dataModelAnnotations.SetAnnotation(ClrAttributesAnnotation, attributes);
-        }
-
-        public static PropertyInfo GetClrPropertyInfo(this IEnumerable<DataModelAnnotation> dataModelAnnotations)
-        {
-            DebugCheck.NotNull(dataModelAnnotations);
-
-            return (PropertyInfo)dataModelAnnotations.GetAnnotation(ClrPropertyInfoAnnotation);
-        }
-
-        public static void SetClrPropertyInfo(
-            this ICollection<DataModelAnnotation> dataModelAnnotations, PropertyInfo propertyInfo)
-        {
-            DebugCheck.NotNull(dataModelAnnotations);
-            DebugCheck.NotNull(propertyInfo);
-
-            dataModelAnnotations.SetAnnotation(ClrPropertyInfoAnnotation, propertyInfo);
-        }
-
         public static Type GetClrType(this IEnumerable<DataModelAnnotation> dataModelAnnotations)
         {
             DebugCheck.NotNull(dataModelAnnotations);

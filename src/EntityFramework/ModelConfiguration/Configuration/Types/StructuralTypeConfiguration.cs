@@ -215,7 +215,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         internal void Configure(
             string structuralTypeName,
             IEnumerable<EdmProperty> properties,
-            ICollection<DataModelAnnotation> dataModelAnnotations)
+            ICollection<MetadataProperty> dataModelAnnotations)
         {
             DebugCheck.NotEmpty(structuralTypeName);
             DebugCheck.NotNull(properties);

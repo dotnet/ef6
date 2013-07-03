@@ -33,12 +33,12 @@ namespace System.Data.Entity.Edm
             }
         }
 
-        protected virtual void VisitAnnotations(MetadataItem item, IEnumerable<DataModelAnnotation> annotations)
+        protected virtual void VisitAnnotations(MetadataItem item, IEnumerable<MetadataProperty> annotations)
         {
             VisitCollection(annotations, VisitAnnotation);
         }
 
-        protected virtual void VisitAnnotation(DataModelAnnotation item)
+        protected virtual void VisitAnnotation(MetadataProperty item)
         {
         }
 
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Edm
         {
             if (item != null)
             {
-                if (item.Annotations.Count > 0)
+                if (item.Annotations.Any())
                 {
                     VisitAnnotations(item, item.Annotations);
                 }

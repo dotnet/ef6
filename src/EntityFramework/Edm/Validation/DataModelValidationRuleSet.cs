@@ -28,7 +28,7 @@ namespace System.Data.Entity.Edm.Validation
             _rules.Remove(rule);
         }
 
-        internal IEnumerable<DataModelValidationRule> GetRules(IMetadataItem itemToValidate)
+        internal IEnumerable<DataModelValidationRule> GetRules(MetadataItem itemToValidate)
         {
             DebugCheck.NotNull(itemToValidate);
 

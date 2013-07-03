@@ -189,15 +189,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             AddInternal(item);
         }
 
-        internal void Remove(T item)
+        internal bool Remove(T item)
         {
             DebugCheck.NotNull(item);
             Debug.Assert(Contains(item));
             ThrowIfReadOnly();
 
-            _collectionData.OrderedList.Remove(item);
+            var result = _collectionData.OrderedList.Remove(item);
 
             InvalidateCache();
+
+            return result;
         }
 
         public void InvalidateCache()

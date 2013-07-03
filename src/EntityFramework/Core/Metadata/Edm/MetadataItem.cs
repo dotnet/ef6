@@ -2,17 +2,20 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
     using System.Text;
     using System.Threading;
 
     /// <summary>
     ///     Represents the base item class for all the metadata
     /// </summary>
-    public abstract partial class MetadataItem : IMetadataItem
+    public abstract partial class MetadataItem
     {
         /// <summary>
         ///     Implementing this internal constructor so that this class can't be derived
@@ -20,11 +23,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal MetadataItem()
         {
+            _annotations = new AnnotationCollection(this);
         }
 
         internal MetadataItem(MetadataFlags flags)
         {
             _flags = flags;
+            _annotations = new AnnotationCollection(this);
         }
 
         [Flags]
@@ -58,15 +63,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private MetadataFlags _flags;
         private readonly object _flagsLock = new object();
         private MetadataCollection<MetadataProperty> _itemAttributes;
-        private readonly List<DataModelAnnotation> annotationsList = new List<DataModelAnnotation>();
+        private AnnotationCollection _annotations;
 
         /// <summary>
         ///     Gets the currently assigned annotations.
         /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DataModelAnnotation> Annotations
+        internal virtual ICollection<MetadataProperty> Annotations
         {
-            get { return annotationsList; }
+            get { return _annotations; }
         }
 
         /// <summary>Gets the built-in type kind for this type.</summary>
@@ -96,6 +100,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
                 return _itemAttributes.AsReadOnlyMetadataCollection();
             }
+        }
+
+        /// <summary>
+        /// Adds a metadata property with the specified name and value.
+        /// </summary>
+        /// <param name="name">The name of the property.</param>
+        /// <param name="value">The value of the property.</param>
+        public void AddAnnotation(string name, object value)
+        {
+            Check.NotEmpty(name, "name");
+
+            MetadataProperties.Source.Add(MetadataProperty.CreateAnnotation(name, value));
         }
 
         /// <summary>
@@ -284,6 +300,92 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     _flags &= ~flag;
                 }
+            }
+        }
+
+        // Internal for test purposes only.
+        internal sealed class AnnotationCollection : ICollection<MetadataProperty>
+        {
+            private readonly MetadataItem _metadataItem;
+
+            internal AnnotationCollection(MetadataItem metadataItem)
+            {
+                DebugCheck.NotNull(metadataItem);
+
+                _metadataItem = metadataItem;
+            }
+
+            public int Count
+            {
+                get { return _metadataItem.MetadataProperties.Where(p => p.IsAnnotation).Count(); }
+            }
+
+            public bool IsReadOnly
+            {
+                get { return _metadataItem.IsReadOnly; }
+            }
+
+            public void Add(MetadataProperty property)
+            {
+                DebugCheck.NotNull(property);
+                Debug.Assert(property.IsAnnotation);
+
+                _metadataItem.MetadataProperties.Source.Add(property);
+            }
+
+            public void Clear()
+            {
+                foreach (var property in this.ToList())
+                {
+                    Remove(property);
+                }
+            }
+
+            public bool Contains(MetadataProperty property)
+            {
+                DebugCheck.NotNull(property);
+                Debug.Assert(property.IsAnnotation);
+
+                return _metadataItem.MetadataProperties.Source.Contains(property);
+            }
+
+            public void CopyTo(MetadataProperty[] array, int index)
+            {
+                DebugCheck.NotNull(array);
+                Debug.Assert(index >= 0);
+
+                if (index >= array.Length)
+                {
+                    return;
+                }
+
+                foreach (var property in _metadataItem.MetadataProperties.Where(p => p.IsAnnotation))
+                {
+                    array[index++] = property;
+
+                    if (index >= array.Length)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            public bool Remove(MetadataProperty property)
+            {
+                DebugCheck.NotNull(property);
+                Debug.Assert(property.IsAnnotation);
+
+                return _metadataItem.MetadataProperties.Source.Remove(property);
+            }
+
+            public IEnumerator<MetadataProperty> GetEnumerator()
+            {
+                return _metadataItem.MetadataProperties.Where(p => p.IsAnnotation).GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
             }
         }
     }

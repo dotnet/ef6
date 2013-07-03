@@ -17,7 +17,7 @@ namespace System.Data.Entity.Edm.Validation
                         if (string.IsNullOrWhiteSpace(item.Name))
                         {
                             context.AddError(
-                                item,
+                                (MetadataItem)item,
                                 XmlConstants.Name,
                                 Strings.EdmModel_Validator_Syntactic_MissingName);
                         }
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Edm.Validation
                             && item.Name.Length > 480 && !(item is RowType) && !(item is CollectionType))
                         {
                             context.AddError(
-                                item,
+                                (MetadataItem)item,
                                 XmlConstants.Name,
                                 Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong(item.Name));
                         }

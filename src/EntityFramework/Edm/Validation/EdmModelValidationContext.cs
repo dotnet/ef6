@@ -36,7 +36,7 @@ namespace System.Data.Entity.Edm.Validation
             get { return _model.Containers.First().DataSpace == DataSpace.CSpace; }
         }
 
-        public void AddError(IMetadataItem item, string propertyName, string errorMessage)
+        public void AddError(MetadataItem item, string propertyName, string errorMessage)
         {
             DebugCheck.NotNull(item);
             DebugCheck.NotEmpty(errorMessage);

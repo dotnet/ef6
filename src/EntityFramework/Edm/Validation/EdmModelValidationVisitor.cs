@@ -31,7 +31,7 @@ namespace System.Data.Entity.Edm.Validation
             }
         }
 
-        private void EvaluateItem(IMetadataItem item)
+        private void EvaluateItem(MetadataItem item)
         {
             DebugCheck.NotNull(item);
 

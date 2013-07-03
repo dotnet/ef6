@@ -54,6 +54,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _propertyKind = PropertyKind.System;
         }
 
+        private MetadataProperty(string name, object value)
+        {
+            DebugCheck.NotEmpty(name);
+
+            _name = name;
+            _value = value;
+            _propertyKind = PropertyKind.Extended;
+        }
+
         private readonly string _name;
         private readonly PropertyKind _propertyKind;
         private object _value;
@@ -171,6 +180,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _propertyKind; }
         }
 
+        internal bool IsAnnotation
+        {
+            get { return PropertyKind == PropertyKind.Extended && TypeUsage == null; }
+        }
+
         /// <summary>
         ///     The factory method for constructing the MetadataProperty object.
         /// </summary>
@@ -188,6 +202,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var metadataProperty = new MetadataProperty(name, typeUsage, value);
             metadataProperty.SetReadOnly();
             return metadataProperty;
+        }
+
+        internal static MetadataProperty CreateAnnotation(string name, object value)
+        {
+            return new MetadataProperty(name, value);
         }
     }
 }

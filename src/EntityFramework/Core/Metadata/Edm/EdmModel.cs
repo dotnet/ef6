@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    public class EdmModel : IMetadataItem
+    public class EdmModel : MetadataItem
     {
         private readonly List<EntityContainer> _containers = new List<EntityContainer>();
         private readonly List<AssociationType> _associationTypes = new List<AssociationType>();
@@ -70,6 +70,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 throw new ModelValidationException(validationErrors);
             }
+        }
+
+        public override BuiltInTypeKind BuiltInTypeKind
+        {
+            get { return BuiltInTypeKind.MetadataItem; }
+        }
+
+        internal override string Identity
+        {
+            get { return "EdmModel" + Containers.Single().Name;  }
         }
 
         public virtual IEnumerable<EntityContainer> Containers

@@ -3,8 +3,10 @@
 namespace System.Data.Entity.Edm.Validation
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Diagnostics;
 
     internal abstract class DataModelValidationRule<TItem> : DataModelValidationRule
+        where TItem : class
     {
         protected Action<EdmModelValidationContext, TItem> _validate;
 
@@ -18,9 +20,10 @@ namespace System.Data.Entity.Edm.Validation
             get { return typeof(TItem); }
         }
 
-        internal override void Evaluate(EdmModelValidationContext context, IMetadataItem item)
+        internal override void Evaluate(EdmModelValidationContext context, MetadataItem item)
         {
-            _validate(context, (TItem)item);
+            Debug.Assert(item is TItem);
+            _validate(context, item as TItem);
         }
     }
 }

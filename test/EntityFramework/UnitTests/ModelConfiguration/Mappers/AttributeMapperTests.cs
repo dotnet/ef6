@@ -27,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                             new TableAttribute("MyTable")
                         });
 
-            var annotations = new List<DataModelAnnotation>();
+            var annotations = new List<MetadataProperty>();
 
             new AttributeMapper(mockAttributeProvider.Object).Map(mockType, annotations);
 
@@ -49,7 +49,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                             new TableAttribute("MyTable")
                         });
 
-            var annotations = new List<DataModelAnnotation>();
+            var annotations = new List<MetadataProperty>();
 
             new AttributeMapper(mockAttributeProvider.Object).Map(mockPropertyInfo, annotations);
 

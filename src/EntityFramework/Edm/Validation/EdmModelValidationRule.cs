@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Edm.Validation
 {
     internal class EdmModelValidationRule<TItem> : DataModelValidationRule<TItem>
+        where TItem : class
     {
         internal EdmModelValidationRule(Action<EdmModelValidationContext, TItem> validate)
             : base(validate)

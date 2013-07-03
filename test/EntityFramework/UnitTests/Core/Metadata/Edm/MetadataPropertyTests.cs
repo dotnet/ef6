@@ -28,6 +28,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Same(typeUsage, metadataProperty.TypeUsage);
             Assert.Equal("value", metadataProperty.Value);
             Assert.True(metadataProperty.IsReadOnly);
+            Assert.False(metadataProperty.IsAnnotation);
+        }
+
+        [Fact]
+        public void CreateAnnotation_creates_correct_metdata_property()
+        {
+            var value = new object();
+            var annotation = MetadataProperty.CreateAnnotation("name", value);
+
+            Assert.Equal("name", annotation.Name);
+            Assert.Equal(value, annotation.Value);
+            Assert.Null(annotation.TypeUsage);
+            Assert.Equal(PropertyKind.Extended, annotation.PropertyKind);
+            Assert.True(annotation.IsAnnotation);
         }
     }
 }

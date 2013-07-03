@@ -241,14 +241,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var mockColumn = CreateMockMember(mockTableType.Object, name);
             mockColumn.Setup(m => m.Annotations).Returns(
                 config == null
-                    ? new DataModelAnnotation[0]
+                    ? new MetadataProperty[0]
                     : new[]
                         {
-                            new DataModelAnnotation
-                                {
-                                    Name = "Configuration",
-                                    Value = config
-                                }
+                            MetadataProperty.CreateAnnotation("Configuration", config)
                         });
             
             mockColumn.SetupProperty(
