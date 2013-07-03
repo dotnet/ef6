@@ -20,13 +20,13 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
+    using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Data.Entity.Validation;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -121,6 +121,9 @@ namespace System.Data.Entity.Internal
         public event EventHandler<EventArgs> OnDisposing;
 
         private DbCommandLogger _commandLogger;
+
+        private string _migrationsConfigurationContextKey;
+        private bool? _migrationsConfigurationDiscovered;
 
         protected InternalContext(DbContext owner, Lazy<Dispatchers> dispatchers = null)
         {
@@ -1438,7 +1441,36 @@ namespace System.Data.Entity.Internal
 
         public string ContextKey
         {
-            get { return OwnerShortTypeName; }
+            get
+            {
+                return MigrationsConfigurationDiscovered ? _migrationsConfigurationContextKey : OwnerShortTypeName;
+            }
+        }
+
+        public bool MigrationsConfigurationDiscovered
+        {
+            get
+            {
+                if (!_migrationsConfigurationDiscovered.HasValue)
+                {
+                    var contextType = Owner.GetType();
+                    var discoveredConfig
+                        = new MigrationsConfigurationFinder(new TypeFinder(contextType.Assembly))
+                            .FindMigrationsConfiguration(contextType, null);
+
+                    if (discoveredConfig != null)
+                    {
+                        _migrationsConfigurationContextKey = discoveredConfig.ContextKey;
+                        _migrationsConfigurationDiscovered = true;
+                    }
+                    else
+                    {
+                        _migrationsConfigurationDiscovered = false;
+                    }
+                }
+
+                return _migrationsConfigurationDiscovered.Value;
+            }
         }
 
         internal virtual string OwnerShortTypeName

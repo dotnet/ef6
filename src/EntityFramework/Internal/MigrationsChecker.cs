@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Internal
 {
-    using System.Data.Entity.Migrations.Utilities;
+    using System.Data.Entity.Migrations;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -10,21 +10,21 @@ namespace System.Data.Entity.Internal
 
     internal class MigrationsChecker
     {
-        private readonly Func<Type, MigrationsConfigurationFinder> _finder;
+        private readonly Func<InternalContext, bool> _finder;
 
-        public MigrationsChecker(Func<Type, MigrationsConfigurationFinder> finder = null)
+        public MigrationsChecker(Func<InternalContext, bool> finder = null)
         {
-            _finder = finder ?? (t => new MigrationsConfigurationFinder(new TypeFinder(t.Assembly)));
+            _finder = finder ?? (c => c.MigrationsConfigurationDiscovered);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public virtual bool IsMigrationsConfigured(Type contextType, Func<bool> databaseExists)
+        public virtual bool IsMigrationsConfigured(InternalContext internalContext, Func<bool> databaseExists)
         {
-            DebugCheck.NotNull(contextType);
+            DebugCheck.NotNull(internalContext);
 
             try
             {
-                if (_finder(contextType).FindMigrationsConfiguration(contextType, null) == null)
+                if (!_finder(internalContext))
                 {
                     return false;
                 }
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Internal
             }
 
             throw new InvalidOperationException(
-                Strings.DatabaseInitializationStrategy_MigrationsEnabled(contextType.Name));
+                Strings.DatabaseInitializationStrategy_MigrationsEnabled(internalContext.Owner.GetType().Name));
         }
     }
 }

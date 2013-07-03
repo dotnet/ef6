@@ -11,13 +11,13 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void IsMigrationsConfigured_returns_true_if_DbMigrationsConfiguration_is_discovered_and_database_exists()
         {
-            Assert.True(new MigrationsChecker().IsMigrationsConfigured(typeof(ContextWithMigrations), () => true));
+            Assert.True(new MigrationsChecker().IsMigrationsConfigured(new ContextWithMigrations().InternalContext, () => true));
         }
 
         [Fact]
         public void IsMigrationsConfigured_returns_false_if_no_DbMigrationsConfiguration_can_be_discovered_and_database_exists()
         {
-            Assert.False(new MigrationsChecker().IsMigrationsConfigured(typeof(FakeContext), () => true));
+            Assert.False(new MigrationsChecker().IsMigrationsConfigured(new FakeContext().InternalContext, () => true));
         }
 
         [Fact]
@@ -26,13 +26,13 @@ namespace System.Data.Entity.Internal
             Assert.Equal(
                 Strings.DatabaseInitializationStrategy_MigrationsEnabled("ContextWithMigrations"),
                 Assert.Throws<InvalidOperationException>(
-                () => new MigrationsChecker().IsMigrationsConfigured(typeof(ContextWithMigrations), () => false)).Message);
+                () => new MigrationsChecker().IsMigrationsConfigured(new ContextWithMigrations().InternalContext, () => false)).Message);
         }
 
         [Fact]
         public void IsMigrationsConfigured_returns_false_if_no_DbMigrationsConfiguration_can_be_discovered_and_database_does_not_exist()
         {
-            Assert.False(new MigrationsChecker().IsMigrationsConfigured(typeof(FakeContext), () => false));
+            Assert.False(new MigrationsChecker().IsMigrationsConfigured(new FakeContext().InternalContext, () => false));
         }
 
         public class DiscoverableConfiguration : DbMigrationsConfiguration<ContextWithMigrations>

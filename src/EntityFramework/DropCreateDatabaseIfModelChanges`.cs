@@ -55,7 +55,7 @@ namespace System.Data.Entity
             var exists = new DatabaseTableChecker().AnyModelTableExists(context.InternalContext);
 
             if (_migrationsChecker.IsMigrationsConfigured(
-                context.GetType(), 
+                context.InternalContext, 
                 () =>
                     {
                         if (exists && !context.Database.CompatibleWithModel(throwIfNoMetadata: true))

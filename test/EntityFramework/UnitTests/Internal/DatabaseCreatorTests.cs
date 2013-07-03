@@ -104,11 +104,9 @@ namespace System.Data.Entity.Internal
             [Fact] // CodePlex 1192
             public void CreateDatabase_throws_if_Migrations_is_configured()
             {
-                var mockFinder = new Mock<MigrationsConfigurationFinder>();
-                mockFinder.Setup(m => m.FindMigrationsConfiguration(It.IsAny<Type>(), null, null, null, null, null))
-                    .Returns(new DbMigrationsConfiguration());
-
-                var creator = new DatabaseCreator(DbConfiguration.DependencyResolver, new MigrationsChecker(t => mockFinder.Object));
+                var creator = new DatabaseCreator(
+                    DbConfiguration.DependencyResolver, 
+                    new MigrationsChecker(c => true));
 
                 Assert.Equal(
                     Strings.DatabaseInitializationStrategy_MigrationsEnabled("FakeContextProxy"),

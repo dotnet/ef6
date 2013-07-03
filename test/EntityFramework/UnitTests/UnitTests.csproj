@@ -330,6 +330,7 @@
     <Compile Include="Internal\Linq\InternalDbSetTests.cs" />
     <Compile Include="Internal\Linq\InternalSetTests.cs" />
     <Compile Include="Internal\MigrationsCheckerTests.cs" />
+    <Compile Include="Internal\ModelCompatibilityCheckerTests.cs" />
     <Compile Include="Internal\TestHelpers\InternalEntityEntryForMock.cs" />
     <Compile Include="Internal\TestHelpers\NavigationEntryMetadataForMock.cs" />
     <Compile Include="Internal\TestHelpers\PropertyEntryMetadataForMock.cs" />

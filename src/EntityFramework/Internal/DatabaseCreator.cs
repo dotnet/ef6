@@ -48,7 +48,7 @@ namespace System.Data.Entity.Internal
             if (internalContext.CodeFirstModel != null
                 && _resolver.GetService<MigrationSqlGenerator>(internalContext.ProviderName) != null)
             {
-                if (!_migrationsChecker.IsMigrationsConfigured(internalContext.Owner.GetType(), () => false))
+                if (!_migrationsChecker.IsMigrationsConfigured(internalContext, () => false))
                 {
                     var migrator = createMigrator(
                         GetMigrationsConfiguration(internalContext),

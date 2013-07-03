@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
     using System.IO;
     using System.Threading;
@@ -37,6 +38,48 @@ namespace System.Data.Entity.Internal
             var internalContext = new EagerInternalContext(genericFuncy);
 
             Assert.Equal(genericFuncy.GetType().ToString(), internalContext.ContextKey);
+        }
+
+        [Fact]
+        public void MigrationsConfigurationDiscovered_returns_true_if_configuration_discovered()
+        {
+            Assert.True(new ContextWithMigrations().InternalContext.MigrationsConfigurationDiscovered);
+        }
+
+        [Fact]
+        public void MigrationsConfigurationDiscovered_returns_false_if_configuration_not_discovered()
+        {
+            Assert.False(new ContextWithoutMigrations().InternalContext.MigrationsConfigurationDiscovered);
+        }
+
+        [Fact]
+        public void ContextKey_returns_key_from_Migrations_configuration_if_discovered()
+        {
+            Assert.Equal("My Key", new ContextWithMigrations().InternalContext.ContextKey);
+        }
+
+        public class DiscoverableConfiguration : DbMigrationsConfiguration<ContextWithMigrations>
+        {
+            public DiscoverableConfiguration()
+            {
+                ContextKey = "My Key";
+            }
+        }
+
+        public class ContextWithMigrations : DbContext
+        {
+            static ContextWithMigrations()
+            {
+                Database.SetInitializer<ContextWithMigrations>(null);
+            }
+        }
+
+        public class ContextWithoutMigrations : DbContext
+        {
+            static ContextWithoutMigrations()
+            {
+                Database.SetInitializer<ContextWithoutMigrations>(null);
+            }
         }
 
         [Fact]

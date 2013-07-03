@@ -49,7 +49,7 @@ namespace System.Data.Entity
             Check.NotNull(context, "context");
 
             if (_migrationsChecker.IsMigrationsConfigured(
-                context.GetType(), 
+                context.InternalContext, 
                 () => new DatabaseTableChecker().AnyModelTableExists(context.InternalContext)))
             {
                 return;

@@ -7,10 +7,8 @@ namespace System.Data.Entity
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
-    using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
-    using System.Xml.Linq;
     using Moq;
     using Xunit;
 
@@ -115,7 +113,7 @@ namespace System.Data.Entity
         public void DropCreateDatabaseAlways_does_nothing_if_Migrations_is_configured_and_database_exists()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseAlways<FakeNoRegContext>>(
-                databaseExists: true, modelCompatible: true, checker: CreatePositiveMigrationsChecker());
+                databaseExists: true, modelCompatible: true, checker: new MigrationsChecker(c => true));
 
             tracker.ExecuteStrategy();
 
@@ -126,7 +124,7 @@ namespace System.Data.Entity
         public void DropCreateDatabaseAlways_throws_if_Migrations_is_configured_and_database_does_not_exist()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseAlways<FakeNoRegContext>>(
-                databaseExists: false, checker: CreatePositiveMigrationsChecker());
+                databaseExists: false, checker: new MigrationsChecker(c => true));
 
             Assert.Equal(
                 Strings.DatabaseInitializationStrategy_MigrationsEnabled("FakeNoRegContextProxy"),
@@ -187,7 +185,7 @@ namespace System.Data.Entity
         public void CreateDatabaseIfNotExists_throws_if_database_does_not_exist_and_Migrations_is_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
-                databaseExists: false, checker: CreatePositiveMigrationsChecker());
+                databaseExists: false, checker: new MigrationsChecker(c => true));
 
             Assert.Equal(
                 Strings.DatabaseInitializationStrategy_MigrationsEnabled("FakeNoRegContextProxy"),
@@ -200,7 +198,7 @@ namespace System.Data.Entity
         public void CreateDatabaseIfNotExists_throws_if_database_exists_and_model_does_not_match_with_Migrations_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
-                databaseExists: true, modelCompatible: false, checker: CreatePositiveMigrationsChecker());
+                databaseExists: true, modelCompatible: false, checker: new MigrationsChecker(c => true));
 
             Assert.Equal(
                 Strings.DatabaseInitializationStrategy_ModelMismatch(tracker.Context.GetType().Name),
@@ -213,7 +211,7 @@ namespace System.Data.Entity
         public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_and_model_matches_with_Migrations_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
-                databaseExists: true, modelCompatible: true, checker: CreatePositiveMigrationsChecker());
+                databaseExists: true, modelCompatible: true, checker: new MigrationsChecker(c => true));
 
             tracker.ExecuteStrategy();
 
@@ -224,7 +222,7 @@ namespace System.Data.Entity
         public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_but_has_no_metadata_with_Migrations_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
-                databaseExists: true, modelCompatible: true, hasMetadata: false, checker: CreatePositiveMigrationsChecker());
+                databaseExists: true, modelCompatible: true, hasMetadata: false, checker: new MigrationsChecker(c => true));
 
             tracker.ExecuteStrategy();
 
@@ -284,7 +282,7 @@ namespace System.Data.Entity
         public void DropCreateDatabaseIfModelChanges_throws_if_database_does_not_exist_and_Migrations_is_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
-                databaseExists: false, checker: CreatePositiveMigrationsChecker());
+                databaseExists: false, checker: new MigrationsChecker(c => true));
 
             Assert.Equal(
                 Strings.DatabaseInitializationStrategy_MigrationsEnabled("FakeNoRegContextProxy"),
@@ -297,7 +295,7 @@ namespace System.Data.Entity
         public void DropCreateDatabaseIfModelChanges_does_nothing_if_database_exists_and_model_is_up_to_date_with_Migrations_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
-                databaseExists: true, modelCompatible: true, checker: CreatePositiveMigrationsChecker());
+                databaseExists: true, modelCompatible: true, checker: new MigrationsChecker(c => true));
 
             tracker.ExecuteStrategy();
 
@@ -308,7 +306,7 @@ namespace System.Data.Entity
         public void DropCreateDatabaseIfModelChanges_throws_if_database_exists_and_model_does_not_match_with_Migrations_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
-                databaseExists: true, modelCompatible: false, checker: CreatePositiveMigrationsChecker());
+                databaseExists: true, modelCompatible: false, checker: new MigrationsChecker(c => true));
 
             Assert.Equal(
                 Strings.DatabaseInitializationStrategy_ModelMismatch(tracker.Context.GetType().Name),
@@ -322,7 +320,7 @@ namespace System.Data.Entity
         {
             var tracker =
                 new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
-                    databaseExists: true, modelCompatible: true, hasMetadata: false, checker: CreatePositiveMigrationsChecker());
+                    databaseExists: true, modelCompatible: true, hasMetadata: false, checker: new MigrationsChecker(c => true));
 
             Assert.Equal(
                 Strings.Database_NoDatabaseMetadata, 
@@ -703,178 +701,6 @@ namespace System.Data.Entity
 
         #endregion
 
-        #region ModelMatches tests
-
-        private static Mock<InternalContextForMock<FakeNoRegContext>> CreateContextForCompatibleTest(
-            bool modelMatches, bool codeFirst = true)
-        {
-            var mockInternalContext = new Mock<InternalContextForMock<FakeNoRegContext>>();
-            mockInternalContext.Setup(c => c.CodeFirstModel).Returns(codeFirst ? new DbCompiledModel() : null);
-            mockInternalContext.Setup(c => c.QueryForModel()).Returns(new XDocument());
-            mockInternalContext.Setup(c => c.ModelMatches(It.IsAny<XDocument>())).Returns(modelMatches);
-            return mockInternalContext;
-        }
-
-        private static Mock<InternalContextForMock<FakeNoRegContext>> CreateContextForCompatibleTest(
-            string databaseHash, bool codeFirst = true)
-        {
-            var mockInternalContext = new Mock<InternalContextForMock<FakeNoRegContext>>();
-            mockInternalContext.Setup(c => c.CodeFirstModel).Returns(codeFirst ? new DbCompiledModel() : null);
-            mockInternalContext.Setup(c => c.QueryForModel()).Returns((XDocument)null);
-            mockInternalContext.Setup(c => c.QueryForModelHash()).Returns(databaseHash);
-            return mockInternalContext;
-        }
-
-        [Fact]
-        public void CompatibleWithModel_returns_true_if_model_matches_database_and_method_is_asked_to_throw()
-        {
-            var mockInternalContext = CreateContextForCompatibleTest(modelMatches: true);
-            var mockHashFactory = new Mock<ModelHashCalculator>();
-
-            Assert.True(
-                new ModelCompatibilityChecker()
-                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: true));
-        }
-
-        [Fact]
-        public void CompatibleWithModel_returns_true_if_model_matches_database_and_method_is_asked_not_to_throw()
-        {
-            var mockInternalContext = CreateContextForCompatibleTest(modelMatches: true);
-            var mockHashFactory = new Mock<ModelHashCalculator>();
-
-            Assert.True(
-                new ModelCompatibilityChecker()
-                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
-        }
-
-        [Fact]
-        public void CompatibleWithModel_returns_false_if_model_does_not_match_database_and_method_is_asked_to_throw()
-        {
-            var mockInternalContext = CreateContextForCompatibleTest(modelMatches: false);
-            var mockHashFactory = new Mock<ModelHashCalculator>();
-
-            Assert.False(
-                new ModelCompatibilityChecker()
-                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: true));
-        }
-
-        [Fact]
-        public void CompatibleWithModel_returns_false_if_model_does_not_match_database_and_method_is_asked_not_to_throw()
-        {
-            var mockInternalContext = CreateContextForCompatibleTest(modelMatches: false);
-            var mockHashFactory = new Mock<ModelHashCalculator>();
-
-            Assert.False(
-                new ModelCompatibilityChecker()
-                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
-        }
-
-        [Fact]
-        public void CompatibleWithModel_returns_true_if_model_matches_database_using_model_hash_check_and_method_is_asked_to_throw()
-        {
-            var mockInternalContext = CreateContextForCompatibleTest("<Hash>");
-            var mockHashFactory = new Mock<ModelHashCalculator>();
-            mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns("<Hash>");
-
-            Assert.True(
-                new ModelCompatibilityChecker()
-                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: true));
-        }
-
-        [Fact]
-        public void CompatibleWithModel_returns_true_if_model_matches_database_using_model_hash_check_and_method_is_asked_not_to_throw()
-        {
-            var mockInternalContext = CreateContextForCompatibleTest("<Hash>");
-            var mockHashFactory = new Mock<ModelHashCalculator>();
-            mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns("<Hash>");
-
-            Assert.True(
-                new ModelCompatibilityChecker()
-                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
-        }
-
-        [Fact]
-        public void CompatibleWithModel_returns_false_if_model_does_not_match_database_using_model_hash_check_and_method_is_asked_to_throw()
-        {
-            var mockInternalContext = CreateContextForCompatibleTest("<Hash1>");
-            var mockHashFactory = new Mock<ModelHashCalculator>();
-            mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns("<Hash2>");
-
-            Assert.False(
-                new ModelCompatibilityChecker()
-                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: true));
-        }
-
-        [Fact]
-        public void
-            CompatibleWithModel_returns_false_if_model_does_not_match_database_using_model_hash_check_and_method_is_asked_not_to_throw()
-        {
-            var mockInternalContext = CreateContextForCompatibleTest("<Hash1>");
-            var mockHashFactory = new Mock<ModelHashCalculator>();
-            mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns("<Hash2>");
-
-            Assert.False(
-                new ModelCompatibilityChecker()
-                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
-        }
-
-        [Fact]
-        public void CompatibleWithModel_returns_true_if_model_is_not_from_code_first_and_method_is_asked_not_to_throw()
-        {
-            var mockInternalContext = CreateContextForCompatibleTest("<Hash>", codeFirst: false);
-            var mockHashFactory = new Mock<ModelHashCalculator>();
-
-            Assert.True(
-                new ModelCompatibilityChecker()
-                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
-        }
-
-        [Fact]
-        public void CompatibleWithModel_returns_true_if_database_has_no_hash_and_method_is_asked_not_to_throw()
-        {
-            var mockInternalContext = CreateContextForCompatibleTest(null);
-            var mockHashFactory = new Mock<ModelHashCalculator>();
-            mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns("<Hash>");
-
-            Assert.True(
-                new ModelCompatibilityChecker()
-                    .CompatibleWithModel(mockInternalContext.Object, mockHashFactory.Object, throwIfNoMetadata: false));
-        }
-
-        [Fact]
-        public void CompatibleWithModel_throws_if_model_is_not_from_code_first_and_method_is_asked_to_throw()
-        {
-            var mockInternalContext = CreateContextForCompatibleTest("<Hash>", codeFirst: false);
-            var mockHashFactory = new Mock<ModelHashCalculator>();
-            mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns((string)null);
-
-            Assert.Equal(
-                Strings.Database_NonCodeFirstCompatibilityCheck,
-                Assert.Throws<NotSupportedException>(
-                    () => new ModelCompatibilityChecker().CompatibleWithModel(
-                        mockInternalContext.Object,
-                        mockHashFactory.Object,
-                        throwIfNoMetadata: true)).Message);
-        }
-
-        [Fact]
-        public void CompatibleWithModel_throws_if_database_has_no_hash_and_method_is_asked_to_throw()
-        {
-            var mockInternalContext = CreateContextForCompatibleTest(null);
-            var mockHashFactory = new Mock<ModelHashCalculator>();
-            mockHashFactory.Setup(f => f.Calculate(It.IsAny<DbCompiledModel>())).Returns("<Hash>");
-
-            Assert.Equal(
-                Strings.Database_NoDatabaseMetadata,
-                Assert.Throws<NotSupportedException>(
-                    () => new ModelCompatibilityChecker().CompatibleWithModel(
-                        mockInternalContext.Object,
-                        mockHashFactory.Object,
-                        throwIfNoMetadata: true)).Message);
-        }
-
-        #endregion
-
         #region TryGetModelHash tests
 
         [Fact]
@@ -966,16 +792,6 @@ namespace System.Data.Entity
 
             new HistoryContext().Database.Initialize(force: true);
             mockInitializer.Verify(i => i.InitializeDatabase(It.IsAny<HistoryContext>()), Times.Never());
-        }
-
-        private static MigrationsChecker CreatePositiveMigrationsChecker()
-        {
-            var mockFinder = new Mock<MigrationsConfigurationFinder>();
-            mockFinder.Setup(m => m.FindMigrationsConfiguration(It.IsAny<Type>(), null, null, null, null, null))
-                .Returns(new DbMigrationsConfiguration());
-
-            var checker = new MigrationsChecker(t => mockFinder.Object);
-            return checker;
         }
     }
 }
