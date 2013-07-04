@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -13,9 +14,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         private const int DefaultLength = 4000;
 
-        public void Apply(EntityType edmDataModelItem, EdmModel model)
+        public virtual void Apply(EntityType item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
             var providerInfo = model.ProviderInfo;
@@ -23,13 +24,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             if ((providerInfo != null)
                 && providerInfo.IsSqlCe())
             {
-                SetLength(edmDataModelItem.DeclaredProperties);
+                SetLength(item.DeclaredProperties);
             }
         }
 
-        public void Apply(ComplexType edmDataModelItem, EdmModel model)
+        public virtual void Apply(ComplexType item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
             var providerInfo = model.ProviderInfo;
@@ -37,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             if ((providerInfo != null)
                 && providerInfo.IsSqlCe())
             {
-                SetLength(edmDataModelItem.Properties);
+                SetLength(item.Properties);
             }
         }
 

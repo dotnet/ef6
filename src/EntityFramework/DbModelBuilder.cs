@@ -374,39 +374,47 @@ namespace System.Data.Entity
             DebugCheck.NotNull(providerManifest);
             DebugCheck.NotNull(providerInfo);
 
-            var model 
-                = new EdmModel(DataSpace.CSpace, _modelBuilderVersion.GetEdmVersion())
-                      {
-                          ProviderInfo = providerInfo
-                      };
+            var schemaVersion = _modelBuilderVersion.GetEdmVersion();
+            var modelBuilderClone = Clone();
+
+            var model = new DbModel(
+                new DbDatabaseMapping()
+                {
+                    Model = EdmModel.CreateConceptualModel(schemaVersion),
+                    Database = EdmModel.CreateStoreModel(providerInfo, providerManifest, schemaVersion)
+                },
+                modelBuilderClone);
+            var modelAdapter = (IEdmModelAdapter)model;
 
             _conventionsConfiguration.ApplyModelConfiguration(_modelConfiguration);
 
             _modelConfiguration.NormalizeConfigurations();
 
-            MapTypes(model);
+            MapTypes(modelAdapter.ConceptualModel);
 
-            _modelConfiguration.Configure(model);
-            _conventionsConfiguration.ApplyModel(model);
+            _modelConfiguration.Configure(modelAdapter.ConceptualModel);
 
-            model.Validate();
+            _conventionsConfiguration.ApplyConceptualModel(model);
 
-            var databaseMapping = model.GenerateDatabaseMapping(providerManifest);
+            modelAdapter.ConceptualModel.Validate();
+
+            model = new DbModel(
+                modelAdapter.ConceptualModel.GenerateDatabaseMapping(providerInfo, providerManifest), 
+                modelBuilderClone);
+            modelAdapter = (IEdmModelAdapter)model;
 
             // Run the PluralizingTableNameConvention first so that the new table name is available for configuration
-            _conventionsConfiguration.ApplyPluralizingTableNameConvention(databaseMapping.Database);
+            _conventionsConfiguration.ApplyPluralizingTableNameConvention(model);
 
-            _modelConfiguration.Configure(databaseMapping, providerManifest);
+            _modelConfiguration.Configure(model.DatabaseMapping, providerManifest);
 
-            _conventionsConfiguration.ApplyDatabase(databaseMapping.Database);
-            _conventionsConfiguration.ApplyMapping(databaseMapping);
+            _conventionsConfiguration.ApplyStoreModel(model);
 
-            databaseMapping.Database.ProviderManifest = providerManifest;
-            databaseMapping.Database.ProviderInfo = providerInfo;
+            _conventionsConfiguration.ApplyMapping(model.DatabaseMapping);
 
-            databaseMapping.Database.Validate();
+            modelAdapter.StoreModel.Validate();
 
-            return new DbModel(databaseMapping, Clone());
+            return model;
         }
 
         private static DbProviderManifest GetProviderManifest(DbProviderInfo providerInfo)

@@ -20,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
 
             using (var xmlWriter = edmx.CreateWriter())
             {
-                new EdmxSerializer().Serialize(databaseMapping, ProviderRegistry.Sql2008_ProviderInfo, xmlWriter);
+                new EdmxSerializer().Serialize(databaseMapping, xmlWriter);
             }
 
             edmx.Validate(LoadEdmxSchemaSet(1), (_, e) => { throw e.Exception; });
@@ -34,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
 
             using (var xmlWriter = edmx.CreateWriter())
             {
-                new EdmxSerializer().Serialize(databaseMapping, ProviderRegistry.Sql2008_ProviderInfo, xmlWriter);
+                new EdmxSerializer().Serialize(databaseMapping, xmlWriter);
             }
 
             edmx.Validate(LoadEdmxSchemaSet(2), (_, e) => { throw e.Exception; });
@@ -48,7 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
 
             using (var xmlWriter = edmx.CreateWriter())
             {
-                new EdmxSerializer().Serialize(databaseMapping, ProviderRegistry.Sql2008_ProviderInfo, xmlWriter);
+                new EdmxSerializer().Serialize(databaseMapping, xmlWriter);
             }
 
             edmx.Validate(LoadEdmxSchemaSet(3), (_, e) => { throw e.Exception; });
@@ -71,7 +71,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
             property.Nullable = false;
             entityType.AddKeyMember(property);
 
-            return new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            return new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
         }
 
         private static XmlSchemaSet LoadEdmxSchemaSet(int version)

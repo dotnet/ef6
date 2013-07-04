@@ -4,34 +4,47 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
 
     public partial class ConventionsConfiguration
     {
         private class ModelConventionDispatcher : EdmModelVisitor
         {
             private readonly IConvention _convention;
-            private readonly EdmModel _model;
+            private readonly DbModel _model;
+            private readonly DataSpace _dataSpace;
 
-            public ModelConventionDispatcher(IConvention convention, EdmModel model)
+            public ModelConventionDispatcher(IConvention convention, DbModel model, DataSpace dataSpace)
             {
                 Check.NotNull(convention, "convention");
                 Check.NotNull(model, "model");
+                Debug.Assert(dataSpace == DataSpace.CSpace || dataSpace == DataSpace.SSpace);
 
                 _convention = convention;
                 _model = model;
+                _dataSpace = dataSpace;
             }
 
             public void Dispatch()
             {
-                VisitEdmModel(_model);
+                if (_dataSpace == DataSpace.CSpace)
+                {
+                    VisitEdmModel(_model.GetConceptualModel());
+                }
+                else
+                {
+                    Debug.Assert(_dataSpace == DataSpace.SSpace);
+                    VisitEdmModel(_model.GetStoreModel());
+                }
             }
 
-            private void Dispatch<TEdmDataModelItem>(TEdmDataModelItem item)
-                where TEdmDataModelItem : MetadataItem
+            private void Dispatch<T>(T item)
+                where T : MetadataItem
             {
-                var convention = _convention as IModelConvention<TEdmDataModelItem>;
+                var convention = _convention as IModelConvention<T>;
 
                 if (convention != null)
                 {
@@ -41,11 +54,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             protected internal override void VisitEdmModel(EdmModel item)
             {
-                var convention = _convention as IModelConvention;
+                var convention = _convention as IModelConvention<EdmModel>;
 
                 if (convention != null)
                 {
-                    convention.Apply(item);
+                    convention.Apply(item, _model);
                 }
 
                 base.VisitEdmModel(item);

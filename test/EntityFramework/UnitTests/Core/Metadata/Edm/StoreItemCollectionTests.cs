@@ -144,12 +144,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_initialize_and_provider_fields_set()
         {
-            var model
-                = new EdmModel(DataSpace.SSpace)
-                      {
-                          ProviderInfo = ProviderRegistry.Sql2008_ProviderInfo,
-                          ProviderManifest = new SqlProviderManifest("2008"),
-                      };
+            var model = EdmModel.CreateStoreModel(
+                ProviderRegistry.Sql2008_ProviderInfo,
+                new SqlProviderManifest("2008"));
 
             var itemCollection = new StoreItemCollection(model);
 

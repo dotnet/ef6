@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using Xunit;
@@ -40,8 +41,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             associationType.Constraint = associationConstraint;
 
-            ((IModelConvention<AssociationType>)new ForeignKeyAssociationMultiplicityConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new ForeignKeyAssociationMultiplicityConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.True(associationType.SourceEnd.IsRequired());
         }

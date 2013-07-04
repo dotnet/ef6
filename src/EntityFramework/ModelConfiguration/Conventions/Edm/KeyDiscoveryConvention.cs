@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
 
@@ -13,23 +14,23 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public abstract class KeyDiscoveryConvention : IModelConvention<EntityType>
     {
         /// <inheritdoc/>
-        public void Apply(EntityType edmDataModelItem, EdmModel model)
+        public virtual void Apply(EntityType item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            if ((edmDataModelItem.KeyProperties.Count > 0)
-                || (edmDataModelItem.BaseType != null))
+            if ((item.KeyProperties.Count > 0)
+                || (item.BaseType != null))
             {
                 return;
             }
 
-            var keyProperties = MatchKeyProperty(edmDataModelItem, edmDataModelItem.GetDeclaredPrimitiveProperties());
+            var keyProperties = MatchKeyProperty(item, item.GetDeclaredPrimitiveProperties());
 
             foreach (var keyProperty in keyProperties)
             {
                 keyProperty.Nullable = false;
-                edmDataModelItem.AddKeyMember(keyProperty);
+                item.AddKeyMember(keyProperty);
             }
         }
 

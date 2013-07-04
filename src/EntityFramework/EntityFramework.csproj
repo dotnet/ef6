@@ -229,8 +229,13 @@
     <Compile Include="Core\Common\CommandTrees\DbUnionAllExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbScanExpression.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\ContainerMappingViewGroup.cs" />
+    <Compile Include="Core\Metadata\Edm\DbModelExtensions.cs" />
+    <Compile Include="Core\Metadata\Edm\IEdmModelAdapter.cs" />
     <Compile Include="Core\Metadata\Edm\RelationshipMultiplicityConverter.cs" />
+    <Compile Include="Edm\Serialization\CsdlSerializer.cs" />
     <Compile Include="Edm\Serialization\MetadataItemHelper.cs" />
+    <Compile Include="Edm\Serialization\MslSerializer.cs" />
+    <Compile Include="Edm\Serialization\SsdlSerializer.cs" />
     <Compile Include="Infrastructure\DbCommandInterceptionContext.cs" />
     <Compile Include="Infrastructure\DbCommandInterceptionContext`.cs" />
     <Compile Include="Infrastructure\DbCommandLogger.cs" />
@@ -1489,9 +1494,6 @@
     <Compile Include="Core\Mapping\ColumnMappingBuilder.cs" />
     <Compile Include="Core\Metadata\Edm\EdmModel.cs" />
     <Compile Include="Edm\EdmModelVisitor.cs" />
-    <Compile Include="Edm\Serialization\CsdlSerializer.cs" />
-    <Compile Include="Edm\Serialization\MslSerializer.cs" />
-    <Compile Include="Edm\Serialization\SsdlSerializer.cs" />
     <Compile Include="Edm\Serialization\EdmXmlSchemaWriter.cs" />
     <Compile Include="Edm\Serialization\EdmSerializationVisitor.cs" />
     <Compile Include="Edm\Serialization\XmlSchemaWriter.cs" />
@@ -1707,7 +1709,6 @@
     <Compile Include="ModelConfiguration\Conventions\Edm\ForeignKeyDiscoveryConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\ForeignKeyNavigationPropertyAttributeConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\IdKeyDiscoveryConvention.cs" />
-    <Compile Include="ModelConfiguration\Conventions\Edm\IModelConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\IModelConvention`.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\KeyDiscoveryConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\NavigationPropertyNameForeignKeyDiscoveryConvention.cs" />

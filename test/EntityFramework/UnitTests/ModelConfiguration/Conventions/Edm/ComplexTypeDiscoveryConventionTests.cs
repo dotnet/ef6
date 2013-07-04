@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
@@ -18,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             complexEntityType.NamespaceName = "Foo";
 
-            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
             Assert.Equal("Foo", model.ComplexTypes.Single().NamespaceName);
         }
@@ -30,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             EntityType complexEntityType;
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
 
-            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
             Assert.Equal(0, model.AssociationTypes.Count());
 
@@ -50,7 +51,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             complexEntityType.AddKeyMember(
                 EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
-            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -67,7 +68,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             complexEntityType.BaseType = new EntityType("E", "N", DataSpace.CSpace);
 
-            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -88,7 +89,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         IsExplicitEntity = true
                     });
 
-            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -111,7 +112,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                       };
             complexEntityType.AddNavigationProperty("N", associationType);
 
-            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -128,7 +129,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             model.AddItem(model.AssociationTypes.Single());
 
-            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
             Assert.Equal(0, model.AssociationTypes.Count());
 
@@ -156,7 +157,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     new[] { property },
                     new[] { property });
 
-            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -173,7 +174,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             model.AssociationTypes.Single().SetConfiguration(42);
 
-            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -197,7 +198,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             associationType.TargetEnd
                 = new AssociationEndMember("T", complexEntityType);
 
-            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -214,7 +215,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             model.AssociationTypes.Single().TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 
-            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
             Assert.Equal(1, model.AssociationTypes.Count());
 
@@ -233,7 +234,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             declaringEntityType.AddNavigationProperty("E.C2", model.AssociationTypes.Single());
 
-            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
             Assert.Equal(0, model.AssociationTypes.Count());
 
@@ -250,7 +251,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             declaringEntityType.NavigationProperties.Single().SetConfiguration(42);
 
-            ((IModelConvention)new ComplexTypeDiscoveryConvention()).Apply(model);
+            (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
             Assert.Equal(1, model.AssociationTypes.Count());
 

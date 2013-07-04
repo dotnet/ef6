@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -41,21 +42,21 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         /// <inheritdoc/>
-        public void Apply(EntityType edmDataModelItem, EdmModel model)
+        public virtual void Apply(EntityType item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            SetLength(edmDataModelItem.DeclaredProperties, edmDataModelItem.KeyProperties);
+            SetLength(item.DeclaredProperties, item.KeyProperties);
         }
 
         /// <inheritdoc/>
-        public void Apply(ComplexType edmDataModelItem, EdmModel model)
+        public virtual void Apply(ComplexType item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            SetLength(edmDataModelItem.Properties, new List<EdmProperty>());
+            SetLength(item.Properties, new List<EdmProperty>());
         }
 
         private void SetLength(IEnumerable<EdmProperty> properties, ICollection<EdmProperty> keyProperties)
@@ -82,30 +83,30 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         /// <inheritdoc/>
-        public void Apply(AssociationType edmDataModelItem, EdmModel model)
+        public virtual void Apply(AssociationType item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            if (edmDataModelItem.Constraint == null)
+            if (item.Constraint == null)
             {
                 return;
             }
 
             var principalKeyProperties
-                = edmDataModelItem
-                    .GetOtherEnd(edmDataModelItem.Constraint.DependentEnd).GetEntityType()
+                = item
+                    .GetOtherEnd(item.Constraint.DependentEnd).GetEntityType()
                     .KeyProperties();
 
             if (principalKeyProperties.Count()
-                != edmDataModelItem.Constraint.ToProperties.Count)
+                != item.Constraint.ToProperties.Count)
             {
                 return;
             }
 
-            for (var i = 0; i < edmDataModelItem.Constraint.ToProperties.Count; i++)
+            for (var i = 0; i < item.Constraint.ToProperties.Count; i++)
             {
-                var dependentProperty = edmDataModelItem.Constraint.ToProperties[i];
+                var dependentProperty = item.Constraint.ToProperties[i];
                 var principalProperty = principalKeyProperties.ElementAt(i);
 
                 if ((dependentProperty.PrimitiveType == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
@@ -14,12 +15,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class ForeignKeyAssociationMultiplicityConvention : IModelConvention<AssociationType>
     {
-        public void Apply(AssociationType edmDataModelItem, EdmModel model)
+        public virtual void Apply(AssociationType item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            var constraint = edmDataModelItem.Constraint;
+            var constraint = item.Constraint;
 
             if (constraint == null)
             {
@@ -27,15 +28,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
 
             var navigationPropertyConfiguration
-                = edmDataModelItem.Annotations.GetConfiguration() as NavigationPropertyConfiguration;
+                = item.Annotations.GetConfiguration() as NavigationPropertyConfiguration;
 
             if (constraint.ToProperties.All(p => !p.Nullable))
             {
-                var principalEnd = edmDataModelItem.GetOtherEnd(constraint.DependentEnd);
+                var principalEnd = item.GetOtherEnd(constraint.DependentEnd);
 
                 // find the navigation property with this end
                 var navigationProperty
-                    = model.EntityTypes
+                    = model.GetConceptualModel().EntityTypes
                            .SelectMany(et => et.DeclaredNavigationProperties)
                            .SingleOrDefault(np => np.ResultEnd == principalEnd);
 

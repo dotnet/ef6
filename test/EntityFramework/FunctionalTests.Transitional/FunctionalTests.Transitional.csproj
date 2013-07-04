@@ -178,7 +178,9 @@
     <Compile Include="CodeFirst\DataAnnotationScenarioTests.cs" />
     <Compile Include="CodeFirst\DataServicesTests.cs" />
     <Compile Include="CodeFirst\FunctionsScenarioTests.cs" />
+    <Compile Include="CodeFirst\TableSplittingTests.cs" />
     <Compile Include="CodeFirst\TestHelpers\EndToEndFunctionsTest.cs" />
+    <Compile Include="CodeFirst\TptMappingTests.cs" />
     <Compile Include="MetadataMapping\EnumOCMappingTests.cs" />
     <Compile Include="Metadata\MetadataCollectionTests.cs" />
     <Compile Include="Metadata\MetadataEnumTests.cs" />

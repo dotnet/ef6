@@ -12,7 +12,7 @@ namespace System.Data.Entity.Infrastructure
     ///     <see cref="DbContext" /> class as the container for the conceptual model built by
     ///     Code First.
     /// </summary>
-    public class ModelContainerConvention : IModelConvention
+    public class ModelContainerConvention : IModelConvention<EntityContainer>
     {
         #region Fields and constructors
 
@@ -37,11 +37,11 @@ namespace System.Data.Entity.Infrastructure
         ///     Applies the convention to the given model.
         /// </summary>
         /// <param name="model"> The model. </param>
-        public virtual void Apply(EdmModel model)
+        public virtual void Apply(EntityContainer item, DbModel model)
         {
             Check.NotNull(model, "model");
 
-            model.Containers.Single().Name = _containerName;
+            item.Name = _containerName;
         }
 
         #endregion

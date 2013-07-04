@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
@@ -18,20 +19,20 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         private static readonly IEnumerable<PrimitiveTypeKind> _applicableTypes
             = new[] { PrimitiveTypeKind.Int16, PrimitiveTypeKind.Int32, PrimitiveTypeKind.Int64 };
 
-        public void Apply(EntityType edmDataModelItem, EdmModel model)
+        public virtual void Apply(EntityType item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            Debug.Assert(edmDataModelItem.KeyProperties != null);
+            Debug.Assert(item.KeyProperties != null);
 
-            if ((edmDataModelItem.BaseType == null && edmDataModelItem.KeyProperties.Count == 1)
-                && !(from p in edmDataModelItem.DeclaredProperties
+            if ((item.BaseType == null && item.KeyProperties.Count == 1)
+                && !(from p in item.DeclaredProperties
                      let sgp = p.GetStoreGeneratedPattern()
                      where sgp != null && sgp == StoreGeneratedPattern.Identity
                      select sgp).Any()) // Entity already has an Identity property.
             {
-                var property = edmDataModelItem.KeyProperties.Single();
+                var property = item.KeyProperties.Single();
 
                 Debug.Assert(property.TypeUsage != null);
 
@@ -39,9 +40,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     && property.PrimitiveType != null
                     && _applicableTypes.Contains(property.PrimitiveType.PrimitiveTypeKind))
                 {
-                    if (!model.AssociationTypes.Any(a => IsNonTableSplittingForeignKey(a, property))
-                        && !ParentOfTpc(edmDataModelItem, model)
-                        && !HasRequiredSelfRef(edmDataModelItem, model))
+                    if (!model.GetConceptualModel().AssociationTypes.Any(a => IsNonTableSplittingForeignKey(a, property))
+                        && !ParentOfTpc(item, model.GetConceptualModel())
+                        && !HasRequiredSelfRef(item, model.GetConceptualModel()))
                     {
                         property.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
                     }

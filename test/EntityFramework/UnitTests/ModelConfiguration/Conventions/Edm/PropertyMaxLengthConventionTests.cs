@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using Xunit;
 
     public sealed class PropertyMaxLengthConventionTests
@@ -22,8 +23,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddMember(property);
 
-            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel(DataSpace.CSpace));
+            (new PropertyMaxLengthConvention())
+                .Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal(true, property.IsUnicode);
             Assert.Equal(false, property.IsFixedLength);
@@ -39,8 +40,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
-            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel(DataSpace.CSpace));
+            (new PropertyMaxLengthConvention())
+                .Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal(true, property.IsUnicode);
             Assert.Equal(128, property.MaxLength);
@@ -56,8 +57,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsUnicode = false;
             entityType.AddMember(property);
 
-            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel(DataSpace.CSpace));
+            (new PropertyMaxLengthConvention())
+                .Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal(128, property.MaxLength);
             Assert.False(property.IsMaxLength);
@@ -71,8 +72,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property);
             entityType.AddKeyMember(property);
 
-            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel(DataSpace.CSpace));
+            (new PropertyMaxLengthConvention())
+                .Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal(128, property.MaxLength);
         }
@@ -84,8 +85,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
             entityType.AddMember(property);
 
-            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel(DataSpace.CSpace));
+            (new PropertyMaxLengthConvention())
+                .Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(false, property.IsFixedLength);
@@ -100,8 +101,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
-            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel(DataSpace.CSpace));
+            (new PropertyMaxLengthConvention())
+                .Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(128, property.MaxLength);
@@ -116,8 +117,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property);
             entityType.AddKeyMember(property);
 
-            ((IModelConvention<EntityType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel(DataSpace.CSpace));
+            (new PropertyMaxLengthConvention())
+                .Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(128, property.MaxLength);
@@ -130,8 +131,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddMember(property);
 
-            ((IModelConvention<ComplexType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel(DataSpace.CSpace));
+            (new PropertyMaxLengthConvention())
+                .Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal(true, property.IsUnicode);
             Assert.Equal(false, property.IsFixedLength);
@@ -147,8 +148,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
-            ((IModelConvention<ComplexType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel(DataSpace.CSpace));
+            (new PropertyMaxLengthConvention())
+                .Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal(true, property.IsUnicode);
             Assert.Equal(128, property.MaxLength);
@@ -164,8 +165,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsUnicode = false;
             entityType.AddMember(property);
 
-            ((IModelConvention<ComplexType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel(DataSpace.CSpace));
+            (new PropertyMaxLengthConvention())
+                .Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal(128, property.MaxLength);
             Assert.False(property.IsMaxLength);
@@ -178,8 +179,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
             entityType.AddMember(property);
 
-            ((IModelConvention<ComplexType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel(DataSpace.CSpace));
+            (new PropertyMaxLengthConvention())
+                .Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(false, property.IsFixedLength);
@@ -194,8 +195,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
-            ((IModelConvention<ComplexType>)new PropertyMaxLengthConvention())
-                .Apply(entityType, new EdmModel(DataSpace.CSpace));
+            (new PropertyMaxLengthConvention())
+                .Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(128, property.MaxLength);
@@ -224,8 +225,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     new[] { principalProperty },
                     new[] { dependentProperty });
 
-            ((IModelConvention<AssociationType>)new PropertyMaxLengthConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new PropertyMaxLengthConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal(23, dependentProperty.MaxLength);
         }

@@ -29,17 +29,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db
         }
 
         [Fact]
-        public void Can_get_and_set_provider_annotation()
-        {
-            var database = new EdmModel(DataSpace.CSpace);
-            var providerInfo = new DbProviderInfo("Foo", "Bar");
-
-            database.ProviderInfo = providerInfo;
-
-            Assert.Same(providerInfo, database.ProviderInfo);
-        }
-
-        [Fact]
         public void AddFunction_should_create_and_add_function_to_model()
         {
             var database = new EdmModel(DataSpace.SSpace);

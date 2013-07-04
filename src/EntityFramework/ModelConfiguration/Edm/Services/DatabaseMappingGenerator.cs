@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
     using System.Linq;
 
@@ -19,20 +20,23 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 isFixedLength: false,
                 maxLength: DiscriminatorMaxLength);
 
+        private readonly DbProviderInfo _providerInfo;
         private readonly DbProviderManifest _providerManifest;
 
-        public DatabaseMappingGenerator(DbProviderManifest providerManifest)
+        public DatabaseMappingGenerator(DbProviderInfo providerInfo, DbProviderManifest providerManifest)
         {
+            DebugCheck.NotNull(providerInfo);
             DebugCheck.NotNull(providerManifest);
 
+            _providerInfo = providerInfo;
             _providerManifest = providerManifest;
         }
 
-        public DbDatabaseMapping Generate(EdmModel model)
+        public DbDatabaseMapping Generate(EdmModel conceptualModel)
         {
-            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(conceptualModel);
 
-            var databaseMapping = InitializeDatabaseMapping(model);
+            var databaseMapping = InitializeDatabaseMapping(conceptualModel);
 
             GenerateEntityTypes(databaseMapping);
             GenerateDiscriminators(databaseMapping);
@@ -41,18 +45,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             return databaseMapping;
         }
 
-        private static DbDatabaseMapping InitializeDatabaseMapping(EdmModel model)
+        private DbDatabaseMapping InitializeDatabaseMapping(EdmModel conceptualModel)
         {
-            DebugCheck.NotNull(model);
+            DebugCheck.NotNull(conceptualModel);
 
-            var databaseMapping
-                = new DbDatabaseMapping()
-                    .Initialize(model, new EdmModel(DataSpace.SSpace, model.SchemaVersion));
+            var storeModel = EdmModel.CreateStoreModel(
+                _providerInfo, _providerManifest, conceptualModel.SchemaVersion);
 
-            return databaseMapping;
+            return new DbDatabaseMapping().Initialize(conceptualModel, storeModel);
         }
 
-        private void GenerateEntityTypes(DbDatabaseMapping databaseMapping)
+        private static void GenerateEntityTypes(DbDatabaseMapping databaseMapping)
         {
             DebugCheck.NotNull(databaseMapping);
 
@@ -60,13 +63,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             {
                 if (!entityType.Abstract)
                 {
-                    new TableMappingGenerator(_providerManifest).
+                    new TableMappingGenerator(databaseMapping.ProviderManifest).
                         Generate(entityType, databaseMapping);
                 }
             }
         }
 
-        private void GenerateDiscriminators(DbDatabaseMapping databaseMapping)
+        private static void GenerateDiscriminators(DbDatabaseMapping databaseMapping)
         {
             DebugCheck.NotNull(databaseMapping);
 
@@ -78,7 +81,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 }
 
                 var typeUsage
-                    = _providerManifest.GetStoreType(DiscriminatorTypeUsage);
+                    = databaseMapping.ProviderManifest.GetStoreType(DiscriminatorTypeUsage);
 
                 var discriminatorColumn
                     = new EdmProperty(DiscriminatorColumnName, typeUsage)
@@ -106,13 +109,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             }
         }
 
-        private void GenerateAssociationTypes(DbDatabaseMapping databaseMapping)
+        private static void GenerateAssociationTypes(DbDatabaseMapping databaseMapping)
         {
             DebugCheck.NotNull(databaseMapping);
 
             foreach (var associationType in databaseMapping.Model.AssociationTypes)
             {
-                new AssociationTypeMappingGenerator(_providerManifest)
+                new AssociationTypeMappingGenerator(databaseMapping.ProviderManifest)
                     .Generate(associationType, databaseMapping);
             }
         }

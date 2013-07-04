@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         {
             var model = new EdmModel(DataSpace.CSpace);
 
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = CreateDatabaseMappingGenerator().Generate(model);
 
             Assert.NotNull(databaseMapping);
             Assert.NotNull(databaseMapping.Database);
@@ -37,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             entityType.AddMember(property1);
             var entitySet = model.AddEntitySet("ESet", entityType);
 
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = CreateDatabaseMappingGenerator().Generate(model);
 
             var entitySetMapping = databaseMapping.GetEntitySetMapping(entitySet);
 
@@ -78,7 +78,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             property.Scale = 77;
             property.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
 
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = CreateDatabaseMappingGenerator().Generate(model);
 
             var column = databaseMapping.GetEntityTypeMapping(entityType).MappingFragments.Single().ColumnMappings.Single().ColumnProperty;
 
@@ -117,7 +117,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             property.Scale = 77;
             property.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
 
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = CreateDatabaseMappingGenerator().Generate(model);
 
             var column = databaseMapping.GetEntityTypeMapping(entityType).MappingFragments.Single().ColumnMappings.Single().ColumnProperty;
 
@@ -156,7 +156,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             property.Scale = 77;
             property.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
 
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = CreateDatabaseMappingGenerator().Generate(model);
 
             var column = databaseMapping.GetEntityTypeMapping(entityType).MappingFragments.Single().ColumnMappings.Single().ColumnProperty;
 
@@ -185,7 +185,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             entityType.AddKeyMember(idProperty);
             var entitySet = model.AddEntitySet("ESet", entityType);
 
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = CreateDatabaseMappingGenerator().Generate(model);
 
             var entitySetMapping = databaseMapping.GetEntitySetMapping(entitySet);
             var entityTypeMapping = entitySetMapping.EntityTypeMappings.Single();
@@ -227,7 +227,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             model.AddAssociationSet("P_DSet", associationType);
             associationType.SourceEnd.DeleteBehavior = OperationAction.Cascade;
 
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = CreateDatabaseMappingGenerator().Generate(model);
 
             var foreignKeyConstraint
                 =
@@ -281,7 +281,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             associationType.SourceEnd.DeleteBehavior = OperationAction.Cascade;
 
             var databaseMapping
-                = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+                = CreateDatabaseMappingGenerator().Generate(model);
 
             var dependentTable = databaseMapping.GetEntityTypeMapping(dependentEntityType).MappingFragments.Single().Table;
             var foreignKeyConstraint = dependentTable.ForeignKeyBuilders.Single();
@@ -329,7 +329,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             entityType3.AddMember(property3);
             entityType3.BaseType = entityType2;
 
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = CreateDatabaseMappingGenerator().Generate(model);
 
             var entitySetMapping = databaseMapping.GetEntitySetMapping(entitySet);
 
@@ -399,7 +399,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             entityType3.AddMember(property3);
             entityType3.BaseType = entityType2;
 
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = CreateDatabaseMappingGenerator().Generate(model);
 
             var entityType1Mapping = databaseMapping.GetEntityTypeMapping(rootEntityType);
             var entityType3Mapping = databaseMapping.GetEntityTypeMapping(entityType3);
@@ -432,7 +432,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             entityTypeConfiguration.MapToStoredProcedures();
             entityType.SetConfiguration(entityTypeConfiguration);
 
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = CreateDatabaseMappingGenerator().Generate(model);
 
             Assert.Equal(0, databaseMapping.Database.Functions.Count());
         }
@@ -464,9 +464,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     RelationshipMultiplicity.Many));
 
             var databaseMapping
-                = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+                = CreateDatabaseMappingGenerator().Generate(model);
 
             Assert.Equal(0, databaseMapping.Database.Functions.Count());
+        }
+
+        private DatabaseMappingGenerator CreateDatabaseMappingGenerator()
+        {
+            return new DatabaseMappingGenerator(
+                ProviderRegistry.Sql2008_ProviderInfo,
+                ProviderRegistry.Sql2008_ProviderManifest);
         }
     }
 }

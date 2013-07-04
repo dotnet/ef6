@@ -63,8 +63,7 @@ namespace System.Data.Entity.Infrastructure
             Check.NotNull(model, "model");
             Check.NotNull(writer, "writer");
 
-            new EdmxSerializer().Serialize(
-                model.DatabaseMapping, model.DatabaseMapping.Database.ProviderInfo, writer);
+            new EdmxSerializer().Serialize(model.DatabaseMapping, writer);
         }
 
         #endregion

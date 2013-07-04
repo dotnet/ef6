@@ -33,7 +33,7 @@ namespace System.Data.Entity.Internal
         {
             DebugCheck.NotNull(databaseMapping);
 
-            _providerInfo = databaseMapping.Database.ProviderInfo;
+            _providerInfo = databaseMapping.ProviderInfo;
             _metadataWorkspace = databaseMapping.ToMetadataWorkspace();
             _assemblies = databaseMapping.Model.GetClrTypes().Select(t => t.Assembly).Distinct().ToList();
 

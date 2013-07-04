@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using Xunit;
@@ -29,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var database = new EdmModel(DataSpace.CSpace);
             database.AddEntitySet("ES", table);
 
-            ((IModelConvention<EntityType>)new ColumnOrderingConvention()).Apply(table, database);
+            (new ColumnOrderingConvention()).Apply(table, new DbModel(null, database));
 
             Assert.Equal(2, table.Properties.Count);
             Assert.Equal("Id", table.Properties.First().Name);
@@ -54,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var database = new EdmModel(DataSpace.CSpace);
             database.AddEntitySet("ES", table);
 
-            ((IModelConvention<EntityType>)new ColumnOrderingConvention()).Apply(table, database);
+            (new ColumnOrderingConvention()).Apply(table, new DbModel(null, database));
 
             Assert.Equal(2, table.Properties.Count);
             Assert.Equal("C", table.Properties.First().Name);
@@ -78,7 +79,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var database = new EdmModel(DataSpace.CSpace);
             database.AddEntitySet("ES", table);
 
-            ((IModelConvention<EntityType>)new ColumnOrderingConvention()).Apply(table, database);
+            (new ColumnOrderingConvention()).Apply(table, new DbModel(null, database));
 
             Assert.Equal(2, table.Properties.Count);
             Assert.Equal("C", table.Properties.First().Name);

@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
@@ -17,19 +18,19 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         private IPluralizationService _pluralizationService
             = DbConfiguration.GetService<IPluralizationService>();
 
-        public virtual void Apply(EntityType edmDataModelItem, EdmModel model)
+        public virtual void Apply(EntityType item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "dbDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
             _pluralizationService = DbConfiguration.GetService<IPluralizationService>();
 
-            if (edmDataModelItem.GetTableName() == null)
+            if (item.GetTableName() == null)
             {
-                var entitySet = model.GetEntitySet(edmDataModelItem);
+                var entitySet = model.GetStoreModel().GetEntitySet(item);
 
                 entitySet.Table
-                    = model.GetEntitySets()
+                    = model.GetStoreModel().GetEntitySets()
                         .Where(es => es.Schema == entitySet.Schema)
                         .Except(new[] { entitySet })
                         .Select(n => n.Table)

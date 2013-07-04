@@ -21,7 +21,7 @@ namespace System.Data.Entity
         internal static void ShellEdmx(this DbDatabaseMapping databaseMapping, string fileName = "Dump.edmx")
         {
             new EdmxSerializer().Serialize(
-                databaseMapping, databaseMapping.Database.ProviderInfo,
+                databaseMapping,
                 XmlWriter.Create(
                     File.CreateText(fileName),
                     new XmlWriterSettings
@@ -43,7 +43,7 @@ namespace System.Data.Entity
         {
             var edmx = new StringBuilder();
             new EdmxSerializer().Serialize(
-                databaseMapping, databaseMapping.Database.ProviderInfo,
+                databaseMapping, 
                 XmlWriter.Create(
                     edmx, new XmlWriterSettings
                               {

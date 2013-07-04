@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using Xunit;
@@ -17,8 +18,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             associationType.MarkIndependent();
 
-            ((IModelConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new TypeNameForeignKeyDiscoveryConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Null(associationType.Constraint);
         }
@@ -41,8 +42,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             associationType.Constraint = associationConstraint;
 
-            ((IModelConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new TypeNameForeignKeyDiscoveryConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Same(associationConstraint, associationType.Constraint);
         }
@@ -57,8 +58,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 = associationType.TargetEnd.RelationshipMultiplicity
                   = RelationshipMultiplicity.Many;
 
-            ((IModelConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new TypeNameForeignKeyDiscoveryConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Null(associationType.Constraint);
         }
@@ -68,8 +69,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var associationType = CreateAssociationType();
 
-            ((IModelConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new TypeNameForeignKeyDiscoveryConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Null(associationType.Constraint);
         }
@@ -90,8 +91,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             // Foo.Id1 == Bar.FooId1 && Foo.Id2 == ?
             associationType.SourceEnd.GetEntityType().Name = "Foo";
 
-            ((IModelConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new TypeNameForeignKeyDiscoveryConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Null(associationType.Constraint);
         }
@@ -110,8 +111,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             // Foo.Id == Bar.FooId
             associationType.SourceEnd.GetEntityType().Name = "Foo";
 
-            ((IModelConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new TypeNameForeignKeyDiscoveryConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Null(associationType.Constraint);
         }
@@ -130,8 +131,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             // Foo.Id == Bar.FooId
             associationType.SourceEnd.GetEntityType().Name = "Foo";
 
-            ((IModelConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new TypeNameForeignKeyDiscoveryConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Null(associationType.Constraint);
         }
@@ -152,8 +153,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             // Foo.Id == Bar.FooId
             associationType.SourceEnd.GetEntityType().Name = "Foo";
 
-            ((IModelConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new TypeNameForeignKeyDiscoveryConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.NotNull(associationType.Constraint);
         }
@@ -175,8 +176,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             // Foo.Id == Bar.FooId
             associationType.SourceEnd.GetEntityType().Name = "Foo";
 
-            ((IModelConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new TypeNameForeignKeyDiscoveryConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.NotNull(associationType.Constraint);
             Assert.Same(associationType.TargetEnd, associationType.Constraint.ToRole);
@@ -199,8 +200,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             // Foo.Id == Bar.FooId
             associationType.SourceEnd.GetEntityType().Name = "Foo";
 
-            ((IModelConvention<AssociationType>)new TypeNameForeignKeyDiscoveryConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new TypeNameForeignKeyDiscoveryConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Null(associationType.Constraint);
         }

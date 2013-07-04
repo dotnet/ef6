@@ -32,23 +32,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
-        public void Custom_container_set_correctly()
-        {
-            var container = new EntityContainer("MyContainer", DataSpace.CSpace);
-
-            Assert.Same(
-                container,
-                new EdmModel(container).Containers.Single());
-        }
-
-        [Fact]
         public void EdmModel_version_set_correctly()
         {
             Assert.Equal(XmlConstants.StoreVersionForV2, new EdmModel(DataSpace.CSpace, XmlConstants.StoreVersionForV2).SchemaVersion);
-
-            Assert.Equal(
-                XmlConstants.StoreVersionForV2,
-                new EdmModel(new EntityContainer("MyContainer", DataSpace.CSpace), XmlConstants.StoreVersionForV2).SchemaVersion);
         }
 
         [Fact]
@@ -79,34 +65,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
-        public void Can_get_and_set_provider_manifest()
-        {
-            var model = new EdmModel(DataSpace.SSpace);
-
-            Assert.Null(model.ProviderManifest);
-
-            var providerManifest = new SqlProviderManifest("2008");
-
-            model.ProviderManifest = providerManifest;
-
-            Assert.Same(providerManifest, model.ProviderManifest);
-        }
-
-        [Fact]
-        public void Can_get_and_set_provider_info()
-        {
-            var model = new EdmModel(DataSpace.SSpace);
-
-            Assert.Null(model.ProviderInfo);
-
-            var providerInfo = ProviderRegistry.Sql2008_ProviderInfo;
-
-            model.ProviderInfo = providerInfo;
-
-            Assert.Same(providerInfo, model.ProviderInfo);
-        }
-
-        [Fact]
         public void Cannot_add_entity_from_different_data_space()
         {
             var exception =
@@ -114,7 +72,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     () => new EdmModel(DataSpace.CSpace)
                               .AddItem(new EntityType("Entity", "Model", DataSpace.SSpace)));
 
-            Assert.Equal("entityType", exception.ParamName);
+            Assert.Equal("item", exception.ParamName);
             Assert.True(exception.Message.StartsWith(Strings.EdmModel_AddItem_NonMatchingNamespace));
         }
 
@@ -130,7 +88,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                           DataSpace = DataSpace.CSpace
                                       }));
 
-            Assert.Equal("enumType", exception.ParamName);
+            Assert.Equal("item", exception.ParamName);
             Assert.True(exception.Message.StartsWith(Strings.EdmModel_AddItem_NonMatchingNamespace));
         }
 
@@ -142,7 +100,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     () => new EdmModel(DataSpace.SSpace)
                               .AddItem(new ComplexType("ComplexType", "Model", DataSpace.CSpace)));
 
-            Assert.Equal("complexType", exception.ParamName);
+            Assert.Equal("item", exception.ParamName);
             Assert.True(exception.Message.StartsWith(Strings.EdmModel_AddItem_NonMatchingNamespace));
         }
 
@@ -154,7 +112,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     () => new EdmModel(DataSpace.SSpace)
                               .AddItem(new AssociationType("AssociationType", "Model", /*foreignKey*/ false, DataSpace.CSpace)));
 
-            Assert.Equal("associationType", exception.ParamName);
+            Assert.Equal("item", exception.ParamName);
             Assert.True(exception.Message.StartsWith(Strings.EdmModel_AddItem_NonMatchingNamespace));
         }
 
@@ -166,12 +124,80 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     () => new EdmModel(DataSpace.SSpace)
                               .AddItem(new EdmFunction("F", "N", DataSpace.CSpace, new EdmFunctionPayload())));
 
-            Assert.Equal("function", exception.ParamName);
+            Assert.Equal("item", exception.ParamName);
             Assert.True(exception.Message.StartsWith(Strings.EdmModel_AddItem_NonMatchingNamespace));
         }
 
         [Fact]
-        public void AddItem_can_add_function()
+        public void Can_add_remove_association_type()
+        {
+            var model = new EdmModel(DataSpace.SSpace);
+            var associationType = new AssociationType("A", "N", false, DataSpace.SSpace);
+
+            model.AddItem(associationType);
+
+            Assert.True(model.AssociationTypes.Contains(associationType));
+            Assert.True(model.NamespaceItems.Contains(associationType));
+
+            model.RemoveItem(associationType);
+
+            Assert.False(model.AssociationTypes.Contains(associationType));
+            Assert.False(model.NamespaceItems.Contains(associationType));
+        }
+
+        [Fact]
+        public void Can_add_remove_complex_type()
+        {
+            var model = new EdmModel(DataSpace.SSpace);
+            var complexType = new ComplexType("C", "N", DataSpace.SSpace);
+
+            model.AddItem(complexType);
+
+            Assert.True(model.ComplexTypes.Contains(complexType));
+            Assert.True(model.NamespaceItems.Contains(complexType));
+
+            model.RemoveItem(complexType);
+
+            Assert.False(model.ComplexTypes.Contains(complexType));
+            Assert.False(model.NamespaceItems.Contains(complexType));
+        }
+
+        [Fact]
+        public void Can_add_remove_entity_type()
+        {
+            var model = new EdmModel(DataSpace.SSpace);
+            var entityType = new EntityType("E", "N", DataSpace.SSpace);
+
+            model.AddItem(entityType);
+
+            Assert.True(model.EntityTypes.Contains(entityType));
+            Assert.True(model.NamespaceItems.Contains(entityType));
+
+            model.RemoveItem(entityType);
+
+            Assert.False(model.EntityTypes.Contains(entityType));
+            Assert.False(model.NamespaceItems.Contains(entityType));
+        }
+
+        [Fact]
+        public void Can_add_remove_enum_type()
+        {
+            var model = new EdmModel(DataSpace.SSpace);
+            var enumType = new EnumType { DataSpace = DataSpace.SSpace };
+
+            model.AddItem(enumType);
+
+            Assert.True(model.EnumTypes.Contains(enumType));
+            Assert.True(model.NamespaceItems.Contains(enumType));
+
+            model.RemoveItem(enumType);
+
+            Assert.False(model.EnumTypes.Contains(enumType));
+            Assert.False(model.NamespaceItems.Contains(enumType));
+        }
+
+        [Fact]
+        public void Can_add_remove_function()
         {
             var model = new EdmModel(DataSpace.SSpace);
             var function = new EdmFunction("F", "N", DataSpace.SSpace, new EdmFunctionPayload());
@@ -180,6 +206,33 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.True(model.Functions.Contains(function));
             Assert.True(model.NamespaceItems.Contains(function));
+
+            model.RemoveItem(function);
+
+            Assert.False(model.Functions.Contains(function));
+            Assert.False(model.NamespaceItems.Contains(function));
+        }
+
+        [Fact]
+        public void CreateStoreModel_creates_model_with_SSpace()
+        {
+            var providerInfo = ProviderRegistry.Sql2008_ProviderInfo;
+            var providerManifest = ProviderRegistry.Sql2008_ProviderManifest;
+            var model = EdmModel.CreateStoreModel(providerInfo, providerManifest);
+
+            Assert.Equal(DataSpace.SSpace, model.DataSpace);
+            Assert.Same(providerInfo, model.ProviderInfo);
+            Assert.Same(providerManifest, model.ProviderManifest);
+        }
+
+        [Fact]
+        public void CreateConceptualModel_creates_model_with_CSpace()
+        {
+            var model = EdmModel.CreateConceptualModel();
+
+            Assert.Equal(DataSpace.CSpace, model.DataSpace);
+            Assert.Null(model.ProviderInfo);
+            Assert.Null(model.ProviderManifest);
         }
     }
 }

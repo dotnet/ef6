@@ -14,6 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
     using Moq;
     using Xunit;
+    using System.Data.Entity.Infrastructure;
 
     public sealed class ConventionsConfigurationTests
     {
@@ -38,8 +39,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Add_should_append_entity_model_convention_on_to_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention>();
-            var mockConvention2 = new Mock<IModelConvention>();
+            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention2 = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -56,8 +57,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Add_should_append_entity_db_convention_on_to_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention>();
-            var mockConvention2 = new Mock<IModelConvention>();
+            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention2 = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -74,7 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Add_throws_for_model_convention_when_configuration_convention_expected()
         {
-            var mockConvention1 = new Mock<IModelConvention>();
+            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
@@ -102,7 +103,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Add_throws_for_invalid_DataSpace()
         {
-            var mockConvention1 = new Mock<IModelConvention>();
+            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
@@ -134,7 +135,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Generic_Add_should_append_entity_model_convention_on_to_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention>();
+            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -151,7 +152,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Generic_Add_should_append_entity_db_convention_on_to_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention>();
+            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -224,7 +225,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void AddAfter_should_add_after_existing_entity_model_convention()
         {
-            var mockConvention = new Mock<IModelConvention>();
+            var mockConvention = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -241,7 +242,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void AddAfter_should_add_after_existing_Db_convention()
         {
-            var mockConvention = new Mock<IModelConvention>();
+            var mockConvention = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -258,7 +259,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void AddAfter_throws_for_model_convention_when_configuration_convention_expected()
         {
-            var mockConvention = new Mock<IModelConvention>().Object;
+            var mockConvention = new Mock<IModelConvention<EdmModel>>().Object;
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
@@ -306,7 +307,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 Strings.ConventionsConfiguration_NotModelConvention(typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
-                    conventionsConfiguration.AddAfter<ConventionFixture>(DataSpace.CSpace, new Mock<IModelConvention>().Object)).Message);
+                    conventionsConfiguration.AddAfter<ConventionFixture>(DataSpace.CSpace, new Mock<IModelConvention<EdmModel>>().Object)).Message);
         }
 
         [Fact]
@@ -324,7 +325,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void AddAfter_throws_when_after_model_convention_not_found()
         {
-            var mockConvention = new Mock<IModelConvention>();
+            var mockConvention = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration();
 
             Assert.Equal(
@@ -337,7 +338,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void AddAfter_throws_for_invalid_DataSpace()
         {
-            var mockConvention1 = new Mock<IModelConvention>();
+            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
@@ -368,7 +369,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void AddBefore_should_add_before_existing_entity_model_convention()
         {
-            var mockConvention = new Mock<IModelConvention>();
+            var mockConvention = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -385,7 +386,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void AddBefore_should_add_before_existing_Db_convention()
         {
-            var mockConvention = new Mock<IModelConvention>();
+            var mockConvention = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -402,7 +403,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void AddBefore_throws_for_model_convention_when_configuration_convention_expected()
         {
-            var mockConvention = new Mock<IModelConvention>().Object;
+            var mockConvention = new Mock<IModelConvention<EdmModel>>().Object;
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
@@ -450,7 +451,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 Strings.ConventionsConfiguration_NotModelConvention(typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
-                    conventionsConfiguration.AddBefore<ConventionFixture>(DataSpace.CSpace, new Mock<IModelConvention>().Object)).Message);
+                    conventionsConfiguration.AddBefore<ConventionFixture>(DataSpace.CSpace, new Mock<IModelConvention<EdmModel>>().Object)).Message);
         }
 
         [Fact]
@@ -468,7 +469,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void AddBefore_throws_when_before_model_convention_not_found()
         {
-            var mockConvention = new Mock<IModelConvention>();
+            var mockConvention = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration();
 
             Assert.Equal(
@@ -481,7 +482,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void AddBefore_throws_for_invalid_DataSpace()
         {
-            var mockConvention1 = new Mock<IModelConvention>();
+            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
@@ -496,9 +497,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
         }
 
-        private class ModelConventionFixture : IModelConvention
+        private class ModelConventionFixture : IModelConvention<EdmModel>
         {
-            public virtual void Apply(EdmModel model)
+            public virtual void Apply(EdmModel item, DbModel model)
             {
                 throw new NotImplementedException();
             }
@@ -524,8 +525,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Remove_should_remove_the_entity_model_conventions_from_the_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention>();
-            var mockConvention2 = new Mock<IModelConvention>();
+            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention2 = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -541,8 +542,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Remove_should_remove_the_db_model_conventions_from_the_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention>();
-            var mockConvention2 = new Mock<IModelConvention>();
+            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention2 = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -558,7 +559,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Remove_throws_for_model_convention_when_configuration_convention_expected()
         {
-            var mockConvention1 = new Mock<IModelConvention>();
+            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
@@ -586,7 +587,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Remove_throws_for_invalid_DataSpace()
         {
-            var mockConvention1 = new Mock<IModelConvention>();
+            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
@@ -682,10 +683,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void ApplyModel_should_run_model_conventions()
+        public void ApplyConceptualModel_should_run_model_conventions()
         {
-            var model = new EdmModel(DataSpace.CSpace);
-            var mockConvention = new Mock<IModelConvention>();
+            var model = CreateDbModel();
+            var mockConvention = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -693,9 +694,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
 
-            conventionsConfiguration.ApplyModel(model);
+            conventionsConfiguration.ApplyConceptualModel(model);
 
-            mockConvention.Verify(c => c.Apply(model), Times.Once());
+            mockConvention.Verify(c => c.Apply(model.GetConceptualModel(), model), Times.Once());
         }
 
         [Fact]
@@ -716,10 +717,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void ApplyDatabase_should_run_database_conventions()
+        public void ApplyStoreModel_should_run_database_conventions()
         {
-            var database = new EdmModel(DataSpace.CSpace);
-            var mockConvention = new Mock<IModelConvention>();
+            var model = CreateDbModel();
+            var mockConvention = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -727,16 +728,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     Enumerable.Empty<IConvention>(),
                     new[] { mockConvention.Object }));
 
-            conventionsConfiguration.ApplyDatabase(database);
+            conventionsConfiguration.ApplyStoreModel(model);
 
-            mockConvention.Verify(c => c.Apply(database), Times.Once());
+            mockConvention.Verify(c => c.Apply(model.GetStoreModel(), model), Times.Once());
         }
 
         [Fact]
-        public void ApplyModel_should_run_targeted_model_conventions()
+        public void ApplyConceptualModel_should_run_targeted_model_conventions()
         {
-            var model = new EdmModel(DataSpace.CSpace);
-            var entityType = model.AddEntityType("E");
+            var model = CreateDbModel();
+            var entityType = model.GetConceptualModel().AddEntityType("E");
             var mockConvention = new Mock<IModelConvention<EntityType>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
@@ -748,16 +749,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
 
-            conventionsConfiguration.ApplyModel(model);
+            conventionsConfiguration.ApplyConceptualModel(model);
 
             mockConvention.Verify(c => c.Apply(entityType, model), Times.Once());
         }
 
         [Fact]
-        public void ApplyDatabase_should_run_targeted_model_conventions()
+        public void ApplyStoreModel_should_run_targeted_model_conventions()
         {
-            var database = new EdmModel(DataSpace.SSpace);
-            var table = database.AddTable("T");
+            var model = CreateDbModel();
+            var table = model.GetStoreModel().AddTable("T");
             var mockConvention = new Mock<IModelConvention<EntityType>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
@@ -769,9 +770,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                             mockConvention.Object
                         }));
 
-            conventionsConfiguration.ApplyDatabase(database);
+            conventionsConfiguration.ApplyStoreModel(model);
 
-            mockConvention.Verify(c => c.Apply(table, database), Times.Once());
+            mockConvention.Verify(c => c.Apply(table, model), Times.Once());
         }
 
         [Fact]
@@ -884,8 +885,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void ApplyPluralizingTableNameConvention_should_run_PluralizingTableName_conventions()
         {
-            var model = new EdmModel(DataSpace.SSpace);
-            model.AddItem(new EntityType("foo", "bar", DataSpace.SSpace));
+            var model = CreateDbModel();
+            model.GetStoreModel().AddItem(new EntityType("foo", "bar", DataSpace.SSpace));
             var mockConvention = new Mock<PluralizingTableNameConvention>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
@@ -1077,9 +1078,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void Clone_returns_an_identical_object()
         {
             var mockConvention1 = new Mock<IConvention>();
-            var mockConvention2 = new Mock<IModelConvention>();
+            var mockConvention2 = new Mock<IModelConvention<EdmModel>>();
             var mockConvention3 = new Mock<IConvention>();
-            var mockConvention4 = new Mock<IModelConvention>();
+            var mockConvention4 = new Mock<IModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     new[] { mockConvention1.Object },
@@ -1094,6 +1095,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Assert.Same(mockConvention2.Object, clone.ConceptualModelConventions.Single());
             Assert.Same(mockConvention3.Object, clone.ConceptualToStoreMappingConventions.Single());
             Assert.Same(mockConvention4.Object, clone.StoreModelConventions.Single());
+        }
+
+        private static DbModel CreateDbModel()
+        {
+            return new DbModel(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest);
         }
     }
 }

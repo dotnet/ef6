@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using Xunit;
@@ -57,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             entityType.AddKeyMember(property6);
 
-            new DeclaredPropertyOrderingConvention().Apply(entityType, new EdmModel(DataSpace.CSpace));
+            new DeclaredPropertyOrderingConvention().Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.True(
                 entityType.DeclaredProperties.Select(e => e.Name)

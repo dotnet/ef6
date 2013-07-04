@@ -153,8 +153,6 @@
     <Compile Include="CodeFirst\NonPublicPropertyTests.cs" />
     <Compile Include="CodeFirst\QueryCachingTests.cs" />
     <Compile Include="CodeFirst\StoredProceduresCUDTests.cs" />
-    <Compile Include="CodeFirst\TableSplittingTests.cs" />
-    <Compile Include="CodeFirst\TptMappingTests.cs" />
     <Compile Include="Interception\BlogContextNoInit.cs" />
     <Compile Include="Interception\DbCommandLoggerTests.cs" />
     <Compile Include="Migrations\LoggingScenarios.cs" />

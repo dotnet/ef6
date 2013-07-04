@@ -7,7 +7,7 @@ namespace System.Data.Entity.Edm.Serialization
     using System.Data.Entity.Utilities;
     using System.Xml;
 
-    public class MslSerializer
+    internal class MslSerializer
     {
         /// <summary>
         ///     Serialize the <see cref="DbModel" /> to the XmlWriter

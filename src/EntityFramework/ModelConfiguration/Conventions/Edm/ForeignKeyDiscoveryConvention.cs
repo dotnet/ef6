@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -40,23 +41,23 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         /// <inheritdoc/>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public void Apply(AssociationType edmDataModelItem, EdmModel model)
+        public virtual void Apply(AssociationType item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            Debug.Assert(edmDataModelItem.SourceEnd != null);
-            Debug.Assert(edmDataModelItem.TargetEnd != null);
+            Debug.Assert(item.SourceEnd != null);
+            Debug.Assert(item.TargetEnd != null);
 
-            if ((edmDataModelItem.Constraint != null)
-                || edmDataModelItem.IsIndependent()
-                || (edmDataModelItem.IsOneToOne() && edmDataModelItem.IsSelfReferencing()))
+            if ((item.Constraint != null)
+                || item.IsIndependent()
+                || (item.IsOneToOne() && item.IsSelfReferencing()))
             {
                 return;
             }
 
             AssociationEndMember principalEnd, dependentEnd;
-            if (!edmDataModelItem.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd))
+            if (!item.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd))
             {
                 return;
             }
@@ -74,7 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
 
             if (!SupportsMultipleAssociations
-                && model.GetAssociationTypesBetween(principalEnd.GetEntityType(), dependentEnd.GetEntityType()).Count() > 1)
+                && model.GetConceptualModel().GetAssociationTypesBetween(principalEnd.GetEntityType(), dependentEnd.GetEntityType()).Count() > 1)
             {
                 return;
             }
@@ -82,7 +83,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var foreignKeyProperties
                 = from p in principalKeyProperties
                   from d in dependentEnd.GetEntityType().DeclaredProperties
-                  where MatchDependentKeyProperty(edmDataModelItem, dependentEnd, d, principalEnd.GetEntityType(), p)
+                  where MatchDependentKeyProperty(item, dependentEnd, d, principalEnd.GetEntityType(), p)
                         && (p.UnderlyingPrimitiveType == d.UnderlyingPrimitiveType)
                   select d;
 
@@ -98,7 +99,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 = dependentKeyProperties.Count() == foreignKeyProperties.Count()
                   && dependentKeyProperties.All(foreignKeyProperties.Contains);
 
-            if ((dependentEnd.IsMany() || edmDataModelItem.IsSelfReferencing()) && fkEquivalentToDependentPk)
+            if ((dependentEnd.IsMany() || item.IsSelfReferencing()) && fkEquivalentToDependentPk)
             {
                 return;
             }
@@ -116,7 +117,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     principalKeyProperties.ToList(),
                     foreignKeyProperties.ToList());
 
-            edmDataModelItem.Constraint = constraint;
+            item.Constraint = constraint;
 
             if (principalEnd.IsRequired())
             {

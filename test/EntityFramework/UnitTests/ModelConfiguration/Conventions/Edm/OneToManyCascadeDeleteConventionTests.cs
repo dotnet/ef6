@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using Xunit;
 
     public sealed class OneToManyCascadeDeleteConventionTests
@@ -14,8 +15,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", associationType.SourceEnd.GetEntityType());
 
-            ((IModelConvention<AssociationType>)new OneToManyCascadeDeleteConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new OneToManyCascadeDeleteConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal(OperationAction.None, associationType.SourceEnd.DeleteBehavior);
             Assert.Equal(OperationAction.None, associationType.TargetEnd.DeleteBehavior);
@@ -30,8 +31,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             associationType.SourceEnd.DeleteBehavior = OperationAction.Cascade;
 
-            ((IModelConvention<AssociationType>)new OneToManyCascadeDeleteConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new OneToManyCascadeDeleteConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal(OperationAction.Cascade, associationType.SourceEnd.DeleteBehavior);
             Assert.Equal(OperationAction.None, associationType.TargetEnd.DeleteBehavior);
@@ -47,8 +48,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
-            ((IModelConvention<AssociationType>)new OneToManyCascadeDeleteConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new OneToManyCascadeDeleteConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal(OperationAction.Cascade, associationType.SourceEnd.DeleteBehavior);
         }
@@ -63,8 +64,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.One;
 
-            ((IModelConvention<AssociationType>)new OneToManyCascadeDeleteConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new OneToManyCascadeDeleteConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal(OperationAction.Cascade, associationType.TargetEnd.DeleteBehavior);
         }

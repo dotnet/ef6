@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Config;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
@@ -17,17 +18,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         private static readonly IPluralizationService _pluralizationService
             = DbConfiguration.GetService<IPluralizationService>();
 
-        public void Apply(EntitySet edmDataModelItem, EdmModel model)
+        public virtual void Apply(EntitySet item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            if (edmDataModelItem.GetConfiguration() == null)
+            if (item.GetConfiguration() == null)
             {
-                edmDataModelItem.Name
-                    = model.GetEntitySets()
-                           .Except(new[] { edmDataModelItem })
-                           .UniquifyName(_pluralizationService.Pluralize(edmDataModelItem.Name));
+                item.Name
+                    = model.GetConceptualModel().GetEntitySets()
+                           .Except(new[] { item })
+                           .UniquifyName(_pluralizationService.Pluralize(item.Name));
             }
         }
     }

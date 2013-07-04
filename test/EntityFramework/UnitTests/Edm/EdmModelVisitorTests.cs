@@ -71,8 +71,8 @@ namespace System.Data.Entity.Edm
             var functionImport =
                 new EdmFunction("f", "N", DataSpace.CSpace, functionPayload);
 
-            var container = new EntityContainer("C", DataSpace.CSpace);
-            container.AddFunctionImport(functionImport);
+            var model = new EdmModel(DataSpace.CSpace);
+            model.Container.AddFunctionImport(functionImport);
 
             var visitorMock =
                 new Mock<EdmModelVisitor>
@@ -80,9 +80,9 @@ namespace System.Data.Entity.Edm
                         CallBase = true
                     };
 
-            visitorMock.Object.VisitEdmModel(new EdmModel(container));
+            visitorMock.Object.VisitEdmModel(model);
 
-            visitorMock.Verify(v => v.VisitFunctionImports(container, It.IsAny<IEnumerable<EdmFunction>>()), Times.Once());
+            visitorMock.Verify(v => v.VisitFunctionImports(model.Container, It.IsAny<IEnumerable<EdmFunction>>()), Times.Once());
             visitorMock.Verify(v => v.VisitFunctionImport(functionImport), Times.Once());
         }
 

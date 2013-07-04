@@ -18,22 +18,19 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
 
         private DbDatabaseMapping _databaseMapping;
         private double _version;
-        private DbProviderInfo _providerInfo;
         private XmlWriter _xmlWriter;
         private string _namespace;
 
-        public void Serialize(DbDatabaseMapping databaseMapping, DbProviderInfo providerInfo, XmlWriter xmlWriter)
+        public void Serialize(DbDatabaseMapping databaseMapping, XmlWriter xmlWriter)
         {
             DebugCheck.NotNull(xmlWriter);
             DebugCheck.NotNull(databaseMapping);
-            DebugCheck.NotNull(providerInfo);
             Debug.Assert(databaseMapping.Model != null);
             Debug.Assert(databaseMapping.Database != null);
 
             _xmlWriter = xmlWriter;
             _databaseMapping = databaseMapping;
             _version = databaseMapping.Model.SchemaVersion;
-            _providerInfo = providerInfo;
             _namespace = Equals(_version, XmlConstants.EdmVersionForV3)
                              ? EdmXmlNamespaceV3
                              : (Equals(_version, XmlConstants.EdmVersionForV2) ? EdmXmlNamespaceV2 : EdmXmlNamespaceV1);
@@ -68,8 +65,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
                 {
                     new SsdlSerializer().Serialize(
                         _databaseMapping.Database,
-                        _providerInfo.ProviderInvariantName,
-                        _providerInfo.ProviderManifestToken,
+                        _databaseMapping.ProviderInfo.ProviderInvariantName,
+                        _databaseMapping.ProviderInfo.ProviderManifestToken,
                         _xmlWriter);
                 }
             }

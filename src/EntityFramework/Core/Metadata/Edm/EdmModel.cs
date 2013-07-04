@@ -9,69 +9,43 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
+    /// <summary>
+    /// Represents a conceptual or store model.
+    /// </summary>
     public class EdmModel : MetadataItem
     {
-        private readonly List<EntityContainer> _containers = new List<EntityContainer>();
         private readonly List<AssociationType> _associationTypes = new List<AssociationType>();
         private readonly List<ComplexType> _complexTypes = new List<ComplexType>();
         private readonly List<EntityType> _entityTypes = new List<EntityType>();
         private readonly List<EnumType> _enumTypes = new List<EnumType>();
         private readonly List<EdmFunction> _functions = new List<EdmFunction>();
+        private readonly EntityContainer _container;
 
-        private readonly DataSpace _dataSpace;
+        private double _schemaVersion;
 
         private DbProviderInfo _providerInfo;
         private DbProviderManifest _providerManifest;
 
-        public double SchemaVersion { get; set; }
-
-        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public EdmModel(EntityContainer entityContainer, double version = XmlConstants.SchemaVersionLatest)
+        internal EdmModel(DataSpace dataSpace, double schemaVersion = XmlConstants.SchemaVersionLatest)
         {
-            Check.NotNull(entityContainer, "entityContainer");
+            if (dataSpace != DataSpace.CSpace && dataSpace != DataSpace.SSpace)            {                throw new ArgumentException(Strings.EdmModel_InvalidDataSpace(dataSpace), "dataSpace");            }
+            _container = new EntityContainer(
+                dataSpace == DataSpace.CSpace
+                    ? "CodeFirstContainer"
+                    : "CodeFirstDatabase",
+                dataSpace);
 
-            _dataSpace = entityContainer.DataSpace;
-            _containers.Add(entityContainer);
-            SchemaVersion = version;
+            _schemaVersion = schemaVersion;
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
-        public EdmModel(DataSpace dataSpace, double version = XmlConstants.SchemaVersionLatest)
-        {
-            if (dataSpace != DataSpace.CSpace
-                && dataSpace != DataSpace.SSpace)
-            {
-                throw new ArgumentException(Strings.EdmModel_InvalidDataSpace(dataSpace), "dataSpace");
-            }
-
-            _containers.Add(
-                new EntityContainer(
-                    dataSpace == DataSpace.CSpace
-                        ? "CodeFirstContainer"
-                        : "CodeFirstDatabase",
-                    dataSpace));
-
-            _dataSpace = dataSpace;
-            SchemaVersion = version;
-        }
-
-        internal virtual void Validate()
-        {
-            var validationErrors = new List<DataModelErrorEventArgs>();
-            var validator = new DataModelValidator();
-            validator.OnError += (_, e) => validationErrors.Add(e);
-
-            validator.Validate(this, true);
-
-            if (validationErrors.Count > 0)
-            {
-                throw new ModelValidationException(validationErrors);
-            }
-        }
-
+        /// <summary>Gets the built-in type kind for this type.</summary>
+        /// <returns>
+        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this type.
+        /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.MetadataItem; }
@@ -79,15 +53,95 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal override string Identity
         {
-            get { return "EdmModel" + Containers.Single().Name;  }
+            get { return "EdmModel" + Container.Identity; }
         }
 
-        public virtual IEnumerable<EntityContainer> Containers
+        /// <summary>
+        /// Gets the data space associated with the model, which indicates whether 
+        /// it is a conceptual model (DataSpace.CSpace) or a store model (DataSpace.SSpace).
+        /// </summary>
+        public DataSpace DataSpace
         {
-            get { return _containers; }
+            get { return Container.DataSpace; }
         }
 
-        public virtual IEnumerable<string> NamespaceNames
+        /// <summary>
+        /// Gets the association types in the model.
+        /// </summary>
+        public IEnumerable<AssociationType> AssociationTypes
+        {
+            get { return _associationTypes; }
+        }
+
+        /// <summary>
+        /// Gets the complex types in the model.
+        /// </summary>
+        public IEnumerable<ComplexType> ComplexTypes
+        {
+            get { return _complexTypes; }
+        }
+
+        /// <summary>
+        /// Gets the entity types in the model.
+        /// </summary>
+        public IEnumerable<EntityType> EntityTypes
+        {
+            get { return _entityTypes; }
+        }
+
+        /// <summary>
+        /// Gets the enum types in the model.
+        /// </summary>
+        public IEnumerable<EnumType> EnumTypes
+        {
+            get { return _enumTypes; }
+        }
+
+        /// <summary>
+        /// Gets the functions in the model.
+        /// </summary>
+        public IEnumerable<EdmFunction> Functions
+        {
+            get { return _functions; }
+        }
+
+        /// <summary>
+        /// Gets the container that stores entity and association sets, and function imports.
+        /// </summary>
+        public EntityContainer Container
+        {
+            get { return _container; }
+        }
+
+        internal double SchemaVersion
+        {
+            get { return _schemaVersion; }
+            set { _schemaVersion = value; }
+        }
+
+        internal DbProviderInfo ProviderInfo
+        {
+            get { return _providerInfo; }
+
+            private set
+            {
+                Debug.Assert(DataSpace == DataSpace.SSpace);
+                _providerInfo = value;
+            }
+        }
+
+        internal DbProviderManifest ProviderManifest
+        {
+            get { return _providerManifest; }
+
+            private set
+            {
+                Debug.Assert(DataSpace == DataSpace.SSpace);
+                _providerManifest = value;
+            }
+        }
+
+        internal virtual IEnumerable<string> NamespaceNames
         {
             get
             {
@@ -97,7 +151,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        public IEnumerable<EdmType> NamespaceItems
+        internal IEnumerable<EdmType> NamespaceItems
         {
             get
             {
@@ -109,118 +163,172 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        public IEnumerable<GlobalItem> GlobalItems
+        internal IEnumerable<GlobalItem> GlobalItems
         {
             get { return NamespaceItems.Concat<GlobalItem>(Containers); }
         }
 
-        public DbProviderInfo ProviderInfo
+        internal virtual IEnumerable<EntityContainer> Containers
         {
-            get { return _providerInfo; }
-            set
-            {
-                DebugCheck.NotNull(value);
+            get { yield return Container; }
+        }
 
-                _providerInfo = value;
+        /// <summary>
+        /// Adds an association type to the model.
+        /// </summary>
+        /// <param name="item">The AssociationType instance to be added.</param>
+        public void AddItem(AssociationType item)
+        {
+            Check.NotNull(item, "item");
+            ValidateSpace(item);
+
+            _associationTypes.Add(item);
+        }
+
+        /// <summary>
+        /// Adds a complex type to the model.
+        /// </summary>
+        /// <param name="item">The ComplexType instance to be added.</param>
+        public void AddItem(ComplexType item)
+        {
+            Check.NotNull(item, "item");
+            ValidateSpace(item);
+
+            _complexTypes.Add(item);
+        }
+
+        /// <summary>
+        /// Adds an entity type to the model.
+        /// </summary>
+        /// <param name="item">The EntityType instance to be added.</param>
+        public void AddItem(EntityType item)
+        {
+            Check.NotNull(item, "item");
+            ValidateSpace(item);
+
+            _entityTypes.Add(item);
+        }
+
+        /// <summary>
+        /// Adds an enumeration type to the model.
+        /// </summary>
+        /// <param name="item">The EnumType instance to be added.</param>
+        public void AddItem(EnumType item)
+        {
+            Check.NotNull(item, "item");
+            ValidateSpace(item);
+
+            _enumTypes.Add(item);
+        }
+
+        /// <summary>
+        /// Adds a function to the model.
+        /// </summary>
+        /// <param name="item">The EdmFunction instance to be added.</param>
+        public void AddItem(EdmFunction item)
+        {
+            Check.NotNull(item, "item");
+            ValidateSpace(item);
+
+            _functions.Add(item);
+        }
+
+        /// <summary>
+        /// Removes an association type from the model.
+        /// </summary>
+        /// <param name="item">The AssociationType instance to be removed.</param>
+        public void RemoveItem(AssociationType item)
+        {
+            Check.NotNull(item, "item");
+
+            _associationTypes.Remove(item);
+        }
+
+        /// <summary>
+        /// Removes a complex type from the model.
+        /// </summary>
+        /// <param name="item">The ComplexType instance to be removed.</param>
+        public void RemoveItem(ComplexType item)
+        {
+            Check.NotNull(item, "item");
+
+            _complexTypes.Remove(item);
+        }
+
+        /// <summary>
+        /// Removes an entity type from the model.
+        /// </summary>
+        /// <param name="item">The EntityType instance to be removed.</param>
+        public void RemoveItem(EntityType item)
+        {
+            Check.NotNull(item, "item");
+
+            _entityTypes.Remove(item);
+        }
+
+        /// <summary>
+        /// Removes an enumeration type from the model.
+        /// </summary>
+        /// <param name="item">The EnumType instance to be removed.</param>
+        public void RemoveItem(EnumType item)
+        {
+            Check.NotNull(item, "item");
+
+            _enumTypes.Remove(item);
+        }
+
+        /// <summary>
+        /// Removes a function from the model.
+        /// </summary>
+        /// <param name="item">The EdmFunction instance to be removed.</param>
+        public void RemoveItem(EdmFunction item)
+        {
+            Check.NotNull(item, "item");
+
+            _functions.Remove(item);
+        }
+
+        internal virtual void Validate()
+        {
+            var validationErrors = new List<DataModelErrorEventArgs>();
+
+            var validator = new DataModelValidator();
+            validator.OnError += (_, e) => validationErrors.Add(e);
+            validator.Validate(this, true);
+
+            if (validationErrors.Count > 0)
+            {
+                throw new ModelValidationException(validationErrors);
             }
         }
 
-        public DbProviderManifest ProviderManifest
+        private void ValidateSpace(EdmType item)
         {
-            get { return _providerManifest; }
-            set
+            if (item.DataSpace != DataSpace)
             {
-                DebugCheck.NotNull(value);
-
-                _providerManifest = value;
+                throw new ArgumentException(Strings.EdmModel_AddItem_NonMatchingNamespace, "item");
             }
         }
 
-        public IEnumerable<AssociationType> AssociationTypes
+        internal static EdmModel CreateStoreModel(
+            DbProviderInfo providerInfo, DbProviderManifest providerManifest,
+            double schemaVersion = XmlConstants.SchemaVersionLatest)
         {
-            get { return _associationTypes; }
+            DebugCheck.NotNull(providerInfo);
+            DebugCheck.NotNull(providerManifest);
+
+            return
+                new EdmModel(DataSpace.SSpace, schemaVersion)
+                {
+                    ProviderInfo = providerInfo,
+                    ProviderManifest = providerManifest
+                };
         }
 
-        public IEnumerable<ComplexType> ComplexTypes
+        internal static EdmModel CreateConceptualModel(
+            double schemaVersion = XmlConstants.SchemaVersionLatest)
         {
-            get { return _complexTypes; }
-        }
-
-        public IEnumerable<EntityType> EntityTypes
-        {
-            get { return _entityTypes; }
-        }
-
-        public IEnumerable<EnumType> EnumTypes
-        {
-            get { return _enumTypes; }
-        }
-
-        public IEnumerable<EdmFunction> Functions
-        {
-            get { return _functions; }
-        }
-
-        public void AddItem(AssociationType associationType)
-        {
-            Check.NotNull(associationType, "associationType");
-            ValidateSpace(associationType, "associationType");
-
-            _associationTypes.Add(associationType);
-        }
-
-        public void RemoveItem(AssociationType associationType)
-        {
-            Check.NotNull(associationType, "associationType");
-
-            _associationTypes.Remove(associationType);
-        }
-
-        public void AddItem(ComplexType complexType)
-        {
-            Check.NotNull(complexType, "complexType");
-            ValidateSpace(complexType, "complexType");
-
-            _complexTypes.Add(complexType);
-        }
-
-        public void AddItem(EntityType entityType)
-        {
-            Check.NotNull(entityType, "entityType");
-            ValidateSpace(entityType, "entityType");
-
-            _entityTypes.Add(entityType);
-        }
-
-        public void RemoveItem(EntityType entityType)
-        {
-            Check.NotNull(entityType, "entityType");
-
-            _entityTypes.Remove(entityType);
-        }
-
-        public void AddItem(EnumType enumType)
-        {
-            Check.NotNull(enumType, "enumType");
-            ValidateSpace(enumType, "enumType");
-
-            _enumTypes.Add(enumType);
-        }
-
-        public void AddItem(EdmFunction function)
-        {
-            Check.NotNull(function, "function");
-            ValidateSpace(function, "function");
-
-            _functions.Add(function);
-        }
-
-        private void ValidateSpace(GlobalItem item, string parameterName)
-        {
-            if (item.DataSpace != _dataSpace)
-            {
-                throw new ArgumentException(Strings.EdmModel_AddItem_NonMatchingNamespace, parameterName);
-            }
+            return new EdmModel(DataSpace.CSpace, schemaVersion);
         }
     }
 }

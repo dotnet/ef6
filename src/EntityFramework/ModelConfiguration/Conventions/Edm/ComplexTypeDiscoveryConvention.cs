@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
@@ -12,12 +13,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to configure a type as a complex type if it has no primary key, no mapped base type and no navigation properties.
     /// </summary>
-    public class ComplexTypeDiscoveryConvention : IModelConvention
+    public class ComplexTypeDiscoveryConvention : IModelConvention<EdmModel>
     {
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        public void Apply(EdmModel model)
+        public virtual void Apply(EdmModel item, DbModel model)
         {
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
             // Query the model for candidate complex types.
@@ -33,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             //      8) Any inbound navigation properties do not have explicit configuration.
 
             var candidates
-                = from entityType in model.EntityTypes
+                = from entityType in item.EntityTypes
                   where entityType.KeyProperties.Count == 0 // (1)
                         && entityType.BaseType == null
                   // (1)
@@ -44,7 +46,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         && !entityType.NavigationProperties.Any()
                   // (3)
                   let matchingAssociations
-                      = from associationType in model.AssociationTypes
+                      = from associationType in item.AssociationTypes
                         where associationType.SourceEnd.GetEntityType() == entityType ||
                               associationType.TargetEnd.GetEntityType() == entityType
                         let declaringEnd
@@ -79,7 +81,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             // Transform candidate entities into complex types
             foreach (var candidate in candidates.ToList())
             {
-                var complexType = model.AddComplexType(candidate.EntityType.Name, candidate.EntityType.NamespaceName);
+                var complexType = item.AddComplexType(candidate.EntityType.Name, candidate.EntityType.NamespaceName);
 
                 foreach (var property in candidate.EntityType.DeclaredProperties)
                 {
@@ -110,10 +112,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                         }
                     }
 
-                    model.RemoveAssociationType(association.AssociationType);
+                    item.RemoveAssociationType(association.AssociationType);
                 }
 
-                model.RemoveEntityType(candidate.EntityType);
+                item.RemoveEntityType(candidate.EntityType);
             }
         }
     }

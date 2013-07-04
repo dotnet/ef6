@@ -60,7 +60,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             entityType.SetConfiguration(entityTypeConfiguration);
 
             var databaseMapping
-                = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+                = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
             entityTypeConfiguration.Configure(entityType, databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 

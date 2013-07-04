@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using Xunit;
 
@@ -23,8 +24,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             associationType.MarkPrincipalConfigured();
 
-            ((IModelConvention<AssociationType>)new OneToOneConstraintIntroductionConvention())
-                .Apply(associationType, new EdmModel(DataSpace.CSpace));
+            (new OneToOneConstraintIntroductionConvention())
+                .Apply(associationType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.NotNull(associationType.Constraint);
             Assert.Equal(1, associationType.Constraint.ToProperties.Count);

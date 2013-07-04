@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -15,12 +16,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class ForeignKeyNavigationPropertyAttributeConvention : IModelConvention<NavigationProperty>
     {
-        public void Apply(NavigationProperty edmDataModelItem, EdmModel model)
+        public virtual void Apply(NavigationProperty item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            var associationType = edmDataModelItem.Association;
+            var associationType = item.Association;
 
             if (associationType.Constraint != null)
             {
@@ -28,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
 
             var foreignKeyAttribute
-                = edmDataModelItem.GetClrAttributes<ForeignKeyAttribute>().SingleOrDefault();
+                = item.GetClrAttributes<ForeignKeyAttribute>().SingleOrDefault();
 
             if (foreignKeyAttribute == null)
             {
@@ -48,15 +49,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                          .Select(p => p.Trim());
 
                 var declaringEntityType
-                    = model.EntityTypes
-                           .Single(e => e.DeclaredNavigationProperties.Contains(edmDataModelItem));
+                    = model.GetConceptualModel().EntityTypes
+                           .Single(e => e.DeclaredNavigationProperties.Contains(item));
 
                 var dependentProperties
                     = GetDependentProperties(
                         dependentEnd.GetEntityType(),
                         dependentPropertyNames,
                         declaringEntityType,
-                        edmDataModelItem).ToList();
+                        item).ToList();
 
                 var constraint
                     = new ReferentialConstraint(

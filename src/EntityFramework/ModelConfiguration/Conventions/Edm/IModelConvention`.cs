@@ -3,10 +3,11 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
 
-    public interface IModelConvention<TEdmDataModelItem> : IConvention
-        where TEdmDataModelItem : MetadataItem
+    public interface IModelConvention<T> : IConvention
+        where T : MetadataItem
     {
-        void Apply(TEdmDataModelItem edmDataModelItem, EdmModel model);
+        void Apply(T item, DbModel model);
     }
 }

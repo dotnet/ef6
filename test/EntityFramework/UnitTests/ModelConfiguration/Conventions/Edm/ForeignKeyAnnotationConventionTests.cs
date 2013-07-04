@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Linq;
@@ -34,8 +35,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                              RelationshipType = associationType
                                          };
 
-            ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
-                .Apply(navigationProperty, new EdmModel(DataSpace.CSpace));
+            (new ForeignKeyNavigationPropertyAttributeConvention())
+                .Apply(navigationProperty, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Same(associationConstraint, navigationProperty.Association.Constraint);
         }
@@ -48,8 +49,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                              RelationshipType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
                                          };
 
-            ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
-                .Apply(navigationProperty, new EdmModel(DataSpace.CSpace));
+            (new ForeignKeyNavigationPropertyAttributeConvention())
+                .Apply(navigationProperty, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Null(navigationProperty.Association.Constraint);
         }
@@ -68,8 +69,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var foreignKeyAnnotation = new ForeignKeyAttribute("AId");
             navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
 
-            ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
-                .Apply(navigationProperty, model);
+            (new ForeignKeyNavigationPropertyAttributeConvention())
+                .Apply(navigationProperty, new DbModel(model, null));
 
             Assert.Null(associationType.Constraint);
         }
@@ -91,8 +92,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var foreignKeyAnnotation = new ForeignKeyAttribute("Fk");
             navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
 
-            ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
-                .Apply(navigationProperty, model);
+            (new ForeignKeyNavigationPropertyAttributeConvention())
+                .Apply(navigationProperty, new DbModel(model, null));
 
             Assert.NotNull(associationType.Constraint);
             Assert.True(associationType.Constraint.ToProperties.Contains(fkProperty));
@@ -119,8 +120,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var foreignKeyAnnotation = new ForeignKeyAttribute("Fk2,Fk1");
             navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
 
-            ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
-                .Apply(navigationProperty, model);
+            (new ForeignKeyNavigationPropertyAttributeConvention())
+                .Apply(navigationProperty, new DbModel(model, null));
 
             Assert.NotNull(associationType.Constraint);
             Assert.True(new[] { fkProperty2, fkProperty1 }.SequenceEqual(associationType.Constraint.ToProperties));
@@ -145,8 +146,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Assert.Equal(
                 Strings.ForeignKeyAttributeConvention_InvalidKey("N", mockType.Object, "_Fk", mockType.Object),
                 Assert.Throws<InvalidOperationException>(
-                    () => ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
-                              .Apply(navigationProperty, model)).Message);
+                    () => (new ForeignKeyNavigationPropertyAttributeConvention())
+                              .Apply(navigationProperty, new DbModel(model, null))).Message);
         }
 
         [Fact]
@@ -168,8 +169,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Assert.Equal(
                 Strings.ForeignKeyAttributeConvention_EmptyKey("N", mockType.Object),
                 Assert.Throws<InvalidOperationException>(
-                    () => ((IModelConvention<NavigationProperty>)new ForeignKeyNavigationPropertyAttributeConvention())
-                              .Apply(navigationProperty, model)).Message);
+                    () => (new ForeignKeyNavigationPropertyAttributeConvention())
+                              .Apply(navigationProperty, new DbModel(model, null))).Message);
         }
     }
 }

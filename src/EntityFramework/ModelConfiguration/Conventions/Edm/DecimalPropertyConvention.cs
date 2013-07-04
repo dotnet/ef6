@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -32,22 +33,21 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             _scale = scale;
         }
 
-        /// <inheritdoc/>
-        public void Apply(EdmProperty edmDataModelItem, EdmModel model)
+        public virtual void Apply(EdmProperty item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            if (edmDataModelItem.PrimitiveType == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal))
+            if (item.PrimitiveType == PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal))
             {
-                if (edmDataModelItem.Precision == null)
+                if (item.Precision == null)
                 {
-                    edmDataModelItem.Precision = _precision;
+                    item.Precision = _precision;
                 }
 
-                if (edmDataModelItem.Scale == null)
+                if (item.Scale == null)
                 {
-                    edmDataModelItem.Scale = _scale;
+                    item.Scale = _scale;
                 }
             }
         }

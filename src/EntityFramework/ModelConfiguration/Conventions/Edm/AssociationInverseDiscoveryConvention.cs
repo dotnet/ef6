@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
@@ -13,16 +14,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///     Convention to detect navigation properties to be inverses of each other when only one pair
     ///     of navigation properties exists between the related types.
     /// </summary>
-    public class AssociationInverseDiscoveryConvention : IModelConvention
+    public class AssociationInverseDiscoveryConvention : IModelConvention<EdmModel>
     {
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public void Apply(EdmModel model)
+        public virtual void Apply(EdmModel item, DbModel model)
         {
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
             var associationPairs
-                = (from a1 in model.AssociationTypes
-                   from a2 in model.AssociationTypes
+                = (from a1 in item.AssociationTypes
+                   from a2 in item.AssociationTypes
                    where a1 != a2
                    where a1.SourceEnd.GetEntityType() == a2.TargetEnd.GetEntityType()
                          && a1.TargetEnd.GetEntityType() == a2.SourceEnd.GetEntityType()
@@ -69,9 +71,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     unifiedAssociation.TargetEnd.SetClrPropertyInfo(sourceEndClrProperty);
                 }
 
-                FixNavigationProperties(model, unifiedAssociation, redundantAssociation);
+                FixNavigationProperties(item, unifiedAssociation, redundantAssociation);
 
-                model.RemoveAssociationType(redundantAssociation);
+                item.RemoveAssociationType(redundantAssociation);
             }
         }
 

@@ -47,7 +47,7 @@ namespace ProductivityApiUnitTests
             Assert.Equal(
                 "writer",
                 Assert.Throws<ArgumentNullException>(
-                    () => EdmxWriter.WriteEdmx(new Mock<DbModel>(new DbDatabaseMapping(), new DbModelBuilder()).Object, null)).ParamName);
+                    () => EdmxWriter.WriteEdmx(new DbModel(new DbDatabaseMapping(), new DbModelBuilder()), null)).ParamName);
         }
 
         #endregion

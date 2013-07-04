@@ -7,6 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Edm.Serialization;
     using System.Data.Entity.Edm.Validation;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -156,11 +157,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         public static DbDatabaseMapping GenerateDatabaseMapping(
-            this EdmModel model, DbProviderManifest providerManifest)
+            this EdmModel model, DbProviderInfo providerInfo, DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(model);
 
-            return new DatabaseMappingGenerator(providerManifest).Generate(model);
+            return new DatabaseMappingGenerator(providerInfo, providerManifest).Generate(model);
         }
 
         public static EdmType GetStructuralOrEnumType(this EdmModel model, string name)

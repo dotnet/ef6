@@ -9,17 +9,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     public sealed class EdmModelExtensionsTests
     {
         [Fact]
-        public void Can_get_and_set_provider_info_annotation()
-        {
-            var model = new EdmModel(DataSpace.SSpace);
-            var providerInfo = ProviderRegistry.Sql2008_ProviderInfo;
-
-            model.ProviderInfo = providerInfo;
-
-            Assert.Same(providerInfo, model.ProviderInfo);
-        }
-
-        [Fact]
         public void HasCascadeDeletePath_should_return_true_for_simple_cascade()
         {
             var model = new EdmModel(DataSpace.CSpace);
@@ -129,7 +118,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
 
-            Assert.NotNull(model.GenerateDatabaseMapping(ProviderRegistry.Sql2008_ProviderManifest));
+            Assert.NotNull(model.GenerateDatabaseMapping(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest));
         }
 
         [Fact]

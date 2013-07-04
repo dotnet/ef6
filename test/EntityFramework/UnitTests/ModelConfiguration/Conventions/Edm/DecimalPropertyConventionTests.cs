@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using Xunit;
 
     public sealed class DecimalPropertyConventionTests
@@ -12,8 +13,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
 
-            ((IModelConvention<EdmProperty>)new DecimalPropertyConvention())
-                .Apply(property, new EdmModel(DataSpace.CSpace));
+            (new DecimalPropertyConvention())
+                .Apply(property, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal((byte)18, property.Precision);
             Assert.Equal((byte)2, property.Scale);
@@ -25,8 +26,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
             property.Precision = 22;
 
-            ((IModelConvention<EdmProperty>)new DecimalPropertyConvention())
-                .Apply(property, new EdmModel(DataSpace.CSpace));
+            (new DecimalPropertyConvention())
+                .Apply(property, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal((byte)22, property.Precision);
             Assert.Equal((byte)2, property.Scale);
@@ -38,8 +39,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
             property.Scale = 4;
 
-            ((IModelConvention<EdmProperty>)new DecimalPropertyConvention())
-                .Apply(property, new EdmModel(DataSpace.CSpace));
+            (new DecimalPropertyConvention())
+                .Apply(property, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
             Assert.Equal((byte)18, property.Precision);
             Assert.Equal((byte)4, property.Scale);

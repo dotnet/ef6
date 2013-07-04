@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.Utilities;
@@ -13,34 +14,34 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class DeclaredPropertyOrderingConvention : IModelConvention<EntityType>
     {
-        public void Apply(EntityType edmDataModelItem, EdmModel model)
+        public virtual void Apply(EntityType item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            if (edmDataModelItem.BaseType == null)
+            if (item.BaseType == null)
             {
                 // Performance: avoid converting to .Each<>() Linq expressions in order to avoid closure allocations   
-                foreach (var p in edmDataModelItem.KeyProperties)
+                foreach (var p in item.KeyProperties)
                 {
-                    edmDataModelItem.RemoveMember(p);
-                    edmDataModelItem.AddKeyMember(p);
+                    item.RemoveMember(p);
+                    item.AddKeyMember(p);
                 }
 
                 foreach (var p in 
                     new PropertyFilter()
-                    .GetProperties(edmDataModelItem.GetClrType(), declaredOnly: false, includePrivate: true))
+                    .GetProperties(item.GetClrType(), declaredOnly: false, includePrivate: true))
                 {
                     var property
-                        = edmDataModelItem
+                        = item
                             .DeclaredProperties
                             .SingleOrDefault(ep => ep.Name == p.Name);
 
                     if ((property != null)
-                        && !edmDataModelItem.KeyProperties.Contains(property))
+                        && !item.KeyProperties.Contains(property))
                     {
-                        edmDataModelItem.RemoveMember(property);
-                        edmDataModelItem.AddMember(property);
+                        item.RemoveMember(property);
+                        item.AddMember(property);
                     }
                 }
             }

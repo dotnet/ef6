@@ -6,6 +6,7 @@ namespace ProductivityApiTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
@@ -750,7 +751,7 @@ namespace ProductivityApiTests
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            model.DatabaseMapping.Model.EntityTypes.Single(e => e.Name == "SynonymToastCrunch");
+            model.GetConceptualModel().EntityTypes.Single(e => e.Name == "SynonymToastCrunch");
         }
 
         public class NotMappedOuter1
@@ -786,9 +787,9 @@ namespace ProductivityApiTests
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Contains("CountChocula", model.DatabaseMapping.Model.EntityTypes.Select(e => e.Name));
-            Assert.Contains("LuckyCharms", model.DatabaseMapping.Model.EntityTypes.Select(e => e.Name));
-            model.DatabaseMapping.Model.EnumTypes.Single(e => e.Name == "ComplexCarbs");
+            Assert.Contains("CountChocula", model.GetConceptualModel().EntityTypes.Select(e => e.Name));
+            Assert.Contains("LuckyCharms", model.GetConceptualModel().EntityTypes.Select(e => e.Name));
+            model.GetConceptualModel().EnumTypes.Single(e => e.Name == "ComplexCarbs");
         }
 
         public class NotMappedEnumOuter1
@@ -831,9 +832,9 @@ namespace ProductivityApiTests
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Contains("CountChocula", model.DatabaseMapping.Model.EntityTypes.Select(e => e.Name));
-            Assert.Contains("LuckyCharms", model.DatabaseMapping.Model.EntityTypes.Select(e => e.Name));
-            model.DatabaseMapping.Model.ComplexTypes.Single(e => e.Name == "ComplexCarbs");
+            Assert.Contains("CountChocula", model.GetConceptualModel().EntityTypes.Select(e => e.Name));
+            Assert.Contains("LuckyCharms", model.GetConceptualModel().EntityTypes.Select(e => e.Name));
+            model.GetConceptualModel().ComplexTypes.Single(e => e.Name == "ComplexCarbs");
         }
 
         [Fact]
@@ -845,9 +846,9 @@ namespace ProductivityApiTests
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Contains("CountChocula", model.DatabaseMapping.Model.EntityTypes.Select(e => e.Name));
-            Assert.Contains("LuckyCharms", model.DatabaseMapping.Model.EntityTypes.Select(e => e.Name));
-            model.DatabaseMapping.Model.ComplexTypes.Single(e => e.Name == "ComplexCarbs");
+            Assert.Contains("CountChocula", model.GetConceptualModel().EntityTypes.Select(e => e.Name));
+            Assert.Contains("LuckyCharms", model.GetConceptualModel().EntityTypes.Select(e => e.Name));
+            model.GetConceptualModel().ComplexTypes.Single(e => e.Name == "ComplexCarbs");
         }
 
         [Fact]
@@ -859,9 +860,9 @@ namespace ProductivityApiTests
 
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
-            Assert.Contains("CountChocula", model.DatabaseMapping.Model.EntityTypes.Select(e => e.Name));
-            Assert.Contains("LuckyCharms", model.DatabaseMapping.Model.EntityTypes.Select(e => e.Name));
-            model.DatabaseMapping.Model.EnumTypes.Single(e => e.Name == "ComplexCarbs");
+            Assert.Contains("CountChocula", model.GetConceptualModel().EntityTypes.Select(e => e.Name));
+            Assert.Contains("LuckyCharms", model.GetConceptualModel().EntityTypes.Select(e => e.Name));
+            model.GetConceptualModel().EnumTypes.Single(e => e.Name == "ComplexCarbs");
         }
     }
 

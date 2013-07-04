@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Conventions;
@@ -446,31 +447,31 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        internal void ApplyModel(EdmModel model)
+        internal void ApplyConceptualModel(DbModel model)
         {
             DebugCheck.NotNull(model);
 
             foreach (var convention in _conceptualModelConventions)
             {
-                new ModelConventionDispatcher(convention, model).Dispatch();
+                new ModelConventionDispatcher(convention, model, DataSpace.CSpace).Dispatch();
             }
         }
 
-        internal void ApplyDatabase(EdmModel database)
+        internal void ApplyStoreModel(DbModel model)
         {
             foreach (var convention in _storeModelConventions)
             {
-                new ModelConventionDispatcher(convention, database).Dispatch();
+                new ModelConventionDispatcher(convention, model, DataSpace.SSpace).Dispatch();
             }
         }
 
-        internal void ApplyPluralizingTableNameConvention(EdmModel database)
+        internal void ApplyPluralizingTableNameConvention(DbModel model)
         {
-            DebugCheck.NotNull(database);
+            DebugCheck.NotNull(model);
 
             foreach (var convention in _storeModelConventions.Where(c => c is PluralizingTableNameConvention))
             {
-                new ModelConventionDispatcher(convention, database).Dispatch();
+                new ModelConventionDispatcher(convention, model, DataSpace.SSpace).Dispatch();
             }
         }
 
@@ -673,9 +674,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private static bool IsModelConvention(Type conventionType)
         {
-            return typeof(IModelConvention).IsAssignableFrom(conventionType)
-                   || conventionType.GetGenericTypeImplementations(
-                       typeof(IModelConvention<>)).Any();
+            return conventionType.GetGenericTypeImplementations(typeof(IModelConvention<>)).Any();
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]

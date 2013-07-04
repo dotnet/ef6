@@ -196,9 +196,9 @@ namespace System.Data.Entity.Core.Common
                 var connectionMock = new Mock<DbConnection>();
                 connectionMock.Setup(m => m.DataSource).Returns("FooSource");
 
-                var model = new EdmModel(DataSpace.SSpace);
-                model.ProviderInfo = new DbProviderInfo("System.Data.FakeSqlClient", "2008");
-                model.ProviderManifest = new SqlProviderManifest("2008");
+                var model = EdmModel.CreateStoreModel(
+                    new DbProviderInfo("System.Data.FakeSqlClient", "2008"),
+                    new SqlProviderManifest("2008"));
 
                 var storeItemCollectionMock = new Mock<StoreItemCollection>(model) { CallBase = true };
 

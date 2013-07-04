@@ -51,7 +51,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             model.AddEntitySet("BS", entityB);
 
             var databaseMapping
-                = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest)
+                = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest)
                     .Generate(model);
 
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
@@ -113,7 +113,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             model.AddAssociationSet("M2MSet", associationType);
 
             var databaseMapping
-                = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest)
+                = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest)
                     .Generate(model);
 
             modelConfiguration.Configure(databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
@@ -535,7 +535,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             (entityType1.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P1")).SetStoreGeneratedPattern(
                 StoreGeneratedPattern.Identity);
 
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
             var modelConfiguration = new ModelConfiguration();
             modelConfiguration.Entity(entityType2.GetClrType()).ToTable("E2");
@@ -602,7 +602,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             (entityType1.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == "P1")).SetStoreGeneratedPattern(
                 StoreGeneratedPattern.Identity);
 
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
             var modelConfiguration = new ModelConfiguration();
             modelConfiguration.Entity(entityType2.GetClrType()).ToTable("E2");
             modelConfiguration.Entity(entityType3.GetClrType()).ToTable("E3");
@@ -660,7 +660,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             //Setup
             var model = TestModelBuilderHelpers.CreateSimpleInheritanceTwoEntities();
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
             var entityType1 = model.GetEntityType("E1");
             var entityType2 = model.GetEntityType("E2");
@@ -724,7 +724,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             //Setup
             var model = TestModelBuilderHelpers.CreateTwoLevelInheritanceWithThreeEntities();
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
             var entityType1 = model.GetEntityType("E1");
             var entityType2 = model.GetEntityType("E2");
@@ -811,7 +811,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             //Setup
             var model = TestModelBuilderHelpers.CreateSingleLevelInheritanceWithThreeEntities();
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
             var entityType1 = model.GetEntityType("E1");
             var entityType2 = model.GetEntityType("E2");
@@ -894,7 +894,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             //Setup
             var model = TestModelBuilderHelpers.CreateSimpleInheritanceTwoEntities();
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
             var entityType1 = model.GetEntityType("E1");
             var entityType2 = model.GetEntityType("E2");
@@ -979,7 +979,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             //Setup
             var model = TestModelBuilderHelpers.CreateTwoLevelInheritanceWithThreeEntities();
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
             var entityType1 = model.GetEntityType("E1");
             var entityType2 = model.GetEntityType("E2");
@@ -1096,7 +1096,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             //Setup
             var model = TestModelBuilderHelpers.CreateSingleLevelInheritanceWithThreeEntities();
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
             var entityType1 = model.GetEntityType("E1");
             var entityType2 = model.GetEntityType("E2");
@@ -1229,7 +1229,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     .Property("P3")
                     .Property("P4")
                     .Property("P5");
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
             var entityType = model.GetEntityType("E");
             var modelConfiguration = new ModelConfiguration();
@@ -1308,7 +1308,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 new TestModelBuilder()
                     .Entity("E")
                     .Key("P1");
-            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
+            var databaseMapping = new DatabaseMappingGenerator(ProviderRegistry.Sql2008_ProviderInfo, ProviderRegistry.Sql2008_ProviderManifest).Generate(model);
 
             var entityType = model.GetEntityType("E");
             var modelConfiguration = new ModelConfiguration();

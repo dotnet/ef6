@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using System.Linq;
@@ -16,29 +17,29 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class ColumnOrderingConvention : IModelConvention<EntityType>
     {
-        public void Apply(EntityType edmDataModelItem, EdmModel model)
+        public virtual void Apply(EntityType item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "dbDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            ValidateColumns(edmDataModelItem, model.GetEntitySet(edmDataModelItem).Table);
+            ValidateColumns(item, model.GetStoreModel().GetEntitySet(item).Table);
 
-            OrderColumns(edmDataModelItem.Properties)
+            OrderColumns(item.Properties)
                 .Each(
                     c =>
                         {
                             var isKey = c.IsPrimaryKeyColumn;
 
-                            edmDataModelItem.RemoveMember(c);
-                            edmDataModelItem.AddMember(c);
+                            item.RemoveMember(c);
+                            item.AddMember(c);
 
                             if (isKey)
                             {
-                                edmDataModelItem.AddKeyMember(c);
+                                item.AddKeyMember(c);
                             }
                         });
 
-            edmDataModelItem.ForeignKeyBuilders
+            item.ForeignKeyBuilders
                            .Each(fk => fk.DependentColumns = OrderColumns(fk.DependentColumns));
         }
 

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using Xunit;
@@ -17,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entitySet = database.AddEntitySet("ES", table);
             entitySet.Table = "Customer";
 
-            ((IModelConvention<EntityType>)new PluralizingTableNameConvention()).Apply(table, database);
+            (new PluralizingTableNameConvention()).Apply(table, new DbModel(null, database));
 
             Assert.Equal("Customers", entitySet.Table);
         }
@@ -31,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entitySet = database.AddEntitySet("ES", table);
             entitySet.Table = "Customer";
 
-            ((IModelConvention<EntityType>)new PluralizingTableNameConvention()).Apply(table, database);
+            (new PluralizingTableNameConvention()).Apply(table, new DbModel(null, database));
 
             Assert.Equal("Customer", entitySet.Table);
             Assert.Equal("Foo", table.GetTableName().Name);
@@ -45,7 +46,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entitySet = database.AddEntitySet("ES", table);
             entitySet.Table = "Customers";
 
-            ((IModelConvention<EntityType>)new PluralizingTableNameConvention()).Apply(table, database);
+            (new PluralizingTableNameConvention()).Apply(table, new DbModel(null, database));
 
             Assert.Equal("Customers", entitySet.Table);
         }
@@ -61,7 +62,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entitySetB = database.AddEntitySet("ESB", tableB);
             entitySetB.Table = "Customer";
 
-            ((IModelConvention<EntityType>)new PluralizingTableNameConvention()).Apply(tableB, database);
+            (new PluralizingTableNameConvention()).Apply(tableB, new DbModel(null, database));
 
             Assert.Equal("Customers1", entitySetB.Table);
         }

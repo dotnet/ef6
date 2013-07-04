@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using System.Linq;
@@ -12,30 +13,30 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class OneToOneConstraintIntroductionConvention : IModelConvention<AssociationType>
     {
-        public void Apply(AssociationType edmDataModelItem, EdmModel model)
+        public virtual void Apply(AssociationType item, DbModel model)
         {
-            Check.NotNull(edmDataModelItem, "edmDataModelItem");
+            Check.NotNull(item, "item");
             Check.NotNull(model, "model");
 
-            if (edmDataModelItem.IsOneToOne()
-                && !edmDataModelItem.IsSelfReferencing()
-                && !edmDataModelItem.IsIndependent()
-                && (edmDataModelItem.Constraint == null))
+            if (item.IsOneToOne()
+                && !item.IsSelfReferencing()
+                && !item.IsIndependent()
+                && (item.Constraint == null))
             {
-                var sourceKeys = edmDataModelItem.SourceEnd.GetEntityType().KeyProperties();
-                var targetKeys = edmDataModelItem.TargetEnd.GetEntityType().KeyProperties();
+                var sourceKeys = item.SourceEnd.GetEntityType().KeyProperties();
+                var targetKeys = item.TargetEnd.GetEntityType().KeyProperties();
 
                 if ((sourceKeys.Count() == targetKeys.Count())
                     && sourceKeys.Select(p => p.UnderlyingPrimitiveType)
                                  .SequenceEqual(targetKeys.Select(p => p.UnderlyingPrimitiveType)))
                 {
                     AssociationEndMember _, dependentEnd;
-                    if (edmDataModelItem.TryGuessPrincipalAndDependentEnds(out _, out dependentEnd)
-                        || edmDataModelItem.IsPrincipalConfigured())
+                    if (item.TryGuessPrincipalAndDependentEnds(out _, out dependentEnd)
+                        || item.IsPrincipalConfigured())
                     {
-                        dependentEnd = dependentEnd ?? edmDataModelItem.TargetEnd;
+                        dependentEnd = dependentEnd ?? item.TargetEnd;
 
-                        var principalEnd = edmDataModelItem.GetOtherEnd(dependentEnd);
+                        var principalEnd = item.GetOtherEnd(dependentEnd);
 
                         var constraint
                             = new ReferentialConstraint(
@@ -44,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                 principalEnd.GetEntityType().KeyProperties().ToList(),
                                 dependentEnd.GetEntityType().KeyProperties().ToList());
 
-                        edmDataModelItem.Constraint = constraint;
+                        item.Constraint = constraint;
                     }
                 }
             }

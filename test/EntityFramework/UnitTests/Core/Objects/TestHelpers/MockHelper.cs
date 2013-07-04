@@ -119,9 +119,9 @@ namespace System.Data.Entity.Core.Objects
             objectContextMock.Setup(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<object>(null));
 #endif
 
-            var model = new EdmModel(DataSpace.SSpace);
-            model.ProviderInfo = new DbProviderInfo(GenericProviderFactory<DbProviderFactory>.Instance.InvariantProviderName, "2008");
-            model.ProviderManifest = new SqlProviderManifest("2008");
+            var model = EdmModel.CreateStoreModel(
+                new DbProviderInfo(GenericProviderFactory<DbProviderFactory>.Instance.InvariantProviderName, "2008"),
+                new SqlProviderManifest("2008"));
             
             var storeItemCollectionMock = new Mock<StoreItemCollection>(model) { CallBase = true };
             

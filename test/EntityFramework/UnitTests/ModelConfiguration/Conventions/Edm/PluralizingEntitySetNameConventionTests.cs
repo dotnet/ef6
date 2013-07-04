@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using Xunit;
 
@@ -14,8 +15,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = new EdmModel(DataSpace.CSpace);
             var entitySet = model.AddEntitySet("Cat", new EntityType("E", "N", DataSpace.CSpace));
 
-            ((IModelConvention<EntitySet>)new PluralizingEntitySetNameConvention())
-                .Apply(entitySet, model);
+            (new PluralizingEntitySetNameConvention())
+                .Apply(entitySet, new DbModel(model, null));
 
             Assert.Equal("Cats", entitySet.Name);
         }
@@ -26,8 +27,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var model = new EdmModel(DataSpace.CSpace);
             var entitySet = model.AddEntitySet("Cats", new EntityType("E", "N", DataSpace.CSpace));
 
-            ((IModelConvention<EntitySet>)new PluralizingEntitySetNameConvention())
-                .Apply(entitySet, model);
+            (new PluralizingEntitySetNameConvention())
+                .Apply(entitySet, new DbModel(model, null));
 
             Assert.Equal("Cats", entitySet.Name);
         }
@@ -39,8 +40,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             model.AddEntitySet("Cats", new EntityType("E", "N", DataSpace.CSpace));
             var entitySet = model.AddEntitySet("Cat", new EntityType("E", "N", DataSpace.CSpace));
 
-            ((IModelConvention<EntitySet>)new PluralizingEntitySetNameConvention())
-                .Apply(entitySet, model);
+            (new PluralizingEntitySetNameConvention())
+                .Apply(entitySet, new DbModel(model, null));
 
             Assert.Equal("Cats1", entitySet.Name);
         }
@@ -53,11 +54,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entitySet1 = model.AddEntitySet("Cats", new EntityType("E", "N", DataSpace.CSpace));
             var entitySet2 = model.AddEntitySet("Cat", new EntityType("E", "N", DataSpace.CSpace));
 
-            ((IModelConvention<EntitySet>)new PluralizingEntitySetNameConvention())
-                .Apply(entitySet1, model);
+            (new PluralizingEntitySetNameConvention())
+                .Apply(entitySet1, new DbModel(model, null));
 
-            ((IModelConvention<EntitySet>)new PluralizingEntitySetNameConvention())
-                .Apply(entitySet2, model);
+            (new PluralizingEntitySetNameConvention())
+                .Apply(entitySet2, new DbModel(model, null));
 
             Assert.Equal("Cats", entitySet1.Name);
             Assert.Equal("Cats2", entitySet2.Name);

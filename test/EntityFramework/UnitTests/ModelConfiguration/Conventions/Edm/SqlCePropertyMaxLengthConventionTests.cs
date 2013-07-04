@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using Xunit;
 
     public sealed class SqlCePropertyMaxLengthConventionTests
@@ -14,8 +15,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddMember(property);
 
-            ((IModelConvention<EntityType>)new SqlCePropertyMaxLengthConvention())
-                .Apply(entityType, CreateEdmModel());
+            (new SqlCePropertyMaxLengthConvention())
+                .Apply(entityType, CreateDbModel());
 
             Assert.Equal(4000, property.MaxLength);
         }
@@ -28,8 +29,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
-            ((IModelConvention<EntityType>)new SqlCePropertyMaxLengthConvention())
-                .Apply(entityType, CreateEdmModel());
+            (new SqlCePropertyMaxLengthConvention())
+                .Apply(entityType, CreateDbModel());
 
             Assert.Equal(4000, property.MaxLength);
         }
@@ -43,8 +44,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsUnicode = false;
             entityType.AddMember(property);
 
-            ((IModelConvention<EntityType>)new SqlCePropertyMaxLengthConvention())
-                .Apply(entityType, CreateEdmModel());
+            (new SqlCePropertyMaxLengthConvention())
+                .Apply(entityType, CreateDbModel());
 
             Assert.Equal(4000, property.MaxLength);
         }
@@ -57,8 +58,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property);
             entityType.AddKeyMember(property);
 
-            ((IModelConvention<EntityType>)new SqlCePropertyMaxLengthConvention())
-                .Apply(entityType, CreateEdmModel());
+            (new SqlCePropertyMaxLengthConvention())
+                .Apply(entityType, CreateDbModel());
 
             Assert.Equal(4000, property.MaxLength);
         }
@@ -70,8 +71,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddMember(property);
 
-            ((IModelConvention<EntityType>)new SqlCePropertyMaxLengthConvention())
-                .Apply(entityType, CreateEdmModel());
+            (new SqlCePropertyMaxLengthConvention())
+                .Apply(entityType, CreateDbModel());
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(4000, property.MaxLength);
@@ -85,8 +86,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
-            ((IModelConvention<EntityType>)new SqlCePropertyMaxLengthConvention())
-                .Apply(entityType, CreateEdmModel());
+            (new SqlCePropertyMaxLengthConvention())
+                .Apply(entityType, CreateDbModel());
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(4000, property.MaxLength);
@@ -100,8 +101,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property);
             entityType.AddKeyMember(property);
 
-            ((IModelConvention<EntityType>)new SqlCePropertyMaxLengthConvention())
-                .Apply(entityType, CreateEdmModel());
+            (new SqlCePropertyMaxLengthConvention())
+                .Apply(entityType, CreateDbModel());
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(4000, property.MaxLength);
@@ -114,8 +115,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddMember(property);
 
-            ((IModelConvention<ComplexType>)new SqlCePropertyMaxLengthConvention())
-                .Apply(entityType, CreateEdmModel());
+            (new SqlCePropertyMaxLengthConvention())
+                .Apply(entityType, CreateDbModel());
 
             Assert.Equal(4000, property.MaxLength);
         }
@@ -128,8 +129,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
-            ((IModelConvention<ComplexType>)new SqlCePropertyMaxLengthConvention())
-                .Apply(entityType, CreateEdmModel());
+            (new SqlCePropertyMaxLengthConvention())
+                .Apply(entityType, CreateDbModel());
 
             Assert.Equal(4000, property.MaxLength);
         }
@@ -143,8 +144,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsUnicode = false;
             entityType.AddMember(property);
 
-            ((IModelConvention<ComplexType>)new SqlCePropertyMaxLengthConvention())
-                .Apply(entityType, CreateEdmModel());
+            (new SqlCePropertyMaxLengthConvention())
+                .Apply(entityType, CreateDbModel());
 
             Assert.Equal(4000, property.MaxLength);
         }
@@ -156,8 +157,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddMember(property);
 
-            ((IModelConvention<ComplexType>)new SqlCePropertyMaxLengthConvention())
-                .Apply(entityType, CreateEdmModel());
+            (new SqlCePropertyMaxLengthConvention())
+                .Apply(entityType, CreateDbModel());
 
             Assert.Equal(4000, property.MaxLength);
         }
@@ -170,22 +171,16 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
-            ((IModelConvention<ComplexType>)new SqlCePropertyMaxLengthConvention())
-                .Apply(entityType, CreateEdmModel());
+            (new SqlCePropertyMaxLengthConvention())
+                .Apply(entityType, CreateDbModel());
 
             Assert.Null(property.IsUnicode);
             Assert.Equal(4000, property.MaxLength);
         }
 
-        private static EdmModel CreateEdmModel()
+        private static DbModel CreateDbModel()
         {
-            var model
-                = new EdmModel(DataSpace.SSpace)
-                      {
-                          ProviderInfo = ProviderRegistry.SqlCe4_ProviderInfo
-                      };
-
-            return model;
+            return new DbModel(ProviderRegistry.SqlCe4_ProviderInfo, ProviderRegistry.SqlCe4_ProviderManifest);
         }
     }
 }

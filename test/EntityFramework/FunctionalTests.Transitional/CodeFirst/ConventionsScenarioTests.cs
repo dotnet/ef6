@@ -15,6 +15,7 @@ namespace FunctionalTests
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
+    using System.Data.Entity.Infrastructure;
 
     public class ConventionsScenarioTests
     {
@@ -38,7 +39,7 @@ namespace FunctionalTests
 
             private sealed class EntitySetNamingConvention : IModelConvention<EntitySet>
             {
-                public void Apply(EntitySet entitySet, EdmModel model)
+                public void Apply(EntitySet entitySet, DbModel model)
                 {
                     entitySet.Name = entitySet.Name + "Foo";
                 }
