@@ -3043,9 +3043,7 @@ namespace System.Data.Entity.Core.Objects
                 _originalValues.Add(userObject, originalPropertyValues);
             }
 
-            Debug.Assert(!originalPropertyValues.ContainsKey(ordinal));
-
-            originalPropertyValues.Add(ordinal, value);
+            originalPropertyValues[ordinal] = value;
         }
 
         internal void CompareKeyProperties(object changed)

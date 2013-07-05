@@ -437,5 +437,71 @@ namespace ProductivityApiTests
         }
 
         #endregion
+
+        [Fact] // CodePlex 1278
+        public void DetectChanges_correctly_detects_change_of_complex_object_instance_on_change_tracking_proxy()
+        {
+            using (var context = new Context1278())
+            {
+                context.Configuration.AutoDetectChangesEnabled = false;
+
+                var entity = context.Entities.Create();
+                entity.ComplexProperty = new ComplexType1278();
+
+                context.Entities.Attach(entity);
+
+                entity.ComplexProperty = new ComplexType1278();
+
+                Assert.True(context.Entry(entity).Property(e => e.ComplexProperty).IsModified);
+
+                context.ChangeTracker.DetectChanges();
+
+                Assert.True(context.Entry(entity).Property(e => e.ComplexProperty).IsModified);
+            }
+        }
+
+        [Fact]
+        public void DetectChanges_correctly_detects_change_of_complex_object_instance_on_non_proxy()
+        {
+            using (var context = new Context1278())
+            {
+                context.Configuration.AutoDetectChangesEnabled = false;
+
+                var entity = new Entity1278 { ComplexProperty = new ComplexType1278() };
+
+                context.Entities.Attach(entity);
+
+                entity.ComplexProperty = new ComplexType1278();
+
+                Assert.False(context.Entry(entity).Property(e => e.ComplexProperty).IsModified);
+
+                context.ChangeTracker.DetectChanges();
+
+                Assert.True(context.Entry(entity).Property(e => e.ComplexProperty).IsModified);
+            }
+        }
+
+        [ComplexType]
+        public class ComplexType1278
+        {
+            public int Value1 { get; set; }
+            public int? Value2 { get; set; }
+        }
+
+        public class Entity1278
+        {
+            public virtual int Id { get; set; }
+            public virtual ComplexType1278 ComplexProperty { get; set; }
+        }
+
+        public class Context1278 : DbContext
+        {
+            static Context1278()
+            {
+                Database.SetInitializer<Context1278>(null);
+            }
+
+            public virtual DbSet<Entity1278> Entities { get; set; }
+        }
     }
 }
