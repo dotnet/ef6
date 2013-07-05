@@ -687,17 +687,11 @@ namespace System.Data.Entity.Migrations.Design
 
             writer.Write("DropPrimaryKey(");
             writer.Write(Quote(dropPrimaryKeyOperation.Table));
-            writer.Write(", ");
 
             if (!dropPrimaryKeyOperation.HasDefaultName)
             {
+                writer.Write(", name: ");
                 writer.Write(Quote(dropPrimaryKeyOperation.Name));
-            }
-            else
-            {
-                writer.Write("new[] { ");
-                writer.Write(dropPrimaryKeyOperation.Columns.Join(Quote));
-                writer.Write(" }");
             }
 
             writer.WriteLine(");");

@@ -389,7 +389,7 @@ Namespace Foo
         Inherits DbMigration
     
         Public Overrides Sub Up()
-            DropPrimaryKey(""T"", ""PK"")
+            DropPrimaryKey(""T"", name := ""PK"")
         End Sub
         
         Public Overrides Sub Down()
@@ -434,7 +434,7 @@ Namespace Foo
         Inherits DbMigration
     
         Public Overrides Sub Up()
-            DropPrimaryKey(""T"", New String() { ""c1"", ""c2"" })
+            DropPrimaryKey(""T"")
         End Sub
         
         Public Overrides Sub Down()
@@ -484,7 +484,7 @@ Namespace Foo
         End Sub
         
         Public Overrides Sub Down()
-            DropPrimaryKey(""T"", ""PK"")
+            DropPrimaryKey(""T"", name := ""PK"")
         End Sub
     End Class
 End Namespace
@@ -529,7 +529,7 @@ Namespace Foo
         End Sub
         
         Public Overrides Sub Down()
-            DropPrimaryKey(""T"", New String() { ""c1"", ""c2"" })
+            DropPrimaryKey(""T"")
         End Sub
     End Class
 End Namespace

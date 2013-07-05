@@ -25,6 +25,39 @@ namespace System.Data.Entity.Migrations.Infrastructure
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class EdmModelDifferTests : DbTestCase
     {
+        public class ArubaTask
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class ArubaRun
+        {
+            public int Id { get; set; }
+            public ICollection<ArubaTask> Tasks { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Should_generate_add_column_operation_when_shared_pk_fk_moved_to_ia()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<ArubaRun>();
+            modelBuilder.Entity<ArubaTask>().HasKey(k => new { k.Id, k.Name });
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder.Entity<ArubaRun>().HasMany(r => r.Tasks).WithRequired().Map(m => { });
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(5, operations.Count());
+            Assert.True(operations.Any(o => o is AddColumnOperation));
+        }
+
         public class WorldContext_Invalid : ModificationCommandTreeGeneratorTests.WorldContext_Fk
         {
             static WorldContext_Invalid()
@@ -62,13 +95,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Throws<InvalidOperationException>(
                 () => new EdmModelDiffer()
-                          .Diff(
-                              model1.GetModel(),
-                              context.GetModel(),
-                              new Lazy<ModificationCommandTreeGenerator>(() => commandTreeGenerator),
-                              new SqlServerMigrationSqlGenerator())
-                          .OfType<CreateProcedureOperation>()
-                          .ToList())
+                    .Diff(
+                        model1.GetModel(),
+                        context.GetModel(),
+                        new Lazy<ModificationCommandTreeGenerator>(() => commandTreeGenerator),
+                        new SqlServerMigrationSqlGenerator())
+                    .OfType<CreateProcedureOperation>()
+                    .ToList())
                 .ValidateMessage("ErrorGeneratingCommandTree", "Thing_Insert", "Thing");
         }
 
@@ -187,10 +220,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             modelBuilder.Entity<OrderLine>().HasKey(
                 ol => new
-                          {
-                              ol.Id,
-                              ol.OrderId
-                          });
+                      {
+                          ol.Id,
+                          ol.OrderId
+                      });
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -246,10 +279,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             modelBuilder.Entity<OrderLine>().HasKey(
                 ol => new
-                          {
-                              ol.Id,
-                              ol.OrderId
-                          });
+                      {
+                          ol.Id,
+                          ol.OrderId
+                      });
             modelBuilder.Entity<OrderLine>().Property(ol => ol.Id).HasColumnName("pk_ID");
 
             var model2 = modelBuilder.Build(ProviderInfo);
@@ -285,10 +318,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder.Entity<OrderLine>()
                 .HasKey(
                     ol => new
-                              {
-                                  ol.Id,
-                                  ol.OrderId
-                              })
+                          {
+                              ol.Id,
+                              ol.OrderId
+                          })
                 .ToTable("tbl_OrderLines");
 
             var model2 = modelBuilder.Build(ProviderInfo);
@@ -398,10 +431,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             WhenSqlCe(
                 () =>
-                    {
-                        modelBuilder.Entity<MigrationsStore>().Ignore(e => e.Location);
-                        modelBuilder.Entity<MigrationsStore>().Ignore(e => e.FloorPlan);
-                    });
+                {
+                    modelBuilder.Entity<MigrationsStore>().Ignore(e => e.Location);
+                    modelBuilder.Entity<MigrationsStore>().Ignore(e => e.FloorPlan);
+                });
 
             modelBuilder
                 .Entity<MigrationsStore>()
@@ -491,36 +524,36 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var storageMappingItemCollection = sourceModel.GetStorageMappingItemCollection(out providerInfo);
 
             var sourceMetadata = new EdmModelDiffer.ModelMetadata
-                                     {
-                                         Model = sourceModel,
-                                         StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
-                                         StorageEntityContainerMapping
-                                             = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().Single(),
-                                         ProviderManifest = GetProviderManifest(providerInfo),
-                                         ProviderInfo = providerInfo
-                                     };
+                                 {
+                                     Model = sourceModel,
+                                     StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
+                                     StorageEntityContainerMapping
+                                         = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().Single(),
+                                     ProviderManifest = GetProviderManifest(providerInfo),
+                                     ProviderInfo = providerInfo
+                                 };
 
             var targetMetadata = new EdmModelDiffer.ModelMetadata
-                                     {
-                                         Model = targetModel,
-                                         // Use the source model here since it doesn't effect the test and the SQL Server provider
-                                         // won't load the target model
-                                         StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
-                                         StorageEntityContainerMapping
-                                             = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().Single(),
-                                         ProviderManifest = GetProviderManifest(providerInfo),
-                                         ProviderInfo = providerInfo
-                                     };
+                                 {
+                                     Model = targetModel,
+                                     // Use the source model here since it doesn't effect the test and the SQL Server provider
+                                     // won't load the target model
+                                     StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
+                                     StorageEntityContainerMapping
+                                         = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().Single(),
+                                     ProviderManifest = GetProviderManifest(providerInfo),
+                                     ProviderInfo = providerInfo
+                                 };
 
             var operations = new EdmModelDiffer().Diff(sourceMetadata, targetMetadata, null, null);
 
             Assert.Equal(2, operations.Count());
             operations.OfType<AlterColumnOperation>().Each(
                 o =>
-                    {
-                        Assert.Null(o.Column.MaxLength);
-                        Assert.Equal(100, ((AlterColumnOperation)o.Inverse).Column.MaxLength);
-                    });
+                {
+                    Assert.Null(o.Column.MaxLength);
+                    Assert.Equal(100, ((AlterColumnOperation)o.Inverse).Column.MaxLength);
+                });
         }
 
         private static DbProviderManifest GetProviderManifest(DbProviderInfo providerInfo)
@@ -669,10 +702,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Entity<MigrationsCustomer>()
                 .MapToStoredProcedures(
                     m =>
-                        {
-                            m.Insert(c => c.HasName("MigrationsCustomer_Insert", "foo"));
-                            m.Update(c => c.HasName("delete_it", "foo"));
-                        });
+                    {
+                        m.Insert(c => c.HasName("MigrationsCustomer_Insert", "foo"));
+                        m.Update(c => c.HasName("delete_it", "foo"));
+                    });
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -844,16 +877,16 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.True(
                 operations.Select(
                     (o, i) => new
-                                  {
-                                      o,
-                                      i
-                                  }).Single(a => a.o is CreateIndexOperation).i <
+                              {
+                                  o,
+                                  i
+                              }).Single(a => a.o is CreateIndexOperation).i <
                 operations.Select(
                     (o, i) => new
-                                  {
-                                      o,
-                                      i
-                                  }).Single(a => a.o is AddForeignKeyOperation).i);
+                              {
+                                  o,
+                                  i
+                              }).Single(a => a.o is AddForeignKeyOperation).i);
 
             var addForeignKeyOperation = operations.OfType<AddForeignKeyOperation>().Single();
 
@@ -934,16 +967,16 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.True(
                 operations.Select(
                     (o, i) => new
-                                  {
-                                      o,
-                                      i
-                                  }).Single(a => a.o is DropForeignKeyOperation).i <
+                              {
+                                  o,
+                                  i
+                              }).Single(a => a.o is DropForeignKeyOperation).i <
                 operations.Select(
                     (o, i) => new
-                                  {
-                                      o,
-                                      i
-                                  }).Single(a => a.o is DropIndexOperation).i);
+                              {
+                                  o,
+                                  i
+                              }).Single(a => a.o is DropIndexOperation).i);
 
             var dropForeignKeyOperation = operations.OfType<DropForeignKeyOperation>().Single();
 
@@ -1085,27 +1118,27 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder.Entity<MigrationsCustomer>()
                 .Map(
                     mc =>
-                        {
-                            mc.Properties(
-                                c => new
-                                         {
-                                             c.Id,
-                                             c.FullName,
-                                             c.HomeAddress,
-                                             c.WorkAddress
-                                         });
-                            mc.ToTable("MigrationsCustomers");
-                        })
+                    {
+                        mc.Properties(
+                            c => new
+                                 {
+                                     c.Id,
+                                     c.FullName,
+                                     c.HomeAddress,
+                                     c.WorkAddress
+                                 });
+                        mc.ToTable("MigrationsCustomers");
+                    })
                 .Map(
                     mc =>
-                        {
-                            mc.Properties(
-                                c => new
-                                         {
-                                             c.Name
-                                         });
-                            mc.ToTable("Customers_Split");
-                        });
+                    {
+                        mc.Properties(
+                            c => new
+                                 {
+                                     c.Name
+                                 });
+                        mc.ToTable("Customers_Split");
+                    });
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -1165,10 +1198,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
             modelBuilder.Entity<MigrationsCustomer>();
             modelBuilder.Entity<MigrationsCustomer>().HasKey(
                 p => new
-                         {
-                             p.Id,
-                             p.Name
-                         });
+                     {
+                         p.Id,
+                         p.Name
+                     });
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -1338,10 +1371,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Entity<MigrationsCustomer>()
                 .Map(
                     c =>
-                        {
-                            c.Requires("disc0").HasValue("2");
-                            c.Requires("disc1").HasValue("PC");
-                        });
+                    {
+                        c.Requires("disc0").HasValue("2");
+                        c.Requires("disc1").HasValue("PC");
+                    });
 
             var model1 = modelBuilder.Build(ProviderInfo);
 
@@ -1351,10 +1384,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Entity<MigrationsCustomer>()
                 .Map(
                     c =>
-                        {
-                            c.Requires("new_disc1").HasValue("PC");
-                            c.Requires("new_disc0").HasValue("2");
-                        });
+                    {
+                        c.Requires("new_disc1").HasValue("PC");
+                        c.Requires("new_disc0").HasValue("2");
+                    });
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
@@ -1422,17 +1455,17 @@ namespace System.Data.Entity.Migrations.Infrastructure
             {
                 modelBuilder.Entity<Child1>().Map(
                     m =>
-                        {
-                            m.Requires("Disc1").HasValue(true);
-                            m.Requires("Disc2").HasValue(false);
-                        });
+                    {
+                        m.Requires("Disc1").HasValue(true);
+                        m.Requires("Disc2").HasValue(false);
+                    });
 
                 modelBuilder.Entity<Child2>().Map(
                     m =>
-                        {
-                            m.Requires("Disc2").HasValue(true);
-                            m.Requires("Disc1").HasValue(false);
-                        });
+                    {
+                        m.Requires("Disc2").HasValue(true);
+                        m.Requires("Disc1").HasValue(false);
+                    });
             }
         }
 

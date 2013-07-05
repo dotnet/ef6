@@ -1046,7 +1046,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private IEnumerable<RenameColumnOperation> FindRenamedColumns()
         {
             return FindRenamedMappedColumns()
-                .Concat(FindRenamedIndependentAssociationColumns())
+                .Concat(FindRenamedForeignKeyColumns())
                 .Concat(FindRenamedDiscriminatorColumns())
                 .Distinct(
                     new DynamicEqualityComparer<RenameColumnOperation>(
@@ -1116,7 +1116,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private IEnumerable<RenameColumnOperation> FindRenamedIndependentAssociationColumns()
+        private IEnumerable<RenameColumnOperation> FindRenamedForeignKeyColumns()
         {
             return from a1 in _source.Model.Descendants(EdmXNames.Ssdl.AssociationNames)
                 from a2 in _target.Model.Descendants(EdmXNames.Ssdl.AssociationNames)
@@ -1140,9 +1140,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                          })
                 where (n1.index == n2.index)
                       && !n1.name.EqualsIgnoreCase(n2.name)
-                let end = a2.Descendants(EdmXNames.Ssdl.EndNames)
+                let es = a2.Descendants(EdmXNames.Ssdl.EndNames)
                     .Single(e => e.RoleAttribute().EqualsOrdinal(d2.RoleAttribute()))
-                let t = GetQualifiedTableName(_target.Model, end.TypeAttribute().Split(new[] { '.' }).Last())
+                    .TypeAttribute().Split(new[] { '.' }).Last()
+                where !_target.Model
+                    .Descendants(EdmXNames.Ssdl.EntityTypeNames)
+                    .Single(et => et.NameAttribute().EqualsIgnoreCase(es))
+                    .Descendants(EdmXNames.Ssdl.PropertyNames)
+                    .Any(p => p.NameAttribute().EqualsIgnoreCase(n1.name))
+                let t = GetQualifiedTableName(_target.Model, es)
                 select new RenameColumnOperation(t, n1.name, n2.name);
         }
 
@@ -1263,6 +1269,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private IEnumerable<AddForeignKeyOperation> FindAddedForeignKeys(XDocument columnNormalizedSourceModel)
         {
+            DebugCheck.NotNull(columnNormalizedSourceModel);
+
             return _target.Model.Descendants(EdmXNames.Ssdl.AssociationNames)
                 .Where(
                     a2 =>
@@ -1273,6 +1281,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private IEnumerable<DropForeignKeyOperation> FindRemovedForeignKeys(XDocument columnNormalizedSourceModel)
         {
+            DebugCheck.NotNull(columnNormalizedSourceModel);
+
             return columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.AssociationNames)
                 .Where(
                     a1 =>

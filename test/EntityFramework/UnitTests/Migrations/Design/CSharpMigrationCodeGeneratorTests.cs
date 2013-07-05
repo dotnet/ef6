@@ -395,7 +395,7 @@ namespace System.Data.Entity.Migrations.Design
     {
         public override void Up()
         {
-            DropPrimaryKey(""T"", ""PK"");
+            DropPrimaryKey(""T"", name: ""PK"");
         }
         
         public override void Down()
@@ -441,7 +441,7 @@ namespace System.Data.Entity.Migrations.Design
     {
         public override void Up()
         {
-            DropPrimaryKey(""T"", new[] { ""c1"", ""c2"" });
+            DropPrimaryKey(""T"");
         }
         
         public override void Down()
@@ -493,7 +493,7 @@ namespace System.Data.Entity.Migrations.Design
         
         public override void Down()
         {
-            DropPrimaryKey(""T"", ""PK"");
+            DropPrimaryKey(""T"", name: ""PK"");
         }
     }
 }
@@ -539,7 +539,7 @@ namespace System.Data.Entity.Migrations.Design
         
         public override void Down()
         {
-            DropPrimaryKey(""T"", new[] { ""c1"", ""c2"" });
+            DropPrimaryKey(""T"");
         }
     }
 }
