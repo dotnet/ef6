@@ -6,13 +6,14 @@ namespace System.Data.Entity.CodeFirst
     using System.Data.Entity.Spatial;
     using System.Data.Entity.TestModels.ArubaModel;
     using System.Data.Entity.TestModels.GearsOfWarModel;
+    using System.Data.Entity.TestModels.FantasyModel;
     using System.Linq;
     using Xunit;
     using Xunit.Extensions;
 
-    public class StoredProceduresCUDTests : FunctionalTestBase
+    public class ModificationFunctionsEndToEndTests : FunctionalTestBase
     {
-        public StoredProceduresCUDTests()
+        public ModificationFunctionsEndToEndTests()
         {
             // force database initialization, we don't want this to happen inside transaction
             using (var context = new GearsOfWarStoredProceduresContext())
@@ -26,25 +27,11 @@ namespace System.Data.Entity.CodeFirst
                 context.Database.Delete();
                 context.Configs.Count();
             }
-        }
 
-        [Fact]
-        public void Initialize_GearsOfWar_model_mapped_to_stored_procedures()
-        {
-            using (var context = new GearsOfWarStoredProceduresContext())
+            using (var context = new FantasyStoredProceduresContext())
             {
                 context.Database.Delete();
-                context.Database.Initialize(force: true);
-            }
-        }
-
-        [Fact]
-        public void Initialize_Aruba_model_mapped_to_stored_procedures()
-        {
-            using (var context = new ArubaStoredProceduresContext())
-            {
-                context.Database.Delete();
-                context.Database.Initialize(force: true);
+                context.Creatures.Count();
             }
         }
 
@@ -166,6 +153,44 @@ namespace System.Data.Entity.CodeFirst
                 Assert.Equal(34, task.TaskInfo.Improvements);
                 Assert.Equal(56, task.TaskInfo.Investigates);
                 Assert.Equal(78, task.TaskInfo.Passed);
+            }
+        }
+
+        [Fact]
+        [AutoRollback]
+        public void Update_Fantasy_entities_using_stored_procedures()
+        {
+            using (var context = new FantasyStoredProceduresContext())
+            {
+                var city = context.Cities.OrderBy(c => c.Id).First();
+                var creature = context.Creatures.OrderBy(c => c.Id).First();
+                var province = context.Provinces.OrderBy(h => h.Id).First();
+                var npc = context.Npcs.OrderBy(n => n.Id).First();
+                var spell = context.Spells.OrderBy(s => s.Id).First();
+
+                city.Name = "Changed City";
+                creature.Details.Attributes.Mana = 123;
+                province.Shape = DbGeometry.FromText("POINT(23 45)", DbGeometry.DefaultCoordinateSystemId);
+                npc.Name = "Changed NPC Name";
+                spell.MagickaCost = 166;
+
+                context.SaveChanges();
+            }
+
+            using(var context = new FantasyStoredProceduresContext())
+            {
+                var city = context.Cities.OrderBy(c => c.Id).First();
+                var creature = context.Creatures.OrderBy(c => c.Id).First();
+                var province = context.Provinces.OrderBy(h => h.Id).First();
+                var npc = context.Npcs.OrderBy(n => n.Id).First();
+                var spell = context.Spells.OrderBy(s => s.Id).First();
+
+                Assert.Equal("Changed City", city.Name);
+                Assert.Equal(123, creature.Details.Attributes.Mana);
+                Assert.Equal(23, province.Shape.XCoordinate);
+                Assert.Equal(45, province.Shape.YCoordinate);
+                Assert.Equal("Changed NPC Name", npc.Name);
+                Assert.Equal(166, spell.MagickaCost);
             }
         }
 
