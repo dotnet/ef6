@@ -543,14 +543,19 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     }
                     else
                     {
-                        SetCachedForeignKey(new EntityKey(principalEntitySet, value), dependentEntity.ObjectStateEntry);
+                        SetCachedForeignKey(
+                            value == null ? null : new EntityKey(principalEntitySet, value),
+                            dependentEntity.ObjectStateEntry);
                     }
                 }
 
                 if (numValues > 1)
                 {
-                    SetCachedForeignKey(new EntityKey(principalEntitySet, values), dependentEntity.ObjectStateEntry);
+                    SetCachedForeignKey(
+                        values.Any(v => v == null) ? null : new EntityKey(principalEntitySet, values),
+                        dependentEntity.ObjectStateEntry);
                 }
+
                 if (WrappedOwner.ObjectStateEntry != null)
                 {
                     stateManager.ForgetEntryWithConceptualNull(WrappedOwner.ObjectStateEntry, resetAllKeys: false);

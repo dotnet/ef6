@@ -6,6 +6,7 @@ namespace ProductivityApiTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Linq;
     using AdvancedPatternsModel;
     using Xunit;
 
@@ -502,6 +503,148 @@ namespace ProductivityApiTests
             }
 
             public virtual DbSet<Entity1278> Entities { get; set; }
+        }
+
+        [Fact] // CodePlex 663
+        public void DetectChanges_can_be_called_twice_for_nullable_key_with_related_entities()
+        {
+            using (var context = new BlogContext663())
+            {
+                context.Configuration.AutoDetectChangesEnabled = false;
+                context.Database.Initialize(force: false);
+
+                using (context.Database.BeginTransaction())
+                {
+                    var blog1 = context.Blogs.Add(new Blog663());
+                    var blog2 = context.Blogs.Add(new Blog663());
+
+                    blog1.Posts = new List<Post663> { new Post663() };
+                    blog2.Posts = new List<Post663> { new Post663() };
+
+                    context.ChangeTracker.DetectChanges();
+                    context.ChangeTracker.DetectChanges();
+
+                    Assert.Equal(EntityState.Added, context.Entry(blog1).State);
+                    Assert.Equal(EntityState.Added, context.Entry(blog2).State);
+                    Assert.Equal(EntityState.Added, context.Entry(blog1.Posts.First()).State);
+                    Assert.Equal(EntityState.Added, context.Entry(blog2.Posts.First()).State);
+
+                    context.SaveChanges();
+
+                    Assert.Equal(EntityState.Unchanged, context.Entry(blog1).State);
+                    Assert.Equal(EntityState.Unchanged, context.Entry(blog2).State);
+                    Assert.Equal(EntityState.Unchanged, context.Entry(blog1.Posts.First()).State);
+                    Assert.Equal(EntityState.Unchanged, context.Entry(blog2.Posts.First()).State);
+
+                    Assert.NotNull(blog1.Id);
+                    Assert.NotNull(blog2.Id);
+                    Assert.Equal(blog1.Id, blog1.Posts.First().BlogId);
+                    Assert.Equal(blog2.Id, blog2.Posts.First().BlogId);
+                }
+            }
+        }
+
+        [Fact] // CodePlex 663
+        public void DetectChanges_can_be_called_twice_for_nullable_composite_key_with_related_entities()
+        {
+            using (var context = new BlogContext663())
+            {
+                context.Configuration.AutoDetectChangesEnabled = false;
+                context.Database.Initialize(force: false);
+
+                using (context.Database.BeginTransaction())
+                {
+                    var blog1 = context.CompositeBlogs.Add(new CompositeBlog663());
+                    var blog2 = context.CompositeBlogs.Add(new CompositeBlog663());
+
+                    blog1.Posts = new List<CompositePost663> { new CompositePost663() };
+                    blog2.Posts = new List<CompositePost663> { new CompositePost663() };
+
+                    context.ChangeTracker.DetectChanges();
+                    context.ChangeTracker.DetectChanges();
+
+                    Assert.Equal(EntityState.Added, context.Entry(blog1).State);
+                    Assert.Equal(EntityState.Added, context.Entry(blog2).State);
+                    Assert.Equal(EntityState.Added, context.Entry(blog1.Posts.First()).State);
+                    Assert.Equal(EntityState.Added, context.Entry(blog2.Posts.First()).State);
+
+                    blog1.Id1 = 1;
+                    blog1.Id2 = 2;
+                    blog2.Id1 = 1;
+                    blog2.Id2 = 3;
+
+                    context.ChangeTracker.DetectChanges();
+                    context.SaveChanges();
+
+                    Assert.Equal(EntityState.Unchanged, context.Entry(blog1).State);
+                    Assert.Equal(EntityState.Unchanged, context.Entry(blog2).State);
+                    Assert.Equal(EntityState.Unchanged, context.Entry(blog1.Posts.First()).State);
+                    Assert.Equal(EntityState.Unchanged, context.Entry(blog2.Posts.First()).State);
+
+                    Assert.NotNull(blog1.Id1);
+                    Assert.NotNull(blog1.Id2);
+                    Assert.NotNull(blog2.Id1);
+                    Assert.NotNull(blog2.Id2);
+                    Assert.Equal(blog1.Id1, blog1.Posts.First().BlogId1);
+                    Assert.Equal(blog1.Id2, blog1.Posts.First().BlogId2);
+                    Assert.Equal(blog2.Id1, blog2.Posts.First().BlogId1);
+                    Assert.Equal(blog2.Id2, blog2.Posts.First().BlogId2);
+                }
+            }
+        }
+
+        public class BlogContext663 : DbContext
+        {
+            static BlogContext663()
+            {
+                Database.SetInitializer(new DropCreateDatabaseIfModelChanges<BlogContext663>());
+            }
+
+            public DbSet<Blog663> Blogs { get; set; }
+            public DbSet<Post663> Posts { get; set; }
+            public DbSet<CompositeBlog663> CompositeBlogs { get; set; }
+            public DbSet<CompositePost663> CompositePosts { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<CompositeBlog663>()
+                    .HasKey(e => new { e.Id1, e.Id2 })
+                    .HasMany(e => e.Posts)
+                    .WithOptional(e => e.Blog)
+                    .HasForeignKey(e => new { e.BlogId1, e.BlogId2 });
+            }
+        }
+
+        public class Blog663
+        {
+            public int? Id { get; set; }
+            public ICollection<Post663> Posts { get; set; }
+        }
+
+        public class Post663
+        {
+            public int? Id { get; set; }
+
+            public int? BlogId { get; set; }
+            public Blog663 Blog { get; set; }
+        }
+
+        public class CompositeBlog663
+        {
+            public int? Id1 { get; set; }
+            public int? Id2 { get; set; }
+            
+            public ICollection<CompositePost663> Posts { get; set; }
+        }
+
+        public class CompositePost663
+        {
+            public int? Id { get; set; }
+
+            public int? BlogId1 { get; set; }
+            public int? BlogId2 { get; set; }
+            public CompositeBlog663 Blog { get; set; }
         }
     }
 }
