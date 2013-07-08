@@ -22,6 +22,9 @@ namespace System.Data.Entity.Migrations
     /// </summary>
     public class DbMigrationsConfiguration
     {
+        /// <summary>
+        /// The default directory that migrations are stored in.
+        /// </summary>
         public const string DefaultMigrationsDirectory = "Migrations";
 
         private readonly Dictionary<string, MigrationSqlGenerator> _sqlGenerators

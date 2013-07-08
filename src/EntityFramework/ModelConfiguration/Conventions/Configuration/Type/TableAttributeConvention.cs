@@ -12,6 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class TableAttributeConvention :
         TypeAttributeConfigurationConvention<TableAttribute>
     {
+        /// <inheritdoc />
         public override void Apply(LightweightTypeConfiguration configuration, TableAttribute attribute)
         {
             Check.NotNull(configuration, "configuration");

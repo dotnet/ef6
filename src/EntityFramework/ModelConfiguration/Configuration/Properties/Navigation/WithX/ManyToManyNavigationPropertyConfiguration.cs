@@ -43,6 +43,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
+        /// <summary>
+        ///     Configures stored procedures to be used for modifying this relationship.
+        ///     The default conventions for procedure and parameter names will be used.
+        /// </summary>
+        /// <returns>The same <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.ManyToManyNavigationPropertyConfiguration`2" /> instance so that multiple calls can be chained.</returns>
         public ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType> MapToStoredProcedures()
         {
             if (_navigationPropertyConfiguration.ModificationFunctionsConfiguration == null)
@@ -54,6 +59,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
+        /// <summary> 
+        ///     Configures stored procedures to be used for modifying this relationship. 
+        /// </summary>
+        /// <param name="modificationFunctionsConfigurationAction">
+        ///     Configuration to override the default conventions for procedure and parameter names.
+        /// </param>
+        /// <returns>The same <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.ManyToManyNavigationPropertyConfiguration`2" /> instance so that multiple calls can be chained.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType> MapToStoredProcedures(
             Action<ManyToManyModificationFunctionsConfiguration<TEntityType, TTargetEntityType>>
@@ -80,24 +92,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string ToString()
         {
             return base.ToString();
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()

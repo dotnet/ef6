@@ -13,6 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class StringLengthAttributeConvention
         : PrimitivePropertyAttributeConfigurationConvention<StringLengthAttribute>
     {
+        /// <inheritdoc/>
         public override void Apply(LightweightPrimitivePropertyConfiguration configuration, StringLengthAttribute attribute)
         {
             Check.NotNull(configuration, "configuration");

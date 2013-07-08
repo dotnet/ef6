@@ -12,6 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class TimestampAttributeConvention
         : PrimitivePropertyAttributeConfigurationConvention<TimestampAttribute>
     {
+        /// <inheritdoc/>
         public override void Apply(LightweightPrimitivePropertyConfiguration configuration, TimestampAttribute attribute)
         {
             Check.NotNull(configuration, "configuration");

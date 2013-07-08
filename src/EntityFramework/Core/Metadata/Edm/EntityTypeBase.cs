@@ -53,6 +53,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets the list of all the key properties for this entity type.</summary>
+        /// <returns>The list of all the key properties for this entity type.</returns>
         public virtual ReadOnlyMetadataCollection<EdmProperty> KeyProperties
         {
             get { return new ReadOnlyMetadataCollection<EdmProperty>(KeyMembers.Cast<EdmProperty>().ToList()); }
@@ -173,6 +175,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Removes the specified key member from the collection.</summary>
+        /// <param name="member">The key member to remove.</param>
         public override void RemoveMember(EdmMember member)
         {
             Check.NotNull(member, "member");

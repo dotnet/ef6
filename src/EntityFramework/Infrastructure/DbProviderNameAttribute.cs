@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Infrastructure
 {
@@ -14,11 +14,15 @@ namespace System.Data.Entity.Infrastructure
     {
         private readonly string _name;
 
+        /// <summary>Initializes a new instance of the <see cref="T:System.Data.Entity.Infrastructure.DbProviderNameAttribute" /> class.</summary>
+        /// <param name="name">The name of the provider.</param>
         public DbProviderNameAttribute(string name)
         {
             _name = name;
         }
 
+        /// <summary>Gets or sets the name of the provider.</summary>
+        /// <returns>The name of the provider.</returns>
         public string Name
         {
             get { return _name; }

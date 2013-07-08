@@ -7,8 +7,14 @@ namespace System.Data.Entity.Migrations.Model
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
+    /// <summary>
+    /// Used when scripting an update database operation to store the operations that would have been performed against the database.
+    /// </summary>
     public class UpdateDatabaseOperation : MigrationOperation
     {
+        /// <summary>
+        /// Represents a migration to be applied to the database.
+        /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible")]
         public class Migration
         {
@@ -24,11 +30,23 @@ namespace System.Data.Entity.Migrations.Model
                 _operations = operations;
             }
 
+            /// <summary>
+            /// Gets the id of the migration.
+            /// </summary>
+            /// <value>
+            /// The id of the migration.
+            /// </value>
             public string MigrationId
             {
                 get { return _migrationId; }
             }
 
+            /// <summary>
+            /// Gets the individual operations applied by this migration.
+            /// </summary>
+            /// <value>
+            /// The individual operations applied by this migration.
+            /// </value>
             public IList<MigrationOperation> Operations
             {
                 get { return _operations; }
@@ -38,6 +56,13 @@ namespace System.Data.Entity.Migrations.Model
         private readonly IList<DbQueryCommandTree> _historyQueryTrees;
         private readonly IList<Migration> _migrations = new List<Migration>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UpdateDatabaseOperation"/> class.
+        /// </summary>
+        /// <param name="historyQueryTrees">
+        /// The queries used to determine if this migration needs to be applied to the database. 
+        /// This is used to generate an idempotent SQL script that can be run against a database at any version.
+        /// </param>
         public UpdateDatabaseOperation(IList<DbQueryCommandTree> historyQueryTrees)
             : base(null)
         {
@@ -46,16 +71,31 @@ namespace System.Data.Entity.Migrations.Model
             _historyQueryTrees = historyQueryTrees;
         }
 
+        /// <summary>
+        /// The queries used to determine if this migration needs to be applied to the database. 
+        /// This is used to generate an idempotent SQL script that can be run against a database at any version.
+        /// </summary>
         public IList<DbQueryCommandTree> HistoryQueryTrees
         {
             get { return _historyQueryTrees; }
         }
 
+        /// <summary>
+        /// Gets the migrations applied during the update database operation.
+        /// </summary>
+        /// <value>
+        /// The migrations applied during the update database operation.
+        /// </value>
         public IList<Migration> Migrations
         {
             get { return _migrations; }
         }
 
+        /// <summary>
+        /// Adds a migration to this update database operation.
+        /// </summary>
+        /// <param name="migrationId">The id of the migration.</param>
+        /// <param name="operations">The individual operations applied by the migration.</param>
         public void AddMigration(string migrationId, IList<MigrationOperation> operations)
         {
             Check.NotEmpty(migrationId, "migrationId");
@@ -64,6 +104,9 @@ namespace System.Data.Entity.Migrations.Model
             _migrations.Add(new Migration(migrationId, operations));
         }
 
+        /// <summary>
+        /// Gets a value indicating if any of the operations may result in data loss.
+        /// </summary>
         public override bool IsDestructiveChange
         {
             get { return false; }

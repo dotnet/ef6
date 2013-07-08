@@ -112,11 +112,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _typeUsage; }
         }
 
+        /// <summary>Gets the type name of this parameter.</summary>
+        /// <returns>The type name of this parameter.</returns>
         public string TypeName
         {
             get { return TypeUsage.EdmType.Name; }
         }
 
+        /// <summary>Gets whether the max length facet is constant for the database provider.</summary>
+        /// <returns>true if the facet is constant; otherwise, false.</returns>
         public bool IsMaxLengthConstant
         {
             get
@@ -128,6 +132,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets the maximum length of the parameter.</summary>
+        /// <returns>The maximum length of the parameter.</returns>
         public int? MaxLength
         {
             get
@@ -139,6 +145,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets whether the parameter uses the maximum length supported by the database provider.</summary>
+        /// <returns>true if parameter uses the maximum length supported by the database provider; otherwise, false.</returns>
         public bool IsMaxLength
         {
             get
@@ -149,6 +157,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets whether the precision facet is constant for the database provider.</summary>
+        /// <returns>true if the facet is constant; otherwise, false.</returns>
         public bool IsPrecisionConstant
         {
             get
@@ -160,6 +170,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets the precision value of the parameter.</summary>
+        /// <returns>The precision value of the parameter.</returns>
         public byte? Precision
         {
             get
@@ -171,6 +183,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets whether the scale facet is constant for the database provider.</summary>
+        /// <returns>true if the facet is constant; otherwise, false.</returns>
         public bool IsScaleConstant
         {
             get
@@ -182,6 +196,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets the scale value of the parameter.</summary>
+        /// <returns>The scale value of the parameter.</returns>
         public byte? Scale
         {
             get

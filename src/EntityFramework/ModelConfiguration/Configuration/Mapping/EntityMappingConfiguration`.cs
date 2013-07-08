@@ -21,6 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     {
         private readonly EntityMappingConfiguration _entityMappingConfiguration;
 
+        /// <summary>Initializes a new instance of the <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.EntityMappingConfiguration`1" /> class.</summary>
         public EntityMappingConfiguration()
             : this(new EntityMappingConfiguration())
         {
@@ -322,24 +323,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return new NotNullConditionConfiguration(_entityMappingConfiguration, property.GetComplexPropertyAccess());
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string ToString()
         {
             return base.ToString();
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()

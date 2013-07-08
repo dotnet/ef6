@@ -8,8 +8,19 @@ namespace System.Data.Entity.Core.Objects
     [Flags]
     public enum SaveOptions
     {
+        /// <summary>
+        /// Changes are saved without the DetectChanges or the AcceptAllChangesAfterSave methods being called.
+        /// </summary>
         None = 0,
+
+        /// <summary>
+        /// After changes are saved, the AcceptAllChangesAfterSave method is called, which resets change tracking in the ObjectStateManager.
+        /// </summary>
         AcceptAllChangesAfterSave = 1,
+
+        /// <summary>
+        /// Before changes are saved, the DetectChanges method is called to synchronize the property values of objects that are attached to the object context with data in the ObjectStateManager.
+        /// </summary>
         DetectChangesBeforeSave = 2
     }
 }

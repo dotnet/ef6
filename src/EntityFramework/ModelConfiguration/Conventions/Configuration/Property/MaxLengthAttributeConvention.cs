@@ -15,6 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         private const int MaxLengthIndicator = -1;
 
+        /// <inheritdoc/>
         public override void Apply(LightweightPrimitivePropertyConfiguration configuration, MaxLengthAttribute attribute)
         {
             Check.NotNull(configuration, "configuration");

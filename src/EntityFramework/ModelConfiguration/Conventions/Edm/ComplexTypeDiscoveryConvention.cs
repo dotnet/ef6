@@ -15,6 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class ComplexTypeDiscoveryConvention : IConceptualModelConvention<EdmModel>
     {
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         public virtual void Apply(EdmModel item, DbModel model)

@@ -4,6 +4,9 @@ namespace System.Data.Entity.Core.Objects
 {
     using System.Diagnostics.CodeAnalysis;
 
+    /// <summary>
+    /// Defines the different ways to handle modified properties when refreshing in-memory data from the database.
+    /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue")]
     public enum RefreshMode
     {

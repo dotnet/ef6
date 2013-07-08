@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity
 {
@@ -21,6 +21,7 @@ namespace System.Data.Entity
     {
         private readonly MigrationsChecker _migrationsChecker;
 
+        /// <summary>Initializes a new instance of the <see cref="T:System.Data.Entity.DropCreateDatabaseIfModelChanges`1" /> class.</summary>
         public DropCreateDatabaseIfModelChanges()
             : this(null)
         {
@@ -55,16 +56,16 @@ namespace System.Data.Entity
             var exists = new DatabaseTableChecker().AnyModelTableExists(context.InternalContext);
 
             if (_migrationsChecker.IsMigrationsConfigured(
-                context.InternalContext, 
+                context.InternalContext,
                 () =>
+                {
+                    if (exists && !context.Database.CompatibleWithModel(throwIfNoMetadata: true))
                     {
-                        if (exists && !context.Database.CompatibleWithModel(throwIfNoMetadata: true))
-                        {
-                            throw Error.DatabaseInitializationStrategy_ModelMismatch(context.GetType().Name);
-                        } 
-                        
-                        return exists;
-                    }))
+                        throw Error.DatabaseInitializationStrategy_ModelMismatch(context.GetType().Name);
+                    }
+
+                    return exists;
+                }))
             {
                 return;
             }

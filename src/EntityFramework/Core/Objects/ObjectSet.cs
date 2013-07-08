@@ -7,6 +7,10 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
+    /// <summary>
+    /// Represents a typed entity set that is used to perform create, read, update, and delete operations. 
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class ObjectSet<TEntity> : ObjectQuery<TEntity>, IObjectSet<TEntity>
         where TEntity : class

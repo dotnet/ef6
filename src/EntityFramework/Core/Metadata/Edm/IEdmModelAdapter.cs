@@ -5,6 +5,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
 
+    /// <summary>
+    /// An interface to get the underlying store and conceptual model for a <see cref="DbModel"/>.
+    /// </summary>
     public interface IEdmModelAdapter
     {
         /// <summary>

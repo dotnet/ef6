@@ -101,6 +101,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return new KeyValuePair<string, DbExpression>(Property.Name, this);
         }
 
+        /// <summary>
+        /// Enables implicit casting to <see cref="KeyValuePair{String, DbExpression}"/>.
+        /// </summary>
+        /// <param name="value">The expression to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator KeyValuePair<string, DbExpression>(DbPropertyExpression value)
         {
             Check.NotNull(value, "value");

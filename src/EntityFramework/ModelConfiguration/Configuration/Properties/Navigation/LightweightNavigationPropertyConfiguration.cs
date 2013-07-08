@@ -10,6 +10,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Linq;
     using System.Reflection;
 
+    /// <summary>
+    ///     Used to create a convention that configures navigation properties.
+    /// </summary>
     public class LightweightNavigationPropertyConfiguration
     {
         private readonly NavigationPropertyConfiguration _configuration;

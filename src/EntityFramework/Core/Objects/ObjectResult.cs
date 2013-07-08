@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Objects
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public abstract class ObjectResult : IEnumerable, IDisposable, IListSource
 #if !NET40
-                                         , IDbAsyncEnumerable
+, IDbAsyncEnumerable
 #endif
 
     {
@@ -50,7 +50,9 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
         {
-            get { return false; // this means that the IList we return is the one which contains our actual data, it is not a collection
+            get
+            {
+                return false; // this means that the IList we return is the one which contains our actual data, it is not a collection
             }
         }
 
@@ -87,6 +89,8 @@ namespace System.Data.Entity.Core.Objects
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>Releases the resources used by the object result.</summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected abstract void Dispose(bool disposing);
 
         /// <summary>Gets the next result set of a stored procedure.</summary>

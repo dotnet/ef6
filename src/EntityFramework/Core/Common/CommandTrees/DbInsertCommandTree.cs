@@ -27,6 +27,14 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbInsertCommandTree"/> class.
+        /// </summary>
+        /// <param name="metadata">The model this command will operate on.</param>
+        /// <param name="dataSpace">The data space.</param>
+        /// <param name="target">The target table for the data manipulation language (DML) operation.</param>
+        /// <param name="setClauses">The list of insert set clauses that define the insert operation. .</param>
+        /// <param name="returning">A <see cref="DbExpression"/> that specifies a projection of results to be returned, based on the modified rows.</param>
         public DbInsertCommandTree(
             MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, ReadOnlyModificationClauses setClauses,
             DbExpression returning)
@@ -57,6 +65,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _returning; }
         }
 
+        /// <summary>Gets the command tree kind.</summary>
+        /// <returns>The command tree kind.</returns>
         public override DbCommandTreeKind CommandTreeKind
         {
             get { return DbCommandTreeKind.Insert; }

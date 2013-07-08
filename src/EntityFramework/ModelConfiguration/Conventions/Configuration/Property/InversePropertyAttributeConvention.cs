@@ -15,6 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class InversePropertyAttributeConvention : PropertyAttributeConfigurationConvention<InversePropertyAttribute>
     {
+        /// <inheritdoc/>
         public override void Apply(
             PropertyInfo memberInfo, LightweightTypeConfiguration configuration, InversePropertyAttribute attribute)
         {

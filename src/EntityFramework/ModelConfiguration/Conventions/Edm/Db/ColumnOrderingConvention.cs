@@ -17,6 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class ColumnOrderingConvention : IStoreModelConvention<EntityType>
     {
+        /// <inheritdoc />
         public virtual void Apply(EntityType item, DbModel model)
         {
             Check.NotNull(item, "item");
@@ -27,22 +28,28 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             OrderColumns(item.Properties)
                 .Each(
                     c =>
+                    {
+                        var isKey = c.IsPrimaryKeyColumn;
+
+                        item.RemoveMember(c);
+                        item.AddMember(c);
+
+                        if (isKey)
                         {
-                            var isKey = c.IsPrimaryKeyColumn;
-
-                            item.RemoveMember(c);
-                            item.AddMember(c);
-
-                            if (isKey)
-                            {
-                                item.AddKeyMember(c);
-                            }
-                        });
+                            item.AddKeyMember(c);
+                        }
+                    });
 
             item.ForeignKeyBuilders
                            .Each(fk => fk.DependentColumns = OrderColumns(fk.DependentColumns));
         }
 
+        /// <summary>
+        ///     Validates the ordering configuration supplied for columns.
+        ///     This base implementation is a no-op.
+        /// </summary>
+        /// <param name="table">The name of the table that the columns belong to.</param>
+        /// <param name="tableName">The definition of the table.</param>
         protected virtual void ValidateColumns(EntityType table, string tableName)
         {
         }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
@@ -23,6 +23,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         private readonly AttributeProvider _attributeProvider = DbConfiguration.GetService<AttributeProvider>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyAttributeConfigurationConvention{TAttribute}"/> class.
+        /// </summary>
         protected PropertyAttributeConfigurationConvention()
         {
             Types().Configure(
@@ -38,6 +41,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     });
         }
 
+        /// <summary>
+        /// Applies this convention to a property that has an attribute of type TAttribute applied.
+        /// </summary>
+        /// <param name="memberInfo">The member info for the property that has the attribute.</param>
+        /// <param name="configuration">The configuration for the class that contains the property.</param>
+        /// <param name="attribute">The attribute.</param>
         public abstract void Apply(PropertyInfo memberInfo, LightweightTypeConfiguration configuration, TAttribute attribute);
     }
 }

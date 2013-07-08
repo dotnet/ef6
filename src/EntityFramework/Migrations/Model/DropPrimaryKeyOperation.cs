@@ -41,6 +41,12 @@ namespace System.Data.Entity.Migrations.Model
             }
         }
 
+        /// <summary>
+        /// Used when altering the migrations history table so that the table can be rebuilt rather than just dropping and adding the primary key.
+        /// </summary>
+        /// <value>
+        /// The create table operation for the migrations history table.
+        /// </value>
         public CreateTableOperation CreateTableOperation { get; internal set; }
     }
 }

@@ -182,6 +182,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _parameters; }
         }
 
+        /// <summary>
+        /// Adds a parameter to this function.
+        /// </summary>
+        /// <param name="functionParameter">The parameter to be added.</param>
         public void AddParameter(FunctionParameter functionParameter)
         {
             Check.NotNull(functionParameter, "functionParameter");
@@ -254,6 +258,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _returnParameters; }
         }
 
+        /// <summary>Gets the store function name attribute of this function.</summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public string StoreFunctionNameAttribute
         {
@@ -272,31 +277,50 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return StoreFunctionNameAttribute ?? Name; }
         }
 
+        /// <summary>Gets the parameter type semantics attribute of this function.</summary>
         [MetadataProperty(typeof(ParameterTypeSemantics), false)]
         public ParameterTypeSemantics ParameterTypeSemanticsAttribute
         {
             get { return _parameterTypeSemantics; }
         }
 
-        // Function attribute parameters
+        /// <summary>Gets the aggregate attribute of this function.</summary>
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
         public bool AggregateAttribute
         {
             get { return GetFunctionAttribute(FunctionAttributes.Aggregate); }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether built in attribute is present on this function.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the attribute is present; otherwise, <c>false</c>.
+        /// </value>
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
         public virtual bool BuiltInAttribute
         {
             get { return GetFunctionAttribute(FunctionAttributes.BuiltIn); }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is from the provider manifest.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is from the provider manifest; otherwise, <c>false</c>.
+        /// </value>
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
         public bool IsFromProviderManifest
         {
             get { return GetFunctionAttribute(FunctionAttributes.IsFromProviderManifest); }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the is a niladic function (a function that accepts no arguments).
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the function is niladic; otherwise, <c>false</c>.
+        /// </value>
         [MetadataProperty(PrimitiveTypeKind.Boolean, false)]
         public bool NiladicFunctionAttribute
         {
@@ -340,6 +364,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return GetFunctionAttribute(FunctionAttributes.IsFunctionImport); }
         }
 
+        /// <summary>Gets or sets the schema associated with the function.</summary>
+        /// <returns>The schema associated with the function.</returns>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public string Schema
         {
@@ -527,26 +553,62 @@ namespace System.Data.Entity.Core.Metadata.Edm
     [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
     public struct EdmFunctionPayload
     {
+        /// <summary>Gets or sets the function schema.</summary>
+        /// <returns>The function schema.</returns>
         public string Schema { get; set; }
+
+        /// <summary>Gets or sets the store function name.</summary>
+        /// <returns>The store function name.</returns>
         public string StoreFunctionName { get; set; }
+
+        /// <summary>Gets or sets the command text associated with the function.</summary>
+        /// <returns>The command text associated with the function.</returns>
         public string CommandText { get; set; }
 
+        /// <summary>Gets or sets the entity sets for the function.</summary>
+        /// <returns>The entity sets for the function.</returns>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         public EntitySet[] EntitySets { get; set; }
 
+        /// <summary>Gets a value that indicates whether this is an aggregate function.</summary>
+        /// <returns>true if this is an aggregate function; otherwise, false.</returns>
         public bool? IsAggregate { get; set; }
+
+        /// <summary>Gets or sets whether this function is a built-in function.</summary>
+        /// <returns>true if this function is a built-in function; otherwise, false.</returns>
         public bool? IsBuiltIn { get; set; }
+
+        /// <summary>Gets or sets whether the function contains no arguments.</summary>
+        /// <returns>true if the function contains no arguments; otherwise, false.</returns>
         public bool? IsNiladic { get; set; }
+
+        /// <summary>Gets or sets whether this function can be composed.</summary>
+        /// <returns>true if this function can be composed; otherwise, false.</returns>
         public bool? IsComposable { get; set; }
+
+        /// <summary>Gets or sets whether this function is from a provider manifest.</summary>
+        /// <returns>true if this function is from a provider manifest; otherwise, false.</returns>
         public bool? IsFromProviderManifest { get; set; }
+
+        /// <summary>Gets or sets whether this function is a cached store function.</summary>
+        /// <returns>true if this function is a cached store function; otherwise, false.</returns>
         public bool? IsCachedStoreFunction { get; set; }
+
+        /// <summary>Gets or sets whether this function is a function import.</summary>
+        /// <returns>true if this function is a function import; otherwise, false.</returns>
         public bool? IsFunctionImport { get; set; }
 
+        /// <summary>Gets or sets the return parameters.</summary>
+        /// <returns>The return parameters.</returns>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         public FunctionParameter[] ReturnParameters { get; set; }
 
+        /// <summary>Gets or sets the parameter type semantics.</summary>
+        /// <returns>The parameter type semantics.</returns>
         public ParameterTypeSemantics? ParameterTypeSemantics { get; set; }
 
+        /// <summary>Gets or sets the function parameters.</summary>
+        /// <returns>The function parameters.</returns>
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         public FunctionParameter[] Parameters { get; set; }
     }

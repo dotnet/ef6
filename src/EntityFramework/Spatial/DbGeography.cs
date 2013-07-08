@@ -8,6 +8,9 @@ namespace System.Data.Entity.Spatial
     using System.Globalization;
     using System.Runtime.Serialization;
 
+    /// <summary>
+    /// Represents data in a geodetic (round earth) coordinate system.
+    /// </summary>
     [DataContract]
     [Serializable]
     public class DbGeography

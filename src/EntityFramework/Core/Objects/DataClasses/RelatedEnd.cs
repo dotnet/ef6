@@ -212,6 +212,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
+        /// <summary>
+        ///     Returns an <see cref="T:System.Collections.IEnumerable" /> that represents the objects that belong to the related end.
+        /// </summary>
+        /// <returns>
+        ///     An <see cref="T:System.Collections.IEnumerable" /> that represents the objects that belong to the related end.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerable IRelatedEnd.CreateSourceQuery()
         {
@@ -1353,18 +1359,26 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             OnAssociationChanged(CollectionChangeAction.Add, wrappedTarget.Entity);
         }
 
+        /// <summary>Adds the current RelatedEnd object to the navigation property if compatible.</summary>
+        /// <param name="otherRelatedEnd">The other related end.</param>
         protected virtual void AddToNavigationPropertyIfCompatible(RelatedEnd otherRelatedEnd)
         {
             // By default, always add
             AddToNavigationProperty(otherRelatedEnd.WrappedOwner);
         }
 
+        /// <summary>Specifies whether the cached foreign key is conceptual null.</summary>
+        /// <returns>true if the cached foreign key is conceptual null; otherwise, false.</returns>
         protected virtual bool CachedForeignKeyIsConceptualNull()
         {
             // Only relevant for EntityReference
             return false;
         }
 
+        /// <summary>Updates the dependent end foreign keys.</summary>
+        /// <returns>The dependent end foreign keys.</returns>
+        /// <param name="targetRelatedEnd">The target related end.</param>
+        /// <param name="forceForeignKeyChanges">true to force foreign key changes; otherwise, false.</param>
         protected virtual bool UpdateDependentEndForeignKey(RelatedEnd targetRelatedEnd, bool forceForeignKeyChanges)
         {
             Debug.Assert(!IsDependentEndOfReferentialConstraint(false), "Dependent end cannot be a collection.");
@@ -1372,6 +1386,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return false;
         }
 
+        /// <summary>Verifies the detached key matches.</summary>
+        /// <param name="entityKey">The entity keys.</param>
         protected virtual void VerifyDetachedKeyMatches(EntityKey entityKey)
         {
             // Only relevant to entity references
@@ -1816,9 +1832,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     wrappedEntity, /*relationshipAlreadyExists*/ false,
                     addRelationshipAsUnchanged, doAttach);
             }
-                // There is a possibility that related entity is added to cache but relationship is not added.
-                // Example: Suppose A and B are related. When walking the graph it is possible that 
-                // node B was visited through some relationship other than A-B. 
+            // There is a possibility that related entity is added to cache but relationship is not added.
+            // Example: Suppose A and B are related. When walking the graph it is possible that 
+            // node B was visited through some relationship other than A-B. 
             else if (null == FindRelationshipEntryInObjectStateManager(wrappedEntity))
             {
                 VerifyDetachedKeyMatches(wrappedEntity.EntityKey);
@@ -1943,9 +1959,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     }
                     RemoveEntityFromObjectStateManager(wrappedEntity);
                 }
-                    // There is a possibility that related entity is removed from cache but relationship is not removed.
-                    // Example: Suppose A and B are related. When walking the graph it is possible that 
-                    // node B was visited through some relationship other than A-B. 
+                // There is a possibility that related entity is removed from cache but relationship is not removed.
+                // Example: Suppose A and B are related. When walking the graph it is possible that 
+                // node B was visited through some relationship other than A-B. 
                 else if (!IsForeignKey
                          && null != FindRelationshipEntryInObjectStateManager(wrappedEntity))
                 {
@@ -2503,7 +2519,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 var foundFromRelationEnd = false;
                 var foundToRelationEnd = false;
                 foreach (var relationEnd in ((AssociationType)_relationMetadata).AssociationEndMembers)
-                    //Only Association relationship is supported
+                //Only Association relationship is supported
                 {
                     if (relationEnd.Name
                         == _navigation.From)
@@ -2542,6 +2558,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
+        /// <summary>Validated the detached entity keys associated with the related end.</summary>
         protected virtual void ValidateDetachedEntityKey()
         {
             // Only relevant for EntityReference

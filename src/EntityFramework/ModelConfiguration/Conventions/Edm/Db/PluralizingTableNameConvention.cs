@@ -18,6 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         private IPluralizationService _pluralizationService
             = DbConfiguration.GetService<IPluralizationService>();
 
+        /// <inheritdoc />
         public virtual void Apply(EntityType item, DbModel model)
         {
             Check.NotNull(item, "item");

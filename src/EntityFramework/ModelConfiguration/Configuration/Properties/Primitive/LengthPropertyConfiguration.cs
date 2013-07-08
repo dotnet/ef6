@@ -34,6 +34,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.LengthPropertyConfiguration" /> 
+        ///     class with the same settings as another configuration.
+        /// </summary>
+        /// <param name="source">The configuration to copy settings from.</param>
         protected LengthPropertyConfiguration(LengthPropertyConfiguration source)
             : base(source)
         {

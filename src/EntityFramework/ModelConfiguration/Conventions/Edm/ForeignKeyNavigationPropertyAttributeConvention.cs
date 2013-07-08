@@ -16,6 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class ForeignKeyNavigationPropertyAttributeConvention : IConceptualModelConvention<NavigationProperty>
     {
+        /// <inheritdoc />
         public virtual void Apply(NavigationProperty item, DbModel model)
         {
             Check.NotNull(item, "item");

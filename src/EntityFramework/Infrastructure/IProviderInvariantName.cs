@@ -11,6 +11,8 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     public interface IProviderInvariantName
     {
+        /// <summary>Gets the name of the provider.</summary>
+        /// <returns>The name of the provider.</returns>
         string Name { get; }
     }
 }

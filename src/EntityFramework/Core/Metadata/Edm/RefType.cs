@@ -74,11 +74,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return builder.ToString();
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return (_elementType.GetHashCode() * 397) ^ typeof(RefType).GetHashCode();
         }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             var other = obj as RefType;

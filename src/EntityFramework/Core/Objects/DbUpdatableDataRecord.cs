@@ -10,6 +10,9 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
+    /// <summary>
+    /// Provides access to the original values of object data. The DbUpdatableDataRecord implements methods that allow updates to the original values of an object.
+    /// </summary>
     public abstract class DbUpdatableDataRecord : DbDataRecord, IExtendedDataRecord
     {
         internal readonly StateManagerTypeMetadata _metadata;

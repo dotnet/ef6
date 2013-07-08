@@ -5,6 +5,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
 
+    /// <summary>
+    /// Extension methods for <see cref="DbModel"/>.
+    /// </summary>
     public static class DbModelExtensions
     {
         /// <summary>

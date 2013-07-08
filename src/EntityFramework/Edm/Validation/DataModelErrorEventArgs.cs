@@ -4,6 +4,9 @@ namespace System.Data.Entity.Edm.Validation
 {
     using System.Data.Entity.Core.Metadata.Edm;
 
+    /// <summary>
+    /// Information about an error that occurred processing an Entity Framework model.
+    /// </summary>
     [Serializable]
     public class DataModelErrorEventArgs : EventArgs
     {

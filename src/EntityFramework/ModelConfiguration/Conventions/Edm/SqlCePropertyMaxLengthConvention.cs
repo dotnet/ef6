@@ -14,6 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         private const int DefaultLength = 4000;
 
+        /// <inheritdoc />
         public virtual void Apply(EntityType item, DbModel model)
         {
             Check.NotNull(item, "item");
@@ -28,6 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
         }
 
+        /// <inheritdoc />
         public virtual void Apply(ComplexType item, DbModel model)
         {
             Check.NotNull(item, "item");

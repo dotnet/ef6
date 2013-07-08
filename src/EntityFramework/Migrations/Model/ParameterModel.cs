@@ -28,6 +28,12 @@ namespace System.Data.Entity.Migrations.Model
         {
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is out parameter.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is out parameter; otherwise, <c>false</c>.
+        /// </value>
         public bool IsOutParameter { get; set; }
     }
 }

@@ -134,17 +134,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     foreignKeyConstraint.DependentColumns
                                         .Each(
                                             c =>
+                                            {
+                                                var isKey = c.IsPrimaryKeyColumn;
+
+                                                sourceTable.RemoveMember(c);
+                                                targetTable.AddMember(c);
+
+                                                if (isKey)
                                                 {
-                                                    var isKey = c.IsPrimaryKeyColumn;
-
-                                                    sourceTable.RemoveMember(c);
-                                                    targetTable.AddMember(c);
-
-                                                    if (isKey)
-                                                    {
-                                                        targetTable.AddKeyMember(c);
-                                                    }
-                                                });
+                                                    targetTable.AddKeyMember(c);
+                                                }
+                                            });
 
                     associationSetMapping.StoreEntitySet = database.GetEntitySet(targetTable);
                 }
@@ -159,12 +159,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _keyColumnNames.Each((n, i) => propertyMappings[i].ColumnProperty.Name = n);
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string ToString()
         {
             return base.ToString();
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool Equals(ForeignKeyAssociationMappingConfiguration other)
         {
@@ -186,6 +188,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return other._keyColumnNames.SequenceEqual(_keyColumnNames);
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj)
         {
@@ -208,6 +211,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return Equals((ForeignKeyAssociationMappingConfiguration)obj);
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
@@ -218,6 +222,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()

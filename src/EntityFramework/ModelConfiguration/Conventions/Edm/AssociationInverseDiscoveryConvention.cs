@@ -16,6 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class AssociationInverseDiscoveryConvention : IConceptualModelConvention<EdmModel>
     {
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public virtual void Apply(EdmModel item, DbModel model)
         {

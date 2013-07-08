@@ -574,6 +574,9 @@ namespace System.Data.Entity.Infrastructure.Pluralization
         }
 
         // CONSIDER optimize the algorithm by collecting all the special cases to one single dictionary
+        /// <summary>Returns the plural form of the specified word.</summary>
+        /// <returns>The plural form of the input parameter.</returns>
+        /// <param name="word">The word to be made plural.</param>
         public string Pluralize(string word)
         {
             return Capitalize(word, InternalPluralize);
@@ -876,6 +879,9 @@ namespace System.Data.Entity.Infrastructure.Pluralization
             return prefixWord + suffixWord + "s";
         }
 
+        /// <summary>Returns the singular form of the specified word.</summary>
+        /// <returns>The singular form of the input parameter.</returns>
+        /// <param name="word">The word to be made singular.</param>
         public string Singularize(string word)
         {
             return Capitalize(word, InternalSingularize);

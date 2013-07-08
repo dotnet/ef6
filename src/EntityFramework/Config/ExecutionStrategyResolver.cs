@@ -13,7 +13,7 @@ namespace System.Data.Entity.Config
     ///     factories.
     /// </summary>
     /// <remarks>
-    ///     This class can be used by <see cref="DbProviderServices" /> to aid in the resoloving
+    ///     This class can be used by <see cref="DbProviderServices" /> to aid in the resolving
     ///     of <see cref="IDbExecutionStrategy" /> factories as a secondary service.
     /// </remarks>
     /// <typeparam name="T">The type of execution strategy that is resolved.</typeparam>

@@ -26,6 +26,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionRebinder" /> class.</summary>
+        /// <param name="targetWorkspace">The target workspace.</param>
         protected DbExpressionRebinder(MetadataWorkspace targetWorkspace)
         {
             DebugCheck.NotNull(targetWorkspace);
@@ -33,6 +35,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             _perspective = new ModelPerspective(targetWorkspace);
         }
 
+        /// <summary>Implements the visitor pattern for the entity set.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="entitySet">The entity set.</param>
         protected override EntitySetBase VisitEntitySet(EntitySetBase entitySet)
         {
             EntityContainer container;
@@ -54,6 +59,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             throw new ArgumentException(Strings.Cqt_Copier_EntityContainerNotFound(entitySet.EntityContainer.Name));
         }
 
+        /// <summary>Implements the visitor pattern for the function.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="functionMetadata">The function metadata.</param>
         protected override EdmFunction VisitFunction(EdmFunction functionMetadata)
         {
             var paramTypes = new List<TypeUsage>(functionMetadata.Parameters.Count);
@@ -107,6 +115,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 Strings.Cqt_Copier_FunctionNotFound(TypeHelpers.GetFullName(functionMetadata.NamespaceName, functionMetadata.Name)));
         }
 
+        /// <summary>Implements the visitor pattern for the type.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="type">The type.</param>
         protected override EdmType VisitType(EdmType type)
         {
             var retType = type;
@@ -170,6 +181,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return retType;
         }
 
+        /// <summary>Implements the visitor pattern for the type usage.</summary>
+        /// <returns>The implemented visitor pattern.</returns>
+        /// <param name="type">The type.</param>
         protected override TypeUsage VisitTypeUsage(TypeUsage type)
         {
             //
@@ -215,6 +229,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return (member != null);
         }
 
+        /// <summary>Implements the visitor pattern for retrieving an instance property.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The expression.</param>
         public override DbExpression Visit(DbPropertyExpression expression)
         {
             Check.NotNull(expression, "expression");

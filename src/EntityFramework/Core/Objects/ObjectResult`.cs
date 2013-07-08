@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Objects
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class ObjectResult<T> : ObjectResult, IEnumerable<T>
 #if !NET40
-                                   , IDbAsyncEnumerable<T>
+, IDbAsyncEnumerable<T>
 #endif
     {
         private Shaper<T> _shaper;
@@ -100,6 +100,8 @@ namespace System.Data.Entity.Core.Objects
 
         #endregion
 
+        /// <summary>Releases the unmanaged resources used by the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> and optionally releases the managed resources.</summary>
+        /// <param name="disposing">true to release managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             var reader = _reader;

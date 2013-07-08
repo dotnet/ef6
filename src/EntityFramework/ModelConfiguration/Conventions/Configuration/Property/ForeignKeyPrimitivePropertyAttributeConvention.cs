@@ -17,6 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class ForeignKeyPrimitivePropertyAttributeConvention :
         PropertyAttributeConfigurationConvention<ForeignKeyAttribute>
     {
+        /// <inheritdoc/>
         public override void Apply(PropertyInfo memberInfo, LightweightTypeConfiguration configuration, ForeignKeyAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");

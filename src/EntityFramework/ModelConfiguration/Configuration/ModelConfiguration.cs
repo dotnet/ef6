@@ -250,6 +250,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return _ignoredTypes.Contains(type);
         }
 
+        /// <summary>Gets the properties that have been configured in this model for a given type.</summary>
+        /// <returns>The properties that have been configured in this model.</returns>
+        /// <param name="type">The type to get configured properties for.</param>
         public virtual IEnumerable<PropertyInfo> GetConfiguredProperties(Type type)
         {
             Check.NotNull(type, "type");
@@ -261,6 +264,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                        : Enumerable.Empty<PropertyInfo>();
         }
 
+        /// <summary>Gets a value indicating whether the specified property is excluded from the model.</summary>
+        /// <returns>true if the property  is excluded; otherwise, false.</returns>
+        /// <param name="type">The type that the property belongs to.</param>
+        /// <param name="propertyInfo">The property to be checked.</param>
         public virtual bool IsIgnoredProperty(Type type, PropertyInfo propertyInfo)
         {
             Check.NotNull(type, "type");
@@ -327,14 +334,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             model.GetSelfAndAllDerivedTypes(entityType)
                  .Each(
                      e =>
-                         {
-                             var entityConfiguration = Entity(e.GetClrType());
+                     {
+                         var entityConfiguration = Entity(e.GetClrType());
 
-                             if (entityConfiguration.ModificationFunctionsConfiguration == null)
-                             {
-                                 entityConfiguration.MapToStoredProcedures();
-                             }
-                         });
+                         if (entityConfiguration.ModificationFunctionsConfiguration == null)
+                         {
+                             entityConfiguration.MapToStoredProcedures();
+                         }
+                     });
         }
 
         private void ConfigureComplexTypes(EdmModel model)
@@ -403,7 +410,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             DebugCheck.NotNull(databaseMapping);
 
-            foreach (var modificationFunctionMapping 
+            foreach (var modificationFunctionMapping
                 in databaseMapping
                     .GetEntitySetMappings()
                     .SelectMany(esm => esm.ModificationFunctionMappings))
@@ -416,7 +423,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     continue;
                 }
 
-                var modificationFunctionsConfiguration 
+                var modificationFunctionsConfiguration
                     = entityTypeConfiguration.ModificationFunctionsConfiguration;
 
                 UniquifyFunctionName(
@@ -435,7 +442,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     modificationFunctionMapping.DeleteFunctionMapping);
             }
 
-            foreach (var modificationFunctionMapping 
+            foreach (var modificationFunctionMapping
                 in databaseMapping
                     .GetAssociationSetMappings()
                     .Select(asm => asm.ModificationFunctionMapping)
@@ -700,9 +707,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                  (from etm in esm.EntityTypeMappings
                   from etmf in etm.MappingFragments
                   group etmf by etmf.Table
-                  into g
-                  where g.Count(x => x.GetDefaultDiscriminator() != null) == 1
-                  select g.Single(x => x.GetDefaultDiscriminator() != null))
+                      into g
+                      where g.Count(x => x.GetDefaultDiscriminator() != null) == 1
+                      select g.Single(x => x.GetDefaultDiscriminator() != null))
                         })
                 .Each(x => x.Fragments.Each(f => f.RemoveDefaultDiscriminator(x.Set)));
         }
@@ -721,16 +728,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             tables.Each(
                 t =>
+                {
+                    var tableName = t.GetTableName();
+
+                    if (tableName != null)
                     {
-                        var tableName = t.GetTableName();
+                        throw Error.OrphanedConfiguredTableDetected(tableName);
+                    }
 
-                        if (tableName != null)
-                        {
-                            throw Error.OrphanedConfiguredTableDetected(tableName);
-                        }
-
-                        databaseMapping.Database.RemoveEntityType(t);
-                    });
+                    databaseMapping.Database.RemoveEntityType(t);
+                });
         }
 
         private IEnumerable<EntityTypeConfiguration> ActiveEntityConfigurations

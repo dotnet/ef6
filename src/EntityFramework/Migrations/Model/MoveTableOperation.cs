@@ -55,7 +55,7 @@ namespace System.Data.Entity.Migrations.Model
                 var databaseName = DatabaseName.Parse(_name);
 
                 return new MoveTableOperation(
-                    new DatabaseName(databaseName.Name, NewSchema).ToString(), 
+                    new DatabaseName(databaseName.Name, NewSchema).ToString(),
                     databaseName.Schema)
                            {
                                IsSystem = IsSystem
@@ -69,10 +69,28 @@ namespace System.Data.Entity.Migrations.Model
             get { return false; }
         }
 
+        /// <summary>
+        ///     Used when altering the migrations history table so that data can be moved to the new table.
+        /// </summary>
+        /// <value>
+        ///     The context key for the model.
+        /// </value>
         public string ContextKey { get; internal set; }
 
+        /// <summary>
+        ///     Gets a value that indicates whether this is a system table.
+        /// </summary>
+        /// <returns>
+        ///     true if the table is a system table; otherwise, false.
+        /// </returns>
         public bool IsSystem { get; internal set; }
 
+        /// <summary>
+        ///     Used when altering the migrations history table so that the table can be rebuilt rather than just dropping and adding the primary key.
+        /// </summary>
+        /// <value>
+        ///     The create table operation for the migrations history table.
+        /// </value>
         public CreateTableOperation CreateTableOperation { get; internal set; }
     }
 }

@@ -738,6 +738,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return VisitBinary(expression, CqtBuilder.Or);
         }
 
+        /// <summary>Implements the visitor pattern for the DbInExpression.</summary>
+        /// <returns>The implemented visitor.</returns>
+        /// <param name="expression">The DbInExpression that is being visited.</param>
         public override DbExpression Visit(DbInExpression expression)
         {
             Check.NotNull(expression, "expression");

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
@@ -6,6 +6,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
+    /// <summary>
+    /// Creates a convention that configures stored procedures to be used to modify entities in the database.
+    /// </summary>
     public class LightweightModificationFunctionsConfiguration
     {
         private readonly Type _type;
@@ -25,6 +28,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             get { return _configuration; }
         }
 
+        /// <summary>Configures stored procedure used to insert entities.</summary>
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
+        /// <param name="modificationFunctionConfigurationAction">A lambda expression that performs configuration for the stored procedure.</param>
         public LightweightModificationFunctionsConfiguration Insert(
             Action<LightweightInsertModificationFunctionConfiguration> modificationFunctionConfigurationAction)
         {
@@ -40,6 +46,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
+        /// <summary>Configures stored procedure used to update entities.</summary>
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
+        /// <param name="modificationFunctionConfigurationAction">A lambda expression that performs configuration for the stored procedure.</param>
         public LightweightModificationFunctionsConfiguration Update(
             Action<LightweightUpdateModificationFunctionConfiguration> modificationFunctionConfigurationAction)
         {
@@ -55,6 +64,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
+        /// <summary>Configures stored procedure used to delete entities.</summary>
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
+        /// <param name="modificationFunctionConfigurationAction">A lambda expression that performs configuration for the stored procedure.</param>
         public LightweightModificationFunctionsConfiguration Delete(
             Action<LightweightDeleteModificationFunctionConfiguration> modificationFunctionConfigurationAction)
         {
@@ -70,24 +82,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string ToString()
         {
             return base.ToString();
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()

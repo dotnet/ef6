@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects
 {
@@ -30,6 +30,10 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         public bool Streaming { get; private set; }
 
+        /// <summary>Determines whether the specified objects are equal.</summary>
+        /// <returns>true if the two objects are equal; otherwise, false.</returns>
+        /// <param name="left">The left objects to compare.</param>
+        /// <param name="right">The right objects to compare.</param>
         public static bool operator ==(ExecutionOptions left, ExecutionOptions right)
         {
             if (ReferenceEquals(left, right))

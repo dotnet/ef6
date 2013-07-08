@@ -8,6 +8,9 @@ namespace System.Data.Entity.Spatial
     using System.Globalization;
     using System.Runtime.Serialization;
 
+    /// <summary>
+    /// Represents geometric shapes.
+    /// </summary>
     [DataContract]
     [Serializable]
     public class DbGeometry

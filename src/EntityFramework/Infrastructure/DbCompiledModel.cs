@@ -74,6 +74,8 @@ namespace System.Data.Entity.Infrastructure
             get { return _workspace.ProviderInfo; }
         }
 
+        /// <summary> Gets the default schema of the model. </summary>
+        /// <returns> The default schema of the model. </returns>
         public string DefaultSchema
         {
             get { return CachedModelBuilder.ModelConfiguration.DefaultSchema; }

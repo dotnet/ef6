@@ -125,6 +125,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
+        /// <summary>
+        ///     Configures the name of the parameter used in stored procedures for this property.
+        /// </summary>
+        /// <param name="parameterName">Name of the parameter.</param>
+        /// <returns> The same PrimitivePropertyConfiguration instance so that multiple calls can be chained. </returns>
         public PrimitivePropertyConfiguration<TConfiguration> HasParameterName(string parameterName)
         {
             Configuration.ParameterName = parameterName;
@@ -150,24 +155,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string ToString()
         {
             return base.ToString();
         }
 
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
+        /// <inheritdoc/>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <inheritdoc/>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()

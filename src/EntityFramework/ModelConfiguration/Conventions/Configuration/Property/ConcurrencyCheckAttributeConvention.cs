@@ -12,6 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class ConcurrencyCheckAttributeConvention
         : PrimitivePropertyAttributeConfigurationConvention<ConcurrencyCheckAttribute>
     {
+        /// <inheritdoc/>
         public override void Apply(LightweightPrimitivePropertyConfiguration configuration, ConcurrencyCheckAttribute attribute)
         {
             Check.NotNull(configuration, "configuration");

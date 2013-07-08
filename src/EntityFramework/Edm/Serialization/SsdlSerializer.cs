@@ -10,8 +10,14 @@ namespace System.Data.Entity.Edm.Serialization
     using System.Linq;
     using System.Xml;
 
+    /// <summary>
+    /// Serializes the storage (database) section of an <see cref="EdmModel"/> to XML.
+    /// </summary>
     public class SsdlSerializer
     {
+        /// <summary>
+        /// Occurs when an error is encountered serializing the model.
+        /// </summary>
         public event EventHandler<DataModelErrorEventArgs> OnError;
 
         /// <summary>

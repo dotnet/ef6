@@ -62,6 +62,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 true /*throwOnError*/);
         }
 
+        /// <summary>Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmItemCollection" /> class.</summary>
+        /// <param name="model">The entity data model.</param>
         public EdmItemCollection(EdmModel model)
             : base(DataSpace.CSpace)
         {

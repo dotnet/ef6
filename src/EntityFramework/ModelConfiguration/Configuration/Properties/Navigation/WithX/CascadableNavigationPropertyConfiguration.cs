@@ -16,6 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     {
         private readonly NavigationPropertyConfiguration _navigationPropertyConfiguration;
 
+        /// <summary>Initializes a new instance of the <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.CascadableNavigationPropertyConfiguration" /> class.</summary>
         protected CascadableNavigationPropertyConfiguration(
             NavigationPropertyConfiguration navigationPropertyConfiguration)
         {
@@ -49,24 +50,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             get { return _navigationPropertyConfiguration; }
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string ToString()
         {
             return base.ToString();
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()

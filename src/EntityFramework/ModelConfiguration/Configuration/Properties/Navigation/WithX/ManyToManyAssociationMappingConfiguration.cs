@@ -144,12 +144,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             keyColumnNames.Each((n, i) => propertyMappings[i].ColumnProperty.Name = n);
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string ToString()
         {
             return base.ToString();
         }
 
+        /// <summary>Determines whether the specified object is equal to the current object.</summary>
+        /// <returns>true if the specified object is equal to the current object; otherwise, false.</returns>
+        /// <param name="other">The object to compare with the current object.</param>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool Equals(ManyToManyAssociationMappingConfiguration other)
         {
@@ -183,6 +187,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return false;
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj)
         {
@@ -205,6 +210,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return Equals((ManyToManyAssociationMappingConfiguration)obj);
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
@@ -216,6 +222,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()

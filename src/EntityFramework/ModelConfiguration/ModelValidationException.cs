@@ -49,6 +49,9 @@ namespace System.Data.Entity.ModelConfiguration
             Debug.Assert(validationErrors.Any());
         }
 
+        /// <summary>Initializes a new instance of <see cref="T:System.Data.Entity.ModelConfiguration.ModelValidationException" /> class serialization info and streaming context.</summary>
+        /// <param name="info">The serialization info.</param>
+        /// <param name="context">The streaming context.</param>
         protected ModelValidationException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

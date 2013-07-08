@@ -5,11 +5,20 @@ namespace System.Data.Entity.Migrations.Model
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
+    /// <summary>
+    /// Represents renaming a stored procedure in the database.
+    /// </summary>
     public class RenameProcedureOperation : MigrationOperation
     {
         private readonly string _name;
         private readonly string _newName;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RenameProcedureOperation"/> class.
+        /// </summary>
+        /// <param name="name">The name of the stored procedure to rename.</param>
+        /// <param name="newName">The new name for the stored procedure.</param>
+        /// <param name="anonymousArguments"> Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public RenameProcedureOperation(string name, string newName, object anonymousArguments = null)
             : base(anonymousArguments)
@@ -21,16 +30,31 @@ namespace System.Data.Entity.Migrations.Model
             _newName = newName;
         }
 
+        /// <summary>
+        /// Gets the name of the stored procedure to rename.
+        /// </summary>
+        /// <value>
+        /// The name of the stored procedure to rename.
+        /// </value>
         public virtual string Name
         {
             get { return _name; }
         }
 
+        /// <summary>
+        /// Gets the new name for the stored procedure.
+        /// </summary>
+        /// <value>
+        /// The new name for the stored procedure.
+        /// </value>
         public virtual string NewName
         {
             get { return _newName; }
         }
 
+        /// <summary>
+        /// Gets an operation that will revert this operation.
+        /// </summary>
         public override MigrationOperation Inverse
         {
             get
@@ -44,7 +68,9 @@ namespace System.Data.Entity.Migrations.Model
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets a value indicating if this operation may result in data loss. Always returns false.
+        /// </summary>
         public override bool IsDestructiveChange
         {
             get { return false; }

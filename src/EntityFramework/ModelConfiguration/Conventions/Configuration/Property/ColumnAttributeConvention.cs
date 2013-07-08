@@ -12,6 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class ColumnAttributeConvention
         : PrimitivePropertyAttributeConfigurationConvention<ColumnAttribute>
     {
+        /// <inheritdoc/>
         public override void Apply(LightweightPrimitivePropertyConfiguration configuration, ColumnAttribute attribute)
         {
             Check.NotNull(configuration, "configuration");

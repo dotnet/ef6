@@ -149,6 +149,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Removes a member from this type.</summary>
+        /// <param name="member">The member to remove.</param>
         public virtual void RemoveMember(EdmMember member)
         {
             Check.NotNull(member, "member");

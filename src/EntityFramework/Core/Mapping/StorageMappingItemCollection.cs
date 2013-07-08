@@ -28,6 +28,9 @@ namespace System.Data.Entity.Core.Mapping
     using OfTypeQVCacheKey =
                 System.Data.Entity.Core.Common.Utils.Pair<Metadata.Edm.EntitySetBase, Common.Utils.Pair<Metadata.Edm.EntityTypeBase, bool>>;
 
+    /// <summary>
+    /// Represents a collection of items in Storage Mapping (CS Mapping) space.
+    /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class StorageMappingItemCollection : MappingItemCollection
     {

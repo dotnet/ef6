@@ -12,6 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class RequiredPrimitivePropertyAttributeConvention
         : PrimitivePropertyAttributeConfigurationConvention<RequiredAttribute>
     {
+        /// <inheritdoc/>
         public override void Apply(LightweightPrimitivePropertyConfiguration configuration, RequiredAttribute attribute)
         {
             Check.NotNull(configuration, "configuration");

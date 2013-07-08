@@ -31,6 +31,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                                             OverridableConfigurationParts.OverridableInSSpace;
         }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration" /> 
+        ///     class with the same settings as another configuration.
+        /// </summary>
+        /// <param name="source">The configuration to copy settings from.</param>
         protected PrimitivePropertyConfiguration(PrimitivePropertyConfiguration source)
         {
             Check.NotNull(source, "source");
@@ -77,6 +82,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         /// </summary>
         public string ColumnName { get; set; }
 
+        /// <summary>Gets or sets the name of the parameter used in stored procedures for this property.</summary>
+        /// <returns>The name of the parameter used in stored procedures for this property.</returns>
         public string ParameterName { get; set; }
 
         /// <summary>
@@ -160,10 +167,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             DebugCheck.NotNull(providerManifest);
 
             propertyMappings.Each(pm => Configure(
-                pm.Item1.ColumnProperty, 
-                pm.Item2, 
-                providerManifest, 
-                allowOverride, 
+                pm.Item1.ColumnProperty,
+                pm.Item2,
+                providerManifest,
+                allowOverride,
                 fillFromExistingConfiguration));
         }
 
@@ -206,17 +213,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             pendingRenames
                 .Each(
                     c =>
-                        {
-                            c.Name = renamedParameters.UniquifyName(ParameterName);
-                            renamedParameters.Add(c);
-                        });
+                    {
+                        c.Name = renamedParameters.UniquifyName(ParameterName);
+                        renamedParameters.Add(c);
+                    });
 
             parameter.SetConfiguration(this);
         }
 
         internal virtual void Configure(
             EdmProperty column, EntityType table, DbProviderManifest providerManifest,
-            bool allowOverride = false, 
+            bool allowOverride = false,
             bool fillFromExistingConfiguration = false)
         {
             DebugCheck.NotNull(column);
@@ -298,10 +305,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             pendingRenames
                 .Each(
                     c =>
-                        {
-                            c.Name = renamedColumns.UniquifyName(ColumnName);
-                            renamedColumns.Add(c);
-                        });
+                    {
+                        c.Name = renamedColumns.UniquifyName(ColumnName);
+                        renamedColumns.Add(c);
+                    });
         }
 
         internal virtual void Configure(EdmProperty column, FacetDescription facetDescription)
@@ -389,6 +396,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                    columnTypeIsCompatible;
         }
 
+        /// <summary>Gets a value that indicates whether the provided model is compatible with the current model provider.</summary>
+        /// <returns>true if the provided model is compatible with the current model provider; otherwise, false.</returns>
+        /// <param name="propertyExpression">The original property expression that specifies the member and instance.</param>
+        /// <param name="other">The property to compare.</param>
+        /// <param name="errorMessage">The error message.</param>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
+        /// <typeparam name="TConfiguration">The type of the configuration to look for.</typeparam>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "2#")]
@@ -415,6 +429,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             return false;
         }
 
+        /// <summary>Gets a value that indicates whether the provided model is compatible with the current model provider.</summary>
+        /// <returns>true if the provided model is compatible with the current model provider; otherwise, false.</returns>
+        /// <param name="propertyExpression">The property expression.</param>
+        /// <param name="other">The property to compare.</param>
+        /// <param name="errorMessage">The error message.</param>
+        /// <typeparam name="TConfiguration">The type of the configuration to look for.</typeparam>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "2#")]
@@ -440,6 +460,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             return false;
         }
 
+        /// <summary>Gets a value that indicates whether the provided model is compatible with the current model provider.</summary>
+        /// <returns>true if the provided model is compatible with the current model provider; otherwise, false.</returns>
+        /// <param name="thisConfiguration">The configuration property.</param>
+        /// <param name="other">The property to compare</param>
+        /// <typeparam name="T">The type property.</typeparam>
         protected static bool IsCompatible<T>(T? thisConfiguration, T? other)
             where T : struct
         {
@@ -456,6 +481,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             return true;
         }
 
+        /// <summary>Gets a value that indicates whether the provided model is compatible with the current model provider.</summary>
+        /// <returns>true if the provided model is compatible with the current model provider; otherwise, false.</returns>
+        /// <param name="thisConfiguration">The configuration property.</param>
+        /// <param name="other">The property to compare.</param>
         protected static bool IsCompatible(string thisConfiguration, string other)
         {
             if (thisConfiguration != null)

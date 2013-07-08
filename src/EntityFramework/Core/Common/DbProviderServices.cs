@@ -69,6 +69,11 @@ namespace System.Data.Entity.Core.Common
             _treeDispatcher = treeDispatcher;
         }
 
+        /// <summary>
+        /// Registers a handler to process non-error messages coming from the database provider.
+        /// </summary>
+        /// <param name="connection">The connection to receive information for.</param>
+        /// <param name="handler">The handler to process messages.</param>
         public virtual void RegisterInfoMessageHandler(DbConnection connection, Action<string> handler)
         {
         }
@@ -384,6 +389,9 @@ namespace System.Data.Entity.Core.Common
             return GetSpatialServices(resolver, key, () => GetProviderServices(connection.StoreConnection));
         }
 
+        /// <summary>Gets the spatial services for the <see cref="T:System.Data.Entity.Core.Common.DbProviderServices" />.</summary>
+        /// <returns>The spatial services.</returns>
+        /// <param name="key">Information about the database that the spatial services will be used for.</param>
         public DbSpatialServices GetSpatialServices(DbProviderInfo key)
         {
             DebugCheck.NotNull(key);

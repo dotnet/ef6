@@ -13,6 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class OneToOneConstraintIntroductionConvention : IConceptualModelConvention<AssociationType>
     {
+        /// <inheritdoc />
         public virtual void Apply(AssociationType item, DbModel model)
         {
             Check.NotNull(item, "item");

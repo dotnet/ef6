@@ -14,6 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class DeclaredPropertyOrderingConvention : IConceptualModelConvention<EntityType>
     {
+        /// <inheritdoc />
         public virtual void Apply(EntityType item, DbModel model)
         {
             Check.NotNull(item, "item");

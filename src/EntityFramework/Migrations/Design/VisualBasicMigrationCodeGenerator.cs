@@ -354,6 +354,9 @@ namespace System.Data.Entity.Migrations.Design
             writer.WriteLine(")");
         }
 
+        /// <summary>Generates code to perform a <see cref="T:System.Data.Entity.Migrations.Model.CreateProcedureOperation" />.</summary>
+        /// <param name="createProcedureOperation">The operation to generate code for.</param>
+        /// <param name="writer">Text writer to add the generated code to.</param>
         protected virtual void Generate(CreateProcedureOperation createProcedureOperation, IndentedTextWriter writer)
         {
             Check.NotNull(createProcedureOperation, "createProcedureOperation");
@@ -362,6 +365,9 @@ namespace System.Data.Entity.Migrations.Design
             Generate(createProcedureOperation, "CreateStoredProcedure", writer);
         }
 
+        /// <summary>Generates code to perform a <see cref="T:System.Data.Entity.Migrations.Model.AlterProcedureOperation" />.</summary>
+        /// <param name="alterProcedureOperation">The operation to generate code for.</param>
+        /// <param name="writer">Text writer to add the generated code to.</param>
         protected virtual void Generate(AlterProcedureOperation alterProcedureOperation, IndentedTextWriter writer)
         {
             Check.NotNull(alterProcedureOperation, "alterProcedureOperation");
@@ -424,7 +430,7 @@ namespace System.Data.Entity.Migrations.Design
                       + writer.NewLine
                       + writer.CurrentIndentation()
                       + "\"";
-                
+
                 writer.WriteLine(
                     Generate(
                         procedureOperation
@@ -443,6 +449,10 @@ namespace System.Data.Entity.Migrations.Design
             writer.WriteLine();
         }
 
+        /// <summary>Generates code to perform a <see cref="T:System.Data.Entity.Migrations.Model.ParameterModel" />.</summary>
+        /// <param name="parameterModel">The parameter model definition to generate code for.</param>
+        /// <param name="writer">Text writer to add the generated code to.</param>
+        /// <param name="emitName">true to include the column name in the definition; otherwise, false.</param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         protected virtual void Generate(ParameterModel parameterModel, IndentedTextWriter writer, bool emitName = false)
@@ -510,6 +520,9 @@ namespace System.Data.Entity.Migrations.Design
             writer.Write(")");
         }
 
+        /// <summary>Generates code to perform a <see cref="T:System.Data.Entity.Migrations.Model.DropProcedureOperation" />.</summary>
+        /// <param name="dropProcedureOperation">The operation to generate code for.</param>
+        /// <param name="writer">Text writer to add the generated code to.</param>
         protected virtual void Generate(DropProcedureOperation dropProcedureOperation, IndentedTextWriter writer)
         {
             Check.NotNull(dropProcedureOperation, "dropProcedureOperation");
@@ -820,7 +833,7 @@ namespace System.Data.Entity.Migrations.Design
 
             if (!dropPrimaryKeyOperation.HasDefaultName)
             {
-                writer.Write(", name := "); 
+                writer.Write(", name := ");
                 writer.Write(Quote(dropPrimaryKeyOperation.Name));
             }
 
@@ -1138,6 +1151,7 @@ namespace System.Data.Entity.Migrations.Design
             writer.WriteLine(")");
         }
 
+        /// 
         protected virtual void Generate(MoveProcedureOperation moveProcedureOperation, IndentedTextWriter writer)
         {
             Check.NotNull(moveProcedureOperation, "moveProcedureOperation");
@@ -1170,6 +1184,7 @@ namespace System.Data.Entity.Migrations.Design
             writer.WriteLine(")");
         }
 
+        /// 
         protected virtual void Generate(RenameProcedureOperation renameProcedureOperation, IndentedTextWriter writer)
         {
             Check.NotNull(renameProcedureOperation, "renameProcedureOperation");

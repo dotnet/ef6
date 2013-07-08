@@ -395,7 +395,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         private void ConfigureDefaultDiscriminator(
             EntityType entityType, StorageMappingFragment fragment)
         {
-            if (ValueConditions.Any() || NullabilityConditions.Any())            {
+            if (ValueConditions.Any() || NullabilityConditions.Any())
+            {
                 var discriminator = fragment.RemoveDefaultDiscriminatorCondition();
                 if (discriminator != null
                     && entityType.BaseType != null)

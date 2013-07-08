@@ -19,6 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         private static readonly IEnumerable<PrimitiveTypeKind> _applicableTypes
             = new[] { PrimitiveTypeKind.Int16, PrimitiveTypeKind.Int32, PrimitiveTypeKind.Int64 };
 
+        /// <inheritdoc />
         public virtual void Apply(EntityType item, DbModel model)
         {
             Check.NotNull(item, "item");

@@ -163,6 +163,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.Constraint = associationConstraint;
         }
 
+        /// <inheritdoc />
         public bool Equals(ForeignKeyConstraintConfiguration other)
         {
             if (ReferenceEquals(null, other))
@@ -181,6 +182,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                     new DynamicEqualityComparer<PropertyInfo>((p1, p2) => p1.IsSameAs(p2)));
         }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -202,6 +204,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             return Equals((ForeignKeyConstraintConfiguration)obj);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return ToProperties.Aggregate(0, (t, p) => t + p.GetHashCode());

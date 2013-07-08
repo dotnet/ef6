@@ -83,6 +83,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets or sets the referential constraint.</summary>
+        /// <returns>The referential constraint.</returns>
         public ReferentialConstraint Constraint
         {
             get { return ReferentialConstraints.SingleOrDefault(); }

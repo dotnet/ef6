@@ -124,12 +124,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _container; }
         }
 
+        /// <summary>Gets the version of the schema for the model.</summary>
+        /// <returns>The version of the schema for the model.</returns>
         internal double SchemaVersion
         {
             get { return _schemaVersion; }
             set { _schemaVersion = value; }
         }
 
+        /// <summary>Gets the provider information for this model.</summary>
+        /// <returns>The provider information for this model.</returns>
         internal DbProviderInfo ProviderInfo
         {
             get { return _providerInfo; }
@@ -142,6 +146,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets the provider manifest associated with the model.</summary>
+        /// <returns>The provider manifest associated with the model.</returns>
         internal DbProviderManifest ProviderManifest
         {
             get { return _providerManifest; }
@@ -154,6 +160,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets the namespace names associated with the model.</summary>
+        /// <returns>The namespace names associated with the model.</returns>
         internal virtual IEnumerable<string> NamespaceNames
         {
             get
@@ -164,6 +172,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets the namespace items associated with the model.</summary>
+        /// <returns>The namespace items associated with the model.</returns>
         internal IEnumerable<EdmType> NamespaceItems
         {
             get
@@ -176,11 +186,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets the global items associated with the model.</summary>
+        /// <returns>The global items associated with the model.</returns>
         public IEnumerable<GlobalItem> GlobalItems
         {
             get { return NamespaceItems.Concat<GlobalItem>(Containers); }
         }
 
+        /// <summary>Gets the containers associated with the model.</summary>
+        /// <returns>The containers associated with the model.</returns>
         internal virtual IEnumerable<EntityContainer> Containers
         {
             get { yield return Container; }

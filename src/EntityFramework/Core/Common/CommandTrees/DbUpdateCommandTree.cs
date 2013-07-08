@@ -28,6 +28,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbUpdateCommandTree"/> class.
+        /// </summary>
+        /// <param name="metadata">The model this command will operate on.</param>
+        /// <param name="dataSpace">The data space.</param>
+        /// <param name="target">The target table for the data manipulation language (DML) operation.</param>
+        /// <param name="predicate">A predicate used to determine which members of the target collection should be updated.</param>
+        /// <param name="setClauses">The list of update set clauses that define the update operation.</param>
+        /// <param name="returning">A <see cref="DbExpression"/> that specifies a projection of results to be returned, based on the modified rows.</param>
         public DbUpdateCommandTree(
             MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, DbExpression predicate,
             ReadOnlyModificationClauses setClauses, DbExpression returning)
@@ -71,6 +80,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _predicate; }
         }
 
+        /// <summary>Gets the kind of this command tree.</summary>
+        /// <returns>The kind of this command tree.</returns>
         public override DbCommandTreeKind CommandTreeKind
         {
             get { return DbCommandTreeKind.Update; }

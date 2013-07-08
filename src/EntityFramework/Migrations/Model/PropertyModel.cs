@@ -5,6 +5,9 @@ namespace System.Data.Entity.Migrations.Model
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
 
+    /// <summary>
+    ///     Represents information about a property of an entity.
+    /// </summary>
     public abstract class PropertyModel
     {
         private readonly PrimitiveTypeKind _type;

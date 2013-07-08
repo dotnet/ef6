@@ -7,10 +7,29 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     /// </summary>
     public enum DbCommandTreeKind
     {
+        /// <summary>
+        /// A query to retrieve data
+        /// </summary>
         Query,
+
+        /// <summary>
+        /// Update existing data
+        /// </summary>
         Update,
+
+        /// <summary>
+        /// Insert new data
+        /// </summary>
         Insert,
+
+        /// <summary>
+        /// Deleted existing data
+        /// </summary>
         Delete,
+
+        /// <summary>
+        /// Call a function
+        /// </summary>
         Function,
     }
 }

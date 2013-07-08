@@ -4,6 +4,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 {
     using System.Data.Entity.Core.Metadata.Edm;
 
+    /// <summary>
+    /// Defines a relationship between two entity types based on an association in the conceptual model.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public sealed class EdmRelationshipAttribute : Attribute
     {

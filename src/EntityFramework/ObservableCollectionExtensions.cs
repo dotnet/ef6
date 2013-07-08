@@ -8,6 +8,9 @@ namespace System.Data.Entity
     using System.Data.Entity.Internal;
     using System.Data.Entity.Utilities;
 
+    /// <summary>
+    /// Extension methods for <see cref="ObservableCollection{T}"/>.
+    /// </summary>
     public static class ObservableCollectionExtensions
     {
         /// <summary>

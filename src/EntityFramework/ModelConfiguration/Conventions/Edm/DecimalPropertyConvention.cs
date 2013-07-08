@@ -33,6 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             _scale = scale;
         }
 
+        /// <inheritdoc />
         public virtual void Apply(EdmProperty item, DbModel model)
         {
             Check.NotNull(item, "item");

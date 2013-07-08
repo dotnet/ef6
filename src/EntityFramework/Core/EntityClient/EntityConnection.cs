@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.EntityClient
 {
@@ -197,6 +197,9 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
+        /// <summary>Handles the event when the database connection state changes.</summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="stateChange">The data for the event.</param>
         protected virtual void StoreConnectionStateChangeHandler(Object sender, StateChangeEventArgs stateChange)
         {
             var newStoreConnectionState = stateChange.CurrentState;

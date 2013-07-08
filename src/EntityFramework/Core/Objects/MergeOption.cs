@@ -2,6 +2,9 @@
 
 namespace System.Data.Entity.Core.Objects
 {
+    /// <summary>
+    /// The different ways that new objects loaded from the database can be merged with existing objects already in memory.
+    /// </summary>
     public enum MergeOption
     {
         /// <summary>

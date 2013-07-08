@@ -18,6 +18,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class EdmProperty : EdmMember
     {
+        /// <summary> Creates a new primitive property. </summary>
+        /// <returns> The newly created property. </returns>
+        /// <param name="name"> The name of the property. </param>
+        /// <param name="primitiveType"> The type of the property. </param>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static EdmProperty Primitive(string name, PrimitiveType primitiveType)
         {
@@ -27,6 +31,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return CreateProperty(name, primitiveType);
         }
 
+        /// <summary> Creates a new enum property. </summary>
+        /// <returns> The newly created property. </returns>
+        /// <param name="name"> The name of the property. </param>
+        /// <param name="primitiveType"> The type of the property. </param>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static EdmProperty Enum(string name, EnumType enumType)
         {
@@ -36,6 +44,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return CreateProperty(name, enumType);
         }
 
+        /// <summary> Creates a new complex property. </summary>
+        /// <returns> The newly created property. </returns>
+        /// <param name="name"> The name of the property. </param>
+        /// <param name="primitiveType"> The type of the property. </param>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static EdmProperty Complex(string name, ComplexType complexType)
         {
@@ -200,6 +212,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets the type name of the property.</summary>
+        /// <returns>The type name of the property.</returns>
         public string TypeName
         {
             get { return TypeUsage.EdmType.Name; }
@@ -255,36 +269,50 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets whether the property is a collection type property.</summary>
+        /// <returns>true if the property is a collection type property; otherwise, false.</returns>
         public bool IsCollectionType
         {
             get { return TypeUsage.EdmType is CollectionType; }
         }
 
+        /// <summary>Gets whether this property is a complex type property.</summary>
+        /// <returns>true if this property is a complex type property; otherwise, false.</returns>
         public bool IsComplexType
         {
             get { return TypeUsage.EdmType is ComplexType; }
         }
 
+        /// <summary>Gets whether this property is a primitive type.</summary>
+        /// <returns>true if this property is a primitive type; otherwise, false.</returns>
         public bool IsPrimitiveType
         {
             get { return TypeUsage.EdmType is PrimitiveType; }
         }
 
+        /// <summary>Gets whether this property is an enumeration type property.</summary>
+        /// <returns>true if this property is an enumeration type property; otherwise, false.</returns>
         public bool IsEnumType
         {
             get { return TypeUsage.EdmType is EnumType; }
         }
 
+        /// <summary>Gets whether this property is an underlying primitive type.</summary>
+        /// <returns>true if this property is an underlying primitive type; otherwise, false.</returns>
         public bool IsUnderlyingPrimitiveType
         {
             get { return IsPrimitiveType || IsEnumType; }
         }
 
+        /// <summary>Gets the complex type information for this property.</summary>
+        /// <returns>The complex type information for this property.</returns>
         public ComplexType ComplexType
         {
             get { return TypeUsage.EdmType as ComplexType; }
         }
 
+        /// <summary>Gets the primitive type information for this property.</summary>
+        /// <returns>The primitive type information for this property.</returns>
         public PrimitiveType PrimitiveType
         {
             get { return TypeUsage.EdmType as PrimitiveType; }
@@ -321,11 +349,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets the enumeration type information for this property.</summary>
+        /// <returns>The enumeration type information for this property.</returns>
         public EnumType EnumType
         {
             get { return TypeUsage.EdmType as EnumType; }
         }
 
+        /// <summary>Gets the underlying primitive type information for this property.</summary>
+        /// <returns>The underlying primitive type information for this property.</returns>
         public PrimitiveType UnderlyingPrimitiveType
         {
             get
@@ -341,6 +373,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets or sets the concurrency mode for the property.</summary>
+        /// <returns>The concurrency mode for the property.</returns>
         public ConcurrencyMode ConcurrencyMode
         {
             get { return MetadataHelper.GetConcurrencyMode(this); }
@@ -352,6 +386,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets or sets the store generated pattern for the property.</summary>
+        /// <returns>The store generated pattern for the property.</returns>
         public StoreGeneratedPattern StoreGeneratedPattern
         {
             get { return MetadataHelper.GetStoreGeneratedPattern(this); }
@@ -363,6 +399,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets or sets the kind of collection for this model.</summary>
+        /// <returns>The kind of collection for this model.</returns>
         public CollectionKind CollectionKind
         {
             get
@@ -380,6 +418,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets whether the maximum length facet is constant for the database provider.</summary>
+        /// <returns>true if the facet is constant; otherwise, false.</returns>
         public bool IsMaxLengthConstant
         {
             get
@@ -391,6 +431,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets or sets the maximum length of the property.</summary>
+        /// <returns>The maximum length of the property.</returns>
         public int? MaxLength
         {
             get
@@ -415,6 +457,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets or sets whether this property uses the maximum length supported by the provider.</summary>
+        /// <returns>true if this property uses the maximum length supported by the provider; otherwise, false.</returns>
         public bool IsMaxLength
         {
             get
@@ -438,6 +482,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets whether the fixed length facet is constant for the database provider.</summary>
+        /// <returns>true if the facet is constant; otherwise, false.</returns>
         public bool IsFixedLengthConstant
         {
             get
@@ -449,6 +495,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets or sets whether the length of this property is fixed.</summary>
+        /// <returns>true if the length of this property is fixed; otherwise, false.</returns>
         public bool? IsFixedLength
         {
             get
@@ -473,6 +521,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets whether the Unicode facet is constant for the database provider.</summary>
+        /// <returns>true if the facet is constant; otherwise, false.</returns>
         public bool IsUnicodeConstant
         {
             get
@@ -484,6 +534,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets or sets whether this property is a Unicode property.</summary>
+        /// <returns>true if this property is a Unicode property; otherwise, false.</returns>
         public bool? IsUnicode
         {
             get
@@ -508,6 +560,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets whether the precision facet is constant for the database provider.</summary>
+        /// <returns>true if the facet is constant; otherwise, false.</returns>
         public bool IsPrecisionConstant
         {
             get
@@ -519,6 +573,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets or sets the precision of this property.</summary>
+        /// <returns>The precision of this property.</returns>
         public byte? Precision
         {
             get
@@ -543,6 +599,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets whether the scale facet is constant for the database provider.</summary>
+        /// <returns>true if the facet is constant; otherwise, false.</returns>
         public bool IsScaleConstant
         {
             get
@@ -554,6 +612,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets or sets the scale of this property.</summary>
+        /// <returns>The scale of this property.</returns>
         public byte? Scale
         {
             get
@@ -578,6 +638,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Sets the metadata properties.</summary>
+        /// <param name="metadataProperties">The metadata properties to be set.</param>
         public void SetMetadataProperties(IEnumerable<MetadataProperty> metadataProperties)
         {
             Check.NotNull(metadataProperties, "metadataProperties");

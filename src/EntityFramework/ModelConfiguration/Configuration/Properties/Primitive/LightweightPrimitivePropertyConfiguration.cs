@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive
 {
@@ -87,6 +87,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             return this;
         }
 
+        /// <summary>
+        ///     Configures the name of the parameter used in stored procedures for this property.
+        /// </summary>
+        /// <param name="parameterName">Name of the parameter.</param>
+        /// <returns>
+        ///     The same <see cref="LightweightPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// </returns>
         public virtual LightweightPrimitivePropertyConfiguration HasParameterName(string parameterName)
         {
             Check.NotEmpty(parameterName, "parameterName");

@@ -158,6 +158,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 #endif
 
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this command.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this command.
+        /// </returns>
         public override string ToString()
         {
             return Print();

@@ -90,6 +90,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _query; }
         }
 
+        /// <summary>Gets the kind of this command tree.</summary>
+        /// <returns>The kind of this command tree.</returns>
         public override DbCommandTreeKind CommandTreeKind
         {
             get { return DbCommandTreeKind.Query; }

@@ -4,6 +4,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Runtime.Serialization;
 
+    /// <summary>
+    /// Thrown when an operation can't be performed because there are existing migrations that have not been applied to the database.
+    /// </summary>
     [Serializable]
     public sealed class MigrationsPendingException : MigrationsException
     {

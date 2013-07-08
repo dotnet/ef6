@@ -6,6 +6,9 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
 
+    /// <summary>
+    /// Provides contextual information to methods that intercept command trees.
+    /// </summary>
     public class DbCommandTreeInterceptionContext : DbInterceptionContext, IDbInterceptionContextWithResult<DbCommandTree>
     {
         private bool _isResultSet;

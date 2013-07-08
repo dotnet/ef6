@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 {
@@ -202,6 +202,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return this;
         }
 
+        /// <summary>
+        /// Configures this type to use stored procedures for insert, update and delete.
+        /// The default conventions for procedure and parameter names will be used.
+        /// </summary>
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         public LightweightTypeConfiguration<T> MapToStoredProcedures()
         {
             _configuration.MapToStoredProcedures();
@@ -209,6 +214,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return this;
         }
 
+        /// <summary>
+        /// Configures this type to use stored procedures for insert, update and delete.
+        /// </summary>
+        /// <param name="modificationFunctionsConfigurationAction">
+        ///     Configuration to override the default conventions for procedure and parameter names.
+        /// </param>
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public LightweightTypeConfiguration<T> MapToStoredProcedures(
             Action<ModificationFunctionsConfiguration<T>> modificationFunctionsConfigurationAction)

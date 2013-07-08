@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Migrations.Sql
 {
@@ -19,6 +19,12 @@ namespace System.Data.Entity.Migrations.Sql
         /// </summary>
         public bool SuppressTransaction { get; set; }
 
+        /// <summary>
+        /// Gets or sets the batch terminator for the database provider.
+        /// </summary>
+        /// <value>
+        /// The batch terminator for the database provider.
+        /// </value>
         public string BatchTerminator { get; set; }
     }
 }

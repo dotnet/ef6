@@ -239,12 +239,14 @@ namespace System.Data.Entity.Core.EntityClient
             return ((ICollection)InnerList).GetEnumerator();
         }
 
+        /// <inhertidoc />
         protected override DbParameter GetParameter(int index)
         {
             RangeCheck(index);
             return InnerList[index];
         }
 
+        /// <inhertidoc />
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         protected override DbParameter GetParameter(string parameterName)
         {
@@ -450,6 +452,7 @@ namespace System.Data.Entity.Core.EntityClient
             item.ResetParent();
         }
 
+        /// <inhertidoc />
         protected override void SetParameter(int index, DbParameter value)
         {
             OnChange();
@@ -457,6 +460,7 @@ namespace System.Data.Entity.Core.EntityClient
             Replace(index, value);
         }
 
+        /// <inhertidoc />
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         protected override void SetParameter(string parameterName, DbParameter value)
         {

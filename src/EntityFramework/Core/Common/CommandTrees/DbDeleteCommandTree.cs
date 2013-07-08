@@ -15,6 +15,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbDeleteCommandTree"/> class.
+        /// </summary>
+        /// <param name="metadata">The model this command will operate on.</param>
+        /// <param name="dataSpace">The data space.</param>
+        /// <param name="target">The target table for the data manipulation language (DML) operation.</param>
+        /// <param name="predicate">A predicate used to determine which members of the target collection should be deleted.</param>
         public DbDeleteCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpressionBinding target, DbExpression predicate)
             : base(metadata, dataSpace, target)
         {
@@ -47,6 +54,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _predicate; }
         }
 
+        /// <summary>Gets the kind of this command tree.</summary>
+        /// <returns>The kind of this command tree.</returns>
         public override DbCommandTreeKind CommandTreeKind
         {
             get { return DbCommandTreeKind.Delete; }

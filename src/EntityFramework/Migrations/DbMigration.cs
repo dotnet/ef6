@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Migrations
 {
@@ -31,6 +31,10 @@ namespace System.Data.Entity.Migrations
         {
         }
 
+        /// <summary>Adds an operation to create a new stored procedure.</summary>
+        /// <param name="name">The name of the stored procedure. Schema name is optional, if no schema is specified then dbo is assumed.</param>
+        /// <param name="body">The body of the stored procedure.</param>
+        /// <param name="anonymousArguments">The additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments. For example, 'new { SampleArgument = "MyValue" }'.</param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public void CreateStoredProcedure(string name, string body, object anonymousArguments = null)
         {
@@ -39,6 +43,12 @@ namespace System.Data.Entity.Migrations
             CreateStoredProcedure<object>(name, _ => new { }, body, anonymousArguments);
         }
 
+        /// <summary>Adds an operation to create a new stored procedure.</summary>
+        /// <param name="name">The name of the stored procedure. Schema name is optional, if no schema is specified then dbo is assumed.</param>
+        /// <param name="parametersAction">The action that specifies the parameters of the stored procedure.</param>
+        /// <param name="body">The body of the stored procedure.</param>
+        /// <param name="anonymousArguments">The additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments. For example, 'new { SampleArgument = "MyValue" }'.</param>
+        /// <typeparam name="TParameters">The parameters in this create stored procedure operation. You do not need to specify this type, it will be inferred from the <paramref name="parametersAction" /> parameter you supply.</typeparam>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public void CreateStoredProcedure<TParameters>(
             string name,
@@ -73,6 +83,12 @@ namespace System.Data.Entity.Migrations
                     });
         }
 
+        /// <summary>
+        /// Adds an operation to alter a stored procedure.
+        /// </summary>
+        /// <param name="name">The name of the stored procedure. Schema name is optional, if no schema is specified then dbo is assumed.</param>
+        /// <param name="body">The body of the stored procedure.</param>
+        /// <param name="anonymousArguments">The additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments. For example, 'new { SampleArgument = "MyValue" }'.</param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public void AlterStoredProcedure(string name, string body, object anonymousArguments = null)
         {
@@ -81,6 +97,14 @@ namespace System.Data.Entity.Migrations
             AlterStoredProcedure<object>(name, _ => new { }, body, anonymousArguments);
         }
 
+        /// <summary>
+        /// Adds an operation to alter a stored procedure.
+        /// </summary>
+        /// <typeparam name="TParameters">The parameters in this alter stored procedure operation. You do not need to specify this type, it will be inferred from the <paramref name="parametersAction" /> parameter you supply.</typeparam>
+        /// <param name="name">The name of the stored procedure. Schema name is optional, if no schema is specified then dbo is assumed.</param>
+        /// <param name="parametersAction">The action that specifies the parameters of the stored procedure.</param>
+        /// <param name="body">The body of the stored procedure.</param>
+        /// <param name="anonymousArguments">The additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments. For example, 'new { SampleArgument = "MyValue" }'.</param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public void AlterStoredProcedure<TParameters>(
             string name,
@@ -115,6 +139,9 @@ namespace System.Data.Entity.Migrations
                     });
         }
 
+        /// <summary>Adds an operation to drop an existing stored procedure with the specified name.</summary>
+        /// <param name="name">The name of the procedure to drop. Schema name is optional, if no schema is specified then dbo is assumed.</param>
+        /// <param name="anonymousArguments">The additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments. For example, 'new { SampleArgument = "MyValue" }'.</param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public void DropStoredProcedure(
             string name,
@@ -155,7 +182,7 @@ namespace System.Data.Entity.Migrations
                         if (columnModel != null)
                         {
                             columnModel.ApiPropertyInfo = p;
-                            
+
                             if (string.IsNullOrWhiteSpace(columnModel.Name))
                             {
                                 columnModel.Name = p.Name;
@@ -359,6 +386,12 @@ namespace System.Data.Entity.Migrations
             AddOperation(new MoveTableOperation(name, newSchema, anonymousArguments));
         }
 
+        /// <summary>
+        ///     Adds an operation to move a stored procedure to a new schema.
+        /// </summary>
+        /// <param name="name"> The name of the stored procedure to be moved. Schema name is optional, if no schema is specified then dbo is assumed. </param>
+        /// <param name="newSchema"> The schema the stored procedure is to be moved to. </param>
+        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void MoveStoredProcedure(string name, string newSchema, object anonymousArguments = null)
         {
@@ -382,6 +415,12 @@ namespace System.Data.Entity.Migrations
             AddOperation(new RenameTableOperation(name, newName, anonymousArguments));
         }
 
+        /// <summary>
+        ///     Adds an operation to rename a stored procedure. To change the schema of a stored procedure use MoveStoredProcedure
+        /// </summary>
+        /// <param name="name"> The name of the stored procedure to be renamed. Schema name is optional, if no schema is specified then dbo is assumed. </param>
+        /// <param name="newName"> The new name for the stored procedure. Schema name is optional, if no schema is specified then dbo is assumed. </param>
+        /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected internal void RenameStoredProcedure(string name, string newName, object anonymousArguments = null)
         {
@@ -736,24 +775,28 @@ namespace System.Data.Entity.Migrations
 
         #region Hide object members
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string ToString()
         {
             return base.ToString();
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
@@ -761,6 +804,7 @@ namespace System.Data.Entity.Migrations
             return base.GetType();
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         protected new object MemberwiseClone()
         {

@@ -119,6 +119,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from a byte array.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(byte[] value)
         {
             return FromBinary(value);
@@ -140,6 +145,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return (value.Value ? DbExpressionBuilder.True : DbExpressionBuilder.False);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="Nullable{Boolean}"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(bool? value)
         {
             return FromBoolean(value);
@@ -161,6 +171,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value.Value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="Nullable{Byte}"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(byte? value)
         {
             return FromByte(value);
@@ -185,6 +200,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value.Value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="Nullable{DateTime}"/>.
+        /// </summary>
+        /// <param name="value">The expression to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(DateTime? value)
         {
             return FromDateTime(value);
@@ -209,6 +229,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value.Value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="Nullable{DateTimeOffset}"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(DateTimeOffset? value)
         {
             return FromDateTimeOffset(value);
@@ -230,6 +255,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value.Value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="Nullable{Decimal}"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(decimal? value)
         {
             return FromDecimal(value);
@@ -251,6 +281,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value.Value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="Nullable{Double}"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(double? value)
         {
             return FromDouble(value);
@@ -275,6 +310,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="DbGeography"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(DbGeography value)
         {
             return FromGeography(value);
@@ -299,6 +339,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="DbGeometry"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(DbGeometry value)
         {
             return FromGeometry(value);
@@ -323,6 +368,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value.Value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="Nullable{Guid}"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(Guid? value)
         {
             return FromGuid(value);
@@ -344,6 +394,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value.Value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="Nullable{Short}"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(short? value)
         {
             return FromInt16(value);
@@ -365,6 +420,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value.Value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="Nullable{Int32}"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(int? value)
         {
             return FromInt32(value);
@@ -386,6 +446,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value.Value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="Nullable{Long}"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(long? value)
         {
             return FromInt64(value);
@@ -407,6 +472,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value.Value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="Nullable{Single}"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(float? value)
         {
             return FromSingle(value);
@@ -428,6 +498,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             return DbExpressionBuilder.Constant(value);
         }
 
+        /// <summary>
+        /// Enables implicit casting from <see cref="String"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value.</returns>
         public static implicit operator DbExpression(string value)
         {
             return FromString(value);

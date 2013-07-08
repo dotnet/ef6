@@ -140,6 +140,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 out _cachedCTypeFunction);
         }
 
+        /// <summary>Initializes a new instances of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" /> class.</summary>
+        /// <param name="model">The model of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" />.</param>
         public StoreItemCollection(EdmModel model)
             : base(DataSpace.SSpace)
         {
@@ -260,21 +262,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _queryCacheManager; }
         }
 
+        /// <summary>Gets the provider factory of the StoreItemCollection.</summary>
+        /// <returns>The provider factory of the StoreItemCollection.</returns>
         public virtual DbProviderFactory StoreProviderFactory
         {
             get { return _providerFactory; }
         }
 
+        /// <summary>Gets the provider manifest of the StoreItemCollection.</summary>
+        /// <returns>The provider manifest of the StoreItemCollection.</returns>
         public virtual DbProviderManifest StoreProviderManifest
         {
             get { return _providerManifest; }
         }
 
+        /// <summary>Gets the manifest token of the StoreItemCollection.</summary>
+        /// <returns>The manifest token of the StoreItemCollection.</returns>
         public virtual string StoreProviderManifestToken
         {
             get { return _providerManifestToken; }
         }
 
+        /// <summary>Gets the invariant name of the StoreItemCollection.</summary>
+        /// <returns>The invariant name of the StoreItemCollection.</returns>
         public virtual string StoreProviderInvariantName
         {
             get { return _providerInvariantName; }

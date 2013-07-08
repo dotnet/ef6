@@ -109,6 +109,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets a collection of the properties defined by the current type.</summary>
+        /// <returns>A collection of the properties defined by the current type.</returns>
         public ReadOnlyMetadataCollection<EdmProperty> DeclaredProperties
         {
             get { return GetDeclaredOnlyMembers<EdmProperty>(); }

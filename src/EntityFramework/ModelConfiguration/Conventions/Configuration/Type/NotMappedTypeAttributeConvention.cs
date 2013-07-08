@@ -12,6 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class NotMappedTypeAttributeConvention :
         TypeAttributeConfigurationConvention<NotMappedAttribute>
     {
+        /// <inheritdoc />
         public override void Apply(LightweightTypeConfiguration configuration, NotMappedAttribute attribute)
         {
             Check.NotNull(configuration, "configuration");

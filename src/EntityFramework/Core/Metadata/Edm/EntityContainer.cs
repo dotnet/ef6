@@ -100,6 +100,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _baseEntitySets; }
         }
 
+        /// <summary> Gets the association sets for this entity container. </summary>
+        /// <returns> The association sets for this entity container .</returns>
         public ReadOnlyMetadataCollection<AssociationSet> AssociationSets
         {
             get
@@ -109,6 +111,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary> Gets the entity sets for this entity container. </summary>
+        /// <returns> The entity sets for this entity container .</returns>
         public ReadOnlyMetadataCollection<EntitySet> EntitySets
         {
             get
@@ -248,6 +252,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _baseEntitySets.Source.Add(entitySetBase);
         }
 
+        /// <summary>Removes a specific entity set from the container.</summary>
+        /// <param name="entitySetBase">The entity set to remove.</param>
         public void RemoveEntitySetBase(EntitySetBase entitySetBase)
         {
             Check.NotNull(entitySetBase, "entitySetBase");

@@ -118,6 +118,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 "Only members of type Property may be added to Entity types.");
         }
 
+        /// <summary>Gets the declared navigation properties associated with the entity type.</summary>
+        /// <returns>The declared navigation properties associated with the entity type.</returns>
         public ReadOnlyMetadataCollection<NavigationProperty> DeclaredNavigationProperties
         {
             get { return GetDeclaredOnlyMembers<NavigationProperty>(); }
@@ -141,11 +143,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        /// <summary>Gets the declared properties for the entity type.</summary>
+        /// <returns>The declared properties for the entity type.</returns>
         public ReadOnlyMetadataCollection<EdmProperty> DeclaredProperties
         {
             get { return GetDeclaredOnlyMembers<EdmProperty>(); }
         }
 
+        /// <summary>Gets the collection of declared members for the entity type.</summary>
+        /// <returns>The collection of declared members for the entity type.</returns>
         public ReadOnlyMetadataCollection<EdmMember> DeclaredMembers
         {
             get { return GetDeclaredOnlyMembers<EdmMember>(); }

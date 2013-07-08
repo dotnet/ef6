@@ -304,12 +304,12 @@ namespace System.Data.Entity
 
             return config.Where(
                 p =>
-                    {
-                        Type propertyType;
-                        p.PropertyType.TryUnwrapNullableType(out propertyType);
+                {
+                    Type propertyType;
+                    p.PropertyType.TryUnwrapNullableType(out propertyType);
 
-                        return propertyType == typeof(T);
-                    });
+                    return propertyType == typeof(T);
+                });
         }
 
         /// <summary>
@@ -399,7 +399,7 @@ namespace System.Data.Entity
             modelAdapter.ConceptualModel.Validate();
 
             model = new DbModel(
-                modelAdapter.ConceptualModel.GenerateDatabaseMapping(providerInfo, providerManifest), 
+                modelAdapter.ConceptualModel.GenerateDatabaseMapping(providerInfo, providerManifest),
                 modelBuilderClone);
             modelAdapter = (IEdmModelAdapter)model;
 
@@ -454,24 +454,28 @@ namespace System.Data.Entity
             get { return _modelConfiguration; }
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override string ToString()
         {
             return base.ToString();
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
         }
 
+        /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()

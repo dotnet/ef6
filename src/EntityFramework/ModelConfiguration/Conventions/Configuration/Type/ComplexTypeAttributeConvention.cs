@@ -12,6 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class ComplexTypeAttributeConvention :
         TypeAttributeConfigurationConvention<ComplexTypeAttribute>
     {
+        /// <inheritdoc />
         public override void Apply(LightweightTypeConfiguration configuration, ComplexTypeAttribute attribute)
         {
             Check.NotNull(configuration, "configuration");

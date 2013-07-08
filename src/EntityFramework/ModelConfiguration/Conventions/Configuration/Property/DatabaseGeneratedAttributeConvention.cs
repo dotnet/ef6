@@ -12,6 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class DatabaseGeneratedAttributeConvention
         : PrimitivePropertyAttributeConfigurationConvention<DatabaseGeneratedAttribute>
     {
+        /// <inheritdoc/>
         public override void Apply(LightweightPrimitivePropertyConfiguration configuration, DatabaseGeneratedAttribute attribute)
         {
             Check.NotNull(configuration, "configuration");

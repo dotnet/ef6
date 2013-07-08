@@ -16,6 +16,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class ColumnOrderingConventionStrict : ColumnOrderingConvention
     {
+        /// <summary>
+        ///     Validates the ordering configuration supplied for columns to ensure 
+        ///     that the same ordinal was not supplied for two columns.
+        /// </summary>
+        /// <param name="table">The name of the table that the columns belong to.</param>
+        /// <param name="tableName">The definition of the table.</param>
         protected override void ValidateColumns(EntityType table, string tableName)
         {
             var hasDuplicates

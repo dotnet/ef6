@@ -13,6 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class NotMappedPropertyAttributeConvention
         : PropertyAttributeConfigurationConvention<NotMappedAttribute>
     {
+        /// <inheritdoc/>
         public override void Apply(PropertyInfo memberInfo, LightweightTypeConfiguration configuration, NotMappedAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
