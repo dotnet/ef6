@@ -1201,7 +1201,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         public void Assembly_reference_can_be_found_for_real_assembly()
         {
             Run_Project_test_if_Visual_Studio_is_running(
-                p =>
+                (p, v) =>
                     {
                         var dataRef = new ReferenceRemover(p).TryFindReference("System.Data", "b77a5c561934e089");
                         Assert.Equal("System.Data", dataRef.Identity);
@@ -1216,7 +1216,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
             var configFilesFound = new List<string>();
 
             Run_Project_test_if_Visual_Studio_is_running(
-                p =>
+                (p, v) =>
                     {
                         new ConfigFileFinder().FindConfigFiles(
                             p.ProjectItems, i =>
@@ -1248,29 +1248,41 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         public void GetProjectTypes_returns_project_types()
         {
             Run_Project_test_if_Visual_Studio_is_running(
-                p =>
+                (p, v) =>
                     {
-                        var types = p.GetProjectTypes();
+                        var types = p.GetProjectTypes(v);
                         Assert.Equal(new[] { "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}" }, types);
                     });
         }
 
-        private void Run_Project_test_if_Visual_Studio_is_running(Action<Project> test)
+        private void Run_Project_test_if_Visual_Studio_is_running(Action<Project, int> test)
         {
+            // Note that these tests are setup to work with the latest released version of Visual
+            // Studio used by the EF team in day-to-day development. Currently this is VS 2012 which
+            // is version 11. See CodePlex 1367.
+            const int targetVsVersion = 11;
+
             MessageFilter.Register();
+
             try
             {
-                var dte = (DTE)Marshal.GetActiveObject("VisualStudio.DTE.11.0");
-                var project = TryGetPowerShellUnitTests(dte);
+                Project project = null;
+                try
+                {
+                    var dte = (DTE)Marshal.GetActiveObject(
+                        string.Format(CultureInfo.InvariantCulture, "VisualStudio.DTE.{0}.0", targetVsVersion));
+                    project = TryGetPowerShellUnitTests(dte);
+                }
+                catch (COMException)
+                {
+                    // This is thrown when running as part of a razzle build. The test doesn't work in
+                    // the razzle environment.
+                }
+
                 if (project != null)
                 {
-                    test(project);
+                    test(project, targetVsVersion);
                 }
-            }
-            catch (COMException)
-            {
-                // This is thrown when running as part of a razzle build. The test doesn't work in
-                // the razzle environment.
             }
             finally
             {

@@ -14,13 +14,6 @@ namespace System.Data.Entity.Migrations.Extensions
 
     internal static class ProjectExtensions
     {
-        private static readonly Type _serviceProviderType =
-            Type.GetType(
-                "Microsoft.VisualStudio.Shell.ServiceProvider, Microsoft.VisualStudio.Shell, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
-            ??
-            Type.GetType(
-                "Microsoft.VisualStudio.Shell.ServiceProvider, Microsoft.VisualStudio.Shell, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
-
         public const int S_OK = 0;
         public const string WebApplicationProjectTypeGuid = "{349C5851-65DF-11DA-9384-00065B846F21}";
         public const string WebSiteProjectTypeGuid = "{E24C65DC-7377-472B-9ABA-BC803B73C61A}";
@@ -275,14 +268,27 @@ namespace System.Data.Entity.Migrations.Extensions
             return (T)property.Value;
         }
 
-        public static IEnumerable<string> GetProjectTypes(this Project project)
+        /// <summary>
+        /// Gets all aggregate project type GUIDs for the given project.
+        /// Note that when running in Visual Studio app domain (which is how this code is used in
+        /// production) a shellVersion of 10 is fine because VS has binding redirects to cause the
+        /// latest version to be loaded. When running tests is may be desirable to explicitly pass
+        /// a different version. See CodePlex 467.
+        /// </summary>
+        public static IEnumerable<string> GetProjectTypes(this Project project, int shellVersion = 10)
         {
             DebugCheck.NotNull(project);
 
             IVsHierarchy hierarchy;
 
+            var serviceProviderType = Type.GetType(string.Format(
+                "Microsoft.VisualStudio.Shell.ServiceProvider, Microsoft.VisualStudio.Shell, Version={0}.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+                shellVersion));
+
+            Debug.Assert(serviceProviderType != null);
+
             var serviceProvider = (IServiceProvider)Activator.CreateInstance(
-                _serviceProviderType,
+                serviceProviderType,
                 (Microsoft.VisualStudio.OLE.Interop.IServiceProvider)project.DTE);
 
             var solution = (IVsSolution)serviceProvider.GetService(typeof(IVsSolution));
