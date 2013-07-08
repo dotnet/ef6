@@ -10,7 +10,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
@@ -30,9 +29,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private DbProviderInfo _providerInfo;
         private DbProviderManifest _providerManifest;
 
+        private EdmModel(EntityContainer entityContainer, double version = XmlConstants.SchemaVersionLatest)
+        {
+            DebugCheck.NotNull(entityContainer);
+
+            _container = entityContainer;
+            SchemaVersion = version;
+        }
+
         internal EdmModel(DataSpace dataSpace, double schemaVersion = XmlConstants.SchemaVersionLatest)
         {
-            if (dataSpace != DataSpace.CSpace && dataSpace != DataSpace.SSpace)            {                throw new ArgumentException(Strings.EdmModel_InvalidDataSpace(dataSpace), "dataSpace");            }
+            if (dataSpace != DataSpace.CSpace && dataSpace != DataSpace.SSpace)
+            {
+                throw new ArgumentException(Strings.EdmModel_InvalidDataSpace(dataSpace), "dataSpace");
+            }
+
             _container = new EntityContainer(
                 dataSpace == DataSpace.CSpace
                     ? "CodeFirstContainer"
@@ -122,10 +133,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal DbProviderInfo ProviderInfo
         {
             get { return _providerInfo; }
-
             private set
             {
+                DebugCheck.NotNull(value);
                 Debug.Assert(DataSpace == DataSpace.SSpace);
+
                 _providerInfo = value;
             }
         }
@@ -133,10 +145,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal DbProviderManifest ProviderManifest
         {
             get { return _providerManifest; }
-
             private set
             {
+                DebugCheck.NotNull(value);
                 Debug.Assert(DataSpace == DataSpace.SSpace);
+
                 _providerManifest = value;
             }
         }
@@ -163,7 +176,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        internal IEnumerable<GlobalItem> GlobalItems
+        public IEnumerable<GlobalItem> GlobalItems
         {
             get { return NamespaceItems.Concat<GlobalItem>(Containers); }
         }
@@ -325,10 +338,44 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 };
         }
 
+        internal static EdmModel CreateStoreModel(
+            EntityContainer entityContainer,
+            DbProviderInfo providerInfo,
+            DbProviderManifest providerManifest,
+            double schemaVersion = XmlConstants.SchemaVersionLatest)
+        {
+            DebugCheck.NotNull(entityContainer);
+            Debug.Assert(entityContainer.DataSpace == DataSpace.SSpace);
+
+            var storeModel = new EdmModel(entityContainer, schemaVersion);
+
+            if (providerInfo != null)
+            {
+                storeModel.ProviderInfo = providerInfo;
+            }
+
+            if (providerManifest != null)
+            {
+                storeModel.ProviderManifest = providerManifest;
+            }
+
+            return storeModel;
+        }
+
         internal static EdmModel CreateConceptualModel(
             double schemaVersion = XmlConstants.SchemaVersionLatest)
         {
             return new EdmModel(DataSpace.CSpace, schemaVersion);
+        }
+
+        internal static EdmModel CreateConceptualModel(
+            EntityContainer entityContainer,
+            double schemaVersion = XmlConstants.SchemaVersionLatest)
+        {
+            DebugCheck.NotNull(entityContainer);
+            Debug.Assert(entityContainer.DataSpace == DataSpace.CSpace);
+
+            return new EdmModel(entityContainer, schemaVersion);
         }
     }
 }

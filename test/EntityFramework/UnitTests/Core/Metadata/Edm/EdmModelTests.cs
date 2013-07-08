@@ -4,8 +4,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.SqlServer;
-    using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
 
@@ -226,6 +224,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
+        public void CreateStoreModel_sets_container()
+        {
+            var container = new EntityContainer("MyContainer", DataSpace.SSpace);
+
+            var model = EdmModel.CreateStoreModel(container, null, null);
+
+            Assert.Same(container, model.Containers.Single());
+            Assert.Null(model.ProviderManifest);
+            Assert.Null(model.ProviderInfo);
+        }
+
+        [Fact]
+        public void CreateStoreModel_sets_provider_info_and_manifest()
+        {
+            var container = new EntityContainer("MyContainer", DataSpace.SSpace);
+            var providerInfo = ProviderRegistry.Sql2008_ProviderInfo;
+            var providerManifest = ProviderRegistry.Sql2008_ProviderManifest;
+
+            var model = EdmModel.CreateStoreModel(container, providerInfo, providerManifest);
+
+            Assert.Same(container, model.Containers.Single());
+            Assert.Same(providerInfo, model.ProviderInfo);
+            Assert.Same(providerManifest, model.ProviderManifest);
+        }
+
+        [Fact]
         public void CreateConceptualModel_creates_model_with_CSpace()
         {
             var model = EdmModel.CreateConceptualModel();
@@ -233,6 +257,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Equal(DataSpace.CSpace, model.DataSpace);
             Assert.Null(model.ProviderInfo);
             Assert.Null(model.ProviderManifest);
+        }
+
+        [Fact]
+        public void CreateConceptualModel_sets_container()
+        {
+            var container = new EntityContainer("MyContainer", DataSpace.CSpace);
+
+            var model = EdmModel.CreateConceptualModel(container);
+
+            Assert.Same(container, model.Containers.Single());
         }
     }
 }
