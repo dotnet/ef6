@@ -42,7 +42,6 @@ namespace System.Data.Entity.ProductivityApi
             using (var context = new SimpleModelContext())
             {
                 RunDeadlockTest(() => context.Products.FindAsync(0));
-                
             }
         }
 
@@ -54,7 +53,7 @@ namespace System.Data.Entity.ProductivityApi
                 RunDeadlockTest(() => context.Database.ExecuteSqlCommandAsync("select Id from Products"));
             }
         }
-        
+
         [Fact]
         public void DbEntityEntry_ReloadAsync_does_not_deadlock()
         {
@@ -96,21 +95,22 @@ namespace System.Data.Entity.ProductivityApi
             {
                 Assert.Equal(
                     DispatcherOperationStatus.Completed,
-                    dispatcher.InvokeAsync(() =>
-                        Assert.True(asyncOperation().Wait(TimeSpan.FromSeconds(5))))
-                    .Wait(TimeSpan.FromSeconds(6)));
+                    dispatcher.InvokeAsync(
+                        () =>
+                        Assert.True(asyncOperation().Wait(TimeSpan.FromMinutes(1))))
+                        .Wait(TimeSpan.FromMinutes(1.1)));
             }
             finally
             {
                 dispatcher.BeginInvokeShutdown(DispatcherPriority.Send);
                 var startShutdownTime = DateTime.Now;
                 while (!(hasShutdownFinished = dispatcher.HasShutdownFinished)
-                       && DateTime.Now - startShutdownTime < TimeSpan.FromSeconds(1))
+                       && DateTime.Now - startShutdownTime < TimeSpan.FromSeconds(5))
                 {
                     Thread.Sleep(TimeSpan.FromMilliseconds(15));
                 }
 
-                Task.Run(() => dispatcherThread.Abort()).Wait(TimeSpan.FromSeconds(1));
+                Task.Run(() => dispatcherThread.Abort()).Wait(TimeSpan.FromSeconds(5));
             }
 
             Assert.True(hasShutdownFinished);
