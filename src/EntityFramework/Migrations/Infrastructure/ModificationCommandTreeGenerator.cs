@@ -281,11 +281,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         set.Attach(principalStub);
                     }
 
-                    if (associationType.IsOneToOne()
+                    if (principalEnd.IsRequired()
                         && state == EntityState.Modified)
                     {
-                        // For one-to-one updates, we need to fake delete
-                        // the relationship first.
+                        // For updates with a required principal, 
+                        // we need to fake delete the relationship first.
 
                         var principalStubForDelete
                             = InstantiateEntity(principalEntityType, context, principalClrType, set);

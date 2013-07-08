@@ -12,6 +12,104 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
     public class ModificationCommandTreeGeneratorTests : TestBase
     {
+        public class ArubaRun
+        {
+            public string Id { get; set; }
+            public ICollection<ArubaTask> Tasks { get; set; }
+        }
+
+        public class ArubaTask
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class ArubaContext : DbContext
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<ArubaRun>().HasMany(r => r.Tasks).WithRequired();
+            }
+        }
+
+        [Fact]
+        public void Can_generate_insert_tree_when_ia_required_to_many()
+        {
+            DbModel model;
+
+            using (var context = new ArubaContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateInsert(GetType().Namespace + ".ArubaTask")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_update_tree_when_ia_required_to_many()
+        {
+            DbModel model;
+
+            using (var context = new ArubaContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateUpdate(GetType().Namespace + ".ArubaTask")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_delete_tree_when_ia_required_to_many()
+        {
+            DbModel model;
+
+            using (var context = new ArubaContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateDelete(GetType().Namespace + ".ArubaTask")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
         public enum MilitaryRank
         {
             Private,
