@@ -71,7 +71,7 @@ namespace System.Data.Entity
         /// <exception cref="InvalidOperationException">Thrown if the connection associated with the transaction does not match the Entity Framework's connection</exception>
         public void UseTransaction(DbTransaction transaction)
         {
-            ((EntityConnection)_internalContext.ObjectContext.Connection).UseStoreTransaction(transaction);
+            ((EntityConnection)_internalContext.GetObjectContextWithoutDatabaseInitialization().Connection).UseStoreTransaction(transaction);
         }
 
         /// <summary>

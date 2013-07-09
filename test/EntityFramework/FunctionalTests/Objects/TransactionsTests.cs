@@ -9,11 +9,11 @@ namespace System.Data.Entity.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Reflection;
     using System.Transactions;
+    using SimpleModel;
     using Xunit;
     using IsolationLevel = System.Data.IsolationLevel;
 
@@ -501,6 +501,79 @@ namespace System.Data.Entity.Objects
             finally
             {
                 ResetTables();
+            }
+        }
+
+        [Fact] // CodePlex 906
+        public void UseTransaction_does_not_cause_or_require_database_initialization()
+        {
+            using (var context = new SimpleModelContext(
+                SimpleConnection<NonInitUseTransaction>(), contextOwnsConnection: true))
+            {
+                context.Database.Delete();
+                context.Database.Create();
+            }
+
+            using (var connection = SimpleConnection<NonInitUseTransaction>())
+            {
+                connection.Open();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    using (var context = new NonInitUseTransaction(connection, contextOwnsConnection: false))
+                    {
+                        context.Database.UseTransaction(transaction);
+
+                        Assert.False(UseTransactionInitializer.InitializerRun);
+
+                        context.Categories.Add(new Category("Fresca"));
+
+                        Assert.True(UseTransactionInitializer.InitializerRun);
+
+                        context.SaveChanges();
+
+                        Assert.Equal(
+                            new[] { "Fresca", "Pepsi" },
+                            context.Categories.Select(c => c.Id).OrderBy(c => c).ToList());
+                    }
+                }
+
+                using (var context = new NonInitUseTransaction(connection, contextOwnsConnection: false))
+                {
+                    // Note that the initializer did not use the transaction because it was run with
+                    // a cloned connection. We did a lot of work around using the same connection instead
+                    // of cloning it, but this caused more problems than it fixed.
+                    Assert.Equal(
+                        new[] { "Pepsi" },
+                        context.Categories.Select(c => c.Id).OrderBy(c => c).ToList());
+                }
+            }
+        }
+
+        public class NonInitUseTransaction : SimpleModelContext
+        {
+            static NonInitUseTransaction()
+            {
+                Database.SetInitializer(new UseTransactionInitializer());
+            }
+
+            public NonInitUseTransaction(DbConnection existingConnection, bool contextOwnsConnection)
+                : base(existingConnection, contextOwnsConnection)
+            {
+            }
+        }
+
+        public class UseTransactionInitializer : IDatabaseInitializer<NonInitUseTransaction>
+        {
+            public static bool InitializerRun { get; set; }
+
+            public void InitializeDatabase(NonInitUseTransaction context)
+            {
+                InitializerRun = true;
+
+                context.Categories.Add(new Category("Pepsi"));
+
+                context.SaveChanges();
             }
         }
 
