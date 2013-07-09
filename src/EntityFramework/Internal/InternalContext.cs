@@ -1439,11 +1439,27 @@ namespace System.Data.Entity.Internal
             get { return null; }
         }
 
+        /// <summary>
+        /// This is the default context key that is used by database initializers if no Migrations
+        /// configuration is found.
+        /// </summary>
+        public string DefaultContextKey
+        {
+            get
+            {
+                return OwnerShortTypeName;
+            }
+        }
+
+        /// <summary>
+        /// This is either the <see cref="DefaultContextKey"/> or if a Migrations configuration is
+        /// discovered then it is the context key from the discovered configuration.
+        /// </summary>
         public string ContextKey
         {
             get
             {
-                return MigrationsConfigurationDiscovered ? _migrationsConfigurationContextKey : OwnerShortTypeName;
+                return MigrationsConfigurationDiscovered ? _migrationsConfigurationContextKey : DefaultContextKey;
             }
         }
 

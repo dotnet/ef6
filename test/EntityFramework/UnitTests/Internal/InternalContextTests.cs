@@ -58,6 +58,14 @@ namespace System.Data.Entity.Internal
             Assert.Equal("My Key", new ContextWithMigrations().InternalContext.ContextKey);
         }
 
+        [Fact]
+        public void DefaultContextKey_returns_context_type_string_even_if_configuration_is_discovered()
+        {
+            Assert.Equal(
+                "System.Data.Entity.Internal.InternalContextTests+ContextWithMigrations",
+                new ContextWithMigrations().InternalContext.DefaultContextKey);
+        }
+
         public class DiscoverableConfiguration : DbMigrationsConfiguration<ContextWithMigrations>
         {
             public DiscoverableConfiguration()

@@ -155,6 +155,26 @@ namespace System.Data.Entity.Migrations
         }
     }
 
+    public class ShopContext_v1b : ShopContext_v1
+    {
+        public ShopContext_v1b()
+        {
+        }
+
+        public ShopContext_v1b(string nameOrConnectionString)
+            : base(nameOrConnectionString)
+        {
+        }
+    }
+
+    public class ShopContextConfiguration_v1b : DbMigrationsConfiguration<ShopContext_v1b>
+    {
+        public ShopContextConfiguration_v1b()
+        {
+            ContextKey = "Keynes";
+        }
+    }
+
     public class ShopContext_v2 : ShopContext_v1
     {
         public ShopContext_v2()

@@ -178,7 +178,7 @@ namespace System.Data.Entity.Migrations
                             ? Strings.LoggingExplicit
                             : _usersContextInfo.ConnectionStringOrigin.ToString());
 
-                _legacyContextKey = context.InternalContext.ContextKey;
+                _legacyContextKey = context.InternalContext.DefaultContextKey;
                 _emptyModel = GetEmptyModel();
             }
             finally

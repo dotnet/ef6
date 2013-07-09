@@ -49,15 +49,15 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var migrator = CreateMigrator<ShopContext_v1>();
+            var migrator = CreateMigrator<ShopContext_v1b>();
 
             var initialCreate = new MigrationScaffolder(migrator.Configuration).Scaffold("InitialCreate");
 
-            migrator = CreateMigrator<ShopContext_v1>(scaffoldedMigrations: initialCreate, contextKey: typeof(ShopContext_v1).FullName);
+            migrator = CreateMigrator<ShopContext_v1b>(scaffoldedMigrations: initialCreate, contextKey: typeof(ShopContext_v1b).FullName);
 
             migrator.Update();
 
-            migrator = CreateMigrator<ShopContext_v1>(contextKey: "NewOne");
+            migrator = CreateMigrator<ShopContext_v1b>(contextKey: "NewOne");
 
             var scaffoldedMigration = migrator.ScaffoldInitialCreate("Foo");
 
