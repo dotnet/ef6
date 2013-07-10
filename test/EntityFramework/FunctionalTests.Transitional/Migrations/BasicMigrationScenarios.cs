@@ -64,6 +64,10 @@ namespace System.Data.Entity.Migrations
             Assert.NotNull(scaffoldedMigration);
             Assert.NotSame(initialCreate, scaffoldedMigration);
             Assert.Equal(initialCreate.MigrationId, scaffoldedMigration.MigrationId);
+
+            WhenNotSqlCe(
+                () =>
+                    Assert.Contains("INSERT [dbo].[MigrationsCustomers]([CustomerNumber],", initialCreate.UserCode));
         }
 
         [MigrationsTheory]

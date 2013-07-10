@@ -279,7 +279,7 @@ namespace System.Data.Entity.Migrations
 
             var migrationOperations
                 = _modelDiffer
-                    .Diff(_emptyModel.Value, databaseModel)
+                    .Diff(_emptyModel.Value, databaseModel, _modificationCommandTreeGenerator, SqlGenerator)
                     .ToList();
 
             var scaffoldedMigration
