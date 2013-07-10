@@ -363,7 +363,7 @@ namespace System.Data.Entity.Migrations.History
             {
                 using (var context = CreateContext(connection))
                 {
-                    return context.History.Any(hr => hr.ContextKey == _contextKey);
+                    return context.History.Count(hr => hr.ContextKey == _contextKey) > 0;
                 }
             }
         }
@@ -412,7 +412,7 @@ namespace System.Data.Entity.Migrations.History
                                 {
                                     contextKey = contextKey.RestrictTo(_contextKeyMaxLength);
 
-                                    if (context.History.Any(hr => hr.ContextKey == contextKey))
+                                    if (context.History.Count(hr => hr.ContextKey == contextKey) > 0)
                                     {
                                         return true;
                                     }

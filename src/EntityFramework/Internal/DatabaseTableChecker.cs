@@ -10,6 +10,7 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Text;
     using System.Transactions;
 
     internal class DatabaseTableChecker
@@ -51,12 +52,6 @@ namespace System.Data.Entity.Internal
                             return true;
                     }
 
-                    // Check for a history entry before we query the DB metadata
-                    if (internalContext.HasHistoryTableEntry())
-                    {
-                        return true;
-                    }
-
                     var modelTables = GetModelTables(internalContext.ObjectContext.MetadataWorkspace).ToList();
 
                     if (!modelTables.Any())
@@ -64,24 +59,17 @@ namespace System.Data.Entity.Internal
                         return true;
                     }
 
-                    IEnumerable<Tuple<string, string>> databaseTables;
                     using (new TransactionScope(TransactionScopeOption.Suppress))
                     {
-                        databaseTables = GetDatabaseTables(
-                            clonedObjectContext.ObjectContext, clonedObjectContext.Connection, provider).ToList();
+                        if (provider.AnyModelTableExistsInDatabase(
+                            clonedObjectContext.ObjectContext, clonedObjectContext.Connection, modelTables,
+                            EdmMetadataContext.TableName))
+                        {
+                            return true;
+                        }
                     }
 
-                    if (databaseTables.Any(
-                        t => t.Item2 == EdmMetadataContext.TableName))
-                    {
-                        return true;
-                    }
-
-                    var comparer = provider.SupportsSchemas
-                                       ? EqualityComparer<Tuple<string, string>>.Default
-                                       : (IEqualityComparer<Tuple<string, string>>)new IgnoreSchemaComparer();
-
-                    return databaseTables.Any(databaseTable => modelTables.Contains(databaseTable, comparer));
+                    return internalContext.HasHistoryTableEntry();
                 }
                 catch (Exception ex)
                 {
@@ -93,9 +81,9 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        private static IEnumerable<Tuple<string, string>> GetModelTables(MetadataWorkspace workspace)
+        private static IEnumerable<EntitySet> GetModelTables(MetadataWorkspace workspace)
         {
-            var tables = workspace
+            return workspace
                 .GetItemCollection(DataSpace.SSpace)
                 .GetItems<EntityContainer>()
                 .Single()
@@ -104,95 +92,132 @@ namespace System.Data.Entity.Internal
                 .Where(
                     s => !s.MetadataProperties.Contains("Type")
                          || (string)s.MetadataProperties["Type"].Value == "Tables");
-
-            return from table in tables
-                   let schemaName = (string)table.MetadataProperties["Schema"].Value
-                   let tableName = table.MetadataProperties.Contains("Table")
-                                   && table.MetadataProperties["Table"].Value != null
-                                       ? (string)table.MetadataProperties["Table"].Value
-                                       : table.Name
-                   select Tuple.Create(schemaName, tableName);
         }
 
-        [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        private static IEnumerable<Tuple<string, string>> GetDatabaseTables(
-            ObjectContext context, DbConnection connection, IPseudoProvider provider)
+        private static string GetTableName(EntitySet modelTable)
         {
-            using (var command = new InterceptableDbCommand(
-                connection.CreateCommand(), context.InterceptionContext))
+            return modelTable.MetadataProperties.Contains("Table")
+                   && modelTable.MetadataProperties["Table"].Value != null
+                       ? (string)modelTable.MetadataProperties["Table"].Value
+                       : modelTable.Name;
+        }
+
+        private interface IPseudoProvider
+        {
+            bool AnyModelTableExistsInDatabase(
+                ObjectContext context, DbConnection connection, List<EntitySet> modelTables, string edmMetadataContextTableName);
+        }
+
+        private class SqlPseudoProvider : IPseudoProvider
+        {
+            [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
+            public bool AnyModelTableExistsInDatabase(
+                ObjectContext context, DbConnection connection, List<EntitySet> modelTables, string edmMetadataContextTableName)
             {
-                command.CommandText = provider.StoreSchemaTablesQuery;
-
-                var executionStrategy = DbProviderServices.GetExecutionStrategy(connection);
-                try
+                var modelTablesListBuilder = new StringBuilder();
+                foreach (var modelTable in modelTables)
                 {
-                    return executionStrategy.Execute(
-                        () =>
-                            {
-                                if (connection.State == ConnectionState.Broken)
-                                {
-                                    connection.Close();
-                                }
+                    modelTablesListBuilder.Append("'");
+                    modelTablesListBuilder.Append((string)modelTable.MetadataProperties["Schema"].Value);
+                    modelTablesListBuilder.Append(".");
+                    modelTablesListBuilder.Append(GetTableName(modelTable));
+                    modelTablesListBuilder.Append("',");
+                }
+                modelTablesListBuilder.Remove(modelTablesListBuilder.Length - 1, 1);
 
-                                if (connection.State == ConnectionState.Closed)
-                                {
-                                    connection.Open();
-                                }
+                using (var command = new InterceptableDbCommand(
+                    connection.CreateCommand(), context.InterceptionContext))
+                {
+                    command.CommandText = @"
+SELECT Count(*)
+FROM INFORMATION_SCHEMA.TABLES AS t
+WHERE t.TABLE_TYPE = 'BASE TABLE'
+    AND (t.TABLE_SCHEMA + '.' + t.TABLE_NAME IN (" + modelTablesListBuilder + @")
+        OR t.TABLE_NAME = '" + edmMetadataContextTableName + "')";
 
-                                using (var reader = command.ExecuteReader())
+                    var executionStrategy = DbProviderServices.GetExecutionStrategy(connection);
+                    try
+                    {
+                        return executionStrategy.Execute(
+                            () =>
                                 {
-                                    var tables = new List<Tuple<string, string>>();
-                                    while (reader.Read())
+                                    if (connection.State == ConnectionState.Broken)
                                     {
-                                        tables.Add(
-                                            Tuple.Create(
-                                                reader["SchemaName"] as string,
-                                                reader["Name"] as string));
+                                        connection.Close();
                                     }
 
-                                    return tables;
-                                }
-                            });
-                }
-                finally
-                {
-                    if (connection.State != ConnectionState.Closed)
+                                    if (connection.State == ConnectionState.Closed)
+                                    {
+                                        connection.Open();
+                                    }
+
+                                    return (int)command.ExecuteScalar() > 0;
+                                });
+                    }
+                    finally
                     {
-                        connection.Close();
+                        if (connection.State != ConnectionState.Closed)
+                        {
+                            connection.Close();
+                        }
                     }
                 }
             }
         }
 
-        private interface IPseudoProvider
-        {
-            string StoreSchemaTablesQuery { get; }
-            bool SupportsSchemas { get; }
-        }
-
-        private class SqlPseudoProvider : IPseudoProvider
-        {
-            public string StoreSchemaTablesQuery
-            {
-                get { return "SELECT TABLE_SCHEMA SchemaName, TABLE_NAME Name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'"; }
-            }
-
-            public bool SupportsSchemas
-            {
-                get { return true; }
-            }
-        }
-
         private class SqlCePseudoProvider : IPseudoProvider
         {
-            public string StoreSchemaTablesQuery
+            public bool AnyModelTableExistsInDatabase(
+                ObjectContext context, DbConnection connection, List<EntitySet> modelTables, string edmMetadataContextTableName)
             {
-                get { return "SELECT TABLE_SCHEMA SchemaName, TABLE_NAME Name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'TABLE'"; }
-            }
+                var modelTablesListBuilder = new StringBuilder();
+                foreach (var modelTable in modelTables)
+                {
+                    modelTablesListBuilder.Append("'");
+                    modelTablesListBuilder.Append(GetTableName(modelTable));
+                    modelTablesListBuilder.Append("',");
+                }
 
-            public bool SupportsSchemas
-            {
-                get { return false; }
+                modelTablesListBuilder.Append("'");
+                modelTablesListBuilder.Append("edmMetadataContextTableName");
+                modelTablesListBuilder.Append("'");
+
+                using (var command = new InterceptableDbCommand(
+                    connection.CreateCommand(), context.InterceptionContext))
+                {
+                    command.CommandText = @"
+SELECT Count(*)
+FROM INFORMATION_SCHEMA.TABLES AS t
+WHERE t.TABLE_TYPE = 'TABLE'
+    AND t.TABLE_NAME IN (" + modelTablesListBuilder + @")";
+
+                    var executionStrategy = DbProviderServices.GetExecutionStrategy(connection);
+                    try
+                    {
+                        return executionStrategy.Execute(
+                            () =>
+                                {
+                                    if (connection.State == ConnectionState.Broken)
+                                    {
+                                        connection.Close();
+                                    }
+
+                                    if (connection.State == ConnectionState.Closed)
+                                    {
+                                        connection.Open();
+                                    }
+
+                                    return (int)command.ExecuteScalar() > 0;
+                                });
+                    }
+                    finally
+                    {
+                        if (connection.State != ConnectionState.Closed)
+                        {
+                            connection.Close();
+                        }
+                    }
+                }
             }
         }
 

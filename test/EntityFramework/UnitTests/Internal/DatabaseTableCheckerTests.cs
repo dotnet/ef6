@@ -31,20 +31,18 @@ namespace System.Data.Entity.Internal
             internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
 
             var dbCommandMock = new Mock<DbCommand>();
-
+            
             SetupMocksForTableChecking(dbCommandMock, connectionMock, internalContextMock);
 
             var executionStrategyMock = new Mock<IDbExecutionStrategy>();
             // Verify that ExecutionStrategy.Execute calls DbCommand.ExecuteDataReader
-            executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<List<Tuple<string, string>>>>()))
-                                 .Returns<Func<List<Tuple<string, string>>>>(
+            executionStrategyMock.Setup(m => m.Execute(It.IsAny < Func<bool>>()))
+                                 .Returns<Func<bool>>(
                                      f =>
                                      {
-                                         dbCommandMock.Protected().Verify<DbDataReader>(
-                                             "ExecuteDbDataReader", Times.Never(), It.IsAny<CommandBehavior>());
+                                         dbCommandMock.Verify(m => m.ExecuteScalar(), Times.Never());
                                          var result = f();
-                                         dbCommandMock.Protected().Verify<DbDataReader>(
-                                             "ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
+                                         dbCommandMock.Verify(m => m.ExecuteScalar(), Times.Once());
                                          return result;
                                      });
 
@@ -59,7 +57,7 @@ namespace System.Data.Entity.Internal
             }
 
             // Finally verify that ExecutionStrategy.Execute was called
-            executionStrategyMock.Verify(m => m.Execute(It.IsAny<Func<List<Tuple<string, string>>>>()), Times.Once());
+            executionStrategyMock.Verify(m => m.Execute(It.IsAny<Func<bool>>()), Times.Once());
         }
 
         [Fact]
@@ -93,9 +91,9 @@ namespace System.Data.Entity.Internal
             }
 
             interceptorMock.Verify(
-                m => m.ReaderExecuting(
+                m => m.ScalarExecuting(
                     dbCommandMock.Object,
-                    It.Is<DbCommandInterceptionContext<DbDataReader>>(c => c.ObjectContexts.Contains(internalContextMock.Object.ObjectContext))));
+                    It.Is<DbCommandInterceptionContext<object>>(c => c.ObjectContexts.Contains(internalContextMock.Object.ObjectContext))));
         }
 
         [Fact]
@@ -116,6 +114,11 @@ namespace System.Data.Entity.Internal
         {
             var dataReader = Core.Common.Internal.Materialization.MockHelper.CreateDbDataReader();
 
+            dbCommandMock.Protected().Setup<DbParameter>("CreateDbParameter")
+                .Returns(new Mock<DbParameter>().Object);
+            dbCommandMock.Protected().Setup<DbParameterCollection>("DbParameterCollection")
+                .Returns(new Mock<DbParameterCollection>().Object);
+            dbCommandMock.Setup(m => m.ExecuteScalar()).Returns(0);
             dbCommandMock.Protected().Setup<DbDataReader>(
                 "ExecuteDbDataReader", It.IsAny<CommandBehavior>())
                          .Returns(dataReader);
