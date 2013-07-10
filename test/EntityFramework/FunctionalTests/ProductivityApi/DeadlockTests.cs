@@ -59,8 +59,12 @@ namespace System.Data.Entity.ProductivityApi
         {
             using (var context = new SimpleModelContext())
             {
-                RunDeadlockTest(context.Products.LoadAsync);
-                RunDeadlockTest(context.ChangeTracker.Entries().First().ReloadAsync);
+                RunDeadlockTest(
+                    async () =>
+                        {
+                            await context.Products.LoadAsync().ConfigureAwait(false);
+                            await context.ChangeTracker.Entries().First().ReloadAsync().ConfigureAwait(false);
+                        });
             }
         }
 
