@@ -98,19 +98,23 @@ namespace System.Data.Entity.ProductivityApi
                     dispatcher.InvokeAsync(
                         () =>
                         Assert.True(asyncOperation().Wait(TimeSpan.FromMinutes(1))))
-                        .Wait(TimeSpan.FromMinutes(1.1)));
+                        .Wait(TimeSpan.FromMinutes(1.5)));
+            }
+            catch (TaskCanceledException)
+            {
+                // Sometimes thrown by the dispatcher, doesn't indicate a deadlock
             }
             finally
             {
                 dispatcher.BeginInvokeShutdown(DispatcherPriority.Send);
                 var startShutdownTime = DateTime.Now;
                 while (!(hasShutdownFinished = dispatcher.HasShutdownFinished)
-                       && DateTime.Now - startShutdownTime < TimeSpan.FromSeconds(5))
+                       && DateTime.Now - startShutdownTime < TimeSpan.FromSeconds(30))
                 {
-                    Thread.Sleep(TimeSpan.FromMilliseconds(15));
+                    Thread.Sleep(TimeSpan.FromMilliseconds(30));
                 }
 
-                Task.Run(() => dispatcherThread.Abort()).Wait(TimeSpan.FromSeconds(5));
+                Task.Run(() => dispatcherThread.Abort()).Wait(TimeSpan.FromSeconds(30));
             }
 
             Assert.True(hasShutdownFinished);
