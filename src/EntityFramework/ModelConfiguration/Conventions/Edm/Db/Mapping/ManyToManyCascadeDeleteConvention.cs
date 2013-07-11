@@ -10,9 +10,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to add a cascade delete to the join table from both tables involved in a many to many relationship.
     /// </summary>
-    internal class ManyToManyCascadeDeleteConvention : IDbMappingConvention
+    public class ManyToManyCascadeDeleteConvention : IDbMappingConvention
     {
-        public virtual void Apply(DbDatabaseMapping databaseMapping)
+        void IDbMappingConvention.Apply(DbDatabaseMapping databaseMapping)
         {
             Check.NotNull(databaseMapping, "databaseMapping");
 

@@ -479,7 +479,7 @@ namespace System.Data.Entity.Internal
             var modelContainer = StripInvalidCharacters(Owner.GetType().Name);
             if (!String.IsNullOrWhiteSpace(modelContainer))
             {
-                modelBuilder.Conventions.Add(DataSpace.CSpace, new ModelContainerConvention(modelContainer));
+                modelBuilder.Conventions.Add(new ModelContainerConvention(modelContainer));
             }
 
             new DbSetDiscoveryService(Owner).RegisterSets(modelBuilder);

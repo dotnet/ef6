@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to set a default maximum length of 4000 for properties whose type supports length facets when SqlCe is the provider.
     /// </summary>
-    public class SqlCePropertyMaxLengthConvention : IModelConvention<EntityType>, IModelConvention<ComplexType>
+    public class SqlCePropertyMaxLengthConvention : IConceptualModelConvention<EntityType>, IConceptualModelConvention<ComplexType>
     {
         private const int DefaultLength = 4000;
 

@@ -998,7 +998,7 @@ namespace FunctionalTests
             public void Repro324763_Build_Is_Not_Idempotent_Inverse()
             {
                 var modelBuilder = new DbModelBuilder();
-                modelBuilder.Conventions.Remove<AssociationInverseDiscoveryConvention>(DataSpace.CSpace);
+                modelBuilder.Conventions.Remove<AssociationInverseDiscoveryConvention>();
                 modelBuilder.Entity<Product>();
                 modelBuilder.Entity<OrderLine>();
 

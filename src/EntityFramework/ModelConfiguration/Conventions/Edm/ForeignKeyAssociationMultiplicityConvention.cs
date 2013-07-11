@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to distinguish between optional and required relationships based on CLR nullability of the foreign key property.
     /// </summary>
-    public class ForeignKeyAssociationMultiplicityConvention : IModelConvention<AssociationType>
+    public class ForeignKeyAssociationMultiplicityConvention : IConceptualModelConvention<AssociationType>
     {
         public virtual void Apply(AssociationType item, DbModel model)
         {

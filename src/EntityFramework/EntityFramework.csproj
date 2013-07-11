@@ -293,6 +293,8 @@
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\TypeConventionOfTypeWithHaving.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\TypeConventionWithHaving.cs" />
     <Compile Include="ModelConfiguration\Conventions\Configuration\Lightweight\TypeConventionWithHavingBase.cs" />
+    <Compile Include="ModelConfiguration\Conventions\IConceptualModelConvention`.cs" />
+    <Compile Include="ModelConfiguration\Conventions\IStoreModelConvention`.cs" />
     <Compile Include="ModelConfiguration\Conventions\Sets\ConventionSet.cs" />
     <Compile Include="ModelConfiguration\Edm\MetadataPropertyExtensions.cs" />
     <Compile Include="QueryableExtensions.cs" />
@@ -1715,7 +1717,6 @@
     <Compile Include="ModelConfiguration\Conventions\Edm\ForeignKeyDiscoveryConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\ForeignKeyNavigationPropertyAttributeConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\IdKeyDiscoveryConvention.cs" />
-    <Compile Include="ModelConfiguration\Conventions\Edm\IModelConvention`.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\KeyDiscoveryConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\NavigationPropertyNameForeignKeyDiscoveryConvention.cs" />
     <Compile Include="ModelConfiguration\Conventions\Edm\OneToManyCascadeDeleteConvention.cs" />

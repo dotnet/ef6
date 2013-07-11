@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to configure integer primary keys to be identity.
     /// </summary>
-    public class StoreGeneratedIdentityKeyConvention : IModelConvention<EntityType>
+    public class StoreGeneratedIdentityKeyConvention : IConceptualModelConvention<EntityType>
     {
         private static readonly IEnumerable<PrimitiveTypeKind> _applicableTypes
             = new[] { PrimitiveTypeKind.Int16, PrimitiveTypeKind.Int32, PrimitiveTypeKind.Int64 };

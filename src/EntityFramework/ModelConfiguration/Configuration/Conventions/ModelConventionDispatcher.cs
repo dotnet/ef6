@@ -30,36 +30,36 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             public void Dispatch()
             {
-                if (_dataSpace == DataSpace.CSpace)
-                {
-                    VisitEdmModel(_model.GetConceptualModel());
-                }
-                else
-                {
-                    Debug.Assert(_dataSpace == DataSpace.SSpace);
-                    VisitEdmModel(_model.GetStoreModel());
-                }
+                VisitEdmModel(
+                    _dataSpace == DataSpace.CSpace 
+                        ? _model.GetConceptualModel()
+                        : _model.GetStoreModel());
             }
 
             private void Dispatch<T>(T item)
                 where T : MetadataItem
             {
-                var convention = _convention as IModelConvention<T>;
-
-                if (convention != null)
+                if (_dataSpace == DataSpace.CSpace)
                 {
-                    convention.Apply(item, _model);
+                    var convention = _convention as IConceptualModelConvention<T>;
+                    if (convention != null)
+                    {
+                        convention.Apply(item, _model);
+                    }                    
+                }
+                else
+                {
+                    var convention = _convention as IStoreModelConvention<T>;
+                    if (convention != null)
+                    {
+                        convention.Apply(item, _model);
+                    }
                 }
             }
 
             protected internal override void VisitEdmModel(EdmModel item)
             {
-                var convention = _convention as IModelConvention<EdmModel>;
-
-                if (convention != null)
-                {
-                    convention.Apply(item, _model);
-                }
+                Dispatch(item);
 
                 base.VisitEdmModel(item);
             }

@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to configure the primary key(s) of the dependent entity type as foreign key(s) in a one:one relationship.
     /// </summary>
-    public class OneToOneConstraintIntroductionConvention : IModelConvention<AssociationType>
+    public class OneToOneConstraintIntroductionConvention : IConceptualModelConvention<AssociationType>
     {
         public virtual void Apply(AssociationType item, DbModel model)
         {

@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to process instances of <see cref="ForeignKeyAttribute" /> found on navigation properties in the model.
     /// </summary>
-    public class ForeignKeyNavigationPropertyAttributeConvention : IModelConvention<NavigationProperty>
+    public class ForeignKeyNavigationPropertyAttributeConvention : IConceptualModelConvention<NavigationProperty>
     {
         public virtual void Apply(NavigationProperty item, DbModel model)
         {

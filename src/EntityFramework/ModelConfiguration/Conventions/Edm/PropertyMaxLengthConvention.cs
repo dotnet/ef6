@@ -13,9 +13,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to set a maximum length for properties whose type supports length facets. The default value is 128.
     /// </summary>
-    public class PropertyMaxLengthConvention : IModelConvention<EntityType>,
-                                               IModelConvention<ComplexType>,
-                                               IModelConvention<AssociationType>
+    public class PropertyMaxLengthConvention : IConceptualModelConvention<EntityType>,
+                                               IConceptualModelConvention<ComplexType>,
+                                               IConceptualModelConvention<AssociationType>
     {
         private const int DefaultLength = 128;
         private readonly int _length;

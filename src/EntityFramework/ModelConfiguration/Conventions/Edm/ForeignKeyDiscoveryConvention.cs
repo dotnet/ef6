@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Base class for conventions that discover foreign key properties.
     /// </summary>
-    public abstract class ForeignKeyDiscoveryConvention : IModelConvention<AssociationType>
+    public abstract class ForeignKeyDiscoveryConvention : IConceptualModelConvention<AssociationType>
     {
         /// <summary>
         ///     Returns <c>true</c> if the convention supports pairs of entity types that have multiple associations defined between them.

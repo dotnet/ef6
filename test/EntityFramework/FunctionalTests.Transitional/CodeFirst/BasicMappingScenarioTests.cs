@@ -76,7 +76,7 @@ namespace FunctionalTests
         {
             var modelBuilder = new DbModelBuilder();
 
-            modelBuilder.Conventions.Remove<PropertyMaxLengthConvention>(DataSpace.CSpace);
+            modelBuilder.Conventions.Remove<PropertyMaxLengthConvention>();
             modelBuilder.Entity<TypeClass>().HasKey(a => a.StringProp);
             modelBuilder.Entity<TypeClass>().Property(t => t.StringProp).HasMaxLength(42);
 

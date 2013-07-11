@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Base class for conventions that discover primary key properties.
     /// </summary>
-    public abstract class KeyDiscoveryConvention : IModelConvention<EntityType>
+    public abstract class KeyDiscoveryConvention : IConceptualModelConvention<EntityType>
     {
         /// <inheritdoc/>
         public virtual void Apply(EntityType item, DbModel model)

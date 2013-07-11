@@ -56,7 +56,7 @@ namespace This.Is.A.Normal.Namespace
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Conventions.Remove<ModelContainerConvention>(DataSpace.CSpace);
+            modelBuilder.Conventions.Remove<ModelContainerConvention>();
         }
 
         public DbSet<ForMetadataLookup> ForMetadataLookup { get; set; }

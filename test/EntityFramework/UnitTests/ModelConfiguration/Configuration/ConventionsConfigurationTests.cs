@@ -37,10 +37,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void Add_should_append_entity_model_convention_on_to_internal_list()
+        public void Add_should_append_conceptual_model_convention_on_to_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
-            var mockConvention2 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention1 = new Mock<IConceptualModelConvention<EdmModel>>();
+            var mockConvention2 = new Mock<IConceptualModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -48,17 +48,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
 
-            conventionsConfiguration.Add(DataSpace.CSpace, mockConvention2.Object);
+            conventionsConfiguration.Add(mockConvention2.Object);
 
             Assert.Equal(2, conventionsConfiguration.ConceptualModelConventions.Count());
             Assert.Same(mockConvention2.Object, conventionsConfiguration.ConceptualModelConventions.Last());
         }
 
         [Fact]
-        public void Add_should_append_entity_db_convention_on_to_internal_list()
+        public void Add_should_append_store_model_convention_on_to_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
-            var mockConvention2 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention1 = new Mock<IStoreModelConvention<EdmModel>>();
+            var mockConvention2 = new Mock<IStoreModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -66,58 +66,34 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     Enumerable.Empty<IConvention>(),
                     new[] { mockConvention1.Object }));
 
-            conventionsConfiguration.Add(DataSpace.SSpace, mockConvention2.Object);
+            conventionsConfiguration.Add(mockConvention2.Object);
 
             Assert.Equal(2, conventionsConfiguration.StoreModelConventions.Count());
             Assert.Same(mockConvention2.Object, conventionsConfiguration.StoreModelConventions.Last());
         }
 
         [Fact]
-        public void Add_throws_for_model_convention_when_configuration_convention_expected()
+        public void Add_should_append_mapping_convention_on_to_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention1 = new Mock<IDbMappingConvention>();
+            var mockConvention2 = new Mock<IDbMappingConvention>();
             var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
+                new ConventionSet(
+                    Enumerable.Empty<IConvention>(),
+                    Enumerable.Empty<IConvention>(),
+                    new[] { mockConvention1.Object },
+                    Enumerable.Empty<IConvention>()));
 
-            Assert.Equal(
-                Strings.ConventionsConfiguration_NotConfigurationConvention(mockConvention1.Object.GetType()),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.Add(mockConvention1.Object)).Message);
-        }
+            conventionsConfiguration.Add(mockConvention2.Object);
 
-        [Fact]
-        public void Add_throws_for_configuration_convention_when_model_configuration_expected()
-        {
-            var mockConvention1 = new Mock<IConvention>();
-            var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
-
-            Assert.Equal(
-                Strings.ConventionsConfiguration_NotModelConvention(mockConvention1.Object.GetType()),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.Add(DataSpace.CSpace, mockConvention1.Object)).Message);
-        }
-
-        [Fact]
-        public void Add_throws_for_invalid_DataSpace()
-        {
-            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
-            var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
-
-            Assert.Equal(
-                Strings.ConventionsConfiguration_InvalidDataSpace(DataSpace.CSSpace),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.Add(DataSpace.CSSpace, mockConvention1.Object)).Message);
+            Assert.Equal(2, conventionsConfiguration.ConceptualToStoreMappingConventions.Count());
+            Assert.Same(mockConvention2.Object, conventionsConfiguration.ConceptualToStoreMappingConventions.Last());
         }
 
         [Fact]
         public void Generic_Add_should_append_configuration_convention_on_to_internal_list()
         {
-            var mockConvention1 = new Mock<IConvention>();
+            var mockConvention1 = new Mock<IConfigurationConvention>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     new[] { mockConvention1.Object },
@@ -133,9 +109,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void Generic_Add_should_append_entity_model_convention_on_to_internal_list()
+        public void Generic_Add_should_append_conceptual_model_convention_on_to_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention1 = new Mock<IConceptualModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -143,16 +119,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
 
-            conventionsConfiguration.Add<ModelConventionFixture>(DataSpace.CSpace);
+            conventionsConfiguration.Add<ConceptualModelConventionFixture>();
 
             Assert.Equal(2, conventionsConfiguration.ConceptualModelConventions.Count());
-            Assert.IsType<ModelConventionFixture>(conventionsConfiguration.ConceptualModelConventions.Last());
+            Assert.IsType<ConceptualModelConventionFixture>(conventionsConfiguration.ConceptualModelConventions.Last());
         }
 
         [Fact]
-        public void Generic_Add_should_append_entity_db_convention_on_to_internal_list()
+        public void Generic_Add_should_append_store_model_convention_on_to_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention1 = new Mock<IStoreModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -160,49 +136,27 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     Enumerable.Empty<IConvention>(),
                     new[] { mockConvention1.Object }));
 
-            conventionsConfiguration.Add<ModelConventionFixture>(DataSpace.SSpace);
+            conventionsConfiguration.Add<StoreModelConventionFixture>();
 
             Assert.Equal(2, conventionsConfiguration.StoreModelConventions.Count());
-            Assert.IsType<ModelConventionFixture>(conventionsConfiguration.StoreModelConventions.Last());
+            Assert.IsType<StoreModelConventionFixture>(conventionsConfiguration.StoreModelConventions.Last());
         }
 
         [Fact]
-        public void Generic_Add_throws_for_model_convention_when_configuration_convention_expected()
+        public void Generic_Add_should_append_mapping_convention_on_to_internal_list()
         {
+            var mockConvention1 = new Mock<IDbMappingConvention>();
             var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
+                new ConventionSet(
+                    Enumerable.Empty<IConvention>(),
+                    Enumerable.Empty<IConvention>(),
+                    new[] { mockConvention1.Object },
+                    Enumerable.Empty<IConvention>()));
 
-            Assert.Equal(
-                Strings.ConventionsConfiguration_NotConfigurationConvention(typeof(ModelConventionFixture)),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.Add<ModelConventionFixture>()).Message);
-        }
+            conventionsConfiguration.Add<MappingConventionFixture>();
 
-        [Fact]
-        public void Generic_Add_throws_for_configuration_convention_when_model_configuration_expected()
-        {
-            var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
-
-            Assert.Equal(
-                Strings.ConventionsConfiguration_NotModelConvention(typeof(ConventionFixture)),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.Add<ConventionFixture>(DataSpace.CSpace)).Message);
-        }
-
-        [Fact]
-        public void Generic_Add_throws_for_invalid_DataSpace()
-        {
-            var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
-
-            Assert.Equal(
-                Strings.ConventionsConfiguration_InvalidDataSpace(DataSpace.CSSpace),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.Add<ModelConventionFixture>(DataSpace.CSSpace)).Message);
+            Assert.Equal(2, conventionsConfiguration.ConceptualToStoreMappingConventions.Count());
+            Assert.IsType<MappingConventionFixture>(conventionsConfiguration.ConceptualToStoreMappingConventions.Last());
         }
 
         [Fact]
@@ -223,91 +177,158 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void AddAfter_should_add_after_existing_entity_model_convention()
+        public void AddAfter_should_add_after_existing_conceptual_model_convention()
         {
-            var mockConvention = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention = new Mock<IConceptualModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
-                    new[] { new ModelConventionFixture() },
+                    new[] { new ConceptualModelConventionFixture() },
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
 
-            conventionsConfiguration.AddAfter<ModelConventionFixture>(DataSpace.CSpace, mockConvention.Object);
+            conventionsConfiguration.AddAfter<ConceptualModelConventionFixture>(mockConvention.Object);
 
             Assert.Equal(2, conventionsConfiguration.ConceptualModelConventions.Count());
             Assert.Same(mockConvention.Object, conventionsConfiguration.ConceptualModelConventions.Last());
         }
 
         [Fact]
-        public void AddAfter_should_add_after_existing_Db_convention()
+        public void AddAfter_should_add_after_existing_store_model_convention()
         {
-            var mockConvention = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention = new Mock<IStoreModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
-                    new[] { new ModelConventionFixture() }));
+                    new[] { new StoreModelConventionFixture() }));
 
-            conventionsConfiguration.AddAfter<ModelConventionFixture>(DataSpace.SSpace, mockConvention.Object);
+            conventionsConfiguration.AddAfter<StoreModelConventionFixture>(mockConvention.Object);
 
             Assert.Equal(2, conventionsConfiguration.StoreModelConventions.Count());
             Assert.Same(mockConvention.Object, conventionsConfiguration.StoreModelConventions.Last());
         }
 
         [Fact]
-        public void AddAfter_throws_for_model_convention_when_configuration_convention_expected()
+        public void AddAfter_should_add_after_existing_mapping_convention()
         {
-            var mockConvention = new Mock<IModelConvention<EdmModel>>().Object;
+            var mockConvention = new Mock<IDbMappingConvention>();
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new ConventionSet(
+                    Enumerable.Empty<IConvention>(),
+                    Enumerable.Empty<IConvention>(),
+                    new[] { new MappingConventionFixture() },
+                    Enumerable.Empty<IConvention>()));
+
+            conventionsConfiguration.AddAfter<MappingConventionFixture>(mockConvention.Object);
+
+            Assert.Equal(2, conventionsConfiguration.ConceptualToStoreMappingConventions.Count());
+            Assert.Same(mockConvention.Object, conventionsConfiguration.ConceptualToStoreMappingConventions.Last());
+        }
+
+        [Fact]
+        public void AddAfter_throws_for_configuration_convention_when_other_convention_category_expected()
+        {
+            var mockConvention = new Mock<IConfigurationConvention>().Object;
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_NotConfigurationConvention(mockConvention.GetType()),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConceptualModelConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddAfter<ConceptualModelConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(StoreModelConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddAfter<StoreModelConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(MappingConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddAfter<MappingConventionFixture>(mockConvention)).Message);
+        }
+
+        [Fact]
+        public void AddAfter_throws_for_conceptual_model_convention_when_other_convention_category_expected()
+        {
+            var mockConvention = new Mock<IConceptualModelConvention<EdmModel>>().Object;
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new ConventionSet());
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                     conventionsConfiguration.AddAfter<ConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(StoreModelConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddAfter<StoreModelConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(MappingConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddAfter<MappingConventionFixture>(mockConvention)).Message);
         }
 
         [Fact]
-        public void AddAfter_throws_for_after_model_convention_when_configuration_convention_expected()
+        public void AddAfter_throws_for_store_model_convention_when_other_convention_category_expected()
         {
+            var mockConvention = new Mock<IStoreModelConvention<EdmModel>>().Object;
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_NotConfigurationConvention(typeof(ModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
-                    conventionsConfiguration.AddAfter<ModelConventionFixture>(new Mock<IConfigurationConvention>().Object)).Message);
+                    conventionsConfiguration.AddAfter<ConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConceptualModelConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddAfter<ConceptualModelConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(MappingConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddAfter<MappingConventionFixture>(mockConvention)).Message);
         }
 
         [Fact]
-        public void AddAfter_throws_for_configuration_convention_when_entity_model_convention_expected()
+        public void AddAfter_throws_for_mapping_convention_when_other_convention_category_expected()
         {
-            var mockConvention = new Mock<IConvention>().Object;
+            var mockConvention = new Mock<IDbMappingConvention>().Object;
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_NotModelConvention(mockConvention.GetType()),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
-                    conventionsConfiguration.AddAfter<ModelConventionFixture>(DataSpace.CSpace, mockConvention)).Message);
-        }
-
-        [Fact]
-        public void AddAfter_throws_for_after_configuration_convention_when_entity_model_convention_expected()
-        {
-            var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
+                    conventionsConfiguration.AddAfter<ConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_NotModelConvention(typeof(ConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConceptualModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
-                    conventionsConfiguration.AddAfter<ConventionFixture>(DataSpace.CSpace, new Mock<IModelConvention<EdmModel>>().Object)).Message);
+                    conventionsConfiguration.AddAfter<ConceptualModelConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(StoreModelConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddAfter<StoreModelConventionFixture>(mockConvention)).Message);
         }
 
         [Fact]
@@ -323,30 +344,42 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void AddAfter_throws_when_after_model_convention_not_found()
+        public void AddAfter_throws_when_after_conceptual_model_convention_not_found()
         {
-            var mockConvention = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention = new Mock<IConceptualModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration();
 
             Assert.Equal(
-                Strings.ConventionNotFound(mockConvention.Object.GetType(), typeof(ModelConventionFixture)),
+                Strings.ConventionNotFound(mockConvention.Object.GetType(), typeof(ConceptualModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
-                    () => conventionsConfiguration.AddAfter<ModelConventionFixture>(DataSpace.CSpace, mockConvention.Object)).
+                    () => conventionsConfiguration.AddAfter<ConceptualModelConventionFixture>(mockConvention.Object)).
                     Message);
         }
 
         [Fact]
-        public void AddAfter_throws_for_invalid_DataSpace()
+        public void AddAfter_throws_when_after_store_model_convention_not_found()
         {
-            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
-            var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
+            var mockConvention = new Mock<IStoreModelConvention<EdmModel>>();
+            var conventionsConfiguration = new ConventionsConfiguration();
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_InvalidDataSpace(DataSpace.CSSpace),
+                Strings.ConventionNotFound(mockConvention.Object.GetType(), typeof(StoreModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.AddAfter<ModelConventionFixture>(DataSpace.CSSpace, mockConvention1.Object)).Message);
+                    () => conventionsConfiguration.AddAfter<StoreModelConventionFixture>(mockConvention.Object)).
+                    Message);
+        }
+
+        [Fact]
+        public void AddAfter_throws_when_after_mapping_convention_not_found()
+        {
+            var mockConvention = new Mock<IDbMappingConvention>();
+            var conventionsConfiguration = new ConventionsConfiguration();
+
+            Assert.Equal(
+                Strings.ConventionNotFound(mockConvention.Object.GetType(), typeof(MappingConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () => conventionsConfiguration.AddAfter<MappingConventionFixture>(mockConvention.Object)).
+                    Message);
         }
 
         [Fact]
@@ -367,91 +400,158 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void AddBefore_should_add_before_existing_entity_model_convention()
+        public void AddBefore_should_add_before_existing_conceptual_model_convention()
         {
-            var mockConvention = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention = new Mock<IConceptualModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
-                    new[] { new ModelConventionFixture() },
+                    new[] { new ConceptualModelConventionFixture() },
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
 
-            conventionsConfiguration.AddBefore<ModelConventionFixture>(DataSpace.CSpace, mockConvention.Object);
+            conventionsConfiguration.AddBefore<ConceptualModelConventionFixture>(mockConvention.Object);
 
             Assert.Equal(2, conventionsConfiguration.ConceptualModelConventions.Count());
             Assert.Same(mockConvention.Object, conventionsConfiguration.ConceptualModelConventions.First());
         }
 
         [Fact]
-        public void AddBefore_should_add_before_existing_Db_convention()
+        public void AddBefore_should_add_before_existing_store_model_convention()
         {
-            var mockConvention = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention = new Mock<IStoreModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
-                    new[] { new ModelConventionFixture() }));
+                    new[] { new StoreModelConventionFixture() }));
 
-            conventionsConfiguration.AddBefore<ModelConventionFixture>(DataSpace.SSpace, mockConvention.Object);
+            conventionsConfiguration.AddBefore<StoreModelConventionFixture>(mockConvention.Object);
 
             Assert.Equal(2, conventionsConfiguration.StoreModelConventions.Count());
             Assert.Same(mockConvention.Object, conventionsConfiguration.StoreModelConventions.First());
         }
 
         [Fact]
-        public void AddBefore_throws_for_model_convention_when_configuration_convention_expected()
+        public void AddBefore_should_add_before_existing_mapping_convention()
         {
-            var mockConvention = new Mock<IModelConvention<EdmModel>>().Object;
+            var mockConvention = new Mock<IDbMappingConvention>();
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new ConventionSet(
+                    Enumerable.Empty<IConvention>(),
+                    Enumerable.Empty<IConvention>(),
+                    new[] { new MappingConventionFixture() },
+                    Enumerable.Empty<IConvention>()));
+
+            conventionsConfiguration.AddBefore<MappingConventionFixture>(mockConvention.Object);
+
+            Assert.Equal(2, conventionsConfiguration.ConceptualToStoreMappingConventions.Count());
+            Assert.Same(mockConvention.Object, conventionsConfiguration.ConceptualToStoreMappingConventions.First());
+        }
+
+        [Fact]
+        public void AddBefore_throws_for_configuration_convention_when_other_convention_category_expected()
+        {
+            var mockConvention = new Mock<IConfigurationConvention>().Object;
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_NotConfigurationConvention(mockConvention.GetType()),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConceptualModelConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddBefore<ConceptualModelConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(StoreModelConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddBefore<StoreModelConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(MappingConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddBefore<MappingConventionFixture>(mockConvention)).Message);
+        }
+
+        [Fact]
+        public void AddBefore_throws_for_conceptual_model_convention_when_other_convention_category_expected()
+        {
+            var mockConvention = new Mock<IConceptualModelConvention<EdmModel>>().Object;
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new ConventionSet());
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
                     conventionsConfiguration.AddBefore<ConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(StoreModelConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddBefore<StoreModelConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(MappingConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddBefore<MappingConventionFixture>(mockConvention)).Message);
         }
 
         [Fact]
-        public void AddBefore_throws_for_before_model_convention_when_configuration_convention_expected()
+        public void AddBefore_throws_for_store_model_convention_when_other_convention_category_expected()
         {
+            var mockConvention = new Mock<IStoreModelConvention<EdmModel>>().Object;
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_NotConfigurationConvention(typeof(ModelConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
-                    conventionsConfiguration.AddBefore<ModelConventionFixture>(new Mock<IConfigurationConvention>().Object)).Message);
+                    conventionsConfiguration.AddBefore<ConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConceptualModelConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddBefore<ConceptualModelConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(MappingConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddBefore<MappingConventionFixture>(mockConvention)).Message);
         }
 
         [Fact]
-        public void AddBefore_throws_for_configuration_convention_when_entity_model_convention_expected()
+        public void AddBefore_throws_for_mapping_convention_when_other_convention_category_expected()
         {
-            var mockConvention = new Mock<IConvention>().Object;
+            var mockConvention = new Mock<IDbMappingConvention>().Object;
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet());
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_NotModelConvention(mockConvention.GetType()),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
-                    conventionsConfiguration.AddBefore<ModelConventionFixture>(DataSpace.CSpace, mockConvention)).Message);
-        }
-
-        [Fact]
-        public void AddBefore_throws_for_before_configuration_convention_when_entity_model_convention_expected()
-        {
-            var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
+                    conventionsConfiguration.AddBefore<ConventionFixture>(mockConvention)).Message);
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_NotModelConvention(typeof(ConventionFixture)),
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(ConceptualModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
                     () =>
-                    conventionsConfiguration.AddBefore<ConventionFixture>(DataSpace.CSpace, new Mock<IModelConvention<EdmModel>>().Object)).Message);
+                    conventionsConfiguration.AddBefore<ConceptualModelConventionFixture>(mockConvention)).Message);
+
+            Assert.Equal(
+                Strings.ConventionsConfiguration_ConventionTypeMissmatch(mockConvention, typeof(StoreModelConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () =>
+                    conventionsConfiguration.AddBefore<StoreModelConventionFixture>(mockConvention)).Message);
         }
 
         [Fact]
@@ -467,39 +567,67 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void AddBefore_throws_when_before_model_convention_not_found()
+        public void AddBefore_throws_when_before_conceptual_model_convention_not_found()
         {
-            var mockConvention = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention = new Mock<IConceptualModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration();
 
             Assert.Equal(
-                Strings.ConventionNotFound(mockConvention.Object.GetType(), typeof(ModelConventionFixture)),
+                Strings.ConventionNotFound(mockConvention.Object.GetType(), typeof(ConceptualModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
-                    () => conventionsConfiguration.AddBefore<ModelConventionFixture>(DataSpace.CSpace, mockConvention.Object)).
+                    () => conventionsConfiguration.AddBefore<ConceptualModelConventionFixture>(mockConvention.Object)).
                     Message);
         }
 
         [Fact]
-        public void AddBefore_throws_for_invalid_DataSpace()
+        public void AddBefore_throws_when_before_store_model_convention_not_found()
         {
-            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
-            var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
+            var mockConvention = new Mock<IStoreModelConvention<EdmModel>>();
+            var conventionsConfiguration = new ConventionsConfiguration();
 
             Assert.Equal(
-                Strings.ConventionsConfiguration_InvalidDataSpace(DataSpace.CSSpace),
+                Strings.ConventionNotFound(mockConvention.Object.GetType(), typeof(StoreModelConventionFixture)),
                 Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.AddBefore<ModelConventionFixture>(DataSpace.CSSpace, mockConvention1.Object)).Message);
+                    () => conventionsConfiguration.AddBefore<StoreModelConventionFixture>(mockConvention.Object)).
+                    Message);
+        }
+
+        [Fact]
+        public void AddBefore_throws_when_before_mapping_convention_not_found()
+        {
+            var mockConvention = new Mock<IDbMappingConvention>();
+            var conventionsConfiguration = new ConventionsConfiguration();
+
+            Assert.Equal(
+                Strings.ConventionNotFound(mockConvention.Object.GetType(), typeof(MappingConventionFixture)),
+                Assert.Throws<InvalidOperationException>(
+                    () => conventionsConfiguration.AddBefore<MappingConventionFixture>(mockConvention.Object)).
+                    Message);
         }
 
         private class ConventionFixture : Convention
         {
         }
 
-        private class ModelConventionFixture : IModelConvention<EdmModel>
+        private class ConceptualModelConventionFixture : IConceptualModelConvention<EdmModel>
         {
             public virtual void Apply(EdmModel item, DbModel model)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class StoreModelConventionFixture : IStoreModelConvention<EdmModel>
+        {
+            public virtual void Apply(EdmModel item, DbModel model)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class MappingConventionFixture : IDbMappingConvention
+        {
+            public virtual void Apply(DbDatabaseMapping mapping)
             {
                 throw new NotImplementedException();
             }
@@ -508,8 +636,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Remove_should_remove_the_configuration_conventions_from_the_internal_list()
         {
-            var mockConvention1 = new Mock<IConvention>();
-            var mockConvention2 = new Mock<IConvention>();
+            var mockConvention1 = new Mock<IConfigurationConvention>();
+            var mockConvention2 = new Mock<IConfigurationConvention>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     new[] { mockConvention1.Object, mockConvention2.Object },
@@ -523,10 +651,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void Remove_should_remove_the_entity_model_conventions_from_the_internal_list()
+        public void Remove_should_remove_the_conceptual_model_conventions_from_the_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
-            var mockConvention2 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention1 = new Mock<IConceptualModelConvention<EdmModel>>();
+            var mockConvention2 = new Mock<IConceptualModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -534,16 +662,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
 
-            conventionsConfiguration.Remove(DataSpace.CSpace,new[] { mockConvention1.Object, mockConvention2.Object });
+            conventionsConfiguration.Remove(new[] { mockConvention1.Object, mockConvention2.Object });
 
             Assert.Equal(0, conventionsConfiguration.ConceptualModelConventions.Count());
         }
 
         [Fact]
-        public void Remove_should_remove_the_db_model_conventions_from_the_internal_list()
+        public void Remove_should_remove_the_store_model_conventions_from_the_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
-            var mockConvention2 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention1 = new Mock<IStoreModelConvention<EdmModel>>();
+            var mockConvention2 = new Mock<IStoreModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -551,51 +679,26 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     Enumerable.Empty<IConvention>(),
                     new[] { mockConvention1.Object, mockConvention2.Object }));
 
-            conventionsConfiguration.Remove(DataSpace.SSpace, new[] { mockConvention1.Object, mockConvention2.Object });
+            conventionsConfiguration.Remove(new[] { mockConvention1.Object, mockConvention2.Object });
 
             Assert.Equal(0, conventionsConfiguration.StoreModelConventions.Count());
         }
 
         [Fact]
-        public void Remove_throws_for_model_convention_when_configuration_convention_expected()
+        public void Remove_should_remove_the_mapping_conventions_from_the_internal_list()
         {
-            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention1 = new Mock<IDbMappingConvention>();
+            var mockConvention2 = new Mock<IDbMappingConvention>();
             var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
+                new ConventionSet(
+                    Enumerable.Empty<IConvention>(),
+                    Enumerable.Empty<IConvention>(),
+                    new[] { mockConvention1.Object, mockConvention2.Object },
+                    Enumerable.Empty<IConvention>()));
 
-            Assert.Equal(
-                Strings.ConventionsConfiguration_NotConfigurationConvention(mockConvention1.Object.GetType()),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.Remove(mockConvention1.Object)).Message);
-        }
+            conventionsConfiguration.Remove(new[] { mockConvention1.Object, mockConvention2.Object });
 
-        [Fact]
-        public void Remove_throws_for_configuration_convention_when_model_configuration_expected()
-        {
-            var mockConvention1 = new Mock<IConvention>();
-            var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
-
-            Assert.Equal(
-                Strings.ConventionsConfiguration_NotModelConvention(mockConvention1.Object.GetType()),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.Remove(DataSpace.CSpace, mockConvention1.Object)).Message);
-        }
-
-        [Fact]
-        public void Remove_throws_for_invalid_DataSpace()
-        {
-            var mockConvention1 = new Mock<IModelConvention<EdmModel>>();
-            var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
-
-            Assert.Equal(
-                Strings.ConventionsConfiguration_InvalidDataSpace(DataSpace.CSSpace),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.Remove(DataSpace.CSSpace, mockConvention1.Object)).Message);
+            Assert.Equal(0, conventionsConfiguration.ConceptualToStoreMappingConventions.Count());
         }
 
         [Fact]
@@ -614,79 +717,55 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void Generic_Remove_should_remove_all_matching_entity_model_conventions()
+        public void Generic_Remove_should_remove_all_matching_conceptual_model_conventions()
         {
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
-                    new[] { new ModelConventionFixture(), new ModelConventionFixture() },
+                    new[] { new ConceptualModelConventionFixture(), new ConceptualModelConventionFixture() },
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
 
-            conventionsConfiguration.Remove<ModelConventionFixture>(DataSpace.CSpace);
+            conventionsConfiguration.Remove<ConceptualModelConventionFixture>();
 
             Assert.Equal(0, conventionsConfiguration.ConceptualModelConventions.Count());
         }
 
         [Fact]
-        public void Generic_Remove_should_remove_all_matching_db_model_conventions()
+        public void Generic_Remove_should_remove_all_matching_store_model_conventions()
         {
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
-                    new[] { new ModelConventionFixture(), new ModelConventionFixture() }));
+                    new[] { new StoreModelConventionFixture(), new StoreModelConventionFixture() }));
 
-            conventionsConfiguration.Remove<ModelConventionFixture>(DataSpace.SSpace);
+            conventionsConfiguration.Remove<StoreModelConventionFixture>();
 
             Assert.Equal(0, conventionsConfiguration.StoreModelConventions.Count());
         }
 
         [Fact]
-        public void Generic_Remove_throws_for_model_convention_when_configuration_convention_expected()
+        public void Generic_Remove_should_remove_all_matching_mapping_conventions()
         {
             var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
+                new ConventionSet(
+                    Enumerable.Empty<IConvention>(),
+                    Enumerable.Empty<IConvention>(),
+                    new[] { new MappingConventionFixture(), new MappingConventionFixture() },
+                    Enumerable.Empty<IConvention>()));
 
-            Assert.Equal(
-                Strings.ConventionsConfiguration_NotConfigurationConvention(typeof(ModelConventionFixture)),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.Remove<ModelConventionFixture>()).Message);
-        }
+            conventionsConfiguration.Remove<MappingConventionFixture>();
 
-        [Fact]
-        public void Generic_Remove_throws_for_configuration_convention_when_model_configuration_expected()
-        {
-            var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
-
-            Assert.Equal(
-                Strings.ConventionsConfiguration_NotModelConvention(typeof(ConventionFixture)),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.Remove<ConventionFixture>(DataSpace.CSpace)).Message);
-        }
-
-        [Fact]
-        public void Generic_Remove_throws_for_invalid_DataSpace()
-        {
-            var conventionsConfiguration = new ConventionsConfiguration(
-                new ConventionSet());
-
-            Assert.Equal(
-                Strings.ConventionsConfiguration_InvalidDataSpace(DataSpace.CSSpace),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    conventionsConfiguration.Remove<ModelConventionFixture>(DataSpace.CSSpace)).Message);
+            Assert.Equal(0, conventionsConfiguration.ConceptualToStoreMappingConventions.Count());
         }
 
         [Fact]
         public void ApplyConceptualModel_should_run_model_conventions()
         {
             var model = CreateDbModel();
-            var mockConvention = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention = new Mock<IConceptualModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -720,7 +799,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void ApplyStoreModel_should_run_database_conventions()
         {
             var model = CreateDbModel();
-            var mockConvention = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention = new Mock<IStoreModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -738,7 +817,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             var model = CreateDbModel();
             var entityType = model.GetConceptualModel().AddEntityType("E");
-            var mockConvention = new Mock<IModelConvention<EntityType>>();
+            var mockConvention = new Mock<IConceptualModelConvention<EntityType>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -759,7 +838,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             var model = CreateDbModel();
             var table = model.GetStoreModel().AddTable("T");
-            var mockConvention = new Mock<IModelConvention<EntityType>>();
+            var mockConvention = new Mock<IStoreModelConvention<EntityType>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
@@ -1078,9 +1157,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void Clone_returns_an_identical_object()
         {
             var mockConvention1 = new Mock<IConvention>();
-            var mockConvention2 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention2 = new Mock<IConceptualModelConvention<EdmModel>>();
             var mockConvention3 = new Mock<IConvention>();
-            var mockConvention4 = new Mock<IModelConvention<EdmModel>>();
+            var mockConvention4 = new Mock<IStoreModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     new[] { mockConvention1.Object },

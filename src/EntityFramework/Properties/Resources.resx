@@ -5404,14 +5404,11 @@
   <data name="InvalidNavigationPropertyComplexType" xml:space="preserve">
     <value>The property '{0}' on type '{1}' cannot be configured as a navigation property because type '{2}' was configured as a complex type.</value>
   </data>
-  <data name="ConventionsConfiguration_InvalidDataSpace" xml:space="preserve">
-    <value>The data space '{0}' cannot be used to add a model convention. The only valid values are 'CSpace' and 'SSpace'</value>
+  <data name="ConventionsConfiguration_InvalidConventionType" xml:space="preserve">
+    <value>The specified convention of type '{0}' is not a configuration convention, a model convention or a mapping convention.</value>
   </data>
-  <data name="ConventionsConfiguration_NotConfigurationConvention" xml:space="preserve">
-    <value>The specified convention of type '{0}' is not a configuration convention, so a data space must be specified.</value>
-  </data>
-  <data name="ConventionsConfiguration_NotModelConvention" xml:space="preserve">
-    <value>The specified convention of type '{0}' is not a model convention, so a data space cannot be specified.</value>
+  <data name="ConventionsConfiguration_ConventionTypeMissmatch" xml:space="preserve">
+    <value>The specified convention of type '{0}' cannot be added before or after a convention of type '{1}'. Both types must specify conventions from the same category: configuration, model or mapping.</value>
   </data>
   <data name="LightweightPrimitivePropertyConfiguration_DateTimeScale" xml:space="preserve">
     <value>The scale cannot be set on the DateTime property '{0}', only the precision should be specified.</value>

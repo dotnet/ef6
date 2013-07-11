@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     ///         cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" />
     ///     or the <see cref="DbModelBuilder" /> API.
     /// </summary>
-    public class ColumnOrderingConvention : IModelConvention<EntityType>
+    public class ColumnOrderingConvention : IStoreModelConvention<EntityType>
     {
         public virtual void Apply(EntityType item, DbModel model)
         {

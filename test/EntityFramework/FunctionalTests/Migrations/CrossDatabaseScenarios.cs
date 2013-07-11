@@ -16,7 +16,7 @@ namespace System.Data.Entity.Migrations
 
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>(DataSpace.CSpace);
+                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>();
 
                 base.OnModelCreating(modelBuilder);
             }

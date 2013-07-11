@@ -2267,7 +2267,7 @@ END", connection).ExecuteNonQuery();
                 builder.Entity<TransactionLogEntry>().ToTable("TransactionLog");
                 builder.HasDefaultSchema("TransactionsModel");
                 builder.HasDefaultSchema("Entities");
-                builder.Conventions.Remove<ModelContainerConvention>(DataSpace.CSpace);
+                builder.Conventions.Remove<ModelContainerConvention>();
                 builder.Entity<TransactionLogEntry>()
                        .MapToStoredProcedures(c => c.Insert(i => i.HasName("TransactionLogEntry_Insert", "dbo")));
 

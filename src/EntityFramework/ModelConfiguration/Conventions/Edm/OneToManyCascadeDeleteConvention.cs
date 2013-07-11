@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to enable cascade delete for any required relationships.
     /// </summary>
-    public class OneToManyCascadeDeleteConvention : IModelConvention<AssociationType>
+    public class OneToManyCascadeDeleteConvention : IConceptualModelConvention<AssociationType>
     {
         public virtual void Apply(AssociationType item, DbModel model)
         {

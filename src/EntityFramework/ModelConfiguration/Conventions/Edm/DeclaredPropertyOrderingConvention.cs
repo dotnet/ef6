@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to move primary key properties to appear first.
     /// </summary>
-    public class DeclaredPropertyOrderingConvention : IModelConvention<EntityType>
+    public class DeclaredPropertyOrderingConvention : IConceptualModelConvention<EntityType>
     {
         public virtual void Apply(EntityType item, DbModel model)
         {

@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to set the table name to be a pluralized version of the entity type name.
     /// </summary>
-    public class PluralizingTableNameConvention : IModelConvention<EntityType>
+    public class PluralizingTableNameConvention : IStoreModelConvention<EntityType>
     {
         private IPluralizationService _pluralizationService
             = DbConfiguration.GetService<IPluralizationService>();

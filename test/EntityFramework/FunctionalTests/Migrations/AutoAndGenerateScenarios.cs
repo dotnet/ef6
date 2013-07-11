@@ -1409,7 +1409,7 @@ namespace System.Data.Entity.Migrations
                 modelBuilder.Entity<MigrationsStore>().Property(s => s.Name).HasMaxLength(256);
 
                 // Prevent convention override
-                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>(DataSpace.CSpace);
+                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>();
 
                 this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
@@ -1422,7 +1422,7 @@ namespace System.Data.Entity.Migrations
                 modelBuilder.Entity<MigrationsStore>().Property(s => s.Name).HasMaxLength(null);
 
                 // Prevent convention override
-                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>(DataSpace.CSpace);
+                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>();
 
                 this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
@@ -1446,7 +1446,7 @@ namespace System.Data.Entity.Migrations
                 modelBuilder.Entity<MigrationsStore>().Property(s => s.Name).HasMaxLength(256);
 
                 // Prevent convention override
-                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>(DataSpace.CSpace);
+                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>();
 
                 this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }
@@ -1459,7 +1459,7 @@ namespace System.Data.Entity.Migrations
                 modelBuilder.Entity<MigrationsStore>().Property(s => s.Name).HasMaxLength(512);
 
                 // Prevent convention override
-                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>(DataSpace.CSpace);
+                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>();
 
                 this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
             }

@@ -12,9 +12,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// <summary>
     ///     Convention to ensure an invalid/unsupported mapping is not created when mapping inherited properties
     /// </summary>
-    internal class MappingInheritedPropertiesSupportConvention : IDbMappingConvention
+    public class MappingInheritedPropertiesSupportConvention : IDbMappingConvention
     {
-        public virtual void Apply(DbDatabaseMapping databaseMapping)
+        void IDbMappingConvention.Apply(DbDatabaseMapping databaseMapping)
         {
             Check.NotNull(databaseMapping, "databaseMapping");
 
