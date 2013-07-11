@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations.Infrastructure
 {
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Linq;
@@ -109,7 +110,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(3, resultTrees.Count());
 
-            var firstCommandTree = resultTrees.First();
+            var firstCommandTree = (DbInsertCommandTree)resultTrees.First();
 
             Assert.Equal(8, firstCommandTree.Parameters.Count());
             Assert.Equal(8, firstCommandTree.SetClauses.Count());
@@ -154,7 +155,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(3, resultTrees.Count());
 
-            var firstCommandTree = resultTrees.First();
+            var firstCommandTree = (DbUpdateCommandTree)resultTrees.First();
 
             Assert.Equal(12, firstCommandTree.Parameters.Count());
             Assert.Equal(6, firstCommandTree.SetClauses.Count());

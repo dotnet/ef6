@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServer.SqlGen
 {
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Linq;
@@ -23,6 +24,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
                     .Convert(commandTrees)
+                    .OfType<DbInsertCommandTree>()
                     .ToList();
 
             var functionSqlGenerator
@@ -57,6 +59,7 @@ WHERE @@ROWCOUNT > 0 AND t0.[Id] = @Id",
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
                     .Convert(commandTrees)
+                    .OfType<DbInsertCommandTree>()
                     .ToList();
 
             var functionSqlGenerator
@@ -91,6 +94,7 @@ WHERE @@ROWCOUNT > 0 AND t0.[Id] = @Id",
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
                     .Convert(commandTrees)
+                    .OfType<DbUpdateCommandTree>()
                     .ToList();
 
             var functionSqlGenerator
@@ -113,6 +117,7 @@ WHERE @@ROWCOUNT > 0 AND t0.[Id] = @Id",
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
                     .Convert(commandTrees)
+                    .OfType<DbUpdateCommandTree>()
                     .ToList();
 
             var functionSqlGenerator
@@ -139,6 +144,7 @@ WHERE ([Id] = @Id)",
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
                     .Convert(commandTrees)
+                    .OfType<DbDeleteCommandTree>()
                     .ToList();
 
             var functionSqlGenerator
@@ -164,6 +170,7 @@ WHERE ([Id] = @Id)",
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
                     .Convert(commandTrees)
+                    .OfType<DbDeleteCommandTree>()
                     .ToList();
 
             var functionSqlGenerator
@@ -189,6 +196,7 @@ WHERE ([Id] = @Id)",
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
                     .Convert(commandTrees)
+                    .OfType<DbInsertCommandTree>()
                     .ToList();
 
             var functionSqlGenerator
@@ -223,6 +231,7 @@ WHERE @@ROWCOUNT > 0 AND t0.[CustomerId] = @CustomerId",
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
                     .Convert(commandTrees)
+                    .OfType<DbInsertCommandTree>()
                     .ToList();
 
             var functionSqlGenerator
@@ -267,6 +276,7 @@ WHERE @@ROWCOUNT > 0 AND t0.[order_id] = @order_id AND t0.[Key] = @Key AND t0.[C
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
                     .Convert(commandTrees)
+                    .OfType<DbUpdateCommandTree>()
                     .ToList();
 
             var functionSqlGenerator
@@ -293,6 +303,7 @@ WHERE ([CustomerId] = @CustomerId)",
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
                     .Convert(commandTrees)
+                    .OfType<DbUpdateCommandTree>()
                     .ToList();
 
             var functionSqlGenerator
@@ -337,6 +348,7 @@ SET @rows_affected = @@ROWCOUNT",
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
                     .Convert(commandTrees)
+                    .OfType<DbDeleteCommandTree>()
                     .ToList();
 
             var functionSqlGenerator
@@ -362,6 +374,7 @@ WHERE ([CustomerId] = @CustomerId)",
                 = new DynamicToFunctionModificationCommandConverter(
                     modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
                     .Convert(commandTrees)
+                    .OfType<DbDeleteCommandTree>()
                     .ToList();
 
             var functionSqlGenerator

@@ -56,8 +56,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private DbContext CreateContext()
         {
             return _connection == null
-                       ? new TempDbContext(_compiledModel)
-                       : new TempDbContext(_connection, _compiledModel);
+                ? new TempDbContext(_compiledModel)
+                : new TempDbContext(_connection, _compiledModel);
         }
 
         public IEnumerable<DbInsertCommandTree> GenerateAssociationInsert(string associationIdentity)
@@ -91,8 +91,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 var targetEntityType = associationType.TargetEnd.GetEntityType();
                 var targetEntity
                     = sourceEntityType.GetRootType() == targetEntityType.GetRootType()
-                          ? sourceEntity
-                          : InstantiateAndAttachEntity(targetEntityType, context);
+                        ? sourceEntity
+                        : InstantiateAndAttachEntity(targetEntityType, context);
 
                 var objectStateManager
                     = ((IObjectContextAdapter)context)
@@ -165,29 +165,28 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return entity;
         }
 
-        public IEnumerable<DbInsertCommandTree> GenerateInsert(string entityIdentity)
+        public IEnumerable<DbModificationCommandTree> GenerateInsert(string entityIdentity)
         {
             DebugCheck.NotEmpty(entityIdentity);
 
-            return Generate<DbInsertCommandTree>(entityIdentity, EntityState.Added);
+            return Generate(entityIdentity, EntityState.Added);
         }
 
-        public IEnumerable<DbUpdateCommandTree> GenerateUpdate(string entityIdentity)
+        public IEnumerable<DbModificationCommandTree> GenerateUpdate(string entityIdentity)
         {
             DebugCheck.NotEmpty(entityIdentity);
 
-            return Generate<DbUpdateCommandTree>(entityIdentity, EntityState.Modified);
+            return Generate(entityIdentity, EntityState.Modified);
         }
 
-        public IEnumerable<DbDeleteCommandTree> GenerateDelete(string entityIdentity)
+        public IEnumerable<DbModificationCommandTree> GenerateDelete(string entityIdentity)
         {
             DebugCheck.NotEmpty(entityIdentity);
 
-            return Generate<DbDeleteCommandTree>(entityIdentity, EntityState.Deleted);
+            return Generate(entityIdentity, EntityState.Deleted);
         }
 
-        private IEnumerable<TCommandTree> Generate<TCommandTree>(string entityIdentity, EntityState state)
-            where TCommandTree : DbCommandTree
+        private IEnumerable<DbModificationCommandTree> Generate(string entityIdentity, EntityState state)
         {
             DebugCheck.NotEmpty(entityIdentity);
 
@@ -219,7 +218,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
                     foreach (var commandTree in commandTracer.CommandTrees)
                     {
-                        yield return (TCommandTree)commandTree;
+                        yield return (DbModificationCommandTree)commandTree;
                     }
                 }
             }

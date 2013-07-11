@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Spatial;
@@ -12,6 +13,201 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
     public class ModificationCommandTreeGeneratorTests : TestBase
     {
+        public class Landmark
+        {
+            public int Id { get; set; }
+            public StandingStone MatchingStone { get; set; }
+            public Hold LocatedIn { get; set; }
+        }
+
+        public class StandingStone
+        {
+            public int Id { get; set; }
+            public Landmark MatchingLandnmark { get; set; }
+            public Hold LocatedIn { get; set; }
+        }
+
+        public class Hold
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public ICollection<Landmark> Landmarks { get; set; }
+        }
+
+        public class TableSplittingContext : DbContext
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                // table splitting
+                modelBuilder.Entity<Landmark>().ToTable("Landmarks");
+                modelBuilder.Entity<StandingStone>().ToTable("Landmarks");
+
+                // 1 -1 relationship needed for table splitting with different hierarchies
+                modelBuilder.Entity<Landmark>().HasRequired(l => l.MatchingStone).WithRequiredDependent(s => s.MatchingLandnmark);
+                modelBuilder.Entity<Landmark>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+                modelBuilder.Entity<StandingStone>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+                modelBuilder.Entity<Landmark>().MapToStoredProcedures();
+                modelBuilder.Entity<StandingStone>().MapToStoredProcedures();
+            }
+        }
+
+        [Fact]
+        public void Can_generate_insert_tree_when_table_splitting_principal()
+        {
+            DbModel model;
+
+            using (var context = new TableSplittingContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateInsert(GetType().Namespace + ".Landmark")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_update_tree_when_table_splitting_principal()
+        {
+            DbModel model;
+
+            using (var context = new TableSplittingContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateUpdate(GetType().Namespace + ".Landmark")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_delete_tree_when_table_splitting_principal()
+        {
+            DbModel model;
+
+            using (var context = new TableSplittingContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateDelete(GetType().Namespace + ".Landmark")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_insert_tree_when_table_splitting_dependent()
+        {
+            DbModel model;
+
+            using (var context = new TableSplittingContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateInsert(GetType().Namespace + ".StandingStone")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_update_tree_when_table_splitting_dependent()
+        {
+            DbModel model;
+
+            using (var context = new TableSplittingContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateUpdate(GetType().Namespace + ".StandingStone")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_delete_tree_when_table_splitting_dependent()
+        {
+            DbModel model;
+
+            using (var context = new TableSplittingContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateDelete(GetType().Namespace + ".StandingStone")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
         public class ArubaRun
         {
             public string Id { get; set; }
@@ -840,13 +1036,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(2, commandTrees.Count());
 
-            var commandTree = commandTrees.First();
+            var commandTree = (DbInsertCommandTree)commandTrees.First();
 
             Assert.Equal(8, commandTree.SetClauses.Count);
             Assert.Equal("Order", commandTree.Target.VariableType.EdmType.Name);
             Assert.NotNull(commandTree.Returning);
 
-            commandTree = commandTrees.Last();
+            commandTree = (DbInsertCommandTree)commandTrees.Last();
 
             Assert.Equal(8, commandTree.SetClauses.Count);
             Assert.NotNull(commandTree.Returning);
@@ -859,7 +1055,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(1, commandTrees.Count());
 
-            commandTree = commandTrees.Single();
+            commandTree = (DbInsertCommandTree)commandTrees.Single();
 
             Assert.Equal(1, commandTree.SetClauses.Count);
             Assert.Equal("Customer", commandTree.Target.VariableType.EdmType.Name);
@@ -881,14 +1077,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(2, commandTrees.Count());
 
-            var commandTree = commandTrees.First();
+            var commandTree = (DbUpdateCommandTree)commandTrees.First();
 
             Assert.Equal(6, commandTree.SetClauses.Count);
             Assert.NotNull(commandTree.Predicate);
             Assert.NotNull(commandTree.Returning);
             Assert.Equal("Order", commandTree.Target.VariableType.EdmType.Name);
 
-            commandTree = commandTrees.Last();
+            commandTree = (DbUpdateCommandTree)commandTrees.Last();
 
             Assert.Equal(4, commandTree.SetClauses.Count);
             Assert.NotNull(commandTree.Predicate);
@@ -902,7 +1098,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(1, commandTrees.Count());
 
-            commandTree = commandTrees.Single();
+            commandTree = (DbUpdateCommandTree)commandTrees.Single();
 
             Assert.Equal(1, commandTree.SetClauses.Count);
             Assert.Equal("Customer", commandTree.Target.VariableType.EdmType.Name);
@@ -924,12 +1120,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(2, commandTrees.Count());
 
-            var commandTree = commandTrees.First();
+            var commandTree = (DbDeleteCommandTree)commandTrees.First();
 
             Assert.NotNull(commandTree.Predicate);
             Assert.Equal("special_orders", commandTree.Target.VariableType.EdmType.Name);
 
-            commandTree = commandTrees.Last();
+            commandTree = (DbDeleteCommandTree)commandTrees.Last();
 
             Assert.NotNull(commandTree.Predicate);
             Assert.Equal("Order", commandTree.Target.VariableType.EdmType.Name);
@@ -941,7 +1137,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal(1, commandTrees.Count());
 
-            commandTree = commandTrees.Single();
+            commandTree = (DbDeleteCommandTree)commandTrees.Single();
 
             Assert.NotNull(commandTree.Predicate);
             Assert.Equal("Customer", commandTree.Target.VariableType.EdmType.Name);
