@@ -1156,9 +1156,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Clone_returns_an_identical_object()
         {
-            var mockConvention1 = new Mock<IConvention>();
+            var mockConvention1 = new Mock<IConfigurationConvention>();
             var mockConvention2 = new Mock<IConceptualModelConvention<EdmModel>>();
-            var mockConvention3 = new Mock<IConvention>();
+            var mockConvention3 = new Mock<IDbMappingConvention>();
             var mockConvention4 = new Mock<IStoreModelConvention<EdmModel>>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
