@@ -19,19 +19,10 @@ namespace System.Data.Entity.SqlServer
                 {
                     switch (err.Number)
                     {
-                            // SQL Error Code: 40627
-                            // Operation on server YYYY and database XXXX is in progress.  Please wait a few minutes before trying again.
-                        case 40627:
                             // SQL Error Code: 40613
                             // Database XXXX on server YYYY is not currently available. Please retry the connection later.
                             // If the problem persists, contact customer support, and provide them the session tracing ID of ZZZZZ.
                         case 40613:
-                            // SQL Error Code: 40545
-                            // The service is experiencing a problem that is currently under investigation. Incident ID: %ls. Code: %d.
-                        case 40545:
-                            // SQL Error Code: 40540
-                            // The service has encountered an error processing your request. Please try again.
-                        case 40540:
                             // SQL Error Code: 40501
                             // The service is currently busy. Retry the request after 10 seconds. Code: (reason code to be decoded).
                         case 40501:
