@@ -1361,7 +1361,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Adds the current RelatedEnd object to the navigation property if compatible.</summary>
         /// <param name="otherRelatedEnd">The other related end.</param>
-        protected virtual void AddToNavigationPropertyIfCompatible(RelatedEnd otherRelatedEnd)
+        internal virtual void AddToNavigationPropertyIfCompatible(RelatedEnd otherRelatedEnd)
         {
             // By default, always add
             AddToNavigationProperty(otherRelatedEnd.WrappedOwner);
@@ -1369,7 +1369,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Specifies whether the cached foreign key is conceptual null.</summary>
         /// <returns>true if the cached foreign key is conceptual null; otherwise, false.</returns>
-        protected virtual bool CachedForeignKeyIsConceptualNull()
+        internal virtual bool CachedForeignKeyIsConceptualNull()
         {
             // Only relevant for EntityReference
             return false;
@@ -1379,7 +1379,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns>The dependent end foreign keys.</returns>
         /// <param name="targetRelatedEnd">The target related end.</param>
         /// <param name="forceForeignKeyChanges">true to force foreign key changes; otherwise, false.</param>
-        protected virtual bool UpdateDependentEndForeignKey(RelatedEnd targetRelatedEnd, bool forceForeignKeyChanges)
+        internal virtual bool UpdateDependentEndForeignKey(RelatedEnd targetRelatedEnd, bool forceForeignKeyChanges)
         {
             Debug.Assert(!IsDependentEndOfReferentialConstraint(false), "Dependent end cannot be a collection.");
 
@@ -1388,7 +1388,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Verifies the detached key matches.</summary>
         /// <param name="entityKey">The entity keys.</param>
-        protected virtual void VerifyDetachedKeyMatches(EntityKey entityKey)
+        internal virtual void VerifyDetachedKeyMatches(EntityKey entityKey)
         {
             // Only relevant to entity references
         }
@@ -2559,7 +2559,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>Validated the detached entity keys associated with the related end.</summary>
-        protected virtual void ValidateDetachedEntityKey()
+        internal virtual void ValidateDetachedEntityKey()
         {
             // Only relevant for EntityReference
         }

@@ -651,7 +651,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Adds to navigation property if compatible.</summary>
         /// <param name="otherRelatedEnd">The related end to add.</param>
-        protected override void AddToNavigationPropertyIfCompatible(RelatedEnd otherRelatedEnd)
+        internal override void AddToNavigationPropertyIfCompatible(RelatedEnd otherRelatedEnd)
         {
             // If this end is non-null, then don't overwrite it.
             // If it's non-null and doesn't match what we think it should be, then throw.
@@ -688,7 +688,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         ///     This occurs when a relationship is set to null but the foreign key property is a non-nullable CLR type and therefore can't be set to null.
         /// </summary>
         /// <returns>true if the foreign key is conceptually null; otherwise, false.</returns>
-        protected override bool CachedForeignKeyIsConceptualNull()
+        internal override bool CachedForeignKeyIsConceptualNull()
         {
             return ForeignKeyFactory.IsConceptualNullKey(CachedForeignKey);
         }
@@ -697,7 +697,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <returns> true if they key was updated; otherwise, false.</returns>
         /// <param name="targetRelatedEnd">The target related end.</param>
         /// <param name="forceForeignKeyChanges"> If true, then the property setter is called even if FK values already match, which causes the FK properties to be marked as modified. </param>
-        protected override bool UpdateDependentEndForeignKey(RelatedEnd targetRelatedEnd, bool forceForeignKeyChanges)
+        internal override bool UpdateDependentEndForeignKey(RelatedEnd targetRelatedEnd, bool forceForeignKeyChanges)
         {
             if (IsDependentEndOfReferentialConstraint(false))
             {
@@ -711,7 +711,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <summary>
         ///     Ensures the detached entity key is valid (not temporary etc.) 
         /// </summary>
-        protected override void ValidateDetachedEntityKey()
+        internal override void ValidateDetachedEntityKey()
         {
             // If this is a stub EntityReference and the DetachedEntityKey is set, make sure it is valid
             if (IsEmpty()
@@ -734,7 +734,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Verifies the detached key matches of the entity key.</summary>
         /// <param name="entityKey">The key entity.</param>
-        protected override void VerifyDetachedKeyMatches(EntityKey entityKey)
+        internal override void VerifyDetachedKeyMatches(EntityKey entityKey)
         {
             // If we have a reference with a detached key, make sure the key matches the relationship we are about to add
             if (DetachedEntityKey != null)

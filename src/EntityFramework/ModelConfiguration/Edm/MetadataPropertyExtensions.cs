@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     /// <summary>
     /// Extension methods for <see cref="MetadataProperty"/>.
     /// </summary>
-    public static class MetadataPropertyExtensions
+    internal static class MetadataPropertyExtensions
     {
         private const string ClrTypeAnnotation = "ClrType";
         private const string ClrPropertyInfoAnnotation = "ClrPropertyInfo";
