@@ -268,6 +268,30 @@ namespace System.Data.Entity.Migrations.Console.Resources
         {
             get { return EntityRes.GetString(EntityRes.InvalidParameterIndexValue); }
         }
+
+        /// <summary>
+        ///     A string like "Invalid argument "{0}" at parameter index {1} in command line "{2}""
+        /// </summary>
+        internal static string InvalidCommandLineArgument(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.InvalidCommandLineArgument, p0, p1, p2);
+        }
+
+        /// <summary>
+        ///     A string like "Invalid command "{0}" at index {1} in command line "{2}""
+        /// </summary>
+        internal static string InvalidCommandLineCommand(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.InvalidCommandLineCommand, p0, p1, p2);
+        }
+
+        /// <summary>
+        ///     A string like "Missing required parameter {0} "{1}" in command line "{2}""
+        /// </summary>
+        internal static string MissingCommandLineParameter(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.MissingCommandLineParameter, p0, p1, p2);
+        }
     }
 
     /// <summary>
@@ -373,6 +397,9 @@ namespace System.Data.Entity.Migrations.Console.Resources
         internal const string AmbiguousConnectionString = "AmbiguousConnectionString";
         internal const string MissingConnectionInfo = "MissingConnectionInfo";
         internal const string InvalidParameterIndexValue = "InvalidParameterIndexValue";
+        internal const string InvalidCommandLineArgument = "InvalidCommandLineArgument";
+        internal const string InvalidCommandLineCommand = "InvalidCommandLineCommand";
+        internal const string MissingCommandLineParameter = "MissingCommandLineParameter";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;
