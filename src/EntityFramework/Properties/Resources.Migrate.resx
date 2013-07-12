@@ -217,4 +217,13 @@
     <value>Invalid ParameterIndex value</value>
     <comment>## ExceptionType=CmdLine.CommandLineException</comment>
   </data>
+  <data name="InvalidCommandLineArgument" xml:space="preserve">
+    <value>Invalid argument "{0}" at parameter index {1} in command line "{2}"</value>
+  </data>
+  <data name="InvalidCommandLineCommand" xml:space="preserve">
+    <value>Invalid command "{0}" at index {1} in command line "{2}"</value>
+  </data>
+  <data name="MissingCommandLineParameter" xml:space="preserve">
+    <value>Missing required parameter {0} "{1}" in command line "{2}"</value>
+  </data>
 </root>

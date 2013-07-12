@@ -3,6 +3,7 @@
 namespace CmdLine
 {
     using System;
+    using System.Data.Entity.Migrations.Console.Resources;
 
     [Serializable]
     public class CommandLineRequiredArgumentMissingException : CommandLineException
@@ -15,16 +16,8 @@ namespace CmdLine
         private static string FormatMessage(string argumentName, int parameterIndex)
         {
             return parameterIndex == -1
-                       ? FormatMessage(argumentName)
-                       : string.Format(
-                           "Missing required parameter {0} \"{1}\" in command line \"{2}\"", parameterIndex,
-                           argumentName, string.Join(" ", CommandLine.Args));
-        }
-
-        private static string FormatMessage(string argumentName)
-        {
-            return string.Format(
-                "Missing required parameter \"{0}\" in command line \"{1}\"", argumentName, CommandLine.Text);
+                       ? Strings.MissingCommandLineParameter("", argumentName, CommandLine.Text)
+                       : Strings.MissingCommandLineParameter(parameterIndex, argumentName, string.Join(" ", CommandLine.Args));
         }
     }
 }
