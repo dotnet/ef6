@@ -61,6 +61,29 @@ namespace FunctionalTests
         }
 
         [Fact]
+        public void Can_configure_precision_on_datetime_properties()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<DateTimeEntity>()
+                .Property(e => e.Date)
+                .HasColumnType("datetime2")
+                .HasPrecision(6);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+            databaseMapping.Assert<DateTimeEntity>(e => e.Date).DbEqual((byte)6, c => c.Precision);
+        }
+
+        public class DateTimeEntity
+        {
+            public int Id { get; set; }
+
+            public DateTime Date { get; set; }
+        }
+
+        [Fact]
         public void Composite_key_should_result_in_correct_order_when_key_and_order_configured_using_api()
         {
             TestCompositeKeyOrder(

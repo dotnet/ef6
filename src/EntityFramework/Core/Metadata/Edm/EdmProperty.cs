@@ -324,18 +324,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var existingStoreGeneratedPattern = StoreGeneratedPattern;
                 var existingConcurrencyMode = ConcurrencyMode;
 
-                var validExistingFacets = new List<Facet>();
+                var relevantExistingFacets = new List<Facet>();
 
                 foreach (var facetDescription in value.GetAssociatedFacetDescriptions())
                 {
                     Facet facet;
-                    if (TypeUsage.Facets.TryGetValue(facetDescription.FacetName, false, out facet))
+                    if (TypeUsage.Facets.TryGetValue(facetDescription.FacetName, false, out facet)
+                        && ((facet.Value == null && facet.Description.DefaultValue != null)
+                            || (facet.Value != null && !facet.Value.Equals(facet.Description.DefaultValue))))
                     {
-                        validExistingFacets.Add(facet);
+                        relevantExistingFacets.Add(facet);
                     }
                 }
 
-                TypeUsage = TypeUsage.Create(value, validExistingFacets);
+                TypeUsage = TypeUsage.Create(value, FacetValues.Create(relevantExistingFacets));
 
                 if (existingStoreGeneratedPattern != StoreGeneratedPattern.None)
                 {

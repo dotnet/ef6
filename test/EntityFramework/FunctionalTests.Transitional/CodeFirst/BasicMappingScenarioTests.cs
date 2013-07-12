@@ -648,7 +648,7 @@ namespace FunctionalTests
                 .HasColumns("Id", "BaseData", "IntProp", "NullableIntProp", "DerivedData", "LeafData", "MyDisc");
             databaseMapping.Assert<TPHBase>("TPHBases")
                 .Column("MyDisc")
-                .DbEqual(null, f => f.MaxLength);
+                .DbEqual(1073741823, f => f.MaxLength);
             databaseMapping.AssertMapping<TPHBase>("TPHBases", false)
                 .HasNoPropertyConditions()
                 .HasColumnCondition("MyDisc", "a");

@@ -216,6 +216,7 @@
     <Compile Include="Core\Metadata\Edm\EntityTypeBaseTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntityTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\EnumTypeTests.cs" />
+    <Compile Include="Core\Metadata\Edm\FacetValuesTests.cs" />
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilderTests.cs" />
     <Compile Include="Core\Metadata\Edm\FunctionParameterTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataCacheTests.cs" />

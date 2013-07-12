@@ -633,7 +633,7 @@ namespace FunctionalTests
                 t.Properties.Single(x => x.Name == "NonMaxTimestamp").IsMaxLength);
 
             databaseMapping.Assert<TimestampAndMaxlen>().DbEqual(
-                null,
+                8,
                 t =>
                 t.Properties.Single(x => x.Name == "NonMaxTimestamp").MaxLength);
         }
