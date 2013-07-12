@@ -17,29 +17,31 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.Empty(interceptionContext.ObjectContexts);
             Assert.Empty(interceptionContext.DbContexts);
-            Assert.Null(interceptionContext.Exception);
             Assert.Equal(null, interceptionContext.Result);
-            Assert.False(interceptionContext.IsResultSet);
+            Assert.Equal(null, interceptionContext.OriginalResult);
         }
 
         [Fact]
-        public void Interception_context_can_be_associated_command_specific_state_and_all_state_is_preserved()
+        public void Cloning_the_interception_context_preserves_contextual_information_but_not_mutable_state()
         {
-            var commandTree = new Mock<DbCommandTree>().Object;
             var objectContext = new ObjectContext();
             var dbContext = CreateDbContext(objectContext);
-            var exception = new Exception();
 
-            var interceptionContext = new DbCommandTreeInterceptionContext { Result = commandTree }
+            var interceptionContext = new DbCommandTreeInterceptionContext();
+            
+            interceptionContext.MutableData.SetExecuted(new Mock<DbCommandTree>().Object);
+
+            interceptionContext = interceptionContext
                 .WithDbContext(dbContext)
                 .WithObjectContext(objectContext)
-                .WithException(exception);
+                .AsAsync();
 
             Assert.Equal(new[] { objectContext }, interceptionContext.ObjectContexts);
             Assert.Equal(new[] { dbContext }, interceptionContext.DbContexts);
-            Assert.Same(exception, interceptionContext.Exception);
-            Assert.Same(commandTree, interceptionContext.Result);
-            Assert.True(interceptionContext.IsResultSet);
+            Assert.True(interceptionContext.IsAsync);
+
+            Assert.Null(interceptionContext.Result);
+            Assert.Null(interceptionContext.OriginalResult);
         }
 
         [Fact]
@@ -47,12 +49,19 @@ namespace System.Data.Entity.Infrastructure
         {
             var interceptionContext = new DbCommandTreeInterceptionContext();
             Assert.Null(interceptionContext.Result);
-            Assert.False(interceptionContext.IsResultSet);
+            Assert.Null(interceptionContext.OriginalResult);
 
             var commandTree = new Mock<DbCommandTree>().Object;
-            interceptionContext.Result = commandTree;
-            Assert.True(interceptionContext.IsResultSet);
+            interceptionContext.MutableData.SetExecuted(commandTree);
+
             Assert.Same(commandTree, interceptionContext.Result);
+            Assert.Same(commandTree, interceptionContext.OriginalResult);
+          
+            var commandTree2 = new Mock<DbCommandTree>().Object;
+            interceptionContext.Result = commandTree2;
+
+            Assert.Same(commandTree2, interceptionContext.Result);
+            Assert.Same(commandTree, interceptionContext.OriginalResult);
         }
 
         [Fact]

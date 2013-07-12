@@ -4,7 +4,6 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -31,21 +30,26 @@ namespace System.Data.Entity.Infrastructure
         ///     interceptors that are registered on <see cref="Interception" /> before/after making a
         ///     call to <see cref="DbCommand.ExecuteNonQuery" />.
         /// </summary>
+        /// <remarks>
+        ///     Note that the result of executing the command is returned by this method. The result is not available
+        ///     in the interception context passed into this method since the interception context is cloned before
+        ///     being passed to interceptors.
+        /// </remarks>
         /// <param name="command">The command on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual int NonQuery(DbCommand command, DbCommandInterceptionContext<int> interceptionContext)
+        public virtual int NonQuery(DbCommand command, DbCommandBaseInterceptionContext interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            Debug.Assert(!interceptionContext.IsResultSet);
+            var clonedInterceptionContext = new DbCommandInterceptionContext<int>(interceptionContext);
 
             return InternalDispatcher.Dispatch(
                 command.ExecuteNonQuery,
-                interceptionContext,
-                i => i.NonQueryExecuting(command, interceptionContext),
-                (i, c) => i.NonQueryExecuted(command, c));
+                clonedInterceptionContext,
+                i => i.NonQueryExecuting(command, clonedInterceptionContext),
+                i => i.NonQueryExecuted(command, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -54,21 +58,26 @@ namespace System.Data.Entity.Infrastructure
         ///     interceptors that are registered on <see cref="Interception" /> before/after making a
         ///     call to <see cref="DbCommand.ExecuteScalar" />.
         /// </summary>
+        /// <remarks>
+        ///     Note that the result of executing the command is returned by this method. The result is not available
+        ///     in the interception context passed into this method since the interception context is cloned before
+        ///     being passed to interceptors.
+        /// </remarks>
         /// <param name="command">The command on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual object Scalar(DbCommand command, DbCommandInterceptionContext<object> interceptionContext)
+        public virtual object Scalar(DbCommand command, DbCommandBaseInterceptionContext interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            Debug.Assert(!interceptionContext.IsResultSet);
+            var clonedInterceptionContext = new DbCommandInterceptionContext<object>(interceptionContext);
 
             return InternalDispatcher.Dispatch(
                 command.ExecuteScalar,
-                interceptionContext,
-                i => i.ScalarExecuting(command, interceptionContext),
-                (i, c) => i.ScalarExecuted(command, c));
+                clonedInterceptionContext,
+                i => i.ScalarExecuting(command, clonedInterceptionContext),
+                i => i.ScalarExecuted(command, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -77,54 +86,63 @@ namespace System.Data.Entity.Infrastructure
         ///     interceptors that are registered on <see cref="Interception" /> before/after making a
         ///     call to <see cref="DbCommand.ExecuteReader(CommandBehavior)" />.
         /// </summary>
+        /// <remarks>
+        ///     Note that the result of executing the command is returned by this method. The result is not available
+        ///     in the interception context passed into this method since the interception context is cloned before
+        ///     being passed to interceptors.
+        /// </remarks>
         /// <param name="command">The command on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
         public virtual DbDataReader Reader(
-            DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
+            DbCommand command, DbCommandBaseInterceptionContext interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            Debug.Assert(!interceptionContext.IsResultSet);
+            var clonedInterceptionContext = new DbCommandInterceptionContext<DbDataReader>(interceptionContext);
 
             return InternalDispatcher.Dispatch(
-                () => command.ExecuteReader(interceptionContext.CommandBehavior),
-                interceptionContext,
-                i => i.ReaderExecuting(command, interceptionContext),
-                (i, c) => i.ReaderExecuted(command, c));
+                () => command.ExecuteReader(clonedInterceptionContext.CommandBehavior),
+                clonedInterceptionContext,
+                i => i.ReaderExecuting(command, clonedInterceptionContext),
+                i => i.ReaderExecuted(command, clonedInterceptionContext));
         }
 
 #if !NET40
         /// <summary>
         ///     Sends <see cref="IDbCommandInterceptor.NonQueryExecuting" /> and
         ///     <see cref="IDbCommandInterceptor.NonQueryExecuted" /> to any  <see cref="IDbCommandInterceptor" />
-        ///     interceptors that are registered on <see cref="Interception" /> before/after making a 
+        ///     interceptors that are registered on <see cref="Interception" /> before/after making a
         ///     call to <see cref="DbCommand.ExecuteNonQueryAsync(CancellationToken)" />.
         /// </summary>
+        /// <remarks>
+        ///     Note that the result of executing the command is returned by this method. The result is not available
+        ///     in the interception context passed into this method since the interception context is cloned before
+        ///     being passed to interceptors.
+        /// </remarks>
         /// <param name="command">The command on which the operation will be executed.</param>
         /// <param name="cancellationToken">The cancellation token for the asynchronous operation.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
         public virtual Task<int> AsyncNonQuery(
-            DbCommand command, CancellationToken cancellationToken, DbCommandInterceptionContext<int> interceptionContext)
+            DbCommand command, CancellationToken cancellationToken, DbCommandBaseInterceptionContext interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            Debug.Assert(!interceptionContext.IsResultSet);
+            var clonedInterceptionContext = new DbCommandInterceptionContext<int>(interceptionContext);
 
-            if (!interceptionContext.IsAsync)
+            if (!clonedInterceptionContext.IsAsync)
             {
-                interceptionContext = interceptionContext.AsAsync();
+                clonedInterceptionContext = clonedInterceptionContext.AsAsync();
             }
 
-            return InternalDispatcher.Dispatch(
+            return InternalDispatcher.DispatchAsync(
                 () => command.ExecuteNonQueryAsync(cancellationToken),
-                interceptionContext,
-                i => i.NonQueryExecuting(command, interceptionContext),
-                (i, c) => i.NonQueryExecuted(command, c),
-                UpdateInterceptionContext);
+                clonedInterceptionContext,
+                i => i.NonQueryExecuting(command, clonedInterceptionContext),
+                i => i.NonQueryExecuted(command, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -133,29 +151,33 @@ namespace System.Data.Entity.Infrastructure
         ///     interceptors that are registered on <see cref="Interception" /> before/after making a
         ///     call to <see cref="DbCommand.ExecuteScalarAsync(CancellationToken)" />.
         /// </summary>
+        /// <remarks>
+        ///     Note that the result of executing the command is returned by this method. The result is not available
+        ///     in the interception context passed into this method since the interception context is cloned before
+        ///     being passed to interceptors.
+        /// </remarks>
         /// <param name="command">The command on which the operation will be executed.</param>
         /// <param name="cancellationToken">The cancellation token for the asynchronous operation.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
         public virtual Task<object> AsyncScalar(
-            DbCommand command, CancellationToken cancellationToken, DbCommandInterceptionContext<object> interceptionContext)
+            DbCommand command, CancellationToken cancellationToken, DbCommandBaseInterceptionContext interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            Debug.Assert(!interceptionContext.IsResultSet);
+            var clonedInterceptionContext = new DbCommandInterceptionContext<object>(interceptionContext);
 
-            if (!interceptionContext.IsAsync)
+            if (!clonedInterceptionContext.IsAsync)
             {
-                interceptionContext = interceptionContext.AsAsync();
+                clonedInterceptionContext = clonedInterceptionContext.AsAsync();
             }
 
-            return InternalDispatcher.Dispatch(
+            return InternalDispatcher.DispatchAsync(
                 () => command.ExecuteScalarAsync(cancellationToken),
-                interceptionContext,
-                i => i.ScalarExecuting(command, interceptionContext),
-                (i, c) => i.ScalarExecuted(command, c),
-                UpdateInterceptionContext);
+                clonedInterceptionContext,
+                i => i.ScalarExecuting(command, clonedInterceptionContext),
+                i => i.ScalarExecuted(command, clonedInterceptionContext));
         }
 
         /// <summary>
@@ -164,35 +186,33 @@ namespace System.Data.Entity.Infrastructure
         ///     interceptors that are registered on <see cref="Interception" /> before/after making a
         ///     call to <see cref="DbCommand.ExecuteReaderAsync(CommandBehavior, CancellationToken)" />.
         /// </summary>
+        /// <remarks>
+        ///     Note that the result of executing the command is returned by this method. The result is not available
+        ///     in the interception context passed into this method since the interception context is cloned before
+        ///     being passed to interceptors.
+        /// </remarks>
         /// <param name="command">The command on which the operation will be executed.</param>
         /// <param name="cancellationToken">The cancellation token for the asynchronous operation.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
         public virtual Task<DbDataReader> AsyncReader(
-            DbCommand command, CancellationToken cancellationToken, DbCommandInterceptionContext<DbDataReader> interceptionContext)
+            DbCommand command, CancellationToken cancellationToken, DbCommandBaseInterceptionContext interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
-            Debug.Assert(!interceptionContext.IsResultSet);
+            var clonedInterceptionContext = new DbCommandInterceptionContext<DbDataReader>(interceptionContext);
 
-            if (!interceptionContext.IsAsync)
+            if (!clonedInterceptionContext.IsAsync)
             {
-                interceptionContext = interceptionContext.AsAsync();
+                clonedInterceptionContext = clonedInterceptionContext.AsAsync();
             }
 
-            return InternalDispatcher.Dispatch(
-                () => command.ExecuteReaderAsync(interceptionContext.CommandBehavior, cancellationToken),
-                interceptionContext,
-                i => i.ReaderExecuting(command, interceptionContext),
-                (i, c) => i.ReaderExecuted(command, c),
-                UpdateInterceptionContext);
-        }
-
-        private static DbCommandInterceptionContext<TResult> UpdateInterceptionContext<TResult>(
-            DbCommandInterceptionContext<TResult> interceptionContext, Task t)
-        {
-            return interceptionContext.WithTaskStatus(t.Status);
+            return InternalDispatcher.DispatchAsync(
+                () => command.ExecuteReaderAsync(clonedInterceptionContext.CommandBehavior, cancellationToken),
+                clonedInterceptionContext,
+                i => i.ReaderExecuting(command, clonedInterceptionContext),
+                i => i.ReaderExecuted(command, clonedInterceptionContext));
         }
 #endif
     }

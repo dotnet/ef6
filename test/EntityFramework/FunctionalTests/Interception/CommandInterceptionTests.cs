@@ -101,15 +101,15 @@ namespace System.Data.Entity.Interception
 
             var executingLog = logger.Log[0];
             Assert.Equal(CommandMethod.ReaderExecuting, executingLog.Method);
-            Assert.False(executingLog.InterceptionContext.IsAsync);
+            Assert.False(executingLog.IsAsync);
             Assert.Null(executingLog.Result);
-            Assert.Null(executingLog.InterceptionContext.Exception);
+            Assert.Null(executingLog.Exception);
 
             var executedLog = logger.Log[1];
             Assert.Equal(CommandMethod.ReaderExecuted, executedLog.Method);
-            Assert.False(executedLog.InterceptionContext.IsAsync);
+            Assert.False(executedLog.IsAsync);
             Assert.Null(executedLog.Result);
-            Assert.Same(exception, executedLog.InterceptionContext.Exception);
+            Assert.Same(exception, executedLog.Exception);
         }
 
 #if !NET40
@@ -139,16 +139,16 @@ namespace System.Data.Entity.Interception
 
             var executingLog = logger.Log[0];
             Assert.Equal(CommandMethod.ReaderExecuting, executingLog.Method);
-            Assert.True(executingLog.InterceptionContext.IsAsync);
+            Assert.True(executingLog.IsAsync);
             Assert.Null(executingLog.Result);
-            Assert.Null(executingLog.InterceptionContext.Exception);
+            Assert.Null(executingLog.Exception);
 
             var executedLog = logger.Log[1];
             Assert.Equal(CommandMethod.ReaderExecuted, executedLog.Method);
-            Assert.True(executedLog.InterceptionContext.IsAsync);
+            Assert.True(executedLog.IsAsync);
             Assert.Null(executedLog.Result);
-            Assert.IsType<SqlException>(executedLog.InterceptionContext.Exception);
-            Assert.True(executedLog.InterceptionContext.TaskStatus.HasFlag(TaskStatus.Faulted));
+            Assert.IsType<SqlException>(executedLog.Exception);
+            Assert.True(executedLog.TaskStatus.HasFlag(TaskStatus.Faulted));
         }
 
         [Fact]
@@ -193,16 +193,16 @@ namespace System.Data.Entity.Interception
 
             var executingLog = logger.Log[0];
             Assert.Equal(CommandMethod.NonQueryExecuting, executingLog.Method);
-            Assert.True(executingLog.InterceptionContext.IsAsync);
+            Assert.True(executingLog.IsAsync);
             Assert.Null(executingLog.Result);
-            Assert.Null(executingLog.InterceptionContext.Exception);
+            Assert.Null(executingLog.Exception);
 
             var executedLog = logger.Log[1];
             Assert.Equal(CommandMethod.NonQueryExecuted, executedLog.Method);
-            Assert.True(executedLog.InterceptionContext.IsAsync);
+            Assert.True(executedLog.IsAsync);
             Assert.Equal(0, executedLog.Result);
-            Assert.Null(executingLog.InterceptionContext.Exception);
-            Assert.True(executedLog.InterceptionContext.TaskStatus.HasFlag(TaskStatus.Canceled));
+            Assert.Null(executedLog.Exception);
+            Assert.True(executedLog.TaskStatus.HasFlag(TaskStatus.Canceled));
         }
 #endif
 
@@ -385,14 +385,18 @@ namespace System.Data.Entity.Interception
                 Method = method;
                 CommandText = command.CommandText;
                 Command = command;
-                InterceptionContext = interceptionContext;
+                Exception = interceptionContext.Exception;
+                TaskStatus = interceptionContext.TaskStatus;
+                IsAsync = interceptionContext.IsAsync;
                 Result = result;
             }
 
             public CommandMethod Method { get; set; }
             public string CommandText { get; set; }
             public DbCommand Command { get; set; }
-            public DbCommandInterceptionContext InterceptionContext { get; set; }
+            public Exception Exception { get; set; }
+            public bool IsAsync { get; set; }
+            public TaskStatus TaskStatus { get; set; }
             public object Result { get; set; }
         }
     }

@@ -13558,6 +13558,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        ///     A string like "The operation could not be suppressed because it has already been executed. 'SuppressExecution' can only be called from an interceptor that runs before the operation is executed."
+        /// </summary>
+        internal static string SuppressionAfterExecution
+        {
+            get { return EntityRes.GetString(EntityRes.SuppressionAfterExecution); }
+        }
+
+        /// <summary>
         ///     A string like "An error occurred while attempting to generate the body SQL of the stored procedure '{0}' for entity type '{1}'. This can happen if the entity type has both a self-referencing association and a store-generated key. See the inner exception for details."
         /// </summary>
         internal static string ErrorGeneratingCommandTree(object p0, object p1)
@@ -17058,6 +17066,7 @@ namespace System.Data.Entity.Resources
         internal const string CommandLogComplete = "CommandLogComplete";
         internal const string CommandLogAsync = "CommandLogAsync";
         internal const string CommandLogNonAsync = "CommandLogNonAsync";
+        internal const string SuppressionAfterExecution = "SuppressionAfterExecution";
         internal const string ErrorGeneratingCommandTree = "ErrorGeneratingCommandTree";
         internal const string LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity = "LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity";
         internal const string LightweightNavigationPropertyConfiguration_InvalidMultiplicity = "LightweightNavigationPropertyConfiguration_InvalidMultiplicity";

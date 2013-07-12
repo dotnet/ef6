@@ -8,15 +8,15 @@ namespace System.Data.Entity.Infrastructure
 
     internal class DbCommandTreeDispatcher : DispatcherBase<IDbCommandTreeInterceptor>
     {
-        public virtual DbCommandTree Created(DbCommandTree commandTree, DbCommandTreeInterceptionContext interceptionContext)
+        public virtual DbCommandTree Created(DbCommandTree commandTree, DbInterceptionContext interceptionContext)
         {
             DebugCheck.NotNull(commandTree);
             DebugCheck.NotNull(interceptionContext);
 
-            Debug.Assert(!interceptionContext.IsResultSet);
+            var clonedInterceptionContext = new DbCommandTreeInterceptionContext(interceptionContext);
 
             return InternalDispatcher.Dispatch(
-                commandTree, interceptionContext,  i => i.TreeCreated(commandTree, interceptionContext));
+                commandTree, clonedInterceptionContext, i => i.TreeCreated(commandTree, clonedInterceptionContext));
         }
     }
 }

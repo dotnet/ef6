@@ -919,7 +919,7 @@ namespace System.Data.Entity.SqlServer
                                 // set database options
                                 using (var command = CreateCommand(conn, setDatabaseOptionsScript, commandTimeout))
                                 {
-                                    Interception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext<int>());
+                                    Interception.Dispatch.Command.NonQuery(command, new DbCommandBaseInterceptionContext());
                                 }
                             });
                 }
@@ -933,7 +933,7 @@ namespace System.Data.Entity.SqlServer
                                 // create database objects
                                 using (var command = CreateCommand(conn, createObjectsScript, commandTimeout))
                                 {
-                                    Interception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext<int>());
+                                    Interception.Dispatch.Command.NonQuery(command, new DbCommandBaseInterceptionContext());
                                 }
                             });
                 }
@@ -1052,7 +1052,7 @@ namespace System.Data.Entity.SqlServer
                         // create database
                         using (var command = CreateCommand(conn, createDatabaseScript, commandTimeout))
                         {
-                            Interception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext<int>());
+                            Interception.Dispatch.Command.NonQuery(command, new DbCommandBaseInterceptionContext());
                         }
                         sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
                     });
@@ -1122,7 +1122,7 @@ namespace System.Data.Entity.SqlServer
                                 using (var command = CreateCommand(conn, databaseExistsScript, commandTimeout))
                                 {
                                     var rowsAffected = (int)Interception.Dispatch.Command.Scalar(
-                                        command, new DbCommandInterceptionContext<object>());
+                                        command, new DbCommandBaseInterceptionContext());
 
                                     databaseDoesNotExistInSysTables = (rowsAffected == 0);
                                 }
@@ -1151,7 +1151,7 @@ namespace System.Data.Entity.SqlServer
                         using (var command = CreateCommand(conn, databaseExistsScript, commandTimeout))
                         {
                             var rowsAffected = (int)Interception.Dispatch.Command.Scalar(
-                                command, new DbCommandInterceptionContext<object>());
+                                command, new DbCommandBaseInterceptionContext());
 
                             databaseExistsInSysTables = (rowsAffected > 0);
                         }
@@ -1206,7 +1206,7 @@ namespace System.Data.Entity.SqlServer
 
                             using (
                                 var reader = Interception.Dispatch.Command.Reader(
-                                    command, new DbCommandInterceptionContext<DbDataReader>()))
+                                    command, new DbCommandBaseInterceptionContext()))
                             {
                                 while (reader.Read())
                                 {
@@ -1247,7 +1247,7 @@ namespace System.Data.Entity.SqlServer
                         {
                             using (var command = CreateCommand(conn, dropDatabaseScript, commandTimeout))
                             {
-                                Interception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext<int>());
+                                Interception.Dispatch.Command.NonQuery(command, new DbCommandBaseInterceptionContext());
                             }
                         });
             }

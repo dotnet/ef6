@@ -106,7 +106,7 @@ namespace System.Data.Entity.Core.Common
                 storeMetadata.StoreProviderManifest != null,
                 "StoreItemCollection has null StoreProviderManifest?");
 
-            commandTree = _treeDispatcher.Value.Created(commandTree, new DbCommandTreeInterceptionContext(interceptionContext));
+            commandTree = _treeDispatcher.Value.Created(commandTree, interceptionContext);
 
             return CreateDbCommandDefinition(storeMetadata.StoreProviderManifest, commandTree, interceptionContext);
         }

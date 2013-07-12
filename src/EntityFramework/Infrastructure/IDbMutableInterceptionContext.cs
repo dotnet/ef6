@@ -2,9 +2,8 @@
 
 namespace System.Data.Entity.Infrastructure
 {
-    internal interface IDbInterceptionContextWithResult<TResult>
+    internal interface IDbMutableInterceptionContext
     {
-        TResult Result { get; set; }
-        bool IsResultSet { get; }
+        InterceptionContextMutableData MutableData { get; }
     }
 }

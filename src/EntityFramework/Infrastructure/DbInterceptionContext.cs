@@ -17,16 +17,17 @@ namespace System.Data.Entity.Infrastructure
     ///     Note that specific types/operations that can be intercepted may use a more specific
     ///     interception context derived from this class. For example, if SQL is being executed by
     ///     a <see cref="DbContext" />, then the DbContext will be contained in the
-    ///     DbCommandInterceptionContext instance that is passed to the methods
+    ///     <see cref="DbCommandInterceptionContext" /> instance that is passed to the methods
     ///     of <see cref="IDbCommandInterceptor" />.
-    ///     Instances of this class are publicly immutable. To add contextual information use one of the
-    ///     With... or As... methods to create a new interception context containing the new information.
+    ///     Instances of this class are publicly immutable for contextual information. To add
+    ///     contextual information use one of the With... or As... methods to create a new
+    ///     interception context containing the new information.
     /// </remarks>
     public class DbInterceptionContext
     {
         private readonly IList<DbContext> _dbContexts;
         private readonly IList<ObjectContext> _objectContexts;
-        private Exception _exception;
+        private bool _isAsync;
 
         /// <summary>
         ///     Constructs a new <see cref="DbInterceptionContext" /> with no state.
@@ -39,31 +40,31 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Creates a new <see cref="DbInterceptionContext" /> by copying state from the given
-        ///     interception context. See <see cref="DbInterceptionContext.Clone"/>
+        ///     interception context. See <see cref="DbInterceptionContext.Clone" />
         /// </summary>
         /// <param name="copyFrom">The context from which to copy state.</param>
         protected DbInterceptionContext(DbInterceptionContext copyFrom)
         {
             _dbContexts = copyFrom.DbContexts.Where(c => !c.InternalContext.IsDisposed).ToList();
             _objectContexts = copyFrom.ObjectContexts.Where(c => !c.IsDisposed).ToList();
-            _exception = copyFrom._exception;
+            _isAsync = copyFrom._isAsync;
         }
 
         private DbInterceptionContext(IEnumerable<DbInterceptionContext> copyFrom)
         {
             Debug.Assert(
-                copyFrom.All(c => c.GetType() == typeof(DbInterceptionContext)), 
+                copyFrom.All(c => c.GetType() == typeof(DbInterceptionContext)),
                 "Combining derived interception contexts will lose state.");
 
             _dbContexts = copyFrom.SelectMany(c => c.DbContexts)
-                                  .Distinct()
-                                  .Where(c => !c.InternalContext.IsDisposed).ToList();
+                .Distinct()
+                .Where(c => !c.InternalContext.IsDisposed).ToList();
 
             _objectContexts = copyFrom.SelectMany(c => c.ObjectContexts)
-                                      .Distinct()
-                                      .Where(c => !c.IsDisposed).ToList();
+                .Distinct()
+                .Where(c => !c.IsDisposed).ToList();
 
-            _exception = copyFrom.Select(c => c._exception).FirstOrDefault();
+            _isAsync = copyFrom.Any(c => c.IsAsync);
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Creates a new <see cref="DbInterceptionContext" /> that contains all the contextual information in this
-        ///     interception context with the addition of the given <see cref="ObjectContext" />.
+        ///     interception context with the addition of the given <see cref="DbContext" />.
         /// </summary>
         /// <param name="context">The context to associate.</param>
         /// <returns>A new interception context associated with the given context.</returns>
@@ -129,27 +130,22 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     If an intercepted operation fails then this property will contain the exception that
-        ///     caused the failure. For operations that have not yet been executed and for operations
-        ///     where execution succeeded this property will be null.
+        ///     True if the operation is being executed asynchronously, otherwise false.
         /// </summary>
-        public Exception Exception
+        public bool IsAsync
         {
-            get { return _exception; }
+            get { return _isAsync; }
         }
 
         /// <summary>
         ///     Creates a new <see cref="DbInterceptionContext" /> that contains all the contextual information in this
-        ///     interception context with the addition of the given <see cref="Exception" />.
-        ///     Note that associating an exception with an interception context indicates that the intercepted
-        ///     operation failed.
+        ///     interception context the <see cref="DbInterceptionContext.IsAsync" /> flag set to true.
         /// </summary>
-        /// <param name="exception">The exception to associate.</param>
-        /// <returns>A new interception context associated with the given exception.</returns>
-        public DbInterceptionContext WithException(Exception exception)
+        /// <returns>A new interception context associated with the async flag set.</returns>
+        public DbInterceptionContext AsAsync()
         {
             var copy = Clone();
-            copy._exception = exception;
+            copy._isAsync = true;
             return copy;
         }
 

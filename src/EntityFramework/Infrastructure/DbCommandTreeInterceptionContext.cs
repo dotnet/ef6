@@ -6,16 +6,23 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// Provides contextual information to methods that intercept command trees.
+    ///     Represents contextual information associated with calls into <see cref="IDbCommandTreeInterceptor" />
+    ///     implementations.
     /// </summary>
-    public class DbCommandTreeInterceptionContext : DbInterceptionContext, IDbInterceptionContextWithResult<DbCommandTree>
+    /// <remarks>
+    ///     Instances of this class are publicly immutable for contextual information. To add
+    ///     contextual information use one of the With... or As... methods to create a new
+    ///     interception context containing the new information.
+    /// </remarks>
+    public class DbCommandTreeInterceptionContext :
+        DbInterceptionContext,
+        IDbMutableInterceptionContext<DbCommandTree>
     {
-        private bool _isResultSet;
-        private DbCommandTree _result;
+        private readonly InterceptionContextMutableData<DbCommandTree> _mutableData
+            = new InterceptionContextMutableData<DbCommandTree>();
 
         /// <summary>
-        ///     Constructs a new <see cref="DbCommandInterceptionContext" /> with no state.
+        ///     Constructs a new <see cref="DbCommandTreeInterceptionContext" /> with no state.
         /// </summary>
         public DbCommandTreeInterceptionContext()
         {
@@ -29,38 +36,42 @@ namespace System.Data.Entity.Infrastructure
         public DbCommandTreeInterceptionContext(DbInterceptionContext copyFrom)
             : base(copyFrom)
         {
-            var asResultType = copyFrom as IDbInterceptionContextWithResult<DbCommandTree>;
-            if (asResultType != null)
-            {
-                _isResultSet = asResultType.IsResultSet;
-                _result = asResultType.Result;
-            }
+        }
+
+        internal InterceptionContextMutableData<DbCommandTree> MutableData
+        {
+            get { return _mutableData; }
+        }
+
+        InterceptionContextMutableData<DbCommandTree> IDbMutableInterceptionContext<DbCommandTree>.MutableData
+        {
+            get { return _mutableData; }
+        }
+
+        InterceptionContextMutableData IDbMutableInterceptionContext.MutableData
+        {
+            get { return _mutableData; }
         }
 
         /// <summary>
-        ///     The result of executing the operation.
+        ///     The original tree created by Entity Framework. Interceptors can change the
+        ///     <see cref="Result" /> property to changes the tree that will be used, but the
+        ///     <see cref="OriginalResult" /> will always be the tree created by Entity Framework.
         /// </summary>
-        /// <remarks>
-        ///     Changing this property will change the tree that is used by EF.
-        /// </remarks>
+        public DbCommandTree OriginalResult
+        {
+            get { return _mutableData.OriginalResult; }
+        }
+
+        /// <summary>
+        ///     The command tree that will be used by Entity Framework. This starts as tree contained in the 
+        ///     the <see cref="OriginalResult"/> property but can be changed by interceptors to change
+        ///     the tree that will be used by Entity Framework.
+        /// </summary>
         public DbCommandTree Result
         {
-            get { return _result; }
-            set
-            {
-                _result = value;
-                _isResultSet = true;
-            }
-        }
-
-        internal bool IsResultSet
-        {
-            get { return ((IDbInterceptionContextWithResult<DbCommandTree>)this).IsResultSet; }
-        }
-
-        bool IDbInterceptionContextWithResult<DbCommandTree>.IsResultSet
-        {
-            get { return _isResultSet; }
+            get { return _mutableData.Result; }
+            set { _mutableData.Result = value; }
         }
 
         /// <inheritdoc />
@@ -71,7 +82,7 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Creates a new <see cref="DbCommandTreeInterceptionContext" /> that contains all the contextual information in this
-        ///     interception context with the addition of the given <see cref="ObjectContext" />.
+        ///     interception context with the addition of the given <see cref="DbContext" />.
         /// </summary>
         /// <param name="context">The context to associate.</param>
         /// <returns>A new interception context associated with the given context.</returns>
@@ -97,15 +108,12 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Creates a new <see cref="DbCommandTreeInterceptionContext" /> that contains all the contextual information in this
-        ///     interception context with the addition of the given <see cref="Exception" />.
-        ///     Note that associating an exception with an interception context indicates that the intercepted
-        ///     operation failed.
+        ///     interception context the <see cref="DbInterceptionContext.IsAsync" /> flag set to true.
         /// </summary>
-        /// <param name="exception">The exception to associate.</param>
-        /// <returns>A new interception context associated with the given exception.</returns>
-        public new DbCommandTreeInterceptionContext WithException(Exception exception)
+        /// <returns>A new interception context associated with the async flag set.</returns>
+        public new DbCommandTreeInterceptionContext AsAsync()
         {
-            return (DbCommandTreeInterceptionContext)base.WithException(exception);
+            return (DbCommandTreeInterceptionContext)base.AsAsync();
         }
     }
 }

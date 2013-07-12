@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.Infrastructure
 {
-    using System.Data.Common;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Resources;
     using System.Threading.Tasks;
     using Moq;
     using Xunit;
@@ -19,49 +19,150 @@ namespace System.Data.Entity.Infrastructure
             Assert.Empty(interceptionContext.ObjectContexts);
             Assert.Empty(interceptionContext.DbContexts);
             Assert.Null(interceptionContext.Exception);
+            Assert.Null(interceptionContext.OriginalException);
             Assert.False(interceptionContext.IsAsync);
             Assert.Equal((TaskStatus)0, interceptionContext.TaskStatus);
             Assert.Equal(CommandBehavior.Default, interceptionContext.CommandBehavior);
             Assert.Equal(0, interceptionContext.Result);
-            Assert.False(interceptionContext.IsResultSet);
+            Assert.Equal(0, interceptionContext.OriginalResult);
+            Assert.False(interceptionContext.IsSuppressed);
         }
 
         [Fact]
-        public void Interception_context_can_be_associated_command_specific_state_and_all_state_is_preserved()
+        public void Cloning_the_interception_context_preserves_contextual_information_but_not_mutable_state()
         {
             var objectContext = new ObjectContext();
             var dbContext = CreateDbContext(objectContext);
-            var exception = new Exception();
 
-            var interceptionContext = new DbCommandInterceptionContext<int> { Result = 77 }
+            var interceptionContext = new DbCommandInterceptionContext<string>();
+            
+            var mutableData = ((IDbMutableInterceptionContext<string>)interceptionContext).MutableData;
+            mutableData.SetExecuted("Wensleydale");
+            mutableData.SetExceptionThrown(new Exception("Cheez Whiz"));
+
+            interceptionContext = interceptionContext
                 .WithDbContext(dbContext)
                 .WithObjectContext(objectContext)
-                .WithException(exception)
-                .WithTaskStatus(TaskStatus.Running)
-                .WithCommandBehavior(CommandBehavior.SchemaOnly)
-                .AsAsync();
+                .AsAsync()
+                .WithCommandBehavior(CommandBehavior.SchemaOnly);
 
             Assert.Equal(new[] { objectContext }, interceptionContext.ObjectContexts);
             Assert.Equal(new[] { dbContext }, interceptionContext.DbContexts);
-            Assert.Same(exception, interceptionContext.Exception);
             Assert.True(interceptionContext.IsAsync);
-            Assert.Equal(TaskStatus.Running, interceptionContext.TaskStatus);
             Assert.Equal(CommandBehavior.SchemaOnly, interceptionContext.CommandBehavior);
-            Assert.Equal(77, interceptionContext.Result);
-            Assert.True(interceptionContext.IsResultSet);
+
+            Assert.Null(interceptionContext.Result);
+            Assert.Null(interceptionContext.OriginalResult);
+            Assert.Null(interceptionContext.Exception);
+            Assert.Null(interceptionContext.OriginalException);
+            Assert.False(interceptionContext.IsSuppressed);
         }
 
         [Fact]
         public void Result_can_be_mutated()
         {
-            var interceptionContext = new DbCommandInterceptionContext<DbDataReader>();
-            Assert.Null(interceptionContext.Result);
-            Assert.False(interceptionContext.IsResultSet);
+            var interceptionContext = new DbCommandInterceptionContext<string>();
 
-            var dataReader = new Mock<DbDataReader>().Object;
-            interceptionContext.Result = dataReader;
-            Assert.True(interceptionContext.IsResultSet);
-            Assert.Same(dataReader, interceptionContext.Result);
+            Assert.Null(interceptionContext.Result);
+            Assert.Null(interceptionContext.OriginalResult);
+            Assert.Null(interceptionContext.Exception);
+            Assert.Null(interceptionContext.OriginalException);
+            Assert.False(interceptionContext.IsSuppressed);
+
+            ((IDbMutableInterceptionContext<string>)interceptionContext).MutableData.SetExecuted("Wensleydale");
+
+            Assert.Equal("Wensleydale", interceptionContext.Result);
+            Assert.Equal("Wensleydale", interceptionContext.OriginalResult);
+            Assert.Null(interceptionContext.Exception);
+            Assert.Null(interceptionContext.OriginalException);
+            Assert.False(interceptionContext.IsSuppressed);
+
+            interceptionContext.Result = "Double Gloucester";
+            Assert.Equal("Double Gloucester", interceptionContext.Result);
+            Assert.Equal("Wensleydale", interceptionContext.OriginalResult);
+            Assert.False(interceptionContext.IsSuppressed);
+
+            interceptionContext.Result = null;
+            Assert.Null(interceptionContext.Result);
+            Assert.Equal("Wensleydale", interceptionContext.OriginalResult);
+            Assert.False(interceptionContext.IsSuppressed);
+        }
+
+        [Fact]
+        public void Exception_can_be_mutated()
+        {
+            var interceptionContext = new DbCommandInterceptionContext<string>();
+
+            Assert.Null(interceptionContext.Result);
+            Assert.Null(interceptionContext.OriginalResult);
+            Assert.Null(interceptionContext.Exception);
+            Assert.Null(interceptionContext.OriginalException);
+            Assert.False(interceptionContext.IsSuppressed);
+
+            interceptionContext.MutableData.SetExceptionThrown(new Exception("Cheez Whiz"));
+
+            Assert.Null(interceptionContext.Result);
+            Assert.Null(interceptionContext.OriginalResult);
+            Assert.Equal("Cheez Whiz", interceptionContext.Exception.Message);
+            Assert.Equal("Cheez Whiz", interceptionContext.OriginalException.Message);
+            Assert.False(interceptionContext.IsSuppressed);
+
+            interceptionContext.Exception = new Exception("Velveeta");
+            Assert.Equal("Velveeta", interceptionContext.Exception.Message);
+            Assert.Equal("Cheez Whiz", interceptionContext.OriginalException.Message);
+            Assert.False(interceptionContext.IsSuppressed);
+
+            interceptionContext.Exception = null;
+            Assert.Null(interceptionContext.Exception);
+            Assert.Equal("Cheez Whiz", interceptionContext.OriginalException.Message);
+            Assert.False(interceptionContext.IsSuppressed);
+        }
+
+        [Fact]
+        public void Suppression_can_be_flagged_by_setting_Result_before_execution()
+        {
+            var interceptionContext = new DbCommandInterceptionContext<string>();
+
+            interceptionContext.Result = "Double Gloucester";
+
+            Assert.True(interceptionContext.IsSuppressed);
+            Assert.Equal("Double Gloucester", interceptionContext.Result);
+        }
+
+        [Fact]
+        public void Suppression_can_be_flagged_by_setting_Exception_before_execution()
+        {
+            var interceptionContext = new DbCommandInterceptionContext<string>();
+
+            interceptionContext.Exception = new Exception("Velveeta");
+
+            Assert.True(interceptionContext.IsSuppressed);
+            Assert.Equal("Velveeta", interceptionContext.Exception.Message);
+        }
+
+        [Fact]
+        public void Suppression_can_be_flagged_by_calling_SuppressExecution()
+        {
+            var interceptionContext = new DbCommandInterceptionContext<string>();
+
+            interceptionContext.SuppressExecution();
+
+            Assert.True(interceptionContext.IsSuppressed);
+            Assert.Null(interceptionContext.Result);
+            Assert.Null(interceptionContext.Exception);
+        }
+
+
+        [Fact]
+        public void Calling_SuppressExecution_after_execution_throws()
+        {
+            var interceptionContext = new DbCommandInterceptionContext<string>();
+
+            ((IDbMutableInterceptionContext<string>)interceptionContext).MutableData.SetExecuted("Wensleydale");
+
+            Assert.Equal(
+                Strings.SuppressionAfterExecution,
+                Assert.Throws<InvalidOperationException>(() => interceptionContext.SuppressExecution()).Message);
         }
 
         [Fact]

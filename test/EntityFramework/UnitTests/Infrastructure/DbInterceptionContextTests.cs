@@ -17,34 +17,23 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.Empty(interceptionContext.ObjectContexts);
             Assert.Empty(interceptionContext.DbContexts);
-            Assert.Null(interceptionContext.Exception);
+            Assert.False(interceptionContext.IsAsync);
         }
 
         [Fact]
-        public void Interception_context_can_be_associated_with_an_exception_and_other_state_is_preserved()
+        public void Interception_context_can_be_made_async_and_other_state_is_preserved()
         {
             var objectContext = new ObjectContext();
             var dbContext = CreateDbContext(objectContext);
-            var exception = new Exception();
 
             var interceptionContext = new DbInterceptionContext()
                 .WithDbContext(dbContext)
                 .WithObjectContext(objectContext)
-                .WithException(exception);
+                .AsAsync();
 
             Assert.Equal(new[] { objectContext }, interceptionContext.ObjectContexts);
             Assert.Equal(new[] { dbContext }, interceptionContext.DbContexts);
-            Assert.Same(exception, interceptionContext.Exception);
-        }
-
-        [Fact]
-        public void Interception_context_associated_exception_can_be_cleared()
-        {
-            var interceptionContext = new DbInterceptionContext()
-                .WithException(new Exception())
-                .WithException(null);
-
-            Assert.Null(interceptionContext.Exception);
+            Assert.True(interceptionContext.IsAsync);
         }
 
         [Fact]
@@ -117,7 +106,8 @@ namespace System.Data.Entity.Infrastructure
             var interceptionContext1 = new DbInterceptionContext()
                 .WithDbContext(context1)
                 .WithDbContext(context2)
-                .WithObjectContext(objectContext1);
+                .WithObjectContext(objectContext1)
+                .AsAsync();
 
             var interceptionContext2 = interceptionContext1
                 .WithDbContext(context2)
@@ -133,6 +123,8 @@ namespace System.Data.Entity.Infrastructure
             Assert.Contains(context2, combined.DbContexts);
             Assert.Contains(objectContext1, combined.ObjectContexts);
             Assert.Contains(objectContext2, combined.ObjectContexts);
+
+            Assert.True(combined.IsAsync);
         }
 
         private static DbContext CreateDbContext(ObjectContext objectContext)

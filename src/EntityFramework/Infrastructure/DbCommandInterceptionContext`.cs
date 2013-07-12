@@ -11,14 +11,14 @@ namespace System.Data.Entity.Infrastructure
     ///     implementations including the result of the operation.
     /// </summary>
     /// <remarks>
-    ///     Instances of this class are publicly immutable except that the <see cref="Result" /> property can
-    ///     be set. To add other contextual information use one of the With... or As... methods to create a
-    ///     new interception context containing the new information.
+    ///     Instances of this class are publicly immutable for contextual information. To add
+    ///     contextual information use one of the With... or As... methods to create a new
+    ///     interception context containing the new information.
     /// </remarks>
-    public class DbCommandInterceptionContext<TResult> : DbCommandInterceptionContext, IDbInterceptionContextWithResult<TResult>
+    public class DbCommandInterceptionContext<TResult> : DbCommandInterceptionContext, IDbMutableInterceptionContext<TResult>
     {
-        private bool _isResultSet;
-        private TResult _result;
+        private readonly InterceptionContextMutableData<TResult> _mutableData
+            = new InterceptionContextMutableData<TResult>();
 
         /// <summary>
         ///     Constructs a new <see cref="DbCommandInterceptionContext{TResult}" /> with no state.
@@ -35,66 +35,95 @@ namespace System.Data.Entity.Infrastructure
         public DbCommandInterceptionContext(DbInterceptionContext copyFrom)
             : base(copyFrom)
         {
-            var asResultType = copyFrom as IDbInterceptionContextWithResult<TResult>;
-            if (asResultType != null)
-            {
-                _isResultSet = asResultType.IsResultSet;
-                _result = asResultType.Result;
-            }
+        }
+
+        InterceptionContextMutableData IDbMutableInterceptionContext.MutableData
+        {
+            get { return _mutableData; }
+        }
+
+        InterceptionContextMutableData<TResult> IDbMutableInterceptionContext<TResult>.MutableData
+        {
+            get { return _mutableData; }
+        }
+
+        internal override InterceptionContextMutableData MutableData
+        {
+            get { return _mutableData; }
         }
 
         /// <summary>
-        ///     The result of executing the operation.
+        ///     If execution of the operation completes without throwing, then this property will contain
+        ///     the result of the operation. If the operation was suppressed or did not fail, then this property
+        ///     will always contain the default value for the generic type.
         /// </summary>
         /// <remarks>
-        ///     If this property is set before the command has been executed (in
-        ///     <see cref="IDbCommandInterceptor.NonQueryExecuting" />,
-        ///     <see cref="IDbCommandInterceptor.ReaderExecuting" />,  or <see cref="IDbCommandInterceptor.ScalarExecuting" />),
-        ///     then the command will not be executed and the set result will be used instead.
-        ///     This property is set by EF when the command has been executed and can then be changed (in
-        ///     <see cref="IDbCommandInterceptor.NonQueryExecuted" />,
-        ///     <see cref="IDbCommandInterceptor.ReaderExecuted" />,  or <see cref="IDbCommandInterceptor.ScalarExecuted" />)
-        ///     to change the result that will be used.
+        ///     When an operation operation completes without throwing both this property and the <see cref="Result" />
+        ///     property are set. However, the <see cref="Result" /> property can be set or changed by interceptors,
+        ///     while this property will always represent the actual result returned by the operation, if any.
+        /// </remarks>
+        public TResult OriginalResult
+        {
+            get { return _mutableData.OriginalResult; }
+        }
+
+        /// <summary>
+        ///     If this property is set before the operation has executed, then execution of the operation will
+        ///     be suppressed and the set result will be returned instead. Otherwise, if the operation succeeds, then
+        ///     this property will be set to the returned result. In either case, interceptors that run
+        ///     after the operation can change this property to change the result that will be returned.
+        /// </summary>
+        /// <remarks>
+        ///     When an operation operation completes without throwing both this property and the <see cref="OriginalResult" />
+        ///     property are set. However, this property can be set or changed by interceptors, while the
+        ///     <see cref="OriginalResult" /> property will always represent the actual result returned by the
+        ///     operation, if any.
         /// </remarks>
         public TResult Result
         {
-            get { return _result; }
-            set
-            {
-                _result = value;
-                _isResultSet = true;
-            }
+            get { return _mutableData.Result; }
+            set { _mutableData.Result = value; }
         }
 
-        internal bool IsResultSet
+        /// <inheritdoc />
+        public override bool IsSuppressed
         {
-            get { return ((IDbInterceptionContextWithResult<TResult>)this).IsResultSet; }
+            get { return _mutableData.IsSuppressed; }
         }
 
-        bool IDbInterceptionContextWithResult<TResult>.IsResultSet
+        /// <inheritdoc />
+        public override void SuppressExecution()
         {
-            get { return _isResultSet; }
+            _mutableData.SuppressExecution();
+        }
+
+        /// <inheritdoc />
+        public override Exception OriginalException
+        {
+            get { return _mutableData.OriginalException; }
+        }
+
+        /// <inheritdoc />
+        public override Exception Exception
+        {
+            get { return _mutableData.Exception; }
+            set { _mutableData.Exception = value; }
+        }
+
+        /// <inheritdoc />
+        public override TaskStatus TaskStatus
+        {
+            get { return _mutableData.TaskStatus; }
         }
 
         /// <summary>
         ///     Creates a new <see cref="DbCommandInterceptionContext{TResult}" /> that contains all the contextual information in this
-        ///     interception context together with the <see cref="DbCommandInterceptionContext.IsAsync" /> flag set to true.
+        ///     interception context together with the <see cref="DbInterceptionContext.IsAsync" /> flag set to true.
         /// </summary>
         /// <returns>A new interception context associated with the async flag set.</returns>
         public new DbCommandInterceptionContext<TResult> AsAsync()
         {
             return (DbCommandInterceptionContext<TResult>)base.AsAsync();
-        }
-
-        /// <summary>
-        ///     Creates a new <see cref="DbCommandInterceptionContext{TResult}" /> that contains all the contextual information in this
-        ///     interception context together with the given <see cref="TaskStatus" />.
-        /// </summary>
-        /// <param name="taskStatus">The task status to associate.</param>
-        /// <returns>A new interception context associated with the given status.</returns>
-        public new DbCommandInterceptionContext<TResult> WithTaskStatus(TaskStatus taskStatus)
-        {
-            return (DbCommandInterceptionContext<TResult>)base.WithTaskStatus(taskStatus);
         }
 
         /// <summary>
@@ -108,11 +137,6 @@ namespace System.Data.Entity.Infrastructure
             return (DbCommandInterceptionContext<TResult>)base.WithCommandBehavior(commandBehavior);
         }
 
-        private DbCommandInterceptionContext<TResult> TypedClone()
-        {
-            return (DbCommandInterceptionContext<TResult>)Clone();
-        }
-
         /// <inheritdoc />
         protected override DbInterceptionContext Clone()
         {
@@ -121,7 +145,7 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Creates a new <see cref="DbCommandInterceptionContext{TResult}" /> that contains all the contextual information in this
-        ///     interception context with the addition of the given <see cref="ObjectContext" />.
+        ///     interception context with the addition of the given <see cref="DbContext" />.
         /// </summary>
         /// <param name="context">The context to associate.</param>
         /// <returns>A new interception context associated with the given context.</returns>
@@ -143,19 +167,6 @@ namespace System.Data.Entity.Infrastructure
             Check.NotNull(context, "context");
 
             return (DbCommandInterceptionContext<TResult>)base.WithObjectContext(context);
-        }
-
-        /// <summary>
-        ///     Creates a new <see cref="DbCommandInterceptionContext{TResult}" /> that contains all the contextual information in this
-        ///     interception context with the addition of the given <see cref="Exception" />.
-        ///     Note that associating an exception with an interception context indicates that the intercepted
-        ///     operation failed.
-        /// </summary>
-        /// <param name="exception">The exception to associate.</param>
-        /// <returns>A new interception context associated with the given exception.</returns>
-        public new DbCommandInterceptionContext<TResult> WithException(Exception exception)
-        {
-            return (DbCommandInterceptionContext<TResult>)base.WithException(exception);
         }
     }
 }

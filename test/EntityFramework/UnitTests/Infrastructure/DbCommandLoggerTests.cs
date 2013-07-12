@@ -590,7 +590,7 @@ namespace System.Data.Entity.Infrastructure
                 new DbCommandLogger(writer.Write).LogResult(
                     new Mock<DbCommand>().Object,
                     null,
-                    new DbCommandInterceptionContext<DbDataReader>().WithException(new Exception("I do not like them!")));
+                    new DbCommandInterceptionContext<DbDataReader> { Exception = new Exception("I do not like them!") });
 
                 Assert.Equal(Strings.CommandLogFailed(0, "I do not like them!", ""), GetSingleLine(writer));
             }
@@ -599,10 +599,14 @@ namespace System.Data.Entity.Infrastructure
             public void LogResult_handles_canceled_commands()
             {
                 var writer = new StringWriter();
+
+                var interceptionContext = new DbCommandInterceptionContext<DbDataReader>();
+                interceptionContext.MutableData.TaskStatus = TaskStatus.Canceled;
+
                 new DbCommandLogger(writer.Write).LogResult(
                     new Mock<DbCommand>().Object,
                     null,
-                    new DbCommandInterceptionContext<DbDataReader>().WithTaskStatus(TaskStatus.Canceled));
+                    interceptionContext);
 
                 Assert.Equal(Strings.CommandLogCanceled(0, ""), GetSingleLine(writer));
             }
@@ -629,7 +633,7 @@ namespace System.Data.Entity.Infrastructure
                 logger.LogResult(
                     new Mock<DbCommand>().Object,
                     77,
-                    new DbCommandInterceptionContext<int>().WithException(new Exception("I do not like them!")));
+                    new DbCommandInterceptionContext<int> { Exception = new Exception("I do not like them!") } );
 
                 Assert.Equal(Strings.CommandLogFailed(elapsed, "I do not like them!", ""), GetSingleLine(writer));
             }
@@ -641,8 +645,11 @@ namespace System.Data.Entity.Infrastructure
                 var logger = new DbCommandLogger(writer.Write);
                 var elapsed = GetElapsed(logger);
 
+                var interceptionContext = new DbCommandInterceptionContext<int>();
+                interceptionContext.MutableData.TaskStatus = TaskStatus.Canceled;
+
                 logger.LogResult(
-                    new Mock<DbCommand>().Object, 77, new DbCommandInterceptionContext<int>().WithTaskStatus(TaskStatus.Canceled));
+                    new Mock<DbCommand>().Object, 77, interceptionContext);
 
                 Assert.Equal(Strings.CommandLogCanceled(elapsed, ""), GetSingleLine(writer));
             }

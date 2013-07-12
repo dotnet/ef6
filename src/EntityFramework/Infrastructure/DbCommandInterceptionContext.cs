@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Infrastructure
 {
-    using System.Data.Common;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
     using System.Threading.Tasks;
@@ -12,15 +11,12 @@ namespace System.Data.Entity.Infrastructure
     ///     implementations.
     /// </summary>
     /// <remarks>
-    ///     Instances of this class are publicly immutable. To add contextual information use one of the
-    ///     With... or As... methods to create a new interception context containing the new information.
+    ///     Instances of this class are publicly immutable for contextual information. To add
+    ///     contextual information use one of the With... or As... methods to create a new
+    ///     interception context containing the new information.
     /// </remarks>
-    public abstract class DbCommandInterceptionContext : DbInterceptionContext
+    public abstract class DbCommandInterceptionContext : DbCommandBaseInterceptionContext, IDbMutableInterceptionContext
     {
-        private bool _isAsync;
-        private TaskStatus _taskStatus;
-        private CommandBehavior _commandBehavior = CommandBehavior.Default;
-
         /// <summary>
         ///     Constructs a new <see cref="DbCommandInterceptionContext" /> with no state.
         /// </summary>
@@ -30,71 +26,73 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Creates a new <see cref="DbCommandInterceptionContext" /> by copying state from the given
-        ///     interception context. Also see <see cref="DbInterceptionContext.Clone" />
+        ///     interception context. Also see <see cref="DbCommandInterceptionContext{TResult}.Clone" />
         /// </summary>
         /// <param name="copyFrom">The context from which to copy state.</param>
         protected DbCommandInterceptionContext(DbInterceptionContext copyFrom)
             : base(copyFrom)
         {
-            var asThisType = copyFrom as DbCommandInterceptionContext;
-            if (asThisType != null)
-            {
-                _isAsync = asThisType._isAsync;
-                _taskStatus = asThisType.TaskStatus;
-                _commandBehavior = asThisType._commandBehavior;
-            }
         }
 
         /// <summary>
-        ///     True if the operation is being executed asynchronously, otherwise false.
+        ///     When true, this flag indicates that that execution of the operation has been suppressed by
+        ///     one of the interceptors. This can be done before the operation has executed by calling
+        ///     <see cref="SuppressExecution" />, by setting an <see cref="Exception" /> to be thrown, or
+        ///     by setting the operation result using <see cref="DbCommandInterceptionContext{TResult}.Result" />.
         /// </summary>
-        public bool IsAsync
-        {
-            get { return _isAsync; }
-        }
+        public abstract bool IsSuppressed { get; }
+
+        /// <summary>
+        ///     Prevents the operation from being executed if called before the operation has executed.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown if this method is called after the
+        ///     operation has already executed.
+        /// </exception>
+        public abstract void SuppressExecution();
+
+        /// <summary>
+        ///     If execution of the operation fails, then this property will contain the exception that was
+        ///     thrown. If the operation was suppressed or did not fail, then this property will always be
+        ///     null.
+        /// </summary>
+        /// <remarks>
+        ///     When an operation fails both this property and the <see cref="Exception" /> property are set
+        ///     to the exception that was thrown. However, the <see cref="Exception" /> property can be set or
+        ///     changed by interceptors, while this property will always represent the original exception
+        ///     thrown.
+        /// </remarks>
+        public abstract Exception OriginalException { get; }
+
+        /// <summary>
+        ///     If this property is set before the operation has executed, then execution of the operation will
+        ///     be suppressed and the set exception will be thrown instead. Otherwise, if the operation fails, then
+        ///     this property will be set to the exception that was thrown. In either case, interceptors that run
+        ///     after the operation can change this property to change the exception that will be thrown, or set this
+        ///     property to null to cause no exception to be thrown at all.
+        /// </summary>
+        /// <remarks>
+        ///     When an operation fails both this property and the <see cref="OriginalException" /> property are set
+        ///     to the exception that was thrown. However, the this property can be set or changed by
+        ///     interceptors, while the <see cref="OriginalException" /> property will always represent
+        ///     the original exception thrown.
+        /// </remarks>
+        public abstract Exception Exception { get; set; }
+
+        /// <summary>
+        ///     Set to the status of the <see cref="Task{TResult}" /> after an async operation has finished. Not used for
+        ///     synchronous operations.
+        /// </summary>
+        public abstract TaskStatus TaskStatus { get; }
 
         /// <summary>
         ///     Creates a new <see cref="DbCommandInterceptionContext" /> that contains all the contextual information in this
-        ///     interception context the <see cref="DbCommandInterceptionContext.IsAsync" /> flag set to true.
+        ///     interception context together with the <see cref="DbInterceptionContext.IsAsync" /> flag set to true.
         /// </summary>
         /// <returns>A new interception context associated with the async flag set.</returns>
-        public DbCommandInterceptionContext AsAsync()
+        public new DbCommandInterceptionContext AsAsync()
         {
-            var copy = TypedClone();
-            copy._isAsync = true;
-            return copy;
-        }
-
-        /// <summary>
-        ///     The status of the async <see cref="Task" /> after the operation complete. This property is only
-        ///     set after an async operation has either completed, failed, or been canceled.
-        /// </summary>
-        public TaskStatus TaskStatus
-        {
-            get { return _taskStatus; }
-        }
-
-        /// <summary>
-        ///     Creates a new <see cref="DbCommandInterceptionContext" /> that contains all the contextual information in this
-        ///     interception context together with the given <see cref="TaskStatus" />.
-        /// </summary>
-        /// <param name="taskStatus">The task status to associate.</param>
-        /// <returns>A new interception context associated with the given status.</returns>
-        public DbCommandInterceptionContext WithTaskStatus(TaskStatus taskStatus)
-        {
-            var copy = TypedClone();
-            copy._taskStatus = taskStatus;
-            return copy;
-        }
-
-        /// <summary>
-        ///     The <see cref="CommandBehavior" /> that will be used or has been used to execute the command with a
-        ///     <see cref="DbDataReader" />. This property is only used for <see cref="DbCommand.ExecuteReader(CommandBehavior)" />
-        ///     and its async counterparts.
-        /// </summary>
-        public CommandBehavior CommandBehavior
-        {
-            get { return _commandBehavior; }
+            return (DbCommandInterceptionContext)base.AsAsync();
         }
 
         /// <summary>
@@ -103,21 +101,14 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <param name="commandBehavior">The command behavior to associate.</param>
         /// <returns>A new interception context associated with the given command behavior.</returns>
-        public DbCommandInterceptionContext WithCommandBehavior(CommandBehavior commandBehavior)
+        public new DbCommandInterceptionContext WithCommandBehavior(CommandBehavior commandBehavior)
         {
-            var copy = TypedClone();
-            copy._commandBehavior = commandBehavior;
-            return copy;
-        }
-
-        private DbCommandInterceptionContext TypedClone()
-        {
-            return (DbCommandInterceptionContext)Clone();
+            return (DbCommandInterceptionContext)base.WithCommandBehavior(commandBehavior);
         }
 
         /// <summary>
         ///     Creates a new <see cref="DbCommandInterceptionContext" /> that contains all the contextual information in this
-        ///     interception context with the addition of the given <see cref="ObjectContext" />.
+        ///     interception context with the addition of the given <see cref="DbContext" />.
         /// </summary>
         /// <param name="context">The context to associate.</param>
         /// <returns>A new interception context associated with the given context.</returns>
@@ -130,7 +121,7 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary>
         ///     Creates a new <see cref="DbCommandInterceptionContext" /> that contains all the contextual information in this
-        ///     interception context with the addition of the given <see cref="ObjectContext" />.
+        ///     interception context with the addition of the given <see cref="DbContext" />.
         /// </summary>
         /// <param name="context">The context to associate.</param>
         /// <returns>A new interception context associated with the given context.</returns>
@@ -141,17 +132,11 @@ namespace System.Data.Entity.Infrastructure
             return (DbCommandInterceptionContext)base.WithObjectContext(context);
         }
 
-        /// <summary>
-        ///     Creates a new <see cref="DbCommandInterceptionContext" /> that contains all the contextual information in this
-        ///     interception context with the addition of the given <see cref="Exception" />.
-        ///     Note that associating an exception with an interception context indicates that the intercepted
-        ///     operation failed.
-        /// </summary>
-        /// <param name="exception">The exception to associate.</param>
-        /// <returns>A new interception context associated with the given exception.</returns>
-        public new DbCommandInterceptionContext WithException(Exception exception)
+        InterceptionContextMutableData IDbMutableInterceptionContext.MutableData
         {
-            return (DbCommandInterceptionContext)base.WithException(exception);
+            get { return MutableData; }
         }
+
+        internal abstract InterceptionContextMutableData MutableData { get; }
     }
 }

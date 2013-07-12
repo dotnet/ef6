@@ -286,6 +286,7 @@
     <Compile Include="Edm\Validation\DataModelValidatorTests.cs" />
     <Compile Include="Infrastructure\CancelableDbCommandDispatcherTests.cs" />
     <Compile Include="Infrastructure\DatabaseInitializerSuppressorTests.cs" />
+    <Compile Include="Infrastructure\DbCommandBaseInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\DbCommandDispatcherTests.cs" />
     <Compile Include="Infrastructure\DbCommandInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\DbCommandLoggerTests.cs" />
@@ -308,6 +309,7 @@
     <Compile Include="Infrastructure\DispatchersTests.cs" />
     <Compile Include="Infrastructure\EntityConnectionDispatcherTests.cs" />
     <Compile Include="Infrastructure\DbExecutionStrategyTests.cs" />
+    <Compile Include="Infrastructure\InterceptionContextMutableDataTests.cs" />
     <Compile Include="Infrastructure\InterceptionTests.cs" />
     <Compile Include="Infrastructure\InternalDispatcherTests.cs" />
     <Compile Include="Infrastructure\Net40DefaultDbProviderFactoryServiceTests.cs" />
