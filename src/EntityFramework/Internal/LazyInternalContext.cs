@@ -431,6 +431,8 @@ namespace System.Data.Entity.Internal
                     _objectContext.InterceptionContext = _objectContext.InterceptionContext.WithDbContext(Owner);
 
                     InitializeEntitySetMappings();
+
+                    _objectContext.InitializeMappingViewCacheFactory(Owner);
                 }
                 finally
                 {

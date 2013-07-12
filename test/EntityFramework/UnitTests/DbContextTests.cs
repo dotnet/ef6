@@ -1,5 +1,12 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+[assembly: System.Data.Entity.Infrastructure.DbMappingViewCacheType(
+    typeof(ProductivityApiUnitTests.DbContextTests.ContextWithMultipleViewCaches),
+    typeof(ProductivityApiUnitTests.DbContextTests.SampleViewCache1))]
+[assembly: System.Data.Entity.Infrastructure.DbMappingViewCacheType(
+    typeof(ProductivityApiUnitTests.DbContextTests.ContextWithMultipleViewCaches),
+    typeof(ProductivityApiUnitTests.DbContextTests.SampleViewCache2))]
+
 namespace ProductivityApiUnitTests
 {
     using System;
@@ -20,6 +27,7 @@ namespace ProductivityApiUnitTests
     using Moq;
     using Moq.Protected;
     using Xunit;
+    using System.Data.Entity.Core.Metadata.Edm;
 
     #region Context types for testing database name generation
 
@@ -765,6 +773,54 @@ END";
 
                 Assert.True(dbContext.Configuration.UseDatabaseNullSemantics);
                 Assert.False(objectContext.ContextOptions.UseCSharpNullComparisonBehavior);
+            }
+        }
+
+        [Fact]
+        public void InitializeMappingViewCacheFactory_throws_if_multiple_DbMappingViewCacheTypeAttribute_with_same_context_type()
+        {
+            using (var context = new ContextWithMultipleViewCaches())
+            {
+                Assert.Equal(
+                    Strings.DbMappingViewCacheTypeAttribute_MultipleInstancesWithSameContextType(
+                        typeof(ContextWithMultipleViewCaches)),
+                    Assert.Throws<InvalidOperationException>(() =>
+                        ((IObjectContextAdapter)context).ObjectContext.InitializeMappingViewCacheFactory(context))
+                        .Message);
+            }
+        }
+
+        public class ContextWithMultipleViewCaches : DbContext
+        {
+            public ContextWithMultipleViewCaches()
+            {
+                Database.SetInitializer<ContextWithMultipleViewCaches>(null);
+            }
+        }
+
+        public class SampleViewCache1 : DbMappingViewCache
+        {
+            public override string MappingHashValue
+            {
+        	    get { throw new NotImplementedException(); }
+            }
+
+            public override DbMappingView GetView(EntitySetBase extent)
+            {
+ 	            throw new NotImplementedException();
+            }
+        }
+
+        public class SampleViewCache2 : DbMappingViewCache
+        {
+            public override string MappingHashValue
+            {
+        	    get { throw new NotImplementedException(); }
+            }
+
+            public override DbMappingView GetView(EntitySetBase extent)
+            {
+ 	            throw new NotImplementedException();
             }
         }
         #endregion

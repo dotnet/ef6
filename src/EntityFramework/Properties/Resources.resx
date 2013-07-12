@@ -2305,12 +2305,27 @@
   </data>
   <data name="Mapping_Invalid_Query_Views_MissingSetClosure" xml:space="preserve">
     <value>If an EntitySet or AssociationSet includes a query view, all related entity and association sets in the EntityContainer must also define query views. The following sets require query views: {0}.</value>
+  </data>  
+  <data name="DbMappingViewCacheTypeAttribute_InvalidContextType" xml:space="preserve">
+    <value>The context type '{0}' must derive from the System.Data.Entity.DbContext type or the System.Data.Entity.Core.Objects.ObjectContext type.</value>
+  </data>
+  <data name="DbMappingViewCacheTypeAttribute_CacheTypeNotFound" xml:space="preserve">
+    <value>The DbMappingViewCache type '{0}' specified in the DbMappingViewCacheTypeAttribute constructor could not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application.</value>
+  </data>
+  <data name="DbMappingViewCacheTypeAttribute_MultipleInstancesWithSameContextType" xml:space="preserve">
+    <value>Multiple instances of DbMappingViewCacheTypeAttribute that specify the same context type '{0}' are not allowed.</value>
+  </data>
+  <data name="DbMappingViewCacheFactory_CreateFailure" xml:space="preserve">
+    <value>The specified DbMappingViewCacheFactory has failed to create a DbMappingViewCache instance.</value>
   </data>
   <data name="Generated_View_Type_Super_Class" xml:space="preserve">
-    <value>The type that contains generated views '{0}' should derive from the System.Data.Mapping.EntityViewContainer type.</value>
+    <value>The type that contains generated views '{0}' must derive from the System.Data.Entity.Infrastructure.DbMappingViewCache type.</value>
   </data>
   <data name="Generated_Views_Invalid_Extent" xml:space="preserve">
     <value>The EntitySet '{0}' for which the view has been specified could not be found in the workspace.</value>
+  </data>
+  <data name="MappingViewCacheFactory_MustNotChange" xml:space="preserve">
+    <value>MappingViewCacheFactory is already set and cannot be modified.</value>
   </data>
   <data name="Mapping_ItemWithSameNameExistsBothInCSpaceAndSSpace" xml:space="preserve">
     <value>GlobalItem with name '{0}' exists both in conceptual model and storage model. Make sure that every item has a unique name across conceptual model and storage model.</value>

@@ -1,12 +1,21 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.ViewGeneration;
+
+[assembly: DbMappingViewCacheType(typeof(PregenContext), typeof(PregenContextViews))]
+[assembly: DbMappingViewCacheType(typeof(PregenContextEdmx), typeof(PregenContextEdmxViews))]
+[assembly: DbMappingViewCacheType(typeof(PregenObjectContext), typeof(PregenObjectContextViews))]
+
 namespace System.Data.Entity.ViewGeneration
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;    
     using System.Data.SqlClient;
+    using System.Linq;
     using System.Xml.Linq;
     using Xunit;
 
@@ -49,6 +58,23 @@ namespace System.Data.Entity.ViewGeneration
 
                 Assert.True(PregenContextEdmxViews.View0Accessed);
                 Assert.True(PregenContextEdmxViews.View1Accessed);
+            }
+        }
+
+        [Fact]
+        public void Pregenerated_views_are_found_for_object_context()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<PregenBlog>();
+            var compiledModel = modelBuilder.Build(new DbProviderInfo("System.Data.SqlClient", "2008")).Compile();
+            var connection = new SqlConnection();
+
+            using (var context = compiledModel.CreateObjectContext<PregenObjectContext>(connection))
+            {
+                var _ = context.Blogs.ToTraceString(); // Trigger view loading
+
+                Assert.True(PregenObjectContextViews.View0Accessed);
+                Assert.True(PregenObjectContextViews.View1Accessed);
             }
         }
     }
@@ -127,5 +153,21 @@ namespace System.Data.Entity.ViewGeneration
                   <EntitySet Name='PregenBlogEdmx' EntityType='Self.PregenBlogEdmx' Schema='dbo' Table='PregenBlogEdmxes' />
                 </EntityContainer>
               </Schema>";
+    }
+
+    public class PregenObjectContext : ObjectContext
+    {
+        public PregenObjectContext(EntityConnection connection)
+            : base(connection)
+        {
+        }
+
+        public ObjectSet<PregenBlog> Blogs
+        {
+            get
+            {
+                return this.CreateObjectSet<PregenBlog>();
+            }
+        }
     }
 }

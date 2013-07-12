@@ -228,9 +228,12 @@
     <Compile Include="Core\Common\CommandTrees\DbRefKeyExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbUnionAllExpression.cs" />
     <Compile Include="Core\Common\CommandTrees\DbScanExpression.cs" />
-    <Compile Include="Core\Mapping\ViewGeneration\ContainerMappingViewGroup.cs" />
     <Compile Include="Core\Metadata\Edm\DbModelExtensions.cs" />
     <Compile Include="Core\Metadata\Edm\IEdmModelAdapter.cs" />
+    <Compile Include="Infrastructure\DbMappingView.cs" />
+    <Compile Include="Infrastructure\DbMappingViewCache.cs" />
+    <Compile Include="Infrastructure\DefaultDbMappingViewCacheFactory.cs" />
+    <Compile Include="Infrastructure\DbMappingViewCacheTypeAttribute.cs" />
     <Compile Include="Core\Metadata\Edm\RelationshipMultiplicityConverter.cs" />
     <Compile Include="Design\Executor.cs" />
     <Compile Include="Design\ForwardingProxy.cs" />
@@ -248,6 +251,7 @@
     <Compile Include="Infrastructure\DbCommandLoggerFactory.cs" />
     <Compile Include="Infrastructure\DbCommandTreeInterceptionContext.cs" />
     <Compile Include="Infrastructure\IDbInterceptionContextWithResult.cs" />
+    <Compile Include="Infrastructure\DbMappingViewCacheFactory.cs" />
     <Compile Include="Internal\MigrationsChecker.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
     <Compile Include="Infrastructure\CancelableDbCommandDispatcher.cs" />
@@ -306,11 +310,7 @@
     <Compile Include="Core\Common\internal\materialization\CoordinatorFactory`.cs" />
     <Compile Include="Core\Common\internal\materialization\Coordinator`.cs" />
     <Compile Include="Core\Mapping\StructuralTypeMapping.cs" />
-    <Compile Include="Core\Mapping\ViewGeneration\IViewAssemblyCache.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\QueryRewriting\FragmentQueryKBChaseSupport.cs" />
-    <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyCache.cs" />
-    <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyChecker.cs" />
-    <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyScanner.cs" />
     <Compile Include="Core\Metadata\Edm\DbDatabaseMapping.cs" />
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilder.cs" />
     <Compile Include="Core\Metadata\Edm\INamedDataModelItem.cs" />

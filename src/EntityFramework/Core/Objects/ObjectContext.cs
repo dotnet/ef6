@@ -15,6 +15,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Core.Objects.ELinq;
@@ -237,6 +238,8 @@ namespace System.Data.Entity.Core.Objects
             {
                 ContextOptions.UseLegacyPreserveChangesBehavior = useV35Behavior;
             }
+
+            InitializeMappingViewCacheFactory();
         }
 
         /// <summary>
@@ -4799,6 +4802,42 @@ namespace System.Data.Entity.Core.Objects
             var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
             var targetProviderManifestToken = GetStoreItemCollection().StoreProviderManifestToken;
             return services.CreateDatabaseScript(targetProviderManifestToken, GetStoreItemCollection());
+        }
+
+        /// <summary>
+        /// Attempts to retrieve an DbGeneratedViewCacheTypeAttribute specified at assembly level,
+        /// that associates the type of the context with an mapping view cache type. If one is found
+        /// this method initializes the mapping view cache factory for this context with a new 
+        /// instance of DefaultDbMappingViewCacheFactory.
+        /// </summary>
+        /// <param name="owner">A DbContext that owns this ObjectContext.</param>
+        internal void InitializeMappingViewCacheFactory(DbContext owner = null)
+        {
+            var contextType = owner != null ? owner.GetType() : GetType();
+
+            var attributes = ((IEnumerable<DbMappingViewCacheTypeAttribute>)contextType.Assembly
+                .GetCustomAttributes(typeof(DbMappingViewCacheTypeAttribute), inherit: false))
+                .Where(a => a.ContextType == contextType);
+
+            var attributeCount = attributes.Count();
+            if (attributeCount > 1)
+            {
+                throw new InvalidOperationException(
+                    Strings.DbMappingViewCacheTypeAttribute_MultipleInstancesWithSameContextType(
+                        contextType));
+            }
+
+            if (attributeCount == 1)
+            {
+                var itemCollection = (StorageMappingItemCollection)
+                    MetadataWorkspace.GetItemCollection(DataSpace.CSSpace);
+
+                if (itemCollection != null)
+                {
+                    itemCollection.MappingViewCacheFactory
+                        = new DefaultDbMappingViewCacheFactory(attributes.First());
+                }
+            }
         }
 
         #endregion //Methods

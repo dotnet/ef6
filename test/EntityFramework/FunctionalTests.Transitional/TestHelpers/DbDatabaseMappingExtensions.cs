@@ -60,9 +60,9 @@ namespace System.Data.Entity
         internal static void AssertValid(this DbDatabaseMapping databaseMapping, bool shouldThrow)
         {
             var storageItemMappingCollection = databaseMapping.ToStorageMappingItemCollection();
-            IList<EdmSchemaError> errors;
 
-            storageItemMappingCollection.GenerateEntitySetViews(out errors);
+            var errors = new List<EdmSchemaError>();
+            storageItemMappingCollection.GenerateViews(errors);
 
             if (errors.Any())
             {

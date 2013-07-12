@@ -13,6 +13,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.SchemaObjectModel;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -21,10 +22,11 @@ namespace System.Data.Entity.Core.Mapping
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Versioning;
+    using System.Threading;
     using System.Xml;
     using EntityContainer = System.Data.Entity.Core.Metadata.Edm.EntityContainer;
     using OfTypeQVCacheKey =
-        System.Data.Entity.Core.Common.Utils.Pair<Metadata.Edm.EntitySetBase, Common.Utils.Pair<Metadata.Edm.EntityTypeBase, bool>>;
+                System.Data.Entity.Core.Common.Utils.Pair<Metadata.Edm.EntitySetBase, Common.Utils.Pair<Metadata.Edm.EntityTypeBase, bool>>;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class StorageMappingItemCollection : MappingItemCollection
@@ -55,15 +57,11 @@ namespace System.Data.Entity.Core.Mapping
             /// </summary>
             private readonly Memoizer<OfTypeQVCacheKey, GeneratedView> _generatedViewOfTypeMemoizer;
 
-            private readonly IViewAssemblyCache _viewAssemblyCache;
-
             internal ViewDictionary(
                 StorageMappingItemCollection storageMappingItemCollection,
                 out Dictionary<EntitySetBase, GeneratedView> userDefinedQueryViewsDict,
-                out Dictionary<OfTypeQVCacheKey, GeneratedView> userDefinedQueryViewsOfTypeDict,
-                IViewAssemblyCache viewAssemblyCache = null)
+                out Dictionary<OfTypeQVCacheKey, GeneratedView> userDefinedQueryViewsOfTypeDict)
             {
-                _viewAssemblyCache = viewAssemblyCache ?? DbConfiguration.GetService<IViewAssemblyCache>();
                 _storageMappingItemCollection = storageMappingItemCollection;
                 _generatedViewsMemoizer =
                     new Memoizer<EntityContainer, Dictionary<EntitySetBase, GeneratedView>>(SerializedGetGeneratedViews, null);
@@ -105,9 +103,9 @@ namespace System.Data.Entity.Core.Mapping
                 }
 
                 // If we are in generated views mode.
-                if (_generatedViewsMode)
+                if (_generatedViewsMode && _storageMappingItemCollection.MappingViewCacheFactory != null)
                 {
-                    SerializedCollectViewsFromCache(_storageMappingItemCollection.Workspace, extentMappingViews, Assembly.GetEntryAssembly);
+                    SerializedCollectViewsFromCache(entityContainerMap, extentMappingViews);
                 }
 
                 if (extentMappingViews.Count == 0)
@@ -380,163 +378,43 @@ namespace System.Data.Entity.Core.Mapping
                 return view;
             }
 
-            internal void SerializedCollectViewsFromCache(
-                MetadataWorkspace workspace,
-                Dictionary<EntitySetBase, GeneratedView> extentMappingViews,
-                Func<Assembly> getEntryAssembly)
-            {
-                // This code means that if _any_ assemblies with pre-generated views have been found then we
-                // won't use the entry assembly to try to find others. For an app with multiple models in
-                // different assemblies with pre-generated views in yet different assemblies, this means we
-                // _might_ not find all pre-generated views. However, this was the behavior in previous versions
-                // and we retain it to avoid introducing a behavior that scans all referenced assemblies in the
-                // app at least once regardless of whether or not this is needed. In the unlikely case that this
-                // scenario is hit in the wild it is easy to fix using either a call to LoadFromAssembly or a 
-                // custom IViewAssemblyCache implementation that returns a static list of assemblies.
-                if (!_viewAssemblyCache.Assemblies.Any())
-                {
-                    var entryAssembly = getEntryAssembly();
-                    if (entryAssembly != null)
-                    {
-                        _viewAssemblyCache.CheckAssembly(entryAssembly, followReferences: true);
-                    }
-                }
-
-                foreach (var assembly in _viewAssemblyCache.Assemblies)
-                {
-                    foreach (EntityViewGenerationAttribute viewGenAttribute in
-                        assembly.GetCustomAttributes(typeof(EntityViewGenerationAttribute), inherit: false))
-                    {
-                        var viewContainerType = viewGenAttribute.ViewGenerationType;
-                        if (!viewContainerType.IsSubclassOf(typeof(EntityViewContainer)))
-                        {
-                            throw new InvalidOperationException(
-                                Strings.Generated_View_Type_Super_Class(StorageMslConstructs.EntityViewGenerationTypeName));
-                        }
-                        var viewContainer = Activator.CreateInstance(viewContainerType) as EntityViewContainer;
-                        Debug.Assert(viewContainer != null, "Should be able to create the type");
-
-                        SerializedAddGeneratedViewsInEntityViewContainer(workspace, viewContainer, extentMappingViews);
-                    }
-                }
-            }
-
-            /// <summary>
-            ///     this method do the following check on the generated views in the EntityViewContainer,
-            ///     then add those views all at once to the dictionary
-            ///     1. there should be one storeageEntityContainerMapping that has the same h
-            ///     C side and S side names as the EnittyViewcontainer
-            ///     2. Generate the hash for the storageEntityContainerMapping in the MM closure,
-            ///     and this hash should be the same in EntityViewContainer
-            ///     3. Generate the hash for all of the view text in the EntityViewContainer and
-            ///     this hash should be the same as the stored on in the EntityViewContainer
-            /// </summary>
-            private void SerializedAddGeneratedViewsInEntityViewContainer(
-                MetadataWorkspace workspace, EntityViewContainer entityViewContainer,
+            private void SerializedCollectViewsFromCache(
+                StorageEntityContainerMapping containerMapping,
                 Dictionary<EntitySetBase, GeneratedView> extentMappingViews)
             {
-                StorageEntityContainerMapping storageEntityContainerMapping;
-                // first check
-                if (!TryGetCorrespondingStorageEntityContainerMapping(
-                    entityViewContainer,
-                    workspace.GetItemCollection(DataSpace.CSSpace).GetItems<StorageEntityContainerMapping>(),
-                    out storageEntityContainerMapping))
+                var mappingViewCacheFactory = _storageMappingItemCollection.MappingViewCacheFactory;
+                DebugCheck.NotNull(mappingViewCacheFactory);
+
+                var mappingViewCache = mappingViewCacheFactory.Create(containerMapping);
+                if (mappingViewCache == null)
                 {
                     return;
                 }
 
-                // second check
-                if (!SerializedVerifyHashOverMmClosure(storageEntityContainerMapping, entityViewContainer))
+                foreach (var extent in containerMapping.StorageEntityContainer.BaseEntitySets.Union(
+                                       containerMapping.EdmEntityContainer.BaseEntitySets))
                 {
-                    throw new MappingException(
-                        Strings.ViewGen_HashOnMappingClosure_Not_Matching(entityViewContainer.EdmEntityContainerName));
-                }
-
-                SerializedAddGeneratedViews(workspace, entityViewContainer, extentMappingViews);
-            }
-
-            private static bool TryGetCorrespondingStorageEntityContainerMapping(
-                EntityViewContainer viewContainer,
-                IEnumerable<StorageEntityContainerMapping> storageEntityContainerMappingList,
-                out StorageEntityContainerMapping storageEntityContainerMapping)
-            {
-                storageEntityContainerMapping = null;
-
-                foreach (var entityContainerMapping in storageEntityContainerMappingList)
-                {
-                    // first check
-                    if (entityContainerMapping.EdmEntityContainer.Name == viewContainer.EdmEntityContainerName
-                        &&
-                        entityContainerMapping.StorageEntityContainer.Name == viewContainer.StoreEntityContainerName)
-                    {
-                        storageEntityContainerMapping = entityContainerMapping;
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            private bool SerializedVerifyHashOverMmClosure(
-                StorageEntityContainerMapping entityContainerMapping, EntityViewContainer entityViewContainer)
-            {
-                if (MetadataMappingHasherVisitor.GetMappingClosureHash(
-                    _storageMappingItemCollection.MappingVersion, entityContainerMapping)
-                    ==
-                    entityViewContainer.HashOverMappingClosure)
-                {
-                    return true;
-                }
-                return false;
-            }
-
-            //Collect the names of the entitysetbases and the generated views from
-            //the generated type into a string so that we can produce a hash over it.
-            private void SerializedAddGeneratedViews(
-                MetadataWorkspace workspace, EntityViewContainer viewContainer, Dictionary<EntitySetBase, GeneratedView> extentMappingViews)
-            {
-                foreach (var extentView in viewContainer.ExtentViews)
-                {
-                    EntityContainer entityContainer = null;
-                    EntitySetBase extent = null;
-
-                    var extentFullName = extentView.Key;
-                    var extentNameIndex = extentFullName.LastIndexOf('.');
-
-                    if (extentNameIndex != -1)
-                    {
-                        var entityContainerName = extentFullName.Substring(0, extentNameIndex);
-                        var extentName = extentFullName.Substring(extentFullName.LastIndexOf('.') + 1);
-
-                        if (!workspace.TryGetItem(entityContainerName, DataSpace.CSpace, out entityContainer))
-                        {
-                            workspace.TryGetItem(entityContainerName, DataSpace.SSpace, out entityContainer);
-                        }
-
-                        if (entityContainer != null)
-                        {
-                            entityContainer.BaseEntitySets.TryGetValue(extentName, false, out extent);
-                        }
-                    }
-
-                    if (extent == null)
-                    {
-                        throw new MappingException(Strings.Generated_Views_Invalid_Extent(extentFullName));
-                    }
-
-                    //Create a Generated view and cache it
                     GeneratedView generatedView;
-                    //Add the view to the local dictionary
-                    if (!extentMappingViews.TryGetValue(extent, out generatedView))
+                    if (extentMappingViews.TryGetValue(extent, out generatedView))
                     {
-                        generatedView = GeneratedView.CreateGeneratedView(
-                            extent,
-                            null, // edmType
-                            null, // commandTree
-                            extentView.Value, // eSQL
-                            _storageMappingItemCollection,
-                            new ConfigViewGenerator());
-                        extentMappingViews.Add(extent, generatedView);
+                        continue;
                     }
+
+                    var mappingView = mappingViewCache.GetView(extent);
+                    if (string.IsNullOrWhiteSpace(mappingView.EntitySql))
+                    {
+                        continue;
+                    }
+
+                    generatedView = GeneratedView.CreateGeneratedView(
+                        extent,
+                        null, // edmType
+                        null, // commandTree
+                        mappingView.EntitySql, // eSQL
+                        _storageMappingItemCollection,
+                        new ConfigViewGenerator());
+
+                    extentMappingViews.Add(extent, generatedView);
                 }
             }
         }
@@ -574,6 +452,8 @@ namespace System.Data.Entity.Core.Mapping
         private readonly ConcurrentDictionary<Tuple<EntitySetBase, EntityTypeBase, InterestingMembersKind>, ReadOnlyCollection<EdmMember>>
             _cachedInterestingMembers =
                 new ConcurrentDictionary<Tuple<EntitySetBase, EntityTypeBase, InterestingMembersKind>, ReadOnlyCollection<EdmMember>>();
+
+        private DbMappingViewCacheFactory _mappingViewCacheFactory;
 
         /// <summary>
         /// For testing.
@@ -759,6 +639,29 @@ namespace System.Data.Entity.Core.Mapping
             return errors;
         }
 
+        /// <summary>
+        /// Gets or sets a DbMappingViewCacheFactory for creating DbMappingViewCache instances
+        /// that are used to retrieve pre-generated mapping views.
+        /// </summary>
+        public DbMappingViewCacheFactory MappingViewCacheFactory
+        {
+            get { return _mappingViewCacheFactory; }
+
+            set 
+            {
+                Check.NotNull(value, "value");
+
+                Interlocked.CompareExchange(ref _mappingViewCacheFactory, value, null);
+
+                if (!_mappingViewCacheFactory.Equals(value))
+                {
+                    throw new ArgumentException(
+                        Strings.MappingViewCacheFactory_MustNotChange,
+                        "value");
+                }
+            }
+        }
+
         internal MetadataWorkspace Workspace
         {
             get
@@ -886,70 +789,6 @@ namespace System.Data.Entity.Core.Mapping
                 return false;
             }
             return TryGetMap(item.Identity, typeSpace, out map);
-        }
-
-        /// <summary>
-        ///     This method
-        ///     - generates views from the mapping elements in the collection;
-        ///     - does not process user defined views - these are processed during mapping collection loading;
-        ///     - does not cache generated views in the mapping collection.
-        ///     The main purpose is design-time view validation and generation.
-        /// </summary>
-        internal Dictionary<EntitySetBase, string> GenerateEntitySetViews(out IList<EdmSchemaError> errors)
-        {
-            var esqlViews = new Dictionary<EntitySetBase, string>();
-            errors = new List<EdmSchemaError>();
-            foreach (var entityContainerMapping in GetItems<StorageEntityContainerMapping>())
-            {
-                // If there are no entity set maps, don't call the view generation process.
-                if (entityContainerMapping.HasViews)
-                {
-                    GenerateEntitySetViews(entityContainerMapping, esqlViews, errors);
-                }
-            }
-            return esqlViews;
-        }
-
-        internal static void GenerateEntitySetViews(
-            StorageEntityContainerMapping entityContainerMapping,
-            Dictionary<EntitySetBase, string> esqlViews,
-            IList<EdmSchemaError> errors)
-        {
-            Debug.Assert(entityContainerMapping.HasViews);
-
-            // If entityContainerMapping contains only query views, then add a warning to the errors and continue to next mapping.
-            if (!entityContainerMapping.HasMappingFragments())
-            {
-                Debug.Assert(
-                    2088 == (int)StorageMappingErrorCode.MappingAllQueryViewAtCompileTime,
-                    "Please change the ERRORCODE_MAPPINGALLQUERYVIEWATCOMPILETIME value as well");
-                errors.Add(
-                    new EdmSchemaError(
-                        Strings.Mapping_AllQueryViewAtCompileTime(entityContainerMapping.Identity),
-                        (int)StorageMappingErrorCode.MappingAllQueryViewAtCompileTime,
-                        EdmSchemaErrorSeverity.Warning));
-            }
-            else
-            {
-                var viewGenResults = ViewgenGatekeeper.GenerateViewsFromMapping(
-                    entityContainerMapping, new ConfigViewGenerator
-                    {
-                        GenerateEsql = true
-                    });
-                if (viewGenResults.HasErrors)
-                {
-                    ((List<EdmSchemaError>)errors).AddRange(viewGenResults.Errors);
-                }
-                var extentMappingViews = viewGenResults.Views;
-                foreach (var extentViewPair in extentMappingViews.KeyValuePairs)
-                {
-                    var generatedViews = extentViewPair.Value;
-                    // Multiple Views are returned for an extent but the first view
-                    // is the only one that we will use for now. In the future,
-                    // we might start using the other views which are per type within an extent.
-                    esqlViews.Add(extentViewPair.Key, generatedViews[0].eSQL);
-                }
-            }
         }
 
         /// <summary>
@@ -1463,6 +1302,128 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
+        /// Computes a hash value for the container mapping specified by the names of the mapped containers.
+        /// </summary>
+        /// <param name="conceptualModelContainerName">The name of a container in the conceptual model.</param>
+        /// <param name="storeModelContainerName">The name of a container in the store model.</param>
+        /// <returns>A string that specifies the computed hash value.</returns>
+        public string ComputeMappingHashValue(
+            string conceptualModelContainerName,
+            string storeModelContainerName)
+        {
+            Check.NotEmpty(conceptualModelContainerName, "conceptualModelContainerName");
+            Check.NotEmpty(storeModelContainerName, "storeModelContainerName");
+
+            return 
+                MetadataMappingHasherVisitor.GetMappingClosureHash(
+                    MappingVersion,
+                    GetItems<StorageEntityContainerMapping>()
+                        .Where(m => m.EdmEntityContainer.Name == conceptualModelContainerName
+                                    && m.StorageEntityContainer.Name == storeModelContainerName)
+                        .Single());
+        }
+
+        /// <summary>
+        /// Computes a hash value for the single container mapping in the collection.
+        /// </summary>
+        /// <returns>A string that specifies the computed hash value.</returns>
+        public string ComputeMappingHashValue()
+        {
+            return 
+                MetadataMappingHasherVisitor.GetMappingClosureHash(
+                    MappingVersion,
+                    GetItems<StorageEntityContainerMapping>().Single());
+        }
+
+        /// <summary>
+        /// Creates a dictionary of (extent, generated view) for a container mapping specified by 
+        /// the names of the mapped containers.
+        /// </summary>
+        /// <param name="conceptualModelContainerName">The name of a container in the conceptual model.</param>
+        /// <param name="storeModelContainerName">The name of a container in the store model.</param>
+        /// <param name="errors">A list that accumulates potential errors.</param>
+        /// <returns>A dictionary of (EntitySetBase, DbMappingView) that specifies the generated views.</returns>
+        public Dictionary<EntitySetBase, DbMappingView> GenerateViews(
+            string conceptualModelContainerName,
+            string storeModelContainerName,
+            IList<EdmSchemaError> errors)
+        {
+            Check.NotEmpty(conceptualModelContainerName, "conceptualModelContainerName");
+            Check.NotEmpty(storeModelContainerName, "storeModelContainerName");
+            Check.NotNull(errors, "errors");
+
+            return 
+                GenerateViews(
+                    GetItems<StorageEntityContainerMapping>()
+                        .Where(m => m.EdmEntityContainer.Name == conceptualModelContainerName
+                                    && m.StorageEntityContainer.Name == storeModelContainerName)
+                        .Single(), 
+                    errors);
+        }
+
+        /// <summary>
+        /// Creates a dictionary of (extent, generated view) for the single container mapping
+        /// in the collection.
+        /// </summary>
+        /// <param name="errors">A list that accumulates potential errors.</param>
+        /// <returns>A dictionary of (EntitySetBase, DbMappingView) that specifies the generated views.</returns>
+        public Dictionary<EntitySetBase, DbMappingView> GenerateViews(
+            IList<EdmSchemaError> errors)
+        {
+            Check.NotNull(errors, "errors");
+
+            return 
+                GenerateViews(
+                    GetItems<StorageEntityContainerMapping>().Single(), 
+                    errors);
+        }
+
+        internal static Dictionary<EntitySetBase, DbMappingView> GenerateViews(
+            StorageEntityContainerMapping containerMapping, IList<EdmSchemaError> errors)
+        {
+            var views = new Dictionary<EntitySetBase, DbMappingView>();
+
+            if (!containerMapping.HasViews)
+            {
+                return views;
+            }
+
+            // If the entity container mapping has only query views, add a warning and return.
+            if (!containerMapping.HasMappingFragments())
+            {
+                Debug.Assert(
+                    2088 == (int)StorageMappingErrorCode.MappingAllQueryViewAtCompileTime,
+                    "Please change the ERRORCODE_MAPPINGALLQUERYVIEWATCOMPILETIME value as well.");
+
+                errors.Add(
+                    new EdmSchemaError(
+                        Strings.Mapping_AllQueryViewAtCompileTime(containerMapping.Identity),
+                        (int)StorageMappingErrorCode.MappingAllQueryViewAtCompileTime,
+                        EdmSchemaErrorSeverity.Warning));
+
+                return views;
+            }
+
+            var viewGenResults = ViewgenGatekeeper.GenerateViewsFromMapping(
+                containerMapping, new ConfigViewGenerator { GenerateEsql = true });
+
+            if (viewGenResults.HasErrors)
+            {
+                viewGenResults.Errors.Each(e => errors.Add(e));
+            }
+
+            foreach (var extentViewPair in viewGenResults.Views.KeyValuePairs)
+            {
+                // Multiple views are returned for an extent but the first view is 
+                // the only one that we will use for now. In the future, we might 
+                // start using the other views which are per type within an extent.
+                views.Add(extentViewPair.Key, new DbMappingView(extentViewPair.Value[0].eSQL));
+            }
+
+            return views;
+        }
+
+        /// <summary>
         ///     Factory method that creates a <see cref="StorageMappingItemCollection" />.
         /// </summary>
         /// <param name="edmItemCollection">
@@ -1501,30 +1462,6 @@ namespace System.Data.Entity.Core.Mapping
                 = new StorageMappingItemCollection(edmItemCollection, storeItemCollection, xmlReaders, filePaths, out errors);
 
             return errors != null && errors.Count > 0 ? null : storageMappingItemCollection;
-        }
-
-        /// <summary>
-        /// Generates a list of ContainerMappingViewGroup corresponding to each 
-        /// container mapping within this mapping collection.
-        /// </summary>
-        /// <param name="errors">A list of EdmSchemaError that accumulates potential 
-        /// errors and warnings encountered during generation.</param>
-        /// <returns>A list of ContainerMappingViewGroup generated from this mapping collection.</returns>
-        public IList<ContainerMappingViewGroup> GenerateViews(IList<EdmSchemaError> errors)
-        {
-            var viewGroups = new List<ContainerMappingViewGroup>();
-
-            foreach (var mapping in GetItems<StorageEntityContainerMapping>())
-            {
-                var group = mapping.GenerateViews(errors);
-
-                if (group != null)
-                {
-                    viewGroups.Add(group);
-                }              
-            }
-
-            return viewGroups;
         }
     }
 }

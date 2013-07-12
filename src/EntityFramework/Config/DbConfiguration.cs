@@ -649,26 +649,6 @@ namespace System.Data.Entity.Config
 
         /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
-        ///     an implementation of <see cref="IViewAssemblyCache" /> which will be used to find and cache the list
-        ///     of assemblies that contain pre-generated views.
-        /// </summary>
-        /// <remarks>
-        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
-        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
-        ///     <see cref="IViewAssemblyCache" />. This means that, if desired, the same functionality can be achieved using
-        ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
-        /// </remarks>
-        /// <param name="cache"> The cache implementation to use. </param>
-        protected internal void SetViewAssemblyCache(IViewAssemblyCache cache)
-        {
-            Check.NotNull(cache, "cache");
-
-            _internalConfiguration.CheckNotLocked("SetViewAssemblyCache");
-            _internalConfiguration.RegisterSingleton(cache);
-        }
-
-        /// <summary>
-        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
         ///     a factory for the type of <see cref="DbCommandLogger" /> to use with <see cref="Database.Log" />.
         /// </summary>
         /// <remarks>

@@ -5454,7 +5454,39 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The type that contains generated views '{0}' should derive from the System.Data.Mapping.EntityViewContainer type."
+        ///     A string like "The context type '{0}' must derive from the System.Data.Entity.DbContext type or the System.Data.Entity.Core.Objects.ObjectContext type."
+        /// </summary>
+        internal static string DbMappingViewCacheTypeAttribute_InvalidContextType(object p0)
+        {
+            return EntityRes.GetString(EntityRes.DbMappingViewCacheTypeAttribute_InvalidContextType, p0);
+        }
+
+        /// <summary>
+        ///     A string like "The DbMappingViewCache type '{0}' specified in the DbMappingViewCacheTypeAttribute constructor could not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application."
+        /// </summary>
+        internal static string DbMappingViewCacheTypeAttribute_CacheTypeNotFound(object p0)
+        {
+            return EntityRes.GetString(EntityRes.DbMappingViewCacheTypeAttribute_CacheTypeNotFound, p0);
+        }
+
+        /// <summary>
+        ///     A string like "Multiple instances of DbMappingViewCacheTypeAttribute that specify the same context type '{0}' are not allowed."
+        /// </summary>
+        internal static string DbMappingViewCacheTypeAttribute_MultipleInstancesWithSameContextType(object p0)
+        {
+            return EntityRes.GetString(EntityRes.DbMappingViewCacheTypeAttribute_MultipleInstancesWithSameContextType, p0);
+        }
+
+        /// <summary>
+        ///     A string like "The specified DbMappingViewCacheFactory has failed to create a DbMappingViewCache instance."
+        /// </summary>
+        internal static string DbMappingViewCacheFactory_CreateFailure
+        {
+            get { return EntityRes.GetString(EntityRes.DbMappingViewCacheFactory_CreateFailure); }
+        }
+
+        /// <summary>
+        ///     A string like "The type that contains generated views '{0}' must derive from the System.Data.Entity.Infrastructure.DbMappingViewCache type."
         /// </summary>
         internal static string Generated_View_Type_Super_Class(object p0)
         {
@@ -5467,6 +5499,14 @@ namespace System.Data.Entity.Resources
         internal static string Generated_Views_Invalid_Extent(object p0)
         {
             return EntityRes.GetString(EntityRes.Generated_Views_Invalid_Extent, p0);
+        }
+
+        /// <summary>
+        ///     A string like "MappingViewCacheFactory is already set and cannot be modified."
+        /// </summary>
+        internal static string MappingViewCacheFactory_MustNotChange
+        {
+            get { return EntityRes.GetString(EntityRes.MappingViewCacheFactory_MustNotChange); }
         }
 
         /// <summary>
@@ -16005,8 +16045,13 @@ namespace System.Data.Entity.Resources
         internal const string Mapping_UnsupportedInitialization_QueryView = "Mapping_UnsupportedInitialization_QueryView";
         internal const string Mapping_EntitySetMismatchOnAssociationSetEnd_QueryView = "Mapping_EntitySetMismatchOnAssociationSetEnd_QueryView";
         internal const string Mapping_Invalid_Query_Views_MissingSetClosure = "Mapping_Invalid_Query_Views_MissingSetClosure";
+        internal const string DbMappingViewCacheTypeAttribute_InvalidContextType = "DbMappingViewCacheTypeAttribute_InvalidContextType";
+        internal const string DbMappingViewCacheTypeAttribute_CacheTypeNotFound = "DbMappingViewCacheTypeAttribute_CacheTypeNotFound";
+        internal const string DbMappingViewCacheTypeAttribute_MultipleInstancesWithSameContextType = "DbMappingViewCacheTypeAttribute_MultipleInstancesWithSameContextType";
+        internal const string DbMappingViewCacheFactory_CreateFailure = "DbMappingViewCacheFactory_CreateFailure";
         internal const string Generated_View_Type_Super_Class = "Generated_View_Type_Super_Class";
         internal const string Generated_Views_Invalid_Extent = "Generated_Views_Invalid_Extent";
+        internal const string MappingViewCacheFactory_MustNotChange = "MappingViewCacheFactory_MustNotChange";
         internal const string Mapping_ItemWithSameNameExistsBothInCSpaceAndSSpace = "Mapping_ItemWithSameNameExistsBothInCSpaceAndSSpace";
         internal const string Mapping_AbstractTypeMappingToNonAbstractType = "Mapping_AbstractTypeMappingToNonAbstractType";
         internal const string Mapping_EnumTypeMappingToNonEnumType = "Mapping_EnumTypeMappingToNonEnumType";

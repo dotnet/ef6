@@ -58,6 +58,8 @@ namespace System.Data.Entity.Internal
             _objectContext.InterceptionContext = _objectContext.InterceptionContext.WithDbContext(owner);
 
             InitializeEntitySetMappings();
+
+            _objectContext.InitializeMappingViewCacheFactory(Owner);
         }
 
         #endregion

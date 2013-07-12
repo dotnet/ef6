@@ -186,7 +186,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     var mapping = new StorageMappingItemCollection(
                         _itemsCSpace.Value,
-                        _itemsSSpace.Value, 
+                        _itemsSSpace.Value,
                         csSpaceReaders,
                         composite.GetPaths(DataSpace.CSSpace));
                     _itemsCSSpace = new Lazy<StorageMappingItemCollection>(() => mapping, isThreadSafe: true);
@@ -1389,7 +1389,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public static void ClearCache()
         {
             MetadataCache.Instance.Clear();
-            DbConfiguration.GetService<IViewAssemblyCache>().Clear();
             using (var cache = AssemblyCache.AquireLockedAssemblyCache())
             {
                 cache.Clear();

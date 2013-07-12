@@ -29,10 +29,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        internal ObjectItemCollection(IViewAssemblyCache viewAssemblyCache, KnownAssembliesSet knownAssembliesSet = null)
+        internal ObjectItemCollection(KnownAssembliesSet knownAssembliesSet = null)
             : base(DataSpace.OSpace)
         {
-            _viewAssemblyCache = viewAssemblyCache ?? DbConfiguration.GetService<IViewAssemblyCache>();
             _knownAssemblies = knownAssembliesSet ?? new KnownAssembliesSet();
 
             foreach (var type in ClrProviderManifest.Instance.GetStoreTypes())
@@ -58,8 +57,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private object _loaderCookie;
         private readonly object _loadAssemblyLock = new object();
-
-        private readonly IViewAssemblyCache _viewAssemblyCache;
 
         internal bool OSpaceTypesLoaded { get; set; }
 
@@ -168,8 +165,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private bool LoadAssemblyFromCache(
             Assembly assembly, bool loadReferencedAssemblies, EdmItemCollection edmItemCollection, Action<String> logLoadMessage)
         {
-            _viewAssemblyCache.CheckAssembly(assembly, loadReferencedAssemblies);
-
             // Code First already did type loading
             if (OSpaceTypesLoaded)
             {

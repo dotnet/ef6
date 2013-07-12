@@ -196,9 +196,6 @@
     <Compile Include="Core\Mapping\StorageSetMappingTests.cs" />
     <Compile Include="Core\Mapping\Update\Internal\PropagatorTests.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\Utils\ExternalCallsTests.cs" />
-    <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyCacheTests.cs" />
-    <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyCheckerTests.cs" />
-    <Compile Include="Core\Mapping\ViewGeneration\ViewAssemblyScannerTests.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\ViewgenContextTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationEndMemberTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationSetTests.cs" />
@@ -295,6 +292,8 @@
     <Compile Include="Infrastructure\DbCommandTreeInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\DbInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\DbLocalViewTests.cs" />
+    <Compile Include="Infrastructure\DbMappingViewCacheTypeAttributeTests.cs" />
+    <Compile Include="Infrastructure\DbMappingViewTests.cs" />
     <Compile Include="Infrastructure\DbProviderInfoTests.cs" />
     <Compile Include="Infrastructure\DbQueryTests.cs" />
     <Compile Include="Infrastructure\DbSqlQueryTests.cs" />
@@ -302,6 +301,7 @@
     <Compile Include="Infrastructure\DbComplexPropertyEntryTests.cs" />
     <Compile Include="Infrastructure\DbPropertyEntryTests.cs" />
     <Compile Include="Infrastructure\DbUpdateExceptionTests.cs" />
+    <Compile Include="Infrastructure\DefaultDbMappingViewCacheFactoryTests.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryServiceTests.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenServiceTests.cs" />
     <Compile Include="Infrastructure\DispatchersTests.cs" />

@@ -5,14 +5,14 @@ namespace System.Data.Entity.ViewGeneration
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
 
-    public sealed class PregenContextViews : DbMappingViewCache
+    public sealed class PregenObjectContextViews : DbMappingViewCache
     {
         public static bool View0Accessed { get; set; }
         public static bool View1Accessed { get; set; }
 
         public override string MappingHashValue
         {
-            get { return "a76b956abbdcf4cc24982c118d0afa3b1cfaedba377a7663cadd041aa30b81be"; }
+            get { return "58210c83048909cf6bc9eb2f4c3d677d1b3edc1145c3eb2ddd5197327458371c"; }
         }
 
         public override DbMappingView GetView(EntitySetBase extent)
@@ -30,15 +30,15 @@ FROM (
     SELECT 
         T.Id AS PregenBlog_Id, 
         True AS _from0
-FROM PregenContext.Blogs AS T
+    FROM CodeFirstContainer.PregenBlogs AS T
 ) AS T1");
 
-                case "PregenContext.Blogs":
+                case "CodeFirstContainer.PregenBlogs":
                     View1Accessed = true;
-                    
+
                     return new DbMappingView(
-@"SELECT VALUE -- Constructing Blogs
-    [System.Data.Entity.ViewGeneration.PregenBlog](T1.PregenBlog_Id)
+@"SELECT VALUE -- Constructing PregenBlogs
+    [CodeFirstNamespace.PregenBlog](T1.PregenBlog_Id)
 FROM (
     SELECT 
         T.Id AS PregenBlog_Id, 

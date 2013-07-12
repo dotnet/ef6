@@ -8,6 +8,11 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     ///     Base class for the type created at design time to store the generated views.
     /// </summary>
+    [Obsolete("The mechanism to provide pre-generated views has changed. Implement a class that derives from " +
+        "System.Data.Entity.Infrastructure.DbMappingViewCache and has a parameterless constructor, " +
+        "then associate it with a type that derives from DbContext or ObjectContext " +
+        "by using System.Data.Entity.Infrastructure.DbGeneratedViewCacheTypeAttribute.",
+        error: true)]
     public abstract class EntityViewContainer
     {
         /// <summary>
@@ -44,6 +49,11 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>Hash value.</summary>
         /// <returns>Hash value.</returns>
         public string HashOverMappingClosure { get; set; }
+
+        /// <summary>Hash value of views.</summary>
+        /// <returns>Hash value.</returns>
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "OverAll")]
+        public string HashOverAllExtentViews { get; set; }
 
         /// <summary>Gets or sets view count.</summary>
         /// <returns>View count.</returns>

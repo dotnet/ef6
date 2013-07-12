@@ -14,6 +14,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Xml.Linq;
     using Moq;
     using Xunit;
+using System.Data.Entity.Infrastructure;
 
     public class StorageMappingItemCollectionTests
     {
@@ -228,46 +229,6 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Same(edmItemCollection, ocMappingCollection.EdmItemCollection);
         }
 
-        [Fact]
-        public void SerializedCollectViewsFromCache_performs_scan_from_entry_assembly_if_no_view_assemblies_known()
-        {
-            var mockCache = new Mock<IViewAssemblyCache>();
-            mockCache.Setup(m => m.Assemblies).Returns(Enumerable.Empty<Assembly>());
-
-            Dictionary<EntitySetBase, GeneratedView> _;
-            Dictionary<Pair<EntitySetBase, Pair<EntityTypeBase, bool>>, GeneratedView> __;
-            var viewDictionary = new StorageMappingItemCollection.ViewDictionary(
-                new Mock<StorageMappingItemCollection>().Object, out _, out __, mockCache.Object);
-
-            viewDictionary.SerializedCollectViewsFromCache(
-                new Mock<MetadataWorkspace>().Object, 
-                new Mock<Dictionary<EntitySetBase, GeneratedView>>().Object,
-                () => typeof(object).Assembly);
-
-            mockCache.Verify(m => m.Assemblies, Times.Exactly(2));
-            mockCache.Verify(m => m.CheckAssembly(typeof(object).Assembly, true), Times.Once());
-        }
-
-        [Fact]
-        public void SerializedCollectViewsFromCache_does_not_scan_from_entry_assembly_if_any_view_assemblies_known()
-        {
-            var mockCache = new Mock<IViewAssemblyCache>();
-            mockCache.Setup(m => m.Assemblies).Returns(new[] { typeof(object).Assembly });
-
-            Dictionary<EntitySetBase, GeneratedView> _;
-            Dictionary<Pair<EntitySetBase, Pair<EntityTypeBase, bool>>, GeneratedView> __;
-            var viewDictionary = new StorageMappingItemCollection.ViewDictionary(
-                new Mock<StorageMappingItemCollection>().Object, out _, out __, mockCache.Object);
-
-            viewDictionary.SerializedCollectViewsFromCache(
-                new Mock<MetadataWorkspace>().Object,
-                new Mock<Dictionary<EntitySetBase, GeneratedView>>().Object,
-                () => typeof(object).Assembly);
-
-            mockCache.Verify(m => m.Assemblies, Times.Exactly(2));
-            mockCache.Verify(m => m.CheckAssembly(It.IsAny<Assembly>(), It.IsAny<bool>()), Times.Never());
-        }
-
         internal static StorageMappingItemCollection CreateStorageMappingItemCollection(string ssdl, string csdl, string msl)
         {
             return CreateStorageMappingItemCollection(new[] {ssdl}, new [] {csdl}, new [] { msl });
@@ -282,27 +243,105 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         [Fact]
-        public static void GenerateViews_creates_expected_result()
+        public void ComputeMappingHashValue_computes_hashvalue_for_single_container_mapping()
+        {
+            var mappingCollection =
+                CreateStorageMappingItemCollection(new[] { SchoolSsdl }, new[] { SchoolCsdl }, new[] { SchoolMsl });
+
+            var hashValue = mappingCollection.ComputeMappingHashValue();
+
+            Assert.Equal("e117e3d423b1c43cf4e9bc77462fe1434fc14872ec7873ad283748398706bc67", hashValue);
+        }
+
+        [Fact]
+        public void ComputeMappingHashValue_computes_hashvalue_for_multiple_container_mappings()
+        {
+            var mappingCollection =
+                CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { Msl, SchoolMsl });
+
+            var hashValue = mappingCollection.ComputeMappingHashValue("AdventureWorksEntities3", "AdventureWorksModelStoreContainer");
+
+            Assert.Equal("e6447993a1b3926723f95dce0a1caccc96ec5774b5ee78bbd28748745ad30db2", hashValue);
+
+            hashValue = mappingCollection.ComputeMappingHashValue("SchoolContainer", "SchoolStoreContainer");
+
+            Assert.Equal("e117e3d423b1c43cf4e9bc77462fe1434fc14872ec7873ad283748398706bc67", hashValue);
+        }
+
+        [Fact]
+        public void ComputeMappingHashValue_for_single_container_mapping_throws_if_multiple_mappings()
+        {
+            var mappingCollection =
+                CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { Msl, SchoolMsl });
+
+            Assert.Throws<InvalidOperationException>(() => mappingCollection.ComputeMappingHashValue());
+        }
+
+        [Fact]
+        public void ComputeMappingHashValue_throws_if_cannot_match_container_names()
+        {
+            var mappingCollection =
+                CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { Msl, SchoolMsl });
+
+            Assert.Throws<InvalidOperationException>(() => mappingCollection.ComputeMappingHashValue("C", "S"));
+        }
+
+        [Fact]
+        public static void GenerateViews_creates_views_for_single_container_mapping()
+        {
+            var mappingCollection =
+                CreateStorageMappingItemCollection(new[] { SchoolSsdl }, new[] { SchoolCsdl }, new[] { SchoolMsl });
+
+            var errors = new List<EdmSchemaError>();
+            var views = mappingCollection.GenerateViews(errors);
+
+            Assert.Empty(errors);
+            Assert.Equal(2, views.Count);
+        }
+
+        [Fact]
+        public void GenerateViews_creates_views_for_multiple_container_mappings()
         {
             var mappingCollection =
                 CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { Msl, SchoolMsl });
 
             var errors = new List<EdmSchemaError>();
-            var viewGroups = mappingCollection.GenerateViews(errors);
+            var views = mappingCollection.GenerateViews("AdventureWorksEntities3", "AdventureWorksModelStoreContainer", errors);
+            
+            Assert.Empty(errors);
+            Assert.Equal(2, views.Count);
+
+            errors = new List<EdmSchemaError>();
+            views = mappingCollection.GenerateViews("SchoolContainer", "SchoolStoreContainer", errors);
 
             Assert.Empty(errors);
-            Assert.Equal(2, viewGroups.Count);
-
-            var group = viewGroups[0];
-
-            Assert.Equal("AdventureWorksModelStoreContainer", group.StoreContainerName);
-            Assert.Equal("AdventureWorksEntities3", group.ModelContainerName);
-            Assert.Equal("e6447993a1b3926723f95dce0a1caccc96ec5774b5ee78bbd28748745ad30db2", group.MappingHash);
-            Assert.Equal(2, group.Views.Count);
+            Assert.Equal(2, views.Count);
         }
 
         [Fact]
-        public static void GenerateViews_returns_errors_for_invalid_mapping()
+        public void GenerateViews_for_single_container_mapping_throws_if_multiple_mappings()
+        {
+            var mappingCollection =
+                CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { Msl, SchoolMsl });
+
+            var errors = new List<EdmSchemaError>();
+
+            Assert.Throws<InvalidOperationException>(() => mappingCollection.GenerateViews(errors));
+        }
+
+        [Fact]
+        public void GenerateViews_throws_if_cannot_match_container_names()
+        {
+            var mappingCollection =
+                CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { Msl, SchoolMsl });
+
+            var errors = new List<EdmSchemaError>();
+
+            Assert.Throws<InvalidOperationException>(() => mappingCollection.GenerateViews("C", "S", errors));
+        }
+
+        [Fact]
+        public void GenerateViews_returns_errors_for_invalid_mapping()
         {
             var msl = XDocument.Parse(Msl);
             msl.Descendants("{http://schemas.microsoft.com/ado/2009/11/mapping/cs}ScalarProperty")
@@ -310,16 +349,16 @@ namespace System.Data.Entity.Core.Mapping
                 .Remove();
 
             var errors = new List<EdmSchemaError>();
-            var views = CreateStorageMappingItemCollection(Ssdl, Csdl, msl.ToString())
-                .GenerateViews(errors);
+            var storageMappingItemCollection = CreateStorageMappingItemCollection(Ssdl, Csdl, msl.ToString());
+            var views = storageMappingItemCollection.GenerateViews(errors);
 
-            Assert.Empty(views);
             Assert.Equal(1, errors.Count);
             Assert.Contains(Strings.ViewGen_No_Default_Value("Entities", "Entities.Name"), errors[0].Message);
+            Assert.Equal(0, views.Count);
         }
 
         [Fact]
-        public static void GenerateViews_generates_views_for_all_containers_that_contain_mappings()
+        public void GenerateViews_generates_views_for_all_containers_that_contain_mappings()
         {
             var storageMappingItemCollection = 
                 CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { SchoolMsl, Msl});
@@ -331,31 +370,76 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             var errors = new List<EdmSchemaError>();
-            var viewGroups = storageMappingItemCollection.GenerateViews(errors);
+            var views = storageMappingItemCollection.GenerateViews("AdventureWorksEntities3", "AdventureWorksModelStoreContainer", errors);
 
             Assert.Empty(errors);
-            Assert.Equal(1, viewGroups.Count);
+            Assert.Equal(2, views.Count);
+
+            errors = new List<EdmSchemaError>();
+            views = storageMappingItemCollection.GenerateViews("SchoolContainer", "SchoolStoreContainer", errors);
+
+            Assert.Empty(errors);
+            Assert.Equal(0, views.Count);
         }
 
         [Fact]
-        public static void GenerateEntitySetViews_generates_views_for_all_containers_that_contain_mappings()
+        public void MappingViewCacheFactory_can_be_set_and_retrieved()
         {
-            var storageMappingItemCollection =
-                CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { SchoolMsl, Msl });
+            var itemCollection = new StorageMappingItemCollection();
+            var factory = new SampleMappingViewCacheFactory("value");
 
-            var containerMapping = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().First();
-            foreach (var entityTypeMapping in containerMapping.EntitySetMappings.SelectMany(m => m.EntityTypeMappings).ToList())
+            itemCollection.MappingViewCacheFactory = factory;
+
+            Assert.Same(factory, itemCollection.MappingViewCacheFactory);
+        }
+
+        [Fact]
+        public void MappingViewCacheFactory_cannot_be_changed()
+        {
+            var itemCollection = new StorageMappingItemCollection();
+
+            var factory1 = new SampleMappingViewCacheFactory("value1");
+            var factory2 = new SampleMappingViewCacheFactory("value1");
+            var factory3 = new SampleMappingViewCacheFactory("value2");
+
+            itemCollection.MappingViewCacheFactory = factory1;
+
+            // Set with same instance does not throw.
+            itemCollection.MappingViewCacheFactory = factory1;
+
+            // Set with new instance and equal value does not throw.
+            itemCollection.MappingViewCacheFactory = factory2;
+
+            // Set with new instance and different value throws.
+            var exception = new ArgumentException(Strings.MappingViewCacheFactory_MustNotChange, "value");
+            Assert.Equal(exception.Message,
+                Assert.Throws<ArgumentException>(
+                    () => itemCollection.MappingViewCacheFactory = factory3).Message);
+        }
+
+        private class SampleMappingViewCacheFactory : DbMappingViewCacheFactory
+        {
+            private readonly string _value;
+
+            public SampleMappingViewCacheFactory(string value)
             {
-                entityTypeMapping.SetMapping.RemoveTypeMapping(entityTypeMapping);
+                _value = value;
             }
 
-            IList<EdmSchemaError> errors;
-            var views = storageMappingItemCollection.GenerateEntitySetViews(out errors);
+            public override DbMappingViewCache Create(string conceptualModelContainerName, string storeModelContainerName)
+            {
+	            throw new NotImplementedException();
+            }
 
-            Assert.Empty(errors);
+            public override bool Equals(object obj)
+            {
+                return _value.Equals(((SampleMappingViewCacheFactory)obj)._value);
+            }
 
-            // expected 2 views - 1 query view and 1 update view
-            Assert.Equal(2, views.Count);
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
         }
     }
 }

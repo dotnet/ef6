@@ -858,39 +858,6 @@ namespace System.Data.Entity.Config
             }
         }
 
-        public class SetViewAssemblyCache
-        {
-            [Fact]
-            public void SetViewAssemblyCache_throws_if_given_a_null_factory()
-            {
-                Assert.Equal(
-                    "cache",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetViewAssemblyCache(null)).ParamName);
-            }
-
-            [Fact]
-            public void SetViewAssemblyCache_throws_if_the_configuation_is_locked()
-            {
-                var configuration = CreatedLockedConfiguration();
-
-                Assert.Equal(
-                    Strings.ConfigurationLocked("SetViewAssemblyCache"),
-                    Assert.Throws<InvalidOperationException>(
-                        () => configuration.SetViewAssemblyCache(new Mock<IViewAssemblyCache>().Object)).Message);
-            }
-
-            [Fact]
-            public void SetViewAssemblyCache_delegates_to_internal_configuration()
-            {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
-                var factory = new Mock<IViewAssemblyCache>().Object;
-
-                new DbConfiguration(mockInternalConfiguration.Object).SetViewAssemblyCache(factory);
-
-                mockInternalConfiguration.Verify(m => m.RegisterSingleton(factory));
-            }
-        }
-
         public class SetCommandLogger
         {
             [Fact]

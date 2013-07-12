@@ -401,34 +401,6 @@ namespace System.Data.Entity.Core.Mapping
 
             return result;
         }
-
-        /// <summary>
-        /// Generates an instance of ContainerMappingViewGroup from this container mapping.
-        /// </summary>
-        /// <param name="errors">A list of EdmSchemaError that accumulates potential 
-        /// errors and warnings encountered during generation.</param>
-        /// <returns>A ContainerMappingViewGroup instance generated from this container mapping,
-        /// or null if there are no entity set mappings.</returns>
-        public ContainerMappingViewGroup GenerateViews(IList<EdmSchemaError> errors)
-        {
-            if (!HasViews)
-            {
-                return null;
-            }
-
-            var views = new Dictionary<EntitySetBase, string>();
-
-            StorageMappingItemCollection.GenerateEntitySetViews(this, views, errors);
-
-            return views.Count > 0
-                       ? new ContainerMappingViewGroup(
-                             StorageEntityContainer.Name,
-                             EdmEntityContainer.Name,
-                             MetadataMappingHasherVisitor.GetMappingClosureHash(
-                                 StorageMappingItemCollection.MappingVersion, this),
-                             views)
-                       : null;
-        }
     }
 
     internal struct InputForComputingCellGroups : IEquatable<InputForComputingCellGroups>, IEqualityComparer<InputForComputingCellGroups>

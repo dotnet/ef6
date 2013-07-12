@@ -42,17 +42,10 @@ namespace System.Data.Entity.ViewGeneration
         [Fact]
         public void MappingHash_does_not_change_if_model_saved_to_edmx_and_reloaded()
         {
-            var hash1 = ComputeHash(GetMappingItemCollectionFromDbContext());
-            var hash2 = ComputeHash(GetMappingItemCollectionFromEdmx());
+            var hash1 = GetMappingItemCollectionFromDbContext().ComputeMappingHashValue();
+            var hash2 = GetMappingItemCollectionFromEdmx().ComputeMappingHashValue();
 
             Assert.Equal(hash1, hash2);
-        }
-
-        private static string ComputeHash(StorageMappingItemCollection mappingItemCollection)
-        {
-            IList<EdmSchemaError> errors = new List<EdmSchemaError>();
-            var viewGroups = mappingItemCollection.GenerateViews(errors);
-            return viewGroups.Single().MappingHash;
         }
 
         private static StorageMappingItemCollection GetMappingItemCollectionFromDbContext()

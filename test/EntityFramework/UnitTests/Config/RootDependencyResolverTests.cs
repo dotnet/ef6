@@ -162,12 +162,6 @@ namespace System.Data.Entity.Config
             }
 
             [Fact]
-            public void The_root_resolver_returns_default_view_assembly_cache()
-            {
-                Assert.IsType<ViewAssemblyCache>(new RootDependencyResolver().GetService<IViewAssemblyCache>());
-            }
-
-            [Fact]
             public void The_root_resolver_returns_default_attribute_provider()
             {
                 Assert.IsType<AttributeProvider>(new RootDependencyResolver().GetService<AttributeProvider>());
@@ -193,8 +187,6 @@ namespace System.Data.Entity.Config
 
                 rootResolver.AddSecondaryResolver(mockSecondaryResolver2.Object);
                 Assert.Same(attributeProvider2, rootResolver.GetService<AttributeProvider>());
-
-                Assert.IsType<ViewAssemblyCache>(new RootDependencyResolver().GetService<IViewAssemblyCache>());
             }
 
             /// <summary>
@@ -272,8 +264,6 @@ namespace System.Data.Entity.Config
                 Assert.Same(attributeProvider2, attributeProviders[0]);
                 Assert.Same(attributeProvider1, attributeProviders[1]);
                 Assert.Same(defaultProvider, attributeProviders[2]);
-
-                Assert.IsType<ViewAssemblyCache>(new RootDependencyResolver().GetServices<IViewAssemblyCache>().Single());
             }
 
             /// <summary>
