@@ -290,7 +290,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var operations = new EdmModelDiffer().Diff(
                 model1.GetModel(), model2.GetModel());
 
-            Assert.Equal(3, operations.Count());
+            Assert.Equal(4, operations.Count());
 
             var addPrimaryKeyOperation = operations.OfType<AddPrimaryKeyOperation>().Single();
 
@@ -493,6 +493,39 @@ namespace System.Data.Entity.Migrations.Infrastructure
             }
 
             Assert.Null(inverse.Column.IsUnicode);
+        }
+
+        [MigrationsTheory]
+        public void Can_detect_changed_columns_when_renamed()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<MigrationsCustomer>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder
+                .Entity<MigrationsCustomer>()
+                .Property(c => c.FullName)
+                .HasMaxLength(25)
+                .HasColumnName("Foo");
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations = new EdmModelDiffer().Diff(
+                model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(2, operations.Count());
+
+            var alterColumnOperation
+                = (AlterColumnOperation)operations.Last();
+
+            Assert.Equal("Foo", alterColumnOperation.Column.Name);
+
+            var inverseAlterColumnOperation
+                = (AlterColumnOperation)alterColumnOperation.Inverse;
+
+            Assert.Equal("Foo", inverseAlterColumnOperation.Column.Name);
         }
 
         [MigrationsTheory] // CodePlex 726

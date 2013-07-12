@@ -116,7 +116,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var renamedColumns = FindRenamedColumns().ToList();
             var addedColumns = FindAddedColumns(renamedColumns).ToList();
-            var alteredColumns = FindChangedColumns().ToList();
+            var alteredColumns = FindChangedColumns(renamedColumns).ToList();
             var removedColumns = FindRemovedColumns(renamedColumns).ToList();
             var orphanedColumns = FindOrphanedColumns(renamedColumns).ToList();
             var renamedTables = FindRenamedTables().ToList();
@@ -1154,6 +1154,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private IEnumerable<AddColumnOperation> FindAddedColumns(IEnumerable<RenameColumnOperation> renamedColumns)
         {
+            DebugCheck.NotNull(renamedColumns);
+
             return from t1 in _source.Model.Descendants(EdmXNames.Ssdl.EntityTypeNames)
                 from t2 in _target.Model.Descendants(EdmXNames.Ssdl.EntityTypeNames)
                 where t1.NameAttribute().EqualsIgnoreCase(t2.NameAttribute())
@@ -1167,45 +1169,38 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 select new AddColumnOperation(t, BuildColumnModel(p2, t2.NameAttribute(), _target));
         }
 
-        private IEnumerable<AlterColumnOperation> FindChangedColumns()
+        private IEnumerable<AlterColumnOperation> FindChangedColumns(IEnumerable<RenameColumnOperation> renamedColumns)
         {
+            DebugCheck.NotNull(renamedColumns);
+
             return from t1 in _source.Model.Descendants(EdmXNames.Ssdl.EntityTypeNames)
                 from t2 in _target.Model.Descendants(EdmXNames.Ssdl.EntityTypeNames)
                 where t1.NameAttribute().EqualsIgnoreCase(t2.NameAttribute())
                 let t = GetQualifiedTableName(_target.Model, t2.NameAttribute())
                 from p1 in t1.Descendants(EdmXNames.Ssdl.PropertyNames)
                 from p2 in t2.Descendants(EdmXNames.Ssdl.PropertyNames)
-                where p1.NameAttribute().EqualsIgnoreCase(p2.NameAttribute())
-                      && !DiffColumns(p1, p2)
+                let rc = renamedColumns
+                    .SingleOrDefault(
+                        rc => rc.Table.EqualsIgnoreCase(t)
+                              && rc.Name.EqualsIgnoreCase(p1.NameAttribute())
+                              && rc.NewName.EqualsIgnoreCase(p2.NameAttribute()))
+                where (rc != null
+                       || p1.NameAttribute().EqualsIgnoreCase(p2.NameAttribute()))
+                      && !DiffColumns(p1, p2, rc)
                 select BuildAlterColumnOperation(t, p2, t2.NameAttribute(), _target, p1, t1.NameAttribute(), _source);
         }
 
-        private AlterColumnOperation BuildAlterColumnOperation(
-            string table,
-            XElement targetProperty,
-            string targetEntitySetName,
-            ModelMetadata targetModelMetadata,
-            XElement sourceProperty,
-            string sourceEntitySetName,
-            ModelMetadata sourceModelMetadata)
-        {
-            var targetModel = BuildColumnModel(targetProperty, targetEntitySetName, targetModelMetadata);
-            var sourceModel = BuildColumnModel(sourceProperty, sourceEntitySetName, sourceModelMetadata);
-
-            return new AlterColumnOperation(
-                table,
-                targetModel,
-                isDestructiveChange: targetModel.IsNarrowerThan(sourceModel, _target.ProviderManifest),
-                inverse: new AlterColumnOperation(
-                    table,
-                    sourceModel,
-                    isDestructiveChange: sourceModel.IsNarrowerThan(targetModel, _target.ProviderManifest)));
-        }
-
-        private bool DiffColumns(XElement column1, XElement column2)
+        private bool DiffColumns(XElement column1, XElement column2, RenameColumnOperation renameColumnOperation)
         {
             DebugCheck.NotNull(column1);
             DebugCheck.NotNull(column2);
+
+            if (renameColumnOperation != null)
+            {
+                // normalize if column is being renamed
+                column1 = new XElement(column1);
+                column1.SetAttributeValue("Name", renameColumnOperation.NewName);
+            }
 
             if (_consistentProviders)
             {
@@ -1226,6 +1221,31 @@ namespace System.Data.Entity.Migrations.Infrastructure
             }
 
             return CanonicalDeepEquals(c1, c2);
+        }
+
+        private AlterColumnOperation BuildAlterColumnOperation(
+            string table,
+            XElement targetProperty,
+            string targetEntitySetName,
+            ModelMetadata targetModelMetadata,
+            XElement sourceProperty,
+            string sourceEntitySetName,
+            ModelMetadata sourceModelMetadata)
+        {
+            var targetModel = BuildColumnModel(targetProperty, targetEntitySetName, targetModelMetadata);
+            var sourceModel = BuildColumnModel(sourceProperty, sourceEntitySetName, sourceModelMetadata);
+
+            // In-case the column is also being renamed.
+            sourceModel.Name = targetModel.Name;
+
+            return new AlterColumnOperation(
+                table,
+                targetModel,
+                isDestructiveChange: targetModel.IsNarrowerThan(sourceModel, _target.ProviderManifest),
+                inverse: new AlterColumnOperation(
+                    table,
+                    sourceModel,
+                    isDestructiveChange: sourceModel.IsNarrowerThan(targetModel, _target.ProviderManifest)));
         }
 
         private static bool CanonicalDeepEquals(XElement element1, XElement element2)
