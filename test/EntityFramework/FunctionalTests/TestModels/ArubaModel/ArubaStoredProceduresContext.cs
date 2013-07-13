@@ -20,15 +20,12 @@ namespace System.Data.Entity.TestModels.ArubaModel
             modelBuilder.Entity<ArubaOwner>().MapToStoredProcedures();
             modelBuilder.Entity<ArubaPerson>().MapToStoredProcedures();
             modelBuilder.Entity<ArubaRun>().MapToStoredProcedures();
-
-            // issue 1242
             modelBuilder.Entity<ArubaTask>().MapToStoredProcedures();
 
             modelBuilder
                 .Entity<ArubaPerson>().HasMany(p => p.Children).WithMany(p => p.Parents)
                 .MapToStoredProcedures();
 
-            // issue 1343
             modelBuilder.Entity<ArubaPerson>().HasMany(p => p.Children).WithMany(p => p.Parents)
                 .MapToStoredProcedures(
                     m => m.Insert(d => d.LeftKeyParameter(l => l.Id, "Left_id").RightKeyParameter(r => r.Id, "Right_Id")));

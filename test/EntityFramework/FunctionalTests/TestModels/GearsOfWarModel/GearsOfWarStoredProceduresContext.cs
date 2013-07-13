@@ -25,11 +25,11 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
             modelBuilder.Entity<CogTag>().MapToStoredProcedures(
                 m => m.Delete(i => i.HasName("Cog_Delete")));
 
-            // issue 1351
-            //modelBuilder.Entity<Gear>().MapToStoredProcedures();
-
             modelBuilder.Entity<Squad>().MapToStoredProcedures(
                 m => m.Insert(i => i.Parameter(p => p.Name, "Squad_Name")));
+
+            // issue 1351
+            //modelBuilder.Entity<Gear>().MapToStoredProcedures();
 
             // issue 1155
             //modelBuilder.Entity<Weapon>().MapToStoredProcedures();
