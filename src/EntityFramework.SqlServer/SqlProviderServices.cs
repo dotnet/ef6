@@ -114,6 +114,11 @@ namespace System.Data.Entity.SqlServer
             set { _truncateDecimalsToScale = value; }
         }
 
+        /// <summary>
+        ///     Registers a handler to process non-error messages coming from the database provider.
+        /// </summary>
+        /// <param name="connection"> The connection to receive information for. </param>
+        /// <param name="handler"> The handler to process messages. </param>
         public override void RegisterInfoMessageHandler(DbConnection connection, Action<string> handler)
         {
             Check.NotNull(connection, "connection");
@@ -243,6 +248,12 @@ namespace System.Data.Entity.SqlServer
             return command;
         }
 
+        /// <summary>
+        ///     Sets the parameter value and appropriate facets for the given <see cref="TypeUsage"/>.
+        /// </summary>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="parameterType">The type of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
         protected override void SetDbParameterValue(DbParameter parameter, TypeUsage parameterType, object value)
         {
             Check.NotNull(parameter, "parameter");
@@ -309,6 +320,11 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
+        /// <summary>
+        ///     Returns provider manifest token for a given connection.
+        /// </summary>
+        /// <param name="connection"> Connection to find manifest token from. </param>
+        /// <returns> The provider manifest token for the specified connection. </returns>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected override string GetDbProviderManifestToken(DbConnection connection)
         {
@@ -340,6 +356,11 @@ namespace System.Data.Entity.SqlServer
             return SqlVersionUtils.GetVersionHint(sqlVersion, serverType);
         }
 
+        /// <summary>
+        ///     Returns the provider manifest by using the specified version information.
+        /// </summary>
+        /// <param name="versionHint"> The token information associated with the provider manifest. </param>
+        /// <returns> The provider manifest by using the specified version information. </returns>
         protected override DbProviderManifest GetDbProviderManifest(string versionHint)
         {
             if (string.IsNullOrEmpty(versionHint))
@@ -350,6 +371,12 @@ namespace System.Data.Entity.SqlServer
             return new SqlProviderManifest(versionHint);
         }
 
+        /// <summary>
+        ///     Gets a spatial data reader for SQL Server.
+        /// </summary>
+        /// <param name="fromReader"> The reader where the spatial data came from. </param>
+        /// <param name="versionHint"> The manifest token associated with the provider manifest. </param>
+        /// <returns> The spatial data reader. </returns>
         protected override DbSpatialDataReader GetDbSpatialDataReader(DbDataReader fromReader, string versionHint)
         {
             var underlyingReader = fromReader as SqlDataReader;
@@ -365,6 +392,11 @@ namespace System.Data.Entity.SqlServer
                        : null;
         }
 
+        /// <summary>
+        ///     Gets a spatial data reader for SQL Server.
+        /// </summary>
+        /// <param name="versionHint"> The manifest token associated with the provider manifest. </param>
+        /// <returns> The spatial data reader. </returns>
         [Obsolete(
             "Return DbSpatialServices from the GetService method. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.")]
         protected override DbSpatialServices DbGetSpatialServices(string versionHint)
@@ -829,6 +861,17 @@ namespace System.Data.Entity.SqlServer
             return type.IsFixedLength() ? SqlDbType.Binary : SqlDbType.VarBinary;
         }
 
+        /// <summary>
+        ///     Generates a data definition language (DDL) script that creates schema objects 
+        ///     (tables, primary keys, foreign keys) based on the contents of the StoreItemCollection 
+        ///     parameter and targeted for the version of the database corresponding to the provider manifest token.
+        /// </summary>
+        /// <param name="providerManifestToken"> The provider manifest token identifying the target version. </param>
+        /// <param name="storeItemCollection"> The structure of the database. </param>
+        /// <returns>
+        ///     A DDL script that creates schema objects based on the contents of the StoreItemCollection parameter 
+        ///     and targeted for the version of the database corresponding to the provider manifest token.
+        /// </returns>
         protected override string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
         {
             Check.NotNull(providerManifestToken, "providerManifestToken");

@@ -79,6 +79,13 @@ namespace System.Data.Entity.SqlServer
             DetectHistoryRebuild(migrationOperations).Each<dynamic>(o => Generate(o));
         }
 
+        /// <summary>
+        ///     Generates the SQL body for a stored procedure.
+        /// </summary>
+        /// <param name="commandTrees">The command trees representing the commands for an insert, update or delete operation.</param>
+        /// <param name="rowsAffectedParameter">The rows affected parameter name.</param>
+        /// <param name="providerManifestToken">The provider manifest token.</param>
+        /// <returns></returns>
         public override string GenerateProcedureBody(
             ICollection<DbModificationCommandTree> commandTrees,
             string rowsAffectedParameter,
@@ -134,6 +141,12 @@ namespace System.Data.Entity.SqlServer
             return null;
         }
 
+        /// <summary>
+        ///     Generates the specified update database operation which represents applying a series of migrations.
+        ///     The generated script is idempotent, meaning it contains conditional logic to check if individual migrations 
+        ///     have already been applied and only apply the pending ones.
+        /// </summary>
+        /// <param name="updateDatabaseOperation">The update database operation.</param>
         protected virtual void Generate(UpdateDatabaseOperation updateDatabaseOperation)
         {
             Check.NotNull(updateDatabaseOperation, "updateDatabaseOperation");
@@ -253,6 +266,10 @@ namespace System.Data.Entity.SqlServer
             return DbConfiguration.GetService<DbProviderFactory>("System.Data.SqlClient").CreateConnection();
         }
 
+        /// <summary>
+        ///     Generates the specified create procedure operation.
+        /// </summary>
+        /// <param name="createProcedureOperation">The create procedure operation.</param>
         protected virtual void Generate(CreateProcedureOperation createProcedureOperation)
         {
             Check.NotNull(createProcedureOperation, "createProcedureOperation");
@@ -260,6 +277,10 @@ namespace System.Data.Entity.SqlServer
             Generate(createProcedureOperation, "CREATE");
         }
 
+        /// <summary>
+        ///     Generates the specified alter procedure operation.
+        /// </summary>
+        /// <param name="alterProcedureOperation">The alter procedure operation.</param>
         protected virtual void Generate(AlterProcedureOperation alterProcedureOperation)
         {
             Check.NotNull(alterProcedureOperation, "alterProcedureOperation");
@@ -267,7 +288,7 @@ namespace System.Data.Entity.SqlServer
             Generate(alterProcedureOperation, "ALTER");
         }
 
-        private void Generate(ProcedureOperation procedureOperation, string modifier)
+       private void Generate(ProcedureOperation procedureOperation, string modifier)
         {
             DebugCheck.NotNull(procedureOperation);
             DebugCheck.NotEmpty(modifier);
@@ -332,6 +353,10 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
+        /// <summary>
+        ///     Generates the specified drop procedure operation.
+        /// </summary>
+        /// <param name="dropProcedureOperation">The drop procedure operation.</param>
         protected virtual void Generate(DropProcedureOperation dropProcedureOperation)
         {
             Check.NotNull(dropProcedureOperation, "dropProcedureOperation");
@@ -852,6 +877,10 @@ namespace System.Data.Entity.SqlServer
             writer.Write("', @objtype = N'OBJECT'");
         }
 
+        /// <summary>
+        ///     Generates the specified rename procedure operation.
+        /// </summary>
+        /// <param name="renameProcedureOperation">The rename procedure operation.</param>
         protected virtual void Generate(RenameProcedureOperation renameProcedureOperation)
         {
             Check.NotNull(renameProcedureOperation, "renameProcedureOperation");
@@ -868,6 +897,10 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
+        /// <summary>
+        ///     Generates the specified move procedure operation.
+        /// </summary>
+        /// <param name="moveProcedureOperation">The move procedure operation.</param>
         protected virtual void Generate(MoveProcedureOperation moveProcedureOperation)
         {
             Check.NotNull(moveProcedureOperation, "moveProcedureOperation");

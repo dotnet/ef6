@@ -229,9 +229,11 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
-        /// <summary>Returns provider manifest token given a connection.</summary>
-        /// <returns>The provider manifest token for the specified connection.</returns>
-        /// <param name="connection">Connection to provider.</param>
+        /// <summary>
+        ///     Returns provider manifest token for a given connection.
+        /// </summary>
+        /// <param name="connection"> Connection to find manifest token from. </param>
+        /// <returns> The provider manifest token for the specified connection. </returns>
         protected abstract string GetDbProviderManifestToken(DbConnection connection);
 
         /// <summary>Returns the provider manifest by using the specified version information.</summary>
@@ -327,7 +329,7 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <returns>The spatial data reader.</returns>
         /// <param name="fromReader">The reader where the spatial data came from.</param>
-        /// <param name="manifestToken">The token information associated with the provider manifest.</param>
+        /// <param name="manifestToken">The manifest token associated with the provider manifest.</param>
         public DbSpatialDataReader GetSpatialDataReader(DbDataReader fromReader, string manifestToken)
         {
             try
@@ -459,7 +461,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Sets the parameter values for the <see cref="T:System.Data.Entity.Core.Common.DbProviderServices" />.
+        ///     Sets the parameter value and appropriate facets for the given <see cref="TypeUsage"/>.
         /// </summary>
         /// <param name="parameter">The parameter.</param>
         /// <param name="parameterType">The type of the parameter.</param>
@@ -543,16 +545,23 @@ namespace System.Data.Entity.Core.Common
             return DbCreateDatabaseScript(providerManifestToken, storeItemCollection);
         }
 
-        /// <summary>Generates a data definition language (DDL script that creates schema objects (tables, primary keys, foreign keys) based on the contents of the StoreItemCollection parameter and targeted for the version of the database corresponding to the provider manifest token.</summary>
+        /// <summary>
+        ///     Generates a data definition language (DDL) script that creates schema objects 
+        ///     (tables, primary keys, foreign keys) based on the contents of the StoreItemCollection 
+        ///     parameter and targeted for the version of the database corresponding to the provider manifest token.
+        /// </summary>
         /// <remarks>
         ///     Individual statements should be separated using database-specific DDL command separator.
         ///     It is expected that the generated script would be executed in the context of existing database with
         ///     sufficient permissions, and it should not include commands to create the database, but it may include
         ///     commands to create schemas and other auxiliary objects such as sequences, etc.
         /// </remarks>
-        /// <returns>A DDL script that creates schema objects based on the contents of the StoreItemCollection parameter and targeted for the version of the database corresponding to the provider manifest token.</returns>
-        /// <param name="providerManifestToken">The provider manifest token identifying the target version.</param>
-        /// <param name="storeItemCollection">The structure of the database.</param>
+        /// <param name="providerManifestToken"> The provider manifest token identifying the target version. </param>
+        /// <param name="storeItemCollection"> The structure of the database. </param>
+        /// <returns>
+        ///     A DDL script that creates schema objects based on the contents of the StoreItemCollection parameter 
+        ///     and targeted for the version of the database corresponding to the provider manifest token.
+        /// </returns>
         protected virtual string DbCreateDatabaseScript(
             string providerManifestToken,
             StoreItemCollection storeItemCollection)

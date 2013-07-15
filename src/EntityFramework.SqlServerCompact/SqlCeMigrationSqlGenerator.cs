@@ -83,6 +83,12 @@ namespace System.Data.Entity.SqlServerCompact
             }
         }
 
+        /// <summary>
+        ///     Generates the specified update database operation which represents applying a series of migrations.
+        ///     The generated script is idempotent, meaning it contains conditional logic to check if individual migrations 
+        ///     have already been applied and only apply the pending ones.
+        /// </summary>
+        /// <param name="updateDatabaseOperation">The update database operation.</param>
         protected virtual void Generate(UpdateDatabaseOperation updateDatabaseOperation)
         {
             Check.NotNull(updateDatabaseOperation, "updateDatabaseOperation");
@@ -113,14 +119,26 @@ namespace System.Data.Entity.SqlServerCompact
             return DbConfiguration.GetService<DbProviderFactory>("System.Data.SqlServerCe.4.0").CreateConnection();
         }
 
+        /// <summary>
+        ///     Generates the specified create procedure operation.
+        /// </summary>
+        /// <param name="createProcedureOperation">The create procedure operation.</param>
         protected virtual void Generate(CreateProcedureOperation createProcedureOperation)
         {
         }
 
+        /// <summary>
+        ///     Generates the specified alter procedure operation.
+        /// </summary>
+        /// <param name="alterProcedureOperation">The alter procedure operation.</param>
         protected virtual void Generate(AlterProcedureOperation alterProcedureOperation)
         {
         }
 
+        /// <summary>
+        ///     Generates the specified drop procedure operation.
+        /// </summary>
+        /// <param name="dropProcedureOperation">The drop procedure operation.</param>
         protected virtual void Generate(DropProcedureOperation dropProcedureOperation)
         {
         }
@@ -538,10 +556,18 @@ namespace System.Data.Entity.SqlServerCompact
             }
         }
 
+        /// <summary>
+        ///     Generates the specified rename procedure operation.
+        /// </summary>
+        /// <param name="renameProcedureOperation">The rename procedure operation.</param>
         protected virtual void Generate(RenameProcedureOperation renameProcedureOperation)
         {
         }
 
+        /// <summary>
+        ///     Generates the specified move procedure operation.
+        /// </summary>
+        /// <param name="moveProcedureOperation">The move procedure operation.</param>
         protected virtual void Generate(MoveProcedureOperation moveProcedureOperation)
         {
         }

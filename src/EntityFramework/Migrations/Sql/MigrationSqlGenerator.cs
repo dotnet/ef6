@@ -25,7 +25,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <summary>
         /// Generates the SQL body for a stored procedure.
         /// </summary>
-        /// <param name="commandTrees">The command trees for insert, update and delete commands.</param>
+        /// <param name="commandTrees">The command trees representing the commands for an insert, update or delete operation.</param>
         /// <param name="rowsAffectedParameter">The rows affected parameter name.</param>
         /// <param name="providerManifestToken">The provider manifest token.</param>
         /// <returns></returns>

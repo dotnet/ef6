@@ -309,6 +309,11 @@ namespace System.Data.Entity.SqlServerCompact
 
         #endregion
 
+        /// <summary>
+        ///     Registers a handler to process non-error messages coming from the database provider.
+        /// </summary>
+        /// <param name="connection">The connection to receive information for.</param>
+        /// <param name="handler">The handler to process messages.</param>
         public override void RegisterInfoMessageHandler(DbConnection connection, Action<string> handler)
         {
             Check.NotNull(connection, "connection");
@@ -440,6 +445,11 @@ namespace System.Data.Entity.SqlServerCompact
         // However, use the connection passed in to determine whether 
         // the provider is local provider or remote provider
         //
+        /// <summary>
+        ///     Returns provider manifest token for a given connection.
+        /// </summary>
+        /// <param name="connection">Connection to find manifest token from.</param>
+        /// <returns>The provider manifest token for the specified connection.</returns>
         protected override string GetDbProviderManifestToken(DbConnection connection)
         {
             Check.NotNull(connection, "connection");
@@ -468,6 +478,11 @@ namespace System.Data.Entity.SqlServerCompact
             return SqlCeProviderManifest.Token40;
         }
 
+        /// <summary>
+        ///     Returns the provider manifest by using the specified version information.
+        /// </summary>
+        /// <returns> The provider manifest by using the specified version information. </returns>
+        /// <param name="versionHint"> The token information associated with the provider manifest. </param>
         protected override DbProviderManifest GetDbProviderManifest(string versionHint)
         {
             // This method can be called at runtime or design time.
