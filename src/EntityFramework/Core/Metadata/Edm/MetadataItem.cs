@@ -103,15 +103,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Adds a metadata property with the specified name and value.
+        /// Adds an annotation with the specified name and value.
         /// </summary>
-        /// <param name="name">The name of the property.</param>
-        /// <param name="value">The value of the property.</param>
+        /// <param name="name">The name of the annotation property.</param>
+        /// <param name="value">The value of the annotation property.</param>
         public void AddAnnotation(string name, object value)
         {
             Check.NotEmpty(name, "name");
 
             MetadataProperties.Source.Add(MetadataProperty.CreateAnnotation(name, value));
+        }
+
+        /// <summary>
+        /// Removes an annotation with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the annotation property.</param>
+        public bool RemoveAnnotation(string name)
+        {
+            Check.NotEmpty(name, "name");
+
+            MetadataProperty property;
+            return (MetadataProperties.Source.TryGetValue(name, false, out property))
+                ? MetadataProperties.Source.Remove(property)
+                : false;
         }
 
         /// <summary>

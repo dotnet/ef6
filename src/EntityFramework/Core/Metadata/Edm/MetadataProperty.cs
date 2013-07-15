@@ -128,10 +128,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // If not, return the actual stored value
                 return _value;
             }
-            internal set
+            
+            set
             {
+                Check.NotNull(value, "value");
                 Util.ThrowIfReadOnly(this);
-                DebugCheck.NotNull(value);
 
                 _value = value;
             }
