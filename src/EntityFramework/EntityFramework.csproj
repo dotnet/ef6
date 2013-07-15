@@ -252,6 +252,7 @@
     <Compile Include="Infrastructure\DbCommandTreeInterceptionContext.cs" />
     <Compile Include="Infrastructure\IDbInterceptionContextWithResult.cs" />
     <Compile Include="Infrastructure\DbMappingViewCacheFactory.cs" />
+    <Compile Include="Internal\DatabaseInitializerSuppressor.cs" />
     <Compile Include="Internal\MigrationsChecker.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
     <Compile Include="Infrastructure\CancelableDbCommandDispatcher.cs" />

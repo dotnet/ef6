@@ -264,7 +264,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
             else
             {
-                // There is no need to supress events on the existingRelatedEnd because setting events on a disconnected
+                // There is no need to suppress events on the existingRelatedEnd because setting events on a disconnected
                 // EntityCollection is an InvalidOperation
                 Debug.Assert(existingRelatedEnd._onAssociationChanged == null, "Disconnected RelatedEnd had events");
 

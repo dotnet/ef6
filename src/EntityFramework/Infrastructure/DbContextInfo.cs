@@ -188,10 +188,14 @@ namespace System.Data.Entity.Infrastructure
 
             if (_activator != null)
             {
+                DatabaseInitializerSuppressor.Instance.Suppress(_contextType);
+
                 var context = _activator();
 
                 if (context != null)
                 {
+                    context.InternalContext.OnDisposing += (_, __) => DatabaseInitializerSuppressor.Instance.Unsuppress(_contextType);
+
                     _isConstructible = true;
 
                     PushConfiguration(context);
@@ -289,7 +293,11 @@ namespace System.Data.Entity.Infrastructure
                 return null;
             }
 
+            DatabaseInitializerSuppressor.Instance.Suppress(_contextType);
+
             var context = _activator();
+
+            context.InternalContext.OnDisposing += (_, __) => DatabaseInitializerSuppressor.Instance.Unsuppress(_contextType);
 
             PushConfiguration(context);
             ConfigureContext(context);
@@ -301,8 +309,6 @@ namespace System.Data.Entity.Infrastructure
         private void ConfigureContext(DbContext context)
         {
             DebugCheck.NotNull(context);
-
-            context.InternalContext.InitializerDisabled = true;
 
             if (_modelProviderInfo != null)
             {

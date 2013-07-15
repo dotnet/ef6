@@ -5,7 +5,6 @@ namespace System.Data.Entity.Internal
     using System.Collections.Concurrent;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -594,19 +593,22 @@ namespace System.Data.Entity.Internal
                 {
                     _inDatabaseInitialization = true;
 
-                    // The idea here is that multiple threads can try to put an entry into InitializedDatabases
-                    // at the same time but only one entry will actually make it into the collection, even though
-                    // several may be constructed. The RetryAction ensures that that delegate only gets called
-                    // exactly one time, thereby ensuring that database initialization will only happen once.  But,
-                    // sometimes the delegate will fail (and throw and exception). This may be due to some resource
-                    // issue--most notably a problem with the database connection. In such a situation it makes
-                    // sense to have initialization try again later when the resource issue has potentially been
-                    // resolved. To enable this RetryAction will try again next time PerformAction called. We
-                    // have to pass the context to PerformAction so that the next time it tries again it will use
-                    // the new connection.
-                    InitializedDatabases.GetOrAdd(
-                        Tuple.Create(_model, _internalConnection.ConnectionKey),
-                        t => new RetryAction<InternalContext>(action)).PerformAction(this);
+                    if (!DatabaseInitializerSuppressor.Instance.IsSuppressed(Owner.GetType()))
+                    {
+                        // The idea here is that multiple threads can try to put an entry into InitializedDatabases
+                        // at the same time but only one entry will actually make it into the collection, even though
+                        // several may be constructed. The RetryAction ensures that that delegate only gets called
+                        // exactly one time, thereby ensuring that database initialization will only happen once.  But,
+                        // sometimes the delegate will fail (and throw and exception). This may be due to some resource
+                        // issue--most notably a problem with the database connection. In such a situation it makes
+                        // sense to have initialization try again later when the resource issue has potentially been
+                        // resolved. To enable this RetryAction will try again next time PerformAction called. We
+                        // have to pass the context to PerformAction so that the next time it tries again it will use
+                        // the new connection.
+                        InitializedDatabases.GetOrAdd(
+                            Tuple.Create(_model, _internalConnection.ConnectionKey),
+                            t => new RetryAction<InternalContext>(action)).PerformAction(this);
+                    }
                 }
                 finally
                 {

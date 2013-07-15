@@ -152,15 +152,18 @@ namespace System.Data.Entity.Internal
             }
 
             [Fact]
-            public void CreateDatabase_using_Migrations_does_not_disable_initializers()
+            public void CreateDatabase_using_Migrations_does_not_suppress_initializers()
             {
                 var internalContext = CreateMockContextForMigrator().Object;
+
+                DatabaseInitializerSuppressor.Instance.Unsuppress(internalContext.Owner.GetType());
+                
                 new DatabaseCreator().CreateDatabase(
                     internalContext,
-                    (config, context) => (new Mock<DbMigrator>(config, context)).Object,
+                    (config, context) => new Mock<DbMigrator>(config, context).Object,
                     null);
 
-                Assert.False(internalContext.InitializerDisabled);
+                Assert.False(DatabaseInitializerSuppressor.Instance.IsSuppressed(internalContext.Owner.GetType()));
             }
 
             [Fact]

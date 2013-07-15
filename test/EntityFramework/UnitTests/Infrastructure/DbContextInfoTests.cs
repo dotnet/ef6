@@ -697,10 +697,10 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal("foo", contextInfo.ConnectionStringName);
         }
 
-        [Fact]
-        public void CreateInstance_should_not_cause_database_initializer_to_run()
+        [Fact] // CodePlex 291, 1316
+        public void CreateInstance_should_not_cause_database_initializer_to_run_even_if_context_consturctor_would_cause_it()
         {
-            var contextInfo = new DbContextInfo(typeof(SimpleContext));
+            var contextInfo = new DbContextInfo(typeof(InitTestContext));
 
             using (var context = contextInfo.CreateInstance())
             {
@@ -709,6 +709,14 @@ namespace System.Data.Entity.Infrastructure
             }
 
             Assert.False(InitTestInitializer.HasRun);
+
+            // Use context normally--initializer should now run.
+            using (var context = new InitTestContext())
+            {
+                Assert.NotNull(((IObjectContextAdapter)context).ObjectContext);
+            }
+
+            Assert.True(InitTestInitializer.HasRun);
         }
 
         public class InitTestContext : DbContext
@@ -716,6 +724,12 @@ namespace System.Data.Entity.Infrastructure
             static InitTestContext()
             {
                 Database.SetInitializer(new InitTestInitializer());
+            }
+
+            public InitTestContext()
+            {
+                // Do something that would normally cause initialization
+                Assert.NotNull(((IObjectContextAdapter)this).ObjectContext);
             }
         }
 
