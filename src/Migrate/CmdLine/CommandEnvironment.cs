@@ -4,7 +4,7 @@ namespace CmdLine
 {
     using System;
 
-    public class CommandEnvironment : ICommandEnvironment
+    internal class CommandEnvironment : ICommandEnvironment
     {
         public string CommandLine
         {

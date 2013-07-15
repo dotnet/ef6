@@ -9,7 +9,7 @@ namespace System.Data.Entity.Migrations.Console
         Program = "migrate",
         TitleResourceId = EntityRes.MigrateTitle,
         DescriptionResourceId = EntityRes.MigrateDescription)]
-    public class Arguments
+    internal class Arguments
     {
         [CommandLineParameter(
             ParameterIndex = 1,

@@ -9,7 +9,7 @@ namespace CmdLine
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
         Justification = "SerializeObjectState used instead")]
     [Serializable]
-    public class CommandLineException : Exception
+    internal class CommandLineException : Exception
     {
         [NonSerialized]
         private CommandLineExceptionState _state;

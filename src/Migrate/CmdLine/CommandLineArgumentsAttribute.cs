@@ -8,7 +8,7 @@ namespace CmdLine
     using System.Reflection;
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class CommandLineArgumentsAttribute : Attribute
+    internal class CommandLineArgumentsAttribute : Attribute
     {
         private string title;
 

@@ -31,6 +31,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1591;1573;1572;1570</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\EntityFramework.PowerShell.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -41,8 +42,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>1591;1573;1572;1570</NoWarn>
+    <NoWarn>1573;1572;1570</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Release\EntityFramework.PowerShell.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugNet40|AnyCPU' ">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -58,6 +60,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1591;1573;1572;1570</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\DebugNet40\EntityFramework.PowerShell.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseNet40|AnyCPU' ">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -68,8 +71,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>1591;1573;1572;1570</NoWarn>
+    <NoWarn>1573;1572;1570</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\ReleaseNet40\EntityFramework.PowerShell.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(InternalsInvisble)'=='true'">
     <DefineConstants>$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>

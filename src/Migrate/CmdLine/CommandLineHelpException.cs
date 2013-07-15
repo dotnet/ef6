@@ -4,7 +4,7 @@ namespace CmdLine
 {
     using System;
 
-    public class CommandLineHelpException : CommandLineException
+    internal class CommandLineHelpException : CommandLineException
     {
         #region Constructors and Destructors
 

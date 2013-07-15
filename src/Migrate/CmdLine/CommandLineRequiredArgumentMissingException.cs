@@ -6,7 +6,7 @@ namespace CmdLine
     using System.Data.Entity.Migrations.Console.Resources;
 
     [Serializable]
-    public class CommandLineRequiredArgumentMissingException : CommandLineException
+    internal class CommandLineRequiredArgumentMissingException : CommandLineException
     {
         public CommandLineRequiredArgumentMissingException(Type argumentType, string argumentName, int parameterIndex)
             : base(new CommandArgumentHelp(argumentType, FormatMessage(argumentName, parameterIndex)))

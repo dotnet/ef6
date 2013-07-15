@@ -13,7 +13,7 @@ namespace CmdLine
     /// <summary>
     ///     Class for parsing command line arguments
     /// </summary>
-    public static class CommandLine
+    internal static class CommandLine
     {
         #region Constants and Fields
 

@@ -10,7 +10,7 @@ namespace CmdLine
     ///     Represents a command line argument
     /// </summary>
     [Serializable]
-    public class CommandArgument
+    internal class CommandArgument
     {
         private const int TokenGroup = 0;
 

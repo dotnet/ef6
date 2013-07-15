@@ -2,7 +2,7 @@
 
 namespace CmdLine
 {
-    public interface ICommandEnvironment
+    internal interface ICommandEnvironment
     {
         string CommandLine { get; }
 

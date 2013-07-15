@@ -10,7 +10,7 @@ namespace CmdLine
     using System.Text.RegularExpressions;
 
     [Serializable]
-    public class CommandArgumentHelp
+    internal class CommandArgumentHelp
     {
         #region Constants and Fields
 

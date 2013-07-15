@@ -10,7 +10,7 @@ namespace CmdLine
 
     [AttributeUsage(AttributeTargets.Property)]
     [Serializable]
-    public class CommandLineParameterAttribute : Attribute
+    internal class CommandLineParameterAttribute : Attribute
     {
         private int parameterIndex = -1;
 

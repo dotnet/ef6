@@ -6,7 +6,7 @@ namespace CmdLine
     using System.Data.Entity.Migrations.Console.Resources;
 
     [Serializable]
-    public class CommandLineArgumentInvalidException : CommandLineException
+    internal class CommandLineArgumentInvalidException : CommandLineException
     {
         public CommandLineArgumentInvalidException(Type argumentType, CommandArgument argument)
             : base(GetInvalidArgumentString(argumentType, argument))
