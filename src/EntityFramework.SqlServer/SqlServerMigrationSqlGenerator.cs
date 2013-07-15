@@ -706,10 +706,8 @@ namespace System.Data.Entity.SqlServer
 
                     writer.Write("ALTER TABLE ");
                     writer.Write(Name(alterColumnOperation.Table));
-                    writer.Write(" ADD CONSTRAINT DF_");
-                    writer.Write(alterColumnOperation.Table);
-                    writer.Write("_");
-                    writer.Write(column.Name);
+                    writer.Write(" ADD CONSTRAINT ");
+                    writer.Write(Quote("DF_" + alterColumnOperation.Table + "_" + column.Name));
                     writer.Write(" DEFAULT ");
                     writer.Write(
                         (column.DefaultValue != null)
@@ -769,9 +767,9 @@ namespace System.Data.Entity.SqlServer
             writer.Indent++;
             writer.Write("EXECUTE('ALTER TABLE ");
             writer.Write(Escape(Name(table)));
-            writer.Write(" DROP CONSTRAINT ' + ");
+            writer.Write(" DROP CONSTRAINT [' + ");
             writer.Write(variable);
-            writer.WriteLine(")");
+            writer.WriteLine(" + ']')");
             writer.Indent--;
         }
 

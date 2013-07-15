@@ -102,7 +102,7 @@ BEGIN
     WHERE parent_object_id = object_id(N'Customers')
     AND col_name(parent_object_id, parent_column_id) = 'Foo';
     IF @var0 IS NOT NULL
-        EXECUTE('ALTER TABLE [Customers] DROP CONSTRAINT ' + @var0)
+        EXECUTE('ALTER TABLE [Customers] DROP CONSTRAINT [' + @var0 + ']')
     ALTER TABLE [Customers] DROP COLUMN [Foo]
     EXECUTE('
         CREATE PROCEDURE [Foo]
@@ -988,8 +988,8 @@ FROM sys.default_constraints
 WHERE parent_object_id = object_id(N'T')
 AND col_name(parent_object_id, parent_column_id) = 'C';
 IF @var0 IS NOT NULL
-    EXECUTE('ALTER TABLE [T] DROP CONSTRAINT ' + @var0)
-ALTER TABLE [T] ADD CONSTRAINT DF_T_C DEFAULT 'SRID=4326;POINT (6 7)' FOR [C]
+    EXECUTE('ALTER TABLE [T] DROP CONSTRAINT [' + @var0 + ']')
+ALTER TABLE [T] ADD CONSTRAINT [DF_T_C] DEFAULT 'SRID=4326;POINT (6 7)' FOR [C]
 ALTER TABLE [T] ALTER COLUMN [C] [geography] NOT NULL", sql);
         }
 
@@ -1016,8 +1016,8 @@ FROM sys.default_constraints
 WHERE parent_object_id = object_id(N'T')
 AND col_name(parent_object_id, parent_column_id) = 'C';
 IF @var0 IS NOT NULL
-    EXECUTE('ALTER TABLE [T] DROP CONSTRAINT ' + @var0)
-ALTER TABLE [T] ADD CONSTRAINT DF_T_C DEFAULT 'SRID=0;POINT (8 9)' FOR [C]
+    EXECUTE('ALTER TABLE [T] DROP CONSTRAINT [' + @var0 + ']')
+ALTER TABLE [T] ADD CONSTRAINT [DF_T_C] DEFAULT 'SRID=0;POINT (8 9)' FOR [C]
 ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
         }
 
@@ -1044,8 +1044,8 @@ FROM sys.default_constraints
 WHERE parent_object_id = object_id(N'T')
 AND col_name(parent_object_id, parent_column_id) = 'C';
 IF @var0 IS NOT NULL
-    EXECUTE('ALTER TABLE [T] DROP CONSTRAINT ' + @var0)
-ALTER TABLE [T] ADD CONSTRAINT DF_T_C DEFAULT 'POINT (6 7)' FOR [C]
+    EXECUTE('ALTER TABLE [T] DROP CONSTRAINT [' + @var0 + ']')
+ALTER TABLE [T] ADD CONSTRAINT [DF_T_C] DEFAULT 'POINT (6 7)' FOR [C]
 ALTER TABLE [T] ALTER COLUMN [C] [geography] NOT NULL", sql);
         }
 
@@ -1072,8 +1072,8 @@ FROM sys.default_constraints
 WHERE parent_object_id = object_id(N'T')
 AND col_name(parent_object_id, parent_column_id) = 'C';
 IF @var0 IS NOT NULL
-    EXECUTE('ALTER TABLE [T] DROP CONSTRAINT ' + @var0)
-ALTER TABLE [T] ADD CONSTRAINT DF_T_C DEFAULT 'POINT (8 9)' FOR [C]
+    EXECUTE('ALTER TABLE [T] DROP CONSTRAINT [' + @var0 + ']')
+ALTER TABLE [T] ADD CONSTRAINT [DF_T_C] DEFAULT 'POINT (8 9)' FOR [C]
 ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
         }
 
