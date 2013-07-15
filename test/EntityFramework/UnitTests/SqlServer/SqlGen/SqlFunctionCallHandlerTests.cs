@@ -10,6 +10,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Text;
     using Moq;
     using Xunit;
+    using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+    using System.Globalization;
 
     public class SqlFunctionCallHandlerTests
     {
@@ -185,6 +187,91 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     Assert.Equal("[My].[Function](iso_week, One, Two)", builder.ToString());
                 }
             }
+        }
+
+        [Fact]
+        public void GenerateFunctionCallSql_generates_expected_sql_for_CreateDateTime()
+        {
+            var dateTime = new DateTime(2012, 2, 29, 6, 12, 37);
+
+            const string expectedSqlFormat = 
+"convert ({0}," 
+    + "convert(varchar(255), 2012) + '-' + convert(varchar(255), 2) + '-' + convert(varchar(255), 29) + ' ' + "
+    + "convert(varchar(255), 6) + ':' + convert(varchar(255), 12) + ':' + str(37, {1}, {2}), 121)";
+
+            var expectedSql1 = String.Format(CultureInfo.InvariantCulture, expectedSqlFormat, "datetime", 6, 3);
+            var expectedSql2 = String.Format(CultureInfo.InvariantCulture, expectedSqlFormat, "datetime2", 10, 7);
+
+            Assert.Equal(expectedSql1, BuildSqlForDateTime(dateTime, SqlVersion.Sql8));
+            Assert.Equal(expectedSql1, BuildSqlForDateTime(dateTime, SqlVersion.Sql9));
+            Assert.Equal(expectedSql2, BuildSqlForDateTime(dateTime, SqlVersion.Sql10));
+            Assert.Equal(expectedSql2, BuildSqlForDateTime(dateTime, SqlVersion.Sql11));
+        }
+
+        [Fact]
+        public void GenerateFunctionCallSql_generates_expected_sql_for_CreateDateTimeOffset()
+        {
+            var dateTimeOffset = new DateTimeOffset(2012, 2, 29, 6, 12, 37, TimeSpan.FromHours(3));
+
+            const string expectedSql=
+"convert (datetimeoffset,"
+    + "convert(varchar(255), 2012) + '-' + convert(varchar(255), 2) + '-' + convert(varchar(255), 29) + ' ' + "
+    + "convert(varchar(255), 6) + ':' + convert(varchar(255), 12) + ':' + str(37, 10, 7) + "
+    + "(CASE WHEN 180 >= 0 THEN '+' ELSE '-' END) + convert(varchar(255), ABS(180/60)) + ':' + convert(varchar(255), ABS(180%60)), 121)";
+
+            Assert.Equal(expectedSql, BuildSqlForDateTimeOffset(dateTimeOffset, SqlVersion.Sql10));
+            Assert.Equal(expectedSql, BuildSqlForDateTimeOffset(dateTimeOffset, SqlVersion.Sql11));
+        }
+
+        private static string BuildSqlForDateTime(DateTime dateTime, SqlVersion sqlVersion)
+        {
+            var builder = new StringBuilder();
+
+            var sqlGenerator = new SqlGenerator(sqlVersion);
+
+            var functionExpression = EdmFunctions.CreateDateTime(
+                DbExpression.FromInt32(dateTime.Year),
+                DbExpression.FromInt32(dateTime.Month),
+                DbExpression.FromInt32(dateTime.Day),
+                DbExpression.FromInt32(dateTime.Hour),
+                DbExpression.FromInt32(dateTime.Minute),
+                DbExpression.FromInt32(dateTime.Second));
+
+            var sqlFragment = SqlFunctionCallHandler.GenerateFunctionCallSql(
+                sqlGenerator, functionExpression);
+
+            using (var sqlWriter = new SqlWriter(builder))
+            {
+                sqlFragment.WriteSql(sqlWriter, sqlGenerator);
+            }
+
+            return builder.ToString();
+        }
+
+        private static string BuildSqlForDateTimeOffset(DateTimeOffset dateTimeOffset, SqlVersion sqlVersion)
+        {
+            var builder = new StringBuilder();
+
+            var sqlGenerator = new SqlGenerator(sqlVersion);
+
+            var functionExpression = EdmFunctions.CreateDateTimeOffset(
+                DbExpression.FromInt32(dateTimeOffset.Year),
+                DbExpression.FromInt32(dateTimeOffset.Month),
+                DbExpression.FromInt32(dateTimeOffset.Day),
+                DbExpression.FromInt32(dateTimeOffset.Hour),
+                DbExpression.FromInt32(dateTimeOffset.Minute),
+                DbExpression.FromInt32(dateTimeOffset.Second),
+                DbExpression.FromInt32(Convert.ToInt32(dateTimeOffset.Offset.TotalMinutes)));
+
+            var sqlFragment = SqlFunctionCallHandler.GenerateFunctionCallSql(
+                sqlGenerator, functionExpression);
+
+            using (var sqlWriter = new SqlWriter(builder))
+            {
+                sqlFragment.WriteSql(sqlWriter, sqlGenerator);
+            }
+
+            return builder.ToString();
         }
 
         private static Mock<SqlGenerator> CreateMockSqlGenerator(string storeType)

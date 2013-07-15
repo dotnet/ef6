@@ -1272,11 +1272,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Helper for all date and time types creating functions.
         ///     The given expression is in general trainslated into:
         ///     CONVERT(@typename, [datePart] + [timePart] + [timeZonePart], 121), where the datePart and the timeZonePart are optional
-        ///     Only on Katmai, if a date part is present it is wrapped with a call for adding years as shown below.
         ///     The individual parts are translated as:
         ///     Date part:
-        ///     PRE KATMAI: convert(varchar(255), @year) + '-' + convert(varchar(255), @month) + '-' + convert(varchar(255), @day)
-        ///     KATMAI: DateAdd(year, @year-1, covert(@typename, '0001' + '-' + convert(varchar(255), @month) + '-' + convert(varchar(255), @day)  + [possibly time ], 121)
+        ///     convert(varchar(255), @year) + '-' + convert(varchar(255), @month) + '-' + convert(varchar(255), @day)
         ///     Time part:
         ///     PRE KATMAI:  convert(varchar(255), @hour)+ ':' + convert(varchar(255), @minute)+ ':' + str(@second, 6, 3)
         ///     KATMAI:  convert(varchar(255), @hour)+ ':' + convert(varchar(255), @minute)+ ':' + str(@second, 10, 7)
@@ -1298,13 +1296,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             var result = new SqlBuilder();
             var currentArgumentIndex = 0;
 
-            if (!sqlgen.IsPreKatmai && hasDatePart)
-            {
-                result.Append("DATEADD(year, ");
-                sqlgen.ParenthesizeExpressionIfNeeded(args[currentArgumentIndex++], result);
-                result.Append(" - 1, ");
-            }
-
             result.Append("convert (");
             result.Append(typeName);
             result.Append(",");
@@ -1312,16 +1303,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
             //Building the string representation
             if (hasDatePart)
             {
-                //  YEAR:   PREKATMAI:               CONVERT(VARCHAR, @YEAR)
-                //          KATMAI   :              '0001'
-                if (!sqlgen.IsPreKatmai)
-                {
-                    result.Append("'0001'");
-                }
-                else
-                {
-                    AppendConvertToVarchar(sqlgen, result, args[currentArgumentIndex++]);
-                }
+                //  YEAR
+                AppendConvertToVarchar(sqlgen, result, args[currentArgumentIndex++]);
 
                 //  MONTH
                 result.Append(" + '-' + ");
@@ -1367,10 +1350,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             result.Append(", 121)");
 
-            if (!sqlgen.IsPreKatmai && hasDatePart)
-            {
-                result.Append(")");
-            }
             return result;
         }
 
