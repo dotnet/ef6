@@ -198,6 +198,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <notes>The newly created MetadataProperty will be read only.</notes>
         public static MetadataProperty Create(string name, TypeUsage typeUsage, object value)
         {
+            Check.NotEmpty(name, "name");
             Check.NotNull(typeUsage, "typeUsage");
 
             var metadataProperty = new MetadataProperty(name, typeUsage, value);

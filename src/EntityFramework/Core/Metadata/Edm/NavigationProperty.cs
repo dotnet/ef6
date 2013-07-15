@@ -147,13 +147,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
             TypeUsage typeUsage,
             RelationshipType relationshipType,
             RelationshipEndMember from,
-            RelationshipEndMember to)
+            RelationshipEndMember to,
+            IEnumerable<MetadataProperty> metadataProperties)
         {
+            Check.NotEmpty(name, "name");
+            Check.NotNull(typeUsage, "typeUsage");
+
             var instance = new NavigationProperty(name, typeUsage);
 
             instance.RelationshipType = relationshipType;
             instance.FromEndMember = from;
             instance.ToEndMember = to;
+
+            if (metadataProperties != null)
+            {
+                instance.AddMetadataProperties(metadataProperties.ToList());
+            }
 
             instance.SetReadOnly();
 

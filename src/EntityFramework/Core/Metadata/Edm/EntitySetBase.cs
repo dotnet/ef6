@@ -101,7 +101,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _definingQuery; }
             internal set
             {
-                Check.NotNull(value, "value");
+                Check.NotEmpty(value, "value");
                 Util.ThrowIfReadOnly(this);
 
                 _definingQuery = value;

@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public static EdmProperty Create(string name, TypeUsage typeUsage)
         {
             Check.NotEmpty(name, "name");
-            Check.NotNull(typeUsage, "primitiveType");
+            Check.NotNull(typeUsage, "typeUsage");
 
             var edmType = typeUsage.EdmType;
             if (!(Helper.IsPrimitiveType(edmType)

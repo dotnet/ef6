@@ -109,8 +109,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             IEnumerable<EdmMember> members,
             IEnumerable<MetadataProperty> metadataProperties)
         {
-            Check.NotNull(name, "name");
-            Check.NotNull(namespaceName, "namespaceName");
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(namespaceName, "namespaceName");
             Check.NotNull(members, "members");
 
             var complexType = new ComplexType(name, namespaceName, dataSpace);

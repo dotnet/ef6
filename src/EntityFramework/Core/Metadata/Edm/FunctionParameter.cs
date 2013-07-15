@@ -257,7 +257,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </returns>
         public static FunctionParameter Create(string name, EdmType edmType, ParameterMode parameterMode)
         {
-            Check.NotNull(name, "name");
+            Check.NotEmpty(name, "name");
             Check.NotNull(edmType, "edmType");
 
             var functionParameter =

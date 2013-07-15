@@ -271,8 +271,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             IEnumerable<EdmMember> members,
             IEnumerable<MetadataProperty> metadataProperties)
         {
-            Check.NotNull(name, "name");
-            Check.NotNull(namespaceName, "namespaceName");
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(namespaceName, "namespaceName");
 
             var entity = new EntityType(name, namespaceName, dataSpace, keyMemberNames, members);
 
@@ -293,6 +293,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public void AddNavigationProperty(NavigationProperty property)
         {
+            Check.NotNull(property, "property");
+
             AddMember(property, true);
         }
     }

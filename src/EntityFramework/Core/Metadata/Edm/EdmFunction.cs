@@ -524,8 +524,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EdmFunctionPayload payload,
             IEnumerable<MetadataProperty> metadataProperties)
         {
-            Check.NotNull(name, "name");
-            Check.NotNull(namespaceName, "namespaceName");
+            Check.NotEmpty(name, "name");
+            Check.NotEmpty(namespaceName, "namespaceName");
 
             var function = new EdmFunction(name, namespaceName, dataSpace, payload);
 

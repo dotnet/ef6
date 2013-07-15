@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
 
@@ -54,17 +55,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
-        public void Create_throws_for_null_arguments()
+        public void Create_throws_for_null_or_empty_arguments()
         {
             Assert.Equal(
-                "name",
-                Assert.Throws<ArgumentNullException>(
-                    () => ComplexType.Create(null, "foo", DataSpace.CSpace, new EdmMember[0], null)).ParamName);
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(
+                    () => ComplexType.Create(null, "foo", DataSpace.CSpace, new EdmMember[0], null)).Message);
 
             Assert.Equal(
-                "namespaceName",
-                Assert.Throws<ArgumentNullException>(
-                    () => ComplexType.Create("foo", null, DataSpace.CSpace, new EdmMember[0], null)).ParamName);
+                Strings.ArgumentIsNullOrWhitespace("namespaceName"),
+                Assert.Throws<ArgumentException>(
+                    () => ComplexType.Create("foo", null, DataSpace.CSpace, new EdmMember[0], null)).Message);
 
             Assert.Equal(
                 "members",
