@@ -1511,15 +1511,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var limitNode = VisitExprAsScalar(expression.Limit);
 
             Node retNode;
-            if (OpType.Project
-                == inputNode.Op.OpType)
+            if (OpType.Project == inputNode.Op.OpType
+                && (inputNode.Child0.Op.OpType == OpType.Sort
+                    || inputNode.Child0.Op.OpType == OpType.ConstrainedSort))
             {
                 //
                 // If the input to the DbLimitExpression is a projection, then apply the Limit operation to the
                 // input to the ProjectOp instead. This allows  Limit(Project(Skip(x))) and Limit(Project(Sort(x)))
                 // to be treated in the same way as Limit(Skip(x)) and Limit(Sort(x)).
-                // Note that even if the input to the projection is not a ConstrainedSortOp or SortOp, the
-                // Limit operation is still pushed under the Project.
                 //
                 inputNode.Child0 = CreateLimitNode(inputNode.Child0, limitNode, expression.WithTies);
                 retNode = inputNode;

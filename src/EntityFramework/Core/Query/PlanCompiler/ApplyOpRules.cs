@@ -948,7 +948,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 Rule_OuterApplyOverAnything,
                 Rule_OuterApplyOverProjectInternalConstantOverFilter,
                 Rule_OuterApplyOverProjectNullSentinelOverFilter,
-                Rule_OuterApplyIntoScalarSubquery, // DevDiv#573440 
                 Rule_OuterApplyOverProject,
                 Rule_OuterApplyOverFilter,
                 Rule_CrossApplyOverLeftOuterJoinOverSingleRowTable,

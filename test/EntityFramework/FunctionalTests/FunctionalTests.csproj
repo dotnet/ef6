@@ -167,6 +167,7 @@
     <Compile Include="Objects\TransactionsTests.cs" />
     <Compile Include="Migrations\SpatialScenarios.cs" />
     <Compile Include="PlanCompiler\AnonymousTypeTests.cs" />
+    <Compile Include="PlanCompiler\LimitExpressionTests.cs" />
     <Compile Include="PlanCompiler\LinqGroupByTests.cs" />
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\DeadlockTests.cs" />

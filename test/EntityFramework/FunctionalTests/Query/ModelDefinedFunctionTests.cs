@@ -317,28 +317,32 @@ FROM ( SELECT TOP (5)
                 "SELECT top(5) s FROM ProductModel.F_In_ColST_Ret_ColST(SELECT VALUE c.CustomerID from ProductContainer.Customers as c) as s";
 
             var expectedSql =
-                @"SELECT TOP (5) 
-1 AS [C1], 
-[c].[CustomerID] AS [C2]
-FROM  (SELECT 
-	[Extent1].[CustomerID] AS [CustomerID]
-	FROM [dbo].[Customers] AS [Extent1]
-INTERSECT
-	SELECT 
-	[UnionAll2].[C1] AS [C1]
-	FROM  (SELECT 
-		[UnionAll1].[C1] AS [C1]
-		FROM  (SELECT 
-			'a' AS [C1]
-			FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
-		UNION ALL
-			SELECT 
-			'b' AS [C1]
-			FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]) AS [UnionAll1]
-	UNION ALL
-		SELECT 
-		'c' AS [C1]
-		FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]) AS [UnionAll2]) AS [c]";
+@"SELECT
+    [Limit1].[C2] AS [C1],
+    [Limit1].[C1] AS [C2]
+    FROM ( SELECT TOP (5)
+        [Intersect1].[CustomerID] AS [C1], 
+        1 AS [C2]
+        FROM  (SELECT
+            [Extent1].[CustomerID] AS [CustomerID]
+            FROM [dbo].[Customers] AS [Extent1]
+        INTERSECT
+            SELECT
+            [UnionAll2].[C1] AS [C1]
+            FROM  (SELECT
+                [UnionAll1].[C1] AS [C1]
+                FROM  (SELECT
+                    'a' AS [C1]
+                    FROM  ( SELECT 1 AS X ) AS [SingleRowTable1]
+                UNION ALL
+                    SELECT
+                    'b' AS [C1]
+                    FROM  ( SELECT 1 AS X ) AS [SingleRowTable2]) AS [UnionAll1]
+            UNION ALL
+                SELECT
+                'c' AS [C1]
+                FROM  ( SELECT 1 AS X ) AS [SingleRowTable3]) AS [UnionAll2]) AS [Intersect1]
+    )  AS [Limit1]";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
         }
@@ -351,20 +355,20 @@ INTERSECT
             var expectedSql =
                 @"SELECT 
 [Limit1].[C1] AS [C1], 
-LEN([Limit1].[CustomerID]) AS [C2], 
+[Limit1].[C2] AS [C2], 
 [Limit1].[City] AS [City], 
 [Limit1].[HomeAddress] AS [HomeAddress], 
 [Limit1].[Region] AS [Region], 
 [Limit1].[PostalCode] AS [PostalCode], 
 [Limit1].[Country] AS [Country]
 FROM ( SELECT TOP (5) 
-	[Extent1].[CustomerID] AS [CustomerID], 
 	[Extent1].[HomeAddress] AS [HomeAddress], 
 	[Extent1].[City] AS [City], 
 	[Extent1].[Region] AS [Region], 
 	[Extent1].[PostalCode] AS [PostalCode], 
 	[Extent1].[Country] AS [Country], 
-	1 AS [C1]
+	1 AS [C1],
+	LEN([Extent1].[CustomerID]) AS [C2]
 	FROM [dbo].[Customers] AS [Extent1]
 )  AS [Limit1]";
 
