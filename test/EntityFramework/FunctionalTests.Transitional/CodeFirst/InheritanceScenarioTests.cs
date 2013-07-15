@@ -1058,17 +1058,17 @@ namespace FunctionalTests
         {
             var modelBuilder = new DbModelBuilder();
             modelBuilder.Entity<Person>();
-            modelBuilder.Entity<Student>().Property(p => p.Career).HasMaxLength(256).HasColumnName("Data");
-            modelBuilder.Entity<Officer>().Property(p => p.Department).HasMaxLength(512).HasColumnName("Data");
+            modelBuilder.Entity<Student>().Property(p => p.Career).HasMaxLength(256).HasColumnName("ColumnName");
+            modelBuilder.Entity<Officer>().Property(p => p.Department).HasMaxLength(512).HasColumnName("ColumnName");
 
             var details = Environment.NewLine + "\t" +
                           string.Format(
                               LookupString(
                                   EntityFrameworkAssembly, "System.Data.Entity.Properties.Resources", "ConflictingConfigurationValue"),
-                              "MaxLength", 256, "MaxLength", 512);
+                              "MaxLength", 512, "MaxLength", 256);
 
             Assert.Throws<MappingException>(() => BuildMapping(modelBuilder))
-                  .ValidateMessage("BadTphMappingToSharedColumn", "Career", "Student", "Department", "Officer", "Data", "Person", details);
+                  .ValidateMessage("BadTphMappingToSharedColumn", "Department", "Officer", "Career", "Student", "ColumnName", "Person", details);
         }
 
         [Fact] // CodePlex 583

@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeFirst\EntitySplittingTests.cs" />
+    <Compile Include="CodeFirst\NameUniquificationTests.cs" />
     <Compile Include="CodeFirst\NonPublicPropertyTests.cs" />
     <Compile Include="CodeFirst\QueryCachingTests.cs" />
     <Compile Include="CodeFirst\ModificationFunctionsEndToEndTests.cs" />

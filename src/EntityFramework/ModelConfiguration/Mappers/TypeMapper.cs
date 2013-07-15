@@ -243,7 +243,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 _knownTypes.AddRange(type.Assembly.GetAccessibleTypes().Where(t => t.IsValidStructuralType()));
             }
 
-            foreach (var derivedType in _knownTypes.Where(t => t.BaseType == type).ToList())
+            foreach (var derivedType in _knownTypes.Where(t => t.BaseType == type).OrderBy(t => t.FullName).ToList())
             {
                 var derivedEntityType = MapEntityType(derivedType);
 
