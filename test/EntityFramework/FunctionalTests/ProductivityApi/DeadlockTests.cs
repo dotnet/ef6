@@ -94,7 +94,6 @@ namespace System.Data.Entity.ProductivityApi
                 Thread.Sleep(TimeSpan.FromMilliseconds(15));
             }
 
-            var hasShutdownFinished = false;
             try
             {
                 Assert.Equal(
@@ -110,19 +109,17 @@ namespace System.Data.Entity.ProductivityApi
             }
             finally
             {
+                // Do our best to cleanup, but don't fail the test if not possible to do so in the allocated time
                 dispatcher.BeginInvokeShutdown(DispatcherPriority.Send);
                 var startShutdownTime = DateTime.Now;
-                while (!(hasShutdownFinished = dispatcher.HasShutdownFinished)
-                       && DateTime.Now - startShutdownTime < TimeSpan.FromSeconds(30))
+                while (!dispatcher.HasShutdownFinished
+                       && DateTime.Now - startShutdownTime < TimeSpan.FromSeconds(10))
                 {
-                    Thread.Sleep(TimeSpan.FromMilliseconds(30));
+                    Thread.Sleep(TimeSpan.FromMilliseconds(100));
                 }
 
-                Task.Run(() => dispatcherThread.Abort()).Wait(TimeSpan.FromSeconds(30));
+                Task.Run(() => dispatcherThread.Abort()).Wait(TimeSpan.FromSeconds(10));
             }
-
-            Assert.True(hasShutdownFinished);
-            Assert.False(dispatcherThread.IsAlive);
         }
     }
 
