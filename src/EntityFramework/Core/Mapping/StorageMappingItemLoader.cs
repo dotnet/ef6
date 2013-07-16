@@ -2314,7 +2314,7 @@ namespace System.Data.Entity.Core.Mapping
                     // Gather and validate complex type property mappings.
                     List<StoragePropertyMapping> propertyMappings;
                     if (
-                        !TryConvertToProperyMappings(
+                        !TryConvertToPropertyMappings(
                             resultComplexType, cTypeTvfElementType, sTypeTvfElementType, functionImport, functionImportKB, lineInfo,
                             out propertyMappings))
                     {
@@ -2595,14 +2595,14 @@ namespace System.Data.Entity.Core.Mapping
 
             // Gather and validate entity type property mappings.
             errorFound |=
-                !TryConvertToProperyMappings(
+                !TryConvertToPropertyMappings(
                     entityType, cTypeTvfElementType, sTypeTvfElementType, functionImport, functionImportKB, navLineInfo,
                     out propertyMappings);
 
             return !errorFound;
         }
 
-        private bool TryConvertToProperyMappings(
+        private bool TryConvertToPropertyMappings(
             StructuralType structuralType,
             RowType cTypeTvfElementType,
             RowType sTypeTvfElementType,
@@ -2665,6 +2665,7 @@ namespace System.Data.Entity.Core.Mapping
                             EdmSchemaErrorSeverity.Error,
                             m_sourceLocation, columnMappingLineInfo.LineNumber, columnMappingLineInfo.LinePosition);
                         m_parsingErrors.Add(error);
+                        errorFound = true;
                     }
                 }
                 else
@@ -2675,6 +2676,7 @@ namespace System.Data.Entity.Core.Mapping
                             Strings.Mapping_InvalidContent_Column, columnName,
                             StorageMappingErrorCode.InvalidStorageMember,
                             m_sourceLocation, columnMappingLineInfo, m_parsingErrors);
+                        errorFound = true;
                     }
                     else
                     {
