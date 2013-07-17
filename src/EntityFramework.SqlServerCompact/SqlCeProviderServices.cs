@@ -4,11 +4,11 @@ namespace System.Data.Entity.SqlServerCompact
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServerCompact.Resources;
     using System.Data.Entity.SqlServerCompact.SqlGen;
@@ -24,7 +24,7 @@ namespace System.Data.Entity.SqlServerCompact
     /// <remarks>
     ///     Note that instance of this type also resolves additional provider services for Microsoft SQL Server Compact Edition
     ///     when this type is registered as an EF provider either using an entry in the application's config file or through
-    ///     code-based registeration in <see cref="DbConfiguration" />.
+    ///     code-based registration in <see cref="DbConfiguration" />.
     ///     The services resolved are:
     ///     Requests for <see cref="IDbConnectionFactory" /> are resolved to a Singleton instance of
     ///     <see cref="SqlCeConnectionFactory" /> to create connections to SQL Compact by default.
@@ -32,11 +32,15 @@ namespace System.Data.Entity.SqlServerCompact
     ///     resolved to <see cref="SqlCeMigrationSqlGenerator" /> instances to provide default Migrations SQL
     ///     generation for SQL Compact.
     /// </remarks>
-    [DbProviderName(ProviderInvariantName)]
     [CLSCompliant(false)]
     public sealed class SqlCeProviderServices : DbProviderServices
     {
-        private const string ProviderInvariantName = "System.Data.SqlServerCe.4.0";
+        /// <summary>
+        ///     This is the well-known string using in configuration files and code-based configuration as
+        ///     the "provider invariant name" used to specify Microsoft SQL Server Compact Edition 4.0 for
+        ///     ADO.NET and Entity Framework provider services.
+        /// </summary>
+        public const string ProviderInvariantName = "System.Data.SqlServerCe.4.0";
 
         /// <summary>
         ///     Singleton object;
@@ -50,9 +54,8 @@ namespace System.Data.Entity.SqlServerCompact
         {
             AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(new SqlCeConnectionFactory(ProviderInvariantName)));
 
-            AddDependencyResolver(
-                new TransientDependencyResolver<MigrationSqlGenerator>(
-                    () => new SqlCeMigrationSqlGenerator(), ProviderInvariantName));
+            AddDependencyResolver(new SingletonDependencyResolver<Func<MigrationSqlGenerator>>(
+                () => new SqlCeMigrationSqlGenerator(), ProviderInvariantName));
         }
 
         #region CodeOnly Methods

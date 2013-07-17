@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Migrations
 {
-    using System.Data.Entity.Config;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
@@ -55,7 +55,9 @@ namespace System.Data.Entity.Migrations
         {
             var generator = new Mock<MigrationSqlGenerator>().Object;
             var mockResolver = new Mock<IDbDependencyResolver>();
-            mockResolver.Setup(m => m.GetService(typeof(MigrationSqlGenerator), "Gu.Hu.Ha")).Returns(generator);
+            mockResolver
+                .Setup(m => m.GetService(typeof(Func<MigrationSqlGenerator>), "Gu.Hu.Ha"))
+                .Returns(() => (Func<MigrationSqlGenerator>)(() => generator));
 
             var migrationsConfiguration = new DbMigrationsConfiguration(new Lazy<IDbDependencyResolver>(() => mockResolver.Object));
 
@@ -74,7 +76,7 @@ namespace System.Data.Entity.Migrations
             new DbMigrationsConfiguration().SetSqlGenerator(DbProviders.SqlCe, new SqlServerMigrationSqlGenerator());
 
             Assert.IsType<SqlCeMigrationSqlGenerator>(
-                DbConfiguration.GetService<MigrationSqlGenerator>(DbProviders.SqlCe));
+                DbConfiguration.DependencyResolver.GetService<Func<MigrationSqlGenerator>>(DbProviders.SqlCe)());
         }
 
         private class TestMigrationsConfiguration<TContext> : DbMigrationsConfiguration<TContext>

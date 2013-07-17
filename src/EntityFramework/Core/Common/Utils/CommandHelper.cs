@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;

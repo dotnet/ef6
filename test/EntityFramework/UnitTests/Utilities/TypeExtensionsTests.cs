@@ -5,7 +5,6 @@ namespace System.Data.Entity.Utilities
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Migrations;

@@ -5157,7 +5157,7 @@
     <value>The default DbConfiguration instance was used by the Entity Framework before an attempt was made to set an instance of '{0}'. The '{0}' instance must be set at application start before using any Entity Framework features or must be registered in the application's config file. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
   </data>
   <data name="AddHandlerToInUseConfiguration" xml:space="preserve">
-    <value>The Entity Framework was already using a DbConfiguration instance before an attempt was made to add an 'OnLockingConfiguration' event handler. 'OnLockingConfiguration' event handlers can only be added as part of application start up before the Entity Framework is used. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
+    <value>The Entity Framework was already using a DbConfiguration instance before an attempt was made to add an 'Loaded' event handler. 'Loaded' event handlers can only be added as part of application start up before the Entity Framework is used. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
   </data>
   <data name="ConfigurationSetTwice" xml:space="preserve">
     <value>An instance of '{0}' cannot be set because an instance of '{1}' is already being used. The DbConfiguration type to use cannot be changed once it has been set. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information.</value>
@@ -5331,9 +5331,6 @@
   <data name="ExecutionStrategy_StreamingNotSupported" xml:space="preserve">
     <value>Streaming queries are not supported by the configured execution strategy '{0}'. See http://go.microsoft.com/fwlink/?LinkId=309381 for additional information.</value>
   </data>
-  <data name="DbProviderNameAttributeNotFound" xml:space="preserve">
-    <value>The type '{0}' doesn't have DbProviderNameAttribute, please use an overload that has a provider invariant name string parameter.</value>
-  </data>
   <data name="EdmProperty_InvalidPropertyType" xml:space="preserve">
     <value>A property cannot be of type '{0}'. The property type must be a ComplexType, a PrimitiveType or an EnumType.</value>
   </data>
@@ -5400,6 +5397,9 @@
   </data>
   <data name="SuppressionAfterExecution" xml:space="preserve">
     <value>The operation could not be suppressed because it has already been executed. 'SuppressExecution' can only be called from an interceptor that runs before the operation is executed.</value>
+  </data>
+  <data name="BadContextTypeForDiscovery" xml:space="preserve">
+    <value>The type '{0}' passed to DbConfiguration.LoadConfiguration does not derive from DbContext. Only DbContext types can be used for DbConfiguration discovery.</value>
   </data>
   <data name="ErrorGeneratingCommandTree" xml:space="preserve">
     <value>An error occurred while attempting to generate the body SQL of the stored procedure '{0}' for entity type '{1}'. This can happen if the entity type has both a self-referencing association and a store-generated key. See the inner exception for details.</value>

@@ -5,10 +5,10 @@ namespace System.Data.Entity.Internal
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -267,7 +267,7 @@ namespace System.Data.Entity.Internal
                         {
                             // Otherwise figure out the connection factory to use (either the default,
                             // the one set in code, or one provided by DbContextInfo via the AppSettings property
-                            UnderlyingConnection = DbConfiguration.GetService<IDbConnectionFactory>()
+                            UnderlyingConnection = DbConfiguration.DependencyResolver.GetService<IDbConnectionFactory>()
                                                                   .CreateConnection(name ?? _nameOrConnectionString);
 
                             if (UnderlyingConnection == null)
@@ -375,7 +375,7 @@ namespace System.Data.Entity.Internal
 
         private void CreateConnectionFromProviderName(string providerInvariantName)
         {
-            var factory = DbConfiguration.GetService<DbProviderFactory>(providerInvariantName);
+            var factory = DbConfiguration.DependencyResolver.GetService<DbProviderFactory>(providerInvariantName);
             Debug.Assert(factory != null, "Expected DbProviderFactories.GetFactory to throw if provider not found.");
 
             UnderlyingConnection = factory.CreateConnection();

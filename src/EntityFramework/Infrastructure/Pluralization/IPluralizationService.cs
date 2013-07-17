@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Infrastructure.Pluralization
 {
-    using System.Data.Entity.Config;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>

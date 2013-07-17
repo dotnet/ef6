@@ -79,7 +79,7 @@ namespace System.Data.Entity.Internal
 
         private Action<DbModelBuilder> _onModelCreating;
 
-        private readonly IDbModelCacheKeyFactory _cacheKeyFactory;
+        private readonly Func<DbContext, IDbModelCacheKey> _cacheKeyFactory;
 
         private readonly AttributeProvider _attributeProvider;
 
@@ -96,7 +96,7 @@ namespace System.Data.Entity.Internal
             DbContext owner,
             IInternalConnection internalConnection,
             DbCompiledModel model,
-            IDbModelCacheKeyFactory cacheKeyFactory = null,
+            Func<DbContext, IDbModelCacheKey> cacheKeyFactory = null,
             AttributeProvider attributeProvider = null,
             Lazy<Dispatchers> dispatchers = null)
             : base(owner, dispatchers)
@@ -105,7 +105,7 @@ namespace System.Data.Entity.Internal
 
             _internalConnection = internalConnection;
             _model = model;
-            _cacheKeyFactory = cacheKeyFactory ?? new DefaultModelCacheKeyFactory();
+            _cacheKeyFactory = cacheKeyFactory ?? new DefaultModelCacheKeyFactory().Create;
             _attributeProvider = attributeProvider ?? new AttributeProvider();
 
             _createdWithExistingModel = model != null;
@@ -407,7 +407,7 @@ namespace System.Data.Entity.Internal
                             // try again next time GetValue called. We have to pass the context to GetValue so that the next time it tries
                             // again it will use the new connection.
 
-                            var key = _cacheKeyFactory.Create(Owner);
+                            var key = _cacheKeyFactory(Owner);
 
                             var model
                                 = _cachedModels.GetOrAdd(

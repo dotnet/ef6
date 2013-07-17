@@ -4,9 +4,9 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
@@ -42,17 +42,6 @@ namespace System.Data.Entity.SqlServer
                     Strings.Mapping_Provider_WrongConnectionType(typeof(SqlConnection)),
                     Assert.Throws<ArgumentException>(
                         () => SqlProviderServices.Instance.RegisterInfoMessageHandler(new SqlCeConnection(), _ => { })).Message);
-            }
-        }
-
-        public class ProviderInvariantNameAttribute : TestBase
-        {
-            [Fact]
-            public void Has_ProviderInvariantNameAttribute()
-            {
-                Assert.Equal(
-                    "System.Data.SqlClient",
-                    DbProviderNameAttribute.GetFromType(typeof(SqlProviderServices)).Single().Name);
             }
         }
 
@@ -161,13 +150,13 @@ namespace System.Data.Entity.SqlServer
             public void GetService_resolves_the_SQL_Server_Migrations_SQL_generator()
             {
                 Assert.IsType<SqlServerMigrationSqlGenerator>(
-                    SqlProviderServices.Instance.GetService<MigrationSqlGenerator>("System.Data.SqlClient"));
+                    SqlProviderServices.Instance.GetService<Func<MigrationSqlGenerator>>("System.Data.SqlClient")());
             }
 
             [Fact]
             public void GetService_returns_null_for_SQL_generators_for_other_invariant_names()
             {
-                Assert.Null(SqlProviderServices.Instance.GetService<MigrationSqlGenerator>("System.Data.SqlServerCe.4.0"));
+                Assert.Null(SqlProviderServices.Instance.GetService<Func<MigrationSqlGenerator>>("System.Data.SqlServerCe.4.0"));
             }
 
             [Fact]

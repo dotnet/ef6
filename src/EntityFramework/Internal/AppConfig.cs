@@ -5,8 +5,8 @@ namespace System.Data.Entity.Internal
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Configuration;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;

@@ -5,11 +5,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.UserRoles_v1;
@@ -591,7 +591,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private static DbProviderManifest GetProviderManifest(DbProviderInfo providerInfo)
         {
-            return DbConfiguration.GetService<DbProviderFactory>(providerInfo.ProviderInvariantName)
+            return DbConfiguration.DependencyResolver.GetService<DbProviderFactory>(providerInfo.ProviderInvariantName)
                 .GetProviderServices()
                 .GetProviderManifest(providerInfo.ProviderManifestToken);
         }

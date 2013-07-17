@@ -37,7 +37,7 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            HistoryContextFactory historyContextFactory = (c, s) => new NonStandardColumnWidthsContext(c, s);
+            Func<DbConnection, string, HistoryContext> historyContextFactory = (c, s) => new NonStandardColumnWidthsContext(c, s);
 
             const string contextKey = "This context key is longer than 10 chars";
 
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Migrations
 
             try
             {
-                MutableResolver.AddResolver<HistoryContextFactory>(_ => _testHistoryContextFactoryA);
+                MutableResolver.AddResolver<Func<DbConnection, string, HistoryContext>>(_ => _testHistoryContextFactoryA);
 
                 var migrator = CreateMigrator<ShopContext_v1>();
 
@@ -142,10 +142,10 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        private readonly HistoryContextFactory _testHistoryContextFactoryA =
+        private readonly Func<DbConnection, string, HistoryContext> _testHistoryContextFactoryA =
             (existingConnection, defaultSchema) => new TestHistoryContextA(existingConnection, defaultSchema);
 
-        private readonly HistoryContextFactory _testHistoryContextFactoryB =
+        private readonly Func<DbConnection, string, HistoryContext> _testHistoryContextFactoryB =
             (existingConnection, defaultSchema) => new TestHistoryContextB(existingConnection, defaultSchema);
 
         [MigrationsTheory]

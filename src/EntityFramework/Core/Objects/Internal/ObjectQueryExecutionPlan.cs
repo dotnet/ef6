@@ -4,23 +4,16 @@ namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Internal.Materialization;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.ELinq;
-    using System.Data.Entity.Infrastructure;
-    using System.Diagnostics;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Diagnostics.CodeAnalysis;
-    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-
-#if !NET40
-
-#endif
 
     /// <summary>
     ///     Represents the 'compiled' form of all elements (query + result assembly) required to execute a specific
@@ -95,7 +88,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 else
                 {
                     var storeItemCollection = (StoreItemCollection)context.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-                    var providerServices = DbConfiguration.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+                    var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
 
                     bufferedReader = new BufferedDataReader(storeReader);
                     bufferedReader.Initialize(storeItemCollection.StoreProviderManifestToken, providerServices);
@@ -171,7 +164,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 else
                 {
                     var storeItemCollection = (StoreItemCollection)context.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-                    var providerServices = DbConfiguration.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+                    var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
 
                     bufferedReader = new BufferedDataReader(storeReader);
                     await

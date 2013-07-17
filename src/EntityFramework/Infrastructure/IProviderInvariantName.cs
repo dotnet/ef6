@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
-    using System.Data.Entity.Config;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
 
     /// <summary>
     ///     Used by <see cref="IDbDependencyResolver" /> and <see cref="DbConfiguration" /> when resolving

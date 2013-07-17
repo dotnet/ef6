@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
-    using System.Data.Entity.Config;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -62,7 +62,7 @@ namespace System.Data.Entity.Infrastructure
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Func<string, DbProviderFactory> ProviderFactory
         {
-            get { return _providerFactoryCreator ?? (DbConfiguration.GetService<DbProviderFactory>); }
+            get { return _providerFactoryCreator ?? (DbConfiguration.DependencyResolver.GetService<DbProviderFactory>); }
             set
             {
                 DebugCheck.NotNull(value);

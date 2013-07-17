@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
-    using System.Data.Entity.Config;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -116,7 +116,7 @@ namespace System.Data.Entity.Infrastructure
         {
             Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
 
-            var factory = DbConfiguration.GetService<DbProviderFactory>(ProviderInvariantName);
+            var factory = DbConfiguration.DependencyResolver.GetService<DbProviderFactory>(ProviderInvariantName);
 
             Debug.Assert(factory != null, "Expected DbProviderFactories.GetFactory to throw if provider not found.");
 

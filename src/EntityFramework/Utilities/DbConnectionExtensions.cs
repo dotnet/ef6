@@ -3,9 +3,9 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Diagnostics.CodeAnalysis;
 
     internal static class DbConnectionExtensions
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Utilities
         {
             DebugCheck.NotNull(connection);
 
-            return DbConfiguration.GetService<IProviderInvariantName>(DbProviderServices.GetProviderFactory(connection)).Name;
+            return DbConfiguration.DependencyResolver.GetService<IProviderInvariantName>(DbProviderServices.GetProviderFactory(connection)).Name;
         }
 
         public static DbProviderInfo GetProviderInfo(
@@ -24,8 +24,9 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(connection);
 
             var providerManifestToken = DbConfiguration
-                .GetService<IManifestTokenService>()
-                .GetProviderManifestToken(connection);
+                .DependencyResolver
+                .GetService<IManifestTokenResolver>()
+                .ResolveManifestToken(connection);
 
             var providerInfo = new DbProviderInfo(connection.GetProviderInvariantName(), providerManifestToken);
 
@@ -39,7 +40,7 @@ namespace System.Data.Entity.Utilities
         {
             DebugCheck.NotNull(connection);
 
-            return DbConfiguration.GetService<IDbProviderFactoryService>().GetProviderFactory(connection);
+            return DbConfiguration.DependencyResolver.GetService<IDbProviderFactoryResolver>().ResolveProviderFactory(connection);
         }
     }
 }

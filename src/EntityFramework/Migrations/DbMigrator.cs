@@ -4,7 +4,6 @@ namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Infrastructure;
@@ -13,6 +12,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Migrations
         private readonly EdmModelDiffer _modelDiffer;
         private readonly Lazy<ModificationCommandTreeGenerator> _modificationCommandTreeGenerator;
         private readonly DbContext _contextForInterception;
-        private readonly HistoryContextFactory _historyContextFactory;
+        private readonly Func<DbConnection, string, HistoryContext> _historyContextFactory;
 
         private readonly bool _calledByCreateDatabase;
 
@@ -153,8 +153,9 @@ namespace System.Data.Entity.Migrations
                     = context.InternalContext.ModelProviderInfo != null
                           ? context.InternalContext.ModelProviderInfo.ProviderManifestToken
                           : DbConfiguration
-                                .GetService<IManifestTokenService>()
-                                .GetProviderManifestToken(connection);
+                                .DependencyResolver
+                                .GetService<IManifestTokenResolver>()
+                                .ResolveManifestToken(connection);
 
                 var modelBuilder
                     = context.InternalContext.CodeFirstModel.CachedModelBuilder;

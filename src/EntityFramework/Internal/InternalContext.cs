@@ -7,13 +7,13 @@ namespace System.Data.Entity.Internal
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.Internal.MockingProxies;
     using System.Data.Entity.Internal.Validation;
@@ -112,7 +112,7 @@ namespace System.Data.Entity.Internal
 
         // Used to create validators to validate entities or properties and contexts for validating entities and properties.
         private readonly ValidationProvider _validationProvider = new ValidationProvider(
-            null, DbConfiguration.GetService<AttributeProvider>());
+            null, DbConfiguration.DependencyResolver.GetService<AttributeProvider>());
 
         private bool _oSpaceLoadingForced;
         private DbProviderFactory _providerFactory;
@@ -1509,7 +1509,7 @@ namespace System.Data.Entity.Internal
 
                     if (value != null)
                     {
-                        _commandLogger = DbConfiguration.GetService<DbCommandLoggerFactory>()(Owner, value);
+                        _commandLogger = DbConfiguration.DependencyResolver.GetService<Func<DbContext, Action<string>, DbCommandLogger>>()(Owner, value);
                         _dispatchers.Value.AddInterceptor(_commandLogger);
                     }
                 }

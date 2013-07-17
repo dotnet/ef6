@@ -3,9 +3,9 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Threading.Tasks;
     using Moq;
     using Xunit;

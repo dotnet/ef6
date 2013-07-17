@@ -4,7 +4,6 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Collections.ObjectModel;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;

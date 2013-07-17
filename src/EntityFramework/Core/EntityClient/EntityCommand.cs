@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.EntitySql;
@@ -14,6 +13,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -21,10 +21,6 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-
-#if !NET40
-
-#endif
 
     /// <summary>
     ///     Class representing a command for the conceptual layer

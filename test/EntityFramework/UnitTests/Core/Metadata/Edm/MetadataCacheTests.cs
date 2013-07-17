@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.TestHelpers;

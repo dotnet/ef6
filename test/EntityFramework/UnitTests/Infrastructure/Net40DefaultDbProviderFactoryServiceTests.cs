@@ -13,27 +13,27 @@ namespace System.Data.Entity.Infrastructure
     using Moq;
     using Xunit;
 
-    public class Net40DefaultDbProviderFactoryServiceTests : DefaultDbProviderFactoryServiceTests
+    public class Net40DefaultDbProviderFactoryResolverTests : DefaultDbProviderFactoryServiceTests
     {
         [Fact]
         public void GetProviderFactory_throws_for_null_connection_on_net40()
         {
             Assert.Equal(
                 "connection",
-                Assert.Throws<ArgumentNullException>(() => new Net40DefaultDbProviderFactoryService().GetProviderFactory(null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => new Net40DefaultDbProviderFactoryResolver().ResolveProviderFactory(null)).ParamName);
         }
 
         [Fact]
         public void GetProviderFactory_for_SqlConnection_should_return_SqlClientFactory_on_net40()
         {
-            Assert.Equal(SqlClientFactory.Instance, new Net40DefaultDbProviderFactoryService().GetProviderFactory(new SqlConnection()));
+            Assert.Equal(SqlClientFactory.Instance, new Net40DefaultDbProviderFactoryResolver().ResolveProviderFactory(new SqlConnection()));
         }
 
         [Fact]
         public void GetProviderFactory_for_EntityConnection_should_return_EntityProviderFactory_on_net40()
         {
             Assert.Equal(
-                EntityProviderFactory.Instance, new Net40DefaultDbProviderFactoryService().GetProviderFactory(new EntityConnection()));
+                EntityProviderFactory.Instance, new Net40DefaultDbProviderFactoryResolver().ResolveProviderFactory(new EntityConnection()));
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Infrastructure
             Assert.NotNull(GenericProviderFactory<DbProviderFactory>.Instance);
             Assert.Equal(
                 GenericProviderFactory<DbProviderFactory>.Instance,
-                new Net40DefaultDbProviderFactoryService(
+                new Net40DefaultDbProviderFactoryResolver(
                     new ProviderRowFinder()).GetProviderFactory(
                         new GenericConnection<DbProviderFactory>(), DbProviderFactories.GetFactoryClasses().Rows.OfType<DataRow>()));
         }
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal(
                 Strings.ProviderNotFound("Disco 2000"),
                 Assert.Throws<NotSupportedException>(
-                    () => new Net40DefaultDbProviderFactoryService().GetProviderFactory(mockConnection.Object)).Message);
+                    () => new Net40DefaultDbProviderFactoryResolver().ResolveProviderFactory(mockConnection.Object)).Message);
         }
 
         [Fact]
@@ -67,13 +67,13 @@ namespace System.Data.Entity.Infrastructure
                     CallBase = true
                 };
 
-            var service = new Net40DefaultDbProviderFactoryService(mockFinder.Object);
+            var service = new Net40DefaultDbProviderFactoryResolver(mockFinder.Object);
 
-            Assert.Equal(SqlClientFactory.Instance, service.GetProviderFactory(new SqlConnection()));
+            Assert.Equal(SqlClientFactory.Instance, service.ResolveProviderFactory(new SqlConnection()));
             mockFinder.Verify(
                 m => m.FindRow(It.IsAny<Type>(), It.IsAny<Func<DataRow, bool>>(), It.IsAny<IEnumerable<DataRow>>()), Times.Once());
 
-            Assert.Equal(SqlClientFactory.Instance, service.GetProviderFactory(new SqlConnection()));
+            Assert.Equal(SqlClientFactory.Instance, service.ResolveProviderFactory(new SqlConnection()));
             // Finder not called again
             mockFinder.Verify(
                 m => m.FindRow(It.IsAny<Type>(), It.IsAny<Func<DataRow, bool>>(), It.IsAny<IEnumerable<DataRow>>()), Times.Once());
@@ -92,7 +92,7 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.Same(
                 FakeSqlProviderFactory.Instance,
-                new Net40DefaultDbProviderFactoryService(new ProviderRowFinder()).GetProviderFactory(new FakeSqlConnection(), rows));
+                new Net40DefaultDbProviderFactoryResolver(new ProviderRowFinder()).GetProviderFactory(new FakeSqlConnection(), rows));
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.Same(
                 GetFactoryInstance(WeakProviderType1),
-                new Net40DefaultDbProviderFactoryService(new ProviderRowFinder())
+                new Net40DefaultDbProviderFactoryResolver(new ProviderRowFinder())
                     .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType1)), rows));
         }
 
@@ -122,7 +122,7 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.Same(
                 FakeProviderFactory2.Instance,
-                new Net40DefaultDbProviderFactoryService(new ProviderRowFinder())
+                new Net40DefaultDbProviderFactoryResolver(new ProviderRowFinder())
                     .GetProviderFactory(new FakeSqlConnection("2008", FakeProviderFactory2.Instance), rows));
         }
 
@@ -136,7 +136,7 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.Same(
                 GetFactoryInstance(WeakProviderType2),
-                new Net40DefaultDbProviderFactoryService(new ProviderRowFinder())
+                new Net40DefaultDbProviderFactoryResolver(new ProviderRowFinder())
                     .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType2)), rows));
         }
 
@@ -150,7 +150,7 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.Same(
                 GetFactoryInstance(WeakProviderType1),
-                new Net40DefaultDbProviderFactoryService(new ProviderRowFinder())
+                new Net40DefaultDbProviderFactoryResolver(new ProviderRowFinder())
                     .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType1)), rows));
         }
 
@@ -166,7 +166,7 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.Same(
                 GetFactoryInstance(WeakProviderType1),
-                new Net40DefaultDbProviderFactoryService(new ProviderRowFinder())
+                new Net40DefaultDbProviderFactoryResolver(new ProviderRowFinder())
                     .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType1)), rows));
         }
     }

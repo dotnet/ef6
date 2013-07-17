@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.EntityClient
 {
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.SqlServer;
     using Moq;
     using Xunit;

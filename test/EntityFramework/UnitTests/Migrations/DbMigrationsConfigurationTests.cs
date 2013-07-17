@@ -2,10 +2,11 @@
 
 namespace System.Data.Entity.Migrations
 {
-    using System.Data.Entity.Config;
+    using System.Data.Common;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Resources;
     using System.Data.Entity.SqlServer;
     using Xunit;
@@ -57,7 +58,7 @@ namespace System.Data.Entity.Migrations
         {
             var migrationsConfiguration = new TestMigrationsConfiguration();
 
-            HistoryContextFactory factory = (c, s) => new HistoryContext(c, s);
+            Func<DbConnection, string, HistoryContext> factory = (c, s) => new HistoryContext(c, s);
 
             migrationsConfiguration.SetHistoryContextFactory("Foo", factory);
 
@@ -73,7 +74,7 @@ namespace System.Data.Entity.Migrations
                     .GetHistoryContextFactory(ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName);
 
             Assert.NotNull(historyContextFactory);
-            Assert.Same(DbConfiguration.GetService<HistoryContextFactory>(), historyContextFactory);
+            Assert.Same(DbConfiguration.DependencyResolver.GetService<Func<DbConnection, string, HistoryContext>>(), historyContextFactory);
         }
 
         [Fact]
@@ -83,9 +84,9 @@ namespace System.Data.Entity.Migrations
 
             try
             {
-                HistoryContextFactory factory = (c, s) => new HistoryContext(c, s);
+                Func<DbConnection, string, HistoryContext> factory = (c, s) => new HistoryContext(c, s);
 
-                MutableResolver.AddResolver<HistoryContextFactory>(_ => factory);
+                MutableResolver.AddResolver<Func<DbConnection, string, HistoryContext>>(_ => factory);
 
                 Assert.Same(factory, migrationsConfiguration.GetHistoryContextFactory("Foo"));
             }

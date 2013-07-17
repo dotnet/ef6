@@ -3,10 +3,10 @@
 namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 {
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient.Internal;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.SqlServer;
     using Moq;
 

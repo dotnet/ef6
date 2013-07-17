@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -19,9 +18,9 @@ namespace System.Data.Entity.Infrastructure
     /// </summary>
     /// <remarks>
     ///     To set the new logger create a code-based configuration for EF using <see cref="DbConfiguration" /> and then
-    ///     set the logger class to use with <see cref="DbConfiguration.SetCommandLogger" />.
+    ///     set the logger class to use with <see cref="DbConfiguration.CommandLogger" />.
     ///     Note that setting the type of logger to use with this method does change the way command are
-    ///     logged when <see cref="Database.Log" />is used. It is still necessary to set a <see cref="Action{String}" />
+    ///     logged when <see cref="Database.Log" /> is used. It is still necessary to set a <see cref="Action{String}" />
     ///     onto <see cref="Database.Log" /> before any commands will be logged.
     ///     For more low-level control over logging/interception see <see cref="IDbCommandInterceptor" /> and
     ///     <see cref="Interception" />.

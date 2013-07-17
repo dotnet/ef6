@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Spatial
 {
-    using System.Data.Entity.Config;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 

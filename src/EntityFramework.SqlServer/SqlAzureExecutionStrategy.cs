@@ -13,7 +13,6 @@ namespace System.Data.Entity.SqlServer
     ///     if the <see cref="SqlException.Errors"/> contains any of the following error numbers:
     ///     40613, 40501, 40197, 10929, 10928, 10060, 10054, 10053, 233, 64 and 20
     /// </remarks>
-    [DbProviderName("System.Data.SqlClient")]
     public class SqlAzureExecutionStrategy : DbExecutionStrategy
     {
         /// <summary>

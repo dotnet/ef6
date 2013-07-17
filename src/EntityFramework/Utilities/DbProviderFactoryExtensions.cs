@@ -3,11 +3,11 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Linq;
@@ -46,10 +46,10 @@ namespace System.Data.Entity.Utilities
                 return EntityProviderServices.Instance;
             }
 
-            var invariantName = DbConfiguration.GetService<IProviderInvariantName>(factory);
+            var invariantName = DbConfiguration.DependencyResolver.GetService<IProviderInvariantName>(factory);
             Debug.Assert(invariantName != null);
 
-            return DbConfiguration.GetService<DbProviderServices>(invariantName.Name);
+            return DbConfiguration.DependencyResolver.GetService<DbProviderServices>(invariantName.Name);
         }
     }
 }

@@ -248,7 +248,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "3#", Scope = "member",
         Target =
-            "System.Data.Entity.Core.Metadata.Edm.StoreItemCollection.#Create(System.Collections.Generic.IEnumerable`1<System.Xml.XmlReader>,System.Collections.ObjectModel.ReadOnlyCollection`1<System.String>,System.Data.Entity.Config.IDbDependencyResolver,System.Collections.Generic.IList`1<System.Data.Entity.Core.Metadata.Edm.EdmSchemaError>&)"
+            "System.Data.Entity.Core.Metadata.Edm.StoreItemCollection.#Create(System.Collections.Generic.IEnumerable`1<System.Xml.XmlReader>,System.Collections.ObjectModel.ReadOnlyCollection`1<System.String>,System.Data.Entity.Infrastructure.DependencyResolution.IDbDependencyResolver,System.Collections.Generic.IList`1<System.Data.Entity.Core.Metadata.Edm.EdmSchemaError>&)"
         )]
 [assembly:
     SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Pluralization", Scope = "namespace",

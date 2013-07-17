@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Config;
     using System.Data.Entity.ModelConfiguration.Configuration;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         : Convention
         where TAttribute : Attribute
     {
-        private readonly AttributeProvider _attributeProvider = DbConfiguration.GetService<AttributeProvider>();
+        private readonly AttributeProvider _attributeProvider = DbConfiguration.DependencyResolver.GetService<AttributeProvider>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyAttributeConfigurationConvention{TAttribute}"/> class.

@@ -11,14 +11,6 @@ namespace System.Data.Entity.SqlServer
     public class SqlAzureExecutionStrategyTests
     {
         [Fact]
-        public void Has_ProviderInvariantNameAttribute()
-        {
-            Assert.Equal(
-                "System.Data.SqlClient",
-                DbProviderNameAttribute.GetFromType(typeof(SqlAzureExecutionStrategy)).Single().Name);
-        }
-
-        [Fact]
         public void Execute_Action_retries_until_succesful()
         {
             Execute_retries_until_succesful((e, f) => e.Execute(() => { f(); }));

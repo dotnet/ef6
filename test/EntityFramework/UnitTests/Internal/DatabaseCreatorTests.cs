@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Internal
 {
-    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
@@ -75,8 +75,8 @@ namespace System.Data.Entity.Internal
             {
                 var mockMigrationsResolver = new Mock<IDbDependencyResolver>();
                 mockMigrationsResolver
-                    .Setup(m => m.GetService(typeof(MigrationSqlGenerator), "FooClient"))
-                    .Returns(new Mock<MigrationSqlGenerator>().Object);
+                    .Setup(m => m.GetService(typeof(Func<MigrationSqlGenerator>), "FooClient"))
+                    .Returns(() => (Func<MigrationSqlGenerator>)(() => new Mock<MigrationSqlGenerator>().Object));
 
                 CreateDatabase_uses_Migrations_when_provider_is_known("FooClient", mockMigrationsResolver.Object);
             }

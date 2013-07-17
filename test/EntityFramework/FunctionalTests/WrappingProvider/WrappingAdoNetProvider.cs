@@ -32,9 +32,9 @@ namespace System.Data.Entity.WrappingProvider
         public static void WrapProviders()
         {
             MutableResolver.AddResolver<DbProviderServices>(k => WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
-            MutableResolver.AddResolver<MigrationSqlGenerator>(WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
+            MutableResolver.AddResolver<Func<MigrationSqlGenerator>>(WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
             MutableResolver.AddResolver<DbProviderFactory>(k => WrappingAdoNetProvider<SqlClientFactory>.Instance);
-            MutableResolver.AddResolver<IDbProviderFactoryService>(k => new WrappingProviderFactoryService<SqlClientFactory>());
+            MutableResolver.AddResolver<IDbProviderFactoryResolver>(k => new WrappingProviderFactoryResolver<SqlClientFactory>());
             MutableResolver.AddResolver<IProviderInvariantName>(
                 k => new WrappingProviderInvariantName
                 {

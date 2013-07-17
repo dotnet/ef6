@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.TestModels.ArubaCeModel
 {
-    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
 
     public class ArubaCeContext : DbContext

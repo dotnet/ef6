@@ -5,12 +5,12 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -1085,7 +1085,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var providerName = ValidateValueForTheKeyword(
                     effectiveConnectionOptions, EntityConnectionStringBuilder.ProviderParameterName);
                 // Get the correct provider factory
-                factory = DbConfiguration.GetService<DbProviderFactory>(providerName);
+                factory = DbConfiguration.DependencyResolver.GetService<DbProviderFactory>(providerName);
 
                 // Create the underlying provider specific connection and give it the connection string from the DbConnectionOptions object
                 storeConnection = GetStoreConnection(factory);

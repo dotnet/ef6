@@ -152,8 +152,8 @@ namespace System.Data.Entity.Interception
             var log = new StringWriter();
             try
             {
-                MutableResolver.AddResolver<DbCommandLoggerFactory>(
-                    k => (DbCommandLoggerFactory)((c, w) => new TestDbCommandLogger(c, w)));
+                MutableResolver.AddResolver<Func<DbContext, Action<string>, DbCommandLogger>>(
+                    k => (Func<DbContext, Action<string>, DbCommandLogger>)((c, w) => new TestDbCommandLogger(c, w)));
 
                 using (var context = new BlogContextNoInit())
                 {

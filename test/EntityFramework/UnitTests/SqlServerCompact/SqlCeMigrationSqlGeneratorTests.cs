@@ -73,14 +73,6 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         [Fact]
-        public void Has_ProviderInvariantNameAttribute()
-        {
-            Assert.Equal(
-                "System.Data.SqlServerCe.4.0",
-                DbProviderNameAttribute.GetFromType(typeof(SqlCeMigrationSqlGenerator)).Single().Name);
-        }
-
-        [Fact]
         public void Generate_can_output_add_column_statement_for_GUID_and_uses_newid()
         {
             var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();

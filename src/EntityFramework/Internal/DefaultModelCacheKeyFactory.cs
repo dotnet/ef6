@@ -5,7 +5,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
 
-    internal sealed class DefaultModelCacheKeyFactory : IDbModelCacheKeyFactory
+    internal sealed class DefaultModelCacheKeyFactory
     {
         public IDbModelCacheKey Create(DbContext context)
         {

@@ -2,7 +2,6 @@
 Imports System.Data.Entity
 Imports System.Data.Entity.Infrastructure
 Imports System.Data.Entity.Core.Objects
-Imports System.Data.Entity.Config
 Imports System.Data.Entity.TestHelpers
 Imports System.Reflection
 Imports System.Transactions

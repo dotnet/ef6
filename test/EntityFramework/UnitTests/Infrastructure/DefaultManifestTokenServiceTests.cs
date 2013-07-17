@@ -10,7 +10,7 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void GetProviderManifestToken_gets_the_token_from_the_provider_of_the_given_connection()
         {
-            Assert.Equal("1908", new DefaultManifestTokenService().GetProviderManifestToken(new FakeSqlConnection("1908")));
+            Assert.Equal("1908", new DefaultManifestTokenResolver().ResolveManifestToken(new FakeSqlConnection("1908")));
         }
 
         [Fact]
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Infrastructure
         {
             Assert.Equal(
                 "connection",
-                Assert.Throws<ArgumentNullException>(() => new DefaultManifestTokenService().GetProviderManifestToken(null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => new DefaultManifestTokenResolver().ResolveManifestToken(null)).ParamName);
         }
     }
 }

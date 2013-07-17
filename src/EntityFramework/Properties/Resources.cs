@@ -12974,7 +12974,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The Entity Framework was already using a DbConfiguration instance before an attempt was made to add an 'OnLockingConfiguration' event handler. 'OnLockingConfiguration' event handlers can only be added as part of application start up before the Entity Framework is used. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
+        ///     A string like "The Entity Framework was already using a DbConfiguration instance before an attempt was made to add an 'Loaded' event handler. 'Loaded' event handlers can only be added as part of application start up before the Entity Framework is used. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
         /// </summary>
         internal static string AddHandlerToInUseConfiguration
         {
@@ -13382,14 +13382,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The type '{0}' doesn't have DbProviderNameAttribute, please use an overload that has a provider invariant name string parameter."
-        /// </summary>
-        internal static string DbProviderNameAttributeNotFound(object p0)
-        {
-            return EntityRes.GetString(EntityRes.DbProviderNameAttributeNotFound, p0);
-        }
-
-        /// <summary>
         ///     A string like "A property cannot be of type '{0}'. The property type must be a ComplexType, a PrimitiveType or an EnumType."
         /// </summary>
         internal static string EdmProperty_InvalidPropertyType(object p0)
@@ -13563,6 +13555,14 @@ namespace System.Data.Entity.Resources
         internal static string SuppressionAfterExecution
         {
             get { return EntityRes.GetString(EntityRes.SuppressionAfterExecution); }
+        }
+
+        /// <summary>
+        ///     A string like "The type '{0}' passed to DbConfiguration.LoadConfiguration does not derive from DbContext. Only DbContext types can be used for DbConfiguration discovery."
+        /// </summary>
+        internal static string BadContextTypeForDiscovery(object p0)
+        {
+            return EntityRes.GetString(EntityRes.BadContextTypeForDiscovery, p0);
         }
 
         /// <summary>
@@ -17044,7 +17044,6 @@ namespace System.Data.Entity.Resources
         internal const string DbContext_TransactionAlreadyStarted = "DbContext_TransactionAlreadyStarted";
         internal const string DbContext_TransactionAlreadyEnlistedInUserTransaction = "DbContext_TransactionAlreadyEnlistedInUserTransaction";
         internal const string ExecutionStrategy_StreamingNotSupported = "ExecutionStrategy_StreamingNotSupported";
-        internal const string DbProviderNameAttributeNotFound = "DbProviderNameAttributeNotFound";
         internal const string EdmProperty_InvalidPropertyType = "EdmProperty_InvalidPropertyType";
         internal const string ConcurrentMethodInvocation = "ConcurrentMethodInvocation";
         internal const string AssociationSet_EndEntityTypeMismatch = "AssociationSet_EndEntityTypeMismatch";
@@ -17067,6 +17066,7 @@ namespace System.Data.Entity.Resources
         internal const string CommandLogAsync = "CommandLogAsync";
         internal const string CommandLogNonAsync = "CommandLogNonAsync";
         internal const string SuppressionAfterExecution = "SuppressionAfterExecution";
+        internal const string BadContextTypeForDiscovery = "BadContextTypeForDiscovery";
         internal const string ErrorGeneratingCommandTree = "ErrorGeneratingCommandTree";
         internal const string LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity = "LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity";
         internal const string LightweightNavigationPropertyConfiguration_InvalidMultiplicity = "LightweightNavigationPropertyConfiguration_InvalidMultiplicity";

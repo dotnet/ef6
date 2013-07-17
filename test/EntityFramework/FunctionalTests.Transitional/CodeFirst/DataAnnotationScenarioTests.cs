@@ -7,8 +7,8 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Linq;
     using System.Linq.Expressions;
@@ -19,7 +19,7 @@ namespace FunctionalTests
     {
         public void Dispose()
         {
-            DbConfiguration.GetService<AttributeProvider>().ClearCache();
+            DbConfiguration.DependencyResolver.GetService<AttributeProvider>().ClearCache();
         }
 
         [Fact]

@@ -4,12 +4,12 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
@@ -31,7 +31,7 @@ namespace System.Data.Entity.SqlServer
     ///     The services resolved are:
     ///     Requests for <see cref="IDbConnectionFactory" /> are resolved to a Singleton instance of
     ///     <see cref="SqlConnectionFactory" /> to create connections to SQL Express by default.
-    ///     Requests for <see cref="Func{ISqlExecutionStrategy}" /> for the invariant name "System.Data.SqlClient"
+    ///     Requests for <see cref="Func{IDbExecutionStrategy}" /> for the invariant name "System.Data.SqlClient"
     ///     for any server name are resolved to a delegate that returns a <see cref="DefaultSqlExecutionStrategy" />
     ///     to provide a non-retrying policy for SQL Server.
     ///     Requests for <see cref="MigrationSqlGenerator" /> for the invariant name "System.Data.SqlClient" are
@@ -43,10 +43,14 @@ namespace System.Data.Entity.SqlServer
     /// </remarks>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     [CLSCompliant(false)]
-    [DbProviderName(ProviderInvariantName)]
     public sealed class SqlProviderServices : DbProviderServices
     {
-        internal const string ProviderInvariantName = "System.Data.SqlClient";
+        /// <summary>
+        ///     This is the well-known string using in configuration files and code-based configuration as
+        ///     the "provider invariant name" used to specify Microsoft SQL Server for ADO.NET and
+        ///     Entity Framework provider services.
+        /// </summary>
+        public const string ProviderInvariantName = "System.Data.SqlClient";
 
         /// <summary>
         ///     Private constructor to ensure only Singleton instance is created.
@@ -60,7 +64,7 @@ namespace System.Data.Entity.SqlServer
                     ProviderInvariantName, null, () => new DefaultSqlExecutionStrategy()));
 
             AddDependencyResolver(
-                new TransientDependencyResolver<MigrationSqlGenerator>(
+                new SingletonDependencyResolver<Func<MigrationSqlGenerator>>(
                     () => new SqlServerMigrationSqlGenerator(), ProviderInvariantName));
 
             // Spatial provider will be returned if the key is null (meaning that a default provider was requested)
@@ -1297,7 +1301,7 @@ namespace System.Data.Entity.SqlServer
             var openingConnection = sqlConnection.State == ConnectionState.Closed;
             if (openingConnection)
             {
-                DbConfiguration.GetService<Func<IDbExecutionStrategy>>(
+                DbConfiguration.DependencyResolver.GetService<Func<IDbExecutionStrategy>>(
                     new ExecutionStrategyKey(ProviderInvariantName, sqlConnection.DataSource))()
                     .Execute(
                         () =>

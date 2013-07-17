@@ -4,11 +4,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.Core.SchemaObjectModel;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -144,7 +144,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     DbProviderFactory factory = null;
                     try
                     {
-                        factory = DbConfiguration.GetService<DbProviderFactory>(_provider);
+                        factory = DbConfiguration.DependencyResolver.GetService<DbProviderFactory>(_provider);
                     }
                     catch (ArgumentException e)
                     {

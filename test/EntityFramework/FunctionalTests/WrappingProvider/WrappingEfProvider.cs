@@ -72,8 +72,8 @@ namespace System.Data.Entity.WrappingProvider
         {
             var service = _baseServices.GetService(type, key);
 
-            var asSqlGenerator = service as MigrationSqlGenerator;
-            return asSqlGenerator != null ? new WrappingSqlGenerator<TAdoNetBase>(asSqlGenerator) : service;
+            var asSqlGenerator = service as Func<MigrationSqlGenerator>;
+            return asSqlGenerator != null ? (Func<MigrationSqlGenerator>)(() => new WrappingSqlGenerator<TAdoNetBase>(asSqlGenerator)) : service;
         }
     }
 }

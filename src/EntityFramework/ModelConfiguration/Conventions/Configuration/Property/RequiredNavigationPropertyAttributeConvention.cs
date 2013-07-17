@@ -3,8 +3,8 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class RequiredNavigationPropertyAttributeConvention : Convention
     {
-        private readonly AttributeProvider _attributeProvider = DbConfiguration.GetService<AttributeProvider>();
+        private readonly AttributeProvider _attributeProvider = DbConfiguration.DependencyResolver.GetService<AttributeProvider>();
 
         // Not using the public API to avoid configuring the property as a navigation property if it wasn't one before
         internal override void ApplyPropertyConfiguration(

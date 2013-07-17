@@ -3,8 +3,8 @@
 namespace System.Data.Entity.TestHelpers
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.SqlServerCompact;
     using System.Linq;
@@ -21,16 +21,16 @@ namespace System.Data.Entity.TestHelpers
         static FunctionalTestsConfiguration()
         {
             // First just a quick test that an event can be added and removed.
-            OnLockingConfiguration += OnOnLockingConfiguration;
-            OnLockingConfiguration -= OnOnLockingConfiguration;
+            Loaded += OnLoaded;
+            Loaded -= OnLoaded;
 
             // Now add an event that actually changes config in a verifiable way.
             // Note that OriginalConnectionFactories will be set to the DbConfiguration specified in the config file when running
             // the functional test project and set to the DbConfiguration that was set in code when running the unit tests project.
-            OnLockingConfiguration +=
+            Loaded +=
                 (s, a) =>
                     {
-                        var currentFactory = a.ResolverSnapshot.GetService<IDbConnectionFactory>();
+                        var currentFactory = a.DependencyResolver.GetService<IDbConnectionFactory>();
                         if (currentFactory != _originalConnectionFactories.LastOrDefault())
                         {
                             var newList = new List<IDbConnectionFactory>(_originalConnectionFactories)
@@ -43,10 +43,10 @@ namespace System.Data.Entity.TestHelpers
                             new SingletonDependencyResolver<IDbConnectionFactory>(
                                 new SqlConnectionFactory(ModelHelpers.BaseConnectionString)), overrideConfigFile: true);
 
-                        var currentProviderFactory = a.ResolverSnapshot.GetService<IDbProviderFactoryService>();
+                        var currentProviderFactory = a.DependencyResolver.GetService<IDbProviderFactoryResolver>();
                         a.AddDependencyResolver(
-                            new SingletonDependencyResolver<IDbProviderFactoryService>(
-                                new FakeProviderFactoryService(currentProviderFactory))
+                            new SingletonDependencyResolver<IDbProviderFactoryResolver>(
+                                new FakeProviderFactoryResolver(currentProviderFactory))
                             , overrideConfigFile: true);
 
                         a.AddDependencyResolver(new FakeProviderServicesResolver(), overrideConfigFile: true);
@@ -55,18 +55,18 @@ namespace System.Data.Entity.TestHelpers
                     };
         }
 
-        private static void OnOnLockingConfiguration(object sender, DbConfigurationEventArgs dbConfigurationEventArgs)
+        private static void OnLoaded(object sender, DbConfigurationLoadedEventArgs eventArgs)
         {
             throw new NotImplementedException();
         }
 
         public FunctionalTestsConfiguration()
         {
-            AddDbProviderServices(SqlCeProviderServices.Instance);
-            AddDbProviderServices(SqlProviderServices.Instance);
+            ProviderServices(SqlCeProviderServices.ProviderInvariantName, SqlCeProviderServices.Instance);
+            ProviderServices(SqlProviderServices.ProviderInvariantName, SqlProviderServices.Instance);
 
-            SetDefaultConnectionFactory(new DefaultUnitTestsConnectionFactory());
-            AddDependencyResolver(new SingletonDependencyResolver<IManifestTokenService>(new FunctionalTestsManifestTokenService()));
+            ConnectionFactory(new DefaultUnitTestsConnectionFactory());
+            AddDependencyResolver(new SingletonDependencyResolver<IManifestTokenResolver>(new FunctionalTestsManifestTokenResolver()));
         }
     }
 }

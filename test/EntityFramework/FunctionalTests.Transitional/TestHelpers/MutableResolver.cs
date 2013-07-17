@@ -4,9 +4,9 @@ namespace System.Data.Entity
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Reflection;
 
     /// <summary>

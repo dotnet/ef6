@@ -5,10 +5,10 @@ namespace System.Data.Entity
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
@@ -420,7 +420,7 @@ namespace System.Data.Entity
         {
             DebugCheck.NotNull(providerInfo);
 
-            var providerFactory = DbConfiguration.GetService<DbProviderFactory>(providerInfo.ProviderInvariantName);
+            var providerFactory = DbConfiguration.DependencyResolver.GetService<DbProviderFactory>(providerInfo.ProviderInvariantName);
             var providerServices = providerFactory.GetProviderServices();
             var providerManifest = providerServices.GetProviderManifest(providerInfo.ProviderManifestToken);
 
@@ -437,7 +437,7 @@ namespace System.Data.Entity
                                         _conventionsConfiguration,
                                         model,
                                         _modelBuilderVersion,
-                                        DbConfiguration.GetService<AttributeProvider>()));
+                                        DbConfiguration.DependencyResolver.GetService<AttributeProvider>()));
 
             _modelConfiguration.Entities
                                .Where(type => typeMapper.MapEntityType(type) == null)

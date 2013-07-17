@@ -4,9 +4,9 @@ namespace System.Data.Entity.WrappingProvider
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
@@ -36,22 +36,22 @@ namespace System.Data.Entity.WrappingProvider
         [Fact]
         public void Wrapping_provider_can_be_found_using_net40_style_table_lookup_even_after_first_asking_for_non_wrapped_provider()
         {
-            MutableResolver.AddResolver<IDbProviderFactoryService>(
-                new SingletonDependencyResolver<IDbProviderFactoryService>(
-                    (IDbProviderFactoryService)Activator.CreateInstance(
-                        typeof(DbContext).Assembly.GetTypes().Single(t => t.Name == "Net40DefaultDbProviderFactoryService"), nonPublic: true)));
+            MutableResolver.AddResolver<IDbProviderFactoryResolver>(
+                new SingletonDependencyResolver<IDbProviderFactoryResolver>(
+                    (IDbProviderFactoryResolver)Activator.CreateInstance(
+                        typeof(DbContext).Assembly.GetTypes().Single(t => t.Name == "Net40DefaultDbProviderFactoryResolver"), nonPublic: true)));
 
             Assert.Same(
                 SqlClientFactory.Instance,
-                DbConfiguration.GetService<IDbProviderFactoryService>()
-                               .GetProviderFactory(new SqlConnection()));
+                DbConfiguration.DependencyResolver.GetService<IDbProviderFactoryResolver>()
+                               .ResolveProviderFactory(new SqlConnection()));
 
             RegisterAdoNetProvider(typeof(WrappingAdoNetProvider<SqlClientFactory>));
 
             Assert.Same(
                 WrappingAdoNetProvider<SqlClientFactory>.Instance,
-                DbConfiguration.GetService<IDbProviderFactoryService>()
-                               .GetProviderFactory(new WrappingConnection<SqlClientFactory>(new SqlConnection())));
+                DbConfiguration.DependencyResolver.GetService<IDbProviderFactoryResolver>()
+                               .ResolveProviderFactory(new WrappingConnection<SqlClientFactory>(new SqlConnection())));
         }
 
         [Fact]
@@ -66,20 +66,20 @@ namespace System.Data.Entity.WrappingProvider
 
             Assert.Same(
                 WrappingAdoNetProvider<SqlClientFactory>.Instance,
-                DbConfiguration.GetService<DbProviderFactory>(SqlClientInvariantName));
+                DbConfiguration.DependencyResolver.GetService<DbProviderFactory>(SqlClientInvariantName));
 
             Assert.Same(
                 WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance,
-                DbConfiguration.GetService<DbProviderServices>(SqlClientInvariantName));
+                DbConfiguration.DependencyResolver.GetService<DbProviderServices>(SqlClientInvariantName));
 
             Assert.Equal(
                 SqlClientInvariantName,
-                DbConfiguration.GetService<IProviderInvariantName>(WrappingAdoNetProvider<SqlClientFactory>.Instance).Name);
+                DbConfiguration.DependencyResolver.GetService<IProviderInvariantName>(WrappingAdoNetProvider<SqlClientFactory>.Instance).Name);
 
             Assert.Same(
                 WrappingAdoNetProvider<SqlClientFactory>.Instance,
-                DbConfiguration.GetService<IDbProviderFactoryService>()
-                               .GetProviderFactory(new WrappingConnection<SqlClientFactory>(new SqlConnection())));
+                DbConfiguration.DependencyResolver.GetService<IDbProviderFactoryResolver>()
+                               .ResolveProviderFactory(new WrappingConnection<SqlClientFactory>(new SqlConnection())));
         }
 
         [Fact]
@@ -89,20 +89,20 @@ namespace System.Data.Entity.WrappingProvider
 
             Assert.Same(
                 WrappingAdoNetProvider<SqlClientFactory>.Instance,
-                DbConfiguration.GetService<DbProviderFactory>(SqlClientInvariantName));
+                DbConfiguration.DependencyResolver.GetService<DbProviderFactory>(SqlClientInvariantName));
 
             Assert.Same(
                 WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance,
-                DbConfiguration.GetService<DbProviderServices>(SqlClientInvariantName));
+                DbConfiguration.DependencyResolver.GetService<DbProviderServices>(SqlClientInvariantName));
 
             Assert.Equal(
                 SqlClientInvariantName,
-                DbConfiguration.GetService<IProviderInvariantName>(WrappingAdoNetProvider<SqlClientFactory>.Instance).Name);
+                DbConfiguration.DependencyResolver.GetService<IProviderInvariantName>(WrappingAdoNetProvider<SqlClientFactory>.Instance).Name);
 
             Assert.Same(
                 WrappingAdoNetProvider<SqlClientFactory>.Instance,
-                DbConfiguration.GetService<IDbProviderFactoryService>()
-                               .GetProviderFactory(new WrappingConnection<SqlClientFactory>(new SqlConnection())));
+                DbConfiguration.DependencyResolver.GetService<IDbProviderFactoryResolver>()
+                               .ResolveProviderFactory(new WrappingConnection<SqlClientFactory>(new SqlConnection())));
 
             // Should still report what is in the providers table
             Assert.Same(SqlClientFactory.Instance, DbProviderFactories.GetFactory(SqlClientInvariantName));
@@ -113,7 +113,7 @@ namespace System.Data.Entity.WrappingProvider
         {
             RegisterAdoNetProvider(typeof(WrappingAdoNetProvider<SqlClientFactory>));
             MutableResolver.AddResolver<DbProviderServices>(k => WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
-            MutableResolver.AddResolver<MigrationSqlGenerator>(WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
+            MutableResolver.AddResolver<Func<MigrationSqlGenerator>>(WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
 
             var log = WrappingAdoNetProvider<SqlClientFactory>.Instance.Log;
             log.Clear();

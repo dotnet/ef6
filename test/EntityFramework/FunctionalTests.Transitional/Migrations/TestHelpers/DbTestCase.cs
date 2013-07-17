@@ -134,7 +134,7 @@ namespace System.Data.Entity.Migrations
             bool automaticDataLossEnabled = false,
             string targetDatabase = null,
             string contextKey = null,
-            HistoryContextFactory historyContextFactory = null,
+            Func<DbConnection, string, HistoryContext> historyContextFactory = null,
             params ScaffoldedMigration[] scaffoldedMigrations)
             where TContext : DbContext
         {
@@ -153,7 +153,7 @@ namespace System.Data.Entity.Migrations
             bool automaticDataLossEnabled = false,
             string targetDatabase = null,
             string contextKey = null,
-            HistoryContextFactory historyContextFactory = null,
+            Func<DbConnection, string, HistoryContext> historyContextFactory = null,
             params ScaffoldedMigration[] scaffoldedMigrations)
             where TContext : DbContext
         {

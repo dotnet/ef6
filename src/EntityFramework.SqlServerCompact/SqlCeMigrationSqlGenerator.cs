@@ -4,11 +4,10 @@ namespace System.Data.Entity.SqlServerCompact
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;
@@ -28,7 +27,6 @@ namespace System.Data.Entity.SqlServerCompact
     ///     that can be run against a Microsoft SQL Server Compact Edition database.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    [DbProviderName("System.Data.SqlServerCe.4.0")]
     public class SqlCeMigrationSqlGenerator : MigrationSqlGenerator
     {
         private const string BatchTerminator = "GO";
@@ -116,7 +114,7 @@ namespace System.Data.Entity.SqlServerCompact
         /// <returns> </returns>
         protected virtual DbConnection CreateConnection()
         {
-            return DbConfiguration.GetService<DbProviderFactory>("System.Data.SqlServerCe.4.0").CreateConnection();
+            return DbConfiguration.DependencyResolver.GetService<DbProviderFactory>("System.Data.SqlServerCe.4.0").CreateConnection();
         }
 
         /// <summary>

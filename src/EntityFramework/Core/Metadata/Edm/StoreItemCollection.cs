@@ -5,10 +5,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Common.Utils;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -151,7 +151,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             _providerManifest = model.ProviderManifest;
             _providerInvariantName = model.ProviderInfo.ProviderInvariantName;
-            _providerFactory = DbConfiguration.GetService<DbProviderFactory>(_providerInvariantName);
+            _providerFactory = DbConfiguration.DependencyResolver.GetService<DbProviderFactory>(_providerInvariantName);
             _providerManifestToken = model.ProviderInfo.ProviderManifestToken;
             _cachedCTypeFunction = new Memoizer<EdmFunction, EdmFunction>(ConvertFunctionSignatureToCType, null);
 

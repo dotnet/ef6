@@ -4,10 +4,10 @@ namespace System.Data.Entity
 {
     using System.ComponentModel;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -340,7 +340,7 @@ namespace System.Data.Entity
             )]
         public static IDbConnectionFactory DefaultConnectionFactory
         {
-            get { return DbConfiguration.GetService<IDbConnectionFactory>(); }
+            get { return DbConfiguration.DependencyResolver.GetService<IDbConnectionFactory>(); }
             set
             {
                 Check.NotNull(value, "value");
@@ -664,7 +664,7 @@ namespace System.Data.Entity
         /// </summary>
         /// <remarks>
         ///     The format of the log text can be changed by creating a new logger that derives from
-        ///     <see cref="DbCommandLogger" /> and setting it with <see cref="DbConfiguration.SetCommandLogger" />.
+        ///     <see cref="DbCommandLogger" /> and setting it with <see cref="DbConfiguration.CommandLogger" />.
         ///     For more low-level control over logging/interception see <see cref="IDbCommandInterceptor" /> and
         ///     <see cref="Interception" />.
         /// </remarks>

@@ -200,11 +200,11 @@
     <Compile Include="TestHelpers\DefaultUnitTestsConnectionFactory.cs" />
     <Compile Include="TestHelpers\DynamicAssembly.cs" />
     <Compile Include="CodeFirst\EnumsScenarioTests.cs" />
-    <Compile Include="TestHelpers\FakeProviderFactoryService.cs" />
+    <Compile Include="TestHelpers\FakeProviderFactoryResolver.cs" />
     <Compile Include="TestHelpers\FakeProviderServicesResolver.cs" />
     <Compile Include="TestHelpers\FunctionalTestBase.cs" />
     <Compile Include="CodeFirst\InheritanceScenarioTests.cs" />
-    <Compile Include="TestHelpers\FunctionalTestsManifestTokenService.cs" />
+    <Compile Include="TestHelpers\FunctionalTestsManifestTokenResolver.cs" />
     <Compile Include="TestHelpers\FunctionalTestsConfiguration.cs" />
     <Compile Include="TestHelpers\GenericConnection.cs">
       <SubType>Component</SubType>

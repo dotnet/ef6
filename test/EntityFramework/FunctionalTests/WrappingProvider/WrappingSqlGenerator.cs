@@ -11,9 +11,9 @@ namespace System.Data.Entity.WrappingProvider
     public class WrappingSqlGenerator<TAdoNetBase> : MigrationSqlGenerator
         where TAdoNetBase : DbProviderFactory
     {
-        private readonly MigrationSqlGenerator _baseGenerator;
+        private readonly Func<MigrationSqlGenerator> _baseGenerator;
 
-        public WrappingSqlGenerator(MigrationSqlGenerator baseGenerator)
+        public WrappingSqlGenerator(Func<MigrationSqlGenerator> baseGenerator)
         {
             _baseGenerator = baseGenerator;
         }
@@ -31,7 +31,7 @@ namespace System.Data.Entity.WrappingProvider
             WrappingAdoNetProvider<TAdoNetBase>.Instance.Log.Add(
                 new LogItem("Generate", null, items.ToString()));
 
-            return _baseGenerator.Generate(migrationOperations, providerManifestToken);
+            return _baseGenerator().Generate(migrationOperations, providerManifestToken);
         }
     }
 }

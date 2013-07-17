@@ -3,8 +3,8 @@
 namespace System.Data.Entity.TestHelpers
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
 
     public class FakeProviderServicesResolver : IDbDependencyResolver
     {

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity.Config;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     /// </summary>
     public class KeyAttributeConvention : Convention
     {
-        private readonly AttributeProvider _attributeProvider = DbConfiguration.GetService<AttributeProvider>();
+        private readonly AttributeProvider _attributeProvider = DbConfiguration.DependencyResolver.GetService<AttributeProvider>();
 
         // Not using the public API to avoid including the property in the model if it wasn't in before
         internal override void ApplyPropertyTypeConfiguration<TStructuralTypeConfiguration>(

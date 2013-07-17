@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity
 {
-    using System.Data.Entity.Config;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Utilities;
 

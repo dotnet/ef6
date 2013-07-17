@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Configuration;
-    using System.Data.Entity.Config;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Creates a new instance representing a given <see cref="DbContext" /> type.
         /// </summary>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" /> .
+        ///     The type deriving from <see cref="DbContext" />.
         /// </param>
         public DbContextInfo(Type contextType)
             : this(Check.NotNull(contextType, "contextType"), null, AppConfig.DefaultInstance, null)
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Creates a new instance representing a given <see cref="DbContext" /> targeting a specific database.
         /// </summary>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" /> .
+        ///     The type deriving from <see cref="DbContext" />.
         /// </param>
         /// <param name="connectionInfo"> Connection information for the database to be used. </param>
         public DbContextInfo(Type contextType, DbConnectionInfo connectionInfo)
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Infrastructure
         ///     to be found in addition to explicitly specified connection strings.
         /// </remarks>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" /> .
+        ///     The type deriving from <see cref="DbContext" />.
         /// </param>
         /// <param name="connectionStringSettings"> A collection of connection strings. </param>
         [Obsolete(
@@ -82,7 +82,7 @@ namespace System.Data.Entity.Infrastructure
         ///     resolution. This includes looking for connection strings and DefaultConnectionFactory entries.
         /// </summary>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" /> .
+        ///     The type deriving from <see cref="DbContext" />.
         /// </param>
         /// <param name="config"> An object representing the config file. </param>
         public DbContextInfo(Type contextType, Configuration config)
@@ -96,7 +96,7 @@ namespace System.Data.Entity.Infrastructure
         ///     resolution. This includes looking for connection strings and DefaultConnectionFactory entries.
         /// </summary>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" /> .
+        ///     The type deriving from <see cref="DbContext" />.
         /// </param>
         /// <param name="config"> An object representing the config file. </param>
         /// <param name="connectionInfo"> Connection information for the database to be used. </param>
@@ -113,7 +113,7 @@ namespace System.Data.Entity.Infrastructure
         ///     the underlying EDM model.
         /// </summary>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" /> .
+        ///     The type deriving from <see cref="DbContext" />.
         /// </param>
         /// <param name="modelProviderInfo">
         ///     A <see cref="DbProviderInfo" /> specifying the underlying ADO.NET provider to target.
@@ -134,7 +134,7 @@ namespace System.Data.Entity.Infrastructure
         ///     connecting to discover a manifest token.
         /// </summary>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" /> .
+        ///     The type deriving from <see cref="DbContext" />.
         /// </param>
         /// <param name="config"> An object representing the config file. </param>
         /// <param name="modelProviderInfo">

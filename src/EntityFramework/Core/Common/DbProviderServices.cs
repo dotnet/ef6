@@ -5,12 +5,12 @@ namespace System.Data.Entity.Core.Common
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
@@ -317,9 +317,9 @@ namespace System.Data.Entity.Core.Common
             var factory = _executionStrategyFactories.GetOrAdd(
                 cacheKey,
                 k =>
-                DbConfiguration.GetService<Func<IDbExecutionStrategy>>(
+                DbConfiguration.DependencyResolver.GetService<Func<IDbExecutionStrategy>>(
                     new ExecutionStrategyKey(
-                    DbConfiguration.GetService<IProviderInvariantName>(providerFactory).Name,
+                    DbConfiguration.DependencyResolver.GetService<IProviderInvariantName>(providerFactory).Name,
                     connection.DataSource)));
             return factory();
         }

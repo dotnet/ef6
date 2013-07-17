@@ -3,9 +3,9 @@
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Threading;

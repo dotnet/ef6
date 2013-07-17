@@ -4,13 +4,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
@@ -1577,7 +1577,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private static DbProviderManifest GetProviderManifest(DbProviderInfo providerInfo)
         {
-            var providerFactory = DbConfiguration.GetService<DbProviderFactory>(providerInfo.ProviderInvariantName);
+            var providerFactory = DbConfiguration.DependencyResolver.GetService<DbProviderFactory>(providerInfo.ProviderInvariantName);
 
             return providerFactory.GetProviderServices().GetProviderManifest(providerInfo.ProviderManifestToken);
         }

@@ -3,11 +3,11 @@
 namespace System.Data.Entity.Core.Common
 {
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
@@ -218,11 +218,11 @@ namespace System.Data.Entity.Core.Common
                             return (Func<IDbExecutionStrategy>)(() => mockExecutionStrategy);
                         });
 
-                var providerFactoryServiceMock = new Mock<IDbProviderFactoryService>();
-                providerFactoryServiceMock.Setup(m => m.GetProviderFactory(It.IsAny<DbConnection>()))
+                var providerFactoryServiceMock = new Mock<IDbProviderFactoryResolver>();
+                providerFactoryServiceMock.Setup(m => m.ResolveProviderFactory(It.IsAny<DbConnection>()))
                     .Returns(FakeSqlProviderFactory.Instance);
 
-                MutableResolver.AddResolver<IDbProviderFactoryService>(k => providerFactoryServiceMock.Object);
+                MutableResolver.AddResolver<IDbProviderFactoryResolver>(k => providerFactoryServiceMock.Object);
                 try
                 {
                     Assert.Same(mockExecutionStrategy, DbProviderServices.GetExecutionStrategy(connectionMock.Object));

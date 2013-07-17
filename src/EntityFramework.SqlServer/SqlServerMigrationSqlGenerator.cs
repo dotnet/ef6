@@ -4,11 +4,10 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
@@ -30,7 +29,6 @@ namespace System.Data.Entity.SqlServer
     ///     that can be run against a Microsoft SQL Server database.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    [DbProviderName("System.Data.SqlClient")]
     public class SqlServerMigrationSqlGenerator : MigrationSqlGenerator
     {
         private const string BatchTerminator = "GO";
@@ -263,7 +261,7 @@ namespace System.Data.Entity.SqlServer
         /// <returns> </returns>
         protected virtual DbConnection CreateConnection()
         {
-            return DbConfiguration.GetService<DbProviderFactory>("System.Data.SqlClient").CreateConnection();
+            return DbConfiguration.DependencyResolver.GetService<DbProviderFactory>("System.Data.SqlClient").CreateConnection();
         }
 
         /// <summary>

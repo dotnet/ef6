@@ -6,7 +6,6 @@ namespace System.Data.Entity
     using System.ComponentModel.DataAnnotations;
     using System.Configuration;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;

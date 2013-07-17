@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Design
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Design
             try
             {
                 // TODO: This should take into account any DbConfiguration class inside _assembly
-                var providerServices = DbConfiguration.GetService<DbProviderServices>(invariantName);
+                var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(invariantName);
                 providerServicesTypeName = providerServices.GetType().AssemblyQualifiedName;
             }
             catch

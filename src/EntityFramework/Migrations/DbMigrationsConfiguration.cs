@@ -3,8 +3,9 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Config;
+    using System.Data.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
@@ -30,8 +31,8 @@ namespace System.Data.Entity.Migrations
         private readonly Dictionary<string, MigrationSqlGenerator> _sqlGenerators
             = new Dictionary<string, MigrationSqlGenerator>();
 
-        private readonly Dictionary<string, HistoryContextFactory> _historyContextFactories
-            = new Dictionary<string, HistoryContextFactory>();
+        private readonly Dictionary<string, Func<DbConnection, string, HistoryContext>> _historyContextFactories
+            = new Dictionary<string, Func<DbConnection, string, HistoryContext>>();
 
         private MigrationCodeGenerator _codeGenerator;
         private Type _contextType;
@@ -111,47 +112,50 @@ namespace System.Data.Entity.Migrations
 
             if (!_sqlGenerators.TryGetValue(providerInvariantName, out migrationSqlGenerator))
             {
-                migrationSqlGenerator
-                    = _resolver.Value.GetService<MigrationSqlGenerator>(providerInvariantName);
+                var factory = _resolver.Value.GetService<Func<MigrationSqlGenerator>>(providerInvariantName);
 
-                if (migrationSqlGenerator == null)
+                if (factory == null)
                 {
                     throw Error.NoSqlGeneratorForProvider(providerInvariantName);
                 }
+
+                migrationSqlGenerator = factory();
             }
 
             return migrationSqlGenerator;
         }
 
         /// <summary>
-        ///     Adds a new <see cref="HistoryContextFactory"/> to be used for a given database provider.
+        ///     Adds a new factory for creating <see cref="HistoryContext"/> instances to be used for a given database provider.
         /// </summary>
         /// <param name="providerInvariantName"> Name of the database provider to set the SQL generator for. </param>
-        /// <param name="historyContextFactory"> The <see cref="HistoryContextFactory"/> to be used. </param>
-        public void SetHistoryContextFactory(string providerInvariantName, HistoryContextFactory historyContextFactory)
+        /// <param name="factory">
+        ///     A factory for creating <see cref="HistoryContext" /> instances for a given <see cref="DbConnection" /> and
+        ///     <see cref="String" /> representing the default schema.
+        /// </param>
+        public void SetHistoryContextFactory(string providerInvariantName, Func<DbConnection, string, HistoryContext> factory)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
-            Check.NotNull(historyContextFactory, "historyContextFactory");
+            Check.NotNull(factory, "factory");
 
-            _historyContextFactories[providerInvariantName] = historyContextFactory;
+            _historyContextFactories[providerInvariantName] = factory;
         }
 
         /// <summary>
-        ///     Gets the <see cref="HistoryContextFactory"/> that is set to be used with a given database provider.
+        ///     Gets the history context factory that is set to be used with a given database provider.
         /// </summary>
-        /// <param name="providerInvariantName"> Name of the database provider to get the <see cref="HistoryContextFactory"/> for. </param>
-        /// <returns> The <see cref="HistoryContextFactory"/> that is set for the database provider. </returns>
-        public HistoryContextFactory GetHistoryContextFactory(string providerInvariantName)
+        /// <param name="providerInvariantName"> Name of the database provider to get thefactory for. </param>
+        /// <returns> The history context factory that is set for the database provider. </returns>
+        public Func<DbConnection, string, HistoryContext> GetHistoryContextFactory(string providerInvariantName)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
 
-            HistoryContextFactory historyContextFactory;
+            Func<DbConnection, string, HistoryContext> historyContextFactory;
 
             if (!_historyContextFactories.TryGetValue(providerInvariantName, out historyContextFactory))
             {
-                return
-                    _resolver.Value.GetService<HistoryContextFactory>(providerInvariantName)
-                    ?? _resolver.Value.GetService<HistoryContextFactory>();
+                return _resolver.Value.GetService<Func<DbConnection, string, HistoryContext>>(providerInvariantName)
+                       ?? _resolver.Value.GetService<Func<DbConnection, string, HistoryContext>>();
             }
 
             return historyContextFactory;

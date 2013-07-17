@@ -7,7 +7,6 @@ namespace System.Data.Entity.Core.Objects
     using System.ComponentModel;
     using System.Configuration;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
@@ -22,6 +21,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -3610,7 +3610,7 @@ namespace System.Data.Entity.Core.Objects
                 try
                 {
                     var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-                    var providerServices = DbConfiguration.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+                    var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
 
                     bufferedReader = new BufferedDataReader(storeReader);
                     bufferedReader.Initialize(storeItemCollection.StoreProviderManifestToken, providerServices);
@@ -4225,7 +4225,7 @@ namespace System.Data.Entity.Core.Objects
             try
             {
                 var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-                var providerServices = DbConfiguration.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+                var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
 
                 bufferedReader = new BufferedDataReader(reader);
                 bufferedReader.Initialize(storeItemCollection.StoreProviderManifestToken, providerServices);
@@ -4512,7 +4512,7 @@ namespace System.Data.Entity.Core.Objects
             try
             {
                 var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-                var providerServices = DbConfiguration.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+                var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
 
                 bufferedReader = new BufferedDataReader(reader);
                 await bufferedReader.InitializeAsync(storeItemCollection.StoreProviderManifestToken, providerServices, cancellationToken)

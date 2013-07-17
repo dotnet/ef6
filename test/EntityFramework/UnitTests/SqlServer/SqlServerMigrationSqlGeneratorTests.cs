@@ -1240,14 +1240,6 @@ ALTER TABLE [T] ALTER COLUMN [C] [geometry] NOT NULL", sql);
         }
 
         [Fact]
-        public void Has_ProviderInvariantNameAttribute()
-        {
-            Assert.Equal(
-                "System.Data.SqlClient",
-                DbProviderNameAttribute.GetFromType(typeof(SqlServerMigrationSqlGenerator)).Single().Name);
-        }
-
-        [Fact]
         public static void Generate_can_output_statement_to_upgrade_primary_key_of_history_table()
         {
             const string expectedSql =

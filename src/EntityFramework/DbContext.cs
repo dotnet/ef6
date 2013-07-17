@@ -5,9 +5,9 @@ namespace System.Data.Entity
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
@@ -181,8 +181,8 @@ namespace System.Data.Entity
 
             _internalContext = new LazyInternalContext(
                     this, internalConnection, model
-                    , DbConfiguration.GetService<IDbModelCacheKeyFactory>()
-                    , DbConfiguration.GetService<AttributeProvider>());
+                    , DbConfiguration.DependencyResolver.GetService<Func<DbContext, IDbModelCacheKey>>()
+                    , DbConfiguration.DependencyResolver.GetService<AttributeProvider>());
             DiscoverAndInitializeSets();
         }
 

@@ -265,7 +265,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WrappingProvider\WrappingEfProvider.cs" />
-    <Compile Include="WrappingProvider\WrappingProviderFactoryService.cs" />
+    <Compile Include="WrappingProvider\WrappingProviderFactoryResolver.cs" />
     <Compile Include="WrappingProvider\WrappingProviderInvariantName.cs" />
     <Compile Include="WrappingProvider\WrappingProviderTests.cs" />
     <Compile Include="WrappingProvider\WrappingSqlGenerator.cs" />

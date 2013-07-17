@@ -18,19 +18,19 @@ namespace System.Data.Entity.Infrastructure
         {
             Assert.Equal(
                 "connection",
-                Assert.Throws<ArgumentNullException>(() => new DefaultDbProviderFactoryService().GetProviderFactory(null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => new DefaultDbProviderFactoryResolver().ResolveProviderFactory(null)).ParamName);
         }
 
         [Fact]
         public void GetProviderFactory_for_SqlConnection_should_return_SqlClientFactory()
         {
-            Assert.Equal(SqlClientFactory.Instance, new DefaultDbProviderFactoryService().GetProviderFactory(new SqlConnection()));
+            Assert.Equal(SqlClientFactory.Instance, new DefaultDbProviderFactoryResolver().ResolveProviderFactory(new SqlConnection()));
         }
 
         [Fact]
         public void GetProviderFactory_for_EntityConnection_should_return_EntityProviderFactory()
         {
-            Assert.Equal(EntityProviderFactory.Instance, new DefaultDbProviderFactoryService().GetProviderFactory(new EntityConnection()));
+            Assert.Equal(EntityProviderFactory.Instance, new DefaultDbProviderFactoryResolver().ResolveProviderFactory(new EntityConnection()));
         }
 
         [Fact]
@@ -39,8 +39,8 @@ namespace System.Data.Entity.Infrastructure
             Assert.NotNull(GenericProviderFactory<DbProviderFactory>.Instance);
             Assert.Equal(
                 GenericProviderFactory<DbProviderFactory>.Instance,
-                new DefaultDbProviderFactoryService()
-                    .GetProviderFactory(new GenericConnection<DbProviderFactory>()));
+                new DefaultDbProviderFactoryResolver()
+                    .ResolveProviderFactory(new GenericConnection<DbProviderFactory>()));
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Infrastructure
         {
             Assert.Same(
                 FakeSqlProviderFactory.Instance,
-                new DefaultDbProviderFactoryService().GetProviderFactory(new FakeSqlConnection()));
+                new DefaultDbProviderFactoryResolver().ResolveProviderFactory(new FakeSqlConnection()));
         }
 
         [Fact]
@@ -56,8 +56,8 @@ namespace System.Data.Entity.Infrastructure
         {
             Assert.Same(
                 GetFactoryInstance(WeakProviderType1),
-                new DefaultDbProviderFactoryService()
-                    .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType1))));
+                new DefaultDbProviderFactoryResolver()
+                    .ResolveProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType1))));
         }
 
         [Fact]
@@ -65,8 +65,8 @@ namespace System.Data.Entity.Infrastructure
         {
             Assert.Same(
                 FakeProviderFactory2.Instance,
-                new DefaultDbProviderFactoryService()
-                    .GetProviderFactory(new FakeSqlConnection("2008", FakeProviderFactory2.Instance)));
+                new DefaultDbProviderFactoryResolver()
+                    .ResolveProviderFactory(new FakeSqlConnection("2008", FakeProviderFactory2.Instance)));
         }
 
         [Fact]
@@ -74,8 +74,8 @@ namespace System.Data.Entity.Infrastructure
         {
             Assert.Same(
                 GetFactoryInstance(WeakProviderType2),
-                new DefaultDbProviderFactoryService()
-                    .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType2))));
+                new DefaultDbProviderFactoryResolver()
+                    .ResolveProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType2))));
         }
 
         [Fact]
@@ -83,8 +83,8 @@ namespace System.Data.Entity.Infrastructure
         {
             Assert.Same(
                 GetFactoryInstance(WeakProviderType1),
-                new DefaultDbProviderFactoryService()
-                    .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType1))));
+                new DefaultDbProviderFactoryResolver()
+                    .ResolveProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType1))));
         }
 
         [Fact]
@@ -92,8 +92,8 @@ namespace System.Data.Entity.Infrastructure
         {
             Assert.Same(
                 GetFactoryInstance(WeakProviderType1),
-                new DefaultDbProviderFactoryService()
-                    .GetProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType1))));
+                new DefaultDbProviderFactoryResolver()
+                    .ResolveProviderFactory(new FakeSqlConnection("2008", GetFactoryInstance(WeakProviderType1))));
         }
 #endif
 

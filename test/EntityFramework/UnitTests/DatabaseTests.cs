@@ -3,8 +3,8 @@
 namespace System.Data.Entity
 {
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.IO;
@@ -224,7 +224,7 @@ namespace System.Data.Entity
 #pragma warning disable 612,618
                 Assert.IsType<SqlConnectionFactory>(Database.DefaultConnectionFactory);
 #pragma warning restore 612,618
-                Assert.IsType<SqlConnectionFactory>(DbConfiguration.GetService<IDbConnectionFactory>());
+                Assert.IsType<SqlConnectionFactory>(DbConfiguration.DependencyResolver.GetService<IDbConnectionFactory>());
             }
 
             private class FakeConnectionFactory : IDbConnectionFactory
@@ -242,7 +242,7 @@ namespace System.Data.Entity
                 {
 #pragma warning disable 612,618
                     // This call will have no effect because the functional tests are setup with a DbConfiguration
-                    // that explicitly overrides this using an OnLockingConfiguration handler.
+                    // that explicitly overrides this using an Loaded handler.
                     Database.DefaultConnectionFactory = new FakeConnectionFactory();
 
                     Assert.IsType<SqlConnectionFactory>(Database.DefaultConnectionFactory);

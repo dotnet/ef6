@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class PluralizingEntitySetNameConvention : IConceptualModelConvention<EntitySet>
     {
         private static readonly IPluralizationService _pluralizationService
-            = DbConfiguration.GetService<IPluralizationService>();
+            = DbConfiguration.DependencyResolver.GetService<IPluralizationService>();
 
         /// <inheritdoc />
         public virtual void Apply(EntitySet item, DbModel model)

@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.Internal
 {
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Internal
             // objectContext may be null when testing.
 
             if (internalContext.CodeFirstModel != null
-                && _resolver.GetService<MigrationSqlGenerator>(internalContext.ProviderName) != null)
+                && _resolver.GetService<Func<MigrationSqlGenerator>>(internalContext.ProviderName) != null)
             {
                 if (!_migrationsChecker.IsMigrationsConfigured(internalContext, () => false))
                 {

@@ -4,12 +4,12 @@ namespace System.Data.Entity.Migrations.History
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Config;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.Infrastructure;
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Migrations.History
         private readonly string _contextKey;
         private readonly int? _commandTimeout;
         private readonly IEnumerable<string> _schemas;
-        private readonly HistoryContextFactory _historyContextFactory;
+        private readonly Func<DbConnection, string, HistoryContext> _historyContextFactory;
         private readonly DbContext _contextForInterception;
         private readonly int _contextKeyMaxLength;
         private readonly int _migrationIdMaxLength;
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Migrations.History
             int? commandTimeout,
             IEnumerable<string> schemas = null,
             DbContext contextForInterception = null,
-            HistoryContextFactory historyContextFactory = null)
+            Func<DbConnection, string, HistoryContext> historyContextFactory = null)
             : base(connectionString, providerFactory)
         {
             DebugCheck.NotEmpty(contextKey);
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Migrations.History
 
             _historyContextFactory
                 = historyContextFactory
-                  ?? DbConfiguration.GetService<HistoryContextFactory>();
+                  ?? DbConfiguration.DependencyResolver.GetService<Func<DbConnection, string, HistoryContext>>();
 
             using (var connection = CreateConnection())
             {

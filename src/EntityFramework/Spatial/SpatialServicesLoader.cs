@@ -2,8 +2,8 @@
 
 namespace System.Data.Entity.Spatial
 {
-    using System.Data.Entity.Config;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
 
     internal class SpatialServicesLoader
     {
