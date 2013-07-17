@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_no_predicates_and_same_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     c => actionInvoked = true);
                 var type = typeof(LocalType1);
@@ -30,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_no_predicates_and_derived_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     c => actionInvoked = true);
                 var type = typeof(LocalType2);
@@ -45,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_no_predicates_and_different_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     c => actionInvoked = true);
                 var type = typeof(object);
@@ -60,7 +60,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_predicate_true_and_same_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     new Func<Type, bool>[] { t => true },
                     c => actionInvoked = true);
                 var type = typeof(LocalType1);
@@ -76,7 +76,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             {
                 var predicateInvoked = false;
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     new Func<Type, bool>[] { t => predicateInvoked = true },
                     c => actionInvoked = true);
                 var type = typeof(object);
@@ -92,7 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_predicate_false_but_same_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     new Func<Type, bool>[] { t => false },
                     c => actionInvoked = true);
                 var type = typeof(LocalType1);
@@ -110,7 +110,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_no_predicates_and_same_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     c => actionInvoked = true);
                 var type = typeof(LocalType1);
@@ -125,7 +125,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_no_predicates_and_derived_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     c => actionInvoked = true);
                 var type = typeof(LocalType2);
@@ -140,7 +140,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_no_predicates_and_different_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     c => actionInvoked = true);
                 var type = typeof(object);
@@ -155,7 +155,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_predicate_true_and_same_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     new Func<Type, bool>[] { t => true },
                     c => actionInvoked = true);
                 var type = typeof(LocalType1);
@@ -171,7 +171,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             {
                 var predicateInvoked = false;
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     new Func<Type, bool>[] { t => predicateInvoked = true },
                     c => actionInvoked = true);
                 var type = typeof(object);
@@ -187,7 +187,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_predicate_false_but_same_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     new Func<Type, bool>[] { t => false },
                     c => actionInvoked = true);
                 var type = typeof(LocalType1);
@@ -205,7 +205,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_no_predicates_and_same_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     c => actionInvoked = true);
                 var type = typeof(LocalType1);
@@ -220,7 +220,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_no_predicates_and_derived_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     c => actionInvoked = true);
                 var type = typeof(LocalType2);
@@ -235,7 +235,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_no_predicates_and_different_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     c => actionInvoked = true);
                 var type = typeof(object);
@@ -250,7 +250,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Invokes_action_when_predicate_true_and_same_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     new Func<Type, bool>[] { t => true },
                     c => actionInvoked = true);
                 var type = typeof(LocalType1);
@@ -266,7 +266,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             {
                 var predicateInvoked = false;
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     new Func<Type, bool>[] { t => predicateInvoked = true },
                     c => actionInvoked = true);
                 var type = typeof(object);
@@ -282,7 +282,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_predicate_false_but_same_type()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfType<LocalType1>(
+                var convention = new TypeConvention<LocalType1>(
                     new Func<Type, bool>[] { t => false },
                     c => actionInvoked = true);
                 var type = typeof(LocalType1);

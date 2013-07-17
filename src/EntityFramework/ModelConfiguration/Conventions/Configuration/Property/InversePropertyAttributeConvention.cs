@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.Resources;
@@ -17,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     {
         /// <inheritdoc/>
         public override void Apply(
-            PropertyInfo memberInfo, LightweightTypeConfiguration configuration, InversePropertyAttribute attribute)
+            PropertyInfo memberInfo, ConventionTypeConfiguration configuration, InversePropertyAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
             Check.NotNull(configuration, "configuration");

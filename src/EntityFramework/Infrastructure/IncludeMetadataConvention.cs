@@ -26,7 +26,7 @@ namespace System.Data.Entity.Infrastructure
         ///     Adds metadata to the given model configuration.
         /// </summary>
         /// <param name="modelConfiguration"> The model configuration. </param>
-        public virtual void Apply(ModelConfiguration modelConfiguration)
+        internal virtual void Apply(ModelConfiguration modelConfiguration)
         {
             Check.NotNull(modelConfiguration, "modelConfiguration");
 

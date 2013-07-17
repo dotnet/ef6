@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     /// <summary>
     ///     Used to configure a foreign key constraint on a navigation property.
     /// </summary>
-    public class ForeignKeyConstraintConfiguration : ConstraintConfiguration
+    internal class ForeignKeyConstraintConfiguration : ConstraintConfiguration
     {
         private readonly List<PropertyInfo> _dependentProperties = new List<PropertyInfo>();
         private readonly bool _isFullySpecified;

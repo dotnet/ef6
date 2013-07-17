@@ -3,10 +3,11 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.ModelConfiguration.Configuration;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Linq;
     using System.Reflection;
     using Xunit;
+    using PrimitivePropertyConfiguration =
+        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration;
 
     public class PropertyConventionTests
     {

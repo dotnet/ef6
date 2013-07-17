@@ -7,17 +7,19 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Utilities;
     using System.Reflection;
+    using PrimitivePropertyConfiguration =
+        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration;
 
     internal class PropertyConventionWithHaving<T> : PropertyConventionBase
         where T : class
     {
         private readonly Func<PropertyInfo, T> _capturingPredicate;
-        private readonly Action<LightweightPrimitivePropertyConfiguration, T> _propertyConfigurationAction;
+        private readonly Action<ConventionPrimitivePropertyConfiguration, T> _propertyConfigurationAction;
 
         public PropertyConventionWithHaving(
             IEnumerable<Func<PropertyInfo, bool>> predicates,
             Func<PropertyInfo, T> capturingPredicate,
-            Action<LightweightPrimitivePropertyConfiguration, T> propertyConfigurationAction)
+            Action<ConventionPrimitivePropertyConfiguration, T> propertyConfigurationAction)
             : base(predicates)
         {
             DebugCheck.NotNull(predicates);
@@ -33,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             get { return _capturingPredicate; }
         }
 
-        internal Action<LightweightPrimitivePropertyConfiguration, T> PropertyConfigurationAction
+        internal Action<ConventionPrimitivePropertyConfiguration, T> PropertyConfigurationAction
         {
             get { return _propertyConfigurationAction; }
         }
@@ -50,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             if (value != null)
             {
                 _propertyConfigurationAction(
-                    new LightweightPrimitivePropertyConfiguration(memberInfo, configuration),
+                    new ConventionPrimitivePropertyConfiguration(memberInfo, configuration),
                     value);
             }
         }

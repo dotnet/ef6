@@ -20,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     /// <summary>
     ///     Used to configure a primitive property of an entity type or complex type.
     /// </summary>
-    public class PrimitivePropertyConfiguration : PropertyConfiguration
+    internal class PrimitivePropertyConfiguration : PropertyConfiguration
     {
         /// <summary>
         ///     Initializes a new instance of the PrimitivePropertyConfiguration class.

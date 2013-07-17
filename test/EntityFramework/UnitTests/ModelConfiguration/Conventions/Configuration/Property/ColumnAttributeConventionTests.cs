@@ -3,8 +3,9 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using Xunit;
+    using PrimitivePropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration;
 
     public sealed class ColumnAttributeConventionTests
     {
@@ -14,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var propertyConfiguration = new PrimitivePropertyConfiguration();
 
             new ColumnAttributeConvention()
-                .Apply(new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                .Apply(new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
                 new ColumnAttribute("Foo"){TypeName = "bar", Order = 1});
 
             Assert.Equal("Foo", propertyConfiguration.ColumnName);
@@ -33,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                             };
 
             new ColumnAttributeConvention()
-                .Apply(new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new ColumnAttribute("Foo"){TypeName = "bar", Order = 1});
+                .Apply(new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new ColumnAttribute("Foo"){TypeName = "bar", Order = 1});
 
             Assert.Equal("Bar", propertyConfiguration.ColumnName);
             Assert.Equal("foo", propertyConfiguration.ColumnType);

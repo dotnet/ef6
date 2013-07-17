@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     /// <summary>
     ///     Used to configure a constraint on a navigation property.
     /// </summary>
-    public abstract class ConstraintConfiguration
+    internal abstract class ConstraintConfiguration
     {
         internal abstract ConstraintConfiguration Clone();
 

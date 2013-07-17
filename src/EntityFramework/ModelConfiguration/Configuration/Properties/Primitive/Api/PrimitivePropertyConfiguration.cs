@@ -5,7 +5,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
@@ -13,19 +12,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     ///     Used to configure a primitive property of an entity type or complex type.
     ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
-    public class PrimitivePropertyConfiguration<TConfiguration>
-        where TConfiguration : PrimitivePropertyConfiguration
+    public class PrimitivePropertyConfiguration
     {
-        private readonly TConfiguration _configuration;
+        private readonly Properties.Primitive.PrimitivePropertyConfiguration _configuration;
 
-        internal PrimitivePropertyConfiguration(TConfiguration configuration)
+        internal PrimitivePropertyConfiguration(Properties.Primitive.PrimitivePropertyConfiguration configuration)
         {
             DebugCheck.NotNull(configuration);
 
             _configuration = configuration;
         }
 
-        internal TConfiguration Configuration
+        internal Properties.Primitive.PrimitivePropertyConfiguration Configuration
         {
             get { return _configuration; }
         }
@@ -35,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     The database column used to store this property will be nullable.
         /// </summary>
         /// <returns> The same PrimitivePropertyConfiguration instance so that multiple calls can be chained. </returns>
-        public PrimitivePropertyConfiguration<TConfiguration> IsOptional()
+        public PrimitivePropertyConfiguration IsOptional()
         {
             Configuration.IsNullable = true;
 
@@ -47,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     The database column used to store this property will be non-nullable.
         /// </summary>
         /// <returns> The same PrimitivePropertyConfiguration instance so that multiple calls can be chained. </returns>
-        public PrimitivePropertyConfiguration<TConfiguration> IsRequired()
+        public PrimitivePropertyConfiguration IsRequired()
         {
             Configuration.IsNullable = false;
 
@@ -59,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="databaseGeneratedOption"> The pattern used to generate values for the property in the database. Setting 'null' will remove the database generated pattern facet from the property. Setting 'null' will cause the same runtime behavior as specifying 'None'. </param>
         /// <returns> The same PrimitivePropertyConfiguration instance so that multiple calls can be chained. </returns>
-        public PrimitivePropertyConfiguration<TConfiguration> HasDatabaseGeneratedOption(
+        public PrimitivePropertyConfiguration HasDatabaseGeneratedOption(
             DatabaseGeneratedOption? databaseGeneratedOption)
         {
             if (!((databaseGeneratedOption == null)
@@ -77,7 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Configures the property to be used as an optimistic concurrency token.
         /// </summary>
         /// <returns> The same PrimitivePropertyConfiguration instance so that multiple calls can be chained. </returns>
-        public PrimitivePropertyConfiguration<TConfiguration> IsConcurrencyToken()
+        public PrimitivePropertyConfiguration IsConcurrencyToken()
         {
             IsConcurrencyToken(true);
 
@@ -89,7 +87,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="concurrencyToken"> Value indicating if the property is a concurrency token or not. Specifying 'null' will remove the concurrency token facet from the property. Specifying 'null' will cause the same runtime behavior as specifying 'false'. </param>
         /// <returns> The same PrimitivePropertyConfiguration instance so that multiple calls can be chained. </returns>
-        public PrimitivePropertyConfiguration<TConfiguration> IsConcurrencyToken(bool? concurrencyToken)
+        public PrimitivePropertyConfiguration IsConcurrencyToken(bool? concurrencyToken)
         {
             Configuration.ConcurrencyMode
                 = (concurrencyToken == null)
@@ -106,7 +104,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="columnType"> Name of the database provider specific data type. </param>
         /// <returns> The same PrimitivePropertyConfiguration instance so that multiple calls can be chained. </returns>
-        public PrimitivePropertyConfiguration<TConfiguration> HasColumnType(string columnType)
+        public PrimitivePropertyConfiguration HasColumnType(string columnType)
         {
             Configuration.ColumnType = columnType;
 
@@ -118,7 +116,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="columnName"> The name of the column. </param>
         /// <returns> The same PrimitivePropertyConfiguration instance so that multiple calls can be chained. </returns>
-        public PrimitivePropertyConfiguration<TConfiguration> HasColumnName(string columnName)
+        public PrimitivePropertyConfiguration HasColumnName(string columnName)
         {
             Configuration.ColumnName = columnName;
 
@@ -130,7 +128,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns> The same PrimitivePropertyConfiguration instance so that multiple calls can be chained. </returns>
-        public PrimitivePropertyConfiguration<TConfiguration> HasParameterName(string parameterName)
+        public PrimitivePropertyConfiguration HasParameterName(string parameterName)
         {
             Configuration.ParameterName = parameterName;
 
@@ -143,7 +141,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="columnOrder"> The order that this column should appear in the database table. </param>
         /// <returns> The same PrimitivePropertyConfiguration instance so that multiple calls can be chained. </returns>
-        public PrimitivePropertyConfiguration<TConfiguration> HasColumnOrder(int? columnOrder)
+        public PrimitivePropertyConfiguration HasColumnOrder(int? columnOrder)
         {
             if (!(columnOrder == null || columnOrder.Value >= 0))
             {

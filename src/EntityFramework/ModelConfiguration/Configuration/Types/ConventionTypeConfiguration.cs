@@ -1,12 +1,13 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.ModelConfiguration.Configuration.Types
+namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Core;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
@@ -14,12 +15,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
-
+    
     /// <summary>
     ///     Allows configuration to be performed for an entity type in a model.
     ///     This configuration functionality is available via lightweight conventions.
     /// </summary>
-    public class LightweightTypeConfiguration
+    public class ConventionTypeConfiguration
     {
         private readonly Type _type;
         private readonly Func<EntityTypeConfiguration> _entityTypeConfiguration;
@@ -27,14 +28,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         private readonly Func<ComplexTypeConfiguration> _complexTypeConfiguration;
         private ConfigurationAspect _currentConfigurationAspect;
 
-        internal LightweightTypeConfiguration(
+        internal ConventionTypeConfiguration(
             Type type,
             ModelConfiguration modelConfiguration)
             : this(type, null, null, modelConfiguration)
         {
         }
 
-        internal LightweightTypeConfiguration(
+        internal ConventionTypeConfiguration(
             Type type,
             Func<EntityTypeConfiguration> entityTypeConfiguration,
             ModelConfiguration modelConfiguration)
@@ -43,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             DebugCheck.NotNull(entityTypeConfiguration);
         }
 
-        internal LightweightTypeConfiguration(
+        internal ConventionTypeConfiguration(
             Type type,
             Func<ComplexTypeConfiguration> complexTypeConfiguration,
             ModelConfiguration modelConfiguration)
@@ -52,7 +53,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             DebugCheck.NotNull(complexTypeConfiguration);
         }
 
-        private LightweightTypeConfiguration(
+        private ConventionTypeConfiguration(
             Type type,
             Func<EntityTypeConfiguration> entityTypeConfiguration,
             Func<ComplexTypeConfiguration> complexTypeConfiguration,
@@ -81,12 +82,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="entitySetName"> The name of the entity set. </param>
         /// <returns>
-        ///     The same <see cref="LightweightTypeConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightTypeConfiguration HasEntitySetName(string entitySetName)
+        public ConventionTypeConfiguration HasEntitySetName(string entitySetName)
         {
             Check.NotEmpty(entitySetName, "entitySetName");
             ValidateConfiguration(ConfigurationAspect.EntitySetName);
@@ -103,7 +104,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <summary>
         ///     Excludes this entity type from the model so that it will not be mapped to the database.
         /// </summary>
-        public LightweightTypeConfiguration Ignore()
+        public ConventionTypeConfiguration Ignore()
         {
             ValidateConfiguration(ConfigurationAspect.IgnoreType);
 
@@ -119,7 +120,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <summary>
         ///     Changes this entity type to a complex type.
         /// </summary>
-        public LightweightTypeConfiguration IsComplexType()
+        public ConventionTypeConfiguration IsComplexType()
         {
             ValidateConfiguration(ConfigurationAspect.ComplexType);
 
@@ -139,7 +140,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <remarks>
         ///     Calling this will have no effect if the property does not exist.
         /// </remarks>
-        public LightweightTypeConfiguration Ignore(string propertyName)
+        public ConventionTypeConfiguration Ignore(string propertyName)
         {
             Check.NotEmpty(propertyName, "propertyName");
 
@@ -161,7 +162,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <remarks>
         ///     Calling this will have no effect if the property does not exist.
         /// </remarks>
-        public LightweightTypeConfiguration Ignore(PropertyInfo propertyInfo)
+        public ConventionTypeConfiguration Ignore(PropertyInfo propertyInfo)
         {
             Check.NotNull(propertyInfo, "propertyInfo");
             ValidateConfiguration(ConfigurationAspect.IgnoreProperty);
@@ -186,7 +187,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="propertyName"> The name of the property being configured. </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
-        public LightweightPrimitivePropertyConfiguration Property(string propertyName)
+        public ConventionPrimitivePropertyConfiguration Property(string propertyName)
         {
             Check.NotEmpty(propertyName, "propertyName");
 
@@ -205,14 +206,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="propertyInfo"> The property being configured. </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
-        public LightweightPrimitivePropertyConfiguration Property(PropertyInfo propertyInfo)
+        public ConventionPrimitivePropertyConfiguration Property(PropertyInfo propertyInfo)
         {
             Check.NotNull(propertyInfo, "propertyInfo");
 
             return Property(new PropertyPath(propertyInfo));
         }
 
-        internal LightweightPrimitivePropertyConfiguration Property(PropertyPath propertyPath)
+        internal ConventionPrimitivePropertyConfiguration Property(PropertyPath propertyPath)
         {
             DebugCheck.NotNull(propertyPath);
 
@@ -231,7 +232,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                                                   ? _complexTypeConfiguration().Property(propertyPath, OverridableConfigurationParts.None)
                                                   : null;
 
-            return new LightweightPrimitivePropertyConfiguration(propertyInfo, () => propertyConfiguration);
+            return new ConventionPrimitivePropertyConfiguration(propertyInfo, () => propertyConfiguration);
         }
 
         /// <summary>
@@ -239,7 +240,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="propertyName"> The name of the property being configured. </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
-        public LightweightNavigationPropertyConfiguration NavigationProperty(string propertyName)
+        internal ConventionNavigationPropertyConfiguration NavigationProperty(string propertyName)
         {
             Check.NotEmpty(propertyName, "propertyName");
 
@@ -257,14 +258,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="propertyInfo"> The property being configured. </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
-        public LightweightNavigationPropertyConfiguration NavigationProperty(PropertyInfo propertyInfo)
+        internal ConventionNavigationPropertyConfiguration NavigationProperty(PropertyInfo propertyInfo)
         {
             Check.NotNull(propertyInfo, "propertyInfo");
 
             return NavigationProperty(new PropertyPath(propertyInfo));
         }
 
-        internal LightweightNavigationPropertyConfiguration NavigationProperty(PropertyPath propertyPath)
+        internal ConventionNavigationPropertyConfiguration NavigationProperty(PropertyPath propertyPath)
         {
             DebugCheck.NotNull(propertyPath);
 
@@ -281,7 +282,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                                             ? _entityTypeConfiguration().Navigation(propertyInfo)
                                             : null;
 
-            return new LightweightNavigationPropertyConfiguration(propertyConfiguration, _modelConfiguration);
+            return new ConventionNavigationPropertyConfiguration(propertyConfiguration, _modelConfiguration);
         }
 
         /// <summary>
@@ -289,9 +290,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="propertyName"> The name of the property to be used as the primary key. </param>
         /// <returns>
-        ///     The same <see cref="LightweightTypeConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
-        public LightweightTypeConfiguration HasKey(string propertyName)
+        public ConventionTypeConfiguration HasKey(string propertyName)
         {
             Check.NotEmpty(propertyName, "propertyName");
 
@@ -309,9 +310,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="propertyInfo"> The property to be used as the primary key. </param>
         /// <returns>
-        ///     The same <see cref="LightweightTypeConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
-        public LightweightTypeConfiguration HasKey(PropertyInfo propertyInfo)
+        public ConventionTypeConfiguration HasKey(PropertyInfo propertyInfo)
         {
             Check.NotNull(propertyInfo, "propertyInfo");
 
@@ -331,9 +332,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="propertyNames"> The names of the properties to be used as the primary key. </param>
         /// <returns>
-        ///     The same <see cref="LightweightTypeConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
-        public LightweightTypeConfiguration HasKey(IEnumerable<string> propertyNames)
+        public ConventionTypeConfiguration HasKey(IEnumerable<string> propertyNames)
         {
             Check.NotNull(propertyNames, "propertyNames");
 
@@ -358,13 +359,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// </summary>
         /// <param name="keyProperties"> The properties to be used as the primary key. </param>
         /// <returns>
-        ///     The same <see cref="LightweightTypeConfiguration" /> instance so that multiple calls can be chained.
+        ///     The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
         ///     Calling this will have no effect once it has been configured or if any
         ///     property does not exist.
         /// </remarks>
-        public LightweightTypeConfiguration HasKey(IEnumerable<PropertyInfo> keyProperties)
+        public ConventionTypeConfiguration HasKey(IEnumerable<PropertyInfo> keyProperties)
         {
             Check.NotNull(keyProperties, "keyProperties");
             EntityUtil.CheckArgumentContainsNull(ref keyProperties, "keyProperties");
@@ -390,7 +391,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightTypeConfiguration ToTable(string tableName)
+        public ConventionTypeConfiguration ToTable(string tableName)
         {
             Check.NotEmpty(tableName, "tableName");
             ValidateConfiguration(ConfigurationAspect.ToTable);
@@ -414,7 +415,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// <remarks>
         ///     Calling this will have no effect once it has been configured.
         /// </remarks>
-        public LightweightTypeConfiguration ToTable(string tableName, string schemaName)
+        public ConventionTypeConfiguration ToTable(string tableName, string schemaName)
         {
             Check.NotEmpty(tableName, "tableName");
             ValidateConfiguration(ConfigurationAspect.ToTable);
@@ -433,7 +434,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         /// The default conventions for procedure and parameter names will be used.
         /// </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        public LightweightTypeConfiguration MapToStoredProcedures()
+        public ConventionTypeConfiguration MapToStoredProcedures()
         {
             ValidateConfiguration(ConfigurationAspect.MapToStoredProcedures);
 
@@ -452,13 +453,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         ///     Configuration to override the default conventions for procedure and parameter names.
         /// </param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        public LightweightTypeConfiguration MapToStoredProcedures(
-            Action<LightweightModificationFunctionsConfiguration> modificationFunctionsConfigurationAction)
+        public ConventionTypeConfiguration MapToStoredProcedures(
+            Action<ConventionModificationFunctionsConfiguration> modificationFunctionsConfigurationAction)
         {
             Check.NotNull(modificationFunctionsConfigurationAction, "modificationFunctionsConfigurationAction");
             ValidateConfiguration(ConfigurationAspect.MapToStoredProcedures);
 
-            var modificationFunctionMappingConfiguration = new LightweightModificationFunctionsConfiguration(_type);
+            var modificationFunctionMappingConfiguration = new ConventionModificationFunctionsConfiguration(_type);
 
             modificationFunctionsConfigurationAction(modificationFunctionMappingConfiguration);
 

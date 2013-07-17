@@ -23,7 +23,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     ///     Allows configuration to be performed for an entity type in a model.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    public class EntityTypeConfiguration : StructuralTypeConfiguration
+    internal class EntityTypeConfiguration : StructuralTypeConfiguration
     {
         private readonly List<PropertyInfo> _keyProperties = new List<PropertyInfo>();
 

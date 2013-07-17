@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var modelConfiguration = new ModelConfiguration();
 
             new NotMappedTypeAttributeConvention()
-                .Apply(new LightweightTypeConfiguration(mockType, modelConfiguration), new NotMappedAttribute());
+                .Apply(new ConventionTypeConfiguration(mockType, modelConfiguration), new NotMappedAttribute());
 
             Assert.True(modelConfiguration.IsIgnoredType(mockType));
         }

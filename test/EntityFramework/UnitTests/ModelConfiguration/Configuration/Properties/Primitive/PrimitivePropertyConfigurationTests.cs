@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive
+namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using Xunit;
@@ -16,8 +17,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public void HasParameterName_should_set_name_on_inner_configuration()
         {
             var innerConfiguration = CreateConfiguration();
-            var primitivePropertyConfiguration 
-                = new PrimitivePropertyConfiguration<PrimitivePropertyConfiguration>(innerConfiguration);
+            var primitivePropertyConfiguration
+                = new PrimitivePropertyConfiguration(innerConfiguration);
 
             primitivePropertyConfiguration.HasParameterName("Foo");
 
@@ -78,9 +79,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             new EdmFunction(
                 "F", "N", DataSpace.SSpace,
                 new EdmFunctionPayload
-                {
-                    Parameters = new[] { functionParameter1, functionParameter2 }
-                });
+                    {
+                        Parameters = new[] { functionParameter1, functionParameter2 }
+                    });
 
             configuration.ConfigureFunctionParameters(new[] { functionParameter1 });
 
@@ -91,7 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         [Fact]
         public void HasColumnOrder_should_throw_when_argument_out_of_range()
         {
-            var configuration = new PrimitivePropertyConfiguration<PrimitivePropertyConfiguration>(new PrimitivePropertyConfiguration());
+            var configuration = new PrimitivePropertyConfiguration(new Properties.Primitive.PrimitivePropertyConfiguration());
 
             Assert.Equal(
                 new ArgumentOutOfRangeException("columnOrder").Message,
@@ -101,7 +102,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         [Fact]
         public void HasDatabaseGeneratedOption_should_throw_when_argument_out_of_range()
         {
-            var configuration = new PrimitivePropertyConfiguration<PrimitivePropertyConfiguration>(new PrimitivePropertyConfiguration());
+            var configuration = new PrimitivePropertyConfiguration(new Properties.Primitive.PrimitivePropertyConfiguration());
 
             Assert.Equal(
                 new ArgumentOutOfRangeException("databaseGeneratedOption").Message,
@@ -146,12 +147,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             configurationA.Configure(property);
 
-            Assert.Equal(ConcurrencyMode.Fixed, ((PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
+            Assert.Equal(
+                ConcurrencyMode.Fixed, ((Properties.Primitive.PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
 
             configurationB.Configure(property);
 
-            Assert.Equal(ConcurrencyMode.Fixed, ((PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
-            Assert.Equal(false, ((PrimitivePropertyConfiguration)property.GetConfiguration()).IsNullable);
+            Assert.Equal(
+                ConcurrencyMode.Fixed, ((Properties.Primitive.PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
+            Assert.Equal(false, ((Properties.Primitive.PrimitivePropertyConfiguration)property.GetConfiguration()).IsNullable);
         }
 
         [Fact]
@@ -159,7 +162,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             var configurationA = CreateConfiguration();
             configurationA.ConcurrencyMode = ConcurrencyMode.Fixed;
-            var configurationB = new PrimitivePropertyConfiguration();
+            var configurationB = new Properties.Primitive.PrimitivePropertyConfiguration();
             configurationB.IsNullable = false;
 
             var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
@@ -168,12 +171,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             configurationA.Configure(property);
 
-            Assert.Equal(ConcurrencyMode.Fixed, ((PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
+            Assert.Equal(
+                ConcurrencyMode.Fixed, ((Properties.Primitive.PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
 
             configurationB.Configure(property);
 
-            Assert.Equal(ConcurrencyMode.Fixed, ((PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
-            Assert.Equal(false, ((PrimitivePropertyConfiguration)property.GetConfiguration()).IsNullable);
+            Assert.Equal(
+                ConcurrencyMode.Fixed, ((Properties.Primitive.PrimitivePropertyConfiguration)property.GetConfiguration()).ConcurrencyMode);
+            Assert.Equal(false, ((Properties.Primitive.PrimitivePropertyConfiguration)property.GetConfiguration()).IsNullable);
             Assert.Equal(GetConfigurationType(), property.GetConfiguration().GetType());
         }
 
@@ -251,14 +256,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
                 ProviderRegistry.Sql2008_ProviderManifest);
 
-            Assert.Equal("foo", ((PrimitivePropertyConfiguration)edmPropertyMapping.ColumnProperty.GetConfiguration()).ColumnName);
+            Assert.Equal(
+                "foo",
+                ((Properties.Primitive.PrimitivePropertyConfiguration)edmPropertyMapping.ColumnProperty.GetConfiguration()).ColumnName);
 
             configurationB.Configure(
                 new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
                 ProviderRegistry.Sql2008_ProviderManifest);
 
-            Assert.Equal("foo", ((PrimitivePropertyConfiguration)edmPropertyMapping.ColumnProperty.GetConfiguration()).ColumnName);
-            Assert.Equal("nvarchar", ((PrimitivePropertyConfiguration)edmPropertyMapping.ColumnProperty.GetConfiguration()).ColumnType);
+            Assert.Equal(
+                "foo",
+                ((Properties.Primitive.PrimitivePropertyConfiguration)edmPropertyMapping.ColumnProperty.GetConfiguration()).ColumnName);
+            Assert.Equal(
+                "nvarchar",
+                ((Properties.Primitive.PrimitivePropertyConfiguration)edmPropertyMapping.ColumnProperty.GetConfiguration()).ColumnType);
         }
 
         [Fact]
@@ -1200,14 +1211,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             Assert.True(string.IsNullOrEmpty(errorMessage));
         }
 
-        internal PrimitivePropertyConfiguration CreateConfiguration()
+        internal Properties.Primitive.PrimitivePropertyConfiguration CreateConfiguration()
         {
-            return (PrimitivePropertyConfiguration)Activator.CreateInstance(GetConfigurationType());
+            return (Properties.Primitive.PrimitivePropertyConfiguration)Activator.CreateInstance(GetConfigurationType());
         }
 
         internal virtual Type GetConfigurationType()
         {
-            return typeof(PrimitivePropertyConfiguration);
+            return typeof(Properties.Primitive.PrimitivePropertyConfiguration);
         }
     }
 }

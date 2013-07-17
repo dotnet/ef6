@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     ///     Used to configure a <see cref="Decimal" /> property of an entity type or
     ///     complex type.
     /// </summary>
-    public class DecimalPropertyConfiguration : PrimitivePropertyConfiguration
+    internal class DecimalPropertyConfiguration : PrimitivePropertyConfiguration
     {
         /// <summary>
         ///     Gets or sets the precision of the property.

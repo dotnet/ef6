@@ -69,7 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             where T : struct
         {
             return new PropertyMappingConfiguration(
-                Property<PrimitivePropertyConfiguration>(propertyExpression));
+                Property<Properties.Primitive.PrimitivePropertyConfiguration>(propertyExpression));
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             where T : struct
         {
             return new PropertyMappingConfiguration(
-                Property<PrimitivePropertyConfiguration>(propertyExpression));
+                Property<Properties.Primitive.PrimitivePropertyConfiguration>(propertyExpression));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Expression<Func<TEntityType, DbGeometry>> propertyExpression)
         {
             return new PropertyMappingConfiguration(
-                Property<PrimitivePropertyConfiguration>(propertyExpression));
+                Property<Properties.Primitive.PrimitivePropertyConfiguration>(propertyExpression));
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Expression<Func<TEntityType, DbGeography>> propertyExpression)
         {
             return new PropertyMappingConfiguration(
-                Property<PrimitivePropertyConfiguration>(propertyExpression));
+                Property<Properties.Primitive.PrimitivePropertyConfiguration>(propertyExpression));
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal TPrimitivePropertyConfiguration Property<TPrimitivePropertyConfiguration>(
             LambdaExpression lambdaExpression)
-            where TPrimitivePropertyConfiguration : PrimitivePropertyConfiguration, new()
+            where TPrimitivePropertyConfiguration : Properties.Primitive.PrimitivePropertyConfiguration, new()
         {
             return _entityMappingConfiguration.Property(
                 lambdaExpression.GetComplexPropertyAccess(),

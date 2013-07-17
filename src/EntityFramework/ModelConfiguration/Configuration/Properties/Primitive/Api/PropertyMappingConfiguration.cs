@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -11,16 +10,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// </summary>
     public class PropertyMappingConfiguration
     {
-        private readonly PrimitivePropertyConfiguration _configuration;
+        private readonly Properties.Primitive.PrimitivePropertyConfiguration _configuration;
 
-        internal PropertyMappingConfiguration(PrimitivePropertyConfiguration configuration)
+        internal PropertyMappingConfiguration(Properties.Primitive.PrimitivePropertyConfiguration configuration)
         {
             DebugCheck.NotNull(configuration);
 
             _configuration = configuration;
         }
 
-        internal PrimitivePropertyConfiguration Configuration
+        internal Properties.Primitive.PrimitivePropertyConfiguration Configuration
         {
             get { return _configuration; }
         }

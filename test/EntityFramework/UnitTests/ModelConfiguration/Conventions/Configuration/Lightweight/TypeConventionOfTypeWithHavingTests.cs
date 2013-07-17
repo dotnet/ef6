@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 var actionInvoked = false;
                 object capturedValue = null;
                 var value = new object();
-                var convention = new TypeConventionOfTypeWithHaving<object, object>(
+                var convention = new TypeConventionWithHaving<object, object>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     t => value,
                     (c, v) =>
@@ -38,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_value_null()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfTypeWithHaving<object, object>(
+                var convention = new TypeConventionWithHaving<object, object>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     t => null,
                     (c, v) => actionInvoked = true);
@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 var actionInvoked = false;
                 object capturedValue = null;
                 var value = new object();
-                var convention = new TypeConventionOfTypeWithHaving<object, object>(
+                var convention = new TypeConventionWithHaving<object, object>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     t => value,
                     (c, v) =>
@@ -80,7 +80,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_value_null()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfTypeWithHaving<object, object>(
+                var convention = new TypeConventionWithHaving<object, object>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     t => null,
                     (c, v) => actionInvoked = true);
@@ -101,7 +101,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 var actionInvoked = false;
                 object capturedValue = null;
                 var value = new object();
-                var convention = new TypeConventionOfTypeWithHaving<object, object>(
+                var convention = new TypeConventionWithHaving<object, object>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     t => value,
                     (c, v) =>
@@ -122,7 +122,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             public void Does_not_invoke_action_when_value_null()
             {
                 var actionInvoked = false;
-                var convention = new TypeConventionOfTypeWithHaving<object, object>(
+                var convention = new TypeConventionWithHaving<object, object>(
                     Enumerable.Empty<Func<Type, bool>>(),
                     t => null,
                     (c, v) => actionInvoked = true);

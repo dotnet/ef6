@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
 
@@ -13,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         TypeAttributeConfigurationConvention<NotMappedAttribute>
     {
         /// <inheritdoc />
-        public override void Apply(LightweightTypeConfiguration configuration, NotMappedAttribute attribute)
+        public override void Apply(ConventionTypeConfiguration configuration, NotMappedAttribute attribute)
         {
             Check.NotNull(configuration, "configuration");
             Check.NotNull(attribute, "attribute");

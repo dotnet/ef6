@@ -6,16 +6,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Reflection;
+    using System.Reflection; 
 
     /// <summary>
-    /// Creates a convention that configures stored procedures to be used to delete entities in the database.
+    ///     Creates a convention that configures stored procedures to be used to delete entities in the database.
     /// </summary>
-    public class LightweightDeleteModificationFunctionConfiguration : LightweightModificationFunctionConfiguration
+    public class ConventionDeleteModificationFunctionConfiguration : ConventionModificationFunctionConfiguration
     {
         private readonly Type _type;
 
-        internal LightweightDeleteModificationFunctionConfiguration(Type type)
+        internal ConventionDeleteModificationFunctionConfiguration(Type type)
         {
             DebugCheck.NotNull(type);
 
@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary> Configures the name of the stored procedure. </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="procedureName"> The stored procedure name. </param>
-        public LightweightDeleteModificationFunctionConfiguration HasName(string procedureName)
+        public ConventionDeleteModificationFunctionConfiguration HasName(string procedureName)
         {
             Check.NotEmpty(procedureName, "procedureName");
 
@@ -38,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="procedureName">The stored procedure name.</param>
         /// <param name="schemaName">The schema name.</param>
-        public LightweightDeleteModificationFunctionConfiguration HasName(string procedureName, string schemaName)
+        public ConventionDeleteModificationFunctionConfiguration HasName(string procedureName, string schemaName)
         {
             Check.NotEmpty(procedureName, "procedureName");
             Check.NotEmpty(schemaName, "schemaName");
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyName"> The name of the property to configure the parameter for. </param>
         /// <param name="parameterName">The name of the parameter.</param>
-        public LightweightDeleteModificationFunctionConfiguration Parameter(string propertyName, string parameterName)
+        public ConventionDeleteModificationFunctionConfiguration Parameter(string propertyName, string parameterName)
         {
             Check.NotEmpty(propertyName, "propertyName");
             Check.NotEmpty(parameterName, "parameterName");
@@ -64,7 +64,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyName"> The property to configure the parameter for. </param>
         /// <param name="parameterName">The name of the parameter.</param>
-        public LightweightDeleteModificationFunctionConfiguration Parameter(
+        public ConventionDeleteModificationFunctionConfiguration Parameter(
             PropertyInfo propertyInfo, string parameterName)
         {
             Check.NotEmpty(parameterName, "parameterName");
@@ -80,7 +80,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>Configures the output parameter that returns the rows affected by this stored procedure.</summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="parameterName">The name of the parameter.</param>
-        public LightweightDeleteModificationFunctionConfiguration RowsAffectedParameter(string parameterName)
+        public ConventionDeleteModificationFunctionConfiguration RowsAffectedParameter(string parameterName)
         {
             Check.NotEmpty(parameterName, "parameterName");
 

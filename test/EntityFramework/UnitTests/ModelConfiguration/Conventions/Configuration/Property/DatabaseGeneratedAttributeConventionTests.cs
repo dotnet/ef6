@@ -3,8 +3,9 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using Xunit;
+    using PrimitivePropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration;
 
     public sealed class DatabaseGeneratedAttributeConventionTests : TestBase
     {
@@ -15,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             new DatabaseGeneratedAttributeConvention()
                 .Apply(
-                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                    new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
                     new DatabaseGeneratedAttribute(DatabaseGeneratedOption.None));
 
             Assert.Equal(DatabaseGeneratedOption.None, propertyConfiguration.DatabaseGeneratedOption);
@@ -31,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             new DatabaseGeneratedAttributeConvention()
                 .Apply(
-                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                    new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
                     new DatabaseGeneratedAttribute(DatabaseGeneratedOption.None));
 
             Assert.Equal(DatabaseGeneratedOption.Computed, propertyConfiguration.DatabaseGeneratedOption);

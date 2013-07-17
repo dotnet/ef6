@@ -5,7 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties
     /// <summary>
     ///     Base class for configuring a property on an entity type or complex type.
     /// </summary>
-    public abstract class PropertyConfiguration : ConfigurationBase
+    internal abstract class PropertyConfiguration : ConfigurationBase
     {
     }
 }

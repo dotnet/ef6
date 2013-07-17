@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Config;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Linq;
@@ -37,6 +38,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         /// </summary>
         /// <param name="configuration">The configuration for the property that has the attribute.</param>
         /// <param name="attribute">The attribute.</param>
-        public abstract void Apply(LightweightPrimitivePropertyConfiguration configuration, TAttribute attribute);
+        public abstract void Apply(ConventionPrimitivePropertyConfiguration configuration, TAttribute attribute);
     }
 }

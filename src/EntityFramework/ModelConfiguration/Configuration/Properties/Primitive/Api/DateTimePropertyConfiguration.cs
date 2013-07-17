@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     ///     Used to configure a <see cref="T:System.DateTime" /> property of an entity type or complex type.
     ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
-    public class DateTimePropertyConfiguration : PrimitivePropertyConfiguration<Properties.Primitive.DateTimePropertyConfiguration>
+    public class DateTimePropertyConfiguration : PrimitivePropertyConfiguration
     {
         internal DateTimePropertyConfiguration(Properties.Primitive.DateTimePropertyConfiguration configuration)
             : base(configuration)
@@ -124,6 +124,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Configuration.Precision = value;
 
             return this;
+        }
+
+        internal new Properties.Primitive.DateTimePropertyConfiguration Configuration
+        {
+            get { return (Properties.Primitive.DateTimePropertyConfiguration)base.Configuration; }
         }
     }
 }

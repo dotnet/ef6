@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Mappers;
@@ -18,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         PropertyAttributeConfigurationConvention<ForeignKeyAttribute>
     {
         /// <inheritdoc/>
-        public override void Apply(PropertyInfo memberInfo, LightweightTypeConfiguration configuration, ForeignKeyAttribute attribute)
+        public override void Apply(PropertyInfo memberInfo, ConventionTypeConfiguration configuration, ForeignKeyAttribute attribute)
         {
             Check.NotNull(memberInfo, "memberInfo");
             Check.NotNull(configuration, "configuration");

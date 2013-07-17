@@ -13,12 +13,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     /// <summary>
     ///     Used to create a convention that configures navigation properties.
     /// </summary>
-    public class LightweightNavigationPropertyConfiguration
+    internal class ConventionNavigationPropertyConfiguration
     {
         private readonly NavigationPropertyConfiguration _configuration;
         private readonly ModelConfiguration _modelConfiguration;
 
-        internal LightweightNavigationPropertyConfiguration(
+        internal ConventionNavigationPropertyConfiguration(
             NavigationPropertyConfiguration configuration, ModelConfiguration modelConfiguration)
         {
             _configuration = configuration;
@@ -136,7 +136,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         /// <summary>
         ///     Sets the inverse navigation property.
         /// </summary>
-        public virtual LightweightNavigationPropertyConfiguration HasInverseNavigationProperty(
+        public virtual ConventionNavigationPropertyConfiguration HasInverseNavigationProperty(
             Func<PropertyInfo, PropertyInfo> inverseNavigationPropertyGetter)
         {
             Check.NotNull(inverseNavigationPropertyGetter, "inverseNavigationPropertyGetter");
@@ -187,7 +187,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         /// <summary>
         ///     Sets the inverse end multiplicity.
         /// </summary>
-        public virtual LightweightNavigationPropertyConfiguration HasInverseEndMultiplicity(RelationshipMultiplicity multiplicity)
+        public virtual ConventionNavigationPropertyConfiguration HasInverseEndMultiplicity(RelationshipMultiplicity multiplicity)
         {
             if (_configuration != null
                 && _configuration.InverseEndKind == null)
@@ -206,7 +206,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         /// <summary>
         ///     True if the navigation property's declaring type is the principal end, false if it is not
         /// </summary>
-        public virtual LightweightNavigationPropertyConfiguration IsDeclaringTypePrincipal(bool isPrincipal)
+        public virtual ConventionNavigationPropertyConfiguration IsDeclaringTypePrincipal(bool isPrincipal)
         {
             if (_configuration != null
                 && _configuration.IsNavigationPropertyDeclaringTypePrincipal == null)
@@ -220,7 +220,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         /// <summary>
         ///     Sets the action to take when a delete operation is attempted.
         /// </summary>
-        public virtual LightweightNavigationPropertyConfiguration HasDeleteAction(OperationAction deleteAction)
+        public virtual ConventionNavigationPropertyConfiguration HasDeleteAction(OperationAction deleteAction)
         {
             if (_configuration != null
                 && _configuration.DeleteAction == null)
@@ -234,7 +234,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         /// <summary>
         ///     Sets the multiplicity of this end of the navigation property.
         /// </summary>
-        public virtual LightweightNavigationPropertyConfiguration HasRelationshipMultiplicity(RelationshipMultiplicity multiplicity)
+        public virtual ConventionNavigationPropertyConfiguration HasRelationshipMultiplicity(RelationshipMultiplicity multiplicity)
         {
             if (_configuration != null
                 && _configuration.RelationshipMultiplicity == null)

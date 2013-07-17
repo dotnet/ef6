@@ -7,16 +7,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Creates a convention that configures stored procedures to be used to modify entities in the database.
+    ///     Creates a convention that configures stored procedures to be used to modify entities in the database.
     /// </summary>
-    public class LightweightModificationFunctionsConfiguration
+    public class ConventionModificationFunctionsConfiguration
     {
         private readonly Type _type;
 
         private readonly ModificationFunctionsConfiguration _configuration
             = new ModificationFunctionsConfiguration();
 
-        internal LightweightModificationFunctionsConfiguration(Type type)
+        internal ConventionModificationFunctionsConfiguration(Type type)
         {
             DebugCheck.NotNull(type);
 
@@ -31,13 +31,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>Configures stored procedure used to insert entities.</summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="modificationFunctionConfigurationAction">A lambda expression that performs configuration for the stored procedure.</param>
-        public LightweightModificationFunctionsConfiguration Insert(
-            Action<LightweightInsertModificationFunctionConfiguration> modificationFunctionConfigurationAction)
+        public ConventionModificationFunctionsConfiguration Insert(
+            Action<ConventionInsertModificationFunctionConfiguration> modificationFunctionConfigurationAction)
         {
             Check.NotNull(modificationFunctionConfigurationAction, "modificationFunctionConfigurationAction");
 
             var modificationFunctionConfiguration
-                = new LightweightInsertModificationFunctionConfiguration(_type);
+                = new ConventionInsertModificationFunctionConfiguration(_type);
 
             modificationFunctionConfigurationAction(modificationFunctionConfiguration);
 
@@ -49,13 +49,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>Configures stored procedure used to update entities.</summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="modificationFunctionConfigurationAction">A lambda expression that performs configuration for the stored procedure.</param>
-        public LightweightModificationFunctionsConfiguration Update(
-            Action<LightweightUpdateModificationFunctionConfiguration> modificationFunctionConfigurationAction)
+        public ConventionModificationFunctionsConfiguration Update(
+            Action<ConventionUpdateModificationFunctionConfiguration> modificationFunctionConfigurationAction)
         {
             Check.NotNull(modificationFunctionConfigurationAction, "modificationFunctionConfigurationAction");
 
             var modificationFunctionConfiguration
-                = new LightweightUpdateModificationFunctionConfiguration(_type);
+                = new ConventionUpdateModificationFunctionConfiguration(_type);
 
             modificationFunctionConfigurationAction(modificationFunctionConfiguration);
 
@@ -67,13 +67,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>Configures stored procedure used to delete entities.</summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="modificationFunctionConfigurationAction">A lambda expression that performs configuration for the stored procedure.</param>
-        public LightweightModificationFunctionsConfiguration Delete(
-            Action<LightweightDeleteModificationFunctionConfiguration> modificationFunctionConfigurationAction)
+        public ConventionModificationFunctionsConfiguration Delete(
+            Action<ConventionDeleteModificationFunctionConfiguration> modificationFunctionConfigurationAction)
         {
             Check.NotNull(modificationFunctionConfigurationAction, "modificationFunctionConfigurationAction");
 
             var modificationFunctionConfiguration
-                = new LightweightDeleteModificationFunctionConfiguration(_type);
+                = new ConventionDeleteModificationFunctionConfiguration(_type);
 
             modificationFunctionConfigurationAction(modificationFunctionConfiguration);
 

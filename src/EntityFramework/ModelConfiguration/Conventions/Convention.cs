@@ -50,10 +50,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         /// <typeparam name="T"> The type of the entities that this convention will apply to. </typeparam>
         /// <returns> A configuration object for the convention. </returns>
         /// <remarks> This method does not add new types to the model.</remarks>
-        public TypeConventionOfTypeConfiguration<T> Types<T>()
+        public TypeConventionConfiguration<T> Types<T>()
             where T : class
         {
-            return new TypeConventionOfTypeConfiguration<T>(_conventionsConfiguration);
+            return new TypeConventionConfiguration<T>(_conventionsConfiguration);
         }
 
         /// <summary>

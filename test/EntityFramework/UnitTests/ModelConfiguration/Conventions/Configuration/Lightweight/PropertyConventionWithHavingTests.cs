@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     capturedValue = v;
                 });
             var propertyInfo = new MockPropertyInfo();
-            var configuration = new PrimitivePropertyConfiguration();
+            var configuration = new Configuration.Properties.Primitive.PrimitivePropertyConfiguration();
 
             convention.Apply(propertyInfo, () => configuration, new ModelConfiguration());
 
@@ -42,7 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 p => null,
                 (c, v) => actionInvoked = true);
             var propertyInfo = new MockPropertyInfo();
-            var configuration = new PrimitivePropertyConfiguration();
+            var configuration = new Configuration.Properties.Primitive.PrimitivePropertyConfiguration();
 
             convention.Apply(propertyInfo, () => configuration, new ModelConfiguration());
 

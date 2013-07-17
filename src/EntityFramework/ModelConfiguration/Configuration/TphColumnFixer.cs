@@ -6,7 +6,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -41,12 +40,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     indexAfterLastDuplicate++;
                 }
 
-                var columnConfig = column.GetConfiguration() as PrimitivePropertyConfiguration;
+                var columnConfig = column.GetConfiguration() as Properties.Primitive.PrimitivePropertyConfiguration;
 
                 for (var toChangeIndex = i + 1; toChangeIndex < indexAfterLastDuplicate; toChangeIndex++)
                 {
                     var toFixup = _columnMappings[toChangeIndex];
-                    var toChangeConfig = toFixup.ColumnProperty.GetConfiguration() as PrimitivePropertyConfiguration;
+                    var toChangeConfig = toFixup.ColumnProperty.GetConfiguration() as Properties.Primitive.PrimitivePropertyConfiguration;
 
                     string configError;
                     if (columnConfig == null

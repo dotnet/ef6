@@ -10,7 +10,6 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
-    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
@@ -18,16 +17,19 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
-    using Moq;
     using Xunit;
     using BinaryPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.BinaryPropertyConfiguration
-            ;
+        ;
     using DateTimePropertyConfiguration =
-            System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DateTimePropertyConfiguration;
+        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DateTimePropertyConfiguration;
     using DecimalPropertyConfiguration =
-            System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DecimalPropertyConfiguration;
+        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DecimalPropertyConfiguration;
+    using LengthPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.LengthPropertyConfiguration
+        ;
+    using PrimitivePropertyConfiguration =
+        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration;
     using StringPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.StringPropertyConfiguration
-            ;
+        ;
 
     public sealed class DbModelBuilderTests
     {
@@ -208,7 +210,7 @@ namespace System.Data.Entity.ModelConfiguration
                         typeof(T).Name, expectedCount, actualCount));
             }
         }
-        
+
         [Fact]
         public void ConventionsConfiguration_has_expected_number_of_fields()
         {
@@ -266,7 +268,7 @@ namespace System.Data.Entity.ModelConfiguration
             configuration.ToTable("Table");
             configuration.IsExplicitEntity = true;
             configuration.EntitySetName = "ESN";
-            
+
             var clone = configuration.Clone();
 
             Assert.True(clone.IsReplaceable);
@@ -440,7 +442,7 @@ namespace System.Data.Entity.ModelConfiguration
             configuration.MapToStoredProcedures();
 
             var clone = configuration.Clone();
-            
+
             Assert.NotNull(clone.ModificationFunctionsConfiguration);
         }
 
@@ -711,7 +713,7 @@ namespace System.Data.Entity.ModelConfiguration
             var configuration = new NavigationPropertyConfiguration(navProp);
 
             var functionsConfiguration = new ModificationFunctionsConfiguration();
-            
+
             configuration.ModificationFunctionsConfiguration = functionsConfiguration;
 
             var clone = configuration.Clone();
@@ -822,9 +824,9 @@ namespace System.Data.Entity.ModelConfiguration
 
             var propertyInfo1 = new MockPropertyInfo(typeof(int), "P1");
             configuration.Properties = new List<PropertyPath>
-                                           {
-                                               new PropertyPath(propertyInfo1)
-                                           };
+                {
+                    new PropertyPath(propertyInfo1)
+                };
 
             configuration.TableName = new DatabaseName("T", "S");
 

@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     ///     Used to configure a <see cref="DateTime" /> property of an entity type or
     ///     complex type.
     /// </summary>
-    public class DateTimePropertyConfiguration : PrimitivePropertyConfiguration
+    internal class DateTimePropertyConfiguration : PrimitivePropertyConfiguration
     {
         /// <summary>
         ///     Gets or sets the precision of the property.

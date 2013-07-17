@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     ///     Used to configure a <see cref="T:System.string" /> property of an entity type or complex type.
     ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
-    public class StringPropertyConfiguration : LengthPropertyConfiguration<Properties.Primitive.StringPropertyConfiguration>
+    public class StringPropertyConfiguration : LengthPropertyConfiguration
     {
         internal StringPropertyConfiguration(Properties.Primitive.StringPropertyConfiguration configuration)
             : base(configuration)
@@ -183,6 +183,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Configuration.IsUnicode = unicode;
 
             return this;
+        }
+
+        internal new Properties.Primitive.StringPropertyConfiguration Configuration
+        {
+            get { return (Properties.Primitive.StringPropertyConfiguration)base.Configuration; }
         }
     }
 }

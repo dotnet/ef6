@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
@@ -12,16 +11,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// </summary>
     public class PrimitiveColumnConfiguration
     {
-        private readonly PrimitivePropertyConfiguration _configuration;
+        private readonly Properties.Primitive.PrimitivePropertyConfiguration _configuration;
 
-        internal PrimitiveColumnConfiguration(PrimitivePropertyConfiguration configuration)
+        internal PrimitiveColumnConfiguration(Properties.Primitive.PrimitivePropertyConfiguration configuration)
         {
             DebugCheck.NotNull(configuration);
 
             _configuration = configuration;
         }
 
-        internal PrimitivePropertyConfiguration Configuration
+        internal Properties.Primitive.PrimitivePropertyConfiguration Configuration
         {
             get { return _configuration; }
         }

@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Data.Entity.ModelConfiguration.Configuration.Properties;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.Utilities;
     using System.Reflection;
@@ -41,8 +40,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             public void Dispatch()
             {
                 Dispatch<PropertyConfiguration>();
-                Dispatch<PrimitivePropertyConfiguration>();
-                Dispatch<LengthPropertyConfiguration>();
+                Dispatch<Properties.Primitive.PrimitivePropertyConfiguration>();
+                Dispatch<Properties.Primitive.LengthPropertyConfiguration>();
                 Dispatch<Properties.Primitive.DateTimePropertyConfiguration>();
                 Dispatch<Properties.Primitive.DecimalPropertyConfiguration>();
                 Dispatch<Properties.Primitive.StringPropertyConfiguration>();

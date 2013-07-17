@@ -3,7 +3,6 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -11,14 +10,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// </summary>
     public abstract class LengthColumnConfiguration : PrimitiveColumnConfiguration
     {
-        internal LengthColumnConfiguration(LengthPropertyConfiguration configuration)
+        internal LengthColumnConfiguration(Properties.Primitive.LengthPropertyConfiguration configuration)
             : base(configuration)
         {
         }
 
-        internal new LengthPropertyConfiguration Configuration
+        internal new Properties.Primitive.LengthPropertyConfiguration Configuration
         {
-            get { return (LengthPropertyConfiguration)base.Configuration; }
+            get { return (Properties.Primitive.LengthPropertyConfiguration)base.Configuration; }
         }
 
         /// <summary>Configures the column to allow the maximum length supported by the database provider.</summary>

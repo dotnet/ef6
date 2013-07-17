@@ -27,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             new ForeignKeyPrimitivePropertyAttributeConvention()
                 .Apply(
                     mockTypeB.GetProperty("AId2"),
-                    new LightweightTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
+                    new ConventionTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
                     new ForeignKeyAttribute("A"));
 
             var foreignKeyConstraint = (ForeignKeyConstraintConfiguration)navigationPropertyConfiguration.Constraint;
@@ -60,7 +60,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             new ForeignKeyPrimitivePropertyAttributeConvention()
                 .Apply(
                     mockTypeB.GetProperty("AId1"),
-                    new LightweightTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
+                    new ConventionTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
                     new ForeignKeyAttribute("A"));
 
             Assert.Null(navigationPropertyConfiguration.Constraint);
@@ -79,7 +79,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             new ForeignKeyPrimitivePropertyAttributeConvention()
                 .Apply(
                     mockPropertyInfo,
-                    new LightweightTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
+                    new ConventionTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
                     new ForeignKeyAttribute("A"));
 
             var navigationPropertyConfiguration
@@ -107,7 +107,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     () => new ForeignKeyPrimitivePropertyAttributeConvention()
                               .Apply(
                                   mockPropertyInfo,
-                                  new LightweightTypeConfiguration(
+                                  new ConventionTypeConfiguration(
                               mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
                                   new ForeignKeyAttribute("Missing"))).Message);
         }

@@ -1,23 +1,23 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.ModelConfiguration.Configuration.Types
+namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Reflection;
     using Xunit;
-
-    public class LightweightTypeConfigurationTests
+    
+    public class ConventionTypeConfigurationTests
     {
         [Fact]
         public void Ctor_does_not_invoke_delegate()
         {
             var initialized = false;
 
-            new LightweightTypeConfiguration(
+            new ConventionTypeConfiguration(
                 new MockType(),
                 () =>
                     {
@@ -36,14 +36,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             type.Property<int>("Property1");
 
             Methods_dont_throw_when_configuration_is_null_implementation(
-                () => new LightweightTypeConfiguration(type, () => new EntityTypeConfiguration(type), new ModelConfiguration()));
+                () => new ConventionTypeConfiguration(type, () => new EntityTypeConfiguration(type), new ModelConfiguration()));
             Methods_dont_throw_when_configuration_is_null_implementation(
-                () => new LightweightTypeConfiguration(type, () => new ComplexTypeConfiguration(type), new ModelConfiguration()));
+                () => new ConventionTypeConfiguration(type, () => new ComplexTypeConfiguration(type), new ModelConfiguration()));
             Methods_dont_throw_when_configuration_is_null_implementation(
-                () => new LightweightTypeConfiguration(type, new ModelConfiguration()));
+                () => new ConventionTypeConfiguration(type, new ModelConfiguration()));
         }
 
-        private void Methods_dont_throw_when_configuration_is_null_implementation(Func<LightweightTypeConfiguration> config)
+        private void Methods_dont_throw_when_configuration_is_null_implementation(Func<ConventionTypeConfiguration> config)
         {
             Assert.NotNull(config().ClrType);
             config().IsComplexType();
@@ -68,7 +68,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var ex = Assert.Throws<ArgumentException>(
                 () => config.HasEntitySetName(null));
@@ -81,7 +81,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.HasEntitySetName("EntitySet1");
 
@@ -97,7 +97,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 {
                     EntitySetName = "EntitySet1"
                 };
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.HasEntitySetName("EntitySet2");
 
@@ -110,7 +110,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var ex = Assert.Throws<ArgumentException>(
                 () => config.Ignore((string)null));
@@ -128,7 +128,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var type = new MockType()
                 .Property<int>("Property1");
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             config.Ignore("Property1");
 
@@ -142,7 +142,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var type = new MockType()
                 .Property<int>("Property1");
             var innerConfig = new ComplexTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             config.IsComplexType();
             config.Ignore("Property1");
@@ -156,7 +156,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             Assert.Equal(
                 Strings.NoSuchProperty("foo", type.FullName),
@@ -168,7 +168,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new ModelConfiguration();
-            var config = new LightweightTypeConfiguration(type, innerConfig);
+            var config = new ConventionTypeConfiguration(type, innerConfig);
 
             config.Ignore();
 
@@ -210,26 +210,26 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 config => config.MapToStoredProcedures(c => { }));
         }
 
-        private void Ignore_type_throws_with_any_other_configuration_implementation(Action<LightweightTypeConfiguration> configAction)
+        private void Ignore_type_throws_with_any_other_configuration_implementation(Action<ConventionTypeConfiguration> configAction)
         {
             var type = new MockType();
             type.Property<int>("Property1");
             type.Property(type, "Property2");
 
             Ignore_type_throws_with_any_other_configuration_assert(
-                new LightweightTypeConfiguration(type, () => new EntityTypeConfiguration(type), new ModelConfiguration()),
+                new ConventionTypeConfiguration(type, () => new EntityTypeConfiguration(type), new ModelConfiguration()),
                 configAction);
             Ignore_type_throws_with_any_other_configuration_assert(
-                new LightweightTypeConfiguration(type, () => new ComplexTypeConfiguration(type), new ModelConfiguration()),
+                new ConventionTypeConfiguration(type, () => new ComplexTypeConfiguration(type), new ModelConfiguration()),
                 configAction);
             Ignore_type_throws_with_any_other_configuration_assert(
-                new LightweightTypeConfiguration(type, new ModelConfiguration()),
+                new ConventionTypeConfiguration(type, new ModelConfiguration()),
                 configAction);
         }
 
         private void Ignore_type_throws_with_any_other_configuration_assert(
-            LightweightTypeConfiguration config,
-            Action<LightweightTypeConfiguration> configAction)
+            ConventionTypeConfiguration config,
+            Action<ConventionTypeConfiguration> configAction)
         {
             config.Ignore();
 
@@ -249,7 +249,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new ModelConfiguration();
-            var config = new LightweightTypeConfiguration(type, innerConfig);
+            var config = new ConventionTypeConfiguration(type, innerConfig);
 
             config.IsComplexType();
 
@@ -283,25 +283,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 config => config.NavigationProperty(config.ClrType.GetProperties().First()));
         }
 
-        private void IsComplexType_throws_with_conflicting_configuration_implementation(Action<LightweightTypeConfiguration> configAction)
+        private void IsComplexType_throws_with_conflicting_configuration_implementation(Action<ConventionTypeConfiguration> configAction)
         {
             var type = new MockType();
             type.Property<int>("Property1");
 
             IsComplexType_throws_with_conflicting_configuration_assert(
-                new LightweightTypeConfiguration(type, () => new EntityTypeConfiguration(type), new ModelConfiguration()),
+                new ConventionTypeConfiguration(type, () => new EntityTypeConfiguration(type), new ModelConfiguration()),
                 configAction);
             IsComplexType_throws_with_conflicting_configuration_assert(
-                new LightweightTypeConfiguration(type, () => new ComplexTypeConfiguration(type), new ModelConfiguration()),
+                new ConventionTypeConfiguration(type, () => new ComplexTypeConfiguration(type), new ModelConfiguration()),
                 configAction);
             IsComplexType_throws_with_conflicting_configuration_assert(
-                new LightweightTypeConfiguration(type, new ModelConfiguration()),
+                new ConventionTypeConfiguration(type, new ModelConfiguration()),
                 configAction);
         }
 
         private void IsComplexType_throws_with_conflicting_configuration_assert(
-            LightweightTypeConfiguration config,
-            Action<LightweightTypeConfiguration> configAction)
+            ConventionTypeConfiguration config,
+            Action<ConventionTypeConfiguration> configAction)
         {
             config.IsComplexType();
 
@@ -321,7 +321,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var ex = Assert.Throws<ArgumentException>(
                 () => config.Property((string)null));
@@ -335,7 +335,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var type = new MockType()
                 .Property<object>("NonScalar");
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var ex = Assert.Throws<InvalidOperationException>(
                 () => config.Property("NonScalar"));
@@ -350,7 +350,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var ex = Assert.Throws<InvalidOperationException>(
                 () => config.Property("Item"));
@@ -365,7 +365,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             Assert.Equal(
                 Strings.NoSuchProperty("Property1", type.Object.FullName),
@@ -382,7 +382,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var type = new MockType()
                 .Property<decimal>("Property1");
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.Property("Property1");
 
@@ -391,7 +391,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             Assert.Equal("Property1", result.ClrPropertyInfo.Name);
             Assert.Equal(typeof(decimal), result.ClrPropertyInfo.PropertyType);
             Assert.NotNull(result.Configuration);
-            Assert.IsType<DecimalPropertyConfiguration>(result.Configuration());
+            Assert.IsType<Properties.Primitive.DecimalPropertyConfiguration>(result.Configuration());
         }
 
         [Fact]
@@ -400,7 +400,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var type = new MockType()
                 .Property<decimal>("Property1");
             var innerConfig = new ComplexTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             config.IsComplexType();
             var result = config.Property("Property1");
@@ -410,7 +410,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             Assert.Equal("Property1", result.ClrPropertyInfo.Name);
             Assert.Equal(typeof(decimal), result.ClrPropertyInfo.PropertyType);
             Assert.NotNull(result.Configuration);
-            Assert.IsType<DecimalPropertyConfiguration>(result.Configuration());
+            Assert.IsType<Properties.Primitive.DecimalPropertyConfiguration>(result.Configuration());
         }
 
         [Fact]
@@ -418,7 +418,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("propertyName"),
@@ -436,7 +436,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.NavigationProperty(type.GetProperty("NavigationProperty"));
 
@@ -453,7 +453,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.NavigationProperty("NavigationProperty");
 
@@ -470,7 +470,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = typeof(LocalEntityType);
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             Assert.Equal(
                 Strings.NoSuchProperty("foo", type.FullName),
@@ -486,7 +486,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var ex = Assert.Throws<ArgumentException>(
                 () => config.ToTable(null));
@@ -499,7 +499,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             config.ToTable("Table1");
 
@@ -512,7 +512,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
             innerConfig.ToTable("Table1");
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             config.ToTable("Table2");
 
@@ -524,7 +524,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             config.ToTable("Schema1.Table1");
 
@@ -537,7 +537,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var ex = Assert.Throws<ArgumentException>(
                 () => config.ToTable(null, null));
@@ -550,7 +550,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             config.ToTable("Table1", "Schema1");
 
@@ -564,7 +564,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
             innerConfig.ToTable("Table1", "Schema1");
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             config.ToTable("Table2", "Schema2");
 
@@ -577,7 +577,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var ex = Assert.Throws<ArgumentException>(
                 () => config.HasKey((string)null));
@@ -592,7 +592,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 .Property<int>("Property1")
                 .Property<int>("Property2");
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.HasKey("Property1").HasKey("Property2");
 
@@ -607,7 +607,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 .Property<int>("Property1")
                 .Property<int>("Property2");
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.HasKey(config.ClrType.GetProperties().First())
                 .HasKey(config.ClrType.GetProperties().Last());
@@ -624,7 +624,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 .Property<int>("Property2");
             var innerConfig = new EntityTypeConfiguration(type);
             innerConfig.Key(new[] { type.GetProperty("Property1") });
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.HasKey("Property2");
 
@@ -638,7 +638,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             Assert.Equal(
                 Strings.NoSuchProperty("Property2", "T"),
@@ -650,7 +650,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var ex = Assert.Throws<ArgumentNullException>(
                 () => config.HasKey((string[])null));
@@ -670,7 +670,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 .Property<int>("Property1")
                 .Property<int>("Property2");
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.HasKey(new[] { "Property1", "Property2" });
 
@@ -689,7 +689,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 .Property<int>("Property3");
             var innerConfig = new EntityTypeConfiguration(type);
             innerConfig.Key(new[] { type.GetProperty("Property1") });
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.HasKey(new[] { "Property2", "Property3" });
 
@@ -707,7 +707,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 .Property<int>("Property2")
                 .Property<int>("Property3");
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.HasKey(new[] { "Property1" })
                 .HasKey(new[] { "Property2", "Property3" });
@@ -723,7 +723,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             Assert.Equal(
                 Strings.NoSuchProperty("Property1", "T"),
@@ -735,7 +735,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             config.MapToStoredProcedures();
 
@@ -747,7 +747,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             Assert.Same(type.Object, config.ClrType);
         }
@@ -757,7 +757,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             config.MapToStoredProcedures();
 
@@ -769,9 +769,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var type = new MockType();
             var innerConfig = new EntityTypeConfiguration(type);
-            var config = new LightweightTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            LightweightModificationFunctionsConfiguration configuration = null;
+            ConventionModificationFunctionsConfiguration configuration = null;
 
             config.MapToStoredProcedures(c => configuration = c);
 

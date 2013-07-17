@@ -15,19 +15,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     ///     the entity types in a model that inherit from a common, specified type.
     /// </summary>
     /// <typeparam name="T"> The common type of the entity types that this convention applies to. </typeparam>
-    public class TypeConventionOfTypeConfiguration<T>
+    public class TypeConventionConfiguration<T>
         where T : class
     {
         private readonly ConventionsConfiguration _conventionsConfiguration;
         private readonly IEnumerable<Func<Type, bool>> _predicates;
 
-        internal TypeConventionOfTypeConfiguration(ConventionsConfiguration conventionsConfiguration)
+        internal TypeConventionConfiguration(ConventionsConfiguration conventionsConfiguration)
             : this(conventionsConfiguration, Enumerable.Empty<Func<Type, bool>>())
         {
             DebugCheck.NotNull(conventionsConfiguration);
         }
 
-        private TypeConventionOfTypeConfiguration(
+        private TypeConventionConfiguration(
             ConventionsConfiguration conventionsConfiguration,
             IEnumerable<Func<Type, bool>> predicates)
         {
@@ -54,13 +54,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="predicate"> A function to test each entity type for a condition. </param>
         /// <returns>
-        ///     An <see cref="TypeConventionOfTypeConfiguration{T}" /> instance so that multiple calls can be chained.
+        ///     An <see cref="TypeConventionConfiguration{T}" /> instance so that multiple calls can be chained.
         /// </returns>
-        public TypeConventionOfTypeConfiguration<T> Where(Func<Type, bool> predicate)
+        public TypeConventionConfiguration<T> Where(Func<Type, bool> predicate)
         {
             Check.NotNull(predicate, "predicate");
 
-            return new TypeConventionOfTypeConfiguration<T>(
+            return new TypeConventionConfiguration<T>(
                 _conventionsConfiguration,
                 _predicates.Append(predicate));
         }
@@ -75,14 +75,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     entity type will be filtered out.
         /// </param>
         /// <returns>
-        ///     An <see cref="TypeConventionOfTypeWithHavingConfiguration{T,TValue}" /> instance so that multiple calls can be chained.
+        ///     An <see cref="TypeConventionWithHavingConfiguration{T,TValue}" /> instance so that multiple calls can be chained.
         /// </returns>
-        public TypeConventionOfTypeWithHavingConfiguration<T, TValue> Having<TValue>(Func<Type, TValue> capturingPredicate)
+        public TypeConventionWithHavingConfiguration<T, TValue> Having<TValue>(Func<Type, TValue> capturingPredicate)
             where TValue : class
         {
             Check.NotNull(capturingPredicate, "capturingPredicate");
 
-            return new TypeConventionOfTypeWithHavingConfiguration<T, TValue>(
+            return new TypeConventionWithHavingConfiguration<T, TValue>(
                 _conventionsConfiguration,
                 _predicates,
                 capturingPredicate);
@@ -94,15 +94,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="entityConfigurationAction">
         ///     An action that performs configuration against a
         ///     <see
-        ///         cref="LightweightTypeConfiguration{T}" />
+        ///         cref="ConventionTypeConfiguration{T}" />
         ///     .
         /// </param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public void Configure(Action<LightweightTypeConfiguration<T>> entityConfigurationAction)
+        public void Configure(Action<ConventionTypeConfiguration<T>> entityConfigurationAction)
         {
             Check.NotNull(entityConfigurationAction, "entityConfigurationAction");
 
-            _conventionsConfiguration.Add(new TypeConventionOfType<T>(_predicates, entityConfigurationAction));
+            _conventionsConfiguration.Add(new TypeConvention<T>(_predicates, entityConfigurationAction));
         }
 
         /// <inheritdoc />

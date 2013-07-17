@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     /// <summary>
     ///     Used to configure a navigation property.
     /// </summary>
-    public class NavigationPropertyConfiguration : PropertyConfiguration
+    internal class NavigationPropertyConfiguration : PropertyConfiguration
     {
         private readonly PropertyInfo _navigationProperty;
         private RelationshipMultiplicity? _endKind;

@@ -6,7 +6,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Resources;
     using System.Linq;
     using Moq;
@@ -100,12 +99,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var columns = new[]
                 {
                     CreateColumn(
-                        mockTableType, "Duke", new PrimitivePropertyConfiguration
+                        mockTableType, "Duke", new Properties.Primitive.PrimitivePropertyConfiguration
                             {
                                 ColumnType = "int"
                             }),
                     CreateColumn(
-                        mockTableType, "Duke", new PrimitivePropertyConfiguration
+                        mockTableType, "Duke", new Properties.Primitive.PrimitivePropertyConfiguration
                             {
                                 ColumnType = "nvarchar(max)"
                             })
@@ -236,7 +235,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return new ColumnMappingBuilder(column, new[] { CreateMockMember(baseType, propertyName).Object });
         }
 
-        private static EdmProperty CreateColumn(Mock<EntityType> mockTableType, string name, PrimitivePropertyConfiguration config = null)
+        private static EdmProperty CreateColumn(
+            Mock<EntityType> mockTableType, string name, Properties.Primitive.PrimitivePropertyConfiguration config = null)
         {
             var mockColumn = CreateMockMember(mockTableType.Object, name);
             mockColumn.Setup(m => m.Annotations).Returns(
@@ -246,7 +246,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                         {
                             MetadataProperty.CreateAnnotation("Configuration", config)
                         });
-            
+
             mockColumn.SetupProperty(
                 m => m.TypeUsage, TypeUsage.CreateStringTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String), true, false));
 

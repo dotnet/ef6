@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Conventions
         public void Configure_evaluates_preconditions()
         {
             var conventions = new ConventionsConfiguration();
-            var entities = new TypeConventionOfTypeConfiguration<object>(conventions);
+            var entities = new TypeConventionConfiguration<object>(conventions);
 
             var ex = Assert.Throws<ArgumentNullException>(
                 () => entities.Having<object>(t => null).Configure(null));
@@ -25,9 +25,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Conventions
         {
             Func<Type, bool> predicate = t => true;
             Func<Type, object> capturingPredicate = t => null;
-            Action<LightweightTypeConfiguration<object>, object> configurationAction = (c, o) => { };
+            Action<ConventionTypeConfiguration<object>, object> configurationAction = (c, o) => { };
             var conventions = new ConventionsConfiguration();
-            var entities = new TypeConventionOfTypeConfiguration<object>(conventions);
+            var entities = new TypeConventionConfiguration<object>(conventions);
 
             entities
                 .Where(predicate)
@@ -36,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Conventions
 
             Assert.Equal(16, conventions.ConfigurationConventions.Count());
 
-            var convention = (TypeConventionOfTypeWithHaving<object, object>)conventions.ConfigurationConventions.Last();
+            var convention = (TypeConventionWithHaving<object, object>)conventions.ConfigurationConventions.Last();
             Assert.Equal(2, convention.Predicates.Count());
             Assert.Same(predicate, convention.Predicates.Last());
             Assert.Same(capturingPredicate, convention.CapturingPredicate);

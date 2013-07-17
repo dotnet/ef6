@@ -54,10 +54,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Allows configuration of the entity types that this convention applies to.
         /// </summary>
         /// <param name="entityConfigurationAction">
-        ///     An action that performs configuration against a <see cref="LightweightTypeConfiguration" />
+        ///     An action that performs configuration against a <see cref="ConventionTypeConfiguration" />
         ///     using a captured value.
         /// </param>
-        public void Configure(Action<LightweightTypeConfiguration, T> entityConfigurationAction)
+        public void Configure(Action<ConventionTypeConfiguration, T> entityConfigurationAction)
         {
             Check.NotNull(entityConfigurationAction, "entityConfigurationAction");
 

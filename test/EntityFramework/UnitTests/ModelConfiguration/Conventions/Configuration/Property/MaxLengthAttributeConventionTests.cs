@@ -3,9 +3,10 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.Resources;
     using Xunit;
+    using StringPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.StringPropertyConfiguration;
 
     public sealed class MaxLengthAttributeConventionTests : TestBase
     {
@@ -16,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             new MaxLengthAttributeConvention()
                 .Apply(
-                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                    new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
                     new MaxLengthAttribute());
 
             Assert.Null(propertyConfiguration.MaxLength);
@@ -33,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             new MaxLengthAttributeConvention()
                 .Apply(
-                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                    new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
                     new MaxLengthAttribute());
 
             Assert.Null(propertyConfiguration.MaxLength);
@@ -47,7 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             new MaxLengthAttributeConvention()
                 .Apply(
-                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                    new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
                     new MaxLengthAttribute(100));
 
             Assert.Equal(100, propertyConfiguration.MaxLength);
@@ -64,7 +65,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             new MaxLengthAttributeConvention()
                 .Apply(
-                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                    new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
                     new MaxLengthAttribute(100));
 
             Assert.Equal(200, propertyConfiguration.MaxLength);
@@ -81,7 +82,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 Assert.Throws<InvalidOperationException>(
                     () => new MaxLengthAttributeConvention()
                               .Apply(
-                                  new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                                  new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
                                   new MaxLengthAttribute(-2))).Message);
         }
     }

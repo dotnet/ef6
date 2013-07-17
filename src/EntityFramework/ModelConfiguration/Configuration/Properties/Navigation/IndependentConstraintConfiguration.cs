@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     /// <summary>
     ///     Used to configure an independent constraint on a navigation property.
     /// </summary>
-    public class IndependentConstraintConfiguration : ConstraintConfiguration
+    internal class IndependentConstraintConfiguration : ConstraintConfiguration
     {
         private static readonly ConstraintConfiguration _instance = new IndependentConstraintConfiguration();
 

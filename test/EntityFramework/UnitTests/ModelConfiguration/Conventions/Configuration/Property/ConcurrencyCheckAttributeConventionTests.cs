@@ -4,8 +4,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using Xunit;
+    using PrimitivePropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration;
 
     public sealed class ConcurrencyCheckAttributeConventionTests : TestBase
     {
@@ -16,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             new ConcurrencyCheckAttributeConvention()
                 .Apply(
-                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                    new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
                     new ConcurrencyCheckAttribute());
 
             Assert.Equal(ConcurrencyMode.Fixed, propertyConfiguration.ConcurrencyMode);
@@ -32,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             new ConcurrencyCheckAttributeConvention()
                 .Apply(
-                    new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
+                    new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration),
                     new ConcurrencyCheckAttribute());
 
             Assert.Equal(ConcurrencyMode.None, propertyConfiguration.ConcurrencyMode);

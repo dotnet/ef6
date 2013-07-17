@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -14,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         : PrimitivePropertyAttributeConfigurationConvention<StringLengthAttribute>
     {
         /// <inheritdoc/>
-        public override void Apply(LightweightPrimitivePropertyConfiguration configuration, StringLengthAttribute attribute)
+        public override void Apply(ConventionPrimitivePropertyConfiguration configuration, StringLengthAttribute attribute)
         {
             Check.NotNull(configuration, "configuration");
             Check.NotNull(attribute, "attribute");

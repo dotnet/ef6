@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     ///     Used to configure a property with length facets for an entity type or
     ///     complex type.
     /// </summary>
-    public abstract class LengthPropertyConfiguration : PrimitivePropertyConfiguration
+    internal abstract class LengthPropertyConfiguration : PrimitivePropertyConfiguration
     {
         /// <summary>
         ///     Gets or sets a value indicating whether the property is fixed length.

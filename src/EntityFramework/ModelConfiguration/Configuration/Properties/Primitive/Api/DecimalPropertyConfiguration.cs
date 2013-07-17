@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     ///     Used to configure a <see cref="T:System.decimal" /> property of an entity type or complex type.
     ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
-    public class DecimalPropertyConfiguration : PrimitivePropertyConfiguration<Properties.Primitive.DecimalPropertyConfiguration>
+    public class DecimalPropertyConfiguration : PrimitivePropertyConfiguration
     {
         internal DecimalPropertyConfiguration(Properties.Primitive.DecimalPropertyConfiguration configuration)
             : base(configuration)
@@ -125,6 +125,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Configuration.Scale = scale;
 
             return this;
+        }
+
+        internal new Properties.Primitive.DecimalPropertyConfiguration Configuration
+        {
+            get { return (Properties.Primitive.DecimalPropertyConfiguration)base.Configuration; }
         }
     }
 }

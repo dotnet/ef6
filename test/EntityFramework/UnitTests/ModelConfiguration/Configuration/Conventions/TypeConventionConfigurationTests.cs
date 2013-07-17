@@ -53,7 +53,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void Configure_adds_convention()
         {
             Func<Type, bool> predicate = t => true;
-            Action<LightweightTypeConfiguration> configurationAction = c => { };
+            Action<ConventionTypeConfiguration> configurationAction = c => { };
             var conventions = new ConventionsConfiguration();
             var entities = new TypeConventionConfiguration(conventions);
 

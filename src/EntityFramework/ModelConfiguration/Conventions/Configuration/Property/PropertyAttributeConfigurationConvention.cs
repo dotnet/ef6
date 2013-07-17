@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.Data.Entity.Config;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -47,6 +48,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         /// <param name="memberInfo">The member info for the property that has the attribute.</param>
         /// <param name="configuration">The configuration for the class that contains the property.</param>
         /// <param name="attribute">The attribute.</param>
-        public abstract void Apply(PropertyInfo memberInfo, LightweightTypeConfiguration configuration, TAttribute attribute);
+        public abstract void Apply(PropertyInfo memberInfo, ConventionTypeConfiguration configuration, TAttribute attribute);
     }
 }

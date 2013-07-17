@@ -7,17 +7,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
 
-    internal class TypeConventionOfTypeWithHaving<T, TValue> : TypeConventionWithHavingBase<TValue>
+    internal class TypeConventionWithHaving<T, TValue> : TypeConventionWithHavingBase<TValue>
         where T : class
         where TValue : class
     {
-        private readonly Action<LightweightTypeConfiguration<T>, TValue> _entityConfigurationAction;
+        private readonly Action<ConventionTypeConfiguration<T>, TValue> _entityConfigurationAction;
 
-        public TypeConventionOfTypeWithHaving(
+        public TypeConventionWithHaving(
             IEnumerable<Func<Type, bool>> predicates,
             Func<Type, TValue> capturingPredicate,
-            Action<LightweightTypeConfiguration<T>, TValue> entityConfigurationAction)
-            : base(predicates.Prepend(TypeConventionOfType<T>.OfTypePredicate), capturingPredicate)
+            Action<ConventionTypeConfiguration<T>, TValue> entityConfigurationAction)
+            : base(predicates.Prepend(TypeConvention<T>.OfTypePredicate), capturingPredicate)
         {
             DebugCheck.NotNull(predicates);
             DebugCheck.NotNull(capturingPredicate);
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             _entityConfigurationAction = entityConfigurationAction;
         }
 
-        internal Action<LightweightTypeConfiguration<T>, TValue> EntityConfigurationAction
+        internal Action<ConventionTypeConfiguration<T>, TValue> EntityConfigurationAction
         {
             get { return _entityConfigurationAction; }
         }
@@ -37,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(modelConfiguration);
             DebugCheck.NotNull(value);
 
-            _entityConfigurationAction(new LightweightTypeConfiguration<T>(memberInfo, modelConfiguration), value);
+            _entityConfigurationAction(new ConventionTypeConfiguration<T>(memberInfo, modelConfiguration), value);
         }
 
         protected override void InvokeAction(
@@ -48,7 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(modelConfiguration);
             DebugCheck.NotNull(value);
 
-            _entityConfigurationAction(new LightweightTypeConfiguration<T>(memberInfo, configuration, modelConfiguration), value);
+            _entityConfigurationAction(new ConventionTypeConfiguration<T>(memberInfo, configuration, modelConfiguration), value);
         }
 
         protected override void InvokeAction(
@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(modelConfiguration);
             DebugCheck.NotNull(value);
 
-            _entityConfigurationAction(new LightweightTypeConfiguration<T>(memberInfo, configuration, modelConfiguration), value);
+            _entityConfigurationAction(new ConventionTypeConfiguration<T>(memberInfo, configuration, modelConfiguration), value);
         }
     }
 }

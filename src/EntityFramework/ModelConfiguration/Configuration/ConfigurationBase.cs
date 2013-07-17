@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     ///     Identifies configurations that can be used when implementing
     ///     <see cref="IConfigurationConvention{TMemberInfo,TConfiguration}" />.
     /// </summary>
-    public abstract class ConfigurationBase
+    internal abstract class ConfigurationBase
     {
         /// <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]

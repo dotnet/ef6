@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     ///     Used to configure a <see cref="String" /> property of an entity type or
     ///     complex type.
     /// </summary>
-    public class StringPropertyConfiguration : LengthPropertyConfiguration
+    internal class StringPropertyConfiguration : LengthPropertyConfiguration
     {
         /// <summary>
         ///     Gets or sets a value indicating whether the property supports Unicode string

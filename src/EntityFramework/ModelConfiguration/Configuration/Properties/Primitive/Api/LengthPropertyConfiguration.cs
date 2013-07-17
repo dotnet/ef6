@@ -2,16 +2,13 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-
     /// <summary>
     ///     Used to configure a property with length facets for an entity type or complex type.
     ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
-    public abstract class LengthPropertyConfiguration<TConfiguration> : PrimitivePropertyConfiguration<TConfiguration>
-        where TConfiguration : LengthPropertyConfiguration, new()
+    public abstract class LengthPropertyConfiguration : PrimitivePropertyConfiguration
     {
-        internal LengthPropertyConfiguration(TConfiguration configuration)
+        internal LengthPropertyConfiguration(Properties.Primitive.LengthPropertyConfiguration configuration)
             : base(configuration)
         {
         }
@@ -20,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Configures the property to allow the maximum length supported by the database provider.
         /// </summary>
         /// <returns> The same LengthPropertyConfiguration instance so that multiple calls can be chained. </returns>
-        public LengthPropertyConfiguration<TConfiguration> IsMaxLength()
+        public LengthPropertyConfiguration IsMaxLength()
         {
             Configuration.IsMaxLength = true;
             Configuration.MaxLength = null;
@@ -33,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="value"> The maximum length for the property. Setting 'null' will remove any maximum length restriction from the property and a default length will be used for the database column. </param>
         /// <returns> The same LengthPropertyConfiguration instance so that multiple calls can be chained. </returns>
-        public LengthPropertyConfiguration<TConfiguration> HasMaxLength(int? value)
+        public LengthPropertyConfiguration HasMaxLength(int? value)
         {
             Configuration.MaxLength = value;
             Configuration.IsMaxLength = null;
@@ -47,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Use HasMaxLength to set the length that the property is fixed to.
         /// </summary>
         /// <returns> The same LengthPropertyConfiguration instance so that multiple calls can be chained. </returns>
-        public LengthPropertyConfiguration<TConfiguration> IsFixedLength()
+        public LengthPropertyConfiguration IsFixedLength()
         {
             Configuration.IsFixedLength = true;
 
@@ -59,11 +56,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     Properties are variable length by default.
         /// </summary>
         /// <returns> The same LengthPropertyConfiguration instance so that multiple calls can be chained. </returns>
-        public LengthPropertyConfiguration<TConfiguration> IsVariableLength()
+        public LengthPropertyConfiguration IsVariableLength()
         {
             Configuration.IsFixedLength = false;
 
             return this;
+        }
+
+        internal new Properties.Primitive.LengthPropertyConfiguration Configuration
+        {
+            get { return (Properties.Primitive.LengthPropertyConfiguration)base.Configuration; }
         }
     }
 }

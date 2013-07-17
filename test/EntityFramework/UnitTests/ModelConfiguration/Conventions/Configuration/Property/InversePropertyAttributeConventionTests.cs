@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             new InversePropertyAttributeConvention()
                 .Apply(
                     mockPropertyInfo,
-                    new LightweightTypeConfiguration(mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
+                    new ConventionTypeConfiguration(mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
                     new InversePropertyAttribute("A"));
 
             var navigationPropertyConfiguration
@@ -43,7 +43,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             new InversePropertyAttributeConvention()
                 .Apply(
                     mockPropertyInfo,
-                    new LightweightTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
+                    new ConventionTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
                     new InversePropertyAttribute("Bs"));
 
             var navigationPropertyConfiguration
@@ -64,7 +64,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             new InversePropertyAttributeConvention()
                 .Apply(
                     mockPropertyInfo,
-                    new LightweightTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
+                    new ConventionTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
                     new InversePropertyAttribute("B"));
 
             var navigationPropertyConfiguration
@@ -85,7 +85,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             new InversePropertyAttributeConvention()
                 .Apply(
                     mockPropertyInfo,
-                    new LightweightTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
+                    new ConventionTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
                     new InversePropertyAttribute("Bs"));
 
             var navigationPropertyConfiguration
@@ -109,7 +109,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             new InversePropertyAttributeConvention()
                 .Apply(
                     mockPropertyInfo,
-                    new LightweightTypeConfiguration(mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
+                    new ConventionTypeConfiguration(mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
                     new InversePropertyAttribute("A1"));
 
             Assert.NotSame(mockTypeB.GetProperty("A1"), navigationPropertyConfiguration.InverseNavigationProperty);
@@ -125,7 +125,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             new InversePropertyAttributeConvention()
                 .Apply(
-                    mockPropertyInfo, new LightweightTypeConfiguration(mockTypeA, () => entityConfiguration, modelConfiguration),
+                    mockPropertyInfo, new ConventionTypeConfiguration(mockTypeA, () => entityConfiguration, modelConfiguration),
                     new InversePropertyAttribute("A1"));
 
             Assert.False(entityConfiguration.IsNavigationPropertyConfigured(mockPropertyInfo));
@@ -145,7 +145,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     () => new InversePropertyAttributeConvention()
                               .Apply(
                                   mockPropertyInfo,
-                                  new LightweightTypeConfiguration(
+                                  new ConventionTypeConfiguration(
                               mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
                                   new InversePropertyAttribute("A"))).Message);
         }
@@ -165,7 +165,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     () => new InversePropertyAttributeConvention()
                               .Apply(
                                   mockPropertyInfo,
-                                  new LightweightTypeConfiguration(
+                                  new ConventionTypeConfiguration(
                               mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
                                   new InversePropertyAttribute("Foo"))).Message);
         }

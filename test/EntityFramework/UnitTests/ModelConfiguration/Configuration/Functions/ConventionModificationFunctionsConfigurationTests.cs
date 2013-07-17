@@ -5,14 +5,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
     using System.Data.Entity.Migrations;
     using Xunit;
 
-    public class LightweightModificationFunctionsConfigurationTests
+    public class ConventionModificationFunctionsConfigurationTests
     {
         [Fact]
         public void Insert_when_config_action_should_call_method_on_internal_configuration()
         {
-            var modificationFunctionsConfiguration = new LightweightModificationFunctionsConfiguration(typeof(Order));
+            var modificationFunctionsConfiguration = new ConventionModificationFunctionsConfiguration(typeof(Order));
 
-            LightweightModificationFunctionConfiguration configuration = null;
+            ConventionModificationFunctionConfiguration configuration = null;
 
             modificationFunctionsConfiguration.Insert(c => { configuration = c; });
 
@@ -24,9 +24,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Update_when_config_action_should_call_method_on_internal_configuration()
         {
-            var modificationFunctionsConfiguration = new LightweightModificationFunctionsConfiguration(typeof(Order));
+            var modificationFunctionsConfiguration = new ConventionModificationFunctionsConfiguration(typeof(Order));
 
-            LightweightModificationFunctionConfiguration configuration = null;
+            ConventionModificationFunctionConfiguration configuration = null;
 
             modificationFunctionsConfiguration.Update(c => { configuration = c; });
 
@@ -38,9 +38,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Delete_when_config_action_should_call_method_on_internal_configuration()
         {
-            var modificationFunctionsConfiguration = new LightweightModificationFunctionsConfiguration(typeof(Order));
+            var modificationFunctionsConfiguration = new ConventionModificationFunctionsConfiguration(typeof(Order));
 
-            LightweightModificationFunctionConfiguration configuration = null;
+            ConventionModificationFunctionConfiguration configuration = null;
 
             modificationFunctionsConfiguration.Delete(c => { configuration = c; });
 

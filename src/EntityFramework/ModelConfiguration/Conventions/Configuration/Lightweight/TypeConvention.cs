@@ -9,11 +9,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
     internal class TypeConvention : TypeConventionBase
     {
-        private readonly Action<LightweightTypeConfiguration> _entityConfigurationAction;
+        private readonly Action<ConventionTypeConfiguration> _entityConfigurationAction;
 
         public TypeConvention(
             IEnumerable<Func<Type, bool>> predicates,
-            Action<LightweightTypeConfiguration> entityConfigurationAction)
+            Action<ConventionTypeConfiguration> entityConfigurationAction)
             : base(predicates)
         {
             DebugCheck.NotNull(predicates);
@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             _entityConfigurationAction = entityConfigurationAction;
         }
 
-        internal Action<LightweightTypeConfiguration> EntityConfigurationAction
+        internal Action<ConventionTypeConfiguration> EntityConfigurationAction
         {
             get { return _entityConfigurationAction; }
         }
@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(memberInfo);
             DebugCheck.NotNull(modelConfiguration);
 
-            _entityConfigurationAction(new LightweightTypeConfiguration(memberInfo, modelConfiguration));
+            _entityConfigurationAction(new ConventionTypeConfiguration(memberInfo, modelConfiguration));
         }
 
         protected override void ApplyCore(
@@ -42,7 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(configuration);
             DebugCheck.NotNull(modelConfiguration);
 
-            _entityConfigurationAction(new LightweightTypeConfiguration(memberInfo, configuration, modelConfiguration));
+            _entityConfigurationAction(new ConventionTypeConfiguration(memberInfo, configuration, modelConfiguration));
         }
 
         protected override void ApplyCore(
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(configuration);
             DebugCheck.NotNull(modelConfiguration);
 
-            _entityConfigurationAction(new LightweightTypeConfiguration(memberInfo, configuration, modelConfiguration));
+            _entityConfigurationAction(new ConventionTypeConfiguration(memberInfo, configuration, modelConfiguration));
         }
     }
 }

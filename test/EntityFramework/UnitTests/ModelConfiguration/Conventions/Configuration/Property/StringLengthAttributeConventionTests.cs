@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var propertyConfiguration = new StringPropertyConfiguration();
 
             new StringLengthAttributeConvention()
-                .Apply(new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new StringLengthAttribute(12));
+                .Apply(new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new StringLengthAttribute(12));
 
             Assert.Equal(12, propertyConfiguration.MaxLength);
         }
@@ -31,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                             };
 
             new StringLengthAttributeConvention()
-                .Apply(new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new StringLengthAttribute(12));
+                .Apply(new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new StringLengthAttribute(12));
 
             Assert.Equal(11, propertyConfiguration.MaxLength);
         }
@@ -45,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 Strings.StringLengthAttributeConvention_InvalidMaximumLength("P", typeof(object)),
                 Assert.Throws<InvalidOperationException>(
                     () => new StringLengthAttributeConvention()
-                              .Apply(new LightweightPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new StringLengthAttribute(-1))).Message);
+                              .Apply(new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => propertyConfiguration), new StringLengthAttribute(-1))).Message);
         }
     }
 }

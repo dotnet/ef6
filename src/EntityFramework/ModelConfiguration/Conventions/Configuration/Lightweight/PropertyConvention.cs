@@ -7,14 +7,16 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Utilities;
     using System.Reflection;
+    using PrimitivePropertyConfiguration =
+        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration;
 
     internal class PropertyConvention : PropertyConventionBase
     {
-        private readonly Action<LightweightPrimitivePropertyConfiguration> _propertyConfigurationAction;
+        private readonly Action<ConventionPrimitivePropertyConfiguration> _propertyConfigurationAction;
 
         public PropertyConvention(
             IEnumerable<Func<PropertyInfo, bool>> predicates,
-            Action<LightweightPrimitivePropertyConfiguration> propertyConfigurationAction)
+            Action<ConventionPrimitivePropertyConfiguration> propertyConfigurationAction)
             : base(predicates)
         {
             DebugCheck.NotNull(predicates);
@@ -23,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             _propertyConfigurationAction = propertyConfigurationAction;
         }
 
-        internal Action<LightweightPrimitivePropertyConfiguration> PropertyConfigurationAction
+        internal Action<ConventionPrimitivePropertyConfiguration> PropertyConfigurationAction
         {
             get { return _propertyConfigurationAction; }
         }
@@ -35,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(configuration);
             DebugCheck.NotNull(modelConfiguration);
 
-            _propertyConfigurationAction(new LightweightPrimitivePropertyConfiguration(memberInfo, configuration));
+            _propertyConfigurationAction(new ConventionPrimitivePropertyConfiguration(memberInfo, configuration));
         }
     }
 }

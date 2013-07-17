@@ -88,10 +88,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="entityConfigurationAction">
         ///     An action that performs configuration against a
         ///     <see
-        ///         cref="LightweightTypeConfiguration" />
+        ///         cref="ConventionTypeConfiguration" />
         ///     .
         /// </param>
-        public void Configure(Action<LightweightTypeConfiguration> entityConfigurationAction)
+        public void Configure(Action<ConventionTypeConfiguration> entityConfigurationAction)
         {
             Check.NotNull(entityConfigurationAction, "entityConfigurationAction");
 

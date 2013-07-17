@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     ///     Used to configure a <see cref="T:System.byte[]" /> property of an entity type or complex type.
     ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
-    public class BinaryPropertyConfiguration : LengthPropertyConfiguration<Properties.Primitive.BinaryPropertyConfiguration>
+    public class BinaryPropertyConfiguration : LengthPropertyConfiguration
     {
         internal BinaryPropertyConfiguration(Properties.Primitive.BinaryPropertyConfiguration configuration)
             : base(configuration)
@@ -172,6 +172,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Configuration.IsRowVersion = true;
 
             return this;
+        }
+
+        internal new Properties.Primitive.BinaryPropertyConfiguration Configuration
+        {
+            get { return (Properties.Primitive.BinaryPropertyConfiguration)base.Configuration; }
         }
     }
 }

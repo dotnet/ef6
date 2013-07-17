@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Utilities;
 
@@ -13,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         : PrimitivePropertyAttributeConfigurationConvention<TimestampAttribute>
     {
         /// <inheritdoc/>
-        public override void Apply(LightweightPrimitivePropertyConfiguration configuration, TimestampAttribute attribute)
+        public override void Apply(ConventionPrimitivePropertyConfiguration configuration, TimestampAttribute attribute)
         {
             Check.NotNull(configuration, "configuration");
             Check.NotNull(attribute, "attribute");

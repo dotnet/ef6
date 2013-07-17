@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     /// <summary>
     ///     Allows configuration to be performed for a type in a model.
     /// </summary>
-    public abstract class StructuralTypeConfiguration : ConfigurationBase
+    internal abstract class StructuralTypeConfiguration : ConfigurationBase
     {
         internal static Type GetPropertyConfigurationType(Type propertyType)
         {

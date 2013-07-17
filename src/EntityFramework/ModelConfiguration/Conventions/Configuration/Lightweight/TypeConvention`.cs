@@ -7,15 +7,15 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
 
-    internal class TypeConventionOfType<T> : TypeConventionBase
+    internal class TypeConvention<T> : TypeConventionBase
         where T : class
     {
         private static readonly Func<Type, bool> _ofTypePredicate = t => typeof(T).IsAssignableFrom(t);
-        private readonly Action<LightweightTypeConfiguration<T>> _entityConfigurationAction;
+        private readonly Action<ConventionTypeConfiguration<T>> _entityConfigurationAction;
 
-        public TypeConventionOfType(
+        public TypeConvention(
             IEnumerable<Func<Type, bool>> predicates,
-            Action<LightweightTypeConfiguration<T>> entityConfigurationAction)
+            Action<ConventionTypeConfiguration<T>> entityConfigurationAction)
             : base(predicates.Prepend(_ofTypePredicate))
         {
             DebugCheck.NotNull(predicates);
@@ -24,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             _entityConfigurationAction = entityConfigurationAction;
         }
 
-        internal Action<LightweightTypeConfiguration<T>> EntityConfigurationAction
+        internal Action<ConventionTypeConfiguration<T>> EntityConfigurationAction
         {
             get { return _entityConfigurationAction; }
         }
@@ -39,7 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(memberInfo);
             DebugCheck.NotNull(modelConfiguration);
 
-            _entityConfigurationAction(new LightweightTypeConfiguration<T>(memberInfo, modelConfiguration));
+            _entityConfigurationAction(new ConventionTypeConfiguration<T>(memberInfo, modelConfiguration));
         }
 
         protected override void ApplyCore(
@@ -49,7 +49,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(configuration);
             DebugCheck.NotNull(modelConfiguration);
 
-            _entityConfigurationAction(new LightweightTypeConfiguration<T>(memberInfo, configuration, modelConfiguration));
+            _entityConfigurationAction(new ConventionTypeConfiguration<T>(memberInfo, configuration, modelConfiguration));
         }
 
         protected override void ApplyCore(
@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             DebugCheck.NotNull(configuration);
             DebugCheck.NotNull(modelConfiguration);
 
-            _entityConfigurationAction(new LightweightTypeConfiguration<T>(memberInfo, configuration, modelConfiguration));
+            _entityConfigurationAction(new ConventionTypeConfiguration<T>(memberInfo, configuration, modelConfiguration));
         }
     }
 }

@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Conventions
         {
             Func<Type, bool> predicate = t => true;
             Func<Type, object> capturingPredicate = t => null;
-            Action<LightweightTypeConfiguration, object> configurationAction = (c, o) => { };
+            Action<ConventionTypeConfiguration, object> configurationAction = (c, o) => { };
             var conventions = new ConventionsConfiguration();
             var entities = new TypeConventionConfiguration(conventions);
 

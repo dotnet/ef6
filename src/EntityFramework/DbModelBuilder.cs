@@ -12,7 +12,6 @@ namespace System.Data.Entity
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
-    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.ModelConfiguration.Conventions.Sets;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Mappers;
@@ -266,10 +265,10 @@ namespace System.Data.Entity
         /// </summary>
         /// <typeparam name="T"> The type of the entities that this convention will apply to. </typeparam>
         /// <returns> A configuration object for the convention. </returns>
-        public TypeConventionOfTypeConfiguration<T> Types<T>()
+        public TypeConventionConfiguration<T> Types<T>()
             where T : class
         {
-            return new TypeConventionOfTypeConfiguration<T>(_conventionsConfiguration);
+            return new TypeConventionConfiguration<T>(_conventionsConfiguration);
         }
 
         /// <summary>

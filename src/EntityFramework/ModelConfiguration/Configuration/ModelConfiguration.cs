@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     ///     Allows configuration to be performed for a model.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
-    public class ModelConfiguration : ConfigurationBase
+    internal class ModelConfiguration : ConfigurationBase
     {
         private readonly Dictionary<Type, EntityTypeConfiguration> _entityConfigurations
             = new Dictionary<Type, EntityTypeConfiguration>();

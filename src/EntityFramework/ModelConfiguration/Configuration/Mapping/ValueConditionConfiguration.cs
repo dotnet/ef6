@@ -28,7 +28,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         internal string Discriminator { get; set; }
         internal object Value { get; set; }
 
-        private PrimitivePropertyConfiguration _configuration;
+        private Properties.Primitive.PrimitivePropertyConfiguration _configuration;
 
         internal ValueConditionConfiguration(EntityMappingConfiguration entityMapConfiguration, string discriminator)
         {
@@ -60,7 +60,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return new ValueConditionConfiguration(owner, this);
         }
 
-        private T GetOrCreateConfiguration<T>() where T : PrimitivePropertyConfiguration, new()
+        private T GetOrCreateConfiguration<T>() where T : Properties.Primitive.PrimitivePropertyConfiguration, new()
         {
             if (_configuration == null)
             {
@@ -95,7 +95,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _entityMappingConfiguration.AddValueCondition(this);
             return
                 new PrimitiveColumnConfiguration(
-                    GetOrCreateConfiguration<PrimitivePropertyConfiguration>());
+                    GetOrCreateConfiguration<Properties.Primitive.PrimitivePropertyConfiguration>());
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _entityMappingConfiguration.AddValueCondition(this);
             return
                 new PrimitiveColumnConfiguration(
-                    GetOrCreateConfiguration<PrimitivePropertyConfiguration>());
+                    GetOrCreateConfiguration<Properties.Primitive.PrimitivePropertyConfiguration>());
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
 
             var existingConfiguration
-                = discriminatorColumn.GetConfiguration() as PrimitivePropertyConfiguration;
+                = discriminatorColumn.GetConfiguration() as Properties.Primitive.PrimitivePropertyConfiguration;
 
             if (Value != null)
             {
@@ -229,7 +229,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     discriminatorColumn.Nullable = false;
                 }
 
-                GetOrCreateConfiguration<PrimitivePropertyConfiguration>().IsNullable = true;
+                GetOrCreateConfiguration<Properties.Primitive.PrimitivePropertyConfiguration>().IsNullable = true;
 
                 fragment.AddNullabilityCondition(discriminatorColumn, true);
             }
@@ -262,7 +262,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private void ConfigureColumnType(
             DbProviderManifest providerManifest,
-            PrimitivePropertyConfiguration existingConfiguration,
+            Properties.Primitive.PrimitivePropertyConfiguration existingConfiguration,
             EdmProperty discriminatorColumn)
         {
             if (((existingConfiguration != null)

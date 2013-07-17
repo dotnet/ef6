@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var modelConfiguration = new ModelConfiguration();
 
             new ComplexTypeAttributeConvention()
-                .Apply(new LightweightTypeConfiguration(mockType, modelConfiguration), new ComplexTypeAttribute());
+                .Apply(new ConventionTypeConfiguration(mockType, modelConfiguration), new ComplexTypeAttribute());
 
             Assert.True(modelConfiguration.IsComplexType(mockType));
         }
