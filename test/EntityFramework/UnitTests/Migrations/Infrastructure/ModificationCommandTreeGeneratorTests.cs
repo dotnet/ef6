@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Infrastructure;
@@ -16,34 +17,202 @@ namespace System.Data.Entity.Migrations.Infrastructure
         public class Landmark
         {
             public int Id { get; set; }
+            
+            [Required]
+            public string Name { get; set; }
+            
             public StandingStone MatchingStone { get; set; }
-            public Hold LocatedIn { get; set; }
         }
 
         public class StandingStone
         {
             public int Id { get; set; }
-            public Landmark MatchingLandnmark { get; set; }
-            public Hold LocatedIn { get; set; }
+            public Landmark MatchingLandmark { get; set; }
+
+            [Required]
+            public string Rune { get; set; }
+
+            public decimal Height { get; set; }
         }
 
-        public class Hold
+        public class OneToOneFkContext : DbContext
         {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public ICollection<Landmark> Landmarks { get; set; }
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<Landmark>()
+                    .HasRequired(l => l.MatchingStone)
+                    .WithRequiredPrincipal(s => s.MatchingLandmark);
+
+                modelBuilder.Entity<Landmark>().MapToStoredProcedures();
+                modelBuilder.Entity<StandingStone>().MapToStoredProcedures();
+            }
+        }
+
+        [Fact]
+        public void Can_generate_insert_tree_when_one_to_one_fk_principal()
+        {
+            DbModel model;
+
+            using (var context = new OneToOneFkContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateInsert(GetType().Namespace + ".Landmark")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_update_tree_when_one_to_one_fk_principal()
+        {
+            DbModel model;
+
+            using (var context = new OneToOneFkContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateUpdate(GetType().Namespace + ".Landmark")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_delete_tree_when_one_to_one_fk_principal()
+        {
+            DbModel model;
+
+            using (var context = new OneToOneFkContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateDelete(GetType().Namespace + ".Landmark")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_insert_tree_when_one_to_one_fk_dependent()
+        {
+            DbModel model;
+
+            using (var context = new OneToOneFkContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateInsert(GetType().Namespace + ".StandingStone")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_update_tree_when_one_to_one_fk_dependent()
+        {
+            DbModel model;
+
+            using (var context = new OneToOneFkContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateUpdate(GetType().Namespace + ".StandingStone")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_delete_tree_when_one_to_one_fk_dependent()
+        {
+            DbModel model;
+
+            using (var context = new OneToOneFkContext())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateDelete(GetType().Namespace + ".StandingStone")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
         }
 
         public class TableSplittingContext : DbContext
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                // table splitting
                 modelBuilder.Entity<Landmark>().ToTable("Landmarks");
                 modelBuilder.Entity<StandingStone>().ToTable("Landmarks");
 
-                // 1 -1 relationship needed for table splitting with different hierarchies
-                modelBuilder.Entity<Landmark>().HasRequired(l => l.MatchingStone).WithRequiredDependent(s => s.MatchingLandnmark);
+                modelBuilder.Entity<Landmark>().HasRequired(l => l.MatchingStone).WithRequiredPrincipal(s => s.MatchingLandmark);
                 modelBuilder.Entity<Landmark>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
                 modelBuilder.Entity<StandingStone>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
@@ -154,6 +323,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .ToList();
 
             Assert.Equal(1, commandTrees.Count());
+            Assert.IsType<DbUpdateCommandTree>(commandTrees.Single());
         }
 
         [Fact]
@@ -180,6 +350,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .ToList();
 
             Assert.Equal(1, commandTrees.Count());
+            Assert.IsType<DbUpdateCommandTree>(commandTrees.Single());
         }
 
         [Fact]
@@ -205,7 +376,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .GenerateDelete(GetType().Namespace + ".StandingStone")
                     .ToList();
 
-            Assert.Equal(1, commandTrees.Count());
+            Assert.Equal(0, commandTrees.Count());
         }
 
         public class ArubaRun

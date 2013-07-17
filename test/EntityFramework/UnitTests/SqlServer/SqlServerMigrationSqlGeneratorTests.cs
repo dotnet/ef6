@@ -360,11 +360,11 @@ AS
 BEGIN
     UPDATE [dbo].[Orders]
     SET [Name] = @Name, [Address_Street] = @Address_Street, [Address_City] = @Address_City, [Address_Country_Name] = @Address_Country_Name, [OrderGroupId] = @OrderGroupId, [Customer_CustomerId] = @Customer_CustomerId
-    WHERE ((((((([order_id] = @xid) AND ([Key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([Name] = @Name_Original) OR ([Name] IS NULL AND @Name_Original IS NULL))) AND (([RowVersion] = @RowVersion_Original) OR ([RowVersion] IS NULL AND @RowVersion_Original IS NULL))) AND (([Customer_CustomerId] = @Customer_CustomerId) OR ([Customer_CustomerId] IS NULL AND @Customer_CustomerId IS NULL)))
+    WHERE (((((([order_id] = @xid) AND ([Key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([Name] = @Name_Original) OR ([Name] IS NULL AND @Name_Original IS NULL))) AND (([RowVersion] = @RowVersion_Original) OR ([RowVersion] IS NULL AND @RowVersion_Original IS NULL)))
     
     UPDATE [dbo].[special_orders]
     SET [OtherCustomer_CustomerId] = @OtherCustomer_CustomerId, [OtherAddress_Street] = @OtherAddress_Street, [OtherAddress_City] = @OtherAddress_City, [OtherAddress_Country_Name] = @OtherAddress_Country_Name
-    WHERE ((((([order_id] = @xid) AND ([so_key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([OtherCustomer_CustomerId] = @OtherCustomer_CustomerId) OR ([OtherCustomer_CustomerId] IS NULL AND @OtherCustomer_CustomerId IS NULL)))
+    WHERE (((([order_id] = @xid) AND ([so_key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature))
     AND @@ROWCOUNT > 0
     
     UPDATE [dbo].[xspecial_orders]
@@ -421,7 +421,7 @@ AS
 BEGIN
     UPDATE [dbo].[Orders]
     SET [Name] = @Name, [Address_Street] = @Address_Street, [Address_City] = @Address_City, [Address_Country_Name] = @Address_Country_Name, [OrderGroupId] = @OrderGroupId, [Customer_CustomerId] = @Customer_CustomerId
-    WHERE ((((((([order_id] = @order_id) AND ([Key] = @key_for_update2)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([Name] = @Name_Original) OR ([Name] IS NULL AND @Name_Original IS NULL))) AND (([RowVersion] = @RowVersion_Original) OR ([RowVersion] IS NULL AND @RowVersion_Original IS NULL))) AND (([Customer_CustomerId] = @Customer_CustomerId) OR ([Customer_CustomerId] IS NULL AND @Customer_CustomerId IS NULL)))
+    WHERE (((((([order_id] = @order_id) AND ([Key] = @key_for_update2)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([Name] = @Name_Original) OR ([Name] IS NULL AND @Name_Original IS NULL))) AND (([RowVersion] = @RowVersion_Original) OR ([RowVersion] IS NULL AND @RowVersion_Original IS NULL)))
     
     SELECT t0.[OrderNo], t0.[RowVersion]
     FROM [dbo].[Orders] AS t0

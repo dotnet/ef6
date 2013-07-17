@@ -80,6 +80,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                    && associationType.TargetEnd.IsMany();
         }
 
+        public static bool IsRequiredToRequired(this AssociationType associationType)
+        {
+            DebugCheck.NotNull(associationType);
+            Debug.Assert(associationType.SourceEnd != null);
+            Debug.Assert(associationType.TargetEnd != null);
+
+            return associationType.SourceEnd.IsRequired()
+                   && associationType.TargetEnd.IsRequired();
+        }
+
         public static bool IsManyToRequired(this AssociationType associationType)
         {
             DebugCheck.NotNull(associationType);

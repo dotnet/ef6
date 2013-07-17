@@ -206,11 +206,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 }
 
                 ChangeRelationshipStates(context, entityType, entity, state);
-
+                
                 if (state == EntityState.Deleted)
                 {
                     context.Entry(entity).State = state;
                 }
+
+                HandleTableSplitting(context, entityType, entity, state);
 
                 using (var commandTracer = new CommandTracer(context))
                 {
@@ -224,11 +226,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             }
         }
 
-        private void ChangeRelationshipStates(
-            DbContext context,
-            EntityType entityType,
-            object entity,
-            EntityState state)
+        private void ChangeRelationshipStates(DbContext context, EntityType entityType, object entity, EntityState state)
         {
             DebugCheck.NotNull(context);
             DebugCheck.NotNull(entityType);
@@ -244,16 +242,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .GetItems<AssociationType>(DataSpace.CSpace)
                     .Where(
                         at => !at.IsForeignKey
+                              && !at.IsManyToMany()
                               && (at.SourceEnd.GetEntityType().IsAssignableFrom(entityType)
                                   || at.TargetEnd.GetEntityType().IsAssignableFrom(entityType)));
 
             foreach (var associationType in associationTypes)
             {
-                if (associationType.IsManyToMany())
-                {
-                    continue;
-                }
-
                 AssociationEndMember principalEnd, dependentEnd;
                 if (!associationType.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd))
                 {
@@ -311,6 +305,69 @@ namespace System.Data.Entity.Migrations.Infrastructure
                             principalEnd.Name,
                             state == EntityState.Deleted ? state : EntityState.Added
                         );
+                }
+            }
+        }
+
+        private void HandleTableSplitting(DbContext context, EntityType entityType, object entity, EntityState state)
+        {
+            DebugCheck.NotNull(context);
+            DebugCheck.NotNull(entityType);
+            DebugCheck.NotNull(entity);
+
+            var associationTypes
+                = _metadataWorkspace
+                    .GetItems<AssociationType>(DataSpace.CSpace)
+                    .Where(
+                        at => at.IsForeignKey
+                              && at.IsRequiredToRequired()
+                              && !at.IsSelfReferencing()
+                              && (at.SourceEnd.GetEntityType().IsAssignableFrom(entityType)
+                                  || at.TargetEnd.GetEntityType().IsAssignableFrom(entityType))
+                              && _metadataWorkspace.GetItems<AssociationType>(DataSpace.SSpace)
+                                  .All(fk => fk.Name != at.Name)); // no store FK == shared table
+
+            foreach (var associationType in associationTypes)
+            {
+                AssociationEndMember principalEnd, dependentEnd;
+                if (!associationType.TryGuessPrincipalAndDependentEnds(out principalEnd, out dependentEnd))
+                {
+                    principalEnd = associationType.SourceEnd;
+                    dependentEnd = associationType.TargetEnd;
+                }
+
+                EntityType otherEntityType;
+                var entityTypeIsPrincipal = false;
+
+                if (principalEnd.GetEntityType().GetRootType() == entityType.GetRootType())
+                {
+                    entityTypeIsPrincipal = true;
+                    otherEntityType = dependentEnd.GetEntityType();
+                }
+                else
+                {
+                    otherEntityType = principalEnd.GetEntityType();
+                }
+
+                var otherEntity = InstantiateAndAttachEntity(otherEntityType, context);
+
+                if (!entityTypeIsPrincipal)
+
+                {
+                    if (state == EntityState.Added)
+                    {
+                        // Rewrite dependent insert to update
+                        context.Entry(entity).State = EntityState.Modified;
+                    }
+                    else if (state == EntityState.Deleted)
+                    {
+                        // Rewrite dependent delete to no-op
+                        context.Entry(entity).State = EntityState.Unchanged;
+                    }
+                }
+                else if (state != EntityState.Modified)
+                {
+                    context.Entry(otherEntity).State = state;
                 }
             }
         }

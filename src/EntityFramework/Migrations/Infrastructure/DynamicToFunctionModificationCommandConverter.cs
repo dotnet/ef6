@@ -13,6 +13,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
+    [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class DynamicToFunctionModificationCommandConverter : DefaultExpressionVisitor
     {
         private readonly StorageEntityTypeModificationFunctionMapping _entityTypeModificationFunctionMapping;
@@ -70,16 +71,16 @@ namespace System.Data.Entity.Migrations.Infrastructure
             {
                 _currentFunctionMapping
                     = _entityTypeModificationFunctionMapping != null
-                          ? _entityTypeModificationFunctionMapping.InsertFunctionMapping
-                          : _associationSetModificationFunctionMapping.InsertFunctionMapping;
+                        ? _entityTypeModificationFunctionMapping.InsertFunctionMapping
+                        : _associationSetModificationFunctionMapping.InsertFunctionMapping;
 
                 var firstTable
                     = ((DbScanExpression)commandTree.Target.Expression).Target.ElementType;
 
                 _storeGeneratedKeys
                     = firstTable.KeyProperties
-                                .Where(p => p.IsStoreGeneratedIdentity)
-                                .ToList();
+                        .Where(p => p.IsStoreGeneratedIdentity)
+                        .ToList();
             }
 
             _nextStoreGeneratedKey = 0;
@@ -115,8 +116,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             _currentFunctionMapping
                 = _entityTypeModificationFunctionMapping != null
-                      ? _entityTypeModificationFunctionMapping.DeleteFunctionMapping
-                      : _associationSetModificationFunctionMapping.DeleteFunctionMapping;
+                    ? _entityTypeModificationFunctionMapping.DeleteFunctionMapping
+                    : _associationSetModificationFunctionMapping.DeleteFunctionMapping;
 
             return
                 new DbDeleteCommandTree(
@@ -135,8 +136,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .Cast<DbSetClause>()
                     .Select(
                         s => new DbSetClause(
-                                 s.Property.Accept(this),
-                                 s.Value.Accept(this)))
+                            s.Property.Accept(this),
+                            s.Value.Accept(this)))
                     .Cast<DbModificationClause>()
                     .ToList());
         }
@@ -180,11 +181,27 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
                 if (parameter != null)
                 {
-                    return new DbParameterReferenceExpression(parameter.TypeUsage, parameter.Name);
+                    return new DbParameterReferenceExpression(parameter.Item1.TypeUsage, parameter.Item1.Name);
                 }
             }
 
             return base.Visit(expression);
+        }
+
+        public override DbExpression Visit(DbAndExpression expression)
+        {
+            DebugCheck.NotNull(expression);
+
+            var newLeft = VisitExpression(expression.Left);
+            var newRight = VisitExpression(expression.Right);
+
+            if ((newLeft != null)
+                && (newRight != null))
+            {
+                return newLeft.And(newRight);
+            }
+
+            return newLeft ?? newRight;
         }
 
         public override DbExpression Visit(DbIsNullExpression expression)
@@ -201,8 +218,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
                 if (parameter != null)
                 {
+                    if (parameter.Item2)
+                    {
+                        // Current value, remove condition
+                        return null;
+                    }
+
                     var parameterReferenceExpression
-                        = new DbParameterReferenceExpression(parameter.TypeUsage, parameter.Name);
+                        = new DbParameterReferenceExpression(parameter.Item1.TypeUsage, parameter.Item1.Name);
 
                     var equalityPredicate
                         = propertyExpression.Equal(parameterReferenceExpression);
@@ -227,7 +250,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
                 if (parameter != null)
                 {
-                    return new DbParameterReferenceExpression(parameter.TypeUsage, parameter.Name);
+                    return new DbParameterReferenceExpression(parameter.Item1.TypeUsage, parameter.Item1.Name);
                 }
             }
 
@@ -242,20 +265,20 @@ namespace System.Data.Entity.Migrations.Infrastructure
             // names from the sproc result binding.
             var arguments
                 = (from propertyExpression in expression.Arguments.Cast<DbPropertyExpression>()
-                   let resultBinding
-                       = _currentFunctionMapping
-                       .ResultBindings
-                       .Single(
-                           rb => (from esm in _entityContainerMapping.EntitySetMappings
-                                  from etm in esm.EntityTypeMappings
-                                  from mf in etm.MappingFragments
-                                  from pm in mf.Properties.OfType<StorageScalarPropertyMapping>()
-                                  where
-                                      pm.ColumnProperty.EdmEquals(propertyExpression.Property)
-                                      && pm.ColumnProperty.DeclaringType.EdmEquals(propertyExpression.Property.DeclaringType)
-                                  select pm.EdmProperty)
-                                     .Contains(rb.Property))
-                   select new KeyValuePair<string, DbExpression>(resultBinding.ColumnName, propertyExpression))
+                    let resultBinding
+                        = _currentFunctionMapping
+                            .ResultBindings
+                            .Single(
+                                rb => (from esm in _entityContainerMapping.EntitySetMappings
+                                    from etm in esm.EntityTypeMappings
+                                    from mf in etm.MappingFragments
+                                    from pm in mf.Properties.OfType<StorageScalarPropertyMapping>()
+                                    where
+                                        pm.ColumnProperty.EdmEquals(propertyExpression.Property)
+                                        && pm.ColumnProperty.DeclaringType.EdmEquals(propertyExpression.Property.DeclaringType)
+                                    select pm.EdmProperty)
+                                    .Contains(rb.Property))
+                    select new KeyValuePair<string, DbExpression>(resultBinding.ColumnName, propertyExpression))
                     .ToList();
 
             return DbExpressionBuilder.NewRow(arguments);
@@ -263,18 +286,18 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private FunctionParameter GetParameter(EdmProperty column, bool originalValue = false)
+        private Tuple<FunctionParameter, bool> GetParameter(EdmProperty column, bool originalValue = false)
         {
             DebugCheck.NotNull(column);
 
             var columnMappings
                 = (from esm in _entityContainerMapping.EntitySetMappings
-                   from etm in esm.EntityTypeMappings
-                   from mf in etm.MappingFragments
-                   from cm in mf.FlattenedProperties
-                   where cm.ColumnProperty.EdmEquals(column)
-                         && cm.ColumnProperty.DeclaringType.EdmEquals(column.DeclaringType)
-                   select cm)
+                    from etm in esm.EntityTypeMappings
+                    from mf in etm.MappingFragments
+                    from cm in mf.FlattenedProperties
+                    where cm.ColumnProperty.EdmEquals(column)
+                          && cm.ColumnProperty.DeclaringType.EdmEquals(column.DeclaringType)
+                    select cm)
                     .ToList();
 
             var parameterBindings
@@ -282,24 +305,24 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .ParameterBindings
                     .Where(
                         pb => columnMappings
-                                  .Any(cm => pb.MemberPath.Members.Reverse().SequenceEqual(cm.PropertyPath)))
+                            .Any(cm => pb.MemberPath.Members.Reverse().SequenceEqual(cm.PropertyPath)))
                     .ToList();
 
             if (!parameterBindings.Any())
             {
                 var iaColumnMappings
                     = (from asm in _entityContainerMapping.AssociationSetMappings
-                       from tm in asm.TypeMappings
-                       from mf in tm.MappingFragments
-                       from epm in mf.Properties.OfType<StorageEndPropertyMapping>()
-                       from pm in epm.PropertyMappings
-                       where pm.ColumnProperty.EdmEquals(column)
-                             && pm.ColumnProperty.DeclaringType.EdmEquals(column.DeclaringType)
-                       select new EdmMember[]
-                                  {
-                                      pm.EdmProperty,
-                                      epm.EndMember
-                                  })
+                        from tm in asm.TypeMappings
+                        from mf in tm.MappingFragments
+                        from epm in mf.Properties.OfType<StorageEndPropertyMapping>()
+                        from pm in epm.PropertyMappings
+                        where pm.ColumnProperty.EdmEquals(column)
+                              && pm.ColumnProperty.DeclaringType.EdmEquals(column.DeclaringType)
+                        select new EdmMember[]
+                               {
+                                   pm.EdmProperty,
+                                   epm.EndMember
+                               })
                         .ToList();
 
                 parameterBindings
@@ -307,7 +330,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         .ParameterBindings
                         .Where(
                             pb => iaColumnMappings
-                                      .Any(epm => pb.MemberPath.Members.SequenceEqual(epm)))
+                                .Any(epm => pb.MemberPath.Members.SequenceEqual(epm)))
                         .ToList();
             }
 
@@ -317,15 +340,17 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 // Store generated key: Introduce a fake parameter which can
                 // be replaced by a local variable in the sproc body.
 
-                return new FunctionParameter(
-                    _storeGeneratedKeys[_nextStoreGeneratedKey++].Name,
-                    column.TypeUsage,
-                    ParameterMode.In);
+                return
+                    Tuple.Create(
+                        new FunctionParameter(
+                            _storeGeneratedKeys[_nextStoreGeneratedKey++].Name,
+                            column.TypeUsage,
+                            ParameterMode.In), true);
             }
 
             if (parameterBindings.Count == 1)
             {
-                return parameterBindings[0].Parameter;
+                return Tuple.Create(parameterBindings[0].Parameter, parameterBindings[0].IsCurrent);
             }
 
             if (parameterBindings.Count == 0)
@@ -337,10 +362,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var parameterBinding
                 = originalValue
-                      ? parameterBindings.Single(pb => !pb.IsCurrent)
-                      : parameterBindings.Single(pb => pb.IsCurrent);
+                    ? parameterBindings.Single(pb => !pb.IsCurrent)
+                    : parameterBindings.Single(pb => pb.IsCurrent);
 
-            return parameterBinding.Parameter;
+            return Tuple.Create(parameterBinding.Parameter, parameterBinding.IsCurrent);
         }
     }
 }

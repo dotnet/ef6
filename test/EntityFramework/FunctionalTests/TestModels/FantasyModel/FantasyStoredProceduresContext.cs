@@ -22,11 +22,8 @@ namespace System.Data.Entity.TestModels.FantasyModel
             modelBuilder.Entity<Race>().MapToStoredProcedures();
             modelBuilder.Entity<Skill>().MapToStoredProcedures();
             modelBuilder.Entity<Spell>().MapToStoredProcedures();
-
-            // issue 1356
-            ////modelBuilder.Entity<Landmark>().MapToStoredProcedures();
-            ////modelBuilder.Entity<Tower>().MapToStoredProcedures();
-
+            modelBuilder.Entity<Landmark>().MapToStoredProcedures();
+            modelBuilder.Entity<Tower>().MapToStoredProcedures();
             modelBuilder.Entity<Carnivore>().HasMany(c => c.Eats).WithMany().MapToStoredProcedures();
             modelBuilder.Entity<Omnivore>().HasMany(c => c.Eats).WithMany().MapToStoredProcedures();
             modelBuilder.Entity<Perk>().HasMany(p => p.RequiredBy).WithMany(p => p.RequiredPerks).MapToStoredProcedures();

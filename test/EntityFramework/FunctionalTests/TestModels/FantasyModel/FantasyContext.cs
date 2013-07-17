@@ -64,7 +64,7 @@ namespace System.Data.Entity.TestModels.FantasyModel
             modelBuilder.Entity<Tower>().ToTable("Landmarks");
 
             // 1 -1 relationship needed for table splitting with different hierarchies
-            modelBuilder.Entity<Landmark>().HasRequired(l => l.MatchingTower).WithRequiredDependent(s => s.MatchingLandnmark);
+            modelBuilder.Entity<Landmark>().HasRequired(l => l.MatchingTower).WithRequiredPrincipal(s => s.MatchingLandnmark);
             modelBuilder.Entity<Landmark>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             modelBuilder.Entity<Tower>().Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
         }
