@@ -54,6 +54,13 @@ namespace System.Data.Entity.Utilities
             return true;
         }
 
+        public static IEnumerable<PropertyInfo> GetNonIndexerProperties(this Type type)
+        {
+            DebugCheck.NotNull(type);
+
+            return type.GetProperties().Where(p => !p.GetIndexParameters().Any());
+        }
+
         /// <summary>
         ///     Determine if the given type type implements the given generic interface or derives from the given generic type,
         ///     and if so return the element type of the collection. If the type implements the generic interface several times

@@ -106,6 +106,15 @@ namespace System.Data.Entity.Utilities
             }
         }
 
+        public class GetNonIndexerProperties
+        {
+            [Fact]
+            public void Should_exclude_indexers()
+            {
+                Assert.Equal("Length", typeof(string).GetNonIndexerProperties().Single().Name);
+            }
+        }
+
         public class TryUnwrapNullableType
         {
             [Fact]

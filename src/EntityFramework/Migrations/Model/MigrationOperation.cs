@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Model
 {
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
+    using System.Linq;
 
     /// <summary>
     ///     Represents an operation to modify a database schema.
@@ -16,12 +17,17 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         ///     Initializes a new instance of the MigrationOperation class.
         /// </summary>
-        /// <param name="anonymousArguments"> Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
+        /// <param name="anonymousArguments">
+        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue"
+        ///     }'.
+        /// </param>
         protected MigrationOperation(object anonymousArguments)
         {
             if (anonymousArguments != null)
             {
-                anonymousArguments.GetType().GetProperties()
+                anonymousArguments
+                    .GetType()
+                    .GetNonIndexerProperties()
                     .Each(p => _anonymousArguments.Add(p.Name, p.GetValue(anonymousArguments, null)));
             }
         }

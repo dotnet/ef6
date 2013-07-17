@@ -60,5 +60,14 @@ namespace System.Data.Entity.Migrations.Model
 
             Assert.Same(addForeignKeyOperation, dropForeignKeyOperation.Inverse);
         }
+
+        [Fact]
+        public void Anonymous_args_should_not_throw_when_string_supplied()
+        {
+            var dropForeignKeyOperation
+                = new DropForeignKeyOperation("Foo");
+
+            Assert.Equal(3, dropForeignKeyOperation.AnonymousArguments["Length"]);
+        }
     }
 }
