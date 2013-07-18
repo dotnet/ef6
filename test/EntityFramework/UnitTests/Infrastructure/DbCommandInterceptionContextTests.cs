@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Threading.Tasks;
@@ -11,6 +12,47 @@ namespace System.Data.Entity.Infrastructure
 
     public class DbCommandInterceptionContextTests : TestBase
     {
+        [Fact]
+        public void New_base_interception_context_has_no_state()
+        {
+            var interceptionContext = new DbCommandInterceptionContext();
+
+            Assert.Empty(interceptionContext.ObjectContexts);
+            Assert.Empty(interceptionContext.DbContexts);
+            Assert.False(interceptionContext.IsAsync);
+            Assert.Equal(CommandBehavior.Default, interceptionContext.CommandBehavior);
+        }
+
+        [Fact]
+        public void Cloning_the_base_interception_context_preserves_contextual_information()
+        {
+            var objectContext = new ObjectContext();
+            var dbContext = CreateDbContext(objectContext);
+
+            var interceptionContext = new DbCommandInterceptionContext()
+                .WithDbContext(dbContext)
+                .WithObjectContext(objectContext)
+                .WithCommandBehavior(CommandBehavior.SchemaOnly)
+                .AsAsync();
+
+            Assert.Equal(new[] { objectContext }, interceptionContext.ObjectContexts);
+            Assert.Equal(new[] { dbContext }, interceptionContext.DbContexts);
+            Assert.True(interceptionContext.IsAsync);
+            Assert.Equal(CommandBehavior.SchemaOnly, interceptionContext.CommandBehavior);
+        }
+
+        [Fact]
+        public void Association_the_base_with_a_null_ObjectContext_or_DbContext_throws()
+        {
+            Assert.Equal(
+                "context",
+                Assert.Throws<ArgumentNullException>(() => new DbCommandInterceptionContext().WithObjectContext(null)).ParamName);
+
+            Assert.Equal(
+                "context",
+                Assert.Throws<ArgumentNullException>(() => new DbCommandInterceptionContext().WithDbContext(null)).ParamName);
+        }
+
         [Fact]
         public void New_interception_context_has_no_state()
         {
@@ -25,7 +67,7 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal(CommandBehavior.Default, interceptionContext.CommandBehavior);
             Assert.Equal(0, interceptionContext.Result);
             Assert.Equal(0, interceptionContext.OriginalResult);
-            Assert.False(interceptionContext.IsSuppressed);
+            Assert.False(interceptionContext.IsExecutionSuppressed);
         }
 
         [Fact]
@@ -55,7 +97,7 @@ namespace System.Data.Entity.Infrastructure
             Assert.Null(interceptionContext.OriginalResult);
             Assert.Null(interceptionContext.Exception);
             Assert.Null(interceptionContext.OriginalException);
-            Assert.False(interceptionContext.IsSuppressed);
+            Assert.False(interceptionContext.IsExecutionSuppressed);
         }
 
         [Fact]
@@ -67,7 +109,7 @@ namespace System.Data.Entity.Infrastructure
             Assert.Null(interceptionContext.OriginalResult);
             Assert.Null(interceptionContext.Exception);
             Assert.Null(interceptionContext.OriginalException);
-            Assert.False(interceptionContext.IsSuppressed);
+            Assert.False(interceptionContext.IsExecutionSuppressed);
 
             ((IDbMutableInterceptionContext<string>)interceptionContext).MutableData.SetExecuted("Wensleydale");
 
@@ -75,17 +117,17 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal("Wensleydale", interceptionContext.OriginalResult);
             Assert.Null(interceptionContext.Exception);
             Assert.Null(interceptionContext.OriginalException);
-            Assert.False(interceptionContext.IsSuppressed);
+            Assert.False(interceptionContext.IsExecutionSuppressed);
 
             interceptionContext.Result = "Double Gloucester";
             Assert.Equal("Double Gloucester", interceptionContext.Result);
             Assert.Equal("Wensleydale", interceptionContext.OriginalResult);
-            Assert.False(interceptionContext.IsSuppressed);
+            Assert.False(interceptionContext.IsExecutionSuppressed);
 
             interceptionContext.Result = null;
             Assert.Null(interceptionContext.Result);
             Assert.Equal("Wensleydale", interceptionContext.OriginalResult);
-            Assert.False(interceptionContext.IsSuppressed);
+            Assert.False(interceptionContext.IsExecutionSuppressed);
         }
 
         [Fact]
@@ -97,7 +139,7 @@ namespace System.Data.Entity.Infrastructure
             Assert.Null(interceptionContext.OriginalResult);
             Assert.Null(interceptionContext.Exception);
             Assert.Null(interceptionContext.OriginalException);
-            Assert.False(interceptionContext.IsSuppressed);
+            Assert.False(interceptionContext.IsExecutionSuppressed);
 
             interceptionContext.MutableData.SetExceptionThrown(new Exception("Cheez Whiz"));
 
@@ -105,17 +147,17 @@ namespace System.Data.Entity.Infrastructure
             Assert.Null(interceptionContext.OriginalResult);
             Assert.Equal("Cheez Whiz", interceptionContext.Exception.Message);
             Assert.Equal("Cheez Whiz", interceptionContext.OriginalException.Message);
-            Assert.False(interceptionContext.IsSuppressed);
+            Assert.False(interceptionContext.IsExecutionSuppressed);
 
             interceptionContext.Exception = new Exception("Velveeta");
             Assert.Equal("Velveeta", interceptionContext.Exception.Message);
             Assert.Equal("Cheez Whiz", interceptionContext.OriginalException.Message);
-            Assert.False(interceptionContext.IsSuppressed);
+            Assert.False(interceptionContext.IsExecutionSuppressed);
 
             interceptionContext.Exception = null;
             Assert.Null(interceptionContext.Exception);
             Assert.Equal("Cheez Whiz", interceptionContext.OriginalException.Message);
-            Assert.False(interceptionContext.IsSuppressed);
+            Assert.False(interceptionContext.IsExecutionSuppressed);
         }
 
         [Fact]
@@ -125,7 +167,7 @@ namespace System.Data.Entity.Infrastructure
 
             interceptionContext.Result = "Double Gloucester";
 
-            Assert.True(interceptionContext.IsSuppressed);
+            Assert.True(interceptionContext.IsExecutionSuppressed);
             Assert.Equal("Double Gloucester", interceptionContext.Result);
         }
 
@@ -136,7 +178,7 @@ namespace System.Data.Entity.Infrastructure
 
             interceptionContext.Exception = new Exception("Velveeta");
 
-            Assert.True(interceptionContext.IsSuppressed);
+            Assert.True(interceptionContext.IsExecutionSuppressed);
             Assert.Equal("Velveeta", interceptionContext.Exception.Message);
         }
 
@@ -147,7 +189,7 @@ namespace System.Data.Entity.Infrastructure
 
             interceptionContext.SuppressExecution();
 
-            Assert.True(interceptionContext.IsSuppressed);
+            Assert.True(interceptionContext.IsExecutionSuppressed);
             Assert.Null(interceptionContext.Result);
             Assert.Null(interceptionContext.Exception);
         }

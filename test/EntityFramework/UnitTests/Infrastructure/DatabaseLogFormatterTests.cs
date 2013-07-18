@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Collections;
     using System.Data.Common;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Resources;
     using System.Globalization;
     using System.IO;
@@ -14,7 +15,7 @@ namespace System.Data.Entity.Infrastructure
     using Moq.Protected;
     using Xunit;
 
-    public class DbCommandLoggerTests
+    public class DatabaseLogFormatterTests
     {
         public class Constructors : TestBase
         {
@@ -23,13 +24,13 @@ namespace System.Data.Entity.Infrastructure
             {
                 Assert.Equal(
                     "context",
-                    Assert.Throws<ArgumentNullException>(() => new DbCommandLogger(null, new StringWriter().Write)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => new DatabaseLogFormatter(null, new StringWriter().Write)).ParamName);
                 Assert.Equal(
-                    "sink",
-                    Assert.Throws<ArgumentNullException>(() => new DbCommandLogger(new Mock<DbContext>().Object, null)).ParamName);
+                    "writeAction",
+                    Assert.Throws<ArgumentNullException>(() => new DatabaseLogFormatter(new Mock<DbContext>().Object, null)).ParamName);
                 Assert.Equal(
-                    "sink",
-                    Assert.Throws<ArgumentNullException>(() => new DbCommandLogger(null)).ParamName);
+                    "writeAction",
+                    Assert.Throws<ArgumentNullException>(() => new DatabaseLogFormatter(null)).ParamName);
             }
         }
 
@@ -39,7 +40,7 @@ namespace System.Data.Entity.Infrastructure
             public void Context_returns_configured_context()
             {
                 var context = new Mock<DbContext>().Object;
-                Assert.Same(context, new DbCommandLogger(context, new StringWriter().Write).Context);
+                Assert.Same(context, new DatabaseLogFormatter(context, new StringWriter().Write).Context);
             }
         }
 
@@ -49,7 +50,7 @@ namespace System.Data.Entity.Infrastructure
             public void Writer_returns_configured_writer()
             {
                 Action<string> writer = new StringWriter().Write;
-                Assert.Same(writer, new DbCommandLogger(new Mock<DbContext>().Object, writer).Sink);
+                Assert.Same(writer, new DatabaseLogFormatter(new Mock<DbContext>().Object, writer).WriteAction);
             }
         }
 
@@ -58,22 +59,22 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void NonQueryExecuting_validates_arguments()
             {
-                var logger = new DbCommandLogger(new StringWriter().Write);
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
 
                 Assert.Equal(
                     "command",
-                    Assert.Throws<ArgumentNullException>(() => logger.NonQueryExecuting(null, new DbCommandInterceptionContext<int>()))
+                    Assert.Throws<ArgumentNullException>(() => formatter.NonQueryExecuting(null, new DbCommandInterceptionContext<int>()))
                         .ParamName);
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(() => logger.NonQueryExecuting(new Mock<DbCommand>().Object, null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.NonQueryExecuting(new Mock<DbCommand>().Object, null)).ParamName);
             }
 
             [Fact]
             public void NonQueryExecuting_logs()
             {
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).NonQueryExecuting(CreateCommand("I am Sam"), new DbCommandInterceptionContext<int>());
+                new DatabaseLogFormatter(writer.Write).NonQueryExecuting(CreateCommand("I am Sam"), new DbCommandInterceptionContext<int>());
 
                 Assert.Equal("I am Sam", GetSingleLine(writer));
             }
@@ -84,22 +85,22 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void ReaderExecuting_validates_arguments()
             {
-                var logger = new DbCommandLogger(new StringWriter().Write);
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
 
                 Assert.Equal(
                     "command",
                     Assert.Throws<ArgumentNullException>(
-                        () => logger.ReaderExecuting(null, new DbCommandInterceptionContext<DbDataReader>())).ParamName);
+                        () => formatter.ReaderExecuting(null, new DbCommandInterceptionContext<DbDataReader>())).ParamName);
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(() => logger.ReaderExecuting(new Mock<DbCommand>().Object, null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.ReaderExecuting(new Mock<DbCommand>().Object, null)).ParamName);
             }
 
             [Fact]
             public void ReaderExecuting_logs()
             {
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).ReaderExecuting(
+                new DatabaseLogFormatter(writer.Write).ReaderExecuting(
                     CreateCommand("I am Sam"), new DbCommandInterceptionContext<DbDataReader>());
 
                 Assert.Equal("I am Sam", GetSingleLine(writer));
@@ -111,22 +112,22 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void ScalarExecuting_validates_arguments()
             {
-                var logger = new DbCommandLogger(new StringWriter().Write);
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
 
                 Assert.Equal(
                     "command",
-                    Assert.Throws<ArgumentNullException>(() => logger.ScalarExecuting(null, new DbCommandInterceptionContext<object>()))
+                    Assert.Throws<ArgumentNullException>(() => formatter.ScalarExecuting(null, new DbCommandInterceptionContext<object>()))
                         .ParamName);
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(() => logger.ScalarExecuting(new Mock<DbCommand>().Object, null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.ScalarExecuting(new Mock<DbCommand>().Object, null)).ParamName);
             }
 
             [Fact]
             public void ScalarExecuting_logs()
             {
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).ScalarExecuting(CreateCommand("Sam I am"), new DbCommandInterceptionContext<object>());
+                new DatabaseLogFormatter(writer.Write).ScalarExecuting(CreateCommand("Sam I am"), new DbCommandInterceptionContext<object>());
 
                 Assert.Equal("Sam I am", GetSingleLine(writer));
             }
@@ -137,15 +138,15 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void NonQueryExecuted_validates_arguments()
             {
-                var logger = new DbCommandLogger(new StringWriter().Write);
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
 
                 Assert.Equal(
                     "command",
-                    Assert.Throws<ArgumentNullException>(() => logger.NonQueryExecuted(null, new DbCommandInterceptionContext<int>()))
+                    Assert.Throws<ArgumentNullException>(() => formatter.NonQueryExecuted(null, new DbCommandInterceptionContext<int>()))
                         .ParamName);
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(() => logger.NonQueryExecuted(new Mock<DbCommand>().Object, null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.NonQueryExecuted(new Mock<DbCommand>().Object, null)).ParamName);
             }
 
             [Fact]
@@ -155,7 +156,7 @@ namespace System.Data.Entity.Infrastructure
                 interceptionContext.Result = 88;
                 var writer = new StringWriter();
 
-                new DbCommandLogger(writer.Write).NonQueryExecuted(CreateCommand(""), interceptionContext);
+                new DatabaseLogFormatter(writer.Write).NonQueryExecuted(CreateCommand(""), interceptionContext);
 
                 Assert.Equal(Strings.CommandLogComplete(0, "88", ""), GetSingleLine(writer));
             }
@@ -166,16 +167,16 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void ReaderExecuted_validates_arguments()
             {
-                var logger = new DbCommandLogger(new StringWriter().Write);
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
 
                 Assert.Equal(
                     "command",
                     Assert.Throws<ArgumentNullException>(
-                        () => logger.ReaderExecuted(null, new DbCommandInterceptionContext<DbDataReader>()))
+                        () => formatter.ReaderExecuted(null, new DbCommandInterceptionContext<DbDataReader>()))
                         .ParamName);
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(() => logger.ReaderExecuted(new Mock<DbCommand>().Object, null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.ReaderExecuted(new Mock<DbCommand>().Object, null)).ParamName);
             }
 
             [Fact]
@@ -186,7 +187,7 @@ namespace System.Data.Entity.Infrastructure
 
                 interceptionContext.Result = dataReader;
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).ReaderExecuted(CreateCommand(""), interceptionContext);
+                new DatabaseLogFormatter(writer.Write).ReaderExecuted(CreateCommand(""), interceptionContext);
 
                 Assert.Equal(Strings.CommandLogComplete(0, dataReader.GetType().Name, ""), GetSingleLine(writer));
             }
@@ -197,15 +198,15 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void ScalarExecuted_validates_arguments()
             {
-                var logger = new DbCommandLogger(new StringWriter().Write);
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
 
                 Assert.Equal(
                     "command",
-                    Assert.Throws<ArgumentNullException>(() => logger.ScalarExecuted(null, new DbCommandInterceptionContext<object>()))
+                    Assert.Throws<ArgumentNullException>(() => formatter.ScalarExecuted(null, new DbCommandInterceptionContext<object>()))
                         .ParamName);
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(() => logger.ScalarExecuted(new Mock<DbCommand>().Object, null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.ScalarExecuted(new Mock<DbCommand>().Object, null)).ParamName);
             }
 
             [Fact]
@@ -215,7 +216,7 @@ namespace System.Data.Entity.Infrastructure
                 interceptionContext.Result = "That Sam-I-am";
 
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).ScalarExecuted(CreateCommand(""), interceptionContext);
+                new DatabaseLogFormatter(writer.Write).ScalarExecuted(CreateCommand(""), interceptionContext);
 
                 Assert.Equal(Strings.CommandLogComplete(0, "That Sam-I-am", ""), GetSingleLine(writer));
             }
@@ -226,14 +227,14 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Executing_validates_arguments()
             {
-                var logger = new DbCommandLogger(new StringWriter().Write);
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
 
                 Assert.Equal(
                     "command",
-                    Assert.Throws<ArgumentNullException>(() => logger.Executing(null, new DbCommandInterceptionContext<int>())).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.Executing(null, new DbCommandInterceptionContext<int>())).ParamName);
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(() => logger.Executing(new Mock<DbCommand>().Object, null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.Executing<int>(new Mock<DbCommand>().Object, null)).ParamName);
             }
 
             [Fact]
@@ -243,10 +244,10 @@ namespace System.Data.Entity.Infrastructure
                 var context2 = new Mock<DbContext>().Object;
 
                 var writer = new StringWriter();
-                var logger = new DbCommandLogger(writer.Write);
-                logger.Executing(CreateCommand("That Sam-I-am!"), new DbCommandInterceptionContext<int>().WithDbContext(context1));
-                logger.Executing(CreateCommand("I do not like"), new DbCommandInterceptionContext<int>().WithDbContext(context2));
-                logger.Executing(CreateCommand("that Sam-I-am"), new DbCommandInterceptionContext<int>());
+                var formatter = new DatabaseLogFormatter(writer.Write);
+                formatter.Executing(CreateCommand("That Sam-I-am!"), new DbCommandInterceptionContext<int>().WithDbContext(context1));
+                formatter.Executing(CreateCommand("I do not like"), new DbCommandInterceptionContext<int>().WithDbContext(context2));
+                formatter.Executing(CreateCommand("that Sam-I-am"), new DbCommandInterceptionContext<int>());
 
                 Assert.Equal("That Sam-I-am!", GetSingleLine(writer));
             }
@@ -258,10 +259,10 @@ namespace System.Data.Entity.Infrastructure
                 var context2 = new Mock<DbContext>().Object;
 
                 var writer = new StringWriter();
-                var logger = new DbCommandLogger(writer.Write);
-                logger.Executing(CreateCommand("Do you like"), new DbCommandInterceptionContext<int>());
-                logger.Executing(CreateCommand("Green eggs and ham?"), new DbCommandInterceptionContext<int>().WithDbContext(context1));
-                logger.Executing(CreateCommand("I do not like them"), new DbCommandInterceptionContext<int>().WithDbContext(context2));
+                var formatter = new DatabaseLogFormatter(writer.Write);
+                formatter.Executing(CreateCommand("Do you like"), new DbCommandInterceptionContext<int>());
+                formatter.Executing(CreateCommand("Green eggs and ham?"), new DbCommandInterceptionContext<int>().WithDbContext(context1));
+                formatter.Executing(CreateCommand("I do not like them"), new DbCommandInterceptionContext<int>().WithDbContext(context2));
 
                 var lines = GetLines(writer);
                 Assert.Equal("Do you like", lines[0]);
@@ -275,15 +276,15 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Executed_validates_arguments()
             {
-                var logger = new DbCommandLogger(new StringWriter().Write);
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
 
                 Assert.Equal(
                     "command",
-                    Assert.Throws<ArgumentNullException>(() => logger.Executed(null, null, new DbCommandInterceptionContext<int>()))
+                    Assert.Throws<ArgumentNullException>(() => formatter.Executed(null, new DbCommandInterceptionContext<int>()))
                         .ParamName);
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(() => logger.Executed(new Mock<DbCommand>().Object, null, null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.Executed<int>(new Mock<DbCommand>().Object, null)).ParamName);
             }
 
             [Fact]
@@ -293,10 +294,17 @@ namespace System.Data.Entity.Infrastructure
                 var context2 = new Mock<DbContext>().Object;
 
                 var writer = new StringWriter();
-                var logger = new DbCommandLogger(writer.Write);
-                logger.Executed(CreateCommand(""), "Sam-I-am", new DbCommandInterceptionContext<int>().WithDbContext(context1));
-                logger.Executed(CreateCommand(""), "I do not like", new DbCommandInterceptionContext<int>().WithDbContext(context2));
-                logger.Executed(CreateCommand(""), "Green eggs and ham", new DbCommandInterceptionContext<int>());
+                var formatter = new DatabaseLogFormatter(writer.Write);
+                
+                var interceptionContext = new DbCommandInterceptionContext<string>().WithDbContext(context1);
+                interceptionContext.Result = "Sam-I-am";
+                formatter.Executed(CreateCommand(""), interceptionContext);
+
+                interceptionContext = new DbCommandInterceptionContext<string>().WithDbContext(context2);
+                interceptionContext.Result = "I do not like";
+                formatter.Executed(CreateCommand(""), interceptionContext);
+
+                formatter.Executed(CreateCommand(""), new DbCommandInterceptionContext<string> { Result = "Green eggs and ham" });
 
                 Assert.Equal(Strings.CommandLogComplete(0, "Sam-I-am", ""), GetSingleLine(writer));
             }
@@ -308,10 +316,17 @@ namespace System.Data.Entity.Infrastructure
                 var context2 = new Mock<DbContext>().Object;
 
                 var writer = new StringWriter();
-                var logger = new DbCommandLogger(writer.Write);
-                logger.Executed(CreateCommand(""), "Would you like them", new DbCommandInterceptionContext<int>());
-                logger.Executed(CreateCommand(""), "Here or there?", new DbCommandInterceptionContext<int>().WithDbContext(context1));
-                logger.Executed(CreateCommand(""), "I would not like them", new DbCommandInterceptionContext<int>().WithDbContext(context2));
+                var formatter = new DatabaseLogFormatter(writer.Write);
+
+                formatter.Executed(CreateCommand(""), new DbCommandInterceptionContext<string> { Result = "Would you like them" });
+
+                var interceptionContext = new DbCommandInterceptionContext<string>().WithDbContext(context1);
+                interceptionContext.Result = "Here or there?";
+                formatter.Executed(CreateCommand(""), interceptionContext);
+
+                interceptionContext = new DbCommandInterceptionContext<string>().WithDbContext(context2);
+                interceptionContext.Result = "I would not like them";
+                formatter.Executed(CreateCommand(""), interceptionContext);
 
                 var lines = GetLines(writer);
                 Assert.Equal(Strings.CommandLogComplete(0, "Would you like them", ""), lines[0]);
@@ -325,21 +340,21 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void LogCommand_validates_arguments()
             {
-                var logger = new DbCommandLogger(new StringWriter().Write);
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
 
                 Assert.Equal(
                     "command",
-                    Assert.Throws<ArgumentNullException>(() => logger.LogCommand(null, new DbCommandInterceptionContext<int>())).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.LogCommand(null, new DbCommandInterceptionContext<int>())).ParamName);
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(() => logger.LogCommand(new Mock<DbCommand>().Object, null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.LogCommand<int>(new Mock<DbCommand>().Object, null)).ParamName);
             }
 
             [Fact]
             public void LogCommand_can_handle_commands_with_null_text_and_parameters()
             {
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogCommand(new Mock<DbCommand>().Object, new DbCommandInterceptionContext<int>());
+                new DatabaseLogFormatter(writer.Write).LogCommand(new Mock<DbCommand>().Object, new DbCommandInterceptionContext<int>());
 
                 Assert.Equal("<null>", GetLines(writer)[0]);
             }
@@ -351,7 +366,7 @@ namespace System.Data.Entity.Infrastructure
                 var parameter2 = CreateParameter("Param2", ParameterDirection.InputOutput, false, DbType.Decimal, -1, 18, 2, 7.7m);
 
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogCommand(
+                new DatabaseLogFormatter(writer.Write).LogCommand(
                     CreateCommand("here or there", parameter1, parameter2), new DbCommandInterceptionContext<int>());
 
                 var lines = GetLines(writer);
@@ -369,7 +384,7 @@ namespace System.Data.Entity.Infrastructure
             public void LogCommand_adds_timestamp_log_line_for_async_commands()
             {
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogCommand(
+                new DatabaseLogFormatter(writer.Write).LogCommand(
                     CreateCommand("I would not like them"), new DbCommandInterceptionContext<int>().AsAsync());
 
                 var lines = GetLines(writer);
@@ -384,7 +399,7 @@ namespace System.Data.Entity.Infrastructure
             public void LogCommand_adds_timestamp_log_line_for_sync_commands()
             {
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogCommand(
+                new DatabaseLogFormatter(writer.Write).LogCommand(
                     CreateCommand("I would not like them"), new DbCommandInterceptionContext<int>());
 
                 var lines = GetLines(writer);
@@ -401,24 +416,24 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void LogParameter_validates_arguments()
             {
-                var logger = new DbCommandLogger(new StringWriter().Write);
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
 
                 Assert.Equal(
                     "command",
                     Assert.Throws<ArgumentNullException>(
-                        () => logger.LogParameter(
+                        () => formatter.LogParameter(
                             null, new DbCommandInterceptionContext<int>(), new Mock<DbParameter>().Object)).ParamName);
 
                 Assert.Equal(
                     "interceptionContext",
                     Assert.Throws<ArgumentNullException>(
-                        () => logger.LogParameter(
+                        () => formatter.LogParameter<int>(
                             new Mock<DbCommand>().Object, null, new Mock<DbParameter>().Object)).ParamName);
 
                 Assert.Equal(
                     "parameter",
                     Assert.Throws<ArgumentNullException>(
-                        () => logger.LogParameter(
+                        () => formatter.LogParameter(
                             new Mock<DbCommand>().Object, new DbCommandInterceptionContext<int>(), null)).ParamName);
             }
 
@@ -428,7 +443,7 @@ namespace System.Data.Entity.Infrastructure
                 var parameter = CreateParameter("Param1", ParameterDirection.InputOutput, false, DbType.Decimal, 4, 18, 2, 2013m);
 
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogCommand(CreateCommand("", parameter), new DbCommandInterceptionContext<int>());
+                new DatabaseLogFormatter(writer.Write).LogCommand(CreateCommand("", parameter), new DbCommandInterceptionContext<int>());
 
                 Assert.Equal(
                     "-- Param1: '2013' (Type = Decimal, Direction = InputOutput, IsNullable = false, Size = 4, Precision = 18, Scale = 2)",
@@ -442,7 +457,7 @@ namespace System.Data.Entity.Infrastructure
                 var parameter2 = CreateParameter("Param2", ParameterDirection.Input, false, DbType.String, 4000, 0, 0, "value");
 
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogCommand(
+                new DatabaseLogFormatter(writer.Write).LogCommand(
                     CreateCommand("", parameter1, parameter2), new DbCommandInterceptionContext<int>());
 
                 var lines = GetLines(writer);
@@ -458,7 +473,7 @@ namespace System.Data.Entity.Infrastructure
                 var parameter3 = CreateParameter("Param3", ParameterDirection.Input, false, DbType.String, 4000, 0, 0, "Not Null");
 
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogCommand(
+                new DatabaseLogFormatter(writer.Write).LogCommand(
                     CreateCommand("", parameter1, parameter2, parameter3), new DbCommandInterceptionContext<int>());
 
                 var lines = GetLines(writer);
@@ -474,7 +489,7 @@ namespace System.Data.Entity.Infrastructure
                 var parameter2 = CreateParameter("Param2", ParameterDirection.Input, true, DbType.String, 0, 0, 0, "value");
 
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogCommand(
+                new DatabaseLogFormatter(writer.Write).LogCommand(
                     CreateCommand("", parameter1, parameter2), new DbCommandInterceptionContext<int>());
 
                 var lines = GetLines(writer);
@@ -489,7 +504,7 @@ namespace System.Data.Entity.Infrastructure
                 var parameter2 = CreateParameter("Param2", ParameterDirection.Input, true, DbType.String, 0, 0, 0, "value");
 
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogCommand(
+                new DatabaseLogFormatter(writer.Write).LogCommand(
                     CreateCommand("", parameter1, parameter2), new DbCommandInterceptionContext<int>());
 
                 var lines = GetLines(writer);
@@ -504,7 +519,7 @@ namespace System.Data.Entity.Infrastructure
                 var parameter2 = CreateParameter("Param2", ParameterDirection.Input, true, DbType.String, 0, 0, 0, "value");
 
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogCommand(
+                new DatabaseLogFormatter(writer.Write).LogCommand(
                     CreateCommand("", parameter1, parameter2), new DbCommandInterceptionContext<int>());
 
                 var lines = GetLines(writer);
@@ -519,7 +534,7 @@ namespace System.Data.Entity.Infrastructure
                 var parameter2 = CreateParameter("Param2", ParameterDirection.Input, true, DbType.String, 0, 0, 0, "value");
 
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogCommand(
+                new DatabaseLogFormatter(writer.Write).LogCommand(
                     CreateCommand("", parameter1, parameter2), new DbCommandInterceptionContext<int>());
 
                 var lines = GetLines(writer);
@@ -533,15 +548,15 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void LogResult_validates_arguments()
             {
-                var logger = new DbCommandLogger(new StringWriter().Write);
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
 
                 Assert.Equal(
                     "command",
-                    Assert.Throws<ArgumentNullException>(() => logger.LogResult(null, null, new DbCommandInterceptionContext<int>()))
+                    Assert.Throws<ArgumentNullException>(() => formatter.LogResult(null, new DbCommandInterceptionContext<int>()))
                         .ParamName);
                 Assert.Equal(
                     "interceptionContext",
-                    Assert.Throws<ArgumentNullException>(() => logger.LogResult(new Mock<DbCommand>().Object, null, null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.LogResult<int>(new Mock<DbCommand>().Object, null)).ParamName);
             }
 
             [Fact]
@@ -549,8 +564,8 @@ namespace System.Data.Entity.Infrastructure
             {
                 var dataReader = new Mock<DbDataReader>().Object;
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogResult(
-                    new Mock<DbCommand>().Object, dataReader, new DbCommandInterceptionContext<int>());
+                new DatabaseLogFormatter(writer.Write).LogResult(
+                    new Mock<DbCommand>().Object, new DbCommandInterceptionContext<DbDataReader> { Result = dataReader });
 
                 Assert.Equal(Strings.CommandLogComplete(0, dataReader.GetType().Name, ""), GetSingleLine(writer));
             }
@@ -559,7 +574,7 @@ namespace System.Data.Entity.Infrastructure
             public void LogResult_handles_completed_commands_with_int_results()
             {
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogResult(new Mock<DbCommand>().Object, 77, new DbCommandInterceptionContext<int>());
+                new DatabaseLogFormatter(writer.Write).LogResult(new Mock<DbCommand>().Object, new DbCommandInterceptionContext<int> { Result = 77 });
 
                 Assert.Equal(Strings.CommandLogComplete(0, "77", ""), GetSingleLine(writer));
             }
@@ -568,8 +583,8 @@ namespace System.Data.Entity.Infrastructure
             public void LogResult_handles_completed_commands_with_some_object_results()
             {
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogResult(
-                    new Mock<DbCommand>().Object, "Green Eggs and Ham", new DbCommandInterceptionContext<int>());
+                new DatabaseLogFormatter(writer.Write).LogResult(
+                    new Mock<DbCommand>().Object, new DbCommandInterceptionContext<string> { Result = "Green Eggs and Ham" });
 
                 Assert.Equal(Strings.CommandLogComplete(0, "Green Eggs and Ham", ""), GetSingleLine(writer));
             }
@@ -578,7 +593,7 @@ namespace System.Data.Entity.Infrastructure
             public void LogResult_handles_completed_commands_with_null_results()
             {
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogResult(new Mock<DbCommand>().Object, null, new DbCommandInterceptionContext<int>());
+                new DatabaseLogFormatter(writer.Write).LogResult(new Mock<DbCommand>().Object, new DbCommandInterceptionContext<DbDataReader>());
 
                 Assert.Equal(Strings.CommandLogComplete(0, "null", ""), GetSingleLine(writer));
             }
@@ -587,9 +602,8 @@ namespace System.Data.Entity.Infrastructure
             public void LogResult_handles_failed_commands()
             {
                 var writer = new StringWriter();
-                new DbCommandLogger(writer.Write).LogResult(
+                new DatabaseLogFormatter(writer.Write).LogResult(
                     new Mock<DbCommand>().Object,
-                    null,
                     new DbCommandInterceptionContext<DbDataReader> { Exception = new Exception("I do not like them!") });
 
                 Assert.Equal(Strings.CommandLogFailed(0, "I do not like them!", ""), GetSingleLine(writer));
@@ -603,9 +617,8 @@ namespace System.Data.Entity.Infrastructure
                 var interceptionContext = new DbCommandInterceptionContext<DbDataReader>();
                 interceptionContext.MutableData.TaskStatus = TaskStatus.Canceled;
 
-                new DbCommandLogger(writer.Write).LogResult(
+                new DatabaseLogFormatter(writer.Write).LogResult(
                     new Mock<DbCommand>().Object,
-                    null,
                     interceptionContext);
 
                 Assert.Equal(Strings.CommandLogCanceled(0, ""), GetSingleLine(writer));
@@ -615,10 +628,10 @@ namespace System.Data.Entity.Infrastructure
             public void LogResult_logs_elapsed_time_for_completed_commands()
             {
                 var writer = new StringWriter();
-                var logger = new DbCommandLogger(writer.Write);
-                var elapsed = GetElapsed(logger);
+                var formatter = new DatabaseLogFormatter(writer.Write);
+                var elapsed = GetElapsed(formatter);
 
-                logger.LogResult(new Mock<DbCommand>().Object, 77, new DbCommandInterceptionContext<int>());
+                formatter.LogResult(new Mock<DbCommand>().Object, new DbCommandInterceptionContext<int> { Result = 77 });
 
                 Assert.Equal(Strings.CommandLogComplete(elapsed, "77", ""), GetSingleLine(writer));
             }
@@ -627,12 +640,11 @@ namespace System.Data.Entity.Infrastructure
             public void LogResult_logs_elapsed_time_for_failed_commands()
             {
                 var writer = new StringWriter();
-                var logger = new DbCommandLogger(writer.Write);
-                var elapsed = GetElapsed(logger);
+                var formatter = new DatabaseLogFormatter(writer.Write);
+                var elapsed = GetElapsed(formatter);
 
-                logger.LogResult(
+                formatter.LogResult(
                     new Mock<DbCommand>().Object,
-                    77,
                     new DbCommandInterceptionContext<int> { Exception = new Exception("I do not like them!") } );
 
                 Assert.Equal(Strings.CommandLogFailed(elapsed, "I do not like them!", ""), GetSingleLine(writer));
@@ -642,24 +654,23 @@ namespace System.Data.Entity.Infrastructure
             public void LogResult_logs_elapsed_time_for_canceled_commands()
             {
                 var writer = new StringWriter();
-                var logger = new DbCommandLogger(writer.Write);
-                var elapsed = GetElapsed(logger);
+                var formatter = new DatabaseLogFormatter(writer.Write);
+                var elapsed = GetElapsed(formatter);
 
                 var interceptionContext = new DbCommandInterceptionContext<int>();
                 interceptionContext.MutableData.TaskStatus = TaskStatus.Canceled;
 
-                logger.LogResult(
-                    new Mock<DbCommand>().Object, 77, interceptionContext);
+                formatter.LogResult(new Mock<DbCommand>().Object, interceptionContext);
 
                 Assert.Equal(Strings.CommandLogCanceled(elapsed, ""), GetSingleLine(writer));
             }
 
-            private static long GetElapsed(DbCommandLogger logger)
+            private static long GetElapsed(DatabaseLogFormatter formatter)
             {
-                logger.Stopwatch.Restart();
+                formatter.Stopwatch.Restart();
                 Thread.Sleep(10);
-                logger.Stopwatch.Stop();
-                return logger.Stopwatch.ElapsedMilliseconds;
+                formatter.Stopwatch.Stop();
+                return formatter.Stopwatch.ElapsedMilliseconds;
             }
         }
 

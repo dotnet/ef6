@@ -10,6 +10,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
@@ -923,7 +924,7 @@ namespace System.Data.Entity.SqlServer
                                 // set database options
                                 using (var command = CreateCommand(conn, setDatabaseOptionsScript, commandTimeout))
                                 {
-                                    Interception.Dispatch.Command.NonQuery(command, new DbCommandBaseInterceptionContext());
+                                    DbInterception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext());
                                 }
                             });
                 }
@@ -937,7 +938,7 @@ namespace System.Data.Entity.SqlServer
                                 // create database objects
                                 using (var command = CreateCommand(conn, createObjectsScript, commandTimeout))
                                 {
-                                    Interception.Dispatch.Command.NonQuery(command, new DbCommandBaseInterceptionContext());
+                                    DbInterception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext());
                                 }
                             });
                 }
@@ -1056,7 +1057,7 @@ namespace System.Data.Entity.SqlServer
                         // create database
                         using (var command = CreateCommand(conn, createDatabaseScript, commandTimeout))
                         {
-                            Interception.Dispatch.Command.NonQuery(command, new DbCommandBaseInterceptionContext());
+                            DbInterception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext());
                         }
                         sqlVersion = SqlVersionUtils.GetSqlVersion(conn);
                     });
@@ -1125,8 +1126,8 @@ namespace System.Data.Entity.SqlServer
                                     fileName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
                                 using (var command = CreateCommand(conn, databaseExistsScript, commandTimeout))
                                 {
-                                    var rowsAffected = (int)Interception.Dispatch.Command.Scalar(
-                                        command, new DbCommandBaseInterceptionContext());
+                                    var rowsAffected = (int)DbInterception.Dispatch.Command.Scalar(
+                                        command, new DbCommandInterceptionContext());
 
                                     databaseDoesNotExistInSysTables = (rowsAffected == 0);
                                 }
@@ -1154,8 +1155,8 @@ namespace System.Data.Entity.SqlServer
                             databaseName, useDeprecatedSystemTable: sqlVersion == SqlVersion.Sql8);
                         using (var command = CreateCommand(conn, databaseExistsScript, commandTimeout))
                         {
-                            var rowsAffected = (int)Interception.Dispatch.Command.Scalar(
-                                command, new DbCommandBaseInterceptionContext());
+                            var rowsAffected = (int)DbInterception.Dispatch.Command.Scalar(
+                                command, new DbCommandInterceptionContext());
 
                             databaseExistsInSysTables = (rowsAffected > 0);
                         }
@@ -1209,8 +1210,8 @@ namespace System.Data.Entity.SqlServer
                             var command = CreateCommand(conn, getDatabaseNamesScript, commandTimeout);
 
                             using (
-                                var reader = Interception.Dispatch.Command.Reader(
-                                    command, new DbCommandBaseInterceptionContext()))
+                                var reader = DbInterception.Dispatch.Command.Reader(
+                                    command, new DbCommandInterceptionContext()))
                             {
                                 while (reader.Read())
                                 {
@@ -1251,7 +1252,7 @@ namespace System.Data.Entity.SqlServer
                         {
                             using (var command = CreateCommand(conn, dropDatabaseScript, commandTimeout))
                             {
-                                Interception.Dispatch.Command.NonQuery(command, new DbCommandBaseInterceptionContext());
+                                DbInterception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext());
                             }
                         });
             }

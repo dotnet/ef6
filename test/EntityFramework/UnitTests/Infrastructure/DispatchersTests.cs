@@ -5,6 +5,9 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
+    using System.Threading.Tasks;
     using Moq;
     using Xunit;
 
@@ -15,7 +18,7 @@ namespace System.Data.Entity.Infrastructure
         {
             var mockInterceptor = new Mock<FakeInterceptor>();
 
-            var dispatchers = new Dispatchers();
+            var dispatchers = new DbDispatchers();
             dispatchers.AddInterceptor(mockInterceptor.Object);
 
             dispatchers.Command.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
@@ -36,7 +39,7 @@ namespace System.Data.Entity.Infrastructure
         {
             var mockInterceptor = new Mock<FakeInterceptor>();
 
-            var dispatchers = new Dispatchers();
+            var dispatchers = new DbDispatchers();
             dispatchers.AddInterceptor(mockInterceptor.Object);
             dispatchers.RemoveInterceptor(mockInterceptor.Object);
 
@@ -65,7 +68,7 @@ namespace System.Data.Entity.Infrastructure
 
             public abstract void ScalarExecuted(DbCommand command, DbCommandInterceptionContext<object> interceptionContext);
 
-            public abstract void TreeCreated(DbCommandTree commandTree, DbCommandTreeInterceptionContext interceptionContext);
+            public abstract void TreeCreated(DbCommandTreeInterceptionContext interceptionContext);
 
             public abstract bool CommandExecuting(DbCommand command, DbInterceptionContext interceptionContext);
 

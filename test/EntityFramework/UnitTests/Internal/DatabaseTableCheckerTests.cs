@@ -8,6 +8,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal.MockingProxies;
     using System.Data.SqlClient;
     using System.Linq;
@@ -80,14 +81,14 @@ namespace System.Data.Entity.Internal
                 {
                     CallBase = true
                 };
-            Interception.AddInterceptor(interceptorMock.Object);
+            DbInterception.Add(interceptorMock.Object);
             try
             {
                 new DatabaseTableChecker().AnyModelTableExists(internalContextMock.Object);
             }
             finally
             {
-                Interception.RemoveInterceptor(interceptorMock.Object);
+                DbInterception.Remove(interceptorMock.Object);
             }
 
             interceptorMock.Verify(

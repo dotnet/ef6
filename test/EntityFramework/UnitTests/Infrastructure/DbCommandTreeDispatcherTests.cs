@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Infrastructure.Interception;
     using Moq;
     using Xunit;
 
@@ -16,11 +17,12 @@ namespace System.Data.Entity.Infrastructure
 
             var mockInterceptor = new Mock<IDbCommandTreeInterceptor>();
             var interceptedTree = new Mock<DbCommandTree>().Object;
-            mockInterceptor.Setup(m => m.TreeCreated(tree, It.IsAny<DbCommandTreeInterceptionContext>()))
-                .Callback<DbCommandTree, DbCommandTreeInterceptionContext>(
-                    (t, i) =>
+            mockInterceptor.Setup(m => m.TreeCreated(It.IsAny<DbCommandTreeInterceptionContext>()))
+                .Callback<DbCommandTreeInterceptionContext>(
+                    i =>
                         {
                             Assert.Same(tree, i.Result);
+                            Assert.Same(tree, i.OriginalResult);
                             i.Result = interceptedTree;
                         });
 
@@ -30,7 +32,7 @@ namespace System.Data.Entity.Infrastructure
 
             Assert.Same(interceptedTree, dispatcher.Created(tree, interceptionContext));
 
-            mockInterceptor.Verify(m => m.TreeCreated(tree, It.IsAny<DbCommandTreeInterceptionContext>()));
+            mockInterceptor.Verify(m => m.TreeCreated(It.IsAny<DbCommandTreeInterceptionContext>()));
         }
 
         [Fact]

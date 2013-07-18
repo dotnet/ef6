@@ -8,6 +8,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServerCompact.Resources;
     using System.Data.SqlClient;
@@ -92,14 +93,14 @@ namespace System.Data.Entity.SqlServerCompact
                     context.Database.Delete();
 
                     var interceptor = new TestNonQueryInterceptor();
-                    Interception.AddInterceptor(interceptor);
+                    DbInterception.Add(interceptor);
                     try
                     {
                         SqlCeProviderServices.Instance.CreateDatabase(context.Database.Connection, null, storeItemCollection);
                     }
                     finally
                     {
-                        Interception.RemoveInterceptor(interceptor);
+                        DbInterception.Remove(interceptor);
                     }
 
                     Assert.Equal(3, interceptor.CommandTexts.Count);

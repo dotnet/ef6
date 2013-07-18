@@ -4,6 +4,7 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.SqlServer.Resources;
     using System.Diagnostics;
     using System.Globalization;
@@ -53,7 +54,7 @@ namespace System.Data.Entity.SqlServer
                 command.CommandText = "select serverproperty('EngineEdition')";
 
                 using (
-                    var reader = Interception.Dispatch.Command.Reader(command, new DbCommandBaseInterceptionContext()))
+                    var reader = DbInterception.Dispatch.Command.Reader(command, new DbCommandInterceptionContext()))
                 {
                     reader.Read();
 

@@ -56,7 +56,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var exception = Assert.Throws<ArgumentException>(
                     () => new DefaultProviderFactoryResolver().GetService<DbProviderFactory>("Oh.No.Not.Again"));
 
-                Assert.Equal(Strings.EntityClient_InvalidStoreProvider, exception.Message);
+                Assert.Equal(Strings.EntityClient_InvalidStoreProvider("Oh.No.Not.Again"), exception.Message);
                 Assert.NotNull(exception.InnerException);
             }
         }

@@ -6,6 +6,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Common;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.History;
@@ -541,7 +542,7 @@ namespace System.Data.Entity.Migrations
                 };
 
             var mockInterceptor = new Mock<DbCommandInterceptor> { CallBase = true };
-            Interception.AddInterceptor(mockInterceptor.Object);
+            DbInterception.Add(mockInterceptor.Object);
 
             try
             {
@@ -549,7 +550,7 @@ namespace System.Data.Entity.Migrations
             }
             finally
             {
-                Interception.RemoveInterceptor(mockInterceptor.Object);
+                DbInterception.Remove(mockInterceptor.Object);
             }
 
             mockInterceptor.Verify(m => m.NonQueryExecuting(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<int>>()));
@@ -585,7 +586,7 @@ namespace System.Data.Entity.Migrations
             };
 
             var mockInterceptor = new Mock<DbCommandInterceptor> { CallBase = true };
-            Interception.AddInterceptor(mockInterceptor.Object);
+            DbInterception.Add(mockInterceptor.Object);
 
             try
             {
@@ -593,7 +594,7 @@ namespace System.Data.Entity.Migrations
             }
             finally
             {
-                Interception.RemoveInterceptor(mockInterceptor.Object);
+                DbInterception.Remove(mockInterceptor.Object);
             }
 
             mockInterceptor.Verify(m => m.NonQueryExecuting(

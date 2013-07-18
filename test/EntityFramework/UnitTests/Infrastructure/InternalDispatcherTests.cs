@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Linq;
@@ -150,7 +151,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -159,7 +160,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Equal("0", c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -192,7 +193,7 @@ namespace System.Data.Entity.Infrastructure
                             {
                                 c.Result = "N";
                             }
-                            Assert.True(c.IsSuppressed);
+                            Assert.True(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -201,7 +202,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.True(c.IsSuppressed);
+                            Assert.True(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -234,7 +235,7 @@ namespace System.Data.Entity.Infrastructure
                             {
                                 c.Exception = new Exception("Bing!");
                             }
-                            Assert.True(c.IsSuppressed);
+                            Assert.True(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -243,7 +244,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Equal("Bing!", c.Exception.Message);
                             Assert.Null(c.OriginalException);
-                            Assert.True(c.IsSuppressed);
+                            Assert.True(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -275,7 +276,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalException);
                             Assert.Null(c.OriginalException);
                             c.SuppressExecution();
-                            Assert.True(c.IsSuppressed);
+                            Assert.True(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -284,7 +285,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.OriginalException);
                             Assert.Null(c.OriginalException);
-                            Assert.True(c.IsSuppressed);
+                            Assert.True(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -326,7 +327,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -335,7 +336,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Equal("Bang!", c.Exception.Message);
                             Assert.Equal("Bang!", c.OriginalException.Message);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -366,7 +367,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -376,7 +377,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.NotEmpty(c.Exception.Message);
                             Assert.Equal("Bang!", c.OriginalException.Message);
                             c.Exception = new Exception("Bing!");
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -407,7 +408,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -416,7 +417,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Equal("Bang!", c.OriginalException.Message);
                             c.Exception = null;
                             c.Result = "N";
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -497,7 +498,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -506,7 +507,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Equal("0", c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -546,7 +547,7 @@ namespace System.Data.Entity.Infrastructure
                             {
                                 c.Result = "N";
                             }
-                            Assert.True(c.IsSuppressed);
+                            Assert.True(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -555,7 +556,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.True(c.IsSuppressed);
+                            Assert.True(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -592,7 +593,7 @@ namespace System.Data.Entity.Infrastructure
                             {
                                 c.Exception = new Exception("Bing!");
                             }
-                            Assert.True(c.IsSuppressed);
+                            Assert.True(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -601,7 +602,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Equal("Bing!", c.Exception.Message);
                             Assert.Null(c.OriginalException);
-                            Assert.True(c.IsSuppressed);
+                            Assert.True(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -636,7 +637,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalException);
                             Assert.Null(c.OriginalException);
                             c.SuppressExecution();
-                            Assert.True(c.IsSuppressed);
+                            Assert.True(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -645,7 +646,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.OriginalException);
                             Assert.Null(c.OriginalException);
-                            Assert.True(c.IsSuppressed);
+                            Assert.True(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -699,7 +700,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -708,7 +709,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Equal("Bang!", c.Exception.Message);
                             Assert.Equal("Bang!", c.OriginalException.Message);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -745,7 +746,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -755,7 +756,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.NotEmpty(c.Exception.Message);
                             Assert.Equal("Bang!", c.OriginalException.Message);
                             c.Exception = new Exception("Bing!");
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -792,7 +793,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -801,7 +802,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Equal("Bang!", c.OriginalException.Message);
                             c.Exception = null;
                             c.Result = "N";
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();
@@ -837,7 +838,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         },
                     c =>
                         {
@@ -846,7 +847,7 @@ namespace System.Data.Entity.Infrastructure
                             Assert.Null(c.OriginalResult);
                             Assert.Null(c.Exception);
                             Assert.Null(c.OriginalException);
-                            Assert.False(c.IsSuppressed);
+                            Assert.False(c.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new InternalDispatcher<IFakeInterceptor1>();

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Linq;
     using Moq;

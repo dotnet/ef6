@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.EntityClient;
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Infrastructure
     ///     Note that specific types/operations that can be intercepted may use a more specific
     ///     interception context derived from this class. For example, if SQL is being executed by
     ///     a <see cref="DbContext" />, then the DbContext will be contained in the
-    ///     <see cref="DbCommandInterceptionContext" /> instance that is passed to the methods
+    ///     <see cref="DbCommandInterceptionContext{TResult}" /> instance that is passed to the methods
     ///     of <see cref="IDbCommandInterceptor" />.
     ///     Instances of this class are publicly immutable for contextual information. To add
     ///     contextual information use one of the With... or As... methods to create a new

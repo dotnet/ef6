@@ -7,6 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -98,7 +99,7 @@ namespace System.Data.Entity.Internal
             DbCompiledModel model,
             Func<DbContext, IDbModelCacheKey> cacheKeyFactory = null,
             AttributeProvider attributeProvider = null,
-            Lazy<Dispatchers> dispatchers = null)
+            Lazy<DbDispatchers> dispatchers = null)
             : base(owner, dispatchers)
         {
             DebugCheck.NotNull(internalConnection);

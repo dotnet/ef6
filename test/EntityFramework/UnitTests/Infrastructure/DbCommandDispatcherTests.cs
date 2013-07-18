@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Threading;
     using System.Threading.Tasks;
     using Moq;
@@ -16,7 +17,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_executes_command_and_dispatches_to_interceptors_which_can_change_result()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext();
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Setup(m => m.ExecuteNonQuery()).Returns(11);
 
@@ -26,11 +27,11 @@ namespace System.Data.Entity.Infrastructure
                         {
                             Assert.Equal(11, i.Result);
                             Assert.Equal(11, i.OriginalResult);
-                            Assert.False(i.IsSuppressed);
+                            Assert.False(i.IsExecutionSuppressed);
                             i.Result = 13;
                             Assert.Equal(13, i.Result);
                             Assert.Equal(11, i.OriginalResult);
-                            Assert.False(i.IsSuppressed);
+                            Assert.False(i.IsExecutionSuppressed);
                         });
 
                 var dispatcher = new DbCommandDispatcher();
@@ -47,7 +48,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_does_not_execute_command_if_result_is_already_set()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext();
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Setup(m => m.ExecuteNonQuery()).Throws(new Exception("Bang!"));
 
@@ -55,18 +56,18 @@ namespace System.Data.Entity.Infrastructure
                 mockInterceptor.Setup(m => m.NonQueryExecuting(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<int>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<int>>((c, i) =>
                     {
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Result = 13;
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
                 mockInterceptor.Setup(m => m.NonQueryExecuted(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<int>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<int>>((c, i) =>
                     {
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         Assert.Equal(13, i.Result);
                         Assert.Equal(0, i.OriginalResult);
                         i.Result = 15;
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         Assert.Equal(15, i.Result);
                         Assert.Equal(0, i.OriginalResult);
                     });
@@ -85,7 +86,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_executes_command_and_dispatches_to_interceptors_even_if_exception_thrown()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext();
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Setup(m => m.ExecuteNonQuery()).Throws(new Exception("Bang!"));
 
@@ -95,11 +96,11 @@ namespace System.Data.Entity.Infrastructure
                     {
                         Assert.Equal("Bang!", i.Exception.Message);
                         Assert.Equal("Bang!", i.OriginalException.Message);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Exception = new Exception("Bing!");
                         Assert.Equal("Bing!", i.Exception.Message);
                         Assert.Equal("Bang!", i.OriginalException.Message);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
@@ -118,7 +119,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_does_not_execute_command_if_exception_is_already_set()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext();
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Setup(m => m.ExecuteNonQuery()).Throws(new Exception("Bang!"));
 
@@ -126,20 +127,20 @@ namespace System.Data.Entity.Infrastructure
                 mockInterceptor.Setup(m => m.NonQueryExecuting(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<int>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<int>>((c, i) =>
                     {
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Exception = new Exception("Bing!");
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
                 mockInterceptor.Setup(m => m.NonQueryExecuted(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<int>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<int>>((c, i) =>
                     {
                         Assert.Equal("Bing!", i.Exception.Message);
                         Assert.Null(i.OriginalException);
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         i.Exception = new Exception("Bung!");
                         Assert.Equal("Bung!", i.Exception.Message);
                         Assert.Null(i.OriginalException);
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
@@ -158,7 +159,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_does_not_execute_command_if_explicitly_suppressed_and_can_still_be_made_to_throw()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext();
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Setup(m => m.ExecuteNonQuery()).Throws(new Exception("Bang!"));
 
@@ -166,9 +167,9 @@ namespace System.Data.Entity.Infrastructure
                 mockInterceptor.Setup(m => m.NonQueryExecuting(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<int>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<int>>((c, i) =>
                     {
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.SuppressExecution();
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
                 mockInterceptor.Setup(m => m.NonQueryExecuted(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<int>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<int>>((c, i) =>
@@ -177,13 +178,13 @@ namespace System.Data.Entity.Infrastructure
                         Assert.Null(i.OriginalException);
                         Assert.Equal(0, i.Result);
                         Assert.Equal(0, i.OriginalResult);
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         i.Exception = new Exception("Bung!");
                         Assert.Equal("Bung!", i.Exception.Message);
                         Assert.Null(i.OriginalException);
                         Assert.Equal(0, i.Result);
                         Assert.Equal(0, i.OriginalResult);
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
@@ -202,7 +203,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_swallows_exception_if_interceptor_sets_Exception_to_null()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext();
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Setup(m => m.ExecuteNonQuery()).Throws(new Exception("Bang!"));
 
@@ -214,14 +215,14 @@ namespace System.Data.Entity.Infrastructure
                         Assert.Equal("Bang!", i.OriginalException.Message);
                         Assert.Equal(0, i.Result);
                         Assert.Equal(0, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Exception = null;
                         i.Result = 13;
                         Assert.Null(i.Exception);
                         Assert.Equal("Bang!", i.OriginalException.Message);
                         Assert.Equal(13, i.Result);
                         Assert.Equal(0, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
@@ -241,7 +242,7 @@ namespace System.Data.Entity.Infrastructure
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Setup(m => m.ExecuteNonQuery()).Returns(11);
 
-                Assert.Equal(11, new DbCommandDispatcher().NonQuery(mockCommand.Object, new DbCommandBaseInterceptionContext()));
+                Assert.Equal(11, new DbCommandDispatcher().NonQuery(mockCommand.Object, new DbCommandInterceptionContext()));
 
                 mockCommand.Verify(m => m.ExecuteNonQuery());
             }
@@ -252,7 +253,7 @@ namespace System.Data.Entity.Infrastructure
                 Assert.Equal(
                     "command",
                     Assert.Throws<ArgumentNullException>(
-                        () => new DbCommandDispatcher().NonQuery(null, new DbCommandBaseInterceptionContext())).ParamName);
+                        () => new DbCommandDispatcher().NonQuery(null, new DbCommandInterceptionContext())).ParamName);
 
                 Assert.Equal(
                     "interceptionContext",
@@ -285,7 +286,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_executes_command_and_dispatches_to_interceptors_which_can_change_result()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext();
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Setup(m => m.ExecuteScalar()).Returns(11);
 
@@ -295,11 +296,11 @@ namespace System.Data.Entity.Infrastructure
                     {
                         Assert.Equal(11, i.Result);
                         Assert.Equal(11, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Result = 13;
                         Assert.Equal(13, i.Result);
                         Assert.Equal(11, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
@@ -316,7 +317,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_does_not_execute_command_if_result_is_already_set()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext();
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Setup(m => m.ExecuteScalar()).Throws(new Exception("Bang!"));
 
@@ -324,18 +325,18 @@ namespace System.Data.Entity.Infrastructure
                 mockInterceptor.Setup(m => m.ScalarExecuting(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<object>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<object>>((c, i) =>
                     {
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Result = 13;
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
                 mockInterceptor.Setup(m => m.ScalarExecuted(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<object>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<object>>((c, i) =>
                     {
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         Assert.Equal(13, i.Result);
                         Assert.Null(i.OriginalResult);
                         i.Result = 15;
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         Assert.Equal(15, i.Result);
                         Assert.Null(i.OriginalResult);
                     });
@@ -354,7 +355,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_executes_command_and_dispatches_to_interceptors_even_if_exception_thrown()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext();
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Setup(m => m.ExecuteScalar()).Throws(new Exception("Bang!"));
 
@@ -364,11 +365,11 @@ namespace System.Data.Entity.Infrastructure
                     {
                         Assert.Equal("Bang!", i.Exception.Message);
                         Assert.Equal("Bang!", i.OriginalException.Message);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Exception = new Exception("Bing!");
                         Assert.Equal("Bing!", i.Exception.Message);
                         Assert.Equal("Bang!", i.OriginalException.Message);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
@@ -390,7 +391,7 @@ namespace System.Data.Entity.Infrastructure
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Setup(m => m.ExecuteScalar()).Returns(11);
 
-                Assert.Equal(11, new DbCommandDispatcher().Scalar(mockCommand.Object, new DbCommandBaseInterceptionContext()));
+                Assert.Equal(11, new DbCommandDispatcher().Scalar(mockCommand.Object, new DbCommandInterceptionContext()));
 
                 mockCommand.Verify(m => m.ExecuteScalar());
             }
@@ -401,7 +402,7 @@ namespace System.Data.Entity.Infrastructure
                 Assert.Equal(
                     "command",
                     Assert.Throws<ArgumentNullException>(
-                        () => new DbCommandDispatcher().Scalar(null, new DbCommandBaseInterceptionContext())).ParamName);
+                        () => new DbCommandDispatcher().Scalar(null, new DbCommandInterceptionContext())).ParamName);
 
                 Assert.Equal(
                     "interceptionContext",
@@ -434,7 +435,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_executes_command_and_dispatches_to_interceptors_which_can_change_result()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess);
+                var interceptionContext = new DbCommandInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess);
 
                 var reader = new Mock<DbDataReader>().Object;
                 var mockCommand = new Mock<DbCommand>();
@@ -450,11 +451,11 @@ namespace System.Data.Entity.Infrastructure
                     {
                         Assert.Same(reader, i.Result);
                         Assert.Same(reader, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Result = interceptReader;
                         Assert.Same(interceptReader, i.Result);
                         Assert.Same(reader, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
@@ -471,7 +472,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_does_not_execute_command_if_result_is_already_set()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext()
+                var interceptionContext = new DbCommandInterceptionContext()
                     .WithCommandBehavior(CommandBehavior.SequentialAccess);
 
                 var interceptReader1 = new Mock<DbDataReader>().Object;
@@ -486,19 +487,19 @@ namespace System.Data.Entity.Infrastructure
                     m => m.ReaderExecuting(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<DbDataReader>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<DbDataReader>>((c, i) =>
                     {
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Result = interceptReader1;
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
                 mockInterceptor.Setup(
                     m => m.ReaderExecuted(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<DbDataReader>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<DbDataReader>>((c, i) =>
                     {
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         Assert.Same(interceptReader1, i.Result);
                         Assert.Null(i.OriginalResult);
                         i.Result = interceptReader2;
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         Assert.Same(interceptReader2, i.Result);
                         Assert.Null(i.OriginalResult);
                     });
@@ -517,7 +518,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_executes_command_and_dispatches_to_interceptors_even_if_exception_thrown()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess);
+                var interceptionContext = new DbCommandInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess);
 
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Protected()
@@ -531,11 +532,11 @@ namespace System.Data.Entity.Infrastructure
                     {
                         Assert.Equal("Bang!", i.Exception.Message);
                         Assert.Equal("Bang!", i.OriginalException.Message);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Exception = new Exception("Bing!");
                         Assert.Equal("Bing!", i.Exception.Message);
                         Assert.Equal("Bang!", i.OriginalException.Message);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
@@ -564,7 +565,7 @@ namespace System.Data.Entity.Infrastructure
                     reader,
                     new DbCommandDispatcher().Reader(
                         mockCommand.Object,
-                        new DbCommandBaseInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess)));
+                        new DbCommandInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess)));
 
                 mockCommand.Protected().Verify("ExecuteDbDataReader", Times.Once(), CommandBehavior.SequentialAccess);
             }
@@ -575,7 +576,7 @@ namespace System.Data.Entity.Infrastructure
                 Assert.Equal(
                     "command",
                     Assert.Throws<ArgumentNullException>(
-                        () => new DbCommandDispatcher().Reader(null, new DbCommandBaseInterceptionContext())).ParamName);
+                        () => new DbCommandDispatcher().Reader(null, new DbCommandInterceptionContext())).ParamName);
 
                 Assert.Equal(
                     "interceptionContext",
@@ -624,18 +625,18 @@ namespace System.Data.Entity.Infrastructure
                     {
                         Assert.Equal(11, i.Result);
                         Assert.Equal(11, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Result = 13;
                         Assert.Equal(13, i.Result);
                         Assert.Equal(11, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
                 var internalDispatcher = dispatcher.InternalDispatcher;
                 internalDispatcher.Add(mockInterceptor.Object);
 
-                var interceptResult = dispatcher.AsyncNonQuery(mockCommand.Object, cancellationToken, new DbCommandBaseInterceptionContext());
+                var interceptResult = dispatcher.NonQueryAsync(mockCommand.Object, new DbCommandInterceptionContext(), cancellationToken);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Verify(m => m.ExecuteNonQueryAsync(cancellationToken));
@@ -676,18 +677,18 @@ namespace System.Data.Entity.Infrastructure
                 mockInterceptor.Setup(m => m.NonQueryExecuting(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<int>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<int>>((c, i) =>
                     {
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Result = 11;
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
                 mockInterceptor.Setup(m => m.NonQueryExecuted(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<int>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<int>>((c, i) =>
                     {
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         Assert.Equal(11, i.Result);
                         Assert.Equal(0, i.OriginalResult);
                         i.Result = 13;
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         Assert.Equal(13, i.Result);
                         Assert.Equal(0, i.OriginalResult);                    
                     });
@@ -696,7 +697,7 @@ namespace System.Data.Entity.Infrastructure
                 var internalDispatcher = dispatcher.InternalDispatcher;
                 internalDispatcher.Add(mockInterceptor.Object);
 
-                var interceptResult = dispatcher.AsyncNonQuery(mockCommand.Object, cancellationToken, new DbCommandBaseInterceptionContext());
+                var interceptResult = dispatcher.NonQueryAsync(mockCommand.Object, new DbCommandInterceptionContext(), cancellationToken);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Verify(m => m.ExecuteNonQueryAsync(cancellationToken), Times.Never());
@@ -736,18 +737,18 @@ namespace System.Data.Entity.Infrastructure
                     {
                         Assert.Equal("Bang!", i.Exception.Message);
                         Assert.Equal("Bang!", i.OriginalException.Message);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Exception = new Exception("Bing!");
                         Assert.Equal("Bing!", i.Exception.Message);
                         Assert.Equal("Bang!", i.OriginalException.Message);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
                 var internalDispatcher = dispatcher.InternalDispatcher;
                 internalDispatcher.Add(mockInterceptor.Object);
 
-                var interceptResult = dispatcher.AsyncNonQuery(mockCommand.Object, CancellationToken.None, new DbCommandBaseInterceptionContext());
+                var interceptResult = dispatcher.NonQueryAsync(mockCommand.Object, new DbCommandInterceptionContext(), CancellationToken.None);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Verify(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>()));
@@ -794,8 +795,8 @@ namespace System.Data.Entity.Infrastructure
                 var internalDispatcher = dispatcher.InternalDispatcher;
                 internalDispatcher.Add(mockInterceptor.Object);
 
-                var interceptResult = dispatcher.AsyncNonQuery(
-                    mockCommand.Object, cancellationToken, new DbCommandBaseInterceptionContext());
+                var interceptResult = dispatcher.NonQueryAsync(
+                    mockCommand.Object, new DbCommandInterceptionContext(), cancellationToken);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Verify(m => m.ExecuteNonQueryAsync(cancellationToken));
@@ -841,9 +842,9 @@ namespace System.Data.Entity.Infrastructure
                     .Callback<DbCommand, DbCommandInterceptionContext<int>>((c, i) =>
                     {
                         Assert.True(i.IsAsync);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Exception = new Exception("Bing!");
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
                 mockInterceptor.Setup(m => m.NonQueryExecuted(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<int>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<int>>((c, i) =>
@@ -851,18 +852,18 @@ namespace System.Data.Entity.Infrastructure
                         Assert.True(i.IsAsync);
                         Assert.Equal("Bing!", i.Exception.Message);
                         Assert.Null(i.OriginalException);
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         i.Exception = new Exception("Bung!");
                         Assert.Equal("Bung!", i.Exception.Message);
                         Assert.Null(i.OriginalException);
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
                 var internalDispatcher = dispatcher.InternalDispatcher;
                 internalDispatcher.Add(mockInterceptor.Object);
 
-                var interceptResult = dispatcher.AsyncNonQuery(mockCommand.Object, cancellationToken, new DbCommandBaseInterceptionContext());
+                var interceptResult = dispatcher.NonQueryAsync(mockCommand.Object, new DbCommandInterceptionContext(), cancellationToken);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Verify(m => m.ExecuteNonQueryAsync(cancellationToken), Times.Never());
@@ -900,9 +901,9 @@ namespace System.Data.Entity.Infrastructure
                     .Callback<DbCommand, DbCommandInterceptionContext<int>>((c, i) =>
                     {
                         Assert.True(i.IsAsync);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.SuppressExecution();
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
                 mockInterceptor.Setup(m => m.NonQueryExecuted(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<int>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<int>>((c, i) =>
@@ -912,20 +913,20 @@ namespace System.Data.Entity.Infrastructure
                         Assert.Null(i.OriginalException);
                         Assert.Equal(0, i.Result);
                         Assert.Equal(0, i.OriginalResult);
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         i.Exception = new Exception("Bung!");
                         Assert.Equal("Bung!", i.Exception.Message);
                         Assert.Null(i.OriginalException);
                         Assert.Equal(0, i.Result);
                         Assert.Equal(0, i.OriginalResult);
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
                 var internalDispatcher = dispatcher.InternalDispatcher;
                 internalDispatcher.Add(mockInterceptor.Object);
 
-                var interceptResult = dispatcher.AsyncNonQuery(mockCommand.Object, cancellationToken, new DbCommandBaseInterceptionContext());
+                var interceptResult = dispatcher.NonQueryAsync(mockCommand.Object, new DbCommandInterceptionContext(), cancellationToken);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Verify(m => m.ExecuteNonQueryAsync(cancellationToken), Times.Never());
@@ -964,21 +965,21 @@ namespace System.Data.Entity.Infrastructure
                         Assert.Equal("Bang!", i.OriginalException.Message);
                         Assert.Equal(0, i.Result);
                         Assert.Equal(0, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Exception = null;
                         i.Result = 17;
                         Assert.Null(i.Exception);
                         Assert.Equal("Bang!", i.OriginalException.Message);
                         Assert.Equal(17, i.Result);
                         Assert.Equal(0, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
                 var internalDispatcher = dispatcher.InternalDispatcher;
                 internalDispatcher.Add(mockInterceptor.Object);
 
-                var interceptResult = dispatcher.AsyncNonQuery(mockCommand.Object, CancellationToken.None, new DbCommandBaseInterceptionContext());
+                var interceptResult = dispatcher.NonQueryAsync(mockCommand.Object, new DbCommandInterceptionContext(), CancellationToken.None);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Verify(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>()));
@@ -1013,7 +1014,7 @@ namespace System.Data.Entity.Infrastructure
 
                 Assert.Same(
                     result,
-                    new DbCommandDispatcher().AsyncNonQuery(mockCommand.Object, CancellationToken.None, new DbCommandBaseInterceptionContext()));
+                    new DbCommandDispatcher().NonQueryAsync(mockCommand.Object, new DbCommandInterceptionContext(), CancellationToken.None));
 
                 mockCommand.Verify(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>()));
             }
@@ -1024,13 +1025,13 @@ namespace System.Data.Entity.Infrastructure
                 Assert.Equal(
                     "command",
                     Assert.Throws<ArgumentNullException>(
-                        () => new DbCommandDispatcher().AsyncNonQuery(null, CancellationToken.None, new DbCommandBaseInterceptionContext()))
+                        () => new DbCommandDispatcher().NonQueryAsync(null, new DbCommandInterceptionContext(), CancellationToken.None))
                           .ParamName);
 
                 Assert.Equal(
                     "interceptionContext",
                     Assert.Throws<ArgumentNullException>(
-                        () => new DbCommandDispatcher().AsyncNonQuery(new Mock<DbCommand>().Object, CancellationToken.None, null)).ParamName);
+                        () => new DbCommandDispatcher().NonQueryAsync(new Mock<DbCommand>().Object, null, CancellationToken.None)).ParamName);
             }
 
             [Fact] // CodePlex 1140
@@ -1046,7 +1047,7 @@ namespace System.Data.Entity.Infrastructure
                 var dispatcher = new DbCommandDispatcher();
                 dispatcher.InternalDispatcher.Add(new Mock<IDbCommandInterceptor>().Object);
 
-                var interceptResult = dispatcher.AsyncNonQuery(mockCommand.Object, new CancellationToken(), interceptionContext);
+                var interceptResult = dispatcher.NonQueryAsync(mockCommand.Object, interceptionContext, new CancellationToken());
 
                 mockCommand.Verify(m => m.ExecuteNonQueryAsync(It.IsAny<CancellationToken>()));
 
@@ -1065,7 +1066,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_executes_command_and_dispatches_to_interceptors_which_can_change_result()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext();
                 var cancellationToken = new CancellationToken();
 
                 var mockCommand = new Mock<DbCommand>();
@@ -1080,11 +1081,11 @@ namespace System.Data.Entity.Infrastructure
                     {
                         Assert.Equal(11, i.Result);
                         Assert.Equal(11, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Result = 13;
                         Assert.Equal(13, i.Result);
                         Assert.Equal(11, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                     });
 
 
@@ -1092,7 +1093,7 @@ namespace System.Data.Entity.Infrastructure
                 var internalDispatcher = dispatcher.InternalDispatcher;
                 internalDispatcher.Add(mockInterceptor.Object);
 
-                var interceptResult = dispatcher.AsyncScalar(mockCommand.Object, cancellationToken, interceptionContext);
+                var interceptResult = dispatcher.ScalarAsync(mockCommand.Object, interceptionContext, cancellationToken);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Verify(m => m.ExecuteScalarAsync(cancellationToken));
@@ -1124,7 +1125,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_does_not_execute_command_if_result_is_already_set()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext();
+                var interceptionContext = new DbCommandInterceptionContext();
                 var cancellationToken = new CancellationToken();
 
                 var mockCommand = new Mock<DbCommand>();
@@ -1137,19 +1138,19 @@ namespace System.Data.Entity.Infrastructure
                     m => m.ScalarExecuting(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<object>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<object>>((c, i) =>
                     {
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Result = 11;
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
                 mockInterceptor.Setup(
                     m => m.ScalarExecuted(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<object>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<object>>((c, i) =>
                     {
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         Assert.Equal(11, i.Result);
                         Assert.Null(i.OriginalResult);
                         i.Result = 13;
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         Assert.Equal(13, i.Result);
                         Assert.Null(i.OriginalResult);
                     });
@@ -1159,7 +1160,7 @@ namespace System.Data.Entity.Infrastructure
                 var internalDispatcher = dispatcher.InternalDispatcher;
                 internalDispatcher.Add(mockInterceptor.Object);
 
-                var interceptResult = dispatcher.AsyncScalar(mockCommand.Object, cancellationToken, interceptionContext);
+                var interceptResult = dispatcher.ScalarAsync(mockCommand.Object, interceptionContext, cancellationToken);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Verify(m => m.ExecuteScalarAsync(cancellationToken), Times.Never());
@@ -1200,18 +1201,18 @@ namespace System.Data.Entity.Infrastructure
                     {
                         Assert.Equal("Bang!", i.Exception.Message);
                         Assert.Equal("Bang!", i.OriginalException.Message);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Exception = new Exception("Bing!");
                         Assert.Equal("Bing!", i.Exception.Message);
                         Assert.Equal("Bang!", i.OriginalException.Message);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
                 var internalDispatcher = dispatcher.InternalDispatcher;
                 internalDispatcher.Add(mockInterceptor.Object);
 
-                var interceptResult = dispatcher.AsyncScalar(mockCommand.Object, CancellationToken.None, new DbCommandBaseInterceptionContext());
+                var interceptResult = dispatcher.ScalarAsync(mockCommand.Object, new DbCommandInterceptionContext(), CancellationToken.None);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Verify(m => m.ExecuteScalarAsync(It.IsAny<CancellationToken>()));
@@ -1262,7 +1263,7 @@ namespace System.Data.Entity.Infrastructure
                 var internalDispatcher = dispatcher.InternalDispatcher;
                 internalDispatcher.Add(mockInterceptor.Object);
 
-                var interceptResult = dispatcher.AsyncScalar(mockCommand.Object, cancellationToken, new DbCommandBaseInterceptionContext());
+                var interceptResult = dispatcher.ScalarAsync(mockCommand.Object, new DbCommandInterceptionContext(), cancellationToken);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Verify(m => m.ExecuteScalarAsync(cancellationToken));
@@ -1302,7 +1303,7 @@ namespace System.Data.Entity.Infrastructure
 
                 Assert.Same(
                     result,
-                    new DbCommandDispatcher().AsyncScalar(mockCommand.Object, CancellationToken.None, new DbCommandBaseInterceptionContext()));
+                    new DbCommandDispatcher().ScalarAsync(mockCommand.Object, new DbCommandInterceptionContext(), CancellationToken.None));
 
                 mockCommand.Verify(m => m.ExecuteScalarAsync(It.IsAny<CancellationToken>()));
             }
@@ -1313,13 +1314,13 @@ namespace System.Data.Entity.Infrastructure
                 Assert.Equal(
                     "command",
                     Assert.Throws<ArgumentNullException>(
-                        () => new DbCommandDispatcher().AsyncScalar(null, CancellationToken.None, new DbCommandBaseInterceptionContext()))
+                        () => new DbCommandDispatcher().ScalarAsync(null, new DbCommandInterceptionContext(), CancellationToken.None))
                           .ParamName);
 
                 Assert.Equal(
                     "interceptionContext",
                     Assert.Throws<ArgumentNullException>(
-                        () => new DbCommandDispatcher().AsyncScalar(new Mock<DbCommand>().Object, CancellationToken.None, null)).ParamName);
+                        () => new DbCommandDispatcher().ScalarAsync(new Mock<DbCommand>().Object, null, CancellationToken.None)).ParamName);
             }
 
             [Fact] // CodePlex 1140
@@ -1335,7 +1336,7 @@ namespace System.Data.Entity.Infrastructure
                 var dispatcher = new DbCommandDispatcher();
                 dispatcher.InternalDispatcher.Add(new Mock<IDbCommandInterceptor>().Object);
 
-                var interceptResult = dispatcher.AsyncScalar(mockCommand.Object, new CancellationToken(), interceptionContext);
+                var interceptResult = dispatcher.ScalarAsync(mockCommand.Object, interceptionContext, new CancellationToken());
 
                 mockCommand.Verify(m => m.ExecuteScalarAsync(It.IsAny<CancellationToken>()));
 
@@ -1354,7 +1355,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_executes_command_and_dispatches_to_interceptors_which_can_change_result()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess);
+                var interceptionContext = new DbCommandInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess);
                 var cancellationToken = new CancellationToken();
 
                 var originalReader = new Mock<DbDataReader>().Object;
@@ -1373,11 +1374,11 @@ namespace System.Data.Entity.Infrastructure
                     {
                         Assert.Same(originalReader, i.Result);
                         Assert.Same(originalReader, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Result = interceptReader;
                         Assert.Same(interceptReader, i.Result);
                         Assert.Same(originalReader, i.OriginalResult);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
@@ -1385,7 +1386,7 @@ namespace System.Data.Entity.Infrastructure
                 internalDispatcher.Add(mockInterceptor.Object);
 
                 var interceptResult =
-                    dispatcher.AsyncReader(mockCommand.Object, cancellationToken, interceptionContext);
+                    dispatcher.ReaderAsync(mockCommand.Object, interceptionContext, cancellationToken);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Protected()
@@ -1423,7 +1424,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_does_not_execute_command_if_result_is_already_set()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess);
+                var interceptionContext = new DbCommandInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess);
                 var cancellationToken = new CancellationToken();
 
                 var originalReader = new Mock<DbDataReader>().Object;
@@ -1440,19 +1441,19 @@ namespace System.Data.Entity.Infrastructure
                     m => m.ReaderExecuting(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<DbDataReader>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<DbDataReader>>((c, i) =>
                     {
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Result = originalReader;
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                     });
                 mockInterceptor.Setup(
                     m => m.ReaderExecuted(mockCommand.Object, It.IsAny<DbCommandInterceptionContext<DbDataReader>>()))
                     .Callback<DbCommand, DbCommandInterceptionContext<DbDataReader>>((c, i) =>
                     {
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         Assert.Same(originalReader, i.Result);
                         Assert.Null(i.OriginalResult);
                         i.Result = interceptReader;
-                        Assert.True(i.IsSuppressed);
+                        Assert.True(i.IsExecutionSuppressed);
                         Assert.Same(interceptReader, i.Result);
                         Assert.Null(i.OriginalResult);
                     });
@@ -1462,7 +1463,7 @@ namespace System.Data.Entity.Infrastructure
                 internalDispatcher.Add(mockInterceptor.Object);
 
                 var interceptResult =
-                    dispatcher.AsyncReader(mockCommand.Object, cancellationToken, interceptionContext);
+                    dispatcher.ReaderAsync(mockCommand.Object, interceptionContext, cancellationToken);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Protected()
@@ -1498,7 +1499,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_executes_command_and_dispatches_to_interceptors_even_if_operation_throws()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess);
+                var interceptionContext = new DbCommandInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess);
 
                 var result = new Task<DbDataReader>(() => { throw new Exception("Bang!"); });
 
@@ -1514,18 +1515,18 @@ namespace System.Data.Entity.Infrastructure
                     {
                         Assert.Equal("Bang!", i.Exception.Message);
                         Assert.Equal("Bang!", i.OriginalException.Message);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                         i.Exception = new Exception("Bing!");
                         Assert.Equal("Bing!", i.Exception.Message);
                         Assert.Equal("Bang!", i.OriginalException.Message);
-                        Assert.False(i.IsSuppressed);
+                        Assert.False(i.IsExecutionSuppressed);
                     });
 
                 var dispatcher = new DbCommandDispatcher();
                 var internalDispatcher = dispatcher.InternalDispatcher;
                 internalDispatcher.Add(mockInterceptor.Object);
 
-                var interceptResult = dispatcher.AsyncReader(mockCommand.Object, CancellationToken.None, interceptionContext);
+                var interceptResult = dispatcher.ReaderAsync(mockCommand.Object, interceptionContext, CancellationToken.None);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Protected()
@@ -1567,7 +1568,7 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Dispatch_method_executes_command_and_dispatches_to_interceptors_even_if_operation_is_canceled()
             {
-                var interceptionContext = new DbCommandBaseInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess);
+                var interceptionContext = new DbCommandInterceptionContext().WithCommandBehavior(CommandBehavior.SequentialAccess);
                 var cancellationTokenSource = new CancellationTokenSource();
                 var cancellationToken = cancellationTokenSource.Token;
 
@@ -1586,7 +1587,7 @@ namespace System.Data.Entity.Infrastructure
                 var internalDispatcher = dispatcher.InternalDispatcher;
                 internalDispatcher.Add(mockInterceptor.Object);
 
-                var interceptResult = dispatcher.AsyncReader(mockCommand.Object, cancellationToken, interceptionContext);
+                var interceptResult = dispatcher.ReaderAsync(mockCommand.Object, interceptionContext, cancellationToken);
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Protected()
@@ -1636,8 +1637,8 @@ namespace System.Data.Entity.Infrastructure
 
                 Assert.Same(
                     result,
-                    new DbCommandDispatcher().AsyncReader(
-                        mockCommand.Object, CancellationToken.None, new DbCommandBaseInterceptionContext()));
+                    new DbCommandDispatcher().ReaderAsync(
+                        mockCommand.Object, new DbCommandInterceptionContext(), CancellationToken.None));
 
                 mockCommand.Protected()
                            .Verify(
@@ -1651,15 +1652,15 @@ namespace System.Data.Entity.Infrastructure
                     "command",
                     Assert.Throws<ArgumentNullException>(
                         () =>
-                        new DbCommandDispatcher().AsyncReader(
-                            null, CancellationToken.None, new DbCommandBaseInterceptionContext())).ParamName);
+                        new DbCommandDispatcher().ReaderAsync(
+                            null, new DbCommandInterceptionContext(), CancellationToken.None)).ParamName);
 
                 Assert.Equal(
                     "interceptionContext",
                     Assert.Throws<ArgumentNullException>(
                         () =>
-                        new DbCommandDispatcher().AsyncReader(
-                            new Mock<DbCommand>().Object, CancellationToken.None, null)).ParamName);
+                        new DbCommandDispatcher().ReaderAsync(
+                            new Mock<DbCommand>().Object, null, CancellationToken.None)).ParamName);
             }
 
             [Fact] // CodePlex 1140
@@ -1678,7 +1679,7 @@ namespace System.Data.Entity.Infrastructure
                 var dispatcher = new DbCommandDispatcher();
                 dispatcher.InternalDispatcher.Add(new Mock<IDbCommandInterceptor>().Object);
 
-                var interceptResult = dispatcher.AsyncReader(mockCommand.Object, new CancellationToken(), interceptionContext);
+                var interceptResult = dispatcher.ReaderAsync(mockCommand.Object, interceptionContext, new CancellationToken());
 
                 mockCommand.Protected().Verify(
                     "ExecuteDbDataReaderAsync", Times.Once(), ItExpr.IsAny<CommandBehavior>(), ItExpr.IsAny<CancellationToken>());

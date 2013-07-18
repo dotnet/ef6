@@ -7,6 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
 
     internal sealed class CommandTracer : ICancelableDbCommandInterceptor, IDbCommandTreeInterceptor, IEntityConnectionInterceptor, IDisposable
@@ -15,14 +16,14 @@ namespace System.Data.Entity.Internal
         private readonly List<DbCommandTree> _commandTrees = new List<DbCommandTree>();
 
         private readonly DbContext _context;
-        private readonly Dispatchers _dispatchers;
+        private readonly DbDispatchers _dispatchers;
 
         public CommandTracer(DbContext context)
-            : this(context, Interception.Dispatch)
+            : this(context, DbInterception.Dispatch)
         {
         }
 
-        internal CommandTracer(DbContext context, Dispatchers dispatchers)
+        internal CommandTracer(DbContext context, DbDispatchers dispatchers)
         {
             DebugCheck.NotNull(context);
             DebugCheck.NotNull(dispatchers);
@@ -55,11 +56,11 @@ namespace System.Data.Entity.Internal
             return true;
         }
 
-        public void TreeCreated(DbCommandTree commandTree, DbCommandTreeInterceptionContext interceptionContext)
+        public void TreeCreated(DbCommandTreeInterceptionContext interceptionContext)
         {
             if (interceptionContext.DbContexts.Contains(_context, ReferenceEquals))
             {
-                _commandTrees.Add(commandTree);
+                _commandTrees.Add(interceptionContext.Result);
             }
         }
 

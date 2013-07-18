@@ -1,21 +1,21 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Common;
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Provides access to all dispatchers through the the <see cref="Interception.Dispatch" /> fluent API.
+    ///     Provides access to all dispatchers through the the <see cref="DbInterception.Dispatch" /> fluent API.
     /// </summary>
-    public class Dispatchers
+    public class DbDispatchers
     {
         private readonly DbCommandTreeDispatcher _commandTreeDispatcher = new DbCommandTreeDispatcher();
         private readonly DbCommandDispatcher _commandDispatcher = new DbCommandDispatcher();
         private readonly EntityConnectionDispatcher _entityConnectionDispatcher = new EntityConnectionDispatcher();
         private readonly CancelableDbCommandDispatcher _cancelableCommandDispatcher = new CancelableDbCommandDispatcher();
 
-        internal Dispatchers()
+        internal DbDispatchers()
         {
         }
 

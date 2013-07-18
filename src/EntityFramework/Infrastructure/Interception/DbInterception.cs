@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Entity.Utilities;
 
@@ -9,16 +9,16 @@ namespace System.Data.Entity.Infrastructure
     ///     receive notifications when EF performs certain operations such as executing commands against
     ///     the database. For example, see <see cref="IDbCommandInterceptor" />.
     /// </summary>
-    public static class Interception
+    public static class DbInterception
     {
-        private static readonly Lazy<Dispatchers> _dispatchers = new Lazy<Dispatchers>(() => new Dispatchers());
+        private static readonly Lazy<DbDispatchers> _dispatchers = new Lazy<DbDispatchers>(() => new DbDispatchers());
 
         /// <summary>
         ///     Registers a new <see cref="IDbInterceptor" /> to receive notifications. Note that the interceptor
         ///     must implement some interface that extends from <see cref="IDbInterceptor" /> to be useful.
         /// </summary>
         /// <param name="interceptor">The interceptor to add.</param>
-        public static void AddInterceptor(IDbInterceptor interceptor)
+        public static void Add(IDbInterceptor interceptor)
         {
             Check.NotNull(interceptor, "interceptor");
 
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Infrastructure
         ///     If the given interceptor is not registered, then this is a no-op.
         /// </summary>
         /// <param name="interceptor">The interceptor to remove.</param>
-        public static void RemoveInterceptor(IDbInterceptor interceptor)
+        public static void Remove(IDbInterceptor interceptor)
         {
             Check.NotNull(interceptor, "interceptor");
 
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Infrastructure
         ///     interceptors are called when operations are performed on behalf of EF. For example, EF providers
         ///     a may make use of this when executing commands.
         /// </summary>
-        public static Dispatchers Dispatch
+        public static DbDispatchers Dispatch
         {
             get { return _dispatchers.Value; }
         }

@@ -4,6 +4,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 {
     using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.History;
@@ -50,7 +53,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             _resolvers.Add(new SingletonDependencyResolver<Func<DbConnection, string, HistoryContext>>(HistoryContext.DefaultFactory));
             _resolvers.Add(new SingletonDependencyResolver<IPluralizationService>(new EnglishPluralizationService()));
             _resolvers.Add(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
-            _resolvers.Add(new SingletonDependencyResolver<Func<DbContext, Action<string>, DbCommandLogger>>((c, w) => new DbCommandLogger(c, w)));
+            _resolvers.Add(new SingletonDependencyResolver<Func<DbContext, Action<string>, DatabaseLogFormatter>>((c, w) => new DatabaseLogFormatter(c, w)));
 
 #if NET40
             _resolvers.Add(new SingletonDependencyResolver<IDbProviderFactoryResolver>(new Net40DefaultDbProviderFactoryResolver()));

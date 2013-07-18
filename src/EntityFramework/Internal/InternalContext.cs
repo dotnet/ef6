@@ -14,6 +14,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.Internal.MockingProxies;
     using System.Data.Entity.Internal.Validation;
@@ -116,21 +117,21 @@ namespace System.Data.Entity.Internal
 
         private bool _oSpaceLoadingForced;
         private DbProviderFactory _providerFactory;
-        private readonly Lazy<Dispatchers> _dispatchers;
+        private readonly Lazy<DbDispatchers> _dispatchers;
 
         public event EventHandler<EventArgs> OnDisposing;
 
-        private DbCommandLogger _commandLogger;
+        private DatabaseLogFormatter _logFormatter;
 
         private string _migrationsConfigurationContextKey;
         private bool? _migrationsConfigurationDiscovered;
 
-        protected InternalContext(DbContext owner, Lazy<Dispatchers> dispatchers = null)
+        protected InternalContext(DbContext owner, Lazy<DbDispatchers> dispatchers = null)
         {
             DebugCheck.NotNull(owner);
 
             _owner = owner;
-            _dispatchers = dispatchers ?? new Lazy<Dispatchers>(() => Interception.Dispatch);
+            _dispatchers = dispatchers ?? new Lazy<DbDispatchers>(() => DbInterception.Dispatch);
 
             AutoDetectChangesEnabled = true;
             ValidateOnSaveEnabled = true;
@@ -1496,21 +1497,21 @@ namespace System.Data.Entity.Internal
 
         public virtual Action<string> Log
         {
-            get { return _commandLogger != null ? _commandLogger.Sink : null; }
+            get { return _logFormatter != null ? _logFormatter.WriteAction : null; }
             set
             {
-                if (_commandLogger == null || _commandLogger.Sink != value)
+                if (_logFormatter == null || _logFormatter.WriteAction != value)
                 {
-                    if (_commandLogger != null)
+                    if (_logFormatter != null)
                     {
-                        _dispatchers.Value.RemoveInterceptor(_commandLogger);
-                        _commandLogger = null;
+                        _dispatchers.Value.RemoveInterceptor(_logFormatter);
+                        _logFormatter = null;
                     }
 
                     if (value != null)
                     {
-                        _commandLogger = DbConfiguration.DependencyResolver.GetService<Func<DbContext, Action<string>, DbCommandLogger>>()(Owner, value);
-                        _dispatchers.Value.AddInterceptor(_commandLogger);
+                        _logFormatter = DbConfiguration.DependencyResolver.GetService<Func<DbContext, Action<string>, DatabaseLogFormatter>>()(Owner, value);
+                        _dispatchers.Value.AddInterceptor(_logFormatter);
                     }
                 }
             }

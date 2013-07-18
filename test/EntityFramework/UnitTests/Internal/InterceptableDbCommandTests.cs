@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
     using System.Threading;
     using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace System.Data.Entity.Internal
             var mockCancelable = new Mock<ICancelableDbCommandInterceptor>();
             var mockPublicInterceptor = new Mock<DbCommandInterceptor> { CallBase = true };
 
-            var dispatchers = new Dispatchers();
+            var dispatchers = new DbDispatchers();
             dispatchers.AddInterceptor(mockCancelable.Object);
             dispatchers.AddInterceptor(mockPublicInterceptor.Object);
 
@@ -73,7 +74,7 @@ namespace System.Data.Entity.Internal
             var mockCancelable = new Mock<ICancelableDbCommandInterceptor>();
             var mockPublicInterceptor = new Mock<DbCommandInterceptor> { CallBase = true };
 
-            var dispatchers = new Dispatchers();
+            var dispatchers = new DbDispatchers();
             dispatchers.AddInterceptor(mockCancelable.Object);
             dispatchers.AddInterceptor(mockPublicInterceptor.Object);
 
@@ -128,7 +129,7 @@ namespace System.Data.Entity.Internal
             var mockCancelable = new Mock<ICancelableDbCommandInterceptor>();
             var mockPublicInterceptor = new Mock<DbCommandInterceptor> { CallBase = true };
 
-            var dispatchers = new Dispatchers();
+            var dispatchers = new DbDispatchers();
             dispatchers.AddInterceptor(mockCancelable.Object);
             dispatchers.AddInterceptor(mockPublicInterceptor.Object);
 
@@ -190,7 +191,7 @@ namespace System.Data.Entity.Internal
             var mockCancelable = new Mock<ICancelableDbCommandInterceptor>();
             var mockPublicInterceptor = new Mock<DbCommandInterceptor> { CallBase = true };
 
-            var dispatchers = new Dispatchers();
+            var dispatchers = new DbDispatchers();
             dispatchers.AddInterceptor(mockCancelable.Object);
             dispatchers.AddInterceptor(mockPublicInterceptor.Object);
 
@@ -240,7 +241,7 @@ namespace System.Data.Entity.Internal
             var mockCancelable = new Mock<ICancelableDbCommandInterceptor>();
             var mockPublicInterceptor = new Mock<DbCommandInterceptor> { CallBase = true };
 
-            var dispatchers = new Dispatchers();
+            var dispatchers = new DbDispatchers();
             dispatchers.AddInterceptor(mockCancelable.Object);
             dispatchers.AddInterceptor(mockPublicInterceptor.Object);
 
@@ -294,7 +295,7 @@ namespace System.Data.Entity.Internal
             var mockCancelable = new Mock<ICancelableDbCommandInterceptor>();
             var mockPublicInterceptor = new Mock<DbCommandInterceptor> { CallBase = true };
 
-            var dispatchers = new Dispatchers();
+            var dispatchers = new DbDispatchers();
             dispatchers.AddInterceptor(mockCancelable.Object);
             dispatchers.AddInterceptor(mockPublicInterceptor.Object);
 

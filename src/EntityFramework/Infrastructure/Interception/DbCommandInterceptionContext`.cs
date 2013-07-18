@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Infrastructure
             get { return _mutableData; }
         }
 
-        internal override InterceptionContextMutableData MutableData
+        internal InterceptionContextMutableData MutableData
         {
             get { return _mutableData; }
         }
@@ -85,33 +85,69 @@ namespace System.Data.Entity.Infrastructure
             set { _mutableData.Result = value; }
         }
 
-        /// <inheritdoc />
-        public override bool IsSuppressed
+        /// <summary>
+        ///     When true, this flag indicates that that execution of the operation has been suppressed by
+        ///     one of the interceptors. This can be done before the operation has executed by calling
+        ///     <see cref="SuppressExecution" />, by setting an <see cref="Exception" /> to be thrown, or
+        ///     by setting the operation result using <see cref="DbCommandInterceptionContext{TResult}.Result" />.
+        /// </summary>
+        public bool IsExecutionSuppressed
         {
-            get { return _mutableData.IsSuppressed; }
+            get { return _mutableData.IsExecutionSuppressed; }
         }
 
-        /// <inheritdoc />
-        public override void SuppressExecution()
+        /// <summary>
+        ///     Prevents the operation from being executed if called before the operation has executed.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown if this method is called after the
+        ///     operation has already executed.
+        /// </exception>
+        public void SuppressExecution()
         {
             _mutableData.SuppressExecution();
         }
 
-        /// <inheritdoc />
-        public override Exception OriginalException
+        /// <summary>
+        ///     If execution of the operation fails, then this property will contain the exception that was
+        ///     thrown. If the operation was suppressed or did not fail, then this property will always be
+        ///     null.
+        /// </summary>
+        /// <remarks>
+        ///     When an operation fails both this property and the <see cref="Exception" /> property are set
+        ///     to the exception that was thrown. However, the <see cref="Exception" /> property can be set or
+        ///     changed by interceptors, while this property will always represent the original exception
+        ///     thrown.
+        /// </remarks>
+        public Exception OriginalException
         {
             get { return _mutableData.OriginalException; }
         }
 
-        /// <inheritdoc />
-        public override Exception Exception
+        /// <summary>
+        ///     If this property is set before the operation has executed, then execution of the operation will
+        ///     be suppressed and the set exception will be thrown instead. Otherwise, if the operation fails, then
+        ///     this property will be set to the exception that was thrown. In either case, interceptors that run
+        ///     after the operation can change this property to change the exception that will be thrown, or set this
+        ///     property to null to cause no exception to be thrown at all.
+        /// </summary>
+        /// <remarks>
+        ///     When an operation fails both this property and the <see cref="OriginalException" /> property are set
+        ///     to the exception that was thrown. However, the this property can be set or changed by
+        ///     interceptors, while the <see cref="OriginalException" /> property will always represent
+        ///     the original exception thrown.
+        /// </remarks>
+        public Exception Exception
         {
             get { return _mutableData.Exception; }
             set { _mutableData.Exception = value; }
         }
 
-        /// <inheritdoc />
-        public override TaskStatus TaskStatus
+        /// <summary>
+        ///     Set to the status of the <see cref="Task{TResult}" /> after an async operation has finished. Not used for
+        ///     synchronous operations.
+        /// </summary>
+        public TaskStatus TaskStatus
         {
             get { return _mutableData.TaskStatus; }
         }

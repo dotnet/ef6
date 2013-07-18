@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Interception
 {
     using System.Data.Common;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.SqlClient;
     using System.Globalization;
     using System.IO;
@@ -24,12 +24,12 @@ namespace System.Data.Entity.Interception
         }
     }
 
-    public class DbCommandLoggerTests : FunctionalTestBase
+    public class DatabaseLogFormatterTests : FunctionalTestBase
     {
         private readonly StringResourceVerifier _resourceVerifier = new StringResourceVerifier(
             new AssemblyResourceLookup(EntityFrameworkAssembly, "System.Data.Entity.Properties.Resources"));
 
-        public DbCommandLoggerTests()
+        public DatabaseLogFormatterTests()
         {
             using (var context = new BlogContextNoInit())
             {
@@ -147,13 +147,13 @@ namespace System.Data.Entity.Interception
 #endif
 
         [Fact]
-        public void The_command_logger_to_use_can_be_changed()
+        public void The_command_formatter_to_use_can_be_changed()
         {
             var log = new StringWriter();
             try
             {
-                MutableResolver.AddResolver<Func<DbContext, Action<string>, DbCommandLogger>>(
-                    k => (Func<DbContext, Action<string>, DbCommandLogger>)((c, w) => new TestDbCommandLogger(c, w)));
+                MutableResolver.AddResolver<Func<DbContext, Action<string>, DatabaseLogFormatter>>(
+                    k => (Func<DbContext, Action<string>, DatabaseLogFormatter>)((c, w) => new TestDatabaseLogFormatter(c, w)));
 
                 using (var context = new BlogContextNoInit())
                 {
@@ -180,17 +180,17 @@ namespace System.Data.Entity.Interception
                 logLines[1]);
         }
 
-        public class TestDbCommandLogger : DbCommandLogger
+        public class TestDatabaseLogFormatter : DatabaseLogFormatter
         {
 
-            public TestDbCommandLogger(DbContext context, Action<string> sink)
-                : base(context, sink)
+            public TestDatabaseLogFormatter(DbContext context, Action<string> writeAction)
+                : base(context, writeAction)
             {
             }
 
-            public override void LogCommand(DbCommand command, DbCommandInterceptionContext interceptionContext)
+            public override void LogCommand<TResult>(DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)
             {
-                Sink(
+                Write(
                     string.Format(
                         CultureInfo.CurrentCulture,
                         "Context '{0}' is executing command '{1}'{2}",
@@ -198,9 +198,9 @@ namespace System.Data.Entity.Interception
                         command.CommandText.CollapseWhitespace(), Environment.NewLine));
             }
 
-            public override void LogResult(DbCommand command, object result, DbCommandInterceptionContext interceptionContext)
+            public override void LogResult<TResult>(DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)
             {
-                Sink(
+                Write(
                     string.Format(
                         CultureInfo.CurrentCulture, "Context '{0}' finished executing command{1}", Context.GetType().Name,
                         Environment.NewLine));

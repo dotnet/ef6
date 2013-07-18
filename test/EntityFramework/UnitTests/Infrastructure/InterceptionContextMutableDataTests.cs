@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Infrastructure
 {
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Resources;
     using System.Threading.Tasks;
     using Xunit;
@@ -37,11 +38,11 @@ namespace System.Data.Entity.Infrastructure
         {
             var data = new InterceptionContextMutableData();
 
-            Assert.False(data.IsSuppressed);
+            Assert.False(data.IsExecutionSuppressed);
 
             data.SuppressExecution();
 
-            Assert.True(data.IsSuppressed);
+            Assert.True(data.IsExecutionSuppressed);
         }
 
         [Fact]
@@ -53,7 +54,7 @@ namespace System.Data.Entity.Infrastructure
                 Strings.SuppressionAfterExecution,
                 Assert.Throws<InvalidOperationException>(() => data.SuppressExecution()).Message);
 
-            Assert.False(data.IsSuppressed);
+            Assert.False(data.IsExecutionSuppressed);
         }
 
         [Fact]
@@ -70,7 +71,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Exception_can_be_changed_after_execution_without_setting_IsSuppressed()
+        public void Exception_can_be_changed_after_execution_without_setting_IsExecutionSuppressed()
         {
             var data = new InterceptionContextMutableData { HasExecuted = true };
 
@@ -80,11 +81,11 @@ namespace System.Data.Entity.Infrastructure
             data.Exception = exception;
 
             Assert.Same(exception, data.Exception);
-            Assert.False(data.IsSuppressed);
+            Assert.False(data.IsExecutionSuppressed);
         }
 
         [Fact]
-        public void Setting_Exception_before_execution_causes_IsSuppressed_to_be_set()
+        public void Setting_Exception_before_execution_causes_IsExecutionSuppressed_to_be_set()
         {
             var data = new InterceptionContextMutableData();
 
@@ -94,7 +95,7 @@ namespace System.Data.Entity.Infrastructure
             data.Exception = exception;
 
             Assert.Same(exception, data.Exception);
-            Assert.True(data.IsSuppressed);
+            Assert.True(data.IsExecutionSuppressed);
         }
 
         [Fact]
@@ -107,7 +108,7 @@ namespace System.Data.Entity.Infrastructure
             Assert.Same(exception, data.OriginalException);
             Assert.Same(exception, data.Exception);
             Assert.True(data.HasExecuted);
-            Assert.False(data.IsSuppressed);
+            Assert.False(data.IsExecutionSuppressed);
         }
 
         [Fact]
@@ -123,7 +124,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         [Fact]
-        public void Result_can_be_changed_after_execution_without_setting_IsSuppressed()
+        public void Result_can_be_changed_after_execution_without_setting_IsExecutionSuppressed()
         {
             var data = new InterceptionContextMutableData<string> { HasExecuted = true };
 
@@ -132,11 +133,11 @@ namespace System.Data.Entity.Infrastructure
             data.Result = "Wensleydale";
 
             Assert.Equal("Wensleydale", data.Result);
-            Assert.False(data.IsSuppressed);
+            Assert.False(data.IsExecutionSuppressed);
         }
 
         [Fact]
-        public void Setting_Result_before_execution_causes_IsSuppressed_to_be_set()
+        public void Setting_Result_before_execution_causes_IsExecutionSuppressed_to_be_set()
         {
             var data = new InterceptionContextMutableData<string>();
 
@@ -145,7 +146,7 @@ namespace System.Data.Entity.Infrastructure
             data.Result = "Wensleydale";
 
             Assert.Equal("Wensleydale", data.Result);
-            Assert.True(data.IsSuppressed);
+            Assert.True(data.IsExecutionSuppressed);
         }
 
         [Fact]
@@ -157,7 +158,7 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal("Wensleydale", data.OriginalResult);
             Assert.Equal("Wensleydale", data.Result);
             Assert.True(data.HasExecuted);
-            Assert.False(data.IsSuppressed);
+            Assert.False(data.IsExecutionSuppressed);
         }
     }
 }

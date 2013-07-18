@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Infrastructure.Interception;
     using Moq;
     using Xunit;
 

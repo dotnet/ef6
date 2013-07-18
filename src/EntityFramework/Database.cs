@@ -8,6 +8,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -663,10 +664,10 @@ namespace System.Data.Entity
         ///     delegate. For example, to log to the console, set this property to <see cref="Console.Write(string)" />.
         /// </summary>
         /// <remarks>
-        ///     The format of the log text can be changed by creating a new logger that derives from
-        ///     <see cref="DbCommandLogger" /> and setting it with <see cref="DbConfiguration.CommandLogger" />.
+        ///     The format of the log text can be changed by creating a new formatter that derives from
+        ///     <see cref="DatabaseLogFormatter" /> and setting it with <see cref="DbConfiguration.DatabaseLogFormatter" />.
         ///     For more low-level control over logging/interception see <see cref="IDbCommandInterceptor" /> and
-        ///     <see cref="Interception" />.
+        ///     <see cref="DbInterception" />.
         /// </remarks>
         public Action<string> Log
         {

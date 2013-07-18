@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Infrastructure.DependencyResolution
 {
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -16,7 +17,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     {
         private CompositeResolver<ResolverChain, ResolverChain> _resolvers;
         private RootDependencyResolver _rootResolver;
-        private readonly Func<Dispatchers> _dispatchers;
+        private readonly Func<DbDispatchers> _dispatchers;
 
         // This does not need to be volatile since it only protects against inappropriate use not
         // thread-unsafe use.
@@ -27,13 +28,13 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             ResolverChain normalResolverChain = null,
             RootDependencyResolver rootResolver = null,
             AppConfigDependencyResolver appConfigResolver = null,
-            Func<Dispatchers> dispatchers = null)
+            Func<DbDispatchers> dispatchers = null)
         {
             _rootResolver = rootResolver ?? new RootDependencyResolver();
             _resolvers = new CompositeResolver<ResolverChain, ResolverChain>(appConfigChain ?? new ResolverChain(), normalResolverChain ?? new ResolverChain());
             _resolvers.Second.Add(_rootResolver);
             _resolvers.First.Add(appConfigResolver ?? new AppConfigDependencyResolver(AppConfig.DefaultInstance, this));
-            _dispatchers = dispatchers ?? (() => Interception.Dispatch);
+            _dispatchers = dispatchers ?? (() => DbInterception.Dispatch);
         }
 
         /// <summary>

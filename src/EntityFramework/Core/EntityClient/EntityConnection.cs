@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.EntityClient
 {
@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -89,7 +90,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             ChangeConnectionString(connectionString);
 
-            _dispatcher = Interception.Dispatch.EntityConnection;
+            _dispatcher = DbInterception.Dispatch.EntityConnection;
         }
 
         /// <summary>
@@ -171,7 +172,7 @@ namespace System.Data.Entity.Core.EntityClient
             _metadataWorkspace = workspace;
             _storeConnection = connection;
             _entityConnectionShouldDisposeStoreConnection = entityConnectionOwnsStoreConnection;
-            _dispatcher = dispatcher ?? Interception.Dispatch.EntityConnection;
+            _dispatcher = dispatcher ?? DbInterception.Dispatch.EntityConnection;
 
             if (_storeConnection != null)
             {

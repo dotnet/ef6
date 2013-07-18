@@ -7,6 +7,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Edm;

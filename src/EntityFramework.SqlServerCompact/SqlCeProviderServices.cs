@@ -9,6 +9,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServerCompact.Resources;
     using System.Data.Entity.SqlServerCompact.SqlGen;
@@ -248,7 +249,7 @@ namespace System.Data.Entity.SqlServerCompact
                 foreach (var text in commandTextCollection)
                 {
                     command.CommandText = text;
-                    Interception.Dispatch.Command.NonQuery(command, new DbCommandBaseInterceptionContext());
+                    DbInterception.Dispatch.Command.NonQuery(command, new DbCommandInterceptionContext());
                 }
 
                 // Commit the transaction.

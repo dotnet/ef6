@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Infrastructure
 {
+    using System.Data.Entity.Infrastructure.Interception;
     using Xunit;
 
     public class InterceptionTests
@@ -11,11 +12,11 @@ namespace System.Data.Entity.Infrastructure
         {
             Assert.Equal(
                 "interceptor",
-                Assert.Throws<ArgumentNullException>(() => Interception.AddInterceptor(null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => DbInterception.Add(null)).ParamName);
 
             Assert.Equal(
                 "interceptor",
-                Assert.Throws<ArgumentNullException>(() => Interception.RemoveInterceptor(null)).ParamName);
+                Assert.Throws<ArgumentNullException>(() => DbInterception.Remove(null)).ParamName);
         }
     }
 }

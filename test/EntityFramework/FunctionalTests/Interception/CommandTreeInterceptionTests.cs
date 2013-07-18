@@ -7,6 +7,7 @@ namespace System.Data.Entity.Interception
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Linq;
     using Xunit;
 
@@ -23,7 +24,7 @@ namespace System.Data.Entity.Interception
             }
 
             var logger = new CommandTreeLogger();
-            Interception.AddInterceptor(logger);
+            DbInterception.Add(logger);
 
             BlogContextLogAll context;
             try
@@ -35,7 +36,7 @@ namespace System.Data.Entity.Interception
             }
             finally
             {
-                Interception.RemoveInterceptor(logger);
+                DbInterception.Remove(logger);
             }
 
             // Sanity check that we got tree creations logged
@@ -81,7 +82,7 @@ namespace System.Data.Entity.Interception
             using (var context = new BlogContextAllTrees())
             {
                 var logger = new CommandTreeLogger(context);
-                Interception.AddInterceptor(logger);
+                DbInterception.Add(logger);
 
                 try
                 {
@@ -89,7 +90,7 @@ namespace System.Data.Entity.Interception
                 }
                 finally
                 {
-                    Interception.RemoveInterceptor(logger);
+                    DbInterception.Remove(logger);
                 }
 
 #if NET40
@@ -115,7 +116,7 @@ namespace System.Data.Entity.Interception
                         using (var context = new BlogContextAllTrees())
                         {
                             var logger = new CommandTreeLogger(context);
-                            Interception.AddInterceptor(logger);
+                            DbInterception.Add(logger);
                             loggers.Add(logger);
 
                             try
@@ -124,7 +125,7 @@ namespace System.Data.Entity.Interception
                             }
                             finally
                             {
-                                Interception.RemoveInterceptor(logger);
+                                DbInterception.Remove(logger);
                             }
                         }
                     }, executionCount);
@@ -176,14 +177,14 @@ namespace System.Data.Entity.Interception
                 get { return _log; }
             }
 
-            public void TreeCreated(DbCommandTree commandTree, DbCommandTreeInterceptionContext interceptionContext)
+            public void TreeCreated(DbCommandTreeInterceptionContext interceptionContext)
             {
                 Assert.NotEmpty(interceptionContext.DbContexts);
                 
                 if (_context == null
                     || interceptionContext.DbContexts.Contains(_context))
                 {
-                    _log.Add(Tuple.Create(commandTree, interceptionContext));
+                    _log.Add(Tuple.Create(interceptionContext.Result, interceptionContext));
                 }
             }
         }

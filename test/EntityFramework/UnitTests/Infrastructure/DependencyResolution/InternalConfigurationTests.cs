@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Infrastructure.DependencyResolution
 {
+    using System.Data.Entity.Infrastructure.Interception;
     using Moq;
     using Xunit;
 
@@ -180,7 +181,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                     .Setup(m => m.GetServices(typeof(IDbInterceptor), null))
                     .Returns(new[] { interceptor1, interceptor2 });
 
-                var mockDispatchers = new Mock<Dispatchers>();
+                var mockDispatchers = new Mock<DbDispatchers>();
 
                 var config = new InternalConfiguration(
                     mockAppConfigChain.Object, mockNormalChain.Object,

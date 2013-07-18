@@ -5,6 +5,7 @@ namespace System.Data.Entity.SqlServer
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.SqlServer.Resources;
     using System.Linq;
     using Moq;
@@ -143,14 +144,14 @@ namespace System.Data.Entity.SqlServer
                 var connection = CreateConnectionForAzureQuery(5).Object;
 
                 var interceptor = new TestReaderInterceptor();
-                Interception.AddInterceptor(interceptor);
+                DbInterception.Add(interceptor);
                 try
                 {
                     SqlVersionUtils.GetServerType(connection);
                 }
                 finally
                 {
-                    Interception.RemoveInterceptor(interceptor);
+                    DbInterception.Remove(interceptor);
                 }
 
                 Assert.Equal(1, interceptor.Commands.Count);

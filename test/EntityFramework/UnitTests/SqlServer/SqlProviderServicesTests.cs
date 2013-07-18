@@ -7,6 +7,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
@@ -241,14 +242,14 @@ namespace System.Data.Entity.SqlServer
                     context.Database.Delete();
 
                     var interceptor = new TestNonQueryInterceptor();
-                    Interception.AddInterceptor(interceptor);
+                    DbInterception.Add(interceptor);
                     try
                     {
                         SqlProviderServices.Instance.CreateDatabase(context.Database.Connection, null, storeItemCollection);
                     }
                     finally
                     {
-                        Interception.RemoveInterceptor(interceptor);
+                        DbInterception.Remove(interceptor);
                     }
 
                     Assert.Equal(3, interceptor.Commands.Count);
@@ -267,7 +268,7 @@ namespace System.Data.Entity.SqlServer
             public void DbDatabaseExists_dispatches_commands_to_interceptors_for_connections_with_initial_catalog()
             {
                 var interceptor = new TestScalarInterceptor();
-                Interception.AddInterceptor(interceptor);
+                DbInterception.Add(interceptor);
                 try
                 {
                     using (var connection = new SqlConnection(ModelHelpers.SimpleAttachConnectionString("I.Do.Not.Exist")))
@@ -277,7 +278,7 @@ namespace System.Data.Entity.SqlServer
                 }
                 finally
                 {
-                    Interception.RemoveInterceptor(interceptor);
+                    DbInterception.Remove(interceptor);
                 }
 
                 Assert.Equal(2, interceptor.Commands.Count);
@@ -291,7 +292,7 @@ namespace System.Data.Entity.SqlServer
             public void DbDatabaseExists_dispatches_commands_to_interceptors_for_connections_with_no_initial_catalog()
             {
                 var interceptor = new TestScalarInterceptor();
-                Interception.AddInterceptor(interceptor);
+                DbInterception.Add(interceptor);
                 try
                 {
                     using (var connection =
@@ -302,7 +303,7 @@ namespace System.Data.Entity.SqlServer
                 }
                 finally
                 {
-                    Interception.RemoveInterceptor(interceptor);
+                    DbInterception.Remove(interceptor);
                 }
 
                 Assert.Equal(1, interceptor.Commands.Count);
@@ -325,7 +326,7 @@ namespace System.Data.Entity.SqlServer
                 }
 
                 var interceptor = new TestNonQueryInterceptor();
-                Interception.AddInterceptor(interceptor);
+                DbInterception.Add(interceptor);
                 try
                 {
                     using (var connection = new SqlConnection(SimpleAttachConnectionString<DdlDatabaseContext>()))
@@ -335,7 +336,7 @@ namespace System.Data.Entity.SqlServer
                 }
                 finally
                 {
-                    Interception.RemoveInterceptor(interceptor);
+                    DbInterception.Remove(interceptor);
                 }
 
                 Assert.Equal(1, interceptor.Commands.Count);
@@ -365,16 +366,16 @@ namespace System.Data.Entity.SqlServer
 
                     var nonQueryInterceptor = new TestNonQueryInterceptor();
                     var readerInterceptor = new TestReaderInterceptor();
-                    Interception.AddInterceptor(nonQueryInterceptor);
-                    Interception.AddInterceptor(readerInterceptor);
+                    DbInterception.Add(nonQueryInterceptor);
+                    DbInterception.Add(readerInterceptor);
                     try
                     {
                         SqlProviderServices.Instance.DeleteDatabase(connection, null, storeItemCollection);
                     }
                     finally
                     {
-                        Interception.RemoveInterceptor(nonQueryInterceptor);
-                        Interception.RemoveInterceptor(readerInterceptor);
+                        DbInterception.Remove(nonQueryInterceptor);
+                        DbInterception.Remove(readerInterceptor);
                     }
 
                     Assert.Equal(2, nonQueryInterceptor.Commands.Count);

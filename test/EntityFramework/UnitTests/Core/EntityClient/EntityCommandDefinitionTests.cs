@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Core.Query.ResultAssembly;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Threading;
@@ -346,7 +347,7 @@ namespace System.Data.Entity.Core.EntityClient
                     {
                         CallBase = true
                     };
-                Interception.AddInterceptor(mockInterceptor.Object);
+                DbInterception.Add(mockInterceptor.Object);
 
                 try
                 {
@@ -355,7 +356,7 @@ namespace System.Data.Entity.Core.EntityClient
                 }
                 finally
                 {
-                    Interception.RemoveInterceptor(mockInterceptor.Object);
+                    DbInterception.Remove(mockInterceptor.Object);
                 }
 
                 dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), CommandBehavior.Default);

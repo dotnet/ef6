@@ -1,91 +1,100 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Common;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     This is the default logger used when some <see cref="Action{String}" /> is set onto the <see cref="Database.Log" />
-    ///     property. A different logger can be used by creating a class that inherits from this class and overrides
+    ///     This is the default log formatter used when some <see cref="Action{String}" /> is set onto the <see cref="Database.Log" />
+    ///     property. A different formatter can be used by creating a class that inherits from this class and overrides
     ///     some or all methods to change behavior.
     /// </summary>
     /// <remarks>
-    ///     To set the new logger create a code-based configuration for EF using <see cref="DbConfiguration" /> and then
-    ///     set the logger class to use with <see cref="DbConfiguration.CommandLogger" />.
-    ///     Note that setting the type of logger to use with this method does change the way command are
+    ///     To set the new formatter create a code-based configuration for EF using <see cref="DbConfiguration" /> and then
+    ///     set the formatter class to use with <see cref="DbConfiguration.DatabaseLogFormatter" />.
+    ///     Note that setting the type of formatter to use with this method does change the way command are
     ///     logged when <see cref="Database.Log" /> is used. It is still necessary to set a <see cref="Action{String}" />
     ///     onto <see cref="Database.Log" /> before any commands will be logged.
     ///     For more low-level control over logging/interception see <see cref="IDbCommandInterceptor" /> and
-    ///     <see cref="Interception" />.
+    ///     <see cref="DbInterception" />.
     /// </remarks>
-    public class DbCommandLogger : IDbCommandInterceptor
+    public class DatabaseLogFormatter : IDbCommandInterceptor
     {
         private readonly DbContext _context;
-        private readonly Action<string> _sink;
+        private readonly Action<string> _writeAction;
         private readonly Stopwatch _stopwatch = new Stopwatch();
 
         /// <summary>
-        ///     Creates a logger that will not filter by any <see cref="DbContext" /> and will instead log every command
+        ///     Creates a formatter that will not filter by any <see cref="DbContext" /> and will instead log every command
         ///     from any context and also commands that do not originate from a context.
         /// </summary>
         /// <remarks>
         ///     This constructor is not used when a delegate is set on <see cref="Database.Log" />. Instead it can be
-        ///     used by setting the logger directly using <see cref="Interception.AddInterceptor" />.
+        ///     used by setting the formatter directly using <see cref="DbInterception.Add" />.
         /// </remarks>
-        /// <param name="sink">The delegate to which output will be sent.</param>
-        public DbCommandLogger(Action<string> sink)
+        /// <param name="writeAction">The delegate to which output will be sent.</param>
+        public DatabaseLogFormatter(Action<string> writeAction)
         {
-            Check.NotNull(sink, "sink");
+            Check.NotNull(writeAction, "writeAction");
 
-            _sink = sink;
+            _writeAction = writeAction;
         }
 
         /// <summary>
-        ///     Creates a logger that will only log commands the come from the given <see cref="DbContext" /> instance.
+        ///     Creates a formatter that will only log commands the come from the given <see cref="DbContext" /> instance.
         /// </summary>
         /// <remarks>
         ///     This constructor must be called by a class that inherits from this class to override the behavior
         ///     of <see cref="Database.Log" />.
         /// </remarks>
         /// <param name="context">The context for which commands should be logged.</param>
-        /// <param name="sink">The delegate to which output will be sent.</param>
-        public DbCommandLogger(DbContext context, Action<string> sink)
+        /// <param name="writeAction">The delegate to which output will be sent.</param>
+        public DatabaseLogFormatter(DbContext context, Action<string> writeAction)
         {
             Check.NotNull(context, "context");
-            Check.NotNull(sink, "sink");
+            Check.NotNull(writeAction, "writeAction");
 
             _context = context;
-            _sink = sink;
+            _writeAction = writeAction;
         }
 
         /// <summary>
         ///     The context for which commands are being logged, or null if commands from all contexts are
         ///     being logged.
         /// </summary>
-        public DbContext Context
+        protected internal DbContext Context
         {
             get { return _context; }
         }
 
-        /// <summary>
-        ///     The delegate to which output is being sent.
-        /// </summary>
-        public Action<string> Sink
+        internal Action<string> WriteAction
         {
-            get { return _sink; }
+            get { return _writeAction; }
         }
 
         /// <summary>
-        ///     The stop watch used to time executions.
+        ///     Writes the given string to the underlying write delegate.
         /// </summary>
-        public Stopwatch Stopwatch
+        /// <param name="output">The string to write.</param>
+        protected virtual void Write(string output)
+        {
+            _writeAction(output);
+        }
+
+        /// <summary>
+        ///     The stop watch used to time executions. This stop watch is started at the end of
+        ///     <see cref="NonQueryExecuting" />, <see cref="ScalarExecuting" />, and <see cref="ReaderExecuting" />
+        ///     methods and is stopped at the beginning of the <see cref="NonQueryExecuted" />, <see cref="ScalarExecuted" />,
+        ///     and <see cref="ReaderExecuted" /> methods. If these methods are overridden and the stop watch is being used
+        ///     then the overrides should either call the base method or start/stop the watch themselves.
+        /// </summary>
+        protected internal Stopwatch Stopwatch
         {
             get { return _stopwatch; }
         }
@@ -93,7 +102,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     This method is called before a call to <see cref="DbCommand.ExecuteNonQuery" /> or
         ///     one of its async counterparts is made.
-        ///     The default implementation calls <see cref="Executing" />
+        ///     The default implementation calls <see cref="Executing" /> and starts <see cref="Stopwatch"/>.
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
@@ -107,9 +116,9 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     This method is called after a call to <see cref="DbCommand.ExecuteNonQuery" />  or
+        ///     This method is called after a call to <see cref="DbCommand.ExecuteNonQuery" /> or
         ///     one of its async counterparts is made.
-        ///     The default implementation calls <see cref="Executed" />
+        ///     The default implementation stops <see cref="Stopwatch"/> and calls <see cref="Executed" />.
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
@@ -119,13 +128,13 @@ namespace System.Data.Entity.Infrastructure
             Check.NotNull(interceptionContext, "interceptionContext");
 
             Stopwatch.Stop();
-            Executed(command, interceptionContext.Result, interceptionContext);
+            Executed(command, interceptionContext);
         }
 
         /// <summary>
-        ///     This method is called before a call to <see cref="DbCommand.ExecuteReader(CommandBehavior)" />  or
+        ///     This method is called before a call to <see cref="DbCommand.ExecuteReader(CommandBehavior)" /> or
         ///     one of its async counterparts is made.
-        ///     The default implementation calls <see cref="Executing" />
+        ///     The default implementation calls <see cref="Executing" /> and starts <see cref="Stopwatch"/>.
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
@@ -139,9 +148,9 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     This method is called after a call to <see cref="DbCommand.ExecuteReader(CommandBehavior)" />  or
+        ///     This method is called after a call to <see cref="DbCommand.ExecuteReader(CommandBehavior)" /> or
         ///     one of its async counterparts is made.
-        ///     The default implementation calls <see cref="Executed" />
+        ///     The default implementation stops <see cref="Stopwatch"/> and calls <see cref="Executed" />.
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
@@ -151,13 +160,13 @@ namespace System.Data.Entity.Infrastructure
             Check.NotNull(interceptionContext, "interceptionContext");
 
             Stopwatch.Stop();
-            Executed(command, interceptionContext.Result, interceptionContext);
+            Executed(command, interceptionContext);
         }
 
         /// <summary>
         ///     This method is called before a call to <see cref="DbCommand.ExecuteScalar" />  or
         ///     one of its async counterparts is made.
-        ///     The default implementation calls <see cref="Executing" />
+        ///     The default implementation calls <see cref="Executing" /> and starts <see cref="Stopwatch"/>.
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
@@ -173,7 +182,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     This method is called after a call to <see cref="DbCommand.ExecuteScalar" />  or
         ///     one of its async counterparts is made.
-        ///     The default implementation calls <see cref="Executed" />
+        ///     The default implementation stops <see cref="Stopwatch"/> and calls <see cref="Executed" />.
         /// </summary>
         /// <param name="command">The command being executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
@@ -183,7 +192,7 @@ namespace System.Data.Entity.Infrastructure
             Check.NotNull(interceptionContext, "interceptionContext");
 
             Stopwatch.Stop();
-            Executed(command, interceptionContext.Result, interceptionContext);
+            Executed(command, interceptionContext);
         }
 
         /// <summary>
@@ -194,7 +203,7 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <param name="command">The command that will be executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
-        public virtual void Executing(DbCommand command, DbCommandInterceptionContext interceptionContext)
+        public virtual void Executing<TResult>(DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
@@ -215,7 +224,7 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="command">The command that was executed.</param>
         /// <param name="result">The result of executing the command.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
-        public virtual void Executed(DbCommand command, object result, DbCommandInterceptionContext interceptionContext)
+        public virtual void Executed<TResult>(DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
@@ -223,17 +232,17 @@ namespace System.Data.Entity.Infrastructure
             if (Context == null
                 || interceptionContext.DbContexts.Contains(Context, ReferenceEquals))
             {
-                LogResult(command, result, interceptionContext);
+                LogResult(command, interceptionContext);
             }
         }
 
         /// <summary>
         ///     Called to log a command that is about to be executed. Override this method to change how the
-        ///     command is logged to <see cref="Sink" />.
+        ///     command is logged to <see cref="WriteAction" />.
         /// </summary>
         /// <param name="command">The command to be logged.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
-        public virtual void LogCommand(DbCommand command, DbCommandInterceptionContext interceptionContext)
+        public virtual void LogCommand<TResult>(DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
@@ -241,12 +250,12 @@ namespace System.Data.Entity.Infrastructure
             var commandText = command.CommandText ?? "<null>";
             if (commandText.EndsWith(Environment.NewLine, StringComparison.Ordinal))
             {
-                Sink(commandText);
+                Write(commandText);
             }
             else
             {
-                Sink(commandText);
-                Sink(Environment.NewLine);
+                Write(commandText);
+                Write(Environment.NewLine);
             }
 
             if (command.Parameters != null)
@@ -257,7 +266,7 @@ namespace System.Data.Entity.Infrastructure
                 }
             }
 
-            Sink(interceptionContext.IsAsync
+            Write(interceptionContext.IsAsync
                       ? Strings.CommandLogAsync(DateTimeOffset.Now, Environment.NewLine)
                       : Strings.CommandLogNonAsync(DateTimeOffset.Now, Environment.NewLine));
         }
@@ -265,12 +274,12 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Called by <see cref="LogCommand" /> to log each parameter. This method can be called from an overridden
         ///     implementation of <see cref="LogCommand" /> to log parameters, and/or can be overridden to
-        ///     change the way that parameters are logged to <see cref="Sink" />.
+        ///     change the way that parameters are logged to <see cref="WriteAction" />.
         /// </summary>
         /// <param name="command">The command being logged.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
         /// <param name="parameter">The parameter to log.</param>
-        public virtual void LogParameter(DbCommand command, DbCommandInterceptionContext interceptionContext, DbParameter parameter)
+        public virtual void LogParameter<TResult>(DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext, DbParameter parameter)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
@@ -312,40 +321,41 @@ namespace System.Data.Entity.Infrastructure
 
             builder.Append(")").Append(Environment.NewLine);
 
-            Sink(builder.ToString());
+            Write(builder.ToString());
         }
 
         /// <summary>
         ///     Called to log the result of executing a command. Override this method to change how results are
-        ///     logged to <see cref="Sink" />.
+        ///     logged to <see cref="WriteAction" />.
         /// </summary>
         /// <param name="command">The command being logged.</param>
         /// <param name="result">The result returned when the command was executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
-        public virtual void LogResult(DbCommand command, object result, DbCommandInterceptionContext interceptionContext)
+        public virtual void LogResult<TResult>(DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             if (interceptionContext.Exception != null)
             {
-                Sink(Strings.CommandLogFailed(
+                Write(Strings.CommandLogFailed(
                     Stopwatch.ElapsedMilliseconds, interceptionContext.Exception.Message, Environment.NewLine));
             }
             else if (interceptionContext.TaskStatus.HasFlag(TaskStatus.Canceled))
             {
-                Sink(Strings.CommandLogCanceled(Stopwatch.ElapsedMilliseconds, Environment.NewLine));
+                Write(Strings.CommandLogCanceled(Stopwatch.ElapsedMilliseconds, Environment.NewLine));
             }
             else
             {
-                var resultString = result == null
+                var result = interceptionContext.Result;
+                var resultString = (object)result == null
                                        ? "null"
                                        : (result is DbDataReader)
                                              ? result.GetType().Name
                                              : result.ToString();
-                Sink(Strings.CommandLogComplete(Stopwatch.ElapsedMilliseconds, resultString, Environment.NewLine));
+                Write(Strings.CommandLogComplete(Stopwatch.ElapsedMilliseconds, resultString, Environment.NewLine));
             }
-            Sink(Environment.NewLine);
+            Write(Environment.NewLine);
         }
     }
 }

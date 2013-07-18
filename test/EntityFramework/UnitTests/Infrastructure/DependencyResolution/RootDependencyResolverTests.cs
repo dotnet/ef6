@@ -5,6 +5,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Collections.Concurrent;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Mapping.ViewGeneration;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.History;
@@ -197,16 +200,16 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             {
                 var factory =
                     new RootDependencyResolver(new DefaultProviderServicesResolver(), new DatabaseInitializerResolver())
-                        .GetService<Func<DbContext, Action<string>, DbCommandLogger>>();
+                        .GetService<Func<DbContext, Action<string>, DatabaseLogFormatter>>();
 
                 var context = new Mock<DbContext>().Object;
                 Action<string> sink = new StringWriter().Write;
 
-                var logger = factory(context, sink);
+                var formatter = factory(context, sink);
 
-                Assert.IsType<DbCommandLogger>(logger);
-                Assert.Same(context, logger.Context);
-                Assert.Same(sink, logger.Sink);
+                Assert.IsType<DatabaseLogFormatter>(formatter);
+                Assert.Same(context, formatter.Context);
+                Assert.Same(sink, formatter.WriteAction);
             }
         }
 

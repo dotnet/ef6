@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using Moq;
     using Xunit;

@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Common;
 
     /// <summary>
-    ///     An object that implements this interface can be registered with <see cref="Interception" /> to
+    ///     An object that implements this interface can be registered with <see cref="DbInterception" /> to
     ///     receive notifications when Entity Framework executes commands.
     /// </summary>
     public interface IDbCommandInterceptor : IDbInterceptor

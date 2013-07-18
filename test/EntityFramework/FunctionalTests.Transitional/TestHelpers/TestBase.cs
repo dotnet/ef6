@@ -27,7 +27,7 @@ namespace System.Data.Entity
             DbConfiguration.SetConfiguration(new FunctionalTestsConfiguration());
 
             // Uncomment below to log all test generated SQL to the console.
-            //Interception.AddInterceptor(new DbCommandLogger(Console.Write));
+            //DbInterception.Add(new DatabaseLogFormatter(Console.Write));
         }
 
         internal DbDatabaseMapping BuildMapping(DbModelBuilder modelBuilder)

@@ -2198,11 +2198,11 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The specified store provider cannot be found in the configuration, or is not valid."
+        ///     A string like "The ADO.NET provider with invariant name '{0}' is either not registered in the machine or application config file, or could not be loaded. See the inner exception for details."
         /// </summary>
-        internal static string EntityClient_InvalidStoreProvider
+        internal static string EntityClient_InvalidStoreProvider(object p0)
         {
-            get { return EntityRes.GetString(EntityRes.EntityClient_InvalidStoreProvider); }
+            return EntityRes.GetString(EntityRes.EntityClient_InvalidStoreProvider, p0);
         }
 
         /// <summary>
@@ -12910,7 +12910,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "No Entity Framework provider found for '{0}' ADO.NET provider. Make sure the provider is registered in the 'entityFramework' section of the application config file. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information."
+        ///     A string like "No Entity Framework provider found for the ADO.NET provider with invariant name '{0}'. Make sure the provider is registered in the 'entityFramework' section of the application config file. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information."
         /// </summary>
         internal static string EF6Providers_NoProviderFound(object p0)
         {
@@ -12918,7 +12918,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The Entity Framework provider type '{0}' for the '{1}' ADO.NET provider could not be loaded. Make sure the provider assembly is available to the running application. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information."
+        ///     A string like "The Entity Framework provider type '{0}' registered in the application config file for the ADO.NET provider with invariant name '{1}' could not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application. See http://go.microsoft.com/fwlink/?LinkId=260882 for more information."
         /// </summary>
         internal static string EF6Providers_ProviderTypeMissing(object p0, object p1)
         {
@@ -12926,7 +12926,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The Entity Framework provider type '{0}' did not have a static property or field named 'Instance'. Entity Framework providers must declare a static property or field named 'Instance' that returns the Singleton instance of the provider."
+        ///     A string like "The Entity Framework provider type '{0}' did not have a static property or field named 'Instance'. Entity Framework providers must declare a static property or field named 'Instance' that returns the singleton instance of the provider."
         /// </summary>
         internal static string EF6Providers_InstanceMissing(object p0)
         {
@@ -12934,7 +12934,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The 'Instance' member of the Entity Framework provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Core.Common.DbProviderServices'. Entity Framework providers must extend from this class and the 'Instance' member must return the Singleton instance of the provider."
+        ///     A string like "The 'Instance' member of the Entity Framework provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Core.Common.DbProviderServices'. Entity Framework providers must inherit from this class and the 'Instance' member must return the singleton instance of the provider. This may be because the provider does not support Entity Framework 6 or later; see http://go.microsoft.com/fwlink/?LinkId=260882 for more information."
         /// </summary>
         internal static string EF6Providers_NotDbProviderServices(object p0)
         {
@@ -12950,7 +12950,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "No name was passed to the IDbDependencyResolver.GetService method. The provider invariant name must be supplied when attempting to resolve a {0} dependency."
+        ///     A string like "No name was passed to the IDbDependencyResolver.GetService method. The provider invariant name must be supplied when attempting to resolve a '{0}' dependency."
         /// </summary>
         internal static string DbDependencyResolver_NoProviderInvariantName(object p0)
         {
@@ -12958,7 +12958,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "No '{0}' instance was passed to the IDbDependencyResolver.GetService method. A '{0}' instance must be supplied when attempting to resolve an {1} dependency."
+        ///     A string like "No '{0}' instance was passed to the IDbDependencyResolver.GetService method. A '{0}' instance must be supplied when attempting to resolve an '{1}' dependency."
         /// </summary>
         internal static string DbDependencyResolver_InvalidKey(object p0, object p1)
         {
@@ -12982,7 +12982,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "An instance of '{0}' cannot be set because an instance of '{1}' is already being used. The DbConfiguration type to use cannot be changed once it has been set. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
+        ///     A string like "An instance of '{0}' cannot be set because an instance of '{1}' is already being used. Only one DbConfiguration type can be used in an application. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
         /// </summary>
         internal static string ConfigurationSetTwice(object p0, object p1)
         {
@@ -12998,7 +12998,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "An instance of '{0}' was set but this type was not discovered in the same assembly as the '{1}' context. A DbConfiguration type can be set in the config file, or it must be part of the same assembly as the DbContext type. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
+        ///     A string like "An instance of '{0}' was set but this type was not discovered in the same assembly as the '{1}' context. Either put the DbConfiguration type in the same assembly as the DbContext type, use DbConfigurationTypeAttribute on the DbContext type to specify the DbConfiguration type, or set the DbConfiguration type in the config file. See http://go.microsoft.com/fwlink/?LinkId=260883 for more information."
         /// </summary>
         internal static string SetConfigurationNotDiscovered(object p0, object p1)
         {
@@ -13006,7 +13006,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The assembly {0} contains more than one type derived from {1}. Either define the DbConfiguration type to use in the application's config file or ensure that the assembly contains at most one type derived from {1}."
+        ///     A string like "The assembly '{0}' contains more than one type derived from '{1}'. Either use DbConfigurationTypeAttribute on the DbContext type to specify the DbConfiguration type, define the DbConfiguration type to use in the application's config file, or ensure that the assembly contains at most one type derived from '{1}'."
         /// </summary>
         internal static string MultipleConfigsInAssembly(object p0, object p1)
         {
@@ -13030,7 +13030,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The type '{0}' does not inherit from '{1}'. Entity Framework code-based configuration classes must extend from '{1}'."
+        ///     A string like "The type '{0}' does not inherit from '{1}'. Entity Framework code-based configuration classes must inherit from '{1}'."
         /// </summary>
         internal static string CreateInstance_BadDbConfigurationType(object p0, object p1)
         {

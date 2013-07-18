@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
@@ -108,7 +108,7 @@ namespace System.Data.Entity.Infrastructure
 
             _interceptors.Each(executing);
 
-            if (!interceptionContext.MutableData.IsSuppressed)
+            if (!interceptionContext.MutableData.IsExecutionSuppressed)
             {
                 try
                 {
@@ -156,7 +156,7 @@ namespace System.Data.Entity.Infrastructure
 
             _interceptors.Each(executing);
 
-            var task = interceptionContext.MutableData.IsSuppressed 
+            var task = interceptionContext.MutableData.IsExecutionSuppressed 
                 ? Task.FromResult(interceptionContext.MutableData.Result) 
                 : operation();
 
@@ -170,7 +170,7 @@ namespace System.Data.Entity.Infrastructure
                         {
                             interceptionContext.MutableData.SetExceptionThrown(t.Exception.InnerException);
                         }
-                        else if (!interceptionContext.MutableData.IsSuppressed)
+                        else if (!interceptionContext.MutableData.IsExecutionSuppressed)
                         {
                             interceptionContext.MutableData.SetExecuted(t.IsCanceled || t.IsFaulted ? default(TResult) : t.Result);
                         }

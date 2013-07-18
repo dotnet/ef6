@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Common;
     using System.Data.Entity.Utilities;
@@ -9,17 +9,25 @@ namespace System.Data.Entity.Infrastructure
 
     /// <summary>
     ///     Used for dispatching operations to a <see cref="DbCommand" /> such that any <see cref="IDbCommandInterceptor" />
-    ///     interceptors that are registered on <see cref="Interception" /> will be notified before and after the
+    ///     interceptors that are registered on <see cref="DbInterception" /> will be notified before and after the
     ///     operation executes.
-    ///     Instances of this class are obtained through the the <see cref="Interception.Dispatch" /> fluent API.
+    ///     Instances of this class are obtained through the the <see cref="DbInterception.Dispatch" /> fluent API.
     /// </summary>
     /// <remarks>
     ///     This class is used internally by Entity Framework when executing commands. It is provided publicly so that
     ///     code that runs outside of the core EF assemblies can opt-in to command interception/tracing. This is
     ///     typically done by EF providers that are executing commands on behalf of EF.
     /// </remarks>
-    public class DbCommandDispatcher : DispatcherBase<IDbCommandInterceptor>
+    public class DbCommandDispatcher
     {
+        private readonly InternalDispatcher<IDbCommandInterceptor> _internalDispatcher
+            = new InternalDispatcher<IDbCommandInterceptor>();
+
+        internal InternalDispatcher<IDbCommandInterceptor> InternalDispatcher
+        {
+            get { return _internalDispatcher; }
+        }
+
         internal DbCommandDispatcher()
         {
         }
@@ -27,7 +35,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Sends <see cref="IDbCommandInterceptor.NonQueryExecuting" /> and
         ///     <see cref="IDbCommandInterceptor.NonQueryExecuted" /> to any  <see cref="IDbCommandInterceptor" />
-        ///     interceptors that are registered on <see cref="Interception" /> before/after making a
+        ///     interceptors that are registered on <see cref="DbInterception" /> before/after making a
         ///     call to <see cref="DbCommand.ExecuteNonQuery" />.
         /// </summary>
         /// <remarks>
@@ -38,14 +46,14 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="command">The command on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual int NonQuery(DbCommand command, DbCommandBaseInterceptionContext interceptionContext)
+        public virtual int NonQuery(DbCommand command, DbCommandInterceptionContext interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbCommandInterceptionContext<int>(interceptionContext);
 
-            return InternalDispatcher.Dispatch(
+            return _internalDispatcher.Dispatch(
                 command.ExecuteNonQuery,
                 clonedInterceptionContext,
                 i => i.NonQueryExecuting(command, clonedInterceptionContext),
@@ -55,7 +63,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Sends <see cref="IDbCommandInterceptor.ScalarExecuting" /> and
         ///     <see cref="IDbCommandInterceptor.ScalarExecuted" /> to any  <see cref="IDbCommandInterceptor" />
-        ///     interceptors that are registered on <see cref="Interception" /> before/after making a
+        ///     interceptors that are registered on <see cref="DbInterception" /> before/after making a
         ///     call to <see cref="DbCommand.ExecuteScalar" />.
         /// </summary>
         /// <remarks>
@@ -66,14 +74,14 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="command">The command on which the operation will be executed.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual object Scalar(DbCommand command, DbCommandBaseInterceptionContext interceptionContext)
+        public virtual object Scalar(DbCommand command, DbCommandInterceptionContext interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbCommandInterceptionContext<object>(interceptionContext);
 
-            return InternalDispatcher.Dispatch(
+            return _internalDispatcher.Dispatch(
                 command.ExecuteScalar,
                 clonedInterceptionContext,
                 i => i.ScalarExecuting(command, clonedInterceptionContext),
@@ -83,7 +91,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Sends <see cref="IDbCommandInterceptor.ReaderExecuting" /> and
         ///     <see cref="IDbCommandInterceptor.ReaderExecuted" /> to any  <see cref="IDbCommandInterceptor" />
-        ///     interceptors that are registered on <see cref="Interception" /> before/after making a
+        ///     interceptors that are registered on <see cref="DbInterception" /> before/after making a
         ///     call to <see cref="DbCommand.ExecuteReader(CommandBehavior)" />.
         /// </summary>
         /// <remarks>
@@ -95,14 +103,14 @@ namespace System.Data.Entity.Infrastructure
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
         public virtual DbDataReader Reader(
-            DbCommand command, DbCommandBaseInterceptionContext interceptionContext)
+            DbCommand command, DbCommandInterceptionContext interceptionContext)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
 
             var clonedInterceptionContext = new DbCommandInterceptionContext<DbDataReader>(interceptionContext);
 
-            return InternalDispatcher.Dispatch(
+            return _internalDispatcher.Dispatch(
                 () => command.ExecuteReader(clonedInterceptionContext.CommandBehavior),
                 clonedInterceptionContext,
                 i => i.ReaderExecuting(command, clonedInterceptionContext),
@@ -113,7 +121,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Sends <see cref="IDbCommandInterceptor.NonQueryExecuting" /> and
         ///     <see cref="IDbCommandInterceptor.NonQueryExecuted" /> to any  <see cref="IDbCommandInterceptor" />
-        ///     interceptors that are registered on <see cref="Interception" /> before/after making a
+        ///     interceptors that are registered on <see cref="DbInterception" /> before/after making a
         ///     call to <see cref="DbCommand.ExecuteNonQueryAsync(CancellationToken)" />.
         /// </summary>
         /// <remarks>
@@ -122,11 +130,11 @@ namespace System.Data.Entity.Infrastructure
         ///     being passed to interceptors.
         /// </remarks>
         /// <param name="command">The command on which the operation will be executed.</param>
-        /// <param name="cancellationToken">The cancellation token for the asynchronous operation.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
+        /// <param name="cancellationToken">The cancellation token for the asynchronous operation.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual Task<int> AsyncNonQuery(
-            DbCommand command, CancellationToken cancellationToken, DbCommandBaseInterceptionContext interceptionContext)
+        public virtual Task<int> NonQueryAsync(
+            DbCommand command, DbCommandInterceptionContext interceptionContext, CancellationToken cancellationToken)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
@@ -138,7 +146,7 @@ namespace System.Data.Entity.Infrastructure
                 clonedInterceptionContext = clonedInterceptionContext.AsAsync();
             }
 
-            return InternalDispatcher.DispatchAsync(
+            return _internalDispatcher.DispatchAsync(
                 () => command.ExecuteNonQueryAsync(cancellationToken),
                 clonedInterceptionContext,
                 i => i.NonQueryExecuting(command, clonedInterceptionContext),
@@ -148,7 +156,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Sends <see cref="IDbCommandInterceptor.ScalarExecuting" /> and
         ///     <see cref="IDbCommandInterceptor.ScalarExecuted" /> to any  <see cref="IDbCommandInterceptor" />
-        ///     interceptors that are registered on <see cref="Interception" /> before/after making a
+        ///     interceptors that are registered on <see cref="DbInterception" /> before/after making a
         ///     call to <see cref="DbCommand.ExecuteScalarAsync(CancellationToken)" />.
         /// </summary>
         /// <remarks>
@@ -157,11 +165,11 @@ namespace System.Data.Entity.Infrastructure
         ///     being passed to interceptors.
         /// </remarks>
         /// <param name="command">The command on which the operation will be executed.</param>
-        /// <param name="cancellationToken">The cancellation token for the asynchronous operation.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
+        /// <param name="cancellationToken">The cancellation token for the asynchronous operation.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual Task<object> AsyncScalar(
-            DbCommand command, CancellationToken cancellationToken, DbCommandBaseInterceptionContext interceptionContext)
+        public virtual Task<object> ScalarAsync(
+            DbCommand command, DbCommandInterceptionContext interceptionContext, CancellationToken cancellationToken)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
@@ -173,7 +181,7 @@ namespace System.Data.Entity.Infrastructure
                 clonedInterceptionContext = clonedInterceptionContext.AsAsync();
             }
 
-            return InternalDispatcher.DispatchAsync(
+            return _internalDispatcher.DispatchAsync(
                 () => command.ExecuteScalarAsync(cancellationToken),
                 clonedInterceptionContext,
                 i => i.ScalarExecuting(command, clonedInterceptionContext),
@@ -183,7 +191,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Sends <see cref="IDbCommandInterceptor.ReaderExecuting" /> and
         ///     <see cref="IDbCommandInterceptor.ReaderExecuted" /> to any  <see cref="IDbCommandInterceptor" />
-        ///     interceptors that are registered on <see cref="Interception" /> before/after making a
+        ///     interceptors that are registered on <see cref="DbInterception" /> before/after making a
         ///     call to <see cref="DbCommand.ExecuteReaderAsync(CommandBehavior, CancellationToken)" />.
         /// </summary>
         /// <remarks>
@@ -192,11 +200,11 @@ namespace System.Data.Entity.Infrastructure
         ///     being passed to interceptors.
         /// </remarks>
         /// <param name="command">The command on which the operation will be executed.</param>
-        /// <param name="cancellationToken">The cancellation token for the asynchronous operation.</param>
         /// <param name="interceptionContext">Optional information about the context of the call being made.</param>
+        /// <param name="cancellationToken">The cancellation token for the asynchronous operation.</param>
         /// <returns>The result of the operation, which may have been modified by interceptors.</returns>
-        public virtual Task<DbDataReader> AsyncReader(
-            DbCommand command, CancellationToken cancellationToken, DbCommandBaseInterceptionContext interceptionContext)
+        public virtual Task<DbDataReader> ReaderAsync(
+            DbCommand command, DbCommandInterceptionContext interceptionContext, CancellationToken cancellationToken)
         {
             Check.NotNull(command, "command");
             Check.NotNull(interceptionContext, "interceptionContext");
@@ -208,7 +216,7 @@ namespace System.Data.Entity.Infrastructure
                 clonedInterceptionContext = clonedInterceptionContext.AsAsync();
             }
 
-            return InternalDispatcher.DispatchAsync(
+            return _internalDispatcher.DispatchAsync(
                 () => command.ExecuteReaderAsync(clonedInterceptionContext.CommandBehavior, cancellationToken),
                 clonedInterceptionContext,
                 i => i.ReaderExecuting(command, clonedInterceptionContext),

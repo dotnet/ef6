@@ -6,6 +6,7 @@ namespace System.Data.Entity.Interception
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Threading;
@@ -26,7 +27,7 @@ namespace System.Data.Entity.Interception
         public void Initialization_and_simple_query_and_update_commands_can_be_logged()
         {
             var logger = new CommandLogger();
-            Interception.AddInterceptor(logger);
+            DbInterception.Add(logger);
 
             try
             {
@@ -37,7 +38,7 @@ namespace System.Data.Entity.Interception
             }
             finally
             {
-                Interception.RemoveInterceptor(logger);
+                DbInterception.Remove(logger);
             }
 
             var commandsUsed = new bool[Enum.GetValues(typeof(CommandMethod)).Length];
@@ -82,7 +83,7 @@ namespace System.Data.Entity.Interception
         public void Commands_that_result_in_exceptions_are_still_intercepted()
         {
             var logger = new CommandLogger();
-            Interception.AddInterceptor(logger);
+            DbInterception.Add(logger);
 
             Exception exception;
             try
@@ -94,7 +95,7 @@ namespace System.Data.Entity.Interception
             }
             finally
             {
-                Interception.RemoveInterceptor(logger);
+                DbInterception.Remove(logger);
             }
 
             Assert.Equal(2, logger.Log.Count);
@@ -117,14 +118,14 @@ namespace System.Data.Entity.Interception
         public void Async_commands_that_result_in_exceptions_are_still_intercepted()
         {
             var logger = new CommandLogger();
-            Interception.AddInterceptor(logger);
+            DbInterception.Add(logger);
 
             try
             {
                 using (var context = new BlogContextNoInit())
                 {
                     var query = context.Blogs.SqlQuery("select * from No.Chance").ToListAsync();
-                    
+
                     Assert.Throws<AggregateException>(() => query.Wait());
 
                     Assert.True(query.IsFaulted);
@@ -132,7 +133,7 @@ namespace System.Data.Entity.Interception
             }
             finally
             {
-                Interception.RemoveInterceptor(logger);
+                DbInterception.Remove(logger);
             }
 
             Assert.Equal(2, logger.Log.Count);
@@ -155,7 +156,7 @@ namespace System.Data.Entity.Interception
         public void Async_commands_that_are_canceled_are_still_intercepted()
         {
             var logger = new CommandLogger();
-            Interception.AddInterceptor(logger);
+            DbInterception.Add(logger);
 
             var cancellation = new CancellationTokenSource();
             var cancellationToken = cancellation.Token;
@@ -186,7 +187,7 @@ namespace System.Data.Entity.Interception
             }
             finally
             {
-                Interception.RemoveInterceptor(logger);
+                DbInterception.Remove(logger);
             }
 
             Assert.Equal(2, logger.Log.Count);
@@ -218,7 +219,7 @@ namespace System.Data.Entity.Interception
                         using (var context = new BlogContextNoInit())
                         {
                             var logger = new CommandLogger(context);
-                            Interception.AddInterceptor(logger);
+                            DbInterception.Add(logger);
                             loggers.Add(logger);
 
                             try
@@ -227,7 +228,7 @@ namespace System.Data.Entity.Interception
                             }
                             finally
                             {
-                                Interception.RemoveInterceptor(logger);
+                                DbInterception.Remove(logger);
                             }
 
                             var commandsUsed = new bool[Enum.GetValues(typeof(CommandMethod)).Length];
@@ -323,7 +324,10 @@ namespace System.Data.Entity.Interception
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.NonQueryExecuting, command, interceptionContext));
+                    _log.Add(
+                        new CommandLogItem(
+                            CommandMethod.NonQueryExecuting, command, interceptionContext.Exception, interceptionContext.TaskStatus,
+                            interceptionContext.IsAsync));
                 }
             }
 
@@ -331,7 +335,10 @@ namespace System.Data.Entity.Interception
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.NonQueryExecuted, command, interceptionContext, interceptionContext.Result));
+                    _log.Add(
+                        new CommandLogItem(
+                            CommandMethod.NonQueryExecuted, command, interceptionContext.Exception, interceptionContext.TaskStatus,
+                            interceptionContext.IsAsync, interceptionContext.Result));
                 }
             }
 
@@ -339,7 +346,10 @@ namespace System.Data.Entity.Interception
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.ReaderExecuting, command, interceptionContext));
+                    _log.Add(
+                        new CommandLogItem(
+                            CommandMethod.ReaderExecuting, command, interceptionContext.Exception, interceptionContext.TaskStatus,
+                            interceptionContext.IsAsync));
                 }
             }
 
@@ -348,7 +358,10 @@ namespace System.Data.Entity.Interception
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.ReaderExecuted, command, interceptionContext, interceptionContext.Result));
+                    _log.Add(
+                        new CommandLogItem(
+                            CommandMethod.ReaderExecuted, command, interceptionContext.Exception, interceptionContext.TaskStatus,
+                            interceptionContext.IsAsync, interceptionContext.Result));
                 }
             }
 
@@ -356,7 +369,10 @@ namespace System.Data.Entity.Interception
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.ScalarExecuting, command, interceptionContext));
+                    _log.Add(
+                        new CommandLogItem(
+                            CommandMethod.ScalarExecuting, command, interceptionContext.Exception, interceptionContext.TaskStatus,
+                            interceptionContext.IsAsync));
                 }
             }
 
@@ -364,7 +380,10 @@ namespace System.Data.Entity.Interception
             {
                 if (ShouldLog(interceptionContext))
                 {
-                    _log.Add(new CommandLogItem(CommandMethod.ScalarExecuted, command, interceptionContext, interceptionContext.Result));
+                    _log.Add(
+                        new CommandLogItem(
+                            CommandMethod.ScalarExecuted, command, interceptionContext.Exception, interceptionContext.TaskStatus,
+                            interceptionContext.IsAsync, interceptionContext.Result));
                 }
             }
 
@@ -377,17 +396,19 @@ namespace System.Data.Entity.Interception
         public class CommandLogItem
         {
             public CommandLogItem(
-                CommandMethod method, 
-                DbCommand command, 
-                DbCommandInterceptionContext interceptionContext, 
+                CommandMethod method,
+                DbCommand command,
+                Exception exception,
+                TaskStatus taskStatus,
+                bool isAsync,
                 object result = null)
             {
                 Method = method;
                 CommandText = command.CommandText;
                 Command = command;
-                Exception = interceptionContext.Exception;
-                TaskStatus = interceptionContext.TaskStatus;
-                IsAsync = interceptionContext.IsAsync;
+                Exception = exception;
+                TaskStatus = taskStatus;
+                IsAsync = isAsync;
                 Result = result;
             }
 

@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
@@ -56,7 +57,7 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <param name="resolver"> The resolver to use. </param>
         protected DbProviderServices(Func<IDbDependencyResolver> resolver)
-            : this(resolver, new Lazy<DbCommandTreeDispatcher>(() => Interception.Dispatch.CommandTree))
+            : this(resolver, new Lazy<DbCommandTreeDispatcher>(() => DbInterception.Dispatch.CommandTree))
         {
         }
 

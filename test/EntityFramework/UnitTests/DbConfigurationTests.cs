@@ -6,6 +6,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.History;
@@ -754,15 +755,15 @@ namespace System.Data.Entity
             }
         }
 
-        public class CommandLogger
+        public class DatabaseLogFormatterTests
         {
             [Fact]
             public void Throws_if_given_a_null_factory()
             {
                 Assert.Equal(
-                    "commandLoggerFactory",
+                    "logFormatterFactory",
                     Assert.Throws<ArgumentNullException>(
-                        () => new DbConfiguration().CommandLogger(null)).ParamName);
+                        () => new DbConfiguration().DatabaseLogFormatter(null)).ParamName);
             }
 
             [Fact]
@@ -771,18 +772,18 @@ namespace System.Data.Entity
                 var configuration = CreatedLockedConfiguration();
 
                 Assert.Equal(
-                    Strings.ConfigurationLocked("CommandLogger"),
+                    Strings.ConfigurationLocked("DatabaseLogFormatter"),
                     Assert.Throws<InvalidOperationException>(
-                        () => configuration.CommandLogger((_, __) => null)).Message);
+                        () => configuration.DatabaseLogFormatter((_, __) => null)).Message);
             }
 
             [Fact]
             public void Delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
-                Func<DbContext, Action<string>, DbCommandLogger> factory = (_, __) => null;
+                Func<DbContext, Action<string>, DatabaseLogFormatter> factory = (_, __) => null;
 
-                new DbConfiguration(mockInternalConfiguration.Object).CommandLogger(factory);
+                new DbConfiguration(mockInternalConfiguration.Object).DatabaseLogFormatter(factory);
 
                 mockInternalConfiguration.Verify(m => m.RegisterSingleton(factory));
             }

@@ -1,13 +1,20 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
 
-    internal class DbCommandTreeDispatcher : DispatcherBase<IDbCommandTreeInterceptor>
+    internal class DbCommandTreeDispatcher
     {
+        private readonly InternalDispatcher<IDbCommandTreeInterceptor> _internalDispatcher
+            = new InternalDispatcher<IDbCommandTreeInterceptor>();
+
+        public InternalDispatcher<IDbCommandTreeInterceptor> InternalDispatcher
+        {
+            get { return _internalDispatcher; }
+        }
+
         public virtual DbCommandTree Created(DbCommandTree commandTree, DbInterceptionContext interceptionContext)
         {
             DebugCheck.NotNull(commandTree);
@@ -15,8 +22,8 @@ namespace System.Data.Entity.Infrastructure
 
             var clonedInterceptionContext = new DbCommandTreeInterceptionContext(interceptionContext);
 
-            return InternalDispatcher.Dispatch(
-                commandTree, clonedInterceptionContext, i => i.TreeCreated(commandTree, clonedInterceptionContext));
+            return _internalDispatcher.Dispatch(
+                commandTree, clonedInterceptionContext, i => i.TreeCreated(clonedInterceptionContext));
         }
     }
 }

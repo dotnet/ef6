@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Entity.Core.Common.CommandTrees;
 
     /// <summary>
-    ///     An object that implements this interface can be registered with <see cref="Interception" /> to
+    ///     An object that implements this interface can be registered with <see cref="DbInterception" /> to
     ///     receive notifications when Entity Framework creates <see cref="DbCommandTree" /> command trees.
     /// </summary>
     public interface IDbCommandTreeInterceptor : IDbInterceptor
@@ -20,8 +20,7 @@ namespace System.Data.Entity.Infrastructure
         ///     command trees are cached by model which means that command tree creation only happens the
         ///     first time a query is executed and this notification will only happen at that time
         /// </remarks>
-        /// <param name="commandTree">The tree that has been created.</param>
         /// <param name="interceptionContext">Contextual information associated with the call.</param>
-        void TreeCreated(DbCommandTree commandTree, DbCommandTreeInterceptionContext interceptionContext);
+        void TreeCreated(DbCommandTreeInterceptionContext interceptionContext);
     }
 }

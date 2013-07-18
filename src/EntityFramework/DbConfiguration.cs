@@ -6,6 +6,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Infrastructure.Pluralization;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
@@ -545,33 +546,33 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
-        ///     a factory for the type of <see cref="DbCommandLogger" /> to use with <see cref="Database.Log" />.
+        ///     a factory for the type of <see cref="Infrastructure.Interception.DatabaseLogFormatter" /> to use with <see cref="Database.Log" />.
         /// </summary>
         /// <remarks>
-        ///     Note that setting the type of logger to use with this method does change the way command are
-        ///     logged when <see cref="Database.Log" />is used. It is still necessary to set a <see cref="TextWriter" />
+        ///     Note that setting the type of formatter to use with this method does change the way command are
+        ///     logged when <see cref="Database.Log" /> is used. It is still necessary to set a <see cref="TextWriter" />
         ///     instance onto <see cref="Database.Log" /> before any commands will be logged.
         ///     For more low-level control over logging/interception see <see cref="IDbCommandInterceptor" /> and
-        ///     <see cref="Interception" />.
+        ///     <see cref="DbInterception" />.
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
-        ///     <see cref="Func{DbCommandLogger}" />. This means that, if desired, the same functionality can be achieved using
+        ///     <see cref="Func{DatabaseLogFormatter}" />. This means that, if desired, the same functionality can be achieved using
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
-        /// <param name="commandLoggerFactory">A delegate that will create logger instances.</param>
+        /// <param name="logFormatterFactory">A delegate that will create formatter instances.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected internal void CommandLogger(Func<DbContext, Action<string>, DbCommandLogger> commandLoggerFactory)
+        protected internal void DatabaseLogFormatter(Func<DbContext, Action<string>, DatabaseLogFormatter> logFormatterFactory)
         {
-            Check.NotNull(commandLoggerFactory, "commandLoggerFactory");
+            Check.NotNull(logFormatterFactory, "logFormatterFactory");
 
-            _internalConfiguration.CheckNotLocked("CommandLogger");
-            _internalConfiguration.RegisterSingleton(commandLoggerFactory);
+            _internalConfiguration.CheckNotLocked("DatabaseLogFormatter");
+            _internalConfiguration.RegisterSingleton(logFormatterFactory);
         }
 
         /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to
         ///     register an <see cref="IDbInterceptor" /> at application startup. Note that interceptors can also
-        ///     be added and removed at any time using <see cref="Interception" />.
+        ///     be added and removed at any time using <see cref="DbInterception" />.
         /// </summary>
         /// <remarks>
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.

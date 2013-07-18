@@ -11,10 +11,10 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     {
         public virtual object GetService(Type type, object key)
         {
-            return GetService(type, key, e => { throw new ArgumentException(Strings.EntityClient_InvalidStoreProvider, e); });
+            return GetService(type, key, (e, n) => { throw new ArgumentException(Strings.EntityClient_InvalidStoreProvider(n), e); });
         }
 
-        private static object GetService(Type type, object key, Func<ArgumentException, object> handleFailedLookup)
+        private static object GetService(Type type, object key, Func<ArgumentException, string, object> handleFailedLookup)
         {
             if (type == typeof(DbProviderFactory))
             {
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 }
                 catch (ArgumentException e)
                 {
-                    return handleFailedLookup(e);
+                    return handleFailedLookup(e, name);
                 }
             }
 
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
         public IEnumerable<object> GetServices(Type type, object key)
         {
-            var service = GetService(type, key, e => null);
+            var service = GetService(type, key, (e, n) => null);
             return service == null ? Enumerable.Empty<object>() : new[] { service };
         }
     }

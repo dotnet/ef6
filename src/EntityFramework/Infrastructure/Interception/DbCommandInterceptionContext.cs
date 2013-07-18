@@ -1,11 +1,10 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
-    using System.Threading.Tasks;
 
     /// <summary>
     ///     Represents contextual information associated with calls into <see cref="IDbCommandInterceptor" />
@@ -18,26 +17,26 @@ namespace System.Data.Entity.Infrastructure
     ///     Instances of this class are publicly immutable. To add contextual information use one of the
     ///     With... or As... methods to create a new interception context containing the new information.
     /// </remarks>
-    public class DbCommandBaseInterceptionContext : DbInterceptionContext
+    public class DbCommandInterceptionContext : DbInterceptionContext
     {
         private CommandBehavior _commandBehavior = CommandBehavior.Default;
 
         /// <summary>
-        ///     Constructs a new <see cref="DbCommandBaseInterceptionContext" /> with no state.
+        ///     Constructs a new <see cref="DbCommandInterceptionContext" /> with no state.
         /// </summary>
-        public DbCommandBaseInterceptionContext()
+        public DbCommandInterceptionContext()
         {
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbCommandBaseInterceptionContext" /> by copying state from the given
+        ///     Creates a new <see cref="DbCommandInterceptionContext" /> by copying state from the given
         ///     interception context. Also see <see cref="DbInterceptionContext.Clone" />
         /// </summary>
         /// <param name="copyFrom">The context from which to copy state.</param>
-        public DbCommandBaseInterceptionContext(DbInterceptionContext copyFrom)
+        public DbCommandInterceptionContext(DbInterceptionContext copyFrom)
             : base(copyFrom)
         {
-            var asThisType = copyFrom as DbCommandBaseInterceptionContext;
+            var asThisType = copyFrom as DbCommandInterceptionContext;
             if (asThisType != null)
             {
                 _commandBehavior = asThisType._commandBehavior;
@@ -55,63 +54,63 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbCommandBaseInterceptionContext" /> that contains all the contextual information in this
+        ///     Creates a new <see cref="DbCommandInterceptionContext" /> that contains all the contextual information in this
         ///     interception context together with the given <see cref="CommandBehavior" />.
         /// </summary>
         /// <param name="commandBehavior">The command behavior to associate.</param>
         /// <returns>A new interception context associated with the given command behavior.</returns>
-        public DbCommandBaseInterceptionContext WithCommandBehavior(CommandBehavior commandBehavior)
+        public DbCommandInterceptionContext WithCommandBehavior(CommandBehavior commandBehavior)
         {
             var copy = TypedClone();
             copy._commandBehavior = commandBehavior;
             return copy;
         }
 
-        private DbCommandBaseInterceptionContext TypedClone()
+        private DbCommandInterceptionContext TypedClone()
         {
-            return (DbCommandBaseInterceptionContext)Clone();
+            return (DbCommandInterceptionContext)Clone();
         }
 
         /// <inheritdoc />
         protected override DbInterceptionContext Clone()
         {
-            return new DbCommandBaseInterceptionContext(this);
+            return new DbCommandInterceptionContext(this);
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbCommandBaseInterceptionContext" /> that contains all the contextual information in this
+        ///     Creates a new <see cref="DbCommandInterceptionContext" /> that contains all the contextual information in this
         ///     interception context with the addition of the given <see cref="ObjectContext" />.
         /// </summary>
         /// <param name="context">The context to associate.</param>
         /// <returns>A new interception context associated with the given context.</returns>
-        public new DbCommandBaseInterceptionContext WithDbContext(DbContext context)
+        public new DbCommandInterceptionContext WithDbContext(DbContext context)
         {
             Check.NotNull(context, "context");
 
-            return (DbCommandBaseInterceptionContext)base.WithDbContext(context);
+            return (DbCommandInterceptionContext)base.WithDbContext(context);
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbCommandBaseInterceptionContext" /> that contains all the contextual information in this
+        ///     Creates a new <see cref="DbCommandInterceptionContext" /> that contains all the contextual information in this
         ///     interception context with the addition of the given <see cref="ObjectContext" />.
         /// </summary>
         /// <param name="context">The context to associate.</param>
         /// <returns>A new interception context associated with the given context.</returns>
-        public new DbCommandBaseInterceptionContext WithObjectContext(ObjectContext context)
+        public new DbCommandInterceptionContext WithObjectContext(ObjectContext context)
         {
             Check.NotNull(context, "context");
 
-            return (DbCommandBaseInterceptionContext)base.WithObjectContext(context);
+            return (DbCommandInterceptionContext)base.WithObjectContext(context);
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbCommandBaseInterceptionContext" /> that contains all the contextual information in this
+        ///     Creates a new <see cref="DbCommandInterceptionContext" /> that contains all the contextual information in this
         ///     interception context the <see cref="DbInterceptionContext.IsAsync" /> flag set to true.
         /// </summary>
         /// <returns>A new interception context associated with the async flag set.</returns>
-        public new DbCommandBaseInterceptionContext AsAsync()
+        public new DbCommandInterceptionContext AsAsync()
         {
-            return (DbCommandBaseInterceptionContext)base.AsAsync();
+            return (DbCommandInterceptionContext)base.AsAsync();
         }
     }
 }
