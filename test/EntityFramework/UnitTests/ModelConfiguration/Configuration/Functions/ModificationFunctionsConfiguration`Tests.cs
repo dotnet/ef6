@@ -10,43 +10,43 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Insert_when_config_action_should_call_method_on_internal_configuration()
         {
-            var modificationFunctionsConfiguration = new ModificationFunctionsConfiguration<Order>();
+            var modificationFunctionsConfiguration = new ModificationStoredProceduresConfiguration<Order>();
 
-            ModificationFunctionConfiguration<Order> configuration = null;
+            ModificationStoredProcedureConfigurationBase configuration = null;
 
             modificationFunctionsConfiguration.Insert(c => { configuration = c; });
 
             Assert.Same(
                 configuration.Configuration,
-                modificationFunctionsConfiguration.Configuration.InsertModificationFunctionConfiguration);
+                modificationFunctionsConfiguration.Configuration.InsertModificationStoredProcedureConfiguration);
         }
 
         [Fact]
         public void Update_when_config_action_should_call_method_on_internal_configuration()
         {
-            var modificationFunctionsConfiguration = new ModificationFunctionsConfiguration<Order>();
+            var modificationFunctionsConfiguration = new ModificationStoredProceduresConfiguration<Order>();
 
-            ModificationFunctionConfiguration<Order> configuration = null;
+            ModificationStoredProcedureConfigurationBase configuration = null;
 
             modificationFunctionsConfiguration.Update(c => { configuration = c; });
 
             Assert.Same(
                 configuration.Configuration,
-                modificationFunctionsConfiguration.Configuration.UpdateModificationFunctionConfiguration);
+                modificationFunctionsConfiguration.Configuration.UpdateModificationStoredProcedureConfiguration);
         }
 
         [Fact]
         public void Delete_when_config_action_should_call_method_on_internal_configuration()
         {
-            var modificationFunctionsConfiguration = new ModificationFunctionsConfiguration<Order>();
+            var modificationFunctionsConfiguration = new ModificationStoredProceduresConfiguration<Order>();
 
-            ModificationFunctionConfiguration<Order> configuration = null;
+            ModificationStoredProcedureConfigurationBase configuration = null;
 
             modificationFunctionsConfiguration.Delete(c => { configuration = c; });
 
             Assert.Same(
                 configuration.Configuration,
-                modificationFunctionsConfiguration.Configuration.DeleteModificationFunctionConfiguration);
+                modificationFunctionsConfiguration.Configuration.DeleteModificationStoredProcedureConfiguration);
         }
     }
 }

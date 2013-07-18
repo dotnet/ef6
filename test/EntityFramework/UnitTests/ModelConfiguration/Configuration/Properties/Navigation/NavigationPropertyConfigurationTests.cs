@@ -196,8 +196,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Configure_should_configure_function_mapping()
         {
-            var functionsConfiguration = new ModificationFunctionsConfiguration();
-            var functionConfiguration = new ModificationFunctionConfiguration();
+            var functionsConfiguration = new ModificationStoredProceduresConfiguration();
+            var functionConfiguration = new ModificationStoredProcedureConfiguration();
             functionConfiguration.HasName("Func");
             functionsConfiguration.Insert(functionConfiguration);
 
@@ -206,7 +206,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var navigationPropertyConfiguration
                 = new NavigationPropertyConfiguration(mockPropertyInfo)
                       {
-                          ModificationFunctionsConfiguration = functionsConfiguration
+                          ModificationStoredProceduresConfiguration = functionsConfiguration
                       };
 
             var databaseMapping
@@ -411,24 +411,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
 
-            var functionConfiguration1 = new ModificationFunctionConfiguration();
+            var functionConfiguration1 = new ModificationStoredProcedureConfiguration();
             functionConfiguration1.HasName("Foo");
 
-            var functionConfiguration2 = new ModificationFunctionConfiguration();
+            var functionConfiguration2 = new ModificationStoredProcedureConfiguration();
             functionConfiguration2.HasName("Bar");
 
-            var functionsConfiguration1 = new ModificationFunctionsConfiguration();
+            var functionsConfiguration1 = new ModificationStoredProceduresConfiguration();
 
             functionsConfiguration1.Insert(functionConfiguration1);
 
-            var functionsConfiguration2 = new ModificationFunctionsConfiguration();
+            var functionsConfiguration2 = new ModificationStoredProceduresConfiguration();
 
             functionsConfiguration2.Insert(functionConfiguration2);
 
             var navigationPropertyConfigurationA
                 = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N1"))
                       {
-                          ModificationFunctionsConfiguration = functionsConfiguration1
+                          ModificationStoredProceduresConfiguration = functionsConfiguration1
                       };
 
             associationType.SetConfiguration(navigationPropertyConfigurationA);
@@ -436,7 +436,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var navigationPropertyConfigurationB
                 = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N2"))
                       {
-                          ModificationFunctionsConfiguration = functionsConfiguration2
+                          ModificationStoredProceduresConfiguration = functionsConfiguration2
                       };
 
             Assert.Equal(

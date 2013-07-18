@@ -739,7 +739,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             config.MapToStoredProcedures();
 
-            Assert.NotNull(innerConfig.ModificationFunctionsConfiguration);
+            Assert.NotNull(innerConfig.ModificationStoredProceduresConfiguration);
         }
 
         [Fact]
@@ -761,7 +761,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             config.MapToStoredProcedures();
 
-            Assert.NotNull(innerConfig.ModificationFunctionsConfiguration);
+            Assert.NotNull(innerConfig.ModificationStoredProceduresConfiguration);
         }
 
         [Fact]
@@ -771,13 +771,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            ConventionModificationFunctionsConfiguration configuration = null;
+            ConventionModificationStoredProceduresConfiguration configuration = null;
 
             config.MapToStoredProcedures(c => configuration = c);
 
             Assert.Same(
                 configuration.Configuration,
-                innerConfig.ModificationFunctionsConfiguration);
+                innerConfig.ModificationStoredProceduresConfiguration);
         }
 
         private class LocalEntityType

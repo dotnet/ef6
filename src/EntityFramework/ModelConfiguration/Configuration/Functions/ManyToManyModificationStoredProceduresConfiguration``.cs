@@ -11,56 +11,56 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// </summary>
     /// <typeparam name="TEntityType">The type of the entity that the relationship is being configured from.</typeparam>
     /// <typeparam name="TTargetEntityType">The type of the entity that the other end of the relationship targets.</typeparam>
-    public class ManyToManyModificationFunctionsConfiguration<TEntityType, TTargetEntityType>
+    public class ManyToManyModificationStoredProceduresConfiguration<TEntityType, TTargetEntityType>
         where TEntityType : class
         where TTargetEntityType : class
     {
-        private readonly ModificationFunctionsConfiguration _configuration
-            = new ModificationFunctionsConfiguration();
+        private readonly ModificationStoredProceduresConfiguration _configuration
+            = new ModificationStoredProceduresConfiguration();
 
-        internal ManyToManyModificationFunctionsConfiguration()
+        internal ManyToManyModificationStoredProceduresConfiguration()
         {
         }
 
-        internal ModificationFunctionsConfiguration Configuration
+        internal ModificationStoredProceduresConfiguration Configuration
         {
             get { return _configuration; }
         }
 
         /// <summary>Configures stored procedure used to insert relationships.</summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        /// <param name="modificationFunctionConfigurationAction">A lambda expression that performs configuration for the stored procedure.</param>
+        /// <param name="modificationStoredProcedureConfigurationAction">A lambda expression that performs configuration for the stored procedure.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionsConfiguration<TEntityType, TTargetEntityType> Insert(
-            Action<ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType>> modificationFunctionConfigurationAction)
+        public ManyToManyModificationStoredProceduresConfiguration<TEntityType, TTargetEntityType> Insert(
+            Action<ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType>> modificationStoredProcedureConfigurationAction)
         {
-            Check.NotNull(modificationFunctionConfigurationAction, "modificationFunctionConfigurationAction");
+            Check.NotNull(modificationStoredProcedureConfigurationAction, "modificationStoredProcedureConfigurationAction");
 
-            var modificationFunctionConfiguration
-                = new ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType>();
+            var modificationStoredProcedureConfiguration
+                = new ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType>();
 
-            modificationFunctionConfigurationAction(modificationFunctionConfiguration);
+            modificationStoredProcedureConfigurationAction(modificationStoredProcedureConfiguration);
 
-            _configuration.Insert(modificationFunctionConfiguration.Configuration);
+            _configuration.Insert(modificationStoredProcedureConfiguration.Configuration);
 
             return this;
         }
 
         /// <summary>Configures stored procedure used to delete relationships.</summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        /// <param name="modificationFunctionConfigurationAction">A lambda expression that performs configuration for the stored procedure.</param>
+        /// <param name="modificationStoredProcedureConfigurationAction">A lambda expression that performs configuration for the stored procedure.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionsConfiguration<TEntityType, TTargetEntityType> Delete(
-            Action<ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType>> modificationFunctionConfigurationAction)
+        public ManyToManyModificationStoredProceduresConfiguration<TEntityType, TTargetEntityType> Delete(
+            Action<ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType>> modificationStoredProcedureConfigurationAction)
         {
-            Check.NotNull(modificationFunctionConfigurationAction, "modificationFunctionConfigurationAction");
+            Check.NotNull(modificationStoredProcedureConfigurationAction, "modificationStoredProcedureConfigurationAction");
 
-            var modificationFunctionConfiguration
-                = new ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType>();
+            var modificationStoredProcedureConfiguration
+                = new ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType>();
 
-            modificationFunctionConfigurationAction(modificationFunctionConfiguration);
+            modificationStoredProcedureConfigurationAction(modificationStoredProcedureConfiguration);
 
-            _configuration.Delete(modificationFunctionConfiguration.Configuration);
+            _configuration.Delete(modificationStoredProcedureConfiguration.Configuration);
 
             return this;
         }

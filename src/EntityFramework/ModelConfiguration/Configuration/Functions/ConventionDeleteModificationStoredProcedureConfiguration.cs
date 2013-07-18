@@ -11,11 +11,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// <summary>
     ///     Creates a convention that configures stored procedures to be used to delete entities in the database.
     /// </summary>
-    public class ConventionDeleteModificationFunctionConfiguration : ConventionModificationFunctionConfiguration
+    public class ConventionDeleteModificationStoredProcedureConfiguration : ConventionModificationStoredProcedureConfiguration
     {
         private readonly Type _type;
 
-        internal ConventionDeleteModificationFunctionConfiguration(Type type)
+        internal ConventionDeleteModificationStoredProcedureConfiguration(Type type)
         {
             DebugCheck.NotNull(type);
 
@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary> Configures the name of the stored procedure. </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="procedureName"> The stored procedure name. </param>
-        public ConventionDeleteModificationFunctionConfiguration HasName(string procedureName)
+        public ConventionDeleteModificationStoredProcedureConfiguration HasName(string procedureName)
         {
             Check.NotEmpty(procedureName, "procedureName");
 
@@ -38,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="procedureName">The stored procedure name.</param>
         /// <param name="schemaName">The schema name.</param>
-        public ConventionDeleteModificationFunctionConfiguration HasName(string procedureName, string schemaName)
+        public ConventionDeleteModificationStoredProcedureConfiguration HasName(string procedureName, string schemaName)
         {
             Check.NotEmpty(procedureName, "procedureName");
             Check.NotEmpty(schemaName, "schemaName");
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyName"> The name of the property to configure the parameter for. </param>
         /// <param name="parameterName">The name of the parameter.</param>
-        public ConventionDeleteModificationFunctionConfiguration Parameter(string propertyName, string parameterName)
+        public ConventionDeleteModificationStoredProcedureConfiguration Parameter(string propertyName, string parameterName)
         {
             Check.NotEmpty(propertyName, "propertyName");
             Check.NotEmpty(parameterName, "parameterName");
@@ -64,7 +64,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyName"> The property to configure the parameter for. </param>
         /// <param name="parameterName">The name of the parameter.</param>
-        public ConventionDeleteModificationFunctionConfiguration Parameter(
+        public ConventionDeleteModificationStoredProcedureConfiguration Parameter(
             PropertyInfo propertyInfo, string parameterName)
         {
             Check.NotEmpty(parameterName, "parameterName");
@@ -80,7 +80,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>Configures the output parameter that returns the rows affected by this stored procedure.</summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="parameterName">The name of the parameter.</param>
-        public ConventionDeleteModificationFunctionConfiguration RowsAffectedParameter(string parameterName)
+        public ConventionDeleteModificationStoredProcedureConfiguration RowsAffectedParameter(string parameterName)
         {
             Check.NotEmpty(parameterName, "parameterName");
 

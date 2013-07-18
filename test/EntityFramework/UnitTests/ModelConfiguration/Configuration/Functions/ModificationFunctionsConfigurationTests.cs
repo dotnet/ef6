@@ -13,28 +13,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Can_merge_configurations()
         {
-            var modificationFunctionsConfigurationA = new ModificationFunctionsConfiguration();
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionsConfigurationA = new ModificationStoredProceduresConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             modificationFunctionsConfigurationA.Insert(modificationFunctionConfiguration);
             modificationFunctionsConfigurationA.Update(modificationFunctionConfiguration);
             modificationFunctionsConfigurationA.Delete(modificationFunctionConfiguration);
 
-            var modificationFunctionsConfigurationB = new ModificationFunctionsConfiguration();
+            var modificationFunctionsConfigurationB = new ModificationStoredProceduresConfiguration();
 
             modificationFunctionsConfigurationB.Merge(modificationFunctionsConfigurationA, true);
 
-            Assert.Same(modificationFunctionConfiguration, modificationFunctionsConfigurationB.InsertModificationFunctionConfiguration);
-            Assert.Same(modificationFunctionConfiguration, modificationFunctionsConfigurationB.UpdateModificationFunctionConfiguration);
-            Assert.Same(modificationFunctionConfiguration, modificationFunctionsConfigurationB.DeleteModificationFunctionConfiguration);
+            Assert.Same(modificationFunctionConfiguration, modificationFunctionsConfigurationB.InsertModificationStoredProcedureConfiguration);
+            Assert.Same(modificationFunctionConfiguration, modificationFunctionsConfigurationB.UpdateModificationStoredProcedureConfiguration);
+            Assert.Same(modificationFunctionConfiguration, modificationFunctionsConfigurationB.DeleteModificationStoredProcedureConfiguration);
         }
 
         [Fact]
         public void Can_clone_configuration()
         {
-            var modificationFunctionsConfiguration = new ModificationFunctionsConfiguration();
+            var modificationFunctionsConfiguration = new ModificationStoredProceduresConfiguration();
 
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             modificationFunctionsConfiguration.Insert(modificationFunctionConfiguration);
             modificationFunctionsConfiguration.Update(modificationFunctionConfiguration);
@@ -43,17 +43,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var clone = modificationFunctionsConfiguration.Clone();
 
             Assert.NotSame(modificationFunctionsConfiguration, clone);
-            Assert.NotSame(modificationFunctionConfiguration, clone.InsertModificationFunctionConfiguration);
-            Assert.NotSame(modificationFunctionConfiguration, clone.UpdateModificationFunctionConfiguration);
-            Assert.NotSame(modificationFunctionConfiguration, clone.DeleteModificationFunctionConfiguration);
+            Assert.NotSame(modificationFunctionConfiguration, clone.InsertModificationStoredProcedureConfiguration);
+            Assert.NotSame(modificationFunctionConfiguration, clone.UpdateModificationStoredProcedureConfiguration);
+            Assert.NotSame(modificationFunctionConfiguration, clone.DeleteModificationStoredProcedureConfiguration);
         }
 
         [Fact]
         public void Configure_should_call_configure_function_configurations()
         {
-            var modificationFunctionsConfiguration = new ModificationFunctionsConfiguration();
+            var modificationFunctionsConfiguration = new ModificationStoredProceduresConfiguration();
 
-            var mockModificationFunctionConfiguration = new Mock<ModificationFunctionConfiguration>();
+            var mockModificationFunctionConfiguration = new Mock<ModificationStoredProcedureConfiguration>();
 
             modificationFunctionsConfiguration.Insert(mockModificationFunctionConfiguration.Object);
             modificationFunctionsConfiguration.Update(mockModificationFunctionConfiguration.Object);
@@ -88,9 +88,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Configure_association_set_should_call_configure_function_configurations()
         {
-            var modificationFunctionsConfiguration = new ModificationFunctionsConfiguration();
+            var modificationFunctionsConfiguration = new ModificationStoredProceduresConfiguration();
 
-            var mockModificationFunctionConfiguration = new Mock<ModificationFunctionConfiguration>();
+            var mockModificationFunctionConfiguration = new Mock<ModificationStoredProcedureConfiguration>();
 
             modificationFunctionsConfiguration.Insert(mockModificationFunctionConfiguration.Object);
             modificationFunctionsConfiguration.Delete(mockModificationFunctionConfiguration.Object);
@@ -123,13 +123,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void IsCompatible_should_check_compatibility_of_insert_configuration()
         {
-            var modificationFunctionsConfiguration1 = new ModificationFunctionsConfiguration();
-            var modificationFunctionsConfiguration2 = new ModificationFunctionsConfiguration();
+            var modificationFunctionsConfiguration1 = new ModificationStoredProceduresConfiguration();
+            var modificationFunctionsConfiguration2 = new ModificationStoredProceduresConfiguration();
 
             Assert.True(modificationFunctionsConfiguration1.IsCompatibleWith(modificationFunctionsConfiguration2));
 
-            var modificationFunctionConfiguration1 = new ModificationFunctionConfiguration();
-            var modificationFunctionConfiguration2 = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration1 = new ModificationStoredProcedureConfiguration();
+            var modificationFunctionConfiguration2 = new ModificationStoredProcedureConfiguration();
 
             modificationFunctionsConfiguration1.Insert(modificationFunctionConfiguration1);
 
@@ -151,13 +151,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void IsCompatible_should_check_compatibility_of_delete_configuration()
         {
-            var modificationFunctionsConfiguration1 = new ModificationFunctionsConfiguration();
-            var modificationFunctionsConfiguration2 = new ModificationFunctionsConfiguration();
+            var modificationFunctionsConfiguration1 = new ModificationStoredProceduresConfiguration();
+            var modificationFunctionsConfiguration2 = new ModificationStoredProceduresConfiguration();
 
             Assert.True(modificationFunctionsConfiguration1.IsCompatibleWith(modificationFunctionsConfiguration2));
 
-            var modificationFunctionConfiguration1 = new ModificationFunctionConfiguration();
-            var modificationFunctionConfiguration2 = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration1 = new ModificationStoredProcedureConfiguration();
+            var modificationFunctionConfiguration2 = new ModificationStoredProcedureConfiguration();
 
             modificationFunctionsConfiguration1.Delete(modificationFunctionConfiguration1);
 

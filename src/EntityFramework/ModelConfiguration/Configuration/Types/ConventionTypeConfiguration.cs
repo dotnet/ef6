@@ -449,32 +449,32 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         /// Configures this type to use stored procedures for insert, update and delete.
         /// </summary>
-        /// <param name="modificationFunctionsConfigurationAction">
+        /// <param name="modificationStoredProceduresConfigurationAction">
         ///     Configuration to override the default conventions for procedure and parameter names.
         /// </param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         public ConventionTypeConfiguration MapToStoredProcedures(
-            Action<ConventionModificationFunctionsConfiguration> modificationFunctionsConfigurationAction)
+            Action<ConventionModificationStoredProceduresConfiguration> modificationStoredProceduresConfigurationAction)
         {
-            Check.NotNull(modificationFunctionsConfigurationAction, "modificationFunctionsConfigurationAction");
+            Check.NotNull(modificationStoredProceduresConfigurationAction, "modificationStoredProceduresConfigurationAction");
             ValidateConfiguration(ConfigurationAspect.MapToStoredProcedures);
 
-            var modificationFunctionMappingConfiguration = new ConventionModificationFunctionsConfiguration(_type);
+            var modificationStoredProcedureMappingConfiguration = new ConventionModificationStoredProceduresConfiguration(_type);
 
-            modificationFunctionsConfigurationAction(modificationFunctionMappingConfiguration);
+            modificationStoredProceduresConfigurationAction(modificationStoredProcedureMappingConfiguration);
 
-            MapToStoredProcedures(modificationFunctionMappingConfiguration.Configuration);
+            MapToStoredProcedures(modificationStoredProcedureMappingConfiguration.Configuration);
 
             return this;
         }
 
-        internal void MapToStoredProcedures(ModificationFunctionsConfiguration modificationFunctionsConfiguration)
+        internal void MapToStoredProcedures(ModificationStoredProceduresConfiguration modificationStoredProceduresConfiguration)
         {
-            DebugCheck.NotNull(modificationFunctionsConfiguration);
+            DebugCheck.NotNull(modificationStoredProceduresConfiguration);
 
             if (_entityTypeConfiguration != null)
             {
-                _entityTypeConfiguration().MapToStoredProcedures(modificationFunctionsConfiguration, allowOverride: false);
+                _entityTypeConfiguration().MapToStoredProcedures(modificationStoredProceduresConfiguration, allowOverride: false);
             }
         }
 

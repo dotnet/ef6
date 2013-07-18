@@ -76,14 +76,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     iaFkProperties,
                     columnMappings);
 
-            var modificationFunctionMapping
+            var modificationStoredProcedureMapping
                 = new StorageEntityTypeModificationFunctionMapping(
                     entityType,
                     deleteFunctionMapping,
                     insertFunctionMapping,
                     updateFunctionMapping);
 
-            entitySetMapping.AddModificationFunctionMapping(modificationFunctionMapping);
+            entitySetMapping.AddModificationFunctionMapping(modificationStoredProcedureMapping);
         }
 
         private static IEnumerable<ColumnMappingBuilder> GetColumnMappings(

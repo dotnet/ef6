@@ -63,7 +63,7 @@ namespace System.Data.Entity.ModelConfiguration
             var mockEntityTypeConfiguration = new Mock<EntityTypeConfiguration>(typeof(Fixture));
             var entityConfiguration = new EntityTypeConfiguration<Fixture>(mockEntityTypeConfiguration.Object);
 
-            ModificationFunctionsConfiguration<Fixture> configuration = null;
+            ModificationStoredProceduresConfiguration<Fixture> configuration = null;
 
             entityConfiguration.MapToStoredProcedures(c => { configuration = c; });
             

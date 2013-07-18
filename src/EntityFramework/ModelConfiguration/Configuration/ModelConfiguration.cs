@@ -304,7 +304,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private void ConfigureFunctionMappings(EdmModel model, EntityTypeConfiguration entityTypeConfiguration, EntityType entityType)
         {
-            if (entityTypeConfiguration.ModificationFunctionsConfiguration == null)
+            if (entityTypeConfiguration.ModificationStoredProceduresConfiguration == null)
             {
                 return;
             }
@@ -320,7 +320,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 if (!entityType.BaseType.Abstract
                     && (!_entityConfigurations
                              .TryGetValue(baseClrType, out baseTypeConfiguration)
-                        || baseTypeConfiguration.ModificationFunctionsConfiguration == null))
+                        || baseTypeConfiguration.ModificationStoredProceduresConfiguration == null))
                 {
                     throw Error.BaseTypeNotMappedToFunctions(
                         baseClrType.FullName,
@@ -337,7 +337,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                      {
                          var entityConfiguration = Entity(e.GetClrType());
 
-                         if (entityConfiguration.ModificationFunctionsConfiguration == null)
+                         if (entityConfiguration.ModificationStoredProceduresConfiguration == null)
                          {
                              entityConfiguration.MapToStoredProcedures();
                          }
@@ -410,75 +410,75 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             DebugCheck.NotNull(databaseMapping);
 
-            foreach (var modificationFunctionMapping
+            foreach (var modificationStoredProcedureMapping
                 in databaseMapping
                     .GetEntitySetMappings()
                     .SelectMany(esm => esm.ModificationFunctionMappings))
             {
                 var entityTypeConfiguration
-                    = (EntityTypeConfiguration)modificationFunctionMapping.EntityType.GetConfiguration();
+                    = (EntityTypeConfiguration)modificationStoredProcedureMapping.EntityType.GetConfiguration();
 
-                if (entityTypeConfiguration.ModificationFunctionsConfiguration == null)
+                if (entityTypeConfiguration.ModificationStoredProceduresConfiguration == null)
                 {
                     continue;
                 }
 
-                var modificationFunctionsConfiguration
-                    = entityTypeConfiguration.ModificationFunctionsConfiguration;
+                var modificationStoredProceduresConfiguration
+                    = entityTypeConfiguration.ModificationStoredProceduresConfiguration;
 
                 UniquifyFunctionName(
                     databaseMapping,
-                    modificationFunctionsConfiguration.InsertModificationFunctionConfiguration,
-                    modificationFunctionMapping.InsertFunctionMapping);
+                    modificationStoredProceduresConfiguration.InsertModificationStoredProcedureConfiguration,
+                    modificationStoredProcedureMapping.InsertFunctionMapping);
 
                 UniquifyFunctionName(
                     databaseMapping,
-                    modificationFunctionsConfiguration.UpdateModificationFunctionConfiguration,
-                    modificationFunctionMapping.UpdateFunctionMapping);
+                    modificationStoredProceduresConfiguration.UpdateModificationStoredProcedureConfiguration,
+                    modificationStoredProcedureMapping.UpdateFunctionMapping);
 
                 UniquifyFunctionName(
                     databaseMapping,
-                    modificationFunctionsConfiguration.DeleteModificationFunctionConfiguration,
-                    modificationFunctionMapping.DeleteFunctionMapping);
+                    modificationStoredProceduresConfiguration.DeleteModificationStoredProcedureConfiguration,
+                    modificationStoredProcedureMapping.DeleteFunctionMapping);
             }
 
-            foreach (var modificationFunctionMapping
+            foreach (var modificationStoredProcedureMapping
                 in databaseMapping
                     .GetAssociationSetMappings()
                     .Select(asm => asm.ModificationFunctionMapping)
                     .Where(asm => asm != null))
             {
                 var navigationPropertyConfiguration
-                    = (NavigationPropertyConfiguration)modificationFunctionMapping
+                    = (NavigationPropertyConfiguration)modificationStoredProcedureMapping
                                                            .AssociationSet.ElementType.GetConfiguration();
 
-                if (navigationPropertyConfiguration.ModificationFunctionsConfiguration == null)
+                if (navigationPropertyConfiguration.ModificationStoredProceduresConfiguration == null)
                 {
                     continue;
                 }
 
                 UniquifyFunctionName(
                     databaseMapping,
-                    navigationPropertyConfiguration.ModificationFunctionsConfiguration.InsertModificationFunctionConfiguration,
-                    modificationFunctionMapping.InsertFunctionMapping);
+                    navigationPropertyConfiguration.ModificationStoredProceduresConfiguration.InsertModificationStoredProcedureConfiguration,
+                    modificationStoredProcedureMapping.InsertFunctionMapping);
 
                 UniquifyFunctionName(
                     databaseMapping,
-                    navigationPropertyConfiguration.ModificationFunctionsConfiguration.DeleteModificationFunctionConfiguration,
-                    modificationFunctionMapping.DeleteFunctionMapping);
+                    navigationPropertyConfiguration.ModificationStoredProceduresConfiguration.DeleteModificationStoredProcedureConfiguration,
+                    modificationStoredProcedureMapping.DeleteFunctionMapping);
             }
         }
 
         private static void UniquifyFunctionName(
             DbDatabaseMapping databaseMapping,
-            ModificationFunctionConfiguration modificationFunctionConfiguration,
+            ModificationStoredProcedureConfiguration modificationStoredProcedureConfiguration,
             StorageModificationFunctionMapping functionMapping)
         {
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(functionMapping);
 
-            if ((modificationFunctionConfiguration == null)
-                || string.IsNullOrWhiteSpace(modificationFunctionConfiguration.Name))
+            if ((modificationStoredProcedureConfiguration == null)
+                || string.IsNullOrWhiteSpace(modificationStoredProcedureConfiguration.Name))
             {
                 functionMapping.Function.StoreFunctionNameAttribute
                     = databaseMapping.Database.Functions.Except(new[] { functionMapping.Function })

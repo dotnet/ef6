@@ -10,29 +10,29 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Insert_when_config_action_should_call_method_on_internal_configuration()
         {
-            var modificationFunctionsConfiguration = new ManyToManyModificationFunctionsConfiguration<Order, Order>();
+            var modificationFunctionsConfiguration = new ManyToManyModificationStoredProceduresConfiguration<Order, Order>();
 
-            ManyToManyModificationFunctionConfiguration<Order, Order> configuration = null;
+            ManyToManyModificationStoredProcedureConfiguration<Order, Order> configuration = null;
 
             modificationFunctionsConfiguration.Insert(c => { configuration = c; });
 
             Assert.Same(
                 configuration.Configuration,
-                modificationFunctionsConfiguration.Configuration.InsertModificationFunctionConfiguration);
+                modificationFunctionsConfiguration.Configuration.InsertModificationStoredProcedureConfiguration);
         }
 
         [Fact]
         public void Delete_when_config_action_should_call_method_on_internal_configuration()
         {
-            var modificationFunctionsConfiguration = new ManyToManyModificationFunctionsConfiguration<Order, Order>();
+            var modificationFunctionsConfiguration = new ManyToManyModificationStoredProceduresConfiguration<Order, Order>();
 
-            ManyToManyModificationFunctionConfiguration<Order, Order> configuration = null;
+            ManyToManyModificationStoredProcedureConfiguration<Order, Order> configuration = null;
 
             modificationFunctionsConfiguration.Delete(c => { configuration = c; });
 
             Assert.Same(
                 configuration.Configuration,
-                modificationFunctionsConfiguration.Configuration.DeleteModificationFunctionConfiguration);
+                modificationFunctionsConfiguration.Configuration.DeleteModificationStoredProcedureConfiguration);
         }
     }
 }

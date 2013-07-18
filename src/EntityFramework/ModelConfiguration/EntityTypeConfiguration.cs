@@ -148,23 +148,23 @@ namespace System.Data.Entity.ModelConfiguration
         /// <summary>
         ///     Configures this type to use stored procedures for insert, update and delete.
         /// </summary>
-        /// <param name="modificationFunctionsConfigurationAction">
+        /// <param name="modificationStoredProceduresConfigurationAction">
         ///     Configuration to override the default conventions for procedure and parameter names.
         /// </param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public EntityTypeConfiguration<TEntityType> MapToStoredProcedures(
-            Action<ModificationFunctionsConfiguration<TEntityType>> modificationFunctionMappingConfigurationAction)
+            Action<ModificationStoredProceduresConfiguration<TEntityType>> modificationStoredProcedureMappingConfigurationAction)
         {
-            Check.NotNull(modificationFunctionMappingConfigurationAction, "modificationFunctionMappingConfigurationAction");
+            Check.NotNull(modificationStoredProcedureMappingConfigurationAction, "modificationStoredProcedureMappingConfigurationAction");
 
-            var modificationFunctionMappingConfiguration
-                = new ModificationFunctionsConfiguration<TEntityType>();
+            var modificationStoredProcedureMappingConfiguration
+                = new ModificationStoredProceduresConfiguration<TEntityType>();
 
-            modificationFunctionMappingConfigurationAction(modificationFunctionMappingConfiguration);
+            modificationStoredProcedureMappingConfigurationAction(modificationStoredProcedureMappingConfiguration);
 
             _entityTypeConfiguration.MapToStoredProcedures(
-                modificationFunctionMappingConfiguration.Configuration,
+                modificationStoredProcedureMappingConfiguration.Configuration,
                 allowOverride: true);
 
             return this;

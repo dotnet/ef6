@@ -28,9 +28,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             modelConfiguration.Entity(typeA).MapToStoredProcedures();
 
             var modificationFunctionsConfiguration
-                = new ModificationFunctionsConfiguration();
+                = new ModificationStoredProceduresConfiguration();
 
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
             modificationFunctionConfiguration.HasName("A_Insert");
 
             modificationFunctionsConfiguration.Insert(modificationFunctionConfiguration);
@@ -73,13 +73,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var navigationPropertyConfiguration
                 = modelConfiguration.Entity(typeB).Navigation(mockPropertyInfo);
 
-            navigationPropertyConfiguration.ModificationFunctionsConfiguration
-                = new ModificationFunctionsConfiguration();
+            navigationPropertyConfiguration.ModificationStoredProceduresConfiguration
+                = new ModificationStoredProceduresConfiguration();
 
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
             modificationFunctionConfiguration.HasName("AB_Delete");
 
-            navigationPropertyConfiguration.ModificationFunctionsConfiguration
+            navigationPropertyConfiguration.ModificationStoredProceduresConfiguration
                 .Insert(modificationFunctionConfiguration);
 
             var model = new EdmModel(DataSpace.CSpace);
@@ -150,9 +150,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modelConfiguration.Configure(model);
 
-            Assert.NotNull(modelConfiguration.Entity(rootType).ModificationFunctionsConfiguration);
-            Assert.NotNull(modelConfiguration.Entity(middleType).ModificationFunctionsConfiguration);
-            Assert.NotNull(modelConfiguration.Entity(leafType).ModificationFunctionsConfiguration);
+            Assert.NotNull(modelConfiguration.Entity(rootType).ModificationStoredProceduresConfiguration);
+            Assert.NotNull(modelConfiguration.Entity(middleType).ModificationStoredProceduresConfiguration);
+            Assert.NotNull(modelConfiguration.Entity(leafType).ModificationStoredProceduresConfiguration);
         }
 
         [Fact]
@@ -204,8 +204,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             modelConfiguration.Configure(model);
 
-            Assert.NotNull(modelConfiguration.Entity(baseType).ModificationFunctionsConfiguration);
-            Assert.NotNull(modelConfiguration.Entity(derivedType).ModificationFunctionsConfiguration);
+            Assert.NotNull(modelConfiguration.Entity(baseType).ModificationStoredProceduresConfiguration);
+            Assert.NotNull(modelConfiguration.Entity(derivedType).ModificationStoredProceduresConfiguration);
         }
 
         [Fact]

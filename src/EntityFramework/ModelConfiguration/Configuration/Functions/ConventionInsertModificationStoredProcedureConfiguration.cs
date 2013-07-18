@@ -11,11 +11,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// <summary>
     ///     Creates a convention that configures stored procedures to be used to insert entities in the database.
     /// </summary>
-    public class ConventionInsertModificationFunctionConfiguration : ConventionModificationFunctionConfiguration
+    public class ConventionInsertModificationStoredProcedureConfiguration : ConventionModificationStoredProcedureConfiguration
     {
         private readonly Type _type;
 
-        internal ConventionInsertModificationFunctionConfiguration(Type type)
+        internal ConventionInsertModificationStoredProcedureConfiguration(Type type)
         {
             DebugCheck.NotNull(type);
 
@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary> Configures the name of the stored procedure. </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="procedureName"> The stored procedure name. </param>
-        public ConventionInsertModificationFunctionConfiguration HasName(string procedureName)
+        public ConventionInsertModificationStoredProcedureConfiguration HasName(string procedureName)
         {
             Check.NotEmpty(procedureName, "procedureName");
 
@@ -38,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="procedureName">The stored procedure name.</param>
         /// <param name="schemaName">The schema name.</param>
-        public ConventionInsertModificationFunctionConfiguration HasName(string procedureName, string schemaName)
+        public ConventionInsertModificationStoredProcedureConfiguration HasName(string procedureName, string schemaName)
         {
             Check.NotEmpty(procedureName, "procedureName");
             Check.NotEmpty(schemaName, "schemaName");
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyName"> The name of the property to configure the parameter for. </param>
         /// <param name="parameterName">The name of the parameter.</param>
-        public ConventionInsertModificationFunctionConfiguration Parameter(string propertyName, string parameterName)
+        public ConventionInsertModificationStoredProcedureConfiguration Parameter(string propertyName, string parameterName)
         {
             Check.NotEmpty(propertyName, "propertyName");
             Check.NotEmpty(parameterName, "parameterName");
@@ -64,7 +64,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyInfo"> The property to configure the parameter for. </param>
         /// <param name="parameterName">The name of the parameter.</param>
-        public ConventionInsertModificationFunctionConfiguration Parameter(
+        public ConventionInsertModificationStoredProcedureConfiguration Parameter(
             PropertyInfo propertyInfo, string parameterName)
         {
             Check.NotEmpty(parameterName, "parameterName");
@@ -84,7 +84,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyExpression"> The name of the property to configure the result for. </param>
         /// <param name="columnName">The name of the result column.</param>
-        public ConventionInsertModificationFunctionConfiguration Result(string propertyName, string columnName)
+        public ConventionInsertModificationStoredProcedureConfiguration Result(string propertyName, string columnName)
         {
             Check.NotEmpty(propertyName, "propertyName");
             Check.NotEmpty(columnName, "columnName");
@@ -101,7 +101,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyExpression"> The property to configure the result for. </param>
         /// <param name="columnName">The name of the result column.</param>
-        public ConventionInsertModificationFunctionConfiguration Result(PropertyInfo propertyInfo, string columnName)
+        public ConventionInsertModificationStoredProcedureConfiguration Result(PropertyInfo propertyInfo, string columnName)
         {
             Check.NotNull(propertyInfo, "propertyInfo");
             Check.NotEmpty(columnName, "columnName");

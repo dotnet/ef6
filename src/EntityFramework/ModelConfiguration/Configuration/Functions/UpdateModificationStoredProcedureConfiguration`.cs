@@ -11,20 +11,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     Allows configuration to be performed for a stored procedure that is used to insert entities.
+    ///     Allows configuration to be performed for a stored procedure that is used to update entities.
     /// </summary>
-    /// <typeparam name="TEntityType">The type of the entity that the stored procedure can be used to insert.</typeparam>
-    public class InsertModificationFunctionConfiguration<TEntityType> : ModificationFunctionConfiguration<TEntityType>
+    /// <typeparam name="TEntityType">The type of the entity that the stored procedure can be used to update.</typeparam>
+    public class UpdateModificationStoredProcedureConfiguration<TEntityType> : ModificationStoredProcedureConfigurationBase
         where TEntityType : class
     {
-        internal InsertModificationFunctionConfiguration()
+        internal UpdateModificationStoredProcedureConfiguration()
         {
         }
 
         /// <summary> Configures the name of the stored procedure. </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="procedureName"> The stored procedure name. </param>
-        public InsertModificationFunctionConfiguration<TEntityType> HasName(string procedureName)
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> HasName(string procedureName)
         {
             Check.NotEmpty(procedureName, "procedureName");
 
@@ -37,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="procedureName">The stored procedure name.</param>
         /// <param name="schemaName">The schema name.</param>
-        public InsertModificationFunctionConfiguration<TEntityType> HasName(string procedureName, string schemaName)
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> HasName(string procedureName, string schemaName)
         {
             Check.NotEmpty(procedureName, "procedureName");
             Check.NotEmpty(schemaName, "schemaName");
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">The name of the parameter.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Parameter<TProperty>(
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Parameter<TProperty>(
             Expression<Func<TEntityType, TProperty>> propertyExpression, string parameterName)
             where TProperty : struct
         {
@@ -69,7 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">The name of the parameter.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Parameter<TProperty>(
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Parameter<TProperty>(
             Expression<Func<TEntityType, TProperty?>> propertyExpression, string parameterName)
             where TProperty : struct
         {
@@ -86,7 +86,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">The name of the parameter.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Parameter(
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Parameter(
             Expression<Func<TEntityType, string>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
@@ -102,7 +102,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">The name of the parameter.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Parameter(
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Parameter(
             Expression<Func<TEntityType, byte[]>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
@@ -118,7 +118,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">The name of the parameter.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Parameter(
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Parameter(
             Expression<Func<TEntityType, DbGeography>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
@@ -134,13 +134,132 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">The name of the parameter.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Parameter(
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Parameter(
             Expression<Func<TEntityType, DbGeometry>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
             Check.NotEmpty(parameterName, "parameterName");
 
             Configuration.Parameter(propertyExpression.GetComplexPropertyAccess(), parameterName);
+
+            return this;
+        }
+
+        /// <summary>Configures a parameter for this stored procedure.</summary>
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
+        /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <param name="currentValueParameterName">The current value parameter name.</param>
+        /// <param name="originalValueParameterName">The original value parameter name.</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Parameter<TProperty>(
+            Expression<Func<TEntityType, TProperty>> propertyExpression, string currentValueParameterName, string originalValueParameterName)
+            where TProperty : struct
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(currentValueParameterName, "currentValueParameterName");
+            Check.NotEmpty(originalValueParameterName, "originalValueParameterName");
+
+            Configuration.Parameter(
+                propertyExpression.GetComplexPropertyAccess(), currentValueParameterName, originalValueParameterName);
+
+            return this;
+        }
+
+        /// <summary>Configures a parameter for this stored procedure.</summary>
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
+        /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <param name="currentValueParameterName">The current value parameter name.</param>
+        /// <param name="originalValueParameterName">The original value parameter name.</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Parameter<TProperty>(
+            Expression<Func<TEntityType, TProperty?>> propertyExpression, string currentValueParameterName,
+            string originalValueParameterName)
+            where TProperty : struct
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(currentValueParameterName, "currentValueParameterName");
+            Check.NotEmpty(originalValueParameterName, "originalValueParameterName");
+
+            Configuration.Parameter(
+                propertyExpression.GetComplexPropertyAccess(), currentValueParameterName, originalValueParameterName);
+
+            return this;
+        }
+
+        /// <summary>Configures a parameter for this stored procedure.</summary>
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
+        /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <param name="currentValueParameterName">The current value parameter name.</param>
+        /// <param name="originalValueParameterName">The original value parameter name.</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Parameter(
+            Expression<Func<TEntityType, string>> propertyExpression, string currentValueParameterName, string originalValueParameterName)
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(currentValueParameterName, "currentValueParameterName");
+            Check.NotEmpty(originalValueParameterName, "originalValueParameterName");
+
+            Configuration.Parameter(
+                propertyExpression.GetComplexPropertyAccess(), currentValueParameterName, originalValueParameterName);
+
+            return this;
+        }
+
+        /// <summary>Configures a parameter for this stored procedure.</summary>
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
+        /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <param name="currentValueParameterName">The current value parameter name.</param>
+        /// <param name="originalValueParameterName">The original value parameter name.</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Parameter(
+            Expression<Func<TEntityType, byte[]>> propertyExpression, string currentValueParameterName, string originalValueParameterName)
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(currentValueParameterName, "currentValueParameterName");
+            Check.NotEmpty(originalValueParameterName, "originalValueParameterName");
+
+            Configuration.Parameter(
+                propertyExpression.GetComplexPropertyAccess(), currentValueParameterName, originalValueParameterName);
+
+            return this;
+        }
+
+        /// <summary>Configures a parameter for this stored procedure.</summary>
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
+        /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <param name="currentValueParameterName">The current value parameter name.</param>
+        /// <param name="originalValueParameterName">The original value parameter name.</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Parameter(
+            Expression<Func<TEntityType, DbGeography>> propertyExpression, string currentValueParameterName,
+            string originalValueParameterName)
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(currentValueParameterName, "currentValueParameterName");
+            Check.NotEmpty(originalValueParameterName, "originalValueParameterName");
+
+            Configuration.Parameter(
+                propertyExpression.GetComplexPropertyAccess(), currentValueParameterName, originalValueParameterName);
+
+            return this;
+        }
+
+        //// <summary>Configures a parameter for this stored procedure.</summary>
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
+        /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <param name="currentValueParameterName">The current value parameter name.</param>
+        /// <param name="originalValueParameterName">The original value parameter name.</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Parameter(
+            Expression<Func<TEntityType, DbGeometry>> propertyExpression, string currentValueParameterName,
+            string originalValueParameterName)
+        {
+            Check.NotNull(propertyExpression, "propertyExpression");
+            Check.NotEmpty(currentValueParameterName, "currentValueParameterName");
+            Check.NotEmpty(originalValueParameterName, "originalValueParameterName");
+
+            Configuration.Parameter(
+                propertyExpression.GetComplexPropertyAccess(), currentValueParameterName, originalValueParameterName);
 
             return this;
         }
@@ -153,7 +272,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the result for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="columnName">The name of the result column.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Result<TProperty>(
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Result<TProperty>(
             Expression<Func<TEntityType, TProperty>> propertyExpression, string columnName)
             where TProperty : struct
         {
@@ -173,7 +292,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the result for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="columnName">The name of the result column.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Result<TProperty>(
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Result<TProperty>(
             Expression<Func<TEntityType, TProperty?>> propertyExpression, string columnName)
             where TProperty : struct
         {
@@ -193,7 +312,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the result for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="columnName">The name of the result column.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Result(
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Result(
             Expression<Func<TEntityType, string>> propertyExpression, string columnName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
@@ -212,7 +331,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the result for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="columnName">The name of the result column.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Result(
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Result(
             Expression<Func<TEntityType, byte[]>> propertyExpression, string columnName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
@@ -231,7 +350,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the result for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="columnName">The name of the result column.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Result(
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Result(
             Expression<Func<TEntityType, DbGeography>> propertyExpression, string columnName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
@@ -250,7 +369,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the result for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="columnName">The name of the result column.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Result(
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Result(
             Expression<Func<TEntityType, DbGeometry>> propertyExpression, string columnName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
@@ -261,26 +380,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
-        /// <summary>Configures parameters for a relationship where the foreign key property is not included in the class.</summary>
+        /// <summary>Configures the output parameter that returns the rows affected by this stored procedure.</summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        /// <param name="navigationPropertyExpression"> A lambda expression representing the navigation property for the relationship. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
-        /// <param name="associationModificationFunctionConfigurationAction">A lambda expression that performs the configuration.</param>
-        /// <typeparam name="TPrincipalEntityType">The type of the principal entity in the relationship.</typeparam>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Association<TPrincipalEntityType>(
-            Expression<Func<TPrincipalEntityType, TEntityType>> navigationPropertyExpression,
-            Action<AssociationModificationFunctionConfiguration<TPrincipalEntityType>> associationModificationFunctionConfigurationAction)
-            where TPrincipalEntityType : class
+        /// <param name="parameterName">The name of the parameter.</param>
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> RowsAffectedParameter(string parameterName)
         {
-            Check.NotNull(navigationPropertyExpression, "navigationPropertyExpression");
-            Check.NotNull(associationModificationFunctionConfigurationAction, "associationModificationFunctionConfigurationAction");
+            Check.NotEmpty(parameterName, "parameterName");
 
-            var associationModificationFunctionConfiguration
-                = new AssociationModificationFunctionConfiguration<TPrincipalEntityType>(
-                    navigationPropertyExpression.GetSimplePropertyAccess().Single(),
-                    Configuration);
-
-            associationModificationFunctionConfigurationAction(associationModificationFunctionConfiguration);
+            Configuration.RowsAffectedParameter(parameterName);
 
             return this;
         }
@@ -288,23 +395,47 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>Configures parameters for a relationship where the foreign key property is not included in the class.</summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="navigationPropertyExpression"> A lambda expression representing the navigation property for the relationship. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
-        /// <param name="associationModificationFunctionConfigurationAction">A lambda expression that performs the configuration.</param>
+        /// <param name="associationModificationStoredProcedureConfigurationAction">A lambda expression that performs the configuration.</param>
         /// <typeparam name="TPrincipalEntityType">The type of the principal entity in the relationship.</typeparam>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public InsertModificationFunctionConfiguration<TEntityType> Association<TPrincipalEntityType>(
-            Expression<Func<TPrincipalEntityType, ICollection<TEntityType>>> navigationPropertyExpression,
-            Action<AssociationModificationFunctionConfiguration<TPrincipalEntityType>> associationModificationFunctionConfigurationAction)
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Navigation<TPrincipalEntityType>(
+            Expression<Func<TPrincipalEntityType, TEntityType>> navigationPropertyExpression,
+            Action<AssociationModificationStoredProcedureConfiguration<TPrincipalEntityType>> associationModificationStoredProcedureConfigurationAction)
             where TPrincipalEntityType : class
         {
             Check.NotNull(navigationPropertyExpression, "navigationPropertyExpression");
-            Check.NotNull(associationModificationFunctionConfigurationAction, "associationModificationFunctionConfigurationAction");
+            Check.NotNull(associationModificationStoredProcedureConfigurationAction, "associationModificationStoredProcedureConfigurationAction");
 
-            var associationModificationFunctionConfiguration
-                = new AssociationModificationFunctionConfiguration<TPrincipalEntityType>(
+            var associationModificationStoredProcedureConfiguration
+                = new AssociationModificationStoredProcedureConfiguration<TPrincipalEntityType>(
                     navigationPropertyExpression.GetSimplePropertyAccess().Single(),
                     Configuration);
 
-            associationModificationFunctionConfigurationAction(associationModificationFunctionConfiguration);
+            associationModificationStoredProcedureConfigurationAction(associationModificationStoredProcedureConfiguration);
+
+            return this;
+        }
+
+        /// <summary>Configures parameters for a relationship where the foreign key property is not included in the class.</summary>
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
+        /// <param name="navigationPropertyExpression"> A lambda expression representing the navigation property for the relationship. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <param name="associationModificationStoredProcedureConfigurationAction">A lambda expression that performs the configuration.</param>
+        /// <typeparam name="TPrincipalEntityType">The type of the principal entity in the relationship.</typeparam>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public UpdateModificationStoredProcedureConfiguration<TEntityType> Navigation<TPrincipalEntityType>(
+            Expression<Func<TPrincipalEntityType, ICollection<TEntityType>>> navigationPropertyExpression,
+            Action<AssociationModificationStoredProcedureConfiguration<TPrincipalEntityType>> associationModificationStoredProcedureConfigurationAction)
+            where TPrincipalEntityType : class
+        {
+            Check.NotNull(navigationPropertyExpression, "navigationPropertyExpression");
+            Check.NotNull(associationModificationStoredProcedureConfigurationAction, "associationModificationStoredProcedureConfigurationAction");
+
+            var associationModificationStoredProcedureConfiguration
+                = new AssociationModificationStoredProcedureConfiguration<TPrincipalEntityType>(
+                    navigationPropertyExpression.GetSimplePropertyAccess().Single(),
+                    Configuration);
+
+            associationModificationStoredProcedureConfigurationAction(associationModificationStoredProcedureConfiguration);
 
             return this;
         }

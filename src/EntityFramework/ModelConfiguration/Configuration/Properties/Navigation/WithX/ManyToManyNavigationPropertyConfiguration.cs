@@ -50,10 +50,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <returns>The same <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.ManyToManyNavigationPropertyConfiguration`2" /> instance so that multiple calls can be chained.</returns>
         public ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType> MapToStoredProcedures()
         {
-            if (_navigationPropertyConfiguration.ModificationFunctionsConfiguration == null)
+            if (_navigationPropertyConfiguration.ModificationStoredProceduresConfiguration == null)
             {
-                _navigationPropertyConfiguration.ModificationFunctionsConfiguration
-                    = new ModificationFunctionsConfiguration();
+                _navigationPropertyConfiguration.ModificationStoredProceduresConfiguration
+                    = new ModificationStoredProceduresConfiguration();
             }
 
             return this;
@@ -62,31 +62,31 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary> 
         ///     Configures stored procedures to be used for modifying this relationship. 
         /// </summary>
-        /// <param name="modificationFunctionsConfigurationAction">
+        /// <param name="modificationStoredProceduresConfigurationAction">
         ///     Configuration to override the default conventions for procedure and parameter names.
         /// </param>
         /// <returns>The same <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.ManyToManyNavigationPropertyConfiguration`2" /> instance so that multiple calls can be chained.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType> MapToStoredProcedures(
-            Action<ManyToManyModificationFunctionsConfiguration<TEntityType, TTargetEntityType>>
-                modificationFunctionMappingConfigurationAction)
+            Action<ManyToManyModificationStoredProceduresConfiguration<TEntityType, TTargetEntityType>>
+                modificationStoredProcedureMappingConfigurationAction)
         {
-            Check.NotNull(modificationFunctionMappingConfigurationAction, "modificationFunctionMappingConfigurationAction");
+            Check.NotNull(modificationStoredProcedureMappingConfigurationAction, "modificationStoredProcedureMappingConfigurationAction");
 
-            var modificationFunctionMappingConfiguration
-                = new ManyToManyModificationFunctionsConfiguration<TEntityType, TTargetEntityType>();
+            var modificationStoredProcedureMappingConfiguration
+                = new ManyToManyModificationStoredProceduresConfiguration<TEntityType, TTargetEntityType>();
 
-            modificationFunctionMappingConfigurationAction(modificationFunctionMappingConfiguration);
+            modificationStoredProcedureMappingConfigurationAction(modificationStoredProcedureMappingConfiguration);
 
-            if (_navigationPropertyConfiguration.ModificationFunctionsConfiguration == null)
+            if (_navigationPropertyConfiguration.ModificationStoredProceduresConfiguration == null)
             {
-                _navigationPropertyConfiguration.ModificationFunctionsConfiguration
-                    = modificationFunctionMappingConfiguration.Configuration;
+                _navigationPropertyConfiguration.ModificationStoredProceduresConfiguration
+                    = modificationStoredProcedureMappingConfiguration.Configuration;
             }
             else
             {
-                _navigationPropertyConfiguration.ModificationFunctionsConfiguration
-                    .Merge(modificationFunctionMappingConfiguration.Configuration, allowOverride: true);
+                _navigationPropertyConfiguration.ModificationStoredProceduresConfiguration
+                    .Merge(modificationStoredProcedureMappingConfiguration.Configuration, allowOverride: true);
             }
 
             return this;

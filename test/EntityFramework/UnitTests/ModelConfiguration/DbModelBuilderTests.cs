@@ -443,7 +443,7 @@ namespace System.Data.Entity.ModelConfiguration
 
             var clone = configuration.Clone();
 
-            Assert.NotNull(clone.ModificationFunctionsConfiguration);
+            Assert.NotNull(clone.ModificationStoredProceduresConfiguration);
         }
 
         [Fact]
@@ -712,14 +712,14 @@ namespace System.Data.Entity.ModelConfiguration
             var navProp = new MockPropertyInfo(new MockType(), "P1");
             var configuration = new NavigationPropertyConfiguration(navProp);
 
-            var functionsConfiguration = new ModificationFunctionsConfiguration();
+            var functionsConfiguration = new ModificationStoredProceduresConfiguration();
 
-            configuration.ModificationFunctionsConfiguration = functionsConfiguration;
+            configuration.ModificationStoredProceduresConfiguration = functionsConfiguration;
 
             var clone = configuration.Clone();
 
-            Assert.NotSame(configuration.ModificationFunctionsConfiguration, clone.ModificationFunctionsConfiguration);
-            Assert.True(configuration.ModificationFunctionsConfiguration.IsCompatibleWith(clone.ModificationFunctionsConfiguration));
+            Assert.NotSame(configuration.ModificationStoredProceduresConfiguration, clone.ModificationStoredProceduresConfiguration);
+            Assert.True(configuration.ModificationStoredProceduresConfiguration.IsCompatibleWith(clone.ModificationStoredProceduresConfiguration));
         }
 
         [Fact]

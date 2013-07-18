@@ -12,12 +12,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// </summary>
     /// <typeparam name="TEntityType">The type of the entity that the relationship is being configured from.</typeparam>
     /// <typeparam name="TTargetEntityType">The type of the entity that the other end of the relationship targets.</typeparam>
-    public class ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType>
-        : ModificationFunctionConfiguration<TEntityType>
+    public class ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType>
+        : ModificationStoredProcedureConfigurationBase
         where TEntityType : class
         where TTargetEntityType : class
     {
-        internal ManyToManyModificationFunctionConfiguration()
+        internal ManyToManyModificationStoredProcedureConfiguration()
         {
         }
 
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="procedureName">Name of the procedure.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> HasName(string procedureName)
+        public ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType> HasName(string procedureName)
         {
             Check.NotEmpty(procedureName, "procedureName");
 
@@ -41,7 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="procedureName">Name of the procedure.</param>
         /// <param name="schemaName">Name of the schema.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> HasName(
+        public ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType> HasName(
             string procedureName, string schemaName)
         {
             Check.NotEmpty(procedureName, "procedureName");
@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> LeftKeyParameter<TProperty>(
+        public ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType> LeftKeyParameter<TProperty>(
             Expression<Func<TEntityType, TProperty>> propertyExpression, string parameterName)
             where TProperty : struct
         {
@@ -78,7 +78,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> LeftKeyParameter<TProperty>(
+        public ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType> LeftKeyParameter<TProperty>(
             Expression<Func<TEntityType, TProperty?>> propertyExpression, string parameterName)
             where TProperty : struct
         {
@@ -97,7 +97,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> LeftKeyParameter(
+        public ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType> LeftKeyParameter(
             Expression<Func<TEntityType, string>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
@@ -115,7 +115,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> LeftKeyParameter(
+        public ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType> LeftKeyParameter(
             Expression<Func<TEntityType, byte[]>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
@@ -133,7 +133,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> RightKeyParameter<TProperty>(
+        public ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType> RightKeyParameter<TProperty>(
             Expression<Func<TTargetEntityType, TProperty>> propertyExpression, string parameterName)
             where TProperty : struct
         {
@@ -152,7 +152,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> RightKeyParameter<TProperty>(
+        public ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType> RightKeyParameter<TProperty>(
             Expression<Func<TTargetEntityType, TProperty?>> propertyExpression, string parameterName)
             where TProperty : struct
         {
@@ -171,7 +171,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> RightKeyParameter(
+        public ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType> RightKeyParameter(
             Expression<Func<TTargetEntityType, string>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
@@ -189,7 +189,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ManyToManyModificationFunctionConfiguration<TEntityType, TTargetEntityType> RightKeyParameter(
+        public ManyToManyModificationStoredProcedureConfiguration<TEntityType, TTargetEntityType> RightKeyParameter(
             Expression<Func<TTargetEntityType, byte[]>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");

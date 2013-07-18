@@ -13,14 +13,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     ///     Allows configuration to be performed for a stored procedure that is used to modify a relationship.
     /// </summary>
     /// <typeparam name="TEntityType">The type of the entity that the relationship is being configured from.</typeparam>
-    public class AssociationModificationFunctionConfiguration<TEntityType>
+    public class AssociationModificationStoredProcedureConfiguration<TEntityType>
         where TEntityType : class
     {
         private readonly PropertyInfo _navigationPropertyInfo;
-        private readonly ModificationFunctionConfiguration _configuration;
+        private readonly ModificationStoredProcedureConfiguration _configuration;
 
-        internal AssociationModificationFunctionConfiguration(
-            PropertyInfo navigationPropertyInfo, ModificationFunctionConfiguration configuration)
+        internal AssociationModificationStoredProcedureConfiguration(
+            PropertyInfo navigationPropertyInfo, ModificationStoredProcedureConfiguration configuration)
         {
             DebugCheck.NotNull(navigationPropertyInfo);
             DebugCheck.NotNull(configuration);
@@ -35,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="parameterName">The name of the parameter.</param>
         /// <typeparam name="TProperty">The type of the property.</typeparam>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public AssociationModificationFunctionConfiguration<TEntityType> Parameter<TProperty>(
+        public AssociationModificationStoredProcedureConfiguration<TEntityType> Parameter<TProperty>(
             Expression<Func<TEntityType, TProperty>> propertyExpression, string parameterName)
             where TProperty : struct
         {
@@ -55,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="parameterName">The name of the parameter.</param>
         /// <typeparam name="TProperty">The type of the property.</typeparam>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public AssociationModificationFunctionConfiguration<TEntityType> Parameter<TProperty>(
+        public AssociationModificationStoredProcedureConfiguration<TEntityType> Parameter<TProperty>(
             Expression<Func<TEntityType, TProperty?>> propertyExpression, string parameterName)
             where TProperty : struct
         {
@@ -74,7 +74,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">The name of the parameter.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public AssociationModificationFunctionConfiguration<TEntityType> Parameter(
+        public AssociationModificationStoredProcedureConfiguration<TEntityType> Parameter(
             Expression<Func<TEntityType, string>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");
@@ -92,7 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">The name of the parameter.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public AssociationModificationFunctionConfiguration<TEntityType> Parameter(
+        public AssociationModificationStoredProcedureConfiguration<TEntityType> Parameter(
             Expression<Func<TEntityType, byte[]>> propertyExpression, string parameterName)
         {
             Check.NotNull(propertyExpression, "propertyExpression");

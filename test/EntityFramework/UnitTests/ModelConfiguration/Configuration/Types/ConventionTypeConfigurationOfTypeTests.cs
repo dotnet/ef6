@@ -223,7 +223,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             config.MapToStoredProcedures();
 
-            Assert.True(innerConfig.ModificationFunctionsConfiguration != null);
+            Assert.True(innerConfig.ModificationStoredProceduresConfiguration != null);
         }
 
         [Fact]
@@ -233,13 +233,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new ConventionTypeConfiguration<LocalEntityType>(type, () => innerConfig, new ModelConfiguration());
 
-            ModificationFunctionsConfiguration<LocalEntityType> configuration = null;
+            ModificationStoredProceduresConfiguration<LocalEntityType> configuration = null;
 
             config.MapToStoredProcedures(c => configuration = c);
 
             Assert.Same(
                 configuration.Configuration,
-                innerConfig.ModificationFunctionsConfiguration);
+                innerConfig.ModificationStoredProceduresConfiguration);
         }
 
         [Fact]

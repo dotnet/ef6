@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             manyToManyNavigationPropertyConfiguration.MapToStoredProcedures();
 
-            Assert.NotNull(navigationPropertyConfiguration.ModificationFunctionsConfiguration);
+            Assert.NotNull(navigationPropertyConfiguration.ModificationStoredProceduresConfiguration);
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             manyToManyNavigationPropertyConfiguration.MapToStoredProcedures(m => { called = true; });
 
             Assert.True(called);
-            Assert.NotNull(navigationPropertyConfiguration.ModificationFunctionsConfiguration);
+            Assert.NotNull(navigationPropertyConfiguration.ModificationStoredProceduresConfiguration);
         }
     }
 }

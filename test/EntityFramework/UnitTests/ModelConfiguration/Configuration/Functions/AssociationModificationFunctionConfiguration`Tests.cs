@@ -12,9 +12,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         public void Parameter_should_return_configuration_for_valid_property_expressions()
         {
             var configuration
-                = new AssociationModificationFunctionConfiguration<Entity>(
+                = new AssociationModificationStoredProcedureConfiguration<Entity>(
                     new MockPropertyInfo(),
-                    new ModificationFunctionConfiguration());
+                    new ModificationStoredProcedureConfiguration());
 
             Assert.Same(configuration, configuration.Parameter(e => e.Int, "Foo"));
             Assert.Same(configuration, configuration.Parameter(e => e.Nullable, "Foo"));
@@ -26,9 +26,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         public void Parameter_should_throw_when_complex_property_expression()
         {
             var configuration
-                = new AssociationModificationFunctionConfiguration<Entity>(
+                = new AssociationModificationStoredProcedureConfiguration<Entity>(
                     new MockPropertyInfo(),
-                    new ModificationFunctionConfiguration());
+                    new ModificationStoredProcedureConfiguration());
 
             Assert.Equal(
                 Strings.InvalidPropertyExpression("e => e.ComplexType.Int"),
@@ -39,10 +39,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Parameter_should_set_parameter_name_for_valid_property_expressions()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             var configuration
-                = new AssociationModificationFunctionConfiguration<Entity>(
+                = new AssociationModificationStoredProcedureConfiguration<Entity>(
                     new MockPropertyInfo(),
                     modificationFunctionConfiguration);
 

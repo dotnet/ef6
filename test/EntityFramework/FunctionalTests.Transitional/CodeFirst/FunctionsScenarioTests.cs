@@ -899,7 +899,7 @@ namespace FunctionalTests
                             map =>
                                 {
                                     map.Insert(
-                                        f => f.Association<Order>(
+                                        f => f.Navigation<Order>(
                                             o => o.OrderLines,
                                             a =>
                                                 {
@@ -907,7 +907,7 @@ namespace FunctionalTests
                                                     a.Parameter(o => o.Type, "the_type1");
                                                 }));
                                     map.Update(
-                                        f => f.Association<Order>(
+                                        f => f.Navigation<Order>(
                                             o => o.OrderLines,
                                             a =>
                                                 {
@@ -915,7 +915,7 @@ namespace FunctionalTests
                                                     a.Parameter(o => o.Type, "the_type2");
                                                 }));
                                     map.Delete(
-                                        f => f.Association<Order>(
+                                        f => f.Navigation<Order>(
                                             o => o.OrderLines,
                                             a =>
                                                 {
@@ -973,7 +973,7 @@ namespace FunctionalTests
                                     map.Insert(
                                         f =>
                                             {
-                                                f.Association<Team>(
+                                                f.Navigation<Team>(
                                                     t => t.Drivers,
                                                     a =>
                                                         {
@@ -1060,17 +1060,17 @@ namespace FunctionalTests
                         .MapToStoredProcedures(
                             map =>
                                 {
-                                    map.Insert(f => f.Association<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id1")));
+                                    map.Insert(f => f.Navigation<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id1")));
                                     map.Update(
                                         f =>
                                             {
                                                 f.Parameter(i => i.Id, "id2");
-                                                f.Association<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id2"));
+                                                f.Navigation<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id2"));
                                             });
                                     map.Delete(
                                         f =>
                                             {
-                                                f.Association<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id3"));
+                                                f.Navigation<Item>(o => o.ChildrenItems, a => a.Parameter(i => i.Id, "item_id3"));
                                                 f.Parameter(i => i.Id, "id3");
                                             });
                                 });
@@ -1811,7 +1811,7 @@ namespace FunctionalTests
                                 map =>
                                     {
                                         map.Insert(
-                                            f => f.Association<Order>(
+                                            f => f.Navigation<Order>(
                                                 o => o.OrderLines,
                                                 a =>
                                                     {
@@ -1819,7 +1819,7 @@ namespace FunctionalTests
                                                         a.Parameter(o => o.Type, "the_type1");
                                                     }));
                                         map.Update(
-                                            f => f.Association<Order>(
+                                            f => f.Navigation<Order>(
                                                 o => o.OrderLines,
                                                 a =>
                                                     {
@@ -1827,7 +1827,7 @@ namespace FunctionalTests
                                                         a.Parameter(o => o.Type, "the_type2");
                                                     }));
                                         map.Delete(
-                                            f => f.Association<Order>(
+                                            f => f.Navigation<Order>(
                                                 o => o.OrderLines,
                                                 a =>
                                                     {
@@ -1888,7 +1888,7 @@ namespace FunctionalTests
                                         map.Insert(
                                             f =>
                                                 {
-                                                    f.Association<Team>(
+                                                    f.Navigation<Team>(
                                                         t => t.Drivers,
                                                         a =>
                                                             {

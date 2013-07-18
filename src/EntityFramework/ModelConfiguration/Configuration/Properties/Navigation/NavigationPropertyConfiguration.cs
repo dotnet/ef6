@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         private RelationshipMultiplicity? _inverseEndKind;
         private ConstraintConfiguration _constraint;
         private AssociationMappingConfiguration _associationMappingConfiguration;
-        private ModificationFunctionsConfiguration _modificationFunctionsConfiguration;
+        private ModificationStoredProceduresConfiguration _modificationStoredProceduresConfiguration;
 
         internal NavigationPropertyConfiguration(PropertyInfo navigationProperty)
         {
@@ -57,10 +57,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             DeleteAction = source.DeleteAction;
             IsNavigationPropertyDeclaringTypePrincipal = source.IsNavigationPropertyDeclaringTypePrincipal;
 
-            _modificationFunctionsConfiguration
-                = source._modificationFunctionsConfiguration == null
+            _modificationStoredProceduresConfiguration
+                = source._modificationStoredProceduresConfiguration == null
                       ? null
-                      : source._modificationFunctionsConfiguration.Clone();
+                      : source._modificationStoredProceduresConfiguration.Clone();
         }
 
         internal virtual NavigationPropertyConfiguration Clone()
@@ -154,14 +154,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             }
         }
 
-        internal ModificationFunctionsConfiguration ModificationFunctionsConfiguration
+        internal ModificationStoredProceduresConfiguration ModificationStoredProceduresConfiguration
         {
-            get { return _modificationFunctionsConfiguration; }
+            get { return _modificationStoredProceduresConfiguration; }
             set
             {
                 DebugCheck.NotNull(value);
                 
-                _modificationFunctionsConfiguration = value;
+                _modificationStoredProceduresConfiguration = value;
             }
         }
 
@@ -213,7 +213,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                     .Configure(associationSetMapping, databaseMapping.Database, _navigationProperty);
             }
 
-            if (_modificationFunctionsConfiguration != null)
+            if (_modificationStoredProceduresConfiguration != null)
             {
                 if (associationSetMapping.ModificationFunctionMapping == null)
                 {
@@ -221,7 +221,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                         .Generate(associationSetMapping, databaseMapping);
                 }
 
-                _modificationFunctionsConfiguration
+                _modificationStoredProceduresConfiguration
                     .Configure(associationSetMapping.ModificationFunctionMapping, providerManifest);
             }
         }
@@ -352,9 +352,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                     NavigationProperty.Name, NavigationProperty.ReflectedType);
             }
 
-            if ((navigationPropertyConfiguration.ModificationFunctionsConfiguration != null)
-                && (ModificationFunctionsConfiguration != null)
-                && !navigationPropertyConfiguration.ModificationFunctionsConfiguration.IsCompatibleWith(ModificationFunctionsConfiguration))
+            if ((navigationPropertyConfiguration.ModificationStoredProceduresConfiguration != null)
+                && (ModificationStoredProceduresConfiguration != null)
+                && !navigationPropertyConfiguration.ModificationStoredProceduresConfiguration.IsCompatibleWith(ModificationStoredProceduresConfiguration))
             {
                 throw Error.ConflictingFunctionsMapping(
                     NavigationProperty.Name, NavigationProperty.ReflectedType);

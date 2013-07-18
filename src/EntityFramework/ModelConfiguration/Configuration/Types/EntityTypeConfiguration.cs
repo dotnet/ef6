@@ -42,7 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         private bool _isKeyConfigured;
         private string _entitySetName;
 
-        private ModificationFunctionsConfiguration _modificationFunctionsConfiguration;
+        private ModificationStoredProceduresConfiguration _modificationStoredProceduresConfiguration;
 
         internal EntityTypeConfiguration(Type structuralType)
             : base(structuralType)
@@ -67,9 +67,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _isKeyConfigured = source._isKeyConfigured;
             _entitySetName = source._entitySetName;
 
-            if (source._modificationFunctionsConfiguration != null)
+            if (source._modificationStoredProceduresConfiguration != null)
             {
-                _modificationFunctionsConfiguration = source._modificationFunctionsConfiguration.Clone();
+                _modificationStoredProceduresConfiguration = source._modificationStoredProceduresConfiguration.Clone();
             }
 
             IsReplaceable = source.IsReplaceable;
@@ -186,31 +186,31 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
         internal bool IsExplicitEntity { get; set; }
 
-        internal ModificationFunctionsConfiguration ModificationFunctionsConfiguration
+        internal ModificationStoredProceduresConfiguration ModificationStoredProceduresConfiguration
         {
-            get { return _modificationFunctionsConfiguration; }
+            get { return _modificationStoredProceduresConfiguration; }
         }
 
         internal virtual void MapToStoredProcedures()
         {
-            if (_modificationFunctionsConfiguration == null)
+            if (_modificationStoredProceduresConfiguration == null)
             {
-                _modificationFunctionsConfiguration = new ModificationFunctionsConfiguration();
+                _modificationStoredProceduresConfiguration = new ModificationStoredProceduresConfiguration();
             }
         }
 
         internal virtual void MapToStoredProcedures(
-            ModificationFunctionsConfiguration modificationFunctionsConfiguration, bool allowOverride)
+            ModificationStoredProceduresConfiguration modificationStoredProceduresConfiguration, bool allowOverride)
         {
-            DebugCheck.NotNull(modificationFunctionsConfiguration);
+            DebugCheck.NotNull(modificationStoredProceduresConfiguration);
 
-            if (_modificationFunctionsConfiguration == null)
+            if (_modificationStoredProceduresConfiguration == null)
             {
-                _modificationFunctionsConfiguration = modificationFunctionsConfiguration;
+                _modificationStoredProceduresConfiguration = modificationStoredProceduresConfiguration;
             }
             else
             {
-                _modificationFunctionsConfiguration.Merge(modificationFunctionsConfiguration, allowOverride);
+                _modificationStoredProceduresConfiguration.Merge(modificationStoredProceduresConfiguration, allowOverride);
             }
         }
 
@@ -587,7 +587,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             ConfigurePropertyMappings(databaseMapping, entityType, providerManifest);
             ConfigureAssociationMappings(databaseMapping, entityType, providerManifest);
             ConfigureDependentKeys(databaseMapping, providerManifest);
-            ConfigureModificationFunctions(databaseMapping, entityType, providerManifest);
+            ConfigureModificationStoredProcedures(databaseMapping, entityType, providerManifest);
         }
 
         internal void ConfigureFunctionParameters(DbDatabaseMapping databaseMapping, EntityType entityType)
@@ -611,26 +611,26 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
-        private void ConfigureModificationFunctions(
+        private void ConfigureModificationStoredProcedures(
             DbDatabaseMapping databaseMapping, EntityType entityType, DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(entityType);
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(providerManifest);
 
-            if (_modificationFunctionsConfiguration != null)
+            if (_modificationStoredProceduresConfiguration != null)
             {
                 new ModificationFunctionMappingGenerator(providerManifest)
                     .Generate(entityType, databaseMapping);
 
-                var modificationFunctionMapping
+                var modificationStoredProcedureMapping
                     = databaseMapping.GetEntitySetMappings()
                         .SelectMany(esm => esm.ModificationFunctionMappings)
                         .SingleOrDefault(mfm => mfm.EntityType == entityType);
 
-                if (modificationFunctionMapping != null)
+                if (modificationStoredProcedureMapping != null)
                 {
-                    _modificationFunctionsConfiguration.Configure(modificationFunctionMapping, providerManifest);
+                    _modificationStoredProceduresConfiguration.Configure(modificationStoredProcedureMapping, providerManifest);
                 }
             }
         }

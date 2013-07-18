@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Merge_configurations_without_override()
         {
-            var modificationFunctionConfigurationA = new ModificationFunctionConfiguration();
+            var modificationFunctionConfigurationA = new ModificationStoredProcedureConfiguration();
 
             modificationFunctionConfigurationA.HasName("Foo", "baz");
 
@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             modificationFunctionConfigurationA.Result(new PropertyPath(mockPropertyInfo), "foo");
             modificationFunctionConfigurationA.RowsAffectedParameter("bar");
 
-            var modificationFunctionConfigurationB = new ModificationFunctionConfiguration();
+            var modificationFunctionConfigurationB = new ModificationStoredProcedureConfiguration();
 
             modificationFunctionConfigurationB.HasName("Foo", "baz");
 
@@ -45,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Merge_configurations_with_override()
         {
-            var modificationFunctionConfigurationA = new ModificationFunctionConfiguration();
+            var modificationFunctionConfigurationA = new ModificationStoredProcedureConfiguration();
 
             modificationFunctionConfigurationA.HasName("Foo", "baz");
 
@@ -55,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             modificationFunctionConfigurationA.Result(new PropertyPath(mockPropertyInfo), "foo");
             modificationFunctionConfigurationA.RowsAffectedParameter("bar");
 
-            var modificationFunctionConfigurationB = new ModificationFunctionConfiguration();
+            var modificationFunctionConfigurationB = new ModificationStoredProcedureConfiguration();
 
             modificationFunctionConfigurationB.HasName("2", "2");
 
@@ -75,7 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Can_clone_configuration()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             modificationFunctionConfiguration.HasName("Foo", "baz");
 
@@ -98,7 +98,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Can_set_function_name()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             modificationFunctionConfiguration.HasName("Foo");
 
@@ -108,7 +108,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Can_set_rows_affected_parameter_name()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             modificationFunctionConfiguration.RowsAffectedParameter("Foo");
 
@@ -118,7 +118,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Can_add_parameter_configuration()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             Assert.Empty(modificationFunctionConfiguration.ParameterNames);
 
@@ -132,7 +132,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Can_set_column_name_for_result_binding()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             var mockPropertyInfo = new MockPropertyInfo();
 
@@ -144,7 +144,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Can_configure_function_name_and_parameters()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             modificationFunctionConfiguration.HasName("Foo", "Bar");
 
@@ -248,7 +248,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Can_configure_ia_fk_parameters()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             var mockPropertyInfo1 = new MockPropertyInfo();
             var mockPropertyInfo2 = new MockPropertyInfo();
@@ -312,7 +312,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Configure_should_throw_when_parameter_binding_not_found()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             var mockPropertyInfo1 = new MockPropertyInfo();
 
@@ -339,7 +339,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Configure_should_throw_when_original_value_parameter_binding_not_found()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             var mockPropertyInfo = new MockPropertyInfo();
 
@@ -377,7 +377,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Configure_should_throw_when_result_binding_not_found()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             var mockPropertyInfo1 = new MockPropertyInfo();
 
@@ -404,7 +404,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Can_configure_result_bindings()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             var mockPropertyInfo = new MockPropertyInfo();
 
@@ -444,7 +444,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Can_configure_rows_affected_parameter_name()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             var mockPropertyInfo = new MockPropertyInfo();
 
@@ -483,7 +483,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Configure_should_introduce_rows_affected_parameter_when_configured()
         {
-            var modificationFunctionConfiguration = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration = new ModificationStoredProcedureConfiguration();
 
             modificationFunctionConfiguration.RowsAffectedParameter("rows_affected");
 
@@ -509,8 +509,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void IsCompatibleWith_should_return_true_when_name_and_parameters_compatible()
         {
-            var modificationFunctionConfiguration1 = new ModificationFunctionConfiguration();
-            var modificationFunctionConfiguration2 = new ModificationFunctionConfiguration();
+            var modificationFunctionConfiguration1 = new ModificationStoredProcedureConfiguration();
+            var modificationFunctionConfiguration2 = new ModificationStoredProcedureConfiguration();
 
             Assert.True(modificationFunctionConfiguration1.IsCompatibleWith(modificationFunctionConfiguration2));
 

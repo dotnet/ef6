@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void HasName_should_set_name_on_underlying_configuration()
         {
-            var configuration = new ManyToManyModificationFunctionConfiguration<Entity, Entity>();
+            var configuration = new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>();
 
             configuration.HasName("Foo");
 
@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void HasName_when_schema_should_set_name_and_schema_on_underlying_configuration()
         {
-            var configuration = new ManyToManyModificationFunctionConfiguration<Entity, Entity>();
+            var configuration = new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>();
 
             configuration.HasName("Foo", "Bar");
 
@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void LeftKeyParameter_should_return_configuration_for_valid_property_expressions()
         {
-            var configuration = new ManyToManyModificationFunctionConfiguration<Entity, Entity>();
+            var configuration = new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>();
 
             Assert.Same(configuration, configuration.LeftKeyParameter(e => e.Int, "Foo"));
             Assert.Same(configuration, configuration.LeftKeyParameter(e => e.Nullable, "Foo"));
@@ -45,29 +45,29 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         {
             Assert.Equal(
                 "Foo",
-                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>()
                     .LeftKeyParameter(e => e.Int, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
-                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>()
                     .LeftKeyParameter(e => e.Nullable, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
-                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>()
                     .LeftKeyParameter(e => e.String, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
-                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>()
                     .LeftKeyParameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Item1);
         }
 
         [Fact]
         public void LeftKeyParameter_should_throw_when_complex_property_expression()
         {
-            var configuration = new ManyToManyModificationFunctionConfiguration<Entity, Entity>();
+            var configuration = new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>();
 
             Assert.Equal(
                 Strings.InvalidPropertyExpression("e => e.ComplexType.Int"),
@@ -78,7 +78,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void RightKeyParameter_should_return_configuration_for_valid_property_expressions()
         {
-            var configuration = new ManyToManyModificationFunctionConfiguration<Entity, Entity>();
+            var configuration = new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>();
 
             Assert.Same(configuration, configuration.RightKeyParameter(e => e.Int, "Foo"));
             Assert.Same(configuration, configuration.RightKeyParameter(e => e.Nullable, "Foo"));
@@ -91,29 +91,29 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         {
             Assert.Equal(
                 "Foo",
-                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>()
                     .RightKeyParameter(e => e.Int, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
-                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>()
                     .RightKeyParameter(e => e.Nullable, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
-                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>()
                     .RightKeyParameter(e => e.String, "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
-                new ManyToManyModificationFunctionConfiguration<Entity, Entity>()
+                new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>()
                     .RightKeyParameter(e => e.Bytes, "Foo").Configuration.ParameterNames.Single().Item1);
         }
 
         [Fact]
         public void RightKeyParameter_should_throw_when_complex_property_expression()
         {
-            var configuration = new ManyToManyModificationFunctionConfiguration<Entity, Entity>();
+            var configuration = new ManyToManyModificationStoredProcedureConfiguration<Entity, Entity>();
 
             Assert.Equal(
                 Strings.InvalidPropertyExpression("e => e.ComplexType.Int"),

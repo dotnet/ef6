@@ -5,16 +5,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// <summary>
     ///     Creates a convention that configures stored procedures to be used to modify entities in the database.
     /// </summary>
-    public abstract class ConventionModificationFunctionConfiguration
+    public abstract class ConventionModificationStoredProcedureConfiguration
     {
-        private readonly ModificationFunctionConfiguration _configuration
-            = new ModificationFunctionConfiguration();
+        private readonly ModificationStoredProcedureConfiguration _configuration
+            = new ModificationStoredProcedureConfiguration();
 
-        internal ConventionModificationFunctionConfiguration()
+        internal ConventionModificationStoredProcedureConfiguration()
         {
         }
 
-        internal ModificationFunctionConfiguration Configuration
+        internal ModificationStoredProcedureConfiguration Configuration
         {
             get { return _configuration; }
         }

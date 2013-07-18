@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Linq;
     using System.Reflection;
 
-    internal class ModificationFunctionConfiguration
+    internal class ModificationStoredProcedureConfiguration
     {
         private sealed class ParameterKey
         {
@@ -78,11 +78,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         private List<FunctionParameter> _configuredParameters;
 
-        public ModificationFunctionConfiguration()
+        public ModificationStoredProcedureConfiguration()
         {
         }
 
-        private ModificationFunctionConfiguration(ModificationFunctionConfiguration source)
+        private ModificationStoredProcedureConfiguration(ModificationStoredProcedureConfiguration source)
         {
             DebugCheck.NotNull(source);
 
@@ -97,9 +97,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 r => _resultBindings.Add(r.Key, r.Value));
         }
 
-        public virtual ModificationFunctionConfiguration Clone()
+        public virtual ModificationStoredProcedureConfiguration Clone()
         {
-            return new ModificationFunctionConfiguration(this);
+            return new ModificationStoredProcedureConfiguration(this);
         }
 
         public void HasName(string name)
@@ -180,49 +180,49 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         public virtual void Configure(
-            StorageModificationFunctionMapping modificationFunctionMapping, DbProviderManifest providerManifest)
+            StorageModificationFunctionMapping modificationStoredProcedureMapping, DbProviderManifest providerManifest)
         {
-            DebugCheck.NotNull(modificationFunctionMapping);
+            DebugCheck.NotNull(modificationStoredProcedureMapping);
             DebugCheck.NotNull(providerManifest);
 
             _configuredParameters = new List<FunctionParameter>();
 
-            ConfigureName(modificationFunctionMapping);
-            ConfigureSchema(modificationFunctionMapping);
-            ConfigureRowsAffectedParameter(modificationFunctionMapping, providerManifest);
-            ConfigureParameters(modificationFunctionMapping);
-            ConfigureResultBindings(modificationFunctionMapping);
+            ConfigureName(modificationStoredProcedureMapping);
+            ConfigureSchema(modificationStoredProcedureMapping);
+            ConfigureRowsAffectedParameter(modificationStoredProcedureMapping, providerManifest);
+            ConfigureParameters(modificationStoredProcedureMapping);
+            ConfigureResultBindings(modificationStoredProcedureMapping);
         }
 
-        private void ConfigureName(StorageModificationFunctionMapping modificationFunctionMapping)
+        private void ConfigureName(StorageModificationFunctionMapping modificationStoredProcedureMapping)
         {
-            DebugCheck.NotNull(modificationFunctionMapping);
+            DebugCheck.NotNull(modificationStoredProcedureMapping);
 
             if (!string.IsNullOrWhiteSpace(_name))
             {
-                modificationFunctionMapping.Function.StoreFunctionNameAttribute = _name;
+                modificationStoredProcedureMapping.Function.StoreFunctionNameAttribute = _name;
             }
         }
 
-        private void ConfigureSchema(StorageModificationFunctionMapping modificationFunctionMapping)
+        private void ConfigureSchema(StorageModificationFunctionMapping modificationStoredProcedureMapping)
         {
-            DebugCheck.NotNull(modificationFunctionMapping);
+            DebugCheck.NotNull(modificationStoredProcedureMapping);
 
             if (!string.IsNullOrWhiteSpace(_schema))
             {
-                modificationFunctionMapping.Function.Schema = _schema;
+                modificationStoredProcedureMapping.Function.Schema = _schema;
             }
         }
 
         private void ConfigureRowsAffectedParameter(
-            StorageModificationFunctionMapping modificationFunctionMapping, DbProviderManifest providerManifest)
+            StorageModificationFunctionMapping modificationStoredProcedureMapping, DbProviderManifest providerManifest)
         {
-            DebugCheck.NotNull(modificationFunctionMapping);
+            DebugCheck.NotNull(modificationStoredProcedureMapping);
             DebugCheck.NotNull(providerManifest);
 
             if (!string.IsNullOrWhiteSpace(_rowsAffectedParameter))
             {
-                if (modificationFunctionMapping.RowsAffectedParameter == null)
+                if (modificationStoredProcedureMapping.RowsAffectedParameter == null)
                 {
                     var rowsAffectedParameter
                         = new FunctionParameter(
@@ -232,19 +232,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                                     PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))),
                             ParameterMode.Out);
 
-                    modificationFunctionMapping.Function.AddParameter(rowsAffectedParameter);
-                    modificationFunctionMapping.RowsAffectedParameter = rowsAffectedParameter;
+                    modificationStoredProcedureMapping.Function.AddParameter(rowsAffectedParameter);
+                    modificationStoredProcedureMapping.RowsAffectedParameter = rowsAffectedParameter;
                 }
 
-                modificationFunctionMapping.RowsAffectedParameter.Name = _rowsAffectedParameter;
+                modificationStoredProcedureMapping.RowsAffectedParameter.Name = _rowsAffectedParameter;
 
-                _configuredParameters.Add(modificationFunctionMapping.RowsAffectedParameter);
+                _configuredParameters.Add(modificationStoredProcedureMapping.RowsAffectedParameter);
             }
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private void ConfigureParameters(StorageModificationFunctionMapping modificationFunctionMapping)
+        private void ConfigureParameters(StorageModificationFunctionMapping modificationStoredProcedureMapping)
         {
             foreach (var keyValue in _parameterNames)
             {
@@ -253,7 +253,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 var originalValueParameterName = keyValue.Value.Item2;
 
                 var parameterBindings
-                    = modificationFunctionMapping
+                    = modificationStoredProcedureMapping
                         .ParameterBindings
                         .Where(
                             pb => // First, try and match scalar/complex/many-to-many binding 
@@ -283,7 +283,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                         {
                             throw Error.ModificationFunctionParameterNotFoundOriginal(
                                 propertyPath,
-                                modificationFunctionMapping.Function.FunctionName);
+                                modificationStoredProcedureMapping.Function.FunctionName);
                         }
                     }
 
@@ -322,12 +322,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     throw Error.ModificationFunctionParameterNotFound(
                         propertyPath,
-                        modificationFunctionMapping.Function.FunctionName);
+                        modificationStoredProcedureMapping.Function.FunctionName);
                 }
             }
 
             var unconfiguredParameters
-                = modificationFunctionMapping
+                = modificationStoredProcedureMapping
                     .Function
                     .Parameters
                     .Except(_configuredParameters);
@@ -335,7 +335,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             foreach (var parameter in unconfiguredParameters)
             {
                 parameter.Name
-                    = modificationFunctionMapping
+                    = modificationStoredProcedureMapping
                         .Function
                         .Parameters
                         .Except(new[] { parameter })
@@ -343,9 +343,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        private void ConfigureResultBindings(StorageModificationFunctionMapping modificationFunctionMapping)
+        private void ConfigureResultBindings(StorageModificationFunctionMapping modificationStoredProcedureMapping)
         {
-            DebugCheck.NotNull(modificationFunctionMapping);
+            DebugCheck.NotNull(modificationStoredProcedureMapping);
 
             foreach (var keyValue in _resultBindings)
             {
@@ -353,7 +353,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 var columnName = keyValue.Value;
 
                 var resultBinding
-                    = (modificationFunctionMapping
+                    = (modificationStoredProcedureMapping
                            .ResultBindings ?? Enumerable.Empty<StorageModificationFunctionResultBinding>())
                         .SingleOrDefault(rb => propertyInfo.IsSameAs(rb.Property.GetClrPropertyInfo()));
 
@@ -361,14 +361,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     throw Error.ResultBindingNotFound(
                         propertyInfo.Name,
-                        modificationFunctionMapping.Function.FunctionName);
+                        modificationStoredProcedureMapping.Function.FunctionName);
                 }
 
                 resultBinding.ColumnName = columnName;
             }
         }
 
-        public bool IsCompatibleWith(ModificationFunctionConfiguration other)
+        public bool IsCompatibleWith(ModificationStoredProcedureConfiguration other)
         {
             DebugCheck.NotNull(other);
 
@@ -395,33 +395,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                         .Any(j => j);
         }
 
-        public void Merge(ModificationFunctionConfiguration modificationFunctionConfiguration, bool allowOverride)
+        public void Merge(ModificationStoredProcedureConfiguration modificationStoredProcedureConfiguration, bool allowOverride)
         {
-            DebugCheck.NotNull(modificationFunctionConfiguration);
+            DebugCheck.NotNull(modificationStoredProcedureConfiguration);
 
             if (allowOverride || string.IsNullOrWhiteSpace(_name))
             {
-                _name = modificationFunctionConfiguration.Name ?? _name;
+                _name = modificationStoredProcedureConfiguration.Name ?? _name;
             }
 
             if (allowOverride || string.IsNullOrWhiteSpace(_schema))
             {
-                _schema = modificationFunctionConfiguration.Schema ?? _schema;
+                _schema = modificationStoredProcedureConfiguration.Schema ?? _schema;
             }
 
             if (allowOverride || string.IsNullOrWhiteSpace(_rowsAffectedParameter))
             {
                 _rowsAffectedParameter
-                    = modificationFunctionConfiguration.RowsAffectedParameterName ?? _rowsAffectedParameter;
+                    = modificationStoredProcedureConfiguration.RowsAffectedParameterName ?? _rowsAffectedParameter;
             }
 
-            foreach (var parameterName in modificationFunctionConfiguration._parameterNames
+            foreach (var parameterName in modificationStoredProcedureConfiguration._parameterNames
                 .Where(parameterName => allowOverride || !_parameterNames.ContainsKey(parameterName.Key)))
             {
                 _parameterNames[parameterName.Key] = parameterName.Value;
             }
 
-            foreach (var resultBinding in modificationFunctionConfiguration.ResultBindings
+            foreach (var resultBinding in modificationStoredProcedureConfiguration.ResultBindings
                 .Where(resultBinding => allowOverride || !_resultBindings.ContainsKey(resultBinding.Key)))
             {
                 _resultBindings[resultBinding.Key] = resultBinding.Value;

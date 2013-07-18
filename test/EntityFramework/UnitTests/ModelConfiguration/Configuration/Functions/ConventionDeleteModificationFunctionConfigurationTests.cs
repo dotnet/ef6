@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void HasName_should_set_name_on_underlying_configuration()
         {
-            var configuration = new ConventionDeleteModificationFunctionConfiguration(typeof(Entity));
+            var configuration = new ConventionDeleteModificationStoredProcedureConfiguration(typeof(Entity));
 
             configuration.HasName("Foo");
 
@@ -20,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void HasName_when_schema_should_set_name_and_schema_on_underlying_configuration()
         {
-            var configuration = new ConventionDeleteModificationFunctionConfiguration(typeof(Entity));
+            var configuration = new ConventionDeleteModificationStoredProcedureConfiguration(typeof(Entity));
 
             configuration.HasName("Foo", "Bar");
 
@@ -31,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void Parameter_should_return_configuration_for_valid_property_expressions()
         {
-            var configuration = new ConventionDeleteModificationFunctionConfiguration(typeof(Entity));
+            var configuration = new ConventionDeleteModificationStoredProcedureConfiguration(typeof(Entity));
 
             Assert.Same(configuration, configuration.Parameter("Int", "Foo"));
             Assert.Same(configuration, configuration.Parameter(typeof(Entity).GetProperty("String"), "Foo"));
@@ -42,19 +42,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         {
             Assert.Equal(
                 "Foo",
-                new ConventionDeleteModificationFunctionConfiguration(typeof(Entity))
+                new ConventionDeleteModificationStoredProcedureConfiguration(typeof(Entity))
                     .Parameter("Int", "Foo").Configuration.ParameterNames.Single().Item1);
 
             Assert.Equal(
                 "Foo",
-                new ConventionDeleteModificationFunctionConfiguration(typeof(Entity))
+                new ConventionDeleteModificationStoredProcedureConfiguration(typeof(Entity))
                     .Parameter(typeof(Entity).GetProperty("String"), "Foo").Configuration.ParameterNames.Single().Item1);
         }
 
         [Fact]
         public void Parameter_is_no_op_when_not_found()
         {
-            var configuration = new ConventionDeleteModificationFunctionConfiguration(typeof(Entity));
+            var configuration = new ConventionDeleteModificationStoredProcedureConfiguration(typeof(Entity));
 
             Assert.Same(configuration, configuration.Parameter("Int1", "Foo"));
             Assert.Same(configuration, configuration.Parameter(typeof(Entity).GetProperty("String1"), "Foo"));
@@ -63,7 +63,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         [Fact]
         public void RowsAffectedParameter_should_set_column_name()
         {
-            var configuration = new ConventionDeleteModificationFunctionConfiguration(typeof(Entity));
+            var configuration = new ConventionDeleteModificationStoredProcedureConfiguration(typeof(Entity));
 
             configuration.RowsAffectedParameter("Foo");
 

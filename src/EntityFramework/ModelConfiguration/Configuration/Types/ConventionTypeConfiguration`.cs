@@ -217,21 +217,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         /// Configures this type to use stored procedures for insert, update and delete.
         /// </summary>
-        /// <param name="modificationFunctionsConfigurationAction">
+        /// <param name="modificationStoredProceduresConfigurationAction">
         ///     Configuration to override the default conventions for procedure and parameter names.
         /// </param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public ConventionTypeConfiguration<T> MapToStoredProcedures(
-            Action<ModificationFunctionsConfiguration<T>> modificationFunctionsConfigurationAction)
+            Action<ModificationStoredProceduresConfiguration<T>> modificationStoredProceduresConfigurationAction)
         {
-            Check.NotNull(modificationFunctionsConfigurationAction, "modificationFunctionsConfigurationAction");
+            Check.NotNull(modificationStoredProceduresConfigurationAction, "modificationStoredProceduresConfigurationAction");
 
-            var modificationFunctionMappingConfiguration = new ModificationFunctionsConfiguration<T>();
+            var modificationStoredProcedureMappingConfiguration = new ModificationStoredProceduresConfiguration<T>();
 
-            modificationFunctionsConfigurationAction(modificationFunctionMappingConfiguration);
+            modificationStoredProceduresConfigurationAction(modificationStoredProcedureMappingConfiguration);
 
-            _configuration.MapToStoredProcedures(modificationFunctionMappingConfiguration.Configuration);
+            _configuration.MapToStoredProcedures(modificationStoredProcedureMappingConfiguration.Configuration);
 
             return this;
         }
