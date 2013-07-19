@@ -529,10 +529,24 @@ namespace System.Data.Entity.SqlServer
 
             using (var writer = Writer())
             {
+                writer.Write("IF object_id(N'");
+
+                var schema = DatabaseName.Parse(dropForeignKeyOperation.DependentTable).Schema;
+                if (schema != null)
+                {
+                    writer.Write(Escape(Quote(schema)));
+                    writer.Write(".");
+                }
+
+                writer.Write(Escape(Quote(dropForeignKeyOperation.Name)));
+                writer.WriteLine("', N'F') IS NOT NULL");
+
+                writer.Indent++;
                 writer.Write("ALTER TABLE ");
                 writer.Write(Name(dropForeignKeyOperation.DependentTable));
                 writer.Write(" DROP CONSTRAINT ");
                 writer.Write(Quote(dropForeignKeyOperation.Name));
+                writer.Indent--;
 
                 Statement(writer);
             }
@@ -584,10 +598,17 @@ namespace System.Data.Entity.SqlServer
 
             using (var writer = Writer())
             {
+                writer.Write("IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'");
+                writer.Write(Escape(dropIndexOperation.Name));
+                writer.Write("' AND object_id = object_id(N'");
+                writer.Write(Escape(Name(dropIndexOperation.Table)));
+                writer.WriteLine("', N'U'))");
+                writer.Indent++;
                 writer.Write("DROP INDEX ");
                 writer.Write(Quote(dropIndexOperation.Name));
                 writer.Write(" ON ");
                 writer.Write(Name(dropIndexOperation.Table));
+                writer.Indent--;
 
                 Statement(writer);
             }

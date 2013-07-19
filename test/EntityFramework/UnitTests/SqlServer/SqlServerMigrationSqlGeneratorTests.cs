@@ -1332,5 +1332,49 @@ EXECUTE sp_rename @objname = N'dbo.__MigrationHistory2', @newname = N'__Migratio
                         addPrimaryKeyOperation
                     };
         }
+
+        [Fact]
+        public void Generate_can_output_statement_to_drop_foreign_key_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var operation =
+                new DropForeignKeyOperation
+                {
+                    Name = "FK_na'me",
+                    DependentTable = "sch'ema.DependentTable"
+                };
+
+            var sql = migrationSqlGenerator.Generate(new [] { operation }, SqlProviderManifest.TokenAzure11)
+                .Join(s => s.Sql, Environment.NewLine);
+
+            const string expectedSql =
+@"IF object_id(N'[sch''ema].[FK_na''me]', N'F') IS NOT NULL
+    ALTER TABLE [sch'ema].[DependentTable] DROP CONSTRAINT [FK_na'me]";
+
+            Assert.Equal(expectedSql, sql);
+        }
+
+        [Fact]
+        public void Generate_can_output_statement_to_drop_index_operation()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var operation =
+                new DropIndexOperation
+                {
+                    Name = "IX_na'me",
+                    Table = "sch'ema.Ta'ble"
+                };
+
+            var sql = migrationSqlGenerator.Generate(new[] { operation }, SqlProviderManifest.TokenAzure11)
+                .Join(s => s.Sql, Environment.NewLine);
+
+            const string expectedSql =
+@"IF EXISTS (SELECT name FROM sys.indexes WHERE name = N'IX_na''me' AND object_id = object_id(N'[sch''ema].[Ta''ble]', N'U'))
+    DROP INDEX [IX_na'me] ON [sch'ema].[Ta'ble]";
+
+            Assert.Equal(expectedSql, sql);
+        }
     }
 }
