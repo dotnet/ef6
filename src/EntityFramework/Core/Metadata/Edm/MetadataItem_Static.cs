@@ -332,7 +332,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _generalFacetDescriptions = Array.AsReadOnly(generalFacetDescriptions);
 
             _collectionKindFacetDescription = new FacetDescription(
-                XmlConstants.CollectionKind,
+                EdmConstants.CollectionKind,
                 GetBuiltInType(BuiltInTypeKind.EnumType),
                 null,
                 null,

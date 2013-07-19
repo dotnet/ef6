@@ -17,11 +17,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private FacetValueContainer<byte?> _precision;
         private FacetValueContainer<byte?> _scale;
         private object _defaultValue;
-        private FacetValueContainer<bool?> _collation;
+        private FacetValueContainer<string> _collation;
         private FacetValueContainer<int?> _srid;
         private FacetValueContainer<bool?> _isStrict;
         private FacetValueContainer<StoreGeneratedPattern?> _storeGeneratedPattern;
         private FacetValueContainer<ConcurrencyMode?> _concurrencyMode;
+        private FacetValueContainer<CollectionKind?> _collectionKind;
 
         internal FacetValueContainer<bool?> Nullable
         {
@@ -58,7 +59,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             set { _defaultValue = value; }
         }
 
-        internal FacetValueContainer<bool?> Collation
+        internal FacetValueContainer<string> Collation
         {
             set { _collation = value; }
         }
@@ -81,6 +82,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal FacetValueContainer<ConcurrencyMode?> ConcurrencyMode
         {
             set { _concurrencyMode = value; }
+        }
+
+        internal FacetValueContainer<CollectionKind?> CollectionKind
+        {
+            set { _collectionKind = value; }
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
@@ -172,6 +178,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         return true;
                     }
                     break;
+                case EdmConstants.CollectionKind:
+                    if (_collectionKind.HasValue)
+                    {
+                        facet = Facet.Create(description, _collectionKind.GetValueAsObject());
+                        return true;
+                    }
+                    break;
                 default:
                     Debug.Assert(false, "Unrecognized facet: " + description.FacetName);
                     break;
@@ -211,7 +224,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         facetValues.DefaultValue = facet.Value;
                         break;
                     case DbProviderManifest.CollationFacetName:
-                        facetValues.Collation = (bool?)facet.Value;
+                        facetValues.Collation = (string)facet.Value;
                         break;
                     case DbProviderManifest.SridFacetName:
                         facetValues.Srid = (int?)facet.Value;
@@ -224,6 +237,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         break;
                     case EdmProviderManifest.ConcurrencyModeFacetName:
                         facetValues.ConcurrencyMode = (ConcurrencyMode?)facet.Value;
+                        break;
+                    case EdmConstants.CollectionKind:
+                        facetValues.CollectionKind = (CollectionKind?)facet.Value;
                         break;
                     default:
                         Debug.Assert(false, "Unrecognized facet: " + description.FacetName);
@@ -245,9 +261,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 values.Precision = (byte?)null;
                 values.Scale = (byte?)null;
                 values.Unicode = (bool?)null;
-                values.Collation = (bool?)null;
+                values.Collation = (string)null;
                 values.Srid = (int?)null;
                 values.IsStrict = (bool?)null;
+                values.ConcurrencyMode = (ConcurrencyMode?)null;
+                values.StoreGeneratedPattern = (StoreGeneratedPattern?)null;
+                values.CollectionKind = (CollectionKind?)null;
 
                 return values;
             }
