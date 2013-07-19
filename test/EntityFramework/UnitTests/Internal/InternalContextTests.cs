@@ -312,7 +312,7 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void Log_can_be_set_to_log_to_a_new_sink()
         {
-            var mockDispatchers = new Mock<Dispatchers>(null);
+            var mockDispatchers = new Mock<Dispatchers>();
 
             var context = new Mock<DbContext>().Object;
             var internalContext = new LazyInternalContext(
@@ -336,7 +336,7 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void Setting_log_again_reoplaces_the_existing_sink()
         {
-            var mockDispatchers = new Mock<Dispatchers>(null);
+            var mockDispatchers = new Mock<Dispatchers>();
 
             var context = new Mock<DbContext>().Object;
             var internalContext = new LazyInternalContext(
@@ -364,7 +364,7 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void Log_can_be_cleared_by_setting_it_to_null()
         {
-            var mockDispatchers = new Mock<Dispatchers>(null);
+            var mockDispatchers = new Mock<Dispatchers>();
 
             var context = new Mock<DbContext>().Object;
             var internalContext = new LazyInternalContext(
@@ -382,7 +382,7 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void Log_returns_the_current_sink_in_use_or_null()
         {
-            var mockDispatchers = new Mock<Dispatchers>(null);
+            var mockDispatchers = new Mock<Dispatchers>();
 
             var context = new Mock<DbContext>().Object;
             var internalContext = new LazyInternalContext(
@@ -401,7 +401,7 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void Log_is_cleared_when_context_is_disposed()
         {
-            var mockDispatchers = new Mock<Dispatchers>(null);
+            var mockDispatchers = new Mock<Dispatchers>();
 
             var context = new Mock<DbContext>().Object;
             var internalContext = new LazyInternalContext(

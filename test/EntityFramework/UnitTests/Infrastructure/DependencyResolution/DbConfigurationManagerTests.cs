@@ -31,7 +31,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public void GetConfiguration_returns_the_configuration_at_the_top_of_the_stack_if_overriding_configurations_have_been_pushed()
             {
                 var manager = CreateManager();
-                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null)
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null)
                     {
                         CallBase = true
                     };
@@ -599,7 +599,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
             internal class DbConfigurationWithMockInternals : DbConfiguration
             {
-                private readonly InternalConfiguration _internalConfiguration = new Mock<InternalConfiguration>(null, null, null, null).Object;
+                private readonly InternalConfiguration _internalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null).Object;
 
                 internal override InternalConfiguration InternalConfiguration
                 {
@@ -670,7 +670,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public void PopConfiguration_removes_the_first_configuration_associated_with_the_given_AppConfig()
             {
                 var manager = CreateManager();
-                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null)
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null)
                     {
                         CallBase = true
                     };
@@ -813,7 +813,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         private static Mock<InternalConfiguration> CreateMockInternalConfiguration(
             DbConfiguration dbConfiguration = null, IDbDependencyResolver snapshot = null)
         {
-            var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+            var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
 
             if (dbConfiguration == null)
             {

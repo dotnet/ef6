@@ -16,6 +16,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     {
         private CompositeResolver<ResolverChain, ResolverChain> _resolvers;
         private RootDependencyResolver _rootResolver;
+        private readonly Func<Dispatchers> _dispatchers;
 
         // This does not need to be volatile since it only protects against inappropriate use not
         // thread-unsafe use.
@@ -25,12 +26,14 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             ResolverChain appConfigChain = null,
             ResolverChain normalResolverChain = null,
             RootDependencyResolver rootResolver = null,
-            AppConfigDependencyResolver appConfigResolver = null)
+            AppConfigDependencyResolver appConfigResolver = null,
+            Func<Dispatchers> dispatchers = null)
         {
             _rootResolver = rootResolver ?? new RootDependencyResolver();
             _resolvers = new CompositeResolver<ResolverChain, ResolverChain>(appConfigChain ?? new ResolverChain(), normalResolverChain ?? new ResolverChain());
             _resolvers.Second.Add(_rootResolver);
             _resolvers.First.Add(appConfigResolver ?? new AppConfigDependencyResolver(AppConfig.DefaultInstance, this));
+            _dispatchers = dispatchers ?? (() => Interception.Dispatch);
         }
 
         /// <summary>
@@ -54,6 +57,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         {
             DbConfigurationManager.Instance.OnLoaded(this);
             _isLocked = true;
+
+            DependencyResolver.GetServices<IDbInterceptor>().Each(_dispatchers().AddInterceptor);
         }
 
         public virtual void AddAppConfigResolver(IDbDependencyResolver resolver)

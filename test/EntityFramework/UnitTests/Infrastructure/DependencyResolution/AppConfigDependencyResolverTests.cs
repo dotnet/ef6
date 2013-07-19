@@ -40,7 +40,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public void GetService_returns_null_for_unknown_contract_type()
             {
                 Assert.Null(
-                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null).Object)
+                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetService<IPilkington>("Karl"));
             }
 
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Same(
                     ProviderServicesFactoryTests.FakeProviderWithPublicProperty.Instance,
                     new AppConfigDependencyResolver(
-                        CreateAppConfigWithProvider(), new Mock<InternalConfiguration>(null, null, null, null).Object)
+                        CreateAppConfigWithProvider(), new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetService<DbProviderServices>("Is.Ee.Avin.A.Larf"));
             }
 
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             {
                 Assert.Null(
                     new AppConfigDependencyResolver(
-                        CreateAppConfigWithProvider(), new Mock<InternalConfiguration>(null, null, null, null).Object)
+                        CreateAppConfigWithProvider(), new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetService<DbProviderServices>("Are.You.Avin.A.Larf"));
             }
 
@@ -67,13 +67,13 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public void GetService_returns_null_for_null_empty_or_whitespace_provider_name()
             {
                 Assert.Null(
-                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null).Object)
+                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetService<DbProviderServices>(null));
                 Assert.Null(
-                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null).Object)
+                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetService<DbProviderServices>(""));
                 Assert.Null(
-                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null).Object)
+                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetService<DbProviderServices>(" "));
             }
 
@@ -86,7 +86,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
                 var resolver = new AppConfigDependencyResolver(
                     mockConfig.Object,
-                    new Mock<InternalConfiguration>(null, null, null, null).Object,
+                    new Mock<InternalConfiguration>(null, null, null, null, null).Object,
                     new Mock<ProviderServicesFactory>().Object);
 
                 var factoryInstance = resolver.GetService<DbProviderServices>("Ask.Rhod.Gilbert");
@@ -104,7 +104,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 mockConfig.Setup(m => m.DbProviderServices).Returns(new NamedDbProviderService[0]);
 
                 var resolver = new AppConfigDependencyResolver(
-                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
+                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object);
 
                 Assert.Null(resolver.GetService<DbProviderServices>("Ask.Rhod.Gilbert"));
                 mockConfig.Verify(m => m.DbProviderServices, Times.Once());
@@ -118,7 +118,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var mockSection = CreateMockSectionWithProviders();
                 var mockFactory = CreateMockFactory(mockSection.Object);
                 var appConfig = new AppConfig(new ConnectionStringSettingsCollection(), null, mockSection.Object, mockFactory.Object);
-                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
 
                 var resolvers = new List<IDbDependencyResolver>();
 
@@ -137,7 +137,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             [Fact]
             public void GetService_registers_all_providers_from_real_app_config_as_secondary_resolvers_in_correct_order()
             {
-                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var resolvers = new List<IDbDependencyResolver>();
 
                 mockConfiguration.Setup(
@@ -158,7 +158,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var mockSection = CreateMockSectionWithProviders();
                 var mockFactory = CreateMockFactory(mockSection.Object);
                 var appConfig = new AppConfig(new ConnectionStringSettingsCollection(), null, mockSection.Object, mockFactory.Object);
-                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
 
                 var resolver = new AppConfigDependencyResolver(appConfig, mockConfiguration.Object, mockFactory.Object);
 
@@ -189,7 +189,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
                 var appConfig = new AppConfig(new ConnectionStringSettingsCollection(), null, mockSection.Object, mockFactory.Object);
 
-                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
 
                 var someRandomThing = new Random();
                 mockSqlProvider.Setup(m => m.GetService(typeof(Random), null)).Returns(someRandomThing);
@@ -218,7 +218,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                         new AppConfigDependencyResolver(
                             new AppConfig(
                                 CreateEmptyConfig().AddDefaultConnectionFactory(typeof(FakeConnectionFactory).AssemblyQualifiedName)),
-                            new Mock<InternalConfiguration>(null, null, null, null).Object)
+                            new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                             .GetService<IDbConnectionFactory>());
                 }
                 finally
@@ -236,7 +236,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                     mockConfig.Setup(m => m.DbProviderServices).Returns(new NamedDbProviderService[0]);
                     mockConfig.Setup(m => m.TryGetDefaultConnectionFactory()).Returns(new FakeConnectionFactory());
                     var resolver = new AppConfigDependencyResolver(
-                        mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
+                        mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object);
 
                     var factoryInstance = resolver.GetService<IDbConnectionFactory>();
 
@@ -258,7 +258,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 mockConfig.Setup(m => m.DbProviderServices).Returns(new NamedDbProviderService[0]);
                 mockConfig.Setup(m => m.TryGetDefaultConnectionFactory()).Returns((IDbConnectionFactory)null);
                 var resolver = new AppConfigDependencyResolver(
-                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
+                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object);
 
                 Assert.Null(resolver.GetService<IDbConnectionFactory>());
                 mockConfig.Verify(m => m.TryGetDefaultConnectionFactory(), Times.Once());
@@ -277,7 +277,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                         new KeyValueConfigurationCollection()));
 
                 Assert.IsType<FakeInitializer<FakeContext>>(
-                    new AppConfigDependencyResolver(mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object)
+                    new AppConfigDependencyResolver(mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetService<IDatabaseInitializer<FakeContext>>());
             }
 
@@ -292,7 +292,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                         new KeyValueConfigurationCollection()));
 
                 Assert.Null(
-                    new AppConfigDependencyResolver(mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object)
+                    new AppConfigDependencyResolver(mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetService<IDatabaseInitializer<DbContext>>());
             }
 
@@ -307,7 +307,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                         new KeyValueConfigurationCollection()));
 
                 var resolver = new AppConfigDependencyResolver(
-                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
+                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object);
                 var initializer = resolver.GetService<IDatabaseInitializer<FakeContext>>();
 
                 Assert.NotNull(initializer);
@@ -327,7 +327,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                         new KeyValueConfigurationCollection()));
 
                 var resolver = new AppConfigDependencyResolver(
-                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
+                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object);
 
                 Assert.Null(resolver.GetService<IDatabaseInitializer<DbContext>>());
                 mockConfig.Verify(m => m.Initializers, Times.Once());
@@ -341,7 +341,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Same(
                     FakeSqlProviderServices.Instance,
                     new AppConfigDependencyResolver(
-                        AppConfig.DefaultInstance, new Mock<InternalConfiguration>(null, null, null, null).Object)
+                        AppConfig.DefaultInstance, new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetService<DbProviderServices>("System.Data.FakeSqlClient"));
             }
 
@@ -363,7 +363,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                     {
                         var bag = new ConcurrentBag<IDbConnectionFactory>();
                         var resolver = new AppConfigDependencyResolver(
-                            appConfig, new Mock<InternalConfiguration>(null, null, null, null).Object);
+                            appConfig, new Mock<InternalConfiguration>(null, null, null, null, null).Object);
 
                         ExecuteInParallel(() => bag.Add(resolver.GetService<IDbConnectionFactory>()));
 
@@ -384,7 +384,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public void GetServices_returns_empty_list_for_unknown_contract_type()
             {
                 Assert.Empty(
-                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null).Object)
+                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetServices<IPilkington>("Karl"));
             }
 
@@ -394,7 +394,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Same(
                     ProviderServicesFactoryTests.FakeProviderWithPublicProperty.Instance,
                     new AppConfigDependencyResolver(
-                        CreateAppConfigWithProvider(), new Mock<InternalConfiguration>(null, null, null, null).Object)
+                        CreateAppConfigWithProvider(), new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetServices<DbProviderServices>("Is.Ee.Avin.A.Larf").Single());
             }
 
@@ -403,7 +403,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             {
                 Assert.Empty(
                     new AppConfigDependencyResolver(
-                        CreateAppConfigWithProvider(), new Mock<InternalConfiguration>(null, null, null, null).Object)
+                        CreateAppConfigWithProvider(), new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetServices<DbProviderServices>("Are.You.Avin.A.Larf"));
             }
 
@@ -411,13 +411,13 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public void GetServices_returns_empty_list_for_null_empty_or_whitespace_provider_name()
             {
                 Assert.Empty(
-                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null).Object)
+                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetServices<DbProviderServices>(null));
                 Assert.Empty(
-                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null).Object)
+                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetServices<DbProviderServices>(""));
                 Assert.Empty(
-                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null).Object)
+                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetServices<DbProviderServices>(" "));
             }
 
@@ -430,7 +430,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
                 var resolver = new AppConfigDependencyResolver(
                     mockConfig.Object,
-                    new Mock<InternalConfiguration>(null, null, null, null).Object,
+                    new Mock<InternalConfiguration>(null, null, null, null, null).Object,
                     new Mock<ProviderServicesFactory>().Object);
 
                 var factoryInstance = resolver.GetServices<DbProviderServices>("Ask.Rhod.Gilbert").Single();
@@ -448,7 +448,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 mockConfig.Setup(m => m.DbProviderServices).Returns(new NamedDbProviderService[0]);
 
                 var resolver = new AppConfigDependencyResolver(
-                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
+                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object);
 
                 Assert.Empty(resolver.GetServices<DbProviderServices>("Ask.Rhod.Gilbert"));
                 mockConfig.Verify(m => m.DbProviderServices, Times.Once());
@@ -462,7 +462,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var mockSection = CreateMockSectionWithProviders();
                 var mockFactory = CreateMockFactory(mockSection.Object);
                 var appConfig = new AppConfig(new ConnectionStringSettingsCollection(), null, mockSection.Object, mockFactory.Object);
-                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
 
                 var resolvers = new List<IDbDependencyResolver>();
 
@@ -481,7 +481,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             [Fact]
             public void GetServices_registers_all_providers_from_real_app_config_as_secondary_resolvers_in_correct_order()
             {
-                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var resolvers = new List<IDbDependencyResolver>();
 
                 mockConfiguration.Setup(
@@ -502,7 +502,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var mockSection = CreateMockSectionWithProviders();
                 var mockFactory = CreateMockFactory(mockSection.Object);
                 var appConfig = new AppConfig(new ConnectionStringSettingsCollection(), null, mockSection.Object, mockFactory.Object);
-                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
 
                 var resolver = new AppConfigDependencyResolver(appConfig, mockConfiguration.Object, mockFactory.Object);
 
@@ -533,7 +533,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
                 var appConfig = new AppConfig(new ConnectionStringSettingsCollection(), null, mockSection.Object, mockFactory.Object);
 
-                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
 
                 var someRandomThing = new Random();
                 mockSqlProvider.Setup(m => m.GetService(typeof(Random), null)).Returns(someRandomThing);
@@ -562,7 +562,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                         new AppConfigDependencyResolver(
                             new AppConfig(
                                 CreateEmptyConfig().AddDefaultConnectionFactory(typeof(FakeConnectionFactory).AssemblyQualifiedName)),
-                            new Mock<InternalConfiguration>(null, null, null, null).Object)
+                            new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                             .GetServices<IDbConnectionFactory>().Single());
                 }
                 finally
@@ -575,7 +575,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public void GetServices_returns_empty_list_if_no_connection_factory_is_set_in_config()
             {
                 Assert.Empty(
-                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null).Object)
+                    new AppConfigDependencyResolver(CreateAppConfig(), new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetServices<IDbConnectionFactory>());
             }
 
@@ -588,7 +588,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                     mockConfig.Setup(m => m.DbProviderServices).Returns(new NamedDbProviderService[0]);
                     mockConfig.Setup(m => m.TryGetDefaultConnectionFactory()).Returns(new FakeConnectionFactory());
                     var resolver = new AppConfigDependencyResolver(
-                        mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
+                        mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object);
 
                     var factoryInstance = resolver.GetServices<IDbConnectionFactory>().Single();
 
@@ -610,7 +610,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 mockConfig.Setup(m => m.DbProviderServices).Returns(new NamedDbProviderService[0]);
                 mockConfig.Setup(m => m.TryGetDefaultConnectionFactory()).Returns((IDbConnectionFactory)null);
                 var resolver = new AppConfigDependencyResolver(
-                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
+                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object);
 
                 Assert.Empty(resolver.GetServices<IDbConnectionFactory>());
                 mockConfig.Verify(m => m.TryGetDefaultConnectionFactory(), Times.Once());
@@ -629,7 +629,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                         new KeyValueConfigurationCollection()));
 
                 Assert.IsType<FakeInitializer<FakeContext>>(
-                    new AppConfigDependencyResolver(mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object)
+                    new AppConfigDependencyResolver(mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetServices<IDatabaseInitializer<FakeContext>>().Single());
             }
 
@@ -644,7 +644,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                         new KeyValueConfigurationCollection()));
 
                 Assert.Empty(
-                    new AppConfigDependencyResolver(mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object)
+                    new AppConfigDependencyResolver(mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object)
                         .GetServices<IDatabaseInitializer<DbContext>>());
             }
 
@@ -659,7 +659,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                         new KeyValueConfigurationCollection()));
 
                 var resolver = new AppConfigDependencyResolver(
-                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
+                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object);
                 var initializer = resolver.GetServices<IDatabaseInitializer<FakeContext>>().Single();
 
                 Assert.NotNull(initializer);
@@ -679,7 +679,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                         new KeyValueConfigurationCollection()));
 
                 var resolver = new AppConfigDependencyResolver(
-                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null).Object);
+                    mockConfig.Object, new Mock<InternalConfiguration>(null, null, null, null, null).Object);
 
                 Assert.Empty(resolver.GetServices<IDatabaseInitializer<DbContext>>());
                 mockConfig.Verify(m => m.Initializers, Times.Once());
@@ -705,7 +705,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                     {
                         var bag = new ConcurrentBag<IDbConnectionFactory>();
                         var resolver = new AppConfigDependencyResolver(
-                            appConfig, new Mock<InternalConfiguration>(null, null, null, null).Object);
+                            appConfig, new Mock<InternalConfiguration>(null, null, null, null, null).Object);
 
                         ExecuteInParallel(() => bag.Add(resolver.GetService<IDbConnectionFactory>()));
 

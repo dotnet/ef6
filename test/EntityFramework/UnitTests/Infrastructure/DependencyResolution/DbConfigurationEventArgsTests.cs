@@ -16,7 +16,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Equal(
                     "resolver",
                     Assert.Throws<ArgumentNullException>(
-                        () => (new DbConfigurationLoadedEventArgs(new Mock<InternalConfiguration>(null, null, null, null).Object))
+                        () => (new DbConfigurationLoadedEventArgs(new Mock<InternalConfiguration>(null, null, null, null, null).Object))
                                   .AddDependencyResolver(null, false)).ParamName);
             }
 
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             [Fact]
             public void AddDependencyResolver_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var resolver = new Mock<IDbDependencyResolver>().Object;
 
                 new DbConfigurationLoadedEventArgs(mockInternalConfiguration.Object).AddDependencyResolver(resolver, true);
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Equal(
                     "resolver",
                     Assert.Throws<ArgumentNullException>(
-                        () => (new DbConfigurationLoadedEventArgs(new Mock<InternalConfiguration>(null, null, null, null).Object))
+                        () => (new DbConfigurationLoadedEventArgs(new Mock<InternalConfiguration>(null, null, null, null, null).Object))
                                   .AddSecondaryResolver(null)).ParamName);
             }
 
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             [Fact]
             public void AddSecondaryResolver_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var resolver = new Mock<IDbDependencyResolver>().Object;
 
                 new DbConfigurationLoadedEventArgs(mockInternalConfiguration.Object).AddSecondaryResolver(resolver);
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             [Fact]
             public void DependencyResolver_delegates_to_internal_configuration()
             {
-                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null);
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var resolver = new Mock<IDbDependencyResolver>().Object;
                 mockInternalConfiguration.Setup(m => m.ResolverSnapshot).Returns(resolver);
 
@@ -109,7 +109,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Equal(
                     "serviceInterceptor",
                     Assert.Throws<ArgumentNullException>(
-                        () => (new DbConfigurationLoadedEventArgs(new Mock<InternalConfiguration>(null, null, null, null).Object))
+                        () => (new DbConfigurationLoadedEventArgs(new Mock<InternalConfiguration>(null, null, null, null, null).Object))
                                   .ReplaceService<IPilkington>(null)).ParamName);
             }
 

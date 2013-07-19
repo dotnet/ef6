@@ -5,8 +5,6 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Infrastructure.DependencyResolution;
-    using System.Threading.Tasks;
     using Moq;
     using Xunit;
 
@@ -48,25 +46,6 @@ namespace System.Data.Entity.Infrastructure
             dispatchers.EntityConnection.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
 
             mockInterceptor.Verify(m => m.CallMe(), Times.Never());
-        }
-
-        [Fact]
-        public void Interceptors_registered_as_services_are_automatically_registered()
-        {
-            var mockInterceptor1 = new Mock<FakeInterceptor>();
-            var mockInterceptor2 = new Mock<FakeInterceptor>();
-
-            var mockResolver = new Mock<IDbDependencyResolver>();
-            mockResolver.Setup(m => m.GetServices(typeof(IDbInterceptor), null))
-                .Returns(new object[] { mockInterceptor1.Object, mockInterceptor2.Object });
-
-            var dispatchers = new Dispatchers(mockResolver.Object);
-
-            mockResolver.Verify(m => m.GetServices(typeof(IDbInterceptor), null));
-
-            dispatchers.Command.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
-            mockInterceptor1.Verify(m => m.CallMe(), Times.Once());
-            mockInterceptor2.Verify(m => m.CallMe(), Times.Once());
         }
 
         internal abstract class FakeInterceptor : IDbCommandInterceptor, IDbCommandTreeInterceptor, ICancelableDbCommandInterceptor,

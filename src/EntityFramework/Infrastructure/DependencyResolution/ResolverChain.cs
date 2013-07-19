@@ -75,7 +75,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         ///     An optional key value which may be used to determine the service instance to create.
         /// </param>
         /// <returns>All the resolved services, or an empty enumeration if no resolver in the chain could resolve the service.</returns>
-        public IEnumerable<object> GetServices(Type type, object key)
+        public virtual IEnumerable<object> GetServices(Type type, object key)
         {
             return _resolversSnapshot.SelectMany(r => r.GetServices(type, key));
         }
