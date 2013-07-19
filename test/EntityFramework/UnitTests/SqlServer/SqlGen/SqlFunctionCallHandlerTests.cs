@@ -196,7 +196,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             const string expectedSqlFormat = 
 "convert ({0}," 
-    + "convert(varchar(255), 2012) + '-' + convert(varchar(255), 2) + '-' + convert(varchar(255), 29) + ' ' + "
+    + "right('000' + convert(varchar(255), 2012), 4) + '-' + convert(varchar(255), 2) + '-' + convert(varchar(255), 29) + ' ' + "
     + "convert(varchar(255), 6) + ':' + convert(varchar(255), 12) + ':' + str(37, {1}, {2}), 121)";
 
             var expectedSql1 = String.Format(CultureInfo.InvariantCulture, expectedSqlFormat, "datetime", 6, 3);
@@ -215,7 +215,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             const string expectedSql=
 "convert (datetimeoffset,"
-    + "convert(varchar(255), 2012) + '-' + convert(varchar(255), 2) + '-' + convert(varchar(255), 29) + ' ' + "
+    + "right('000' + convert(varchar(255), 2012), 4) + '-' + convert(varchar(255), 2) + '-' + convert(varchar(255), 29) + ' ' + "
     + "convert(varchar(255), 6) + ':' + convert(varchar(255), 12) + ':' + str(37, 10, 7) + "
     + "(CASE WHEN 180 >= 0 THEN '+' ELSE '-' END) + convert(varchar(255), ABS(180/60)) + ':' + convert(varchar(255), ABS(180%60)), 121)";
 

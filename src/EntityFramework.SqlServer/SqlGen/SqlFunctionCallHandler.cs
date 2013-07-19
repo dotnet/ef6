@@ -1303,8 +1303,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
             //Building the string representation
             if (hasDatePart)
             {
-                //  YEAR
+                //  YEAR (must be 4 digits)
+                result.Append("right('000' + ");
                 AppendConvertToVarchar(sqlgen, result, args[currentArgumentIndex++]);
+                result.Append(", 4)");
 
                 //  MONTH
                 result.Append(" + '-' + ");

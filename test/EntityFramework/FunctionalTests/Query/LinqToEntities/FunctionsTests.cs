@@ -423,6 +423,40 @@ FROM [dbo].[ArubaOwners] AS [Extent1]";
                     Assert.Contains("SECOND", query.ToString().ToUpperInvariant());
                 }
             }
+
+            [Fact]
+            public void DbFunctions_CreateDateTime_does_not_throw_if_year_does_not_have_4_digits()
+            {
+                using (var ctx = new ArubaContext())
+                {
+                    var query = ctx.AllTypes.Select(
+                        a => a.c5_datetime == DbFunctions.CreateDateTime(8, 2, 29, 1, 1, 1));
+                    Assert.DoesNotThrow(() => query.Count());
+
+                    query = ctx.AllTypes.Select(
+                        a => a.c6_smalldatetime == DbFunctions.CreateDateTime(8, 2, 29, 1, 1, 1));
+                    Assert.DoesNotThrow(() => query.Count());
+
+                    query = ctx.AllTypes.Select(
+                        a => a.c28_date == DbFunctions.CreateDateTime(8, 2, 29, null, null, null));
+                    Assert.DoesNotThrow(() => query.Count());
+
+                    query = ctx.AllTypes.Select(
+                        a => a.c29_datetime2 == DbFunctions.CreateDateTime(8, 2, 29, 1, 1, 1));
+                    Assert.DoesNotThrow(() => query.Count());
+                }
+            }
+
+            [Fact]
+            public void DbFunctions_CreateDateTimeOffset_does_not_throw_if_year_does_not_have_4_digits()
+            {
+                using (var ctx = new ArubaContext())
+                {
+                    var query = ctx.AllTypes.Select(
+                        a => a.c30_datetimeoffset == DbFunctions.CreateDateTimeOffset(8, 2, 29, 1, 1, 1, 1));
+                    Assert.DoesNotThrow(() => query.Count());
+                }
+            }
         }
 
         public class MathFunctions : FunctionalTestBase
