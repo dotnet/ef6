@@ -142,12 +142,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var renamedModificationFunctions = FindRenamedModificationFunctions().ToList();
             var movedModificationFunctions = FindMovedModificationFunctions().ToList();
 
-            return renamedTables
+            return HandleTransitiveRenameDependencies(renamedTables)
                 .Concat<MigrationOperation>(movedTables)
                 .Concat(removedForeignKeys)
                 .Concat(removedForeignKeys.Select(fko => fko.CreateDropIndexOperation()))
                 .Concat(orphanedColumns)
-                .Concat(renamedColumns)
+                .Concat(HandleTransitiveRenameDependencies(renamedColumns))
                 .Concat(addedTables)
                 .Concat(addedColumns)
                 .Concat(alteredColumns)
@@ -164,11 +164,87 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .ToList();
         }
 
+        private static IEnumerable<RenameTableOperation> HandleTransitiveRenameDependencies(
+            IList<RenameTableOperation> renameTableOperations)
+        {
+            DebugCheck.NotNull(renameTableOperations);
+
+            return HandleTransitiveRenameDependencies(
+                renameTableOperations,
+                (rt1, rt2) =>
+                {
+                    var databaseName1 = DatabaseName.Parse(rt1.Name);
+                    var databaseName2 = DatabaseName.Parse(rt2.Name);
+
+                    return databaseName1.Name.EqualsIgnoreCase(rt2.NewName)
+                           && databaseName1.Schema.EqualsIgnoreCase(databaseName2.Schema);
+                },
+                (t, rt) => new RenameTableOperation(t, rt.NewName),
+                (rt, t) => rt.NewName = t);
+        }
+
+        private static IEnumerable<RenameColumnOperation> HandleTransitiveRenameDependencies(
+            IList<RenameColumnOperation> renameColumnOperations)
+        {
+            DebugCheck.NotNull(renameColumnOperations);
+
+            return HandleTransitiveRenameDependencies(
+                renameColumnOperations,
+                (rc1, rc2) => rc1.Table.EqualsIgnoreCase(rc2.Table)
+                              && rc1.Name.EqualsIgnoreCase(rc2.NewName),
+                (t, rc) => new RenameColumnOperation(rc.Table, t, rc.NewName),
+                (rc, t) => rc.NewName = t);
+        }
+
+        private static IEnumerable<T> HandleTransitiveRenameDependencies<T>(
+            IList<T> renameOperations,
+            Func<T, T, bool> dependencyFinder,
+            Func<string, T, T> renameCreator,
+            Action<T, string> setNewName)
+            where T : class
+        {
+            DebugCheck.NotNull(renameOperations);
+            DebugCheck.NotNull(dependencyFinder);
+            DebugCheck.NotNull(renameCreator);
+            DebugCheck.NotNull(setNewName);
+
+            var tempCounter = 0;
+            var tempRenames = new List<T>();
+
+            for (var i = 0; i < renameOperations.Count; i++)
+            {
+                var renameOperation = renameOperations[i];
+
+                var dependentRename
+                    = renameOperations
+                        .Skip(i + 1)
+                        .SingleOrDefault(rt => dependencyFinder(renameOperation, rt));
+
+                if (dependentRename != null)
+                {
+                    var tempNewName = "__mig_tmp__" + tempCounter++;
+
+                    tempRenames.Add(renameCreator(tempNewName, renameOperation));
+
+                    setNewName(renameOperation, tempNewName);
+                }
+
+                yield return renameOperation;
+            }
+
+            foreach (var renameOperation in tempRenames)
+            {
+                yield return renameOperation;
+            }
+        }
+
         private XDocument BuildColumnNormalizedSourceModel(IEnumerable<RenameColumnOperation> renamedColumns)
         {
             DebugCheck.NotNull(renamedColumns);
 
             var columnNormalizedSourceModel = new XDocument(_source.Model); // clone
+
+            var normalizedElements = new List<XElement>();
 
             renamedColumns.Each(
                 rc =>
@@ -188,9 +264,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
                             where pd.RoleAttribute().EqualsIgnoreCase(entitySet)
                             from pr in pd.Descendants(EdmXNames.Ssdl.PropertyRefNames)
                             where pr.NameAttribute().EqualsIgnoreCase(rc.Name)
+                                  && !normalizedElements.Contains(pr)
                             select pr;
 
-                    principalDependents.Each(pd => pd.SetAttributeValue("Name", rc.NewName));
+                    principalDependents.Each(
+                        pr =>
+                        {
+                            pr.SetAttributeValue("Name", rc.NewName);
+                            normalizedElements.Add(pr);
+                        });
 
                     var keyProperties
                         = from et in columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.EntityTypeNames)
@@ -198,9 +280,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
                             from pr in
                                 et.Descendants(EdmXNames.Ssdl.KeyNames).Descendants(EdmXNames.Ssdl.PropertyRefNames)
                             where pr.NameAttribute().EqualsIgnoreCase(rc.Name)
+                                  && !normalizedElements.Contains(pr)
                             select pr;
 
-                    keyProperties.Each(pr => pr.SetAttributeValue("Name", rc.NewName));
+                    keyProperties.Each(
+                        pr =>
+                        {
+                            pr.SetAttributeValue("Name", rc.NewName);
+                            normalizedElements.Add(pr);
+                        });
                 });
 
             return columnNormalizedSourceModel;
@@ -956,6 +1044,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private IEnumerable<CreateTableOperation> FindAddedTables(IEnumerable<RenameTableOperation> renamedTables)
         {
+            DebugCheck.NotNull(renamedTables);
+
             return _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
                 .Except(
                     _source.Model.Descendants(EdmXNames.Ssdl.EntitySetNames),
@@ -992,6 +1082,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private IEnumerable<DropTableOperation> FindRemovedTables(IEnumerable<RenameTableOperation> renamedTables)
         {
+            DebugCheck.NotNull(renamedTables);
+
             return _source.Model.Descendants(EdmXNames.Ssdl.EntitySetNames).Except(
                 _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames),
                 (es1, es2) => es1.NameAttribute().EqualsIgnoreCase(es2.NameAttribute()))
@@ -1008,6 +1100,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private IEnumerable<DropColumnOperation> FindRemovedColumns(IEnumerable<RenameColumnOperation> renamedColumns)
         {
+            DebugCheck.NotNull(renamedColumns);
+
             return from t1 in _source.Model.Descendants(EdmXNames.Ssdl.EntityTypeNames)
                 from t2 in _target.Model.Descendants(EdmXNames.Ssdl.EntityTypeNames)
                 where t1.NameAttribute().EqualsIgnoreCase(t2.NameAttribute())
@@ -1025,17 +1119,25 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private IEnumerable<DropColumnOperation> FindOrphanedColumns(IEnumerable<RenameColumnOperation> renamedColumns)
         {
-            return from rc in renamedColumns
+            DebugCheck.NotNull(renamedColumns);
+
+            return from rc1 in renamedColumns
                 from et in _source.Model.Descendants(EdmXNames.Ssdl.EntityTypeNames)
                 let t = GetQualifiedTableName(_source.Model, et.NameAttribute())
-                where rc.Table.EqualsIgnoreCase(t)
+                where rc1.Table.EqualsIgnoreCase(t)
                       && _source.Model
                           .Descendants(EdmXNames.Msl.AssociationSetMappingNames)
                           .Where(asm => asm.StoreEntitySetAttribute().EqualsIgnoreCase(et.NameAttribute()))
                           .Descendants(EdmXNames.Msl.ScalarPropertyNames)
-                          .Any(sp => sp.ColumnNameAttribute().EqualsIgnoreCase(rc.Name))
+                          .Any(sp => sp.ColumnNameAttribute().EqualsIgnoreCase(rc1.Name))
+                      && !renamedColumns.Any(
+                          // Ensure the candidate column is not also being renamed
+                          rc2 =>
+                              rc2 != rc1
+                              && rc2.Table.EqualsIgnoreCase(rc1.Table)
+                              && rc2.Name.EqualsIgnoreCase(rc1.NewName))
                 let oc = et.Descendants(EdmXNames.Ssdl.PropertyNames)
-                    .SingleOrDefault(c => rc.NewName.EqualsIgnoreCase(c.NameAttribute()))
+                    .SingleOrDefault(c => rc1.NewName.EqualsIgnoreCase(c.NameAttribute()))
                 where oc != null
                 select new DropColumnOperation(
                     t,
@@ -1045,14 +1147,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         private IEnumerable<RenameColumnOperation> FindRenamedColumns()
         {
-            return FindRenamedMappedColumns()
-                .Concat(FindRenamedForeignKeyColumns())
-                .Concat(FindRenamedDiscriminatorColumns())
-                .Distinct(
-                    new DynamicEqualityComparer<RenameColumnOperation>(
-                        (c1, c2) => c1.Table.EqualsIgnoreCase(c2.Table)
-                                    && c1.Name.EqualsIgnoreCase(c2.Name)
-                                    && c1.NewName.EqualsIgnoreCase(c2.NewName)));
+            return
+                FindRenamedMappedColumns()
+                    .Concat(FindRenamedForeignKeyColumns())
+                    .Concat(FindRenamedDiscriminatorColumns())
+                    .Distinct(
+                        new DynamicEqualityComparer<RenameColumnOperation>(
+                            (c1, c2) => c1.Table.EqualsIgnoreCase(c2.Table)
+                                        && c1.Name.EqualsIgnoreCase(c2.Name)
+                                        && c1.NewName.EqualsIgnoreCase(c2.NewName)));
         }
 
         private IEnumerable<RenameColumnOperation> FindRenamedMappedColumns()
@@ -1148,6 +1251,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     .Single(et => et.NameAttribute().EqualsIgnoreCase(es))
                     .Descendants(EdmXNames.Ssdl.PropertyNames)
                     .Any(p => p.NameAttribute().EqualsIgnoreCase(n1.name))
+                      || (from a3 in _target.Model.Descendants(EdmXNames.Ssdl.AssociationNames)
+                          where !a2.NameAttribute().EqualsIgnoreCase(a3.NameAttribute())
+                          let d3 = a3.Descendants(EdmXNames.Ssdl.DependentNames).Single()
+                          where d2.RoleAttribute().EqualsIgnoreCase(d3.RoleAttribute())
+                          from n3 in d3.Descendants(EdmXNames.Ssdl.PropertyRefNames)
+                          where n3.NameAttribute().EqualsIgnoreCase(n1.name)
+                          select n3)
+                          .Any()
                 let t = GetQualifiedTableName(_target.Model, es)
                 select new RenameColumnOperation(t, n1.name, n2.name);
         }

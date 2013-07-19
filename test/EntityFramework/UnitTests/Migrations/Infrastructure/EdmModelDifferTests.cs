@@ -105,6 +105,228 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .ValidateMessage("ErrorGeneratingCommandTree", "Thing_Insert", "Thing");
         }
 
+        public class TypeBase
+        {
+            public int Id { get; set; }
+        }
+
+        public class TypeOne : TypeBase
+        {
+            public RelatedType Related { get; set; }
+        }
+
+        public class TypeTwo : TypeBase
+        {
+            public RelatedType Related { get; set; }
+        }
+
+        public class RelatedType
+        {
+            public int Id { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Should_detect_renamed_fk_columns_when_swapped()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<TypeBase>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+            
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<TypeBase>();
+            modelBuilder.Entity<TypeOne>().HasOptional(t => t.Related).WithMany().Map(m => m.MapKey("Related_Id1"));
+            modelBuilder.Entity<TypeTwo>().HasOptional(t => t.Related).WithMany().Map(m => m.MapKey("Related_Id"));
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(3, operations.Count());
+        }
+
+        public class Foo
+        {
+            public int Id { get; set; }
+        }
+
+        public class Bar
+        {
+            public int Id { get; set; }
+        }
+
+        public class Baz
+        {
+            public int Id { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Should_not_introduce_temp_table_renames_when_tables_in_different_schemas()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Foo>().ToTable("Foo1");
+            modelBuilder.Entity<Bar>().ToTable("Bar1");
+            modelBuilder.Entity<Baz>().ToTable("Baz1");
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Foo>().ToTable("Baz1");
+            modelBuilder.Entity<Bar>().ToTable("Foo1");
+            modelBuilder.Entity<Baz>().ToTable("Bar1");
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer()
+                    .Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(5, operations.Count());
+
+            var renameOperations
+                = operations.OfType<RenameTableOperation>().ToList();
+
+            Assert.Equal(5, renameOperations.Count());
+
+            var renameTableOperation = renameOperations.ElementAt(0);
+
+            Assert.Equal("dbo.Foo1", renameTableOperation.Name);
+            Assert.Equal("__mig_tmp__0", renameTableOperation.NewName);
+
+            renameTableOperation = renameOperations.ElementAt(1);
+
+            Assert.Equal("dbo.Bar1", renameTableOperation.Name);
+            Assert.Equal("__mig_tmp__1", renameTableOperation.NewName);
+
+            renameTableOperation = renameOperations.ElementAt(2);
+
+            Assert.Equal("dbo.Baz1", renameTableOperation.Name);
+            Assert.Equal("Bar1", renameTableOperation.NewName);
+
+            renameTableOperation = renameOperations.ElementAt(3);
+
+            Assert.Equal("__mig_tmp__0", renameTableOperation.Name);
+            Assert.Equal("Baz1", renameTableOperation.NewName);
+
+            renameTableOperation = renameOperations.ElementAt(4);
+
+            Assert.Equal("__mig_tmp__1", renameTableOperation.Name);
+            Assert.Equal("Foo1", renameTableOperation.NewName);
+        }
+
+        [MigrationsTheory]
+        public void Should_introduce_temp_table_renames_when_transitive_dependencies()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Foo>().ToTable("Foo1", "foo");
+            modelBuilder.Entity<Bar>().ToTable("Bar1", "bar");
+            modelBuilder.Entity<Baz>().ToTable("Baz1", "baz");
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Foo>().ToTable("Baz1", "foo");
+            modelBuilder.Entity<Bar>().ToTable("Foo1", "bar");
+            modelBuilder.Entity<Baz>().ToTable("Bar1", "baz");
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer()
+                    .Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(3, operations.Count());
+
+            var renameOperations
+                = operations.OfType<RenameTableOperation>().ToList();
+
+            Assert.Equal(3, renameOperations.Count());
+
+            var renameTableOperation = renameOperations.ElementAt(0);
+
+            Assert.Equal("foo.Foo1", renameTableOperation.Name);
+            Assert.Equal("Baz1", renameTableOperation.NewName);
+
+            renameTableOperation = renameOperations.ElementAt(1);
+
+            Assert.Equal("bar.Bar1", renameTableOperation.Name);
+            Assert.Equal("Foo1", renameTableOperation.NewName);
+
+            renameTableOperation = renameOperations.ElementAt(2);
+
+            Assert.Equal("baz.Baz1", renameTableOperation.Name);
+            Assert.Equal("Bar1", renameTableOperation.NewName);
+        }
+        
+        public class TypeWithRenames
+        {
+            public int Id { get; set; }
+            public int Foo { get; set; }
+            public int Bar { get; set; }
+            public int Baz { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Should_introduce_temp_column_renames_when_transitive_dependencies()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<TypeWithRenames>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<TypeWithRenames>().Property(t => t.Foo).HasColumnName("Baz");
+            modelBuilder.Entity<TypeWithRenames>().Property(t => t.Bar).HasColumnName("Foo");
+            modelBuilder.Entity<TypeWithRenames>().Property(t => t.Baz).HasColumnName("Bar");
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer()
+                    .Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(5, operations.Count());
+
+            var renameOperations
+                = operations.OfType<RenameColumnOperation>().ToList();
+
+            Assert.Equal(5, renameOperations.Count());
+
+            var renameColumnOperation = renameOperations.ElementAt(0);
+
+            Assert.Equal("Foo", renameColumnOperation.Name);
+            Assert.Equal("__mig_tmp__0", renameColumnOperation.NewName);
+
+            renameColumnOperation = renameOperations.ElementAt(1);
+
+            Assert.Equal("Bar", renameColumnOperation.Name);
+            Assert.Equal("__mig_tmp__1", renameColumnOperation.NewName);
+
+            renameColumnOperation = renameOperations.ElementAt(2);
+
+            Assert.Equal("Baz", renameColumnOperation.Name);
+            Assert.Equal("Bar", renameColumnOperation.NewName);
+
+            renameColumnOperation = renameOperations.ElementAt(3);
+
+            Assert.Equal("__mig_tmp__0", renameColumnOperation.Name);
+            Assert.Equal("Baz", renameColumnOperation.NewName);
+
+            renameColumnOperation = renameOperations.ElementAt(4);
+
+            Assert.Equal("__mig_tmp__1", renameColumnOperation.Name);
+            Assert.Equal("Foo", renameColumnOperation.NewName);
+        }
+
         public class ClassA
         {
             public string Id { get; set; }
@@ -129,7 +351,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Map(_ => { }); // IA
 
             var model1 = modelBuilder.Build(ProviderInfo);
-
+            
             modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<ClassB>();

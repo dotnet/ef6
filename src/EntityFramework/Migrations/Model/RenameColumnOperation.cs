@@ -12,7 +12,7 @@ namespace System.Data.Entity.Migrations.Model
     {
         private readonly string _table;
         private readonly string _name;
-        private readonly string _newName;
+        private string _newName;
 
         /// <summary>
         ///     Initializes a new instance of the RenameColumnOperation class.
@@ -56,6 +56,12 @@ namespace System.Data.Entity.Migrations.Model
         public virtual string NewName
         {
             get { return _newName; }
+            internal set
+            {
+                DebugCheck.NotEmpty(value);
+                
+                _newName = value;
+            }
         }
 
         /// <summary>
