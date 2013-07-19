@@ -661,7 +661,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
 
             Assert.Equal(
-                Strings.ComplexTypeConfigurationMismatch(type),
+                Strings.ComplexTypeConfigurationMismatch(type.Name),
                 Assert.Throws<InvalidOperationException>(() => typeMapper.MapEntityType(type)).Message);
         }
 

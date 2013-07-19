@@ -165,7 +165,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             Assert.Equal(
                 Strings.LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity(
                 "*",
-                typeof(LightweighEntity).FullName + "." + "ValidInverseNavigationProperty",
+                typeof(LightweighEntity).Name + "." + "ValidInverseNavigationProperty",
                 typeof(LightweighEntity).FullName),
                 Assert.Throws<InvalidOperationException>(
                     () => lightweightConfiguration.HasInverseEndMultiplicity(RelationshipMultiplicity.Many)).Message);
@@ -285,7 +285,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             Assert.Equal(
                 Strings.LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity(
                 "*",
-                typeof(LightweighEntity).FullName + "." + "ValidInverseNavigationProperty",
+                typeof(LightweighEntity).Name + "." + "ValidInverseNavigationProperty",
                 typeof(LightweighEntity).FullName),
                 Assert.Throws<InvalidOperationException>(
                     () => lightweightConfiguration.HasInverseNavigationProperty(p => inverseNavigationProperty)).Message);
@@ -336,7 +336,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             Assert.Equal(
                 Strings.LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity(
                 "0..1",
-                typeof(LightweighEntity).FullName + "." + "PrivateNavigationProperty",
+                typeof(LightweighEntity).Name + "." + "PrivateNavigationProperty",
                 "System.Collections.Generic.ICollection`1["+
                 typeof(LightweighEntity).FullName + "]"),
                 Assert.Throws<InvalidOperationException>(

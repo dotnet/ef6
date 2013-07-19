@@ -448,7 +448,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             modelConfiguration.Add(new Mock<ComplexTypeConfiguration>(typeof(object)).Object);
 
             Assert.Equal(
-                Strings.EntityTypeConfigurationMismatch(typeof(object)),
+                Strings.EntityTypeConfigurationMismatch(typeof(object).Name),
                 Assert.Throws<InvalidOperationException>(() => modelConfiguration.Entity(typeof(object))).Message);
         }
 
@@ -467,7 +467,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             modelConfiguration.Add(new Mock<EntityTypeConfiguration>(typeof(object)).Object);
 
             Assert.Equal(
-                Strings.ComplexTypeConfigurationMismatch(typeof(object)),
+                Strings.ComplexTypeConfigurationMismatch(typeof(object).Name),
                 Assert.Throws<InvalidOperationException>(() => modelConfiguration.ComplexType(typeof(object))).Message);
         }
 

@@ -1177,7 +1177,7 @@ namespace ProductivityApiTests
                     {
                         if (shouldThrow)
                         {
-                            Assert.Throws<DbConcurrencyException>(
+                            Assert.Throws<NotSupportedException>(
                                 () => execute(context, tasks)).ValidateMessage("ConcurrentMethodInvocation");
                         }
                         else

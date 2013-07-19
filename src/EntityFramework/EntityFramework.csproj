@@ -444,7 +444,6 @@
     <Compile Include="Migrations\Infrastructure\ModificationCommandTreeGenerator.cs" />
     <Compile Include="Migrations\Infrastructure\IDbMigration.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryResolver.cs" />
-    <Compile Include="Infrastructure\DbConcurrencyException.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenResolver.cs" />
     <Compile Include="Infrastructure\IDbExecutionStrategy.cs" />
     <Compile Include="Infrastructure\DbExecutionStrategy.cs" />

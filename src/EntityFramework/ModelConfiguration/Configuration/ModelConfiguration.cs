@@ -150,7 +150,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             if (_complexTypeConfigurations.ContainsKey(entityType))
             {
-                throw Error.EntityTypeConfigurationMismatch(entityType.FullName);
+                throw Error.EntityTypeConfigurationMismatch(entityType.Name);
             }
 
             EntityTypeConfiguration entityTypeConfiguration;
@@ -181,7 +181,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             if (_entityConfigurations.ContainsKey(complexType))
             {
-                throw Error.ComplexTypeConfigurationMismatch(complexType.FullName);
+                throw Error.ComplexTypeConfigurationMismatch(complexType.Name);
             }
 
             ComplexTypeConfiguration complexTypeConfiguration;
@@ -323,8 +323,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                         || baseTypeConfiguration.ModificationStoredProceduresConfiguration == null))
                 {
                     throw Error.BaseTypeNotMappedToFunctions(
-                        baseClrType.FullName,
-                        entityTypeConfiguration.ClrType.FullName);
+                        baseClrType.Name,
+                        entityTypeConfiguration.ClrType.Name);
                 }
 
                 entityType = (EntityType)entityType.BaseType;

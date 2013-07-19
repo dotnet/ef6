@@ -156,8 +156,8 @@ namespace FunctionalTests
 
                     Assert.Equal(
                         Strings.BaseTypeNotMappedToFunctions(
-                            typeof(MigrationsCustomer).FullName,
-                            typeof(GoldCustomer).FullName),
+                            typeof(MigrationsCustomer).Name,
+                            typeof(GoldCustomer).Name),
                         Assert.Throws<InvalidOperationException>(
                             () => BuildMapping(modelBuilder)).Message);
                 }

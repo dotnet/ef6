@@ -241,7 +241,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     throw new InvalidOperationException(
                         Strings.LightweightPrimitivePropertyConfiguration_NonNullableProperty(
                             _propertyInfo.DeclaringType + "." + _propertyInfo.Name,
-                            _propertyInfo.PropertyType));
+                            _propertyInfo.PropertyType.Name));
                 }
 
                 _configuration().IsNullable = true;

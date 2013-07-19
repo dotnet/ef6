@@ -159,7 +159,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             Assert.Equal(
-                Strings.NoSuchProperty("foo", type.FullName),
+                Strings.NoSuchProperty("foo", type.Name),
                 Assert.Throws<InvalidOperationException>(() => config.Ignore("foo")).Message);
         }
 
@@ -179,38 +179,39 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void Ignore_type_throws_with_any_other_configuration()
         {
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.IsComplexType());
+                config => config.IsComplexType(), "IsComplexType");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.Ignore("Property1"));
+                config => config.Ignore("Property1"), "Ignore");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.HasEntitySetName("EntitySet1"));
+                config => config.HasEntitySetName("EntitySet1"), "HasEntitySetName");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.HasKey("Property1"));
+                config => config.HasKey("Property1"), "HasKey");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.HasKey(new[] { "Property1" }));
+                config => config.HasKey(new[] { "Property1" }), "HasKey");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.HasKey(config.ClrType.GetProperties().First()));
+                config => config.HasKey(config.ClrType.GetProperties().First()), "HasKey");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.HasKey(new[] { config.ClrType.GetProperties().First() }));
+                config => config.HasKey(new[] { config.ClrType.GetProperties().First() }), "HasKey");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.Property("Property1"));
+                config => config.Property("Property1"), "Property");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.Property(config.ClrType.GetProperties().First()));
+                config => config.Property(config.ClrType.GetProperties().First()), "Property");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.NavigationProperty("Property2"));
+                config => config.NavigationProperty("Property2"), "NavigationProperty");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.NavigationProperty(config.ClrType.GetProperties().Last()));
+                config => config.NavigationProperty(config.ClrType.GetProperties().Last()), "NavigationProperty");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.ToTable("Table1"));
+                config => config.ToTable("Table1"), "ToTable");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.ToTable("Table1", "Schema1"));
+                config => config.ToTable("Table1", "Schema1"), "ToTable");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.MapToStoredProcedures());
+                config => config.MapToStoredProcedures(), "MapToStoredProcedures");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.MapToStoredProcedures(c => { }));
+                config => config.MapToStoredProcedures(c => { }), "MapToStoredProcedures");
         }
 
-        private void Ignore_type_throws_with_any_other_configuration_implementation(Action<ConventionTypeConfiguration> configAction)
+        private void Ignore_type_throws_with_any_other_configuration_implementation(Action<ConventionTypeConfiguration> configAction,
+            string methodName)
         {
             var type = new MockType();
             type.Property<int>("Property1");
@@ -218,28 +219,29 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             Ignore_type_throws_with_any_other_configuration_assert(
                 new ConventionTypeConfiguration(type, () => new EntityTypeConfiguration(type), new ModelConfiguration()),
-                configAction);
+                configAction, methodName);
             Ignore_type_throws_with_any_other_configuration_assert(
                 new ConventionTypeConfiguration(type, () => new ComplexTypeConfiguration(type), new ModelConfiguration()),
-                configAction);
+                configAction, methodName);
             Ignore_type_throws_with_any_other_configuration_assert(
                 new ConventionTypeConfiguration(type, new ModelConfiguration()),
-                configAction);
+                configAction, methodName);
         }
 
         private void Ignore_type_throws_with_any_other_configuration_assert(
             ConventionTypeConfiguration config,
-            Action<ConventionTypeConfiguration> configAction)
+            Action<ConventionTypeConfiguration> configAction,
+            string methodName)
         {
             config.Ignore();
 
             Assert.Equal(
-                Strings.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType,
+                Strings.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType(methodName, config.ClrType.Name),
                 Assert.Throws<InvalidOperationException>(
                     () => configAction(config)).Message);
 
             Assert.Equal(
-                Strings.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType,
+                Strings.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType(methodName, config.ClrType.Name),
                 Assert.Throws<InvalidOperationException>(
                     () => config.Ignore()).Message);
         }
@@ -260,58 +262,60 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void IsComplexType_throws_with_conflicting_configuration()
         {
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.HasEntitySetName("EntitySet1"));
+                config => config.HasEntitySetName("EntitySet1"), "HasEntitySetName");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.HasKey("Property1"));
+                config => config.HasKey("Property1"), "HasKey");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.HasKey(new[] { "Property1" }));
+                config => config.HasKey(new[] { "Property1" }), "HasKey");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.HasKey(config.ClrType.GetProperties().First()));
+                config => config.HasKey(config.ClrType.GetProperties().First()), "HasKey");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.HasKey(new[] { config.ClrType.GetProperties().First() }));
+                config => config.HasKey(new[] { config.ClrType.GetProperties().First() }), "HasKey");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.ToTable("Table1"));
+                config => config.ToTable("Table1"), "ToTable");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.ToTable("Table1", "Schema1"));
+                config => config.ToTable("Table1", "Schema1"), "ToTable");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.MapToStoredProcedures());
+                config => config.MapToStoredProcedures(), "MapToStoredProcedures");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.MapToStoredProcedures(c => { }));
+                config => config.MapToStoredProcedures(c => { }), "MapToStoredProcedures");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.NavigationProperty("Property1"));
+                config => config.NavigationProperty("Property1"), "NavigationProperty");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.NavigationProperty(config.ClrType.GetProperties().First()));
+                config => config.NavigationProperty(config.ClrType.GetProperties().First()), "NavigationProperty");
         }
 
-        private void IsComplexType_throws_with_conflicting_configuration_implementation(Action<ConventionTypeConfiguration> configAction)
+        private void IsComplexType_throws_with_conflicting_configuration_implementation(Action<ConventionTypeConfiguration> configAction,
+            string methodName)
         {
             var type = new MockType();
             type.Property<int>("Property1");
 
             IsComplexType_throws_with_conflicting_configuration_assert(
                 new ConventionTypeConfiguration(type, () => new EntityTypeConfiguration(type), new ModelConfiguration()),
-                configAction);
+                configAction, methodName);
             IsComplexType_throws_with_conflicting_configuration_assert(
                 new ConventionTypeConfiguration(type, () => new ComplexTypeConfiguration(type), new ModelConfiguration()),
-                configAction);
+                configAction, methodName);
             IsComplexType_throws_with_conflicting_configuration_assert(
                 new ConventionTypeConfiguration(type, new ModelConfiguration()),
-                configAction);
+                configAction, methodName);
         }
 
         private void IsComplexType_throws_with_conflicting_configuration_assert(
             ConventionTypeConfiguration config,
-            Action<ConventionTypeConfiguration> configAction)
+            Action<ConventionTypeConfiguration> configAction,
+            string methodName)
         {
             config.IsComplexType();
 
             Assert.Equal(
-                Strings.LightweightEntityConfiguration_ConfigurationConflict_ComplexType,
+                Strings.LightweightEntityConfiguration_ConfigurationConflict_ComplexType(methodName, config.ClrType.Name),
                 Assert.Throws<InvalidOperationException>(
                     () => configAction(config)).Message);
 
             Assert.Equal(
-                Strings.LightweightEntityConfiguration_ConfigurationConflict_ComplexType,
+                Strings.LightweightEntityConfiguration_ConfigurationConflict_ComplexType(methodName, config.ClrType.Name),
                 Assert.Throws<InvalidOperationException>(
                     () => config.IsComplexType()).Message);
         }
@@ -473,7 +477,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             Assert.Equal(
-                Strings.NoSuchProperty("foo", type.FullName),
+                Strings.NoSuchProperty("foo", type.Name),
                 Assert.Throws<InvalidOperationException>(() => config.NavigationProperty("foo")).Message);
 
             Assert.Equal(

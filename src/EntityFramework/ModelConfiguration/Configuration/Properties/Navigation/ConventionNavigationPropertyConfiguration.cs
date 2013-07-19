@@ -157,16 +157,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 {
                     throw new InvalidOperationException(
                         Strings.LightweightEntityConfiguration_MismatchedInverseNavigationProperty(
-                            _configuration.NavigationProperty.PropertyType.GetTargetType(), _configuration.NavigationProperty.Name,
-                            inverseNavigationProperty.DeclaringType, inverseNavigationProperty.Name));
+                            _configuration.NavigationProperty.PropertyType.GetTargetType().FullName, _configuration.NavigationProperty.Name,
+                            inverseNavigationProperty.DeclaringType.FullName, inverseNavigationProperty.Name));
                 }
 
                 if (inverseNavigationProperty.PropertyType.GetTargetType() != _configuration.NavigationProperty.DeclaringType)
                 {
                     throw new InvalidOperationException(
                         Strings.LightweightEntityConfiguration_InvalidInverseNavigationProperty(
-                            _configuration.NavigationProperty.DeclaringType, _configuration.NavigationProperty.Name,
-                            inverseNavigationProperty.PropertyType.GetTargetType(), inverseNavigationProperty.Name));
+                            _configuration.NavigationProperty.DeclaringType.FullName, _configuration.NavigationProperty.Name,
+                            inverseNavigationProperty.PropertyType.GetTargetType().FullName, inverseNavigationProperty.Name));
                 }
 
                 if (_configuration.InverseEndKind.HasValue)
@@ -268,7 +268,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                 throw new InvalidOperationException(
                     Strings.LightweightNavigationPropertyConfiguration_IncompatibleMultiplicity(
                         RelationshipMultiplicityConverter.MultiplicityToString(multiplicity),
-                        propertyInfo.DeclaringType + "." + propertyInfo.Name,
+                        propertyInfo.DeclaringType.Name + "." + propertyInfo.Name,
                         propertyInfo.PropertyType));
             }
         }

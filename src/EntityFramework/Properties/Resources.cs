@@ -13222,14 +13222,6 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The type '{0}' is invalid. The specified type must derive from '{1}'."
-        /// </summary>
-        internal static string LightweightEntityConfiguration_TypeMismatch(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_TypeMismatch, p0, p1);
-        }
-
-        /// <summary>
         ///     A string like "The property '{0}' cannot be configured. Only scalar properties can be configured using lightweight conventions."
         /// </summary>
         internal static string LightweightEntityConfiguration_NonScalarProperty(object p0)
@@ -13454,19 +13446,19 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "If a type is mapped as a Complex Type the only configuration that can be specified is the property mapping."
+        ///     A string like "Calling '{0}' is not valid for type '{1}' because it is configured as a complex type. '{0}' is only allowed when configuring entity types."
         /// </summary>
-        internal static string LightweightEntityConfiguration_ConfigurationConflict_ComplexType
+        internal static string LightweightEntityConfiguration_ConfigurationConflict_ComplexType(object p0, object p1)
         {
-            get { return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_ConfigurationConflict_ComplexType); }
+            return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_ConfigurationConflict_ComplexType, p0, p1);
         }
 
         /// <summary>
-        ///     A string like "If a type is 'Ignored' no other configuration can be specified."
+        ///     A string like "Calling '{0}' is not valid for type '{1}' because it has been excluded from the model."
         /// </summary>
-        internal static string LightweightEntityConfiguration_ConfigurationConflict_IgnoreType
+        internal static string LightweightEntityConfiguration_ConfigurationConflict_IgnoreType(object p0, object p1)
         {
-            get { return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType); }
+            return EntityRes.GetString(EntityRes.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType, p0, p1);
         }
 
         /// <summary>
@@ -13478,7 +13470,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The property '{0}' cannot be configured as a navigation property. The property has to be of a valid entity type and the property should have non-abstract getter and setter. For collection properties the type must implement ICollection of T where T is a valid entity type."
+        ///     A string like "The property '{0}' cannot be configured as a navigation property. The property must be a valid entity type and the property should have a non-abstract getter and setter. For collection properties the type must implement ICollection<T> where T is a valid entity type."
         /// </summary>
         internal static string LightweightEntityConfiguration_InvalidNavigationProperty(object p0)
         {
@@ -13486,7 +13478,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The entity type '{0}' that the navigation property '{1}' is declared on is not the same as the type '{2}' referred by the inverse navigation property '{3}'."
+        ///     A string like "The entity type '{0}' on which the navigation property '{1}' is declared is not the same as the type '{2}' referred to by the inverse navigation property '{3}'."
         /// </summary>
         internal static string LightweightEntityConfiguration_InvalidInverseNavigationProperty(object p0, object p1, object p2, object p3)
         {
@@ -13494,7 +13486,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The entity type '{0}' that the navigation property '{1}' refers to is not the same as the type '{2}' on which the inverse navigation property '{3}' is declared."
+        ///     A string like "The entity type '{0}' to which the navigation property '{1}' refers is not the same as the type '{2}' on which the inverse navigation property '{3}' is declared."
         /// </summary>
         internal static string LightweightEntityConfiguration_MismatchedInverseNavigationProperty(object p0, object p1, object p2, object p3)
         {
@@ -13590,7 +13582,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The property {0} of type {1} cannot be marked as optional because it can't be assigned a null value."
+        ///     A string like "The property '{0}' of type '{1}' cannot be marked as optional because it cannot be assigned a null value."
         /// </summary>
         internal static string LightweightPrimitivePropertyConfiguration_NonNullableProperty(object p0, object p1)
         {
@@ -13622,7 +13614,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The specified convention of type '{0}' is not a configuration convention, a model convention or a mapping convention."
+        ///     A string like "The specified convention of type '{0}' is not a valid convention. Conventions must derive from Convention or implement IStoreConvention or IConceptualConvention."
         /// </summary>
         internal static string ConventionsConfiguration_InvalidConventionType(object p0)
         {
@@ -13630,7 +13622,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The specified convention of type '{0}' cannot be added before or after a convention of type '{1}'. Both types must specify conventions from the same category: configuration, model or mapping."
+        ///     A string like "The specified convention '{0}' cannot be added before or after '{1}'. Both conventions must share the same base class (Convention) or implement the same interface (IConceptualModelConvention<T> or IStoreModelConvention<T>)."
         /// </summary>
         internal static string ConventionsConfiguration_ConventionTypeMissmatch(object p0, object p1)
         {
@@ -13638,7 +13630,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The scale cannot be set on the DateTime property '{0}', only the precision should be specified."
+        ///     A string like "Scale cannot be configured for the DateTime property '{0}', only precision can be configured for DateTime properties."
         /// </summary>
         internal static string LightweightPrimitivePropertyConfiguration_DateTimeScale(object p0)
         {
@@ -13646,7 +13638,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "To set the precision on the decimal property '{0}' the scale must also be specified."
+        ///     A string like "Only precision was configured for Decimal property '{0}'. Both precision and scale must be configured for Decimal properties."
         /// </summary>
         internal static string LightweightPrimitivePropertyConfiguration_DecimalNoScale(object p0)
         {
@@ -13654,7 +13646,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The property '{0}' is not of DateTime type. Precision can only be set on DateTime properties."
+        ///     A string like "Precision without scale has been configured for property '{0}'. Precision without scale can only be configured for DateTime properties."
         /// </summary>
         internal static string LightweightPrimitivePropertyConfiguration_HasPrecisionNonDateTime(object p0)
         {
@@ -13662,7 +13654,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The property '{0}' is not of Decimal type. Precision and scale can only be set on Decimal properties."
+        ///     A string like "Precision and scale have been configured for property '{0}'. Precision and scale can only be configured for Decimal properties."
         /// </summary>
         internal static string LightweightPrimitivePropertyConfiguration_HasPrecisionNonDecimal(object p0)
         {
@@ -13670,7 +13662,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The property '{0}' is not of byte[] type. IsRowVersion can only be called on byte[] properties."
+        ///     A string like "The property '{0}' is not a Byte array. IsRowVersion can only be configured for Byte array properties."
         /// </summary>
         internal static string LightweightPrimitivePropertyConfiguration_IsRowVersionNonBinary(object p0)
         {
@@ -13678,7 +13670,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The property '{0}' is not of String type. IsUnicode can only be called on String properties."
+        ///     A string like "The property '{0}' is not a String. IsUnicode can only be configured on String properties."
         /// </summary>
         internal static string LightweightPrimitivePropertyConfiguration_IsUnicodeNonString(object p0)
         {
@@ -13686,7 +13678,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "Length cannot be set for the property '{0}'. Length can only be set for properties of String or byte[] types."
+        ///     A string like "The property '{0}' is not a String or Byte array. Length can only be configured for String and Byte array properties."
         /// </summary>
         internal static string LightweightPrimitivePropertyConfiguration_NonLength(object p0)
         {
@@ -15234,22 +15226,6 @@ namespace System.Data.Entity.Resources
         internal static Exception ModelBuilder_PropertyFilterTypeMustBePrimitive(object p0)
         {
             return new InvalidOperationException(Strings.ModelBuilder_PropertyFilterTypeMustBePrimitive(p0));
-        }
-
-        /// <summary>
-        ///     ArgumentException with message like "The type '{0}' is invalid. The specified type must derive from '{1}'."
-        /// </summary>
-        internal static Exception LightweightEntityConfiguration_TypeMismatch(object p0, object p1)
-        {
-            return new ArgumentException(Strings.LightweightEntityConfiguration_TypeMismatch(p0, p1));
-        }
-
-        /// <summary>
-        ///     InvalidOperationException with message like "The property '{0}' cannot be configured. Only scalar properties can be configured using lightweight conventions."
-        /// </summary>
-        internal static Exception LightweightEntityConfiguration_NonScalarProperty(object p0)
-        {
-            return new InvalidOperationException(Strings.LightweightEntityConfiguration_NonScalarProperty(p0));
         }
 
         /// <summary>
@@ -17024,7 +17000,6 @@ namespace System.Data.Entity.Resources
         internal const string DbMigrationsConfiguration_ContextType = "DbMigrationsConfiguration_ContextType";
         internal const string DbMigrationsConfiguration_RootedPath = "DbMigrationsConfiguration_RootedPath";
         internal const string ModelBuilder_PropertyFilterTypeMustBePrimitive = "ModelBuilder_PropertyFilterTypeMustBePrimitive";
-        internal const string LightweightEntityConfiguration_TypeMismatch = "LightweightEntityConfiguration_TypeMismatch";
         internal const string LightweightEntityConfiguration_NonScalarProperty = "LightweightEntityConfiguration_NonScalarProperty";
         internal const string MigrationsPendingException = "MigrationsPendingException";
         internal const string ExecutionStrategy_ExistingTransaction = "ExecutionStrategy_ExistingTransaction";

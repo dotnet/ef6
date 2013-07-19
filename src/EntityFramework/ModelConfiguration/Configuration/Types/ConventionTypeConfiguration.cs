@@ -90,7 +90,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public ConventionTypeConfiguration HasEntitySetName(string entitySetName)
         {
             Check.NotEmpty(entitySetName, "entitySetName");
-            ValidateConfiguration(ConfigurationAspect.EntitySetName);
+            ValidateConfiguration(ConfigurationAspect.HasEntitySetName);
 
             if (_entityTypeConfiguration != null
                 && _entityTypeConfiguration().EntitySetName == null)
@@ -122,7 +122,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         public ConventionTypeConfiguration IsComplexType()
         {
-            ValidateConfiguration(ConfigurationAspect.ComplexType);
+            ValidateConfiguration(ConfigurationAspect.IsComplexType);
 
             if (_entityTypeConfiguration == null
                 && _complexTypeConfiguration == null)
@@ -147,7 +147,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var propertyInfo = _type.GetProperty(propertyName, PropertyFilter.DefaultBindingFlags);
             if (propertyInfo == null)
             {
-                throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.FullName));
+                throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.Name));
             }
 
             Ignore(propertyInfo);
@@ -165,7 +165,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public ConventionTypeConfiguration Ignore(PropertyInfo propertyInfo)
         {
             Check.NotNull(propertyInfo, "propertyInfo");
-            ValidateConfiguration(ConfigurationAspect.IgnoreProperty);
+            ValidateConfiguration(ConfigurationAspect.Ignore);
 
             if (propertyInfo != null)
             {
@@ -195,7 +195,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             if (propertyInfo == null)
             {
-                throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.FullName));
+                throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.Name));
             }
 
             return Property(propertyInfo);
@@ -223,7 +223,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             if (!propertyInfo.IsValidEdmScalarProperty())
             {
-                throw Error.LightweightEntityConfiguration_NonScalarProperty(propertyPath);
+                throw new InvalidOperationException(Strings.LightweightEntityConfiguration_NonScalarProperty(propertyPath));
             }
 
             var propertyConfiguration = _entityTypeConfiguration != null
@@ -247,7 +247,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var propertyInfo = _type.GetProperty(propertyName, PropertyFilter.DefaultBindingFlags);
             if (propertyInfo == null)
             {
-                throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.FullName));
+                throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.Name));
             }
 
             return NavigationProperty(propertyInfo);
@@ -299,7 +299,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var propertyInfo = _type.GetProperty(propertyName, PropertyFilter.DefaultBindingFlags);
             if (propertyInfo == null)
             {
-                throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.FullName));
+                throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.Name));
             }
 
             return HasKey(_type.GetProperty(propertyName));
@@ -316,7 +316,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             Check.NotNull(propertyInfo, "propertyInfo");
 
-            ValidateConfiguration(ConfigurationAspect.Key);
+            ValidateConfiguration(ConfigurationAspect.HasKey);
 
             if (_entityTypeConfiguration != null
                 && !_entityTypeConfiguration().IsKeyConfigured)
@@ -345,7 +345,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                             var propertyInfo = _type.GetProperty(n, PropertyFilter.DefaultBindingFlags);
                             if (propertyInfo == null)
                             {
-                                throw new InvalidOperationException(Strings.NoSuchProperty(n, _type.FullName));
+                                throw new InvalidOperationException(Strings.NoSuchProperty(n, _type.Name));
                             }
                             return propertyInfo;
                         })
@@ -373,7 +373,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 ref keyProperties,
                 p => Strings.CollectionEmpty(p, "HasKey"), "keyProperties");
 
-            ValidateConfiguration(ConfigurationAspect.Key);
+            ValidateConfiguration(ConfigurationAspect.HasKey);
 
             if (_entityTypeConfiguration != null
                 && !_entityTypeConfiguration().IsKeyConfigured)
@@ -478,31 +478,48 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
+        private static readonly List<ConfigurationAspect> ConfigurationAspectsConflictingWithIgnoreType = new List<ConfigurationAspect>
+            {
+                ConfigurationAspect.IsComplexType,
+                ConfigurationAspect.HasEntitySetName,
+                ConfigurationAspect.Ignore,
+                ConfigurationAspect.HasKey,
+                ConfigurationAspect.MapToStoredProcedures,
+                ConfigurationAspect.NavigationProperty,
+                ConfigurationAspect.Property,
+                ConfigurationAspect.ToTable
+            };
+
+        private static readonly List<ConfigurationAspect> ConfigurationAspectsConflictingWithComplexType = new List<ConfigurationAspect>
+            {
+                ConfigurationAspect.HasEntitySetName,
+                ConfigurationAspect.HasKey,
+                ConfigurationAspect.MapToStoredProcedures,
+                ConfigurationAspect.NavigationProperty,
+                ConfigurationAspect.ToTable
+            };
+
         private void ValidateConfiguration(ConfigurationAspect aspect)
         {
             _currentConfigurationAspect |= aspect;
 
             if (_currentConfigurationAspect.HasFlag(ConfigurationAspect.IgnoreType)
-                && (_currentConfigurationAspect.HasFlag(ConfigurationAspect.ComplexType)
-                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.EntitySetName)
-                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.IgnoreProperty)
-                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.Key)
-                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.MapToStoredProcedures)
-                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.NavigationProperty)
-                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.Property)
-                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.ToTable)))
+                && ConfigurationAspectsConflictingWithIgnoreType
+                       .Any(ca => _currentConfigurationAspect.HasFlag(ca)))
             {
-                throw new InvalidOperationException(Strings.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType);
+                throw new InvalidOperationException(
+                    Strings.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType(
+                        ConfigurationAspectsConflictingWithIgnoreType.First(ca => _currentConfigurationAspect.HasFlag(ca)),
+                        _type.Name));
             }
 
-            if (_currentConfigurationAspect.HasFlag(ConfigurationAspect.ComplexType)
-                && (_currentConfigurationAspect.HasFlag(ConfigurationAspect.EntitySetName)
-                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.Key)
-                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.MapToStoredProcedures)
-                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.NavigationProperty)
-                    || _currentConfigurationAspect.HasFlag(ConfigurationAspect.ToTable)))
+            if (_currentConfigurationAspect.HasFlag(ConfigurationAspect.IsComplexType)
+                && ConfigurationAspectsConflictingWithComplexType
+                       .Any(ca => _currentConfigurationAspect.HasFlag(ca)))
             {
-                throw new InvalidOperationException(Strings.LightweightEntityConfiguration_ConfigurationConflict_ComplexType);
+                throw new InvalidOperationException(Strings.LightweightEntityConfiguration_ConfigurationConflict_ComplexType(
+                        ConfigurationAspectsConflictingWithComplexType.First(ca => _currentConfigurationAspect.HasFlag(ca)),
+                        _type.Name));
             }
         }
 
@@ -539,11 +556,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private enum ConfigurationAspect : uint
         {
             None = 0,
-            EntitySetName = 1 << 0,
-            Key = 1 << 1,
+            HasEntitySetName = 1 << 0,
+            HasKey = 1 << 1,
             IgnoreType = 1 << 2,
-            IgnoreProperty = 1 << 3,
-            ComplexType = 1 << 4,
+            Ignore = 1 << 3,
+            IsComplexType = 1 << 4,
             MapToStoredProcedures = 1 << 5,
             Property = 1 << 6,
             NavigationProperty = 1 << 7,

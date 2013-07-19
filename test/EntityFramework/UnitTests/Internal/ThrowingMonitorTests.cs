@@ -2,7 +2,6 @@
 
 namespace System.Data.Entity.Internal
 {
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
     using Xunit;
 
@@ -15,7 +14,7 @@ namespace System.Data.Entity.Internal
 
             monitor.Enter();
             Assert.Equal(Strings.ConcurrentMethodInvocation,
-                Assert.Throws<DbConcurrencyException>(() =>
+                Assert.Throws<NotSupportedException>(() =>
             monitor.Enter()).Message);
         }
 
@@ -37,7 +36,7 @@ namespace System.Data.Entity.Internal
 
             monitor.Enter();
             Assert.Equal(Strings.ConcurrentMethodInvocation,
-                Assert.Throws<DbConcurrencyException>(() =>
+                Assert.Throws<NotSupportedException>(() =>
             monitor.EnsureNotEntered()).Message);
         }
     }

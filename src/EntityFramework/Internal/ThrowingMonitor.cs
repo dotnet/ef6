@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Resources;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
@@ -24,7 +25,7 @@ namespace System.Data.Entity.Internal
         {
             if (Interlocked.CompareExchange(ref _isInCriticalSection, 1, 0) != 0)
             {
-                throw new DbConcurrencyException();
+                throw new NotSupportedException(Strings.ConcurrentMethodInvocation);
             }
         }
 
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Internal
             Thread.MemoryBarrier();
             if (_isInCriticalSection != 0)
             {
-                throw new DbConcurrencyException();
+                throw new NotSupportedException(Strings.ConcurrentMethodInvocation);
             }
         }
     }

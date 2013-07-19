@@ -2305,7 +2305,7 @@
   </data>
   <data name="Mapping_Invalid_Query_Views_MissingSetClosure" xml:space="preserve">
     <value>If an EntitySet or AssociationSet includes a query view, all related entity and association sets in the EntityContainer must also define query views. The following sets require query views: {0}.</value>
-  </data>  
+  </data>
   <data name="DbMappingViewCacheTypeAttribute_InvalidContextType" xml:space="preserve">
     <value>The context type '{0}' must derive from the System.Data.Entity.DbContext type or the System.Data.Entity.Core.Objects.ObjectContext type.</value>
   </data>
@@ -5260,13 +5260,8 @@
     <value>The type '{0}' cannot be used to filter properties. Only scalar types, string, and byte[] are supported.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
-  <data name="LightweightEntityConfiguration_TypeMismatch" xml:space="preserve">
-    <value>The type '{0}' is invalid. The specified type must derive from '{1}'.</value>
-    <comment>## ExceptionType=ArgumentException</comment>
-  </data>
   <data name="LightweightEntityConfiguration_NonScalarProperty" xml:space="preserve">
     <value>The property '{0}' cannot be configured. Only scalar properties can be configured using lightweight conventions.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="MigrationsPendingException" xml:space="preserve">
     <value>Unable to generate an explicit migration because the following explicit migrations are pending: [{0}]. Apply the pending explicit migrations before attempting to generate a new explicit migration.</value>
@@ -5360,22 +5355,22 @@
     <value>Scaffolding create or alter procedure operations is not supported in down methods.</value>
   </data>
   <data name="LightweightEntityConfiguration_ConfigurationConflict_ComplexType" xml:space="preserve">
-    <value>If a type is mapped as a Complex Type the only configuration that can be specified is the property mapping.</value>
+    <value>Calling '{0}' is not valid for type '{1}' because it is configured as a complex type. '{0}' is only allowed when configuring entity types.</value>
   </data>
   <data name="LightweightEntityConfiguration_ConfigurationConflict_IgnoreType" xml:space="preserve">
-    <value>If a type is 'Ignored' no other configuration can be specified.</value>
+    <value>Calling '{0}' is not valid for type '{1}' because it has been excluded from the model.</value>
   </data>
   <data name="AttemptToAddEdmMemberFromWrongDataSpace" xml:space="preserve">
     <value>Attempt to add member {0} to structural type {1} failed. Member has DataSpace {2}, structural type has DataSpace {3}. They must be the same.</value>
   </data>
   <data name="LightweightEntityConfiguration_InvalidNavigationProperty" xml:space="preserve">
-    <value>The property '{0}' cannot be configured as a navigation property. The property has to be of a valid entity type and the property should have non-abstract getter and setter. For collection properties the type must implement ICollection of T where T is a valid entity type.</value>
+    <value>The property '{0}' cannot be configured as a navigation property. The property must be a valid entity type and the property should have a non-abstract getter and setter. For collection properties the type must implement ICollection&lt;T&gt; where T is a valid entity type.</value>
   </data>
   <data name="LightweightEntityConfiguration_InvalidInverseNavigationProperty" xml:space="preserve">
-    <value>The entity type '{0}' that the navigation property '{1}' is declared on is not the same as the type '{2}' referred by the inverse navigation property '{3}'.</value>
+    <value>The entity type '{0}' on which the navigation property '{1}' is declared is not the same as the type '{2}' referred to by the inverse navigation property '{3}'.</value>
   </data>
   <data name="LightweightEntityConfiguration_MismatchedInverseNavigationProperty" xml:space="preserve">
-    <value>The entity type '{0}' that the navigation property '{1}' refers to is not the same as the type '{2}' on which the inverse navigation property '{3}' is declared.</value>
+    <value>The entity type '{0}' to which the navigation property '{1}' refers is not the same as the type '{2}' on which the inverse navigation property '{3}' is declared.</value>
   </data>
   <data name="DuplicateParameterName" xml:space="preserve">
     <value>Duplicate parameter name: {0}</value>
@@ -5411,7 +5406,7 @@
     <value>Multiplicity '{0}' is not valid. Multiplicity must be: '*', '0..1', or '1'.</value>
   </data>
   <data name="LightweightPrimitivePropertyConfiguration_NonNullableProperty" xml:space="preserve">
-    <value>The property {0} of type {1} cannot be marked as optional because it can't be assigned a null value.</value>
+    <value>The property '{0}' of type '{1}' cannot be marked as optional because it cannot be assigned a null value.</value>
   </data>
   <data name="TestDoubleNotImplemented" xml:space="preserve">
     <value>The member '{0}' has not been implemented on type '{1}' which inherits from '{2}'. Test doubles for '{2}' must provide implementations of methods and properties that are used.</value>
@@ -5423,31 +5418,31 @@
     <value>The property '{0}' on type '{1}' cannot be configured as a navigation property because type '{2}' was configured as a complex type.</value>
   </data>
   <data name="ConventionsConfiguration_InvalidConventionType" xml:space="preserve">
-    <value>The specified convention of type '{0}' is not a configuration convention, a model convention or a mapping convention.</value>
+    <value>The specified convention of type '{0}' is not a valid convention. Conventions must derive from Convention or implement IStoreConvention or IConceptualConvention.</value>
   </data>
   <data name="ConventionsConfiguration_ConventionTypeMissmatch" xml:space="preserve">
-    <value>The specified convention of type '{0}' cannot be added before or after a convention of type '{1}'. Both types must specify conventions from the same category: configuration, model or mapping.</value>
+    <value>The specified convention '{0}' cannot be added before or after '{1}'. Both conventions must share the same base class (Convention) or implement the same interface (IConceptualModelConvention&lt;T&gt; or IStoreModelConvention&lt;T&gt;).</value>
   </data>
   <data name="LightweightPrimitivePropertyConfiguration_DateTimeScale" xml:space="preserve">
-    <value>The scale cannot be set on the DateTime property '{0}', only the precision should be specified.</value>
+    <value>Scale cannot be configured for the DateTime property '{0}', only precision can be configured for DateTime properties.</value>
   </data>
   <data name="LightweightPrimitivePropertyConfiguration_DecimalNoScale" xml:space="preserve">
-    <value>To set the precision on the decimal property '{0}' the scale must also be specified.</value>
+    <value>Only precision was configured for Decimal property '{0}'. Both precision and scale must be configured for Decimal properties.</value>
   </data>
   <data name="LightweightPrimitivePropertyConfiguration_HasPrecisionNonDateTime" xml:space="preserve">
-    <value>The property '{0}' is not of DateTime type. Precision can only be set on DateTime properties.</value>
+    <value>Precision without scale has been configured for property '{0}'. Precision without scale can only be configured for DateTime properties.</value>
   </data>
   <data name="LightweightPrimitivePropertyConfiguration_HasPrecisionNonDecimal" xml:space="preserve">
-    <value>The property '{0}' is not of Decimal type. Precision and scale can only be set on Decimal properties.</value>
+    <value>Precision and scale have been configured for property '{0}'. Precision and scale can only be configured for Decimal properties.</value>
   </data>
   <data name="LightweightPrimitivePropertyConfiguration_IsRowVersionNonBinary" xml:space="preserve">
-    <value>The property '{0}' is not of byte[] type. IsRowVersion can only be called on byte[] properties.</value>
+    <value>The property '{0}' is not a Byte array. IsRowVersion can only be configured for Byte array properties.</value>
   </data>
   <data name="LightweightPrimitivePropertyConfiguration_IsUnicodeNonString" xml:space="preserve">
-    <value>The property '{0}' is not of String type. IsUnicode can only be called on String properties.</value>
+    <value>The property '{0}' is not a String. IsUnicode can only be configured on String properties.</value>
   </data>
   <data name="LightweightPrimitivePropertyConfiguration_NonLength" xml:space="preserve">
-    <value>Length cannot be set for the property '{0}'. Length can only be set for properties of String or byte[] types.</value>
+    <value>The property '{0}' is not a String or Byte array. Length can only be configured for String and Byte array properties.</value>
   </data>
   <data name="UnableToUpgradeHistoryWhenCustomFactory" xml:space="preserve">
     <value>An existing EF5 migrations history table was detected but could not be upgraded because a custom history context factory has been configured. To upgrade an existing EF5 database, ensure there is no custom history context factory configured.</value>

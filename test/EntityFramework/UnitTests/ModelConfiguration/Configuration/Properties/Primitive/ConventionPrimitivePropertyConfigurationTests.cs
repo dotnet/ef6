@@ -335,7 +335,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(typeof(int), "IntProperty"), () => innerConfig);
 
             Assert.Equal(
-                Strings.LightweightPrimitivePropertyConfiguration_NonNullableProperty("System.Object.IntProperty", typeof(int).FullName),
+                Strings.LightweightPrimitivePropertyConfiguration_NonNullableProperty("System.Object.IntProperty", typeof(int).Name),
                 Assert.Throws<InvalidOperationException>(() => config.IsOptional()).Message);
         }
 

@@ -280,8 +280,9 @@ namespace FunctionalTests
                             });
 
                 Assert.Equal(
-                    Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
-                        .Message, Strings.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType);
+                    Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder)).Message,
+                    Strings.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType(
+                        "HasKey", typeof(LightweightComplexTypeWithId).Name));
             }
 
             [Fact]
@@ -398,7 +399,8 @@ namespace FunctionalTests
 
                 Assert.Equal(
                     Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
-                        .Message, Strings.LightweightEntityConfiguration_ConfigurationConflict_ComplexType);
+                        .Message, Strings.LightweightEntityConfiguration_ConfigurationConflict_ComplexType(
+                            "HasKey", typeof(LightweightComplexTypeWithId).Name));
             }
 
             [Fact]
@@ -412,7 +414,7 @@ namespace FunctionalTests
                     .Configure(c => c.NavigationProperty("Foo"));
 
                 Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
-                    .ValidateMessage("NoSuchProperty", "Foo", typeof(LightweightEntity).FullName);
+                    .ValidateMessage("NoSuchProperty", "Foo", typeof(LightweightEntity).Name);
             }
 
             [Fact]
