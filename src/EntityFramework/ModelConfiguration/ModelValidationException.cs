@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Edm.Validation;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;

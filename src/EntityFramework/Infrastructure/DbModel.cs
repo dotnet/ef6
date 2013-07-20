@@ -2,16 +2,11 @@
 
 namespace System.Data.Entity.Infrastructure
 {
-    using System.Collections.ObjectModel;
-    using System.Data.Common;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Xml;
 
     /// <summary>
     ///     Represents an Entity Data Model (EDM) created by the <see cref="DbModelBuilder" />.
@@ -19,7 +14,7 @@ namespace System.Data.Entity.Infrastructure
     ///     which is a compiled snapshot of the model suitable for caching and creation of
     ///     <see cref="DbContext" /> or <see cref="T:System.Data.Objects.ObjectContext" /> instances.
     /// </summary>
-    public sealed class DbModel : IEdmModelAdapter
+    public class DbModel : IEdmModelAdapter
     {
         private readonly DbDatabaseMapping _databaseMapping;
         private readonly DbModelBuilder _cachedModelBuilder;
@@ -47,7 +42,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        /// For test purpose only.
+        ///     For test purpose only.
         /// </summary>
         internal DbModel(EdmModel conceptualModel, EdmModel storeModel)
         {
@@ -55,7 +50,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        /// Gets the provider information.
+        ///     Gets the provider information.
         /// </summary>
         public DbProviderInfo ProviderInfo
         {
@@ -63,18 +58,20 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        /// Gets the provider manifest.
+        ///     Gets the provider manifest.
         /// </summary>
         public DbProviderManifest ProviderManifest
         {
             get { return ((IEdmModelAdapter)this).StoreModel.ProviderManifest; }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         EdmModel IEdmModelAdapter.ConceptualModel
         {
             get { return _databaseMapping.Model; }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         EdmModel IEdmModelAdapter.StoreModel
         {
             get { return _databaseMapping.Database; }

@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-[assembly: System.Data.Entity.Infrastructure.DbMappingViewCacheType(
+using System.Data.Entity.Infrastructure.MappingViews;
+
+[assembly: DbMappingViewCacheType(
     typeof(ProductivityApiUnitTests.DbContextTests.ContextWithMultipleViewCaches),
     typeof(ProductivityApiUnitTests.DbContextTests.SampleViewCache1))]
-[assembly: System.Data.Entity.Infrastructure.DbMappingViewCacheType(
+[assembly: DbMappingViewCacheType(
     typeof(ProductivityApiUnitTests.DbContextTests.ContextWithMultipleViewCaches),
     typeof(ProductivityApiUnitTests.DbContextTests.SampleViewCache2))]
 
@@ -16,6 +18,7 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.MappingViews;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.ModelConfiguration.Edm;

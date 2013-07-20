@@ -297,7 +297,7 @@ namespace System.Data.Entity
         ///     The task result contains the number of objects written to the underlying database.
         /// </returns>
         /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
-        public Task<int> SaveChangesAsync()
+        public virtual Task<int> SaveChangesAsync()
         {
             return SaveChangesAsync(CancellationToken.None);
         }

@@ -358,7 +358,7 @@ namespace System.Data.Entity.TestDoubles
         [Fact]
         public void Moq_DbSet_can_be_used_for_async_SqlQuery()
         {
-            var mockSqlQuery = new Mock<DbSqlQuery>();
+            var mockSqlQuery = new Mock<DbSqlQuery> { CallBase = true };
             var products = new[] { new Product { Id = 1 }, new Product { Id = 2 } };
             mockSqlQuery.As<IDbAsyncEnumerable>()
                 .Setup(m => m.GetAsyncEnumerator())

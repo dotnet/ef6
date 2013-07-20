@@ -8,7 +8,7 @@ namespace System.Data.Entity.Migrations.History
     ///     This class is used by Code First Migrations to read and write migration history
     ///     from the database.
     /// </summary>
-    public sealed class HistoryRow
+    public class HistoryRow
     {
         /// <summary>
         ///     Gets or sets the Id of the migration this row represents.

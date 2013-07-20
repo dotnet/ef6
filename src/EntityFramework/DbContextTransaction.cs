@@ -57,9 +57,9 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Gets the underlying store's transaction
+        ///     Gets the database (store) transaction that is underlying this context transaction.
         /// </summary>
-        public DbTransaction StoreTransaction
+        public DbTransaction UnderlyingTransaction
         {
             get { return _entityTransaction.StoreTransaction; }
         }

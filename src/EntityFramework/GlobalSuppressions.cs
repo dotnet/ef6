@@ -39,16 +39,16 @@ using System.Diagnostics.CodeAnalysis;
         )]
 [assembly:
     SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member",
-        Target = "System.Data.Entity.Edm.Validation.EdmModelSyntacticValidationRules.#.cctor()")]
+        Target = "System.Data.Entity.Core.Metadata.Edm.EdmModelSyntacticValidationRules.#.cctor()")]
 [assembly:
     SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Scope = "member",
-        Target = "System.Data.Entity.Edm.Validation.EdmModelSemanticValidationRules.#.cctor()")]
+        Target = "System.Data.Entity.Core.Metadata.Edm.EdmModelSemanticValidationRules.#.cctor()")]
 [assembly:
     SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member",
-        Target = "System.Data.Entity.Edm.Validation.EdmModelSemanticValidationRules.#.cctor()")]
+        Target = "System.Data.Entity.Core.Metadata.Edm.EdmModelSemanticValidationRules.#.cctor()")]
 [assembly:
     SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Scope = "member",
-        Target = "System.Data.Entity.Edm.Validation.EdmModelSemanticValidationRules.#.cctor()")]
+        Target = "System.Data.Entity.Core.Metadata.Edm.EdmModelSemanticValidationRules.#.cctor()")]
 [assembly:
     SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
         Target = "System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder")]
@@ -230,12 +230,6 @@ using System.Diagnostics.CodeAnalysis;
             "System.Data.Entity.Core.Metadata.Edm.ObjectItemLoadingSessionData.#.ctor(System.Data.Entity.Core.Metadata.Edm.KnownAssembliesSet,System.Data.Entity.Core.Metadata.Edm.LockedAssemblyCache,System.Data.Entity.Core.Metadata.Edm.EdmItemCollection,System.Action`1<System.String>,System.Object)"
         )]
 [assembly:
-    SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
-        Target = "System.Data.Entity.Edm.Serialization")]
-[assembly:
-    SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
-        Target = "System.Data.Entity.Edm.Validation")]
-[assembly:
     SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "2#", Scope = "member",
         Target =
             "System.Data.Entity.Core.Metadata.Edm.EdmItemCollection.#Create(System.Collections.Generic.IEnumerable`1<System.Xml.XmlReader>,System.Collections.ObjectModel.ReadOnlyCollection`1<System.String>,System.Collections.Generic.IList`1<System.Data.Entity.Core.Metadata.Edm.EdmSchemaError>&)"
@@ -262,3 +256,6 @@ using System.Diagnostics.CodeAnalysis;
 [assembly:
     SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "ms", Scope = "resource",
         Target = "System.Data.Entity.Properties.Resources.resources")]
+[assembly: 
+    SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace",
+        Target = "System.Data.Entity.Infrastructure.MappingViews")]

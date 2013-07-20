@@ -109,7 +109,9 @@
       <HintPath>..\..\..\packages\xunit.extensions.1.9.1\lib\net20\xunit.extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Design\" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.csdl" />
     <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.msl" />
@@ -180,13 +182,20 @@
     <Compile Include="Core\Metadata\Edm\CodeFirstOSpaceLoaderTests.cs" />
     <Compile Include="Core\Metadata\Edm\CodeFirstOSpaceTypeFactoryTests.cs" />
     <Compile Include="Core\Metadata\Edm\ComplexTypeTests.cs" />
+    <Compile Include="Core\Metadata\Edm\CsdlSerializerTests.cs" />
+    <Compile Include="Core\Metadata\Edm\DataModelValidatorTests.cs" />
     <Compile Include="Core\Metadata\Edm\DbDatabaseMappingTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmFunctionTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmItemCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmMemberTests.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmModelSemanticValidationRulesTests.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmModelSyntacticValidationRulesTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmModelTests.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmModelValidationContextTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmPropertyTests.cs" />
     <Compile Include="Core\Metadata\Edm\EdmSchemaErrorTests.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmSerializationVisitorTests.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmXmlSchemaWriterTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntityContainerTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntitySetBaseTests.cs" />
     <Compile Include="Core\Metadata\Edm\EntitySetTests.cs" />
@@ -199,10 +208,12 @@
     <Compile Include="Core\Metadata\Edm\MetadataCacheTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataPropertyTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataWorkspaceTests.cs" />
+    <Compile Include="Core\Metadata\Edm\MslXmlSchemaWriterTests.cs" />
     <Compile Include="Core\Metadata\Edm\NavigationPropertyTests.cs" />
     <Compile Include="Core\Metadata\Edm\ObjectItemCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\ObjectItemConventionAssemblyLoaderTests.cs" />
     <Compile Include="Core\Metadata\Edm\RowTypeTests.cs" />
+    <Compile Include="Core\Metadata\Edm\SsdlSerializerTests.cs" />
     <Compile Include="Core\Metadata\Edm\StoreItemCollectionTests.cs" />
     <Compile Include="Core\Objects\DataClasses\RelationshipManagerTests.cs" />
     <Compile Include="Core\Objects\DataClasses\EdmFunctionAttributeTests.cs" />
@@ -250,20 +261,7 @@
     <Compile Include="DbContextTransactionTests.cs" />
     <Compile Include="DbFunctionAttributeTests.cs" />
     <Compile Include="DbFunctionsTests.cs" />
-    <Compile Include="Design\ExecutorTests.cs" />
-    <Compile Include="Design\ForwardingProxyTests.cs" />
-    <Compile Include="Design\HandlerBaseTests.cs" />
-    <Compile Include="Design\WrappedHandlerTests.cs" />
     <Compile Include="Edm\EdmModelVisitorTests.cs" />
-    <Compile Include="Edm\Serialization\CsdlSerializerTests.cs" />
-    <Compile Include="Edm\Serialization\EdmSerializationVisitorTests.cs" />
-    <Compile Include="Edm\Serialization\EdmXmlSchemaWriterTests.cs" />
-    <Compile Include="Edm\Serialization\MslXmlSchemaWriterTests.cs" />
-    <Compile Include="Edm\Serialization\SsdlSerializerTests.cs" />
-    <Compile Include="Edm\Validation\EdmModelSemanticValidationRulesTests.cs" />
-    <Compile Include="Edm\Validation\EdmModelSyntacticValidationRulesTests.cs" />
-    <Compile Include="Edm\Validation\EdmModelValidationContextTests.cs" />
-    <Compile Include="Edm\Validation\DataModelValidatorTests.cs" />
     <Compile Include="Infrastructure\CancelableDbCommandDispatcherTests.cs" />
     <Compile Include="Infrastructure\DatabaseInitializerSuppressorTests.cs" />
     <Compile Include="Infrastructure\DbCommandDispatcherTests.cs" />
@@ -273,8 +271,6 @@
     <Compile Include="Infrastructure\DbCommandTreeInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\DbInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\DbLocalViewTests.cs" />
-    <Compile Include="Infrastructure\DbMappingViewCacheTypeAttributeTests.cs" />
-    <Compile Include="Infrastructure\DbMappingViewTests.cs" />
     <Compile Include="Infrastructure\DbProviderInfoTests.cs" />
     <Compile Include="Infrastructure\DbQueryTests.cs" />
     <Compile Include="Infrastructure\DbSqlQueryTests.cs" />
@@ -282,7 +278,6 @@
     <Compile Include="Infrastructure\DbComplexPropertyEntryTests.cs" />
     <Compile Include="Infrastructure\DbPropertyEntryTests.cs" />
     <Compile Include="Infrastructure\DbUpdateExceptionTests.cs" />
-    <Compile Include="Infrastructure\DefaultDbMappingViewCacheFactoryTests.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryServiceTests.cs" />
     <Compile Include="Infrastructure\DefaultManifestTokenServiceTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\AppConfigDependencyResolverTests.cs" />
@@ -306,12 +301,19 @@
     <Compile Include="Infrastructure\DependencyResolution\RootDependencyResolverTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\SingletonDependencyResolverTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\WrappingDependencyResolverTests.cs" />
+    <Compile Include="Infrastructure\Design\ExecutorTests.cs" />
+    <Compile Include="Infrastructure\Design\ForwardingProxyTests.cs" />
+    <Compile Include="Infrastructure\Design\HandlerBaseTests.cs" />
+    <Compile Include="Infrastructure\Design\WrappedHandlerTests.cs" />
     <Compile Include="Infrastructure\DispatchersTests.cs" />
     <Compile Include="Infrastructure\EntityConnectionDispatcherTests.cs" />
     <Compile Include="Infrastructure\DbExecutionStrategyTests.cs" />
     <Compile Include="Infrastructure\InterceptionContextMutableDataTests.cs" />
     <Compile Include="Infrastructure\InterceptionTests.cs" />
     <Compile Include="Infrastructure\InternalDispatcherTests.cs" />
+    <Compile Include="Infrastructure\MappingViews\DbMappingViewCacheTypeAttributeTests.cs" />
+    <Compile Include="Infrastructure\MappingViews\DbMappingViewTests.cs" />
+    <Compile Include="Infrastructure\MappingViews\DefaultDbMappingViewCacheFactoryTests.cs" />
     <Compile Include="Infrastructure\Net40DefaultDbProviderFactoryServiceTests.cs" />
     <Compile Include="Infrastructure\DefaultExecutionStrategyTests.cs" />
     <Compile Include="Infrastructure\ModelNamespaceConventionTests.cs" />

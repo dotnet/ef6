@@ -112,6 +112,25 @@
     <Compile Include="..\Common\StringExtensions.cs">
       <Link>Utilities\StringExtensions.cs</Link>
     </Compile>
+    <Compile Include="Core\Metadata\Edm\CsdlSerializer.cs" />
+    <Compile Include="Core\Metadata\Edm\DataModelErrorEventArgs.cs" />
+    <Compile Include="Core\Metadata\Edm\DataModelValidationRule.cs" />
+    <Compile Include="Core\Metadata\Edm\DataModelValidationRuleSet.cs" />
+    <Compile Include="Core\Metadata\Edm\DataModelValidationRule`.cs" />
+    <Compile Include="Core\Metadata\Edm\DataModelValidator.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmModelRuleSet.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmModelSemanticValidationRules.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmModelSyntacticValidationRules.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmModelValidationContext.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmModelValidationRule.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmModelValidationVisitor.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmSerializationVisitor.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmXmlSchemaWriter.cs" />
+    <Compile Include="Core\Metadata\Edm\MetadataItemHelper.cs" />
+    <Compile Include="Core\Metadata\Edm\MslSerializer.cs" />
+    <Compile Include="Core\Metadata\Edm\MslXmlSchemaWriter.cs" />
+    <Compile Include="Core\Metadata\Edm\SsdlSerializer.cs" />
+    <Compile Include="Core\Metadata\Edm\XmlSchemaWriter.cs" />
     <Compile Include="DbConfiguration.cs" />
     <Compile Include="DbConfigurationTypeAttribute.cs" />
     <Compile Include="Core\Common\CommandTrees\DbAggregate.cs" />
@@ -206,22 +225,8 @@
     <Compile Include="Core\Common\CommandTrees\DbScanExpression.cs" />
     <Compile Include="Core\Metadata\Edm\DbModelExtensions.cs" />
     <Compile Include="Core\Metadata\Edm\IEdmModelAdapter.cs" />
-    <Compile Include="Infrastructure\DbMappingView.cs" />
-    <Compile Include="Infrastructure\DbMappingViewCache.cs" />
-    <Compile Include="Infrastructure\DefaultDbMappingViewCacheFactory.cs" />
-    <Compile Include="Infrastructure\DbMappingViewCacheTypeAttribute.cs" />
     <Compile Include="Core\Metadata\Edm\RelationshipMultiplicityConverter.cs" />
-    <Compile Include="Design\Executor.cs" />
-    <Compile Include="Design\ForwardingProxy.cs" />
-    <Compile Include="Design\HandlerBase.cs" />
-    <Compile Include="Design\IResultHandler.cs" />
-    <Compile Include="Design\WrappedHandler.cs" />
-    <Compile Include="Edm\Serialization\CsdlSerializer.cs" />
-    <Compile Include="Edm\Serialization\MetadataItemHelper.cs" />
-    <Compile Include="Edm\Serialization\MslSerializer.cs" />
-    <Compile Include="Edm\Serialization\SsdlSerializer.cs" />
     <Compile Include="Infrastructure\CommitFailedException.cs" />
-    <Compile Include="Infrastructure\DbMappingViewCacheFactory.cs" />
     <Compile Include="Infrastructure\DependencyResolution\AppConfigDependencyResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\CachingDependencyResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\CompositeResolver`.cs" />
@@ -267,6 +272,16 @@
     <Compile Include="Infrastructure\Interception\InterceptionContextMutableData.cs" />
     <Compile Include="Infrastructure\Interception\InterceptionContextMutableData`.cs" />
     <Compile Include="Infrastructure\Interception\InternalDispatcher.cs" />
+    <Compile Include="Infrastructure\Design\Executor.cs" />
+    <Compile Include="Infrastructure\Design\ForwardingProxy.cs" />
+    <Compile Include="Infrastructure\Design\HandlerBase.cs" />
+    <Compile Include="Infrastructure\Design\IResultHandler.cs" />
+    <Compile Include="Infrastructure\Design\WrappedHandler.cs" />
+    <Compile Include="Infrastructure\MappingViews\DbMappingView.cs" />
+    <Compile Include="Infrastructure\MappingViews\DbMappingViewCache.cs" />
+    <Compile Include="Infrastructure\MappingViews\DbMappingViewCacheFactory.cs" />
+    <Compile Include="Infrastructure\MappingViews\DbMappingViewCacheTypeAttribute.cs" />
+    <Compile Include="Infrastructure\MappingViews\DefaultDbMappingViewCacheFactory.cs" />
     <Compile Include="Internal\DatabaseInitializerSuppressor.cs" />
     <Compile Include="Internal\MigrationsChecker.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
@@ -438,7 +453,6 @@
     <Compile Include="DataAnnotations\Schema\NotMappedAttribute.cs" />
     <Compile Include="DataAnnotations\Schema\TableAttribute.cs" />
     <Compile Include="DbContextTransaction.cs" />
-    <Compile Include="Edm\Serialization\MslXmlSchemaWriter.cs" />
     <Compile Include="Infrastructure\Net40DefaultDbProviderFactoryResolver.cs" />
     <Compile Include="Migrations\Infrastructure\DynamicToFunctionModificationCommandConverter.cs" />
     <Compile Include="Migrations\Infrastructure\ModificationCommandTreeGenerator.cs" />
@@ -1357,7 +1371,6 @@
     <Compile Include="Core\UpdateException.cs" />
     <Compile Include="DbFunctionAttribute.cs" />
     <Compile Include="DbFunctions.cs" />
-    <Compile Include="Edm\Validation\DataModelValidationRule`.cs" />
     <Compile Include="EntityState.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Infrastructure\IDbAsyncEnumerable`.cs" />
@@ -1495,22 +1508,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
-    <Compile Include="Edm\Validation\DataModelErrorEventArgs.cs" />
     <Compile Include="Core\Mapping\ColumnMappingBuilder.cs" />
     <Compile Include="Core\Metadata\Edm\EdmModel.cs" />
     <Compile Include="Edm\EdmModelVisitor.cs" />
-    <Compile Include="Edm\Serialization\EdmXmlSchemaWriter.cs" />
-    <Compile Include="Edm\Serialization\EdmSerializationVisitor.cs" />
-    <Compile Include="Edm\Serialization\XmlSchemaWriter.cs" />
-    <Compile Include="Edm\Validation\DataModelValidationRule.cs" />
-    <Compile Include="Edm\Validation\DataModelValidationRuleSet.cs" />
-    <Compile Include="Edm\Validation\DataModelValidator.cs" />
-    <Compile Include="Edm\Validation\EdmModelRuleSet.cs" />
-    <Compile Include="Edm\Validation\EdmModelSemanticValidationRules.cs" />
-    <Compile Include="Edm\Validation\EdmModelSyntacticValidationRules.cs" />
-    <Compile Include="Edm\Validation\EdmModelValidationContext.cs" />
-    <Compile Include="Edm\Validation\EdmModelValidationRule.cs" />
-    <Compile Include="Edm\Validation\EdmModelValidationVisitor.cs" />
     <Compile Include="CreateDatabaseIfNotExists`.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="DbContext.cs" />

@@ -13,6 +13,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.SchemaObjectModel;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.MappingViews;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -642,14 +643,14 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Gets or sets a DbMappingViewCacheFactory for creating DbMappingViewCache instances
-        /// that are used to retrieve pre-generated mapping views.
+        ///     Gets or sets a <see cref="DbMappingViewCacheFactory" /> for creating <see cref="DbMappingViewCache" /> instances
+        ///     that are used to retrieve pre-generated mapping views.
         /// </summary>
         public DbMappingViewCacheFactory MappingViewCacheFactory
         {
             get { return _mappingViewCacheFactory; }
 
-            set 
+            set
             {
                 Check.NotNull(value, "value");
 
@@ -1304,7 +1305,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Computes a hash value for the container mapping specified by the names of the mapped containers.
+        ///     Computes a hash value for the container mapping specified by the names of the mapped containers.
         /// </summary>
         /// <param name="conceptualModelContainerName">The name of a container in the conceptual model.</param>
         /// <param name="storeModelContainerName">The name of a container in the store model.</param>
@@ -1316,13 +1317,12 @@ namespace System.Data.Entity.Core.Mapping
             Check.NotEmpty(conceptualModelContainerName, "conceptualModelContainerName");
             Check.NotEmpty(storeModelContainerName, "storeModelContainerName");
 
-            return 
-                MetadataMappingHasherVisitor.GetMappingClosureHash(
-                    MappingVersion,
-                    GetItems<StorageEntityContainerMapping>()
-                        .Where(m => m.EdmEntityContainer.Name == conceptualModelContainerName
-                                    && m.StorageEntityContainer.Name == storeModelContainerName)
-                        .Single());
+            return MetadataMappingHasherVisitor.GetMappingClosureHash(
+                MappingVersion,
+                GetItems<StorageEntityContainerMapping>()
+                    .Single(
+                        m => m.EdmEntityContainer.Name == conceptualModelContainerName
+                             && m.StorageEntityContainer.Name == storeModelContainerName));
         }
 
         /// <summary>
@@ -1338,13 +1338,15 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Creates a dictionary of (extent, generated view) for a container mapping specified by 
-        /// the names of the mapped containers.
+        ///     Creates a dictionary of (extent, generated view) for a container mapping specified by
+        ///     the names of the mapped containers.
         /// </summary>
         /// <param name="conceptualModelContainerName">The name of a container in the conceptual model.</param>
         /// <param name="storeModelContainerName">The name of a container in the store model.</param>
         /// <param name="errors">A list that accumulates potential errors.</param>
-        /// <returns>A dictionary of (EntitySetBase, DbMappingView) that specifies the generated views.</returns>
+        /// <returns>
+        ///     A dictionary of (<see cref="EntitySetBase" />, <see cref="DbMappingView" />) that specifies the generated views.
+        /// </returns>
         public Dictionary<EntitySetBase, DbMappingView> GenerateViews(
             string conceptualModelContainerName,
             string storeModelContainerName,
@@ -1354,30 +1356,30 @@ namespace System.Data.Entity.Core.Mapping
             Check.NotEmpty(storeModelContainerName, "storeModelContainerName");
             Check.NotNull(errors, "errors");
 
-            return 
-                GenerateViews(
-                    GetItems<StorageEntityContainerMapping>()
-                        .Where(m => m.EdmEntityContainer.Name == conceptualModelContainerName
-                                    && m.StorageEntityContainer.Name == storeModelContainerName)
-                        .Single(), 
-                    errors);
+            return GenerateViews(
+                GetItems<StorageEntityContainerMapping>()
+                    .Single(
+                        m => m.EdmEntityContainer.Name == conceptualModelContainerName
+                             && m.StorageEntityContainer.Name == storeModelContainerName),
+                errors);
         }
 
         /// <summary>
-        /// Creates a dictionary of (extent, generated view) for the single container mapping
-        /// in the collection.
+        ///     Creates a dictionary of (extent, generated view) for the single container mapping
+        ///     in the collection.
         /// </summary>
         /// <param name="errors">A list that accumulates potential errors.</param>
-        /// <returns>A dictionary of (EntitySetBase, DbMappingView) that specifies the generated views.</returns>
+        /// <returns>
+        ///     A dictionary of (<see cref="EntitySetBase" />, <see cref="DbMappingView" />) that specifies the generated views.
+        /// </returns>
         public Dictionary<EntitySetBase, DbMappingView> GenerateViews(
             IList<EdmSchemaError> errors)
         {
             Check.NotNull(errors, "errors");
 
-            return 
-                GenerateViews(
-                    GetItems<StorageEntityContainerMapping>().Single(), 
-                    errors);
+            return GenerateViews(
+                GetItems<StorageEntityContainerMapping>().Single(),
+                errors);
         }
 
         internal static Dictionary<EntitySetBase, DbMappingView> GenerateViews(

@@ -87,7 +87,7 @@ namespace System.Data.Entity
 
             var dbContextTransaction = new DbContextTransaction(mockEntityConnection.Object);
 
-            Assert.Equal(mockDbTransaction.Object, dbContextTransaction.StoreTransaction);
+            Assert.Equal(mockDbTransaction.Object, dbContextTransaction.UnderlyingTransaction);
         }
 
         #endregion

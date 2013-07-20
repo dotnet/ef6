@@ -20,7 +20,9 @@ namespace System.Data.Entity.Migrations.Utilities
         public const string DefaultTabString = "    ";
 
         /// <summary>
-        ///     Specifies the culture what will be used by the underlying TextWriter. This static property is readonly.
+        ///     Specifies the culture what will be used by the underlying TextWriter. This static property is read-only.
+        ///     Note that any writer passed to one of the constructors of <see cref="IndentedTextWriter"/> must use this
+        ///     same culture. The culture is <see cref="CultureInfo.InvariantCulture"/>.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "CultureInfo.InvariantCulture is readonly")]
@@ -84,6 +86,8 @@ namespace System.Data.Entity.Migrations.Utilities
 
         /// <summary>
         ///     Initializes a new instance of the IndentedTextWriter class using the specified text writer and default tab string.
+        ///     Note that the writer passed to this constructor must use the <see cref="CultureInfo"/> specified by the
+        ///     <see cref="Culture"/> property.
         /// </summary>
         /// <param name="writer">
         ///     The <see cref="T:System.IO.TextWriter" /> to use for output.
@@ -95,6 +99,8 @@ namespace System.Data.Entity.Migrations.Utilities
 
         /// <summary>
         ///     Initializes a new instance of the IndentedTextWriter class using the specified text writer and tab string.
+        ///     Note that the writer passed to this constructor must use the <see cref="CultureInfo"/> specified by the
+        ///     <see cref="Culture"/> property.
         /// </summary>
         /// <param name="writer">
         ///     The <see cref="T:System.IO.TextWriter" /> to use for output.

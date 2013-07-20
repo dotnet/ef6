@@ -96,6 +96,7 @@ namespace System.Data.Entity
             {
                 case DbModelBuilderVersion.V4_1:
                     return V1ConventionSet.Conventions;
+                case DbModelBuilderVersion.V5_0_Net4:
                 case DbModelBuilderVersion.V5_0:
                 case DbModelBuilderVersion.V6_0:
                 case DbModelBuilderVersion.Latest:

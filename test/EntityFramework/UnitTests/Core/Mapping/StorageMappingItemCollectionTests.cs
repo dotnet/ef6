@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure.MappingViews;
     using System.Data.Entity.Resources;
     using System.IO;
     using System.Linq;

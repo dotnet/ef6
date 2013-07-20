@@ -251,7 +251,7 @@ namespace System.Data.Entity.Objects
                 Assert.Null(GetCurrentEntityTransaction(entityConnection));
                 using (var transaction = ctx.Database.BeginTransaction())
                 {
-                    Assert.Equal(transaction.StoreTransaction, GetCurrentStoreTransaction(entityConnection));
+                    Assert.Equal(transaction.UnderlyingTransaction, GetCurrentStoreTransaction(entityConnection));
                 }
             }
         }
@@ -315,7 +315,7 @@ namespace System.Data.Entity.Objects
                 Assert.Null(GetCurrentEntityTransaction(entityConnection));
                 using (var transaction = ctx.Database.BeginTransaction(IsolationLevel.Serializable))
                 {
-                    Assert.Equal(transaction.StoreTransaction, GetCurrentStoreTransaction(entityConnection));
+                    Assert.Equal(transaction.UnderlyingTransaction, GetCurrentStoreTransaction(entityConnection));
                     Assert.Equal(IsolationLevel.Serializable, GetCurrentStoreTransaction(entityConnection).IsolationLevel);
                 }
             }

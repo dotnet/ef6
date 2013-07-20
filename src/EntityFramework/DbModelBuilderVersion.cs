@@ -24,7 +24,7 @@ namespace System.Data.Entity
         ///     Indicates that the latest version of the <see cref="DbModelBuilder" /> and
         ///     <see cref="DbContext" /> conventions should be used.
         /// </summary>
-        Latest,
+        Latest = 0,
 
         /// <summary>
         ///     Indicates that the version of the <see cref="DbModelBuilder" /> and
@@ -32,7 +32,15 @@ namespace System.Data.Entity
         ///     should be used.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
-        V4_1,
+        V4_1 = 1,
+
+        /// <summary>
+        ///     Indicates that the version of the <see cref="DbModelBuilder" /> and
+        ///     <see cref="DbContext" /> conventions shipped with Entity Framework v5.0
+        ///     when targeting .Net Framework 4 should be used.
+        /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
+        V5_0_Net4 = 2,
 
         /// <summary>
         ///     Indicates that the version of the <see cref="DbModelBuilder" /> and
@@ -40,7 +48,7 @@ namespace System.Data.Entity
         ///     should be used.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
-        V5_0,
+        V5_0 = 3,
 
         /// <summary>
         ///     Indicates that the version of the <see cref="DbModelBuilder" /> and
@@ -48,6 +56,6 @@ namespace System.Data.Entity
         ///     should be used.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores")]
-        V6_0
+        V6_0 = 4
     }
 }

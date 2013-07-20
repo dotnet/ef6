@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ViewGeneration
 {
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.MappingViews;
 
     public sealed class PregenObjectContextViews : DbMappingViewCache
     {

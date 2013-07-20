@@ -181,6 +181,7 @@
     <Compile Include="CodeFirst\TableSplittingTests.cs" />
     <Compile Include="CodeFirst\TestHelpers\EndToEndFunctionsTest.cs" />
     <Compile Include="CodeFirst\TptMappingTests.cs" />
+    <Compile Include="Design\BasicDesignTimeScenarios.cs" />
     <Compile Include="MetadataMapping\EnumOCMappingTests.cs" />
     <Compile Include="Metadata\MetadataCollectionTests.cs" />
     <Compile Include="Metadata\MetadataEnumTests.cs" />

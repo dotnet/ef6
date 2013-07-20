@@ -11,6 +11,7 @@ namespace System.Data.Entity.Utilities
             switch (modelBuilderVersion)
             {
                 case DbModelBuilderVersion.V4_1:
+                case DbModelBuilderVersion.V5_0_Net4:
                     return XmlConstants.EdmVersionForV2;
                 case DbModelBuilderVersion.V5_0:
                 case DbModelBuilderVersion.V6_0:

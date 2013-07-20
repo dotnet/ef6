@@ -5,7 +5,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Edm.Serialization;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;

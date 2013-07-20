@@ -23,6 +23,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
+    using System.Data.Entity.Infrastructure.MappingViews;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;

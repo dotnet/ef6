@@ -3,7 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration
 {
     using System.CodeDom.Compiler;
-    using System.Data.Entity.Edm.Validation;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.IO;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;

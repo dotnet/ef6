@@ -104,7 +104,7 @@ namespace System.Data.Entity.Infrastructure
         /// </remarks>
         /// <param name="action"> The action to perform on each element. </param>
         /// <returns> A task that represents the asynchronous operation. </returns>
-        public Task ForEachAsync(Action<object> action)
+        public virtual Task ForEachAsync(Action<object> action)
         {
             Check.NotNull(action, "action");
 
@@ -123,7 +123,7 @@ namespace System.Data.Entity.Infrastructure
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns> A task that represents the asynchronous operation. </returns>
-        public Task ForEachAsync(Action<object> action, CancellationToken cancellationToken)
+        public virtual Task ForEachAsync(Action<object> action, CancellationToken cancellationToken)
         {
             Check.NotNull(action, "action");
 
@@ -142,7 +142,7 @@ namespace System.Data.Entity.Infrastructure
         ///     The task result contains a <see cref="List{T}" /> that contains elements from the query.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<List<object>> ToListAsync()
+        public virtual Task<List<object>> ToListAsync()
         {
             return ((IDbAsyncEnumerable)this).ToListAsync<object>();
         }
@@ -162,7 +162,7 @@ namespace System.Data.Entity.Infrastructure
         ///     The task result contains a <see cref="List{T}" /> that contains elements from the query.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public Task<List<object>> ToListAsync(CancellationToken cancellationToken)
+        public virtual Task<List<object>> ToListAsync(CancellationToken cancellationToken)
         {
             return ((IDbAsyncEnumerable)this).ToListAsync<object>(cancellationToken);
         }

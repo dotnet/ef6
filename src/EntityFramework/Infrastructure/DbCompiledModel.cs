@@ -76,7 +76,7 @@ namespace System.Data.Entity.Infrastructure
 
         /// <summary> Gets the default schema of the model. </summary>
         /// <returns> The default schema of the model. </returns>
-        public string DefaultSchema
+        internal string DefaultSchema
         {
             get { return CachedModelBuilder.ModelConfiguration.DefaultSchema; }
         }

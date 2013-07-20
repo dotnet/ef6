@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Infrastructure.MappingViews;
 using System.Data.Entity.ViewGeneration;
 
 [assembly: DbMappingViewCacheType(typeof(PregenContext), typeof(PregenContextViews))]
