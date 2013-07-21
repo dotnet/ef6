@@ -113,7 +113,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             }
 
             [Fact]
-            public void GetService_registers_all_providers_as_secondary_resolvers_in_order_the_first_time_any_service_is_requested()
+            public void GetService_registers_all_providers_as_default_resolvers_in_order_the_first_time_any_service_is_requested()
             {
                 var mockSection = CreateMockSectionWithProviders();
                 var mockFactory = CreateMockFactory(mockSection.Object);
@@ -123,7 +123,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var resolvers = new List<IDbDependencyResolver>();
 
                 mockConfiguration.Setup(
-                    m => m.AddSecondaryResolver(It.IsAny<IDbDependencyResolver>())).Callback<IDbDependencyResolver>(resolvers.Add);
+                    m => m.AddDefaultResolver(It.IsAny<IDbDependencyResolver>())).Callback<IDbDependencyResolver>(resolvers.Add);
 
                 new AppConfigDependencyResolver(appConfig, mockConfiguration.Object, mockFactory.Object).GetService<IPilkington>();
 
@@ -135,13 +135,13 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             }
 
             [Fact]
-            public void GetService_registers_all_providers_from_real_app_config_as_secondary_resolvers_in_correct_order()
+            public void GetService_registers_all_providers_from_real_app_config_as_default_resolvers_in_correct_order()
             {
                 var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var resolvers = new List<IDbDependencyResolver>();
 
                 mockConfiguration.Setup(
-                    m => m.AddSecondaryResolver(It.IsAny<IDbDependencyResolver>())).Callback<IDbDependencyResolver>(resolvers.Add);
+                    m => m.AddDefaultResolver(It.IsAny<IDbDependencyResolver>())).Callback<IDbDependencyResolver>(resolvers.Add);
 
                 new AppConfigDependencyResolver(AppConfig.DefaultInstance, mockConfiguration.Object).GetService<IPilkington>();
 
@@ -153,7 +153,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             }
 
             [Fact]
-            public void GetService_registers_all_providers_as_secondary_resolvers_only_once()
+            public void GetService_registers_all_providers_as_default_resolvers_only_once()
             {
                 var mockSection = CreateMockSectionWithProviders();
                 var mockFactory = CreateMockFactory(mockSection.Object);
@@ -164,11 +164,11 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
                 resolver.GetService<IPilkington>();
 
-                mockConfiguration.Verify(m => m.AddSecondaryResolver(It.IsAny<DbProviderServices>()), Times.Exactly(3));
+                mockConfiguration.Verify(m => m.AddDefaultResolver(It.IsAny<DbProviderServices>()), Times.Exactly(3));
 
                 resolver.GetService<IPilkington>();
 
-                mockConfiguration.Verify(m => m.AddSecondaryResolver(It.IsAny<DbProviderServices>()), Times.Exactly(3));
+                mockConfiguration.Verify(m => m.AddDefaultResolver(It.IsAny<DbProviderServices>()), Times.Exactly(3));
             }
 
             [Fact]
@@ -195,14 +195,14 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 mockSqlProvider.Setup(m => m.GetService(typeof(Random), null)).Returns(someRandomThing);
 
                 var resolvers = new ResolverChain();
-                mockConfiguration.Setup(m => m.AddSecondaryResolver(It.IsAny<IDbDependencyResolver>()))
+                mockConfiguration.Setup(m => m.AddDefaultResolver(It.IsAny<IDbDependencyResolver>()))
                     .Callback<IDbDependencyResolver>(resolvers.Add);
 
                 new AppConfigDependencyResolver(appConfig, mockConfiguration.Object, mockFactory.Object).GetService<IPilkington>();
 
-                mockConfiguration.Verify(m => m.AddSecondaryResolver(It.IsAny<DbProviderServices>()), Times.Exactly(4));
+                mockConfiguration.Verify(m => m.AddDefaultResolver(It.IsAny<DbProviderServices>()), Times.Exactly(4));
                 mockConfiguration.Verify(
-                    m => m.AddSecondaryResolver(It.IsAny<SingletonDependencyResolver<DbProviderServices>>()), Times.Once());
+                    m => m.AddDefaultResolver(It.IsAny<SingletonDependencyResolver<DbProviderServices>>()), Times.Once());
 
                 Assert.Equal("Robot.Rock", resolvers.GetService<string>());
                 Assert.Same(someRandomThing, resolvers.GetService<Random>());
@@ -457,7 +457,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             }
 
             [Fact]
-            public void GetServices_registers_all_providers_as_secondary_resolvers_in_order_the_first_time_any_service_is_requested()
+            public void GetServices_registers_all_providers_as_default_resolvers_in_order_the_first_time_any_service_is_requested()
             {
                 var mockSection = CreateMockSectionWithProviders();
                 var mockFactory = CreateMockFactory(mockSection.Object);
@@ -467,7 +467,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var resolvers = new List<IDbDependencyResolver>();
 
                 mockConfiguration.Setup(
-                    m => m.AddSecondaryResolver(It.IsAny<IDbDependencyResolver>())).Callback<IDbDependencyResolver>(resolvers.Add);
+                    m => m.AddDefaultResolver(It.IsAny<IDbDependencyResolver>())).Callback<IDbDependencyResolver>(resolvers.Add);
 
                 new AppConfigDependencyResolver(appConfig, mockConfiguration.Object, mockFactory.Object).GetServices<IPilkington>();
 
@@ -479,13 +479,13 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             }
 
             [Fact]
-            public void GetServices_registers_all_providers_from_real_app_config_as_secondary_resolvers_in_correct_order()
+            public void GetServices_registers_all_providers_from_real_app_config_as_default_resolvers_in_correct_order()
             {
                 var mockConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var resolvers = new List<IDbDependencyResolver>();
 
                 mockConfiguration.Setup(
-                    m => m.AddSecondaryResolver(It.IsAny<IDbDependencyResolver>())).Callback<IDbDependencyResolver>(resolvers.Add);
+                    m => m.AddDefaultResolver(It.IsAny<IDbDependencyResolver>())).Callback<IDbDependencyResolver>(resolvers.Add);
 
                 new AppConfigDependencyResolver(AppConfig.DefaultInstance, mockConfiguration.Object).GetServices<IPilkington>();
 
@@ -497,7 +497,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             }
 
             [Fact]
-            public void GetServices_registers_all_providers_as_secondary_resolvers_only_once()
+            public void GetServices_registers_all_providers_as_default_resolvers_only_once()
             {
                 var mockSection = CreateMockSectionWithProviders();
                 var mockFactory = CreateMockFactory(mockSection.Object);
@@ -508,11 +508,11 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
                 resolver.GetServices<IPilkington>();
 
-                mockConfiguration.Verify(m => m.AddSecondaryResolver(It.IsAny<DbProviderServices>()), Times.Exactly(3));
+                mockConfiguration.Verify(m => m.AddDefaultResolver(It.IsAny<DbProviderServices>()), Times.Exactly(3));
 
                 resolver.GetServices<IPilkington>();
 
-                mockConfiguration.Verify(m => m.AddSecondaryResolver(It.IsAny<DbProviderServices>()), Times.Exactly(3));
+                mockConfiguration.Verify(m => m.AddDefaultResolver(It.IsAny<DbProviderServices>()), Times.Exactly(3));
             }
 
             [Fact]
@@ -539,14 +539,14 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 mockSqlProvider.Setup(m => m.GetService(typeof(Random), null)).Returns(someRandomThing);
 
                 var resolvers = new ResolverChain();
-                mockConfiguration.Setup(m => m.AddSecondaryResolver(It.IsAny<IDbDependencyResolver>()))
+                mockConfiguration.Setup(m => m.AddDefaultResolver(It.IsAny<IDbDependencyResolver>()))
                     .Callback<IDbDependencyResolver>(resolvers.Add);
 
                 new AppConfigDependencyResolver(appConfig, mockConfiguration.Object, mockFactory.Object).GetServices<IPilkington>();
 
-                mockConfiguration.Verify(m => m.AddSecondaryResolver(It.IsAny<DbProviderServices>()), Times.Exactly(4));
+                mockConfiguration.Verify(m => m.AddDefaultResolver(It.IsAny<DbProviderServices>()), Times.Exactly(4));
                 mockConfiguration.Verify(
-                    m => m.AddSecondaryResolver(It.IsAny<SingletonDependencyResolver<DbProviderServices>>()), Times.Once());
+                    m => m.AddDefaultResolver(It.IsAny<SingletonDependencyResolver<DbProviderServices>>()), Times.Once());
 
                 Assert.Equal("Robot.Rock", resolvers.GetService<string>());
                 Assert.Same(someRandomThing, resolvers.GetService<Random>());

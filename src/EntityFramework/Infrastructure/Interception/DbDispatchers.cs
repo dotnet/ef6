@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.Infrastructure.Interception
 {
+    using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Provides access to all dispatchers through the the <see cref="DbInterception.Dispatch" /> fluent API.
@@ -61,6 +63,35 @@ namespace System.Data.Entity.Infrastructure.Interception
             _commandDispatcher.InternalDispatcher.Remove(interceptor);
             _entityConnectionDispatcher.InternalDispatcher.Remove(interceptor);
             _cancelableCommandDispatcher.InternalDispatcher.Remove(interceptor);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        /// <inheritdoc />
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new Type GetType()
+        {
+            return base.GetType();
         }
     }
 }

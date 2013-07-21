@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity
 {
+    using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Infrastructure;
@@ -152,17 +153,17 @@ namespace System.Data.Entity
         ///     be used to resolve a dependency that could not be resolved by any of the other resolvers.
         /// </summary>
         /// <remarks>
-        ///     A <see cref="DbProviderServices" /> implementation is automatically registered as a secondary resolver
-        ///     when it is added with a call to <see cref="ProviderServices"/>. This allows EF providers to act as secondary
+        ///     A <see cref="DbProviderServices" /> implementation is automatically registered as a default resolver
+        ///     when it is added with a call to <see cref="ProviderServices"/>. This allows EF providers to act as
         ///     resolvers for other services that may need to be overridden by the provider.
         /// </remarks>
         /// <param name="resolver"> The resolver to add. </param>
-        protected internal void AddSecondaryResolver(IDbDependencyResolver resolver)
+        protected internal void AddDefaultResolver(IDbDependencyResolver resolver)
         {
             Check.NotNull(resolver, "resolver");
 
-            _internalConfiguration.CheckNotLocked("AddSecondaryResolver");
-            _internalConfiguration.AddSecondaryResolver(resolver);
+            _internalConfiguration.CheckNotLocked("AddDefaultResolver");
+            _internalConfiguration.AddDefaultResolver(resolver);
         }
 
         /// <summary>
@@ -179,12 +180,12 @@ namespace System.Data.Entity
         ///     an Entity Framework provider.
         /// </summary>
         /// <remarks>
-        ///     Note that the provider is both registered as a service itself and also registered as a secondary resolver with
-        ///     a call to AddSecondaryResolver.  This allows EF providers to act as secondary resolvers for other services that
+        ///     Note that the provider is both registered as a service itself and also registered as a default resolver with
+        ///     a call to AddDefaultResolver.  This allows EF providers to act as resolvers for other services that
         ///     may need to be overridden by the provider.
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
-        ///     <see cref="DbProviderServices" /> and also using AddSecondaryResolver to add the provider as a secondary
+        ///     <see cref="DbProviderServices" /> and also using AddDefaultResolver to add the provider as a default
         ///     resolver. This means that, if desired, the same functionality can be achieved using a custom resolver or a
         ///     resolver backed by an Inversion-of-Control container.
         /// </remarks>
@@ -199,7 +200,7 @@ namespace System.Data.Entity
             _internalConfiguration.CheckNotLocked("ProviderServices");
             _internalConfiguration.RegisterSingleton(provider, providerInvariantName);
 
-            AddSecondaryResolver(provider);
+            AddDefaultResolver(provider);
         }
 
         /// <summary>
@@ -593,6 +594,35 @@ namespace System.Data.Entity
         internal virtual InternalConfiguration InternalConfiguration
         {
             get { return _internalConfiguration; }
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        /// <inheritdoc />
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new Type GetType()
+        {
+            return base.GetType();
         }
     }
 }

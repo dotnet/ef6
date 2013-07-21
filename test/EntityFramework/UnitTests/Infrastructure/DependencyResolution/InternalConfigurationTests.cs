@@ -117,10 +117,10 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             }
         }
 
-        public class AddSecondaryResolver
+        public class AddDefaultResolver
         {
             [Fact]
-            public void AddSecondaryResolver_adds_a_secondary_resolver_to_the_root()
+            public void AddDefaultResolver_adds_a_default_resolver_to_the_root()
             {
                 var mockRootResolver = new Mock<RootDependencyResolver>();
                 var resolver = new Mock<IDbDependencyResolver>().Object;
@@ -129,13 +129,13 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                     new Mock<ResolverChain>().Object,
                     new Mock<ResolverChain>().Object,
                     mockRootResolver.Object,
-                    new Mock<AppConfigDependencyResolver>().Object).AddSecondaryResolver(resolver);
+                    new Mock<AppConfigDependencyResolver>().Object).AddDefaultResolver(resolver);
 
-                mockRootResolver.Verify(m => m.AddSecondaryResolver(resolver));
+                mockRootResolver.Verify(m => m.AddDefaultResolver(resolver));
             }
 
             [Fact]
-            public void AddDependencyResolver_adds_a_resolver_to_the_app_config_chain_when_override_flag_is_used()
+            public void AddDefaultResolver_adds_a_resolver_to_the_app_config_chain_when_override_flag_is_used()
             {
                 var mockAppConfigChain = new Mock<ResolverChain>();
                 var resolver = new Mock<IDbDependencyResolver>().Object;

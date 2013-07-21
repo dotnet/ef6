@@ -13,7 +13,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     /// </summary>
     /// <remarks>
     ///     This class can be used by <see cref="DbProviderServices" /> to aid in the resolving
-    ///     of <see cref="IDbExecutionStrategy" /> factories as a secondary service.
+    ///     of <see cref="IDbExecutionStrategy" /> factories as a default service for the provider.
     /// </remarks>
     /// <typeparam name="T">The type of execution strategy that is resolved.</typeparam>
     public class ExecutionStrategyResolver<T> : IDbDependencyResolver

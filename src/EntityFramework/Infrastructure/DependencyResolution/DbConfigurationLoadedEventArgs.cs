@@ -2,7 +2,9 @@
 
 namespace System.Data.Entity.Infrastructure.DependencyResolution
 {
+    using System.ComponentModel;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     ///     Event arguments passed to <see cref="DbConfiguration.Loaded" /> event handlers.
@@ -57,12 +59,12 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         ///     be used to resolve a dependency that could not be resolved by any of the other resolvers.
         /// </summary>
         /// <param name="resolver"> The resolver to add. </param>
-        public void AddSecondaryResolver(IDbDependencyResolver resolver)
+        public void AddDefaultResolver(IDbDependencyResolver resolver)
         {
             Check.NotNull(resolver, "resolver");
 
-            _internalConfiguration.CheckNotLocked("AddSecondaryResolver");
-            _internalConfiguration.AddSecondaryResolver(resolver);
+            _internalConfiguration.CheckNotLocked("AddDefaultResolver");
+            _internalConfiguration.AddDefaultResolver(resolver);
         }
 
         /// <summary>
@@ -79,6 +81,35 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             AddDependencyResolver(
                 new WrappingDependencyResolver<TService>(DependencyResolver, serviceInterceptor),
                 overrideConfigFile: true);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        /// <inheritdoc />
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public new Type GetType()
+        {
+            return base.GetType();
         }
     }
 }

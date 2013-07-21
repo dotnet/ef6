@@ -146,24 +146,24 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             }
 
             [Fact]
-            public void The_root_resolver_resolves_from_secondary_resolvers_before_roots()
+            public void The_root_resolver_resolves_from_default_resolvers_before_roots()
             {
                 var attributeProvider1 = new Mock<AttributeProvider>().Object;
                 var attributeProvider2 = new Mock<AttributeProvider>().Object;
 
-                var mockSecondaryResolver1 = new Mock<IDbDependencyResolver>();
-                mockSecondaryResolver1.Setup(m => m.GetService(typeof(AttributeProvider), null)).Returns(attributeProvider1);
-                var mockSecondaryResolver2 = new Mock<IDbDependencyResolver>();
-                mockSecondaryResolver2.Setup(m => m.GetService(typeof(AttributeProvider), null)).Returns(attributeProvider2);
+                var mockDefaultResolver1 = new Mock<IDbDependencyResolver>();
+                mockDefaultResolver1.Setup(m => m.GetService(typeof(AttributeProvider), null)).Returns(attributeProvider1);
+                var mockDefaultResolver2 = new Mock<IDbDependencyResolver>();
+                mockDefaultResolver2.Setup(m => m.GetService(typeof(AttributeProvider), null)).Returns(attributeProvider2);
 
                 var rootResolver = new RootDependencyResolver();
 
                 Assert.IsType<AttributeProvider>(rootResolver.GetService<AttributeProvider>());
 
-                rootResolver.AddSecondaryResolver(mockSecondaryResolver1.Object);
+                rootResolver.AddDefaultResolver(mockDefaultResolver1.Object);
                 Assert.Same(attributeProvider1, rootResolver.GetService<AttributeProvider>());
 
-                rootResolver.AddSecondaryResolver(mockSecondaryResolver2.Object);
+                rootResolver.AddDefaultResolver(mockDefaultResolver2.Object);
                 Assert.Same(attributeProvider2, rootResolver.GetService<AttributeProvider>());
             }
 
@@ -181,8 +181,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                     var bag = new ConcurrentBag<AttributeProvider>();
 
                     var resolver = new RootDependencyResolver();
-                    resolver.AddSecondaryResolver(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
-                    resolver.AddSecondaryResolver(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
+                    resolver.AddDefaultResolver(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
+                    resolver.AddDefaultResolver(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
 
                     ExecuteInParallel(() => bag.Add(resolver.GetService<AttributeProvider>()));
 
@@ -216,23 +216,23 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         public class GetServices : TestBase
         {
             [Fact]
-            public void The_root_resolver_resolves_from_secondary_resolvers_and_roots()
+            public void The_root_resolver_resolves_from_default_resolvers_and_roots()
             {
                 var attributeProvider1 = new Mock<AttributeProvider>().Object;
                 var attributeProvider2 = new Mock<AttributeProvider>().Object;
 
-                var mockSecondaryResolver1 = new Mock<IDbDependencyResolver>();
-                mockSecondaryResolver1.Setup(m => m.GetServices(typeof(AttributeProvider), null)).Returns(new object[] { attributeProvider1 });
-                var mockSecondaryResolver2 = new Mock<IDbDependencyResolver>();
-                mockSecondaryResolver2.Setup(m => m.GetServices(typeof(AttributeProvider), null)).Returns(new object[] { attributeProvider2 });
+                var mockDefaultResolver1 = new Mock<IDbDependencyResolver>();
+                mockDefaultResolver1.Setup(m => m.GetServices(typeof(AttributeProvider), null)).Returns(new object[] { attributeProvider1 });
+                var mockDefaultResolver2 = new Mock<IDbDependencyResolver>();
+                mockDefaultResolver2.Setup(m => m.GetServices(typeof(AttributeProvider), null)).Returns(new object[] { attributeProvider2 });
 
                 var rootResolver = new RootDependencyResolver();
 
                 var defaultProvider = rootResolver.GetServices<AttributeProvider>().Single();
                 Assert.IsType<AttributeProvider>(defaultProvider);
 
-                rootResolver.AddSecondaryResolver(mockSecondaryResolver1.Object);
-                rootResolver.AddSecondaryResolver(mockSecondaryResolver2.Object);
+                rootResolver.AddDefaultResolver(mockDefaultResolver1.Object);
+                rootResolver.AddDefaultResolver(mockDefaultResolver2.Object);
 
                 var attributeProviders = rootResolver.GetServices<AttributeProvider>().ToList();
                 
@@ -256,8 +256,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                     var bag = new ConcurrentBag<AttributeProvider>();
 
                     var resolver = new RootDependencyResolver();
-                    resolver.AddSecondaryResolver(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
-                    resolver.AddSecondaryResolver(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
+                    resolver.AddDefaultResolver(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
+                    resolver.AddDefaultResolver(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
 
                     ExecuteInParallel(() => resolver.GetServices<AttributeProvider>().Each(bag.Add));
 

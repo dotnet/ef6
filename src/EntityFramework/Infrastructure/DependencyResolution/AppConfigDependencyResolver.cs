@@ -137,7 +137,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 p =>
                     {
                         _providerFactories[p.InvariantName] = p.ProviderServices;
-                        _internalConfiguration.AddSecondaryResolver(p.ProviderServices);
+                        _internalConfiguration.AddDefaultResolver(p.ProviderServices);
                     });
         }
 
@@ -154,9 +154,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             {
                 // This provider goes just above the root resolver so that any other provider registered in code
                 // still takes precedence.
-                _internalConfiguration.AddSecondaryResolver(
+                _internalConfiguration.AddDefaultResolver(
                     new SingletonDependencyResolver<DbProviderServices>(provider, "System.Data.SqlClient"));
-                _internalConfiguration.AddSecondaryResolver(provider);
+                _internalConfiguration.AddDefaultResolver(provider);
             }
         }
     }

@@ -84,36 +84,36 @@ namespace System.Data.Entity
             }
         }
 
-        public class AddSecondaryResolver
+        public class AddDefaultResolver
         {
             [Fact]
-            public void AddSecondaryResolver_throws_if_given_a_null_resolver()
+            public void AddDefaultResolver_throws_if_given_a_null_resolver()
             {
                 Assert.Equal(
                     "resolver",
-                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddSecondaryResolver(null)).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().AddDefaultResolver(null)).ParamName);
             }
 
             [Fact]
-            public void AddSecondaryResolver_throws_if_the_configuation_is_locked()
+            public void AddDefaultResolver_throws_if_the_configuation_is_locked()
             {
                 var configuration = CreatedLockedConfiguration();
 
                 Assert.Equal(
-                    Strings.ConfigurationLocked("AddSecondaryResolver"),
+                    Strings.ConfigurationLocked("AddDefaultResolver"),
                     Assert.Throws<InvalidOperationException>(
-                        () => configuration.AddSecondaryResolver(new Mock<IDbDependencyResolver>().Object)).Message);
+                        () => configuration.AddDefaultResolver(new Mock<IDbDependencyResolver>().Object)).Message);
             }
 
             [Fact]
-            public void AddSecondaryResolver_delegates_to_internal_configuration()
+            public void AddDefaultResolver_delegates_to_internal_configuration()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var resolver = new Mock<IDbDependencyResolver>().Object;
 
-                new DbConfiguration(mockInternalConfiguration.Object).AddSecondaryResolver(resolver);
+                new DbConfiguration(mockInternalConfiguration.Object).AddDefaultResolver(resolver);
 
-                mockInternalConfiguration.Verify(m => m.AddSecondaryResolver(resolver));
+                mockInternalConfiguration.Verify(m => m.AddDefaultResolver(resolver));
             }
         }
 
@@ -167,14 +167,14 @@ namespace System.Data.Entity
             }
 
             [Fact]
-            public void ProviderServices_also_adds_the_provider_as_a_secondary_resolver()
+            public void ProviderServices_also_adds_the_provider_as_a_default_resolver()
             {
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var providerServices = new Mock<DbProviderServices>().Object;
 
                 new DbConfiguration(mockInternalConfiguration.Object).ProviderServices("900.FTW", providerServices);
 
-                mockInternalConfiguration.Verify(m => m.AddSecondaryResolver(providerServices));
+                mockInternalConfiguration.Verify(m => m.AddDefaultResolver(providerServices));
             }
 
             [Fact]

@@ -79,12 +79,12 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             (overrideConfigFile ? _resolvers.First : _resolvers.Second).Add(resolver);
         }
 
-        public virtual void AddSecondaryResolver(IDbDependencyResolver resolver)
+        public virtual void AddDefaultResolver(IDbDependencyResolver resolver)
         {
             DebugCheck.NotNull(resolver);
 
-            // Secondary resolvers only kick in if nothing else before the root resolves the dependency.
-            _rootResolver.AddSecondaryResolver(resolver);
+            // Default resolvers only kick in if nothing else before the root resolves the dependency.
+            _rootResolver.AddDefaultResolver(resolver);
         }
 
         public virtual void RegisterSingleton<TService>(TService instance)

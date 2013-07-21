@@ -716,7 +716,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Adds an <see cref="IDbDependencyResolver" /> that will be used to resolve secondary provider
+        ///     Adds an <see cref="IDbDependencyResolver" /> that will be used to resolve additional default provider
         ///     services when a derived type is registered as an EF provider either using an entry in the application's
         ///     config file or through code-based registration in <see cref="DbConfiguration" />.
         /// </summary>
@@ -729,7 +729,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Called to resolve secondary provider services when a derived type is registered as an
+        ///     Called to resolve additional default provider services when a derived type is registered as an
         ///     EF provider either using an entry in the application's config file or through code-based
         ///     registration in <see cref="DbConfiguration" />. The implementation of this method in this
         ///     class uses the resolvers added with the AddDependencyResolver method to resolve
@@ -751,7 +751,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Called to resolve secondary provider services when a derived type is registered as an
+        ///     Called to resolve additional default provider services when a derived type is registered as an
         ///     EF provider either using an entry in the application's config file or through code-based
         ///     registration in <see cref="DbConfiguration" />. The implementation of this method in this
         ///     class uses the resolvers added with the AddDependencyResolver method to resolve

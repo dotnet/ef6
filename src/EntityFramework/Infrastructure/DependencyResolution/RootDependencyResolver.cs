@@ -22,7 +22,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     /// </summary>
     internal class RootDependencyResolver : IDbDependencyResolver
     {
-        private readonly ResolverChain _secondaryResolvers = new ResolverChain();
+        private readonly ResolverChain _defaultResolvers = new ResolverChain();
         private readonly ResolverChain _resolvers = new ResolverChain();
         private readonly DatabaseInitializerResolver _databaseInitializerResolver;
 
@@ -70,19 +70,19 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         /// <inheritdoc />
         public virtual object GetService(Type type, object key)
         {
-            return _secondaryResolvers.GetService(type, key) ?? _resolvers.GetService(type, key);
+            return _defaultResolvers.GetService(type, key) ?? _resolvers.GetService(type, key);
         }
 
-        public virtual void AddSecondaryResolver(IDbDependencyResolver resolver)
+        public virtual void AddDefaultResolver(IDbDependencyResolver resolver)
         {
             DebugCheck.NotNull(resolver);
 
-            _secondaryResolvers.Add(resolver);
+            _defaultResolvers.Add(resolver);
         }
 
         public IEnumerable<object> GetServices(Type type, object key)
         {
-            return _secondaryResolvers.GetServices(type, key).Concat(_resolvers.GetServices(type, key));
+            return _defaultResolvers.GetServices(type, key).Concat(_resolvers.GetServices(type, key));
         }
     }
 }
