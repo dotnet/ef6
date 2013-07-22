@@ -46,7 +46,7 @@ namespace System.Data.Entity.Infrastructure.Design
             string providerServicesTypeName = null;
             try
             {
-                // TODO: This should take into account any DbConfiguration class inside _assembly
+                DbConfiguration.LoadConfiguration(_assembly);
                 var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(invariantName);
                 providerServicesTypeName = providerServices.GetType().AssemblyQualifiedName;
             }
