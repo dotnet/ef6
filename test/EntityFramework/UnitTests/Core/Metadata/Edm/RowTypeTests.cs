@@ -13,8 +13,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var rowType = RowType.Create(
                 new[]
                     {
-                        EdmProperty.Primitive("foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
-                        EdmProperty.Primitive("bar", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64))
+                        EdmProperty.CreatePrimitive("foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                        EdmProperty.CreatePrimitive("bar", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64))
                     },
                 new[]
                     {
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Empty(rowType.DeclaredProperties);
 
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             rowType.AddMember(property);
 

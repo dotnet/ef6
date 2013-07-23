@@ -22,10 +22,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
-            var intProperty = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            var intProperty = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
             entityType.AddKeyMember(intProperty);
 
-            var stringProperty = EdmProperty.Primitive("Name", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var stringProperty = EdmProperty.CreatePrimitive("Name", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddMember(stringProperty);
 
             var entitySetMapping
@@ -106,11 +106,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
-            var intProperty = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            var intProperty = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
             intProperty.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
             entityType.AddKeyMember(intProperty);
 
-            var stringProperty = EdmProperty.Primitive("Name", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var stringProperty = EdmProperty.CreatePrimitive("Name", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             stringProperty.SetStoreGeneratedPattern(StoreGeneratedPattern.Computed);
             entityType.AddMember(stringProperty);
 

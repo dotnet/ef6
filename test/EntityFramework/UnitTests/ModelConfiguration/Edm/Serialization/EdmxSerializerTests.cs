@@ -64,7 +64,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
             entityType.Annotations.SetClrType(type);
             model.AddEntitySet("ESet", entityType);
 
-            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var property = property1;

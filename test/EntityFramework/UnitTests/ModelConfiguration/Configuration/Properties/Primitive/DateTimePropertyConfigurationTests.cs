@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             var configuration = CreateConfiguration();
             configuration.Precision = 255;
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.DateTime));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.DateTime));
 
             configuration.Configure(property);
 

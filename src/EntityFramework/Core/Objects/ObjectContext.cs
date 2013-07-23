@@ -2832,7 +2832,7 @@ namespace System.Data.Entity.Core.Objects
         ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
-        public int SaveChanges()
+        public virtual int SaveChanges()
         {
             return SaveChanges(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave);
         }
@@ -2852,7 +2852,7 @@ namespace System.Data.Entity.Core.Objects
         ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
-        public Task<Int32> SaveChangesAsync()
+        public virtual Task<Int32> SaveChangesAsync()
         {
             return SaveChangesAsync(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave, CancellationToken.None);
         }
@@ -2873,7 +2873,7 @@ namespace System.Data.Entity.Core.Objects
         ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
-        public Task<Int32> SaveChangesAsync(CancellationToken cancellationToken)
+        public virtual Task<Int32> SaveChangesAsync(CancellationToken cancellationToken)
         {
             return SaveChangesAsync(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave, cancellationToken);
         }
@@ -2897,7 +2897,7 @@ namespace System.Data.Entity.Core.Objects
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
         [Obsolete("Use SaveChanges(SaveOptions options) instead.")]
-        public int SaveChanges(bool acceptChangesDuringSave)
+        public virtual int SaveChanges(bool acceptChangesDuringSave)
         {
             return SaveChanges(
                 acceptChangesDuringSave
@@ -2954,7 +2954,7 @@ namespace System.Data.Entity.Core.Objects
         ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
-        public Task<Int32> SaveChangesAsync(SaveOptions options)
+        public virtual Task<Int32> SaveChangesAsync(SaveOptions options)
         {
             return SaveChangesAsync(options, CancellationToken.None);
         }
@@ -3612,10 +3612,10 @@ namespace System.Data.Entity.Core.Objects
                 try
                 {
                     var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-                    var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+                    var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
 
                     bufferedReader = new BufferedDataReader(storeReader);
-                    bufferedReader.Initialize(storeItemCollection.StoreProviderManifestToken, providerServices);
+                    bufferedReader.Initialize(storeItemCollection.ProviderManifestToken, providerServices);
                 }
                 catch (Exception e)
                 {
@@ -4227,10 +4227,10 @@ namespace System.Data.Entity.Core.Objects
             try
             {
                 var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-                var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+                var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
 
                 bufferedReader = new BufferedDataReader(reader);
-                bufferedReader.Initialize(storeItemCollection.StoreProviderManifestToken, providerServices);
+                bufferedReader.Initialize(storeItemCollection.ProviderManifestToken, providerServices);
                 return InternalTranslate<TElement>(
                     bufferedReader, entitySetName, executionOptions.MergeOption, readerOwned: true,
                     shouldReleaseConnection: !executionOptions.Streaming);
@@ -4514,10 +4514,10 @@ namespace System.Data.Entity.Core.Objects
             try
             {
                 var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-                var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+                var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
 
                 bufferedReader = new BufferedDataReader(reader);
-                await bufferedReader.InitializeAsync(storeItemCollection.StoreProviderManifestToken, providerServices, cancellationToken)
+                await bufferedReader.InitializeAsync(storeItemCollection.ProviderManifestToken, providerServices, cancellationToken)
                                     .ConfigureAwait(continueOnCapturedContext: false);
                 return InternalTranslate<TElement>(
                     bufferedReader, entitySetName, executionOptions.MergeOption, readerOwned: true,
@@ -4718,7 +4718,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual void CreateDatabase()
         {
             var storeConnection = ((EntityConnection)Connection).StoreConnection;
-            var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
+            var services = GetStoreItemCollection().ProviderFactory.GetProviderServices();
             services.CreateDatabase(storeConnection, CommandTimeout, GetStoreItemCollection());
         }
 
@@ -4726,7 +4726,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual void DeleteDatabase()
         {
             var storeConnection = ((EntityConnection)Connection).StoreConnection;
-            var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
+            var services = GetStoreItemCollection().ProviderFactory.GetProviderServices();
             services.DeleteDatabase(storeConnection, CommandTimeout, GetStoreItemCollection());
         }
 
@@ -4738,7 +4738,7 @@ namespace System.Data.Entity.Core.Objects
         public virtual bool DatabaseExists()
         {
             var storeConnection = ((EntityConnection)Connection).StoreConnection;
-            var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
+            var services = GetStoreItemCollection().ProviderFactory.GetProviderServices();
             try
             {
                 return services.DatabaseExists(storeConnection, CommandTimeout, GetStoreItemCollection());
@@ -4801,8 +4801,8 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         public virtual String CreateDatabaseScript()
         {
-            var services = GetStoreItemCollection().StoreProviderFactory.GetProviderServices();
-            var targetProviderManifestToken = GetStoreItemCollection().StoreProviderManifestToken;
+            var services = GetStoreItemCollection().ProviderFactory.GetProviderServices();
+            var targetProviderManifestToken = GetStoreItemCollection().ProviderManifestToken;
             return services.CreateDatabaseScript(targetProviderManifestToken, GetStoreItemCollection());
         }
 

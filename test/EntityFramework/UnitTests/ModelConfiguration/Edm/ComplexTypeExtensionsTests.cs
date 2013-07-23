@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public void AddPrimitiveProperty_should_create_and_add_to_primitive_properties()
         {
             var complexType = new ComplexType("C");
-            var property1 = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             complexType.AddMember(property1);
             var property = property1;
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public void GetPrimitiveProperty_should_return_correct_property()
         {
             var complexType = new ComplexType("C");
-            var property1 = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             complexType.AddMember(property1);
             var property = property1;

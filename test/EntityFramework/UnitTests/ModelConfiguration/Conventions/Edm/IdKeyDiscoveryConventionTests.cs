@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_match_simple_id()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var property = property1;
@@ -27,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_make_key_not_nullable()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var property = property1;
@@ -41,7 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_match_type_prefixed_id()
         {
             var entityType = new EntityType("Foo", "N", DataSpace.CSpace);
-            var property1 = EdmProperty.Primitive("FooId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("FooId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var property = property1;
@@ -55,10 +55,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_match_id_ahead_of_type_and_id()
         {
             var entityType = new EntityType("Foo", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("FooId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("FooId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
-            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var idProperty = property1;
@@ -73,7 +73,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_ignore_case()
         {
             var entityType = new EntityType("Foo", "N", DataSpace.CSpace);
-            var property1 = EdmProperty.Primitive("foOid", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("foOid", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var property = property1;
@@ -87,7 +87,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_ignore_non_primitive_type()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property1 = EdmProperty.Complex("Id", new ComplexType("C"));
+            var property1 = EdmProperty.CreateComplex("Id", new ComplexType("C"));
 
             entityType.AddMember(property1);
             var property = property1;
@@ -101,11 +101,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_ignore_when_key_already_specified()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var property = property1;
-            entityType.AddKeyMember(EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
+            entityType.AddKeyMember(EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
             (new IdKeyDiscoveryConvention()).Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
 
@@ -116,7 +116,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_ignore_when_type_is_derived()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var property = property1;
@@ -131,11 +131,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_throw_if_two_Id_properties_are_matched_that_differ_only_by_case()
         {
             var entityType = new EntityType("Foo", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("ID", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("ID", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
             var IDProperty = property;
-            var property1 = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var IdProperty = property1;
@@ -150,11 +150,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_throw_if_two_type_Id_properties_are_matched_that_differ_only_by_case()
         {
             var entityType = new EntityType("Foo", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("FOOId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("FOOId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
             var FOOIdProperty = property;
-            var property1 = EdmProperty.Primitive("FooId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("FooId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var FooIdProperty = property1;

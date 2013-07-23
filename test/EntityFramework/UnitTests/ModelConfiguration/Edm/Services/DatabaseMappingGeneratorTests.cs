@@ -29,10 +29,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var type = typeof(object);
 
             entityType.Annotations.SetClrType(type);
-            var property = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
-            var property1 = EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var entitySet = model.AddEntitySet("ESet", entityType);
@@ -65,7 +65,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var property
                 = EdmProperty
-                    .Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+                    .CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
 
@@ -104,7 +104,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var property
                 = EdmProperty
-                    .Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Time));
+                    .CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Time));
 
             entityType.AddMember(property);
 
@@ -143,7 +143,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var property
                 = EdmProperty
-                    .Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
+                    .CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
 
             entityType.AddMember(property);
 
@@ -178,7 +178,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var type = typeof(object);
 
             entityType.Annotations.SetClrType(type);
-            var property = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
             var idProperty = property;
@@ -203,12 +203,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var type = typeof(object);
 
             principalEntityType.Annotations.SetClrType(type);
-            var property = EdmProperty.Primitive("Id1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("Id1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             principalEntityType.AddMember(property);
             var idProperty1 = property;
             principalEntityType.AddKeyMember(idProperty1);
-            var property1 = EdmProperty.Primitive("Id2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Id2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             principalEntityType.AddMember(property1);
             var idProperty2 = property1;
@@ -255,11 +255,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var dependentEntityType = model.AddEntityType("D");
             dependentEntityType.Annotations.SetClrType(typeof(string));
 
-            var dependentProperty1 = EdmProperty.Primitive("FK1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            var dependentProperty1 = EdmProperty.CreatePrimitive("FK1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
             dependentProperty1.Nullable = false;
             dependentEntityType.AddMember(dependentProperty1);
 
-            var dependentProperty2 = EdmProperty.Primitive("FK2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var dependentProperty2 = EdmProperty.CreatePrimitive("FK2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             dependentEntityType.AddMember(dependentProperty2);
 
             model.AddEntitySet("PSet", principalEntityType);
@@ -305,15 +305,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var type = typeof(object);
 
             rootEntityType.Annotations.SetClrType(type);
-            var property = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             rootEntityType.AddMember(property);
-            var property1 = EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             rootEntityType.AddMember(property1);
             var entitySet = model.AddEntitySet("ESet", rootEntityType);
             var entityType2 = model.AddEntityType("E2");
-            var property2 = EdmProperty.Primitive("P3", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property2 = EdmProperty.CreatePrimitive("P3", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType2.AddMember(property2);
             var type1 = typeof(string);
@@ -324,7 +324,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var type2 = typeof(int);
 
             entityType3.Annotations.SetClrType(type2);
-            var property3 = EdmProperty.Primitive("P4", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property3 = EdmProperty.CreatePrimitive("P4", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType3.AddMember(property3);
             entityType3.BaseType = entityType2;
@@ -367,13 +367,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             rootEntityType.Annotations.SetClrType(typeof(object));
 
             var property0
-                = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+                = EdmProperty.CreatePrimitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             rootEntityType.AddMember(property0);
             rootEntityType.AddKeyMember(rootEntityType.Properties.First());
 
             var property1
-                = EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+                = EdmProperty.CreatePrimitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             rootEntityType.AddMember(property1);
 
@@ -382,7 +382,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var entityType2 = model.AddEntityType("E2");
 
             var property2
-                = EdmProperty.Primitive("P3", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+                = EdmProperty.CreatePrimitive("P3", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType2.AddMember(property2);
             entityType2.Annotations.SetClrType(typeof(string));
@@ -394,7 +394,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             entityType3.Annotations.SetClrType(typeof(int));
 
             var property3
-                = EdmProperty.Primitive("P4", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+                = EdmProperty.CreatePrimitive("P4", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType3.AddMember(property3);
             entityType3.BaseType = entityType2;

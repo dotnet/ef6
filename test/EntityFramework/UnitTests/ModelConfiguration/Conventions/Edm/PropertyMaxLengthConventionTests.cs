@@ -20,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_set_correct_defaults_for_unconfigured_strings()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddMember(property);
 
             (new PropertyMaxLengthConvention())
@@ -36,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_set_correct_defaults_for_unicode_fixed_length_strings()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_set_correct_defaults_for_non_unicode_fixed_length_strings()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             property.IsFixedLength = true;
             property.IsUnicode = false;
             entityType.AddMember(property);
@@ -68,7 +68,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_set_correct_defaults_for_string_keys()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddMember(property);
             entityType.AddKeyMember(property);
 
@@ -82,7 +82,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_set_correct_defaults_for_unconfigured_binary()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
             entityType.AddMember(property);
 
             (new PropertyMaxLengthConvention())
@@ -97,7 +97,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_set_correct_defaults_for_fixed_length_binary()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
@@ -113,7 +113,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_set_correct_defaults_for_binary_key()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
             entityType.AddMember(property);
             entityType.AddKeyMember(property);
 
@@ -128,7 +128,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void ComplexType_apply_should_set_correct_defaults_for_unconfigured_strings()
         {
             var entityType = new ComplexType("C");
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddMember(property);
 
             (new PropertyMaxLengthConvention())
@@ -144,7 +144,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void ComplexType_apply_should_set_correct_defaults_for_unicode_fixed_length_strings()
         {
             var entityType = new ComplexType("C");
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
@@ -160,7 +160,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void ComplexType_apply_should_set_correct_defaults_for_non_unicode_fixed_length_strings()
         {
             var entityType = new ComplexType("C");
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             property.IsFixedLength = true;
             property.IsUnicode = false;
             entityType.AddMember(property);
@@ -176,7 +176,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void ComplexType_apply_should_set_correct_defaults_for_unconfigured_binary()
         {
             var entityType = new ComplexType("C");
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
             entityType.AddMember(property);
 
             (new PropertyMaxLengthConvention())
@@ -191,7 +191,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void ComplexType_apply_should_set_correct_defaults_for_fixed_length_binary()
         {
             var entityType = new ComplexType("C");
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
             property.IsFixedLength = true;
             entityType.AddMember(property);
 
@@ -207,7 +207,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_update_foreign_keys()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var principalProperty = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var principalProperty = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             principalProperty.MaxLength = 23;
             entityType.AddMember(principalProperty);
             entityType.AddKeyMember(principalProperty);
@@ -216,7 +216,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             associationType.SourceEnd = new AssociationEndMember("S", entityType);
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
 
-            var dependentProperty = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var dependentProperty = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             associationType.Constraint
                 = new ReferentialConstraint(

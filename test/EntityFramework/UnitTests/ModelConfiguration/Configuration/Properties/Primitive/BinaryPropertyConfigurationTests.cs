@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             var configuration = CreateConfiguration();
             configuration.IsRowVersion = true;
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             configuration.Configure(property);
 

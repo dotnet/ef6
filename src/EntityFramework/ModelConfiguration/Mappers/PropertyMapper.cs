@@ -69,7 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
                 if (complexType != null)
                 {
-                    property = EdmProperty.Complex(propertyInfo.Name, complexType);
+                    property = EdmProperty.CreateComplex(propertyInfo.Name, complexType);
                 }
                 else
                 {
@@ -81,7 +81,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
                         if (enumType != null)
                         {
-                            property = EdmProperty.Enum(propertyInfo.Name, enumType);
+                            property = EdmProperty.CreateEnum(propertyInfo.Name, enumType);
                             property.Nullable = isNullable;
                         }
                     }

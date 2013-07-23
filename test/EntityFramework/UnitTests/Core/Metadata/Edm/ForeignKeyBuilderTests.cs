@@ -190,7 +190,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             foreignKeyBuilder.PrincipalTable = table;
             foreignKeyBuilder.SetOwner(table);
 
-            var property = EdmProperty.Primitive("K", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("K", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             foreignKeyBuilder.DependentColumns = new[] { property };
 

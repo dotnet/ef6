@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            var property = EdmProperty.Primitive("P", primitiveType);
+            var property = EdmProperty.CreatePrimitive("P", primitiveType);
 
             property.Name = "Foo";
 
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            var property = EdmProperty.Primitive("P", primitiveType);
+            var property = EdmProperty.CreatePrimitive("P", primitiveType);
 
             var entityTypeMock = new Mock<StructuralType>();
 
@@ -58,9 +58,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            var property1 = EdmProperty.Primitive("Foo", primitiveType);
-            var property2 = EdmProperty.Primitive("Bar", primitiveType);
-            var property3 = EdmProperty.Primitive("Boo", primitiveType);
+            var property1 = EdmProperty.CreatePrimitive("Foo", primitiveType);
+            var property2 = EdmProperty.CreatePrimitive("Bar", primitiveType);
+            var property3 = EdmProperty.CreatePrimitive("Boo", primitiveType);
 
             var entityType = new EntityType("T","S",DataSpace.CSpace);
 
@@ -81,9 +81,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            var property1 = EdmProperty.Primitive("Foo", primitiveType);
-            var property2 = EdmProperty.Primitive("Bar", primitiveType);
-            var property3 = EdmProperty.Primitive("Boo", primitiveType);
+            var property1 = EdmProperty.CreatePrimitive("Foo", primitiveType);
+            var property2 = EdmProperty.CreatePrimitive("Bar", primitiveType);
+            var property3 = EdmProperty.CreatePrimitive("Boo", primitiveType);
 
             var entityTypeMock = new Mock<EntityType>("T", "S", DataSpace.CSpace)
             {
@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            var property = EdmProperty.Primitive("P", primitiveType);
+            var property = EdmProperty.CreatePrimitive("P", primitiveType);
 
             Assert.False(property.IsPrimaryKeyColumn);
 

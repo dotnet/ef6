@@ -30,8 +30,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                     new EdmProperty("C"),
                     new[]
                         {
-                            EdmProperty.Complex("P1", complexType),
-                            EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))
+                            EdmProperty.CreateComplex("P1", complexType),
+                            EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))
                         });
             var type = typeof(object);
 
@@ -44,8 +44,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                     new EdmProperty("C"),
                     new List<EdmProperty>
                         {
-                            EdmProperty.Complex("P3", complexType),
-                            EdmProperty.Primitive(
+                            EdmProperty.CreateComplex("P3", complexType),
+                            EdmProperty.CreatePrimitive(
                                 "P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
                         });
             entityTypeMappingFragment.AddColumnMapping(propertyMapping2);
@@ -84,8 +84,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                                 new StorageModificationFunctionMemberPath(
                                 new EdmMember[]
                                     {
-                                        EdmProperty.Complex("C1", complexType1),
-                                        EdmProperty.Complex("C2", complexType2),
+                                        EdmProperty.CreateComplex("C1", complexType1),
+                                        EdmProperty.CreateComplex("C2", complexType2),
                                         new EdmProperty("M")
                                     },
                                 null),

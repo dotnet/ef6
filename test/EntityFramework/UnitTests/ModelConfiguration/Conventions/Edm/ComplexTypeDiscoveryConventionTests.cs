@@ -49,7 +49,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             EntityType complexEntityType;
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
             complexEntityType.AddKeyMember(
-                EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
+                EdmProperty.CreatePrimitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
             (new ComplexTypeDiscoveryConvention()).Apply(model, new DbModel(model, null));
 
@@ -148,7 +148,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             var associationType = model.AssociationTypes.Single();
 
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             associationType.Constraint
                 = new ReferentialConstraint(
@@ -267,7 +267,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             declaringEntityType = model.AddEntityType("E");
             complexEntityType = model.AddEntityType("C");
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             complexEntityType.AddMember(property);
 

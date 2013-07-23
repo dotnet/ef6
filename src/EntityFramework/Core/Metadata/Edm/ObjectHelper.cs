@@ -104,7 +104,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns> the respective Model (C-Space) typeusage </returns>
         internal static TypeUsage GetModelTypeUsage(TypeUsage typeUsage)
         {
-            return typeUsage.GetModelTypeUsage();
+            return typeUsage.ModelTypeUsage;
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (sspaceType.EdmType.DataSpace
                 == DataSpace.SSpace)
             {
-                modelEquivalentSspace = sspaceType.GetModelTypeUsage();
+                modelEquivalentSspace = sspaceType.ModelTypeUsage;
             }
 
             // check that cspace type is subtype of c-space equivalent type from the ssdl definition

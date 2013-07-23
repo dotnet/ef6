@@ -136,7 +136,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void EdmType_SystemNamespaceEncountered_not_triggered_for_row_and_collection_types()
         {
             var rowType =
-                new RowType(new[] { EdmProperty.Primitive("Property", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) });
+                new RowType(new[] { EdmProperty.CreatePrimitive("Property", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) });
 
             foreach (var type in new EdmType[] { rowType, rowType.GetCollectionType() })
             {
@@ -232,10 +232,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     : FakeSqlProviderServices.Instance.GetProviderManifest("2008").GetStoreTypes().Single(t => t.Name == "int");
 
             var principal = 
-                new EntityType("P", "ns", dataSpace, new [] {"Id"}, new[] { EdmProperty.Primitive("Id", intType) });
+                new EntityType("P", "ns", dataSpace, new [] {"Id"}, new[] { EdmProperty.CreatePrimitive("Id", intType) });
             var dependent = 
                 new EntityType("P", "ns", dataSpace, new [] {"Id"},
-                    new[] { EdmProperty.Primitive("Id", intType), EdmProperty.Primitive("NonKeyProperty", intType) });
+                    new[] { EdmProperty.CreatePrimitive("Id", intType), EdmProperty.CreatePrimitive("NonKeyProperty", intType) });
 
             foreach (var property in principal.Properties.Concat(dependent.Properties))
             {

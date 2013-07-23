@@ -21,10 +21,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
 
-            var pkProperty = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var pkProperty = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.SourceEnd.GetEntityType().AddKeyMember(pkProperty);
 
-            var fkProperty = EdmProperty.Primitive("NavId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var fkProperty = EdmProperty.CreatePrimitive("NavId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.TargetEnd.GetEntityType().AddMember(fkProperty);
             associationType.TargetEnd.GetEntityType().AddNavigationProperty("Nav", associationType).ToEndMember = associationType.SourceEnd;
             associationType.TargetEnd.GetEntityType().AddNavigationProperty("Foos", associationType);
@@ -44,10 +44,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var associationType = CreateAssociationType();
 
-            var pkProperty = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var pkProperty = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.SourceEnd.GetEntityType().AddKeyMember(pkProperty);
 
-            var fkProperty = EdmProperty.Primitive("NavId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var fkProperty = EdmProperty.CreatePrimitive("NavId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.TargetEnd.GetEntityType().AddMember(fkProperty);
             associationType.TargetEnd.GetEntityType().AddNavigationProperty("Nav", associationType).ToEndMember = associationType.SourceEnd;
 
@@ -66,10 +66,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var associationType = CreateAssociationType();
 
-            var pkProperty = EdmProperty.Primitive("ID", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var pkProperty = EdmProperty.CreatePrimitive("ID", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.SourceEnd.GetEntityType().AddKeyMember(pkProperty);
 
-            var fkProperty = EdmProperty.Primitive("NavId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var fkProperty = EdmProperty.CreatePrimitive("NavId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.TargetEnd.GetEntityType().AddMember(fkProperty);
             associationType.TargetEnd.GetEntityType().AddNavigationProperty("Nav", associationType).ToEndMember = associationType.SourceEnd;
 
@@ -88,13 +88,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var associationType = CreateAssociationType();
 
-            var pkProperty1 = EdmProperty.Primitive("Id1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
-            var pkProperty2 = EdmProperty.Primitive("Id2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var pkProperty1 = EdmProperty.CreatePrimitive("Id1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var pkProperty2 = EdmProperty.CreatePrimitive("Id2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.SourceEnd.GetEntityType().AddKeyMember(pkProperty1);
             associationType.SourceEnd.GetEntityType().AddKeyMember(pkProperty2);
 
-            var fkProperty1 = EdmProperty.Primitive("NavId1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
-            var fkProperty2 = EdmProperty.Primitive("NavId2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var fkProperty1 = EdmProperty.CreatePrimitive("NavId1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var fkProperty2 = EdmProperty.CreatePrimitive("NavId2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.TargetEnd.GetEntityType().AddMember(fkProperty1);
             associationType.TargetEnd.GetEntityType().AddMember(fkProperty2);
             associationType.TargetEnd.GetEntityType().AddNavigationProperty("Nav", associationType).ToEndMember = associationType.SourceEnd;
@@ -114,10 +114,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var associationType = CreateAssociationType();
 
-            var pkProperty = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var pkProperty = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.SourceEnd.GetEntityType().AddKeyMember(pkProperty);
 
-            var fkProperty = EdmProperty.Primitive("NavId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var fkProperty = EdmProperty.CreatePrimitive("NavId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.TargetEnd.GetEntityType().AddMember(fkProperty);
             associationType.TargetEnd.GetEntityType().AddNavigationProperty("Nav", associationType).ToEndMember = associationType.SourceEnd;
 
@@ -138,10 +138,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var associationType = CreateAssociationType();
 
-            var pkProperty = EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            var pkProperty = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
             associationType.SourceEnd.GetEntityType().AddKeyMember(pkProperty);
 
-            var fkProperty = EdmProperty.Primitive("NavId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var fkProperty = EdmProperty.CreatePrimitive("NavId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.TargetEnd.GetEntityType().AddMember(fkProperty);
             associationType.TargetEnd.GetEntityType().AddNavigationProperty("Nav", associationType).ToEndMember = associationType.SourceEnd;
 

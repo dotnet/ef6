@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_set_correct_defaults_for_unconfigured_decimal()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
 
             (new DecimalPropertyConvention())
                 .Apply(property, new DbModel(new EdmModel(DataSpace.CSpace), null));
@@ -23,7 +23,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_not_set_defaults_for_configured_precision()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
             property.Precision = 22;
 
             (new DecimalPropertyConvention())
@@ -36,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_not_set_defaults_for_configured_scale()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
             property.Scale = 4;
 
             (new DecimalPropertyConvention())

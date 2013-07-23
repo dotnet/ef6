@@ -14,10 +14,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var associationType = CreateAssociationType();
 
-            var pkProperty = EdmProperty.Primitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var pkProperty = EdmProperty.CreatePrimitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.SourceEnd.GetEntityType().AddKeyMember(pkProperty);
 
-            var fkProperty = EdmProperty.Primitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var fkProperty = EdmProperty.CreatePrimitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.TargetEnd.GetEntityType().AddMember(fkProperty);
 
             // Foo.PId == Bar.PId
@@ -35,10 +35,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var associationType = CreateAssociationType();
 
-            var pkProperty = EdmProperty.Primitive("PID", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var pkProperty = EdmProperty.CreatePrimitive("PID", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.SourceEnd.GetEntityType().AddKeyMember(pkProperty);
 
-            var fkProperty = EdmProperty.Primitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var fkProperty = EdmProperty.CreatePrimitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.TargetEnd.GetEntityType().AddMember(fkProperty);
 
             // Foo.PID == Bar.PId
@@ -56,13 +56,13 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var associationType = CreateAssociationType();
 
-            var pkProperty1 = EdmProperty.Primitive("PId1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
-            var pkProperty2 = EdmProperty.Primitive("PId2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var pkProperty1 = EdmProperty.CreatePrimitive("PId1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var pkProperty2 = EdmProperty.CreatePrimitive("PId2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.SourceEnd.GetEntityType().AddKeyMember(pkProperty1);
             associationType.SourceEnd.GetEntityType().AddKeyMember(pkProperty2);
 
-            var fkProperty1 = EdmProperty.Primitive("PId1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
-            var fkProperty2 = EdmProperty.Primitive("PId2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var fkProperty1 = EdmProperty.CreatePrimitive("PId1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var fkProperty2 = EdmProperty.CreatePrimitive("PId2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.TargetEnd.GetEntityType().AddMember(fkProperty1);
             associationType.TargetEnd.GetEntityType().AddMember(fkProperty2);
 
@@ -81,10 +81,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var associationType = CreateAssociationType();
 
-            var pkProperty = EdmProperty.Primitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var pkProperty = EdmProperty.CreatePrimitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.SourceEnd.GetEntityType().AddKeyMember(pkProperty);
 
-            var fkProperty = EdmProperty.Primitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var fkProperty = EdmProperty.CreatePrimitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.TargetEnd.GetEntityType().AddMember(fkProperty);
 
             // Foo.PId == Bar.PId
@@ -104,10 +104,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var associationType = CreateAssociationType();
 
-            var pkProperty = EdmProperty.Primitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
+            var pkProperty = EdmProperty.CreatePrimitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Binary));
             associationType.SourceEnd.GetEntityType().AddKeyMember(pkProperty);
 
-            var fkProperty = EdmProperty.Primitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var fkProperty = EdmProperty.CreatePrimitive("PId", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             associationType.TargetEnd.GetEntityType().AddMember(fkProperty);
 
             // Foo.PId == Bar.PId

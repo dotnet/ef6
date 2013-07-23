@@ -12,12 +12,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         public void GetPropertyMapping_should_return_mapping_with_path()
         {
             var entityTypeMapping = new StorageEntityTypeMapping(null);
-            var propertyFoo = EdmProperty.Complex("Foo", new ComplexType());
-            var propertyBar = EdmProperty.Primitive("Bar", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var propertyFoo = EdmProperty.CreateComplex("Foo", new ComplexType());
+            var propertyBar = EdmProperty.CreatePrimitive("Bar", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             var entityPropertyMapping
                 = new ColumnMappingBuilder(
-                    EdmProperty.Primitive("C", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
+                    EdmProperty.CreatePrimitive("C", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
                     new[]
                         {
                             propertyFoo,

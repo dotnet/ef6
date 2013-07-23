@@ -336,7 +336,7 @@ namespace System.Data.Entity.ModelConfiguration
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
             foreach (var prop in props)
             {
-                var property = EdmProperty.Primitive(prop.Name, PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+                var property = EdmProperty.CreatePrimitive(prop.Name, PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
                 entityType.AddMember(property);
                 entityType.GetDeclaredPrimitiveProperties().SingleOrDefault(p => p.Name == prop.Name).SetClrPropertyInfo(prop);

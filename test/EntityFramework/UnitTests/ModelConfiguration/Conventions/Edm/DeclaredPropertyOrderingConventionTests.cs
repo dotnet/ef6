@@ -32,27 +32,27 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             entityType.Annotations.SetClrType(type);
 
-            var property1 = EdmProperty.Primitive("PrivateProperty", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("PrivateProperty", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
 
-            var property2 = EdmProperty.Primitive("InheritedPropertyB", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property2 = EdmProperty.CreatePrimitive("InheritedPropertyB", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property2);
 
-            var property3 = EdmProperty.Primitive("InheritedPropertyA", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property3 = EdmProperty.CreatePrimitive("InheritedPropertyA", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property3);
 
-            var property4 = EdmProperty.Primitive("PropertyB", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property4 = EdmProperty.CreatePrimitive("PropertyB", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property4);
 
-            var property5 = EdmProperty.Primitive("PropertyA", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property5 = EdmProperty.CreatePrimitive("PropertyA", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property5);
 
-            var property6 = EdmProperty.Primitive("Key", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property6 = EdmProperty.CreatePrimitive("Key", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property6);
 

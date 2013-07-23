@@ -150,10 +150,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             var itemCollection = new StoreItemCollection(model);
 
-            Assert.Same(model.ProviderInfo.ProviderManifestToken, itemCollection.StoreProviderManifestToken);
-            Assert.NotNull(itemCollection.StoreProviderFactory);
-            Assert.Same(model.ProviderManifest, itemCollection.StoreProviderManifest);
-            Assert.Same(model.ProviderInfo.ProviderInvariantName, itemCollection.StoreProviderInvariantName);
+            Assert.Same(model.ProviderInfo.ProviderManifestToken, itemCollection.ProviderManifestToken);
+            Assert.NotNull(itemCollection.ProviderFactory);
+            Assert.Same(model.ProviderManifest, itemCollection.ProviderManifest);
+            Assert.Same(model.ProviderInfo.ProviderInvariantName, itemCollection.ProviderInvariantName);
         }
 
         [Fact]
@@ -163,7 +163,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var storeItemCollection = 
                 StoreItemCollection.Create(new[] { XDocument.Parse(Ssdl).CreateReader() }, null, null, out errors);
 
-            Assert.Equal("System.Data.SqlClient", storeItemCollection.StoreProviderInvariantName);
+            Assert.Equal("System.Data.SqlClient", storeItemCollection.ProviderInvariantName);
         }
 
         [Fact]
@@ -178,8 +178,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     "providerInvariantName", 
                     "token");
 
-            Assert.Equal("providerInvariantName", storeItemCollection.StoreProviderInvariantName);
-            Assert.Equal("token", storeItemCollection.StoreProviderManifestToken);
+            Assert.Equal("providerInvariantName", storeItemCollection.ProviderInvariantName);
+            Assert.Equal("token", storeItemCollection.ProviderManifestToken);
         }
     }
 }

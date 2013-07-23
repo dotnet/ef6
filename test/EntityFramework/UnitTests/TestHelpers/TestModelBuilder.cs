@@ -49,7 +49,7 @@ namespace System.Data.Entity
 
         public TestModelBuilder Property(string propertyName)
         {
-            var property1 = EdmProperty.Primitive(propertyName, PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive(propertyName, PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             _entityType.AddMember(property1);
             var property = property1;
@@ -59,7 +59,7 @@ namespace System.Data.Entity
 
         public TestModelBuilder Key(string key)
         {
-            var property1 = EdmProperty.Primitive(key, PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive(key, PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             _entityType.AddMember(property1);
             var property = property1;

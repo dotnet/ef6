@@ -104,7 +104,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         public void Configure_should_configure_properties()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property1 = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var property = property1;
@@ -190,10 +190,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         public void Configure_should_configure_and_order_keys_when_keys_and_order_specified()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
-            var property1 = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
 

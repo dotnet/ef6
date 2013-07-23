@@ -16,8 +16,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 = new ReferentialConstraint(
                     fromRole,
                     new AssociationEndMember("D", new EntityType("E", "N", DataSpace.CSpace)),
-                    new[] { EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) },
-                    new[] { EdmProperty.Primitive("D", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) });
+                    new[] { EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) },
+                    new[] { EdmProperty.CreatePrimitive("D", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) });
 
             Assert.Same(fromRole, referentialConstraint.FromRole);
 
@@ -37,8 +37,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 = new ReferentialConstraint(
                     new AssociationEndMember("P", new EntityType("E", "N", DataSpace.CSpace)),
                     toRole,
-                    new[] { EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) },
-                    new[] { EdmProperty.Primitive("D", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) });
+                    new[] { EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) },
+                    new[] { EdmProperty.CreatePrimitive("D", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) });
 
             Assert.Same(toRole, referentialConstraint.ToRole);
 

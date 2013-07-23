@@ -152,7 +152,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Tells whether this member is marked as a Computed member in the EDM definition
         /// </summary>
-        internal bool IsStoreGeneratedComputed
+        public bool IsStoreGeneratedComputed
         {
             get
             {

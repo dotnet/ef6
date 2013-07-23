@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_match_simple_int_key()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
             entityType.AddKeyMember(property);
 
             (new StoreGeneratedIdentityKeyConvention())
@@ -30,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_match_simple_long_key()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
             entityType.AddKeyMember(property);
 
             (new StoreGeneratedIdentityKeyConvention())
@@ -45,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_match_simple_short_key()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
             entityType.AddKeyMember(property);
 
             (new StoreGeneratedIdentityKeyConvention())
@@ -61,7 +61,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
 
             entityType.AddKeyMember(property);
 
@@ -89,7 +89,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
 
             entityType.AddKeyMember(property);
 
@@ -126,7 +126,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_not_match_simple_key_of_wrong_type()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             entityType.AddKeyMember(property);
 
             (new StoreGeneratedIdentityKeyConvention())
@@ -139,10 +139,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_not_match_composite_key()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddKeyMember(property);
-            entityType.AddKeyMember(EdmProperty.Primitive("K", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
+            entityType.AddKeyMember(EdmProperty.CreatePrimitive("K", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
             (new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, new DbModel(new EdmModel(DataSpace.CSpace), null));
@@ -158,7 +158,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
 
             entityType.AddKeyMember(property);
 
@@ -181,7 +181,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         {
             var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int64));
 
             entityType.AddKeyMember(property);
 

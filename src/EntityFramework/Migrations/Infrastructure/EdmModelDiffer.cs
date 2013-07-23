@@ -928,7 +928,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             DebugCheck.NotNull(modelMetadata);
 
             var edmTypeUsage
-                = functionParameter.TypeUsage.GetModelTypeUsage();
+                = functionParameter.TypeUsage.ModelTypeUsage;
 
             var defaultStoreTypeName
                 = modelMetadata.ProviderManifest.GetStoreType(edmTypeUsage).EdmType.Name;

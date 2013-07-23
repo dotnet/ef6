@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Mapping
         [Fact]
         public void Can_get_set_property()
         {
-            var property = EdmProperty.Primitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            var property = EdmProperty.CreatePrimitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
 
             Assert.Same(
                 property,

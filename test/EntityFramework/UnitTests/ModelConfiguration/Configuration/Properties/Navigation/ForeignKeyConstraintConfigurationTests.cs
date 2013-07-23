@@ -36,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var mockPropertyInfo = new MockPropertyInfo(typeof(int), "P");
             var constraintConfiguration = new ForeignKeyConstraintConfiguration(new[] { mockPropertyInfo.Object });
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property1 = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var property = property1;
@@ -57,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var mockPropertyInfo = new MockPropertyInfo(typeof(int), "P");
             var constraintConfiguration = new ForeignKeyConstraintConfiguration(new[] { mockPropertyInfo.Object });
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property1 = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var property = property1;

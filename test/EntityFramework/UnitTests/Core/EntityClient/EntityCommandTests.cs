@@ -184,7 +184,7 @@ namespace System.Data.Entity.Core.EntityClient
             [Fact]
             public void Parameterless_ExecuteReader_calls_overload_with_CommandBehavior_Default()
             {
-                var entityCommandMock = new Mock<EntityCommand>();
+                var entityCommandMock = new Mock<EntityCommand> { CallBase = true };
                 entityCommandMock.Setup(m => m.ExecuteReaderAsync(CommandBehavior.Default, It.IsAny<CancellationToken>())).Returns(
                     Task.FromResult(default(EntityDataReader)));
                 entityCommandMock.Object.ExecuteReaderAsync().Wait();

@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         [Fact]
         public void Configure_should_update_MaxLength()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             var configuration = CreateConfiguration();
             configuration.MaxLength = 1;
@@ -24,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         [Fact]
         public void Configure_should_update_IsFixedLength()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             var configuration = CreateConfiguration();
             configuration.IsFixedLength = true;
@@ -37,7 +37,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         [Fact]
         public void Configure_should_update_IsMaxLength()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             var configuration = CreateConfiguration();
             configuration.IsMaxLength = true;

@@ -114,7 +114,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             public void This_returned_for_CSPace_type()
             {
                 var typeUsage = TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
-                Assert.Same(typeUsage, typeUsage.GetModelTypeUsage());
+                Assert.Same(typeUsage, typeUsage.ModelTypeUsage);
             }
 
             [Fact]
@@ -123,7 +123,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var enumType = new ClrEnumType(typeof(System.DayOfWeek), "foo", "DayOfWeek");
                 var typeUsage = TypeUsage.Create(enumType);
 
-                Assert.Same(typeUsage, typeUsage.GetModelTypeUsage());
+                Assert.Same(typeUsage, typeUsage.ModelTypeUsage);
             }
 
             [Fact]
@@ -142,7 +142,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                 Nullable = false
                             });
 
-                var cSpaceTypeUsage = nonNullableSSpaceTypeUsage.GetModelTypeUsage();
+                var cSpaceTypeUsage = nonNullableSSpaceTypeUsage.ModelTypeUsage;
 
                 Assert.Equal(DataSpace.CSpace, cSpaceTypeUsage.EdmType.GetDataSpace());
                 Assert.Equal(
@@ -159,7 +159,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     .Instance.GetProviderManifest("2008")
                     .GetStoreType(TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
-                var cSpaceTypeUsage = sSpaceTypeUsage.GetModelTypeUsage();
+                var cSpaceTypeUsage = sSpaceTypeUsage.ModelTypeUsage;
 
                 Assert.Equal(DataSpace.CSpace, cSpaceTypeUsage.EdmType.GetDataSpace());
                 Assert.Equal(
@@ -183,7 +183,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 Assert.Equal(
                     Strings.Mapping_ProviderReturnsNullType("bar.foo"),
-                    Assert.Throws<ProviderIncompatibleException>(() => fakeStorePrimitiveTypeUsage.GetModelTypeUsage()).Message);
+                    Assert.Throws<ProviderIncompatibleException>(() => fakeStorePrimitiveTypeUsage.ModelTypeUsage).Message);
             }
 
             [Fact]
@@ -196,7 +196,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                                .First(t => t.PrimitiveTypeKind == PrimitiveTypeKind.Geometry)
                                                .GetCollectionType());
 
-                var cSpaceCollectionType = sSpaceCollectionTypeUsage.GetModelTypeUsage().EdmType;
+                var cSpaceCollectionType = sSpaceCollectionTypeUsage.ModelTypeUsage.EdmType;
 
                 Assert.Equal(DataSpace.CSpace, cSpaceCollectionType.GetDataSpace());
                 Assert.Equal(BuiltInTypeKind.CollectionType, cSpaceCollectionType.BuiltInTypeKind);
@@ -217,7 +217,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var sSpaceRowTypeUsage = 
                     TypeUsage.CreateDefaultTypeUsage(RowType.Create(new[] { EdmProperty.Create("foo", sSpaceTypeUsage) }, null));
 
-                var cSpaceRowType = (RowType)sSpaceRowTypeUsage.GetModelTypeUsage().EdmType;
+                var cSpaceRowType = (RowType)sSpaceRowTypeUsage.ModelTypeUsage.EdmType;
                 
                 Assert.Equal(DataSpace.CSpace, cSpaceRowType.GetDataSpace());
                 Assert.Equal(1, cSpaceRowType.Properties.Count);

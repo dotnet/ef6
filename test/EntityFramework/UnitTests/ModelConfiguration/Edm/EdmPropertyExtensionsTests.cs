@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void GetStoreGeneratedPattern_should_return_null_when_not_set()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             var storeGeneratedPattern = property.GetStoreGeneratedPattern();
 
@@ -20,7 +20,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void SetStoreGeneratedPattern_should_create_annotation_and_add_to_property_facets()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             property.SetStoreGeneratedPattern(StoreGeneratedPattern.Computed);
 
@@ -33,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void SetStoreGeneratedPattern_should_update_existing_annotation()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             property.SetStoreGeneratedPattern(StoreGeneratedPattern.Computed);
             property.SetStoreGeneratedPattern(StoreGeneratedPattern.None);
@@ -47,7 +47,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void Can_get_and_set_configuration_annotation()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             property.SetConfiguration(42);
 
@@ -57,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void AsPrimitive_should_create_property_type_and_facets()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             Assert.NotNull(property.TypeUsage);
         }
@@ -65,7 +65,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void AsComplex_should_create_property_type()
         {
-            var property = EdmProperty.Complex("P", new ComplexType("C"));
+            var property = EdmProperty.CreateComplex("P", new ComplexType("C"));
 
             Assert.NotNull(property.TypeUsage);
             Assert.True(property.IsComplexType);
@@ -75,7 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void Enum_should_create_property_type()
         {
-            var property = EdmProperty.Enum("P", new EnumType());
+            var property = EdmProperty.CreateEnum("P", new EnumType());
 
             Assert.NotNull(property.TypeUsage);
             Assert.True(property.IsEnumType);
@@ -84,7 +84,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void HasStoreGeneratedPattern_should_return_true_when_not_null_or_none()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             Assert.False(property.HasStoreGeneratedPattern());
 

@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.False(associationType.IsForeignKey);
 
             var property
-                = EdmProperty.Primitive("Fk", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+                = EdmProperty.CreatePrimitive("Fk", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             var referentialConstraint
                 = new ReferentialConstraint(

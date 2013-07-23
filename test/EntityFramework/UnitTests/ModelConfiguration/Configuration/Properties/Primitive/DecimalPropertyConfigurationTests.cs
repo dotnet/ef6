@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             var configuration = CreateConfiguration();
             configuration.Precision = 8;
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
 
             configuration.Configure(property);
 
@@ -27,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             var configuration = CreateConfiguration();
             configuration.Scale = 70;
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
 
             configuration.Configure(property);
 

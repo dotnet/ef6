@@ -88,10 +88,10 @@ namespace System.Data.Entity.Core.Objects.Internal
                 else
                 {
                     var storeItemCollection = (StoreItemCollection)context.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-                    var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+                    var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
 
                     bufferedReader = new BufferedDataReader(storeReader);
-                    bufferedReader.Initialize(storeItemCollection.StoreProviderManifestToken, providerServices);
+                    bufferedReader.Initialize(storeItemCollection.ProviderManifestToken, providerServices);
 
                     shaper = shaperFactory.Create(
                         bufferedReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: false,
@@ -164,11 +164,11 @@ namespace System.Data.Entity.Core.Objects.Internal
                 else
                 {
                     var storeItemCollection = (StoreItemCollection)context.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-                    var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.StoreProviderInvariantName);
+                    var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
 
                     bufferedReader = new BufferedDataReader(storeReader);
                     await
-                        bufferedReader.InitializeAsync(storeItemCollection.StoreProviderManifestToken, providerServices, cancellationToken)
+                        bufferedReader.InitializeAsync(storeItemCollection.ProviderManifestToken, providerServices, cancellationToken)
                                       .ConfigureAwait(continueOnCapturedContext: false);
 
                     shaper = shaperFactory.Create(

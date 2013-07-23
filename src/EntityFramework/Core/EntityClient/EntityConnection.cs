@@ -164,7 +164,7 @@ namespace System.Data.Entity.Core.EntityClient
 
                 var collection = (StoreItemCollection)workspace.GetItemCollection(DataSpace.SSpace);
 
-                _providerFactory = collection.StoreProviderFactory;
+                _providerFactory = collection.ProviderFactory;
                 Debug.Assert(_providerFactory == providerFactory);
                 _initialized = true;
             }

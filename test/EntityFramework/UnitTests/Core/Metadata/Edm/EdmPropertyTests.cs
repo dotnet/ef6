@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            var property = EdmProperty.Primitive("P", primitiveType);
+            var property = EdmProperty.CreatePrimitive("P", primitiveType);
 
             Assert.NotNull(property);
             Assert.NotNull(property.TypeUsage);
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var enumType = new EnumType();
 
-            var property = EdmProperty.Enum("P", enumType);
+            var property = EdmProperty.CreateEnum("P", enumType);
 
             Assert.NotNull(property);
             Assert.NotNull(property.TypeUsage);
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var complexType = new ComplexType();
 
-            var property = EdmProperty.Complex("P", complexType);
+            var property = EdmProperty.CreateComplex("P", complexType);
 
             Assert.NotNull(property);
             Assert.NotNull(property.TypeUsage);
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            var property = EdmProperty.Primitive("P", primitiveType);
+            var property = EdmProperty.CreatePrimitive("P", primitiveType);
 
             Assert.True(property.Nullable);
 
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var complexType = new ComplexType();
 
-            var property = EdmProperty.Complex("P", complexType);
+            var property = EdmProperty.CreateComplex("P", complexType);
 
             Assert.False(property.IsPrimitiveType);
             Assert.False(property.IsEnumType);
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            var property = EdmProperty.Primitive("P", primitiveType);
+            var property = EdmProperty.CreatePrimitive("P", primitiveType);
 
             Assert.False(property.IsComplexType);
             Assert.False(property.IsEnumType);
@@ -88,7 +88,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var enumType = new EnumType();
 
-            var property = EdmProperty.Enum("P", enumType);
+            var property = EdmProperty.CreateEnum("P", enumType);
 
             Assert.False(property.IsComplexType);
             Assert.False(property.IsPrimitiveType);
@@ -113,13 +113,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            var property = EdmProperty.Primitive("P", primitiveType);
+            var property = EdmProperty.CreatePrimitive("P", primitiveType);
 
             Assert.True(property.IsUnderlyingPrimitiveType);
 
             var enumType = new EnumType();
 
-            property = EdmProperty.Enum("P", enumType);
+            property = EdmProperty.CreateEnum("P", enumType);
 
             Assert.True(property.IsUnderlyingPrimitiveType);
         }
@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var complexType = new ComplexType();
 
-            var property = EdmProperty.Complex("P", complexType);
+            var property = EdmProperty.CreateComplex("P", complexType);
 
             Assert.Same(complexType, property.ComplexType);
         }
@@ -139,7 +139,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            var property = EdmProperty.Primitive("P", primitiveType);
+            var property = EdmProperty.CreatePrimitive("P", primitiveType);
 
             Assert.Same(primitiveType, property.PrimitiveType);
         }
@@ -149,7 +149,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            var property = EdmProperty.Primitive("P", primitiveType);
+            var property = EdmProperty.CreatePrimitive("P", primitiveType);
 
             Assert.Equal("Int32", property.TypeName);
         }
@@ -159,7 +159,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var enumType = new EnumType();
 
-            var property = EdmProperty.Enum("P", enumType);
+            var property = EdmProperty.CreateEnum("P", enumType);
 
             Assert.Same(enumType, property.EnumType);
         }
@@ -169,19 +169,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            var property = EdmProperty.Primitive("P", primitiveType);
+            var property = EdmProperty.CreatePrimitive("P", primitiveType);
 
             Assert.Same(primitiveType, property.UnderlyingPrimitiveType);
 
             var enumType = new EnumType();
 
-            property = EdmProperty.Enum("P", enumType);
+            property = EdmProperty.CreateEnum("P", enumType);
 
             Assert.Same(primitiveType, property.UnderlyingPrimitiveType);
 
             var complexType = new ComplexType();
 
-            property = EdmProperty.Complex("P", complexType);
+            property = EdmProperty.CreateComplex("P", complexType);
 
             Assert.Null(property.UnderlyingPrimitiveType);
         }
@@ -189,7 +189,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Can_get_and_set_facet_wrappers()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             property.ConcurrencyMode = ConcurrencyMode.Fixed;
             property.CollectionKind = CollectionKind.List;
@@ -212,7 +212,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.True(property.IsFixedLength.Value);
             Assert.True(property.IsUnicode.Value);
 
-            property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
+            property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Decimal));
 
             property.Precision = 42;
             property.Scale = 42;
@@ -230,7 +230,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String);
 
-            var property = EdmProperty.Primitive("P", primitiveType);
+            var property = EdmProperty.CreatePrimitive("P", primitiveType);
             property.StoreGeneratedPattern = StoreGeneratedPattern.Computed;
             property.ConcurrencyMode = ConcurrencyMode.Fixed;
             property.MaxLength = 42;
@@ -247,7 +247,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
 
-            var property = EdmProperty.Primitive("P", primitiveType);
+            var property = EdmProperty.CreatePrimitive("P", primitiveType);
 
             Assert.False(property.IsKeyMember);
 
@@ -420,7 +420,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 RowType.Create(
                     new[]
                         {
-                            EdmProperty.Primitive("property", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))
+                            EdmProperty.CreatePrimitive("property", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))
                         },
                     null);
 

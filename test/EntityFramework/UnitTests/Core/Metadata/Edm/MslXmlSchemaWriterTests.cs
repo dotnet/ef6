@@ -165,8 +165,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                 new StorageModificationFunctionMemberPath(
                                 new[]
                                     {
-                                        EdmProperty.Complex("C1", new ComplexType()),
-                                        EdmProperty.Complex("C2", new ComplexType()),
+                                        EdmProperty.CreateComplex("C1", new ComplexType()),
+                                        EdmProperty.CreateComplex("C2", new ComplexType()),
                                         new EdmProperty("M")
                                     },
                                 null),

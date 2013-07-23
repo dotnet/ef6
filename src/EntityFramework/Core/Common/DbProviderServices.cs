@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Common
         ///     resolving EF dependencies such as the <see cref="DbSpatialServices" /> instance to use.
         /// </summary>
         /// <param name="resolver"> The resolver to use. </param>
-        protected DbProviderServices(Func<IDbDependencyResolver> resolver)
+        internal DbProviderServices(Func<IDbDependencyResolver> resolver)
             : this(resolver, new Lazy<DbCommandTreeDispatcher>(() => DbInterception.Dispatch.CommandTree))
         {
         }
@@ -104,12 +104,12 @@ namespace System.Data.Entity.Core.Common
             var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
 
             Debug.Assert(
-                storeMetadata.StoreProviderManifest != null,
-                "StoreItemCollection has null StoreProviderManifest?");
+                storeMetadata.ProviderManifest != null,
+                "StoreItemCollection has null ProviderManifest?");
 
             commandTree = _treeDispatcher.Value.Created(commandTree, interceptionContext);
 
-            return CreateDbCommandDefinition(storeMetadata.StoreProviderManifest, commandTree, interceptionContext);
+            return CreateDbCommandDefinition(storeMetadata.ProviderManifest, commandTree, interceptionContext);
         }
 
         internal virtual DbCommandDefinition CreateDbCommandDefinition(
@@ -299,7 +299,7 @@ namespace System.Data.Entity.Core.Common
         {
             var storeMetadata = (StoreItemCollection)metadataWorkspace.GetItemCollection(DataSpace.SSpace);
 
-            return GetExecutionStrategy(connection, storeMetadata.StoreProviderFactory);
+            return GetExecutionStrategy(connection, storeMetadata.ProviderFactory);
         }
 
         private static IDbExecutionStrategy GetExecutionStrategy(
@@ -387,7 +387,7 @@ namespace System.Data.Entity.Core.Common
 
             var storeItemCollection = (StoreItemCollection)connection.GetMetadataWorkspace().GetItemCollection(DataSpace.SSpace);
             var key = new DbProviderInfo(
-                storeItemCollection.StoreProviderInvariantName, storeItemCollection.StoreProviderManifestToken);
+                storeItemCollection.ProviderInvariantName, storeItemCollection.ProviderManifestToken);
 
             return GetSpatialServices(resolver, key, () => GetProviderServices(connection.StoreConnection));
         }

@@ -28,7 +28,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         {
             var complexType = new ComplexType("C");
 
-            var property1 = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             complexType.AddMember(property1);
             var property = property1;

@@ -264,28 +264,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets the provider factory of the StoreItemCollection.</summary>
         /// <returns>The provider factory of the StoreItemCollection.</returns>
-        public virtual DbProviderFactory StoreProviderFactory
+        public virtual DbProviderFactory ProviderFactory
         {
             get { return _providerFactory; }
         }
 
         /// <summary>Gets the provider manifest of the StoreItemCollection.</summary>
         /// <returns>The provider manifest of the StoreItemCollection.</returns>
-        public virtual DbProviderManifest StoreProviderManifest
+        public virtual DbProviderManifest ProviderManifest
         {
             get { return _providerManifest; }
         }
 
         /// <summary>Gets the manifest token of the StoreItemCollection.</summary>
         /// <returns>The manifest token of the StoreItemCollection.</returns>
-        public virtual string StoreProviderManifestToken
+        public virtual string ProviderManifestToken
         {
             get { return _providerManifestToken; }
         }
 
         /// <summary>Gets the invariant name of the StoreItemCollection.</summary>
         /// <returns>The invariant name of the StoreItemCollection.</returns>
-        public virtual string StoreProviderInvariantName
+        public virtual string ProviderInvariantName
         {
             get { return _providerInvariantName; }
         }

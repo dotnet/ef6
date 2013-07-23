@@ -1896,7 +1896,7 @@ namespace System.Data.Entity.Core.Mapping
                     }
 
                     var cspaceTargetType =
-                        (PrimitiveType)StoreItemCollection.StoreProviderManifest.GetEdmType(targetParameter.TypeUsage).EdmType;
+                        (PrimitiveType)StoreItemCollection.ProviderManifest.GetEdmType(targetParameter.TypeUsage).EdmType;
                     if (cspaceTargetType == null)
                     {
                         AddToSchemaErrorWithMessage(
@@ -3450,7 +3450,7 @@ namespace System.Data.Entity.Core.Mapping
                 if (conditionMember.DeclaringType.DataSpace
                     == DataSpace.SSpace)
                 {
-                    cspaceTypeUsage = StoreItemCollection.StoreProviderManifest.GetEdmType(conditionMember.TypeUsage);
+                    cspaceTypeUsage = StoreItemCollection.ProviderManifest.GetEdmType(conditionMember.TypeUsage);
                     if (cspaceTypeUsage == null)
                     {
                         AddToSchemaErrorWithMessage(
@@ -3861,7 +3861,7 @@ namespace System.Data.Entity.Core.Mapping
             {
                 // Get the store member type to which the cspace member was mapped to previously
                 var storeMappedTypeUsage = memberMappingInfo.Value;
-                var modelColumnMember = columnMember.TypeUsage.GetModelTypeUsage();
+                var modelColumnMember = columnMember.TypeUsage.ModelTypeUsage;
                 if (!ReferenceEquals(columnMember.TypeUsage.EdmType, storeMappedTypeUsage.EdmType))
                 {
                     var error = new EdmSchemaError(

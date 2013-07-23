@@ -1943,7 +1943,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 return false;
             }
 
-            return e.Arguments.Select(t => sqlgen.StoreItemCollection.StoreProviderManifest.GetStoreType(t.ResultType))
+            return e.Arguments.Select(t => sqlgen.StoreItemCollection.ProviderManifest.GetStoreType(t.ResultType))
                     .Any(storeType => _maxTypeNames.Contains(storeType.EdmType.Name));
         }
 

@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Empty(entityType.DeclaredProperties);
 
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
 
@@ -94,7 +94,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Empty(entityType.DeclaredMembers);
 
             var property1 = new NavigationProperty("N", TypeUsage.Create(new EntityType("E", "N", DataSpace.CSpace)));
-            var property2 = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property2 = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             entityType.AddMember(property2);
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Empty(entityType.Properties);
 
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
 
@@ -139,8 +139,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     new[] { "Id" },
                     new[]
                         {
-                            EdmProperty.Primitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
-                            EdmProperty.Primitive("Name", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))
+                            EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                            EdmProperty.CreatePrimitive("Name", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))
                         },
                     new[]
                         {

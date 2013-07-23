@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Empty(mappingFragment.ColumnMappings);
 
             var columnProperty = new EdmProperty("C");
-            var property1 = EdmProperty.Complex("P1", new ComplexType("CT"));
+            var property1 = EdmProperty.CreateComplex("P1", new ComplexType("CT"));
             var property2 = new EdmProperty("P2");
 
             var columnMappingBuilder1 = new ColumnMappingBuilder(columnProperty, new[] { property1, property2 });
@@ -235,7 +235,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Empty(mappingFragment.ColumnMappings);
 
             var columnProperty = new EdmProperty("C");
-            var property1 = EdmProperty.Complex("P1", new ComplexType("CT"));
+            var property1 = EdmProperty.CreateComplex("P1", new ComplexType("CT"));
             var property2 = new EdmProperty("P2");
 
             var columnMappingBuilder = new ColumnMappingBuilder(columnProperty, new[] { property1, property2 });
@@ -268,7 +268,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Empty(mappingFragment.ColumnMappings);
 
             var columnProperty = new EdmProperty("C");
-            var property1 = EdmProperty.Complex("P1", new ComplexType("CT"));
+            var property1 = EdmProperty.CreateComplex("P1", new ComplexType("CT"));
             var property2 = new EdmProperty("P2");
 
             var columnMappingBuilder = new ColumnMappingBuilder(columnProperty, new[] { property1, property2 });
@@ -295,7 +295,7 @@ namespace System.Data.Entity.Core.Mapping
                             new EntitySet(),
                             new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
 
-            var property1 = EdmProperty.Complex("P1", new ComplexType("CT"));
+            var property1 = EdmProperty.CreateComplex("P1", new ComplexType("CT"));
             var property2 = new EdmProperty("P2");
 
             var columnMappingBuilder1 = new ColumnMappingBuilder(new EdmProperty("C"), new[] { property1, property2 });

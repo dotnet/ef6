@@ -124,7 +124,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public void Configure_should_set_CSpace_configuration_annotation()
         {
             var configuration = CreateConfiguration();
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             Assert.Null(property.GetConfiguration());
 
@@ -141,7 +141,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var configurationB = CreateConfiguration();
             configurationB.IsNullable = false;
 
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             Assert.Null(property.GetConfiguration());
 
@@ -165,7 +165,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var configurationB = new Properties.Primitive.PrimitivePropertyConfiguration();
             configurationB.IsNullable = false;
 
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             Assert.Null(property.GetConfiguration());
 
@@ -187,7 +187,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             var configuration = CreateConfiguration();
             configuration.IsNullable = true;
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             configuration.Configure(property);
 
@@ -200,7 +200,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var configuration = CreateConfiguration();
             configuration.ConcurrencyMode = ConcurrencyMode.Fixed;
 
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             configuration.Configure(property);
 
@@ -213,7 +213,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var configuration = CreateConfiguration();
             configuration.DatabaseGeneratedOption = DatabaseGeneratedOption.Identity;
 
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             configuration.Configure(property);
 
@@ -328,7 +328,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var configurationRequired = CreateConfiguration();
             configurationRequired.IsNullable = false;
 
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             configurationNullable.Configure(property);
             Assert.Equal(

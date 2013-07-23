@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var properties = new EdmProperty[100];
             for (int i = 0; i < 100; i++)
             {
-                properties[i] = EdmProperty.Primitive("Property" + i, intType);
+                properties[i] = EdmProperty.CreatePrimitive("Property" + i, intType);
             }
 
             var rowType = new RowType(properties);
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public void EdmModel_NameIsNotAllowed_not_triggered_for_row_and_collection_types()
         {
             var rowType =
-                new RowType(new[] { EdmProperty.Primitive("Property", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) });
+                new RowType(new[] { EdmProperty.CreatePrimitive("Property", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)) });
 
             foreach (var type in new EdmType[] { rowType, rowType.GetCollectionType() })
             {
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void EdmModel_NameIsNotAllowed_not_triggered_for_store_property_with_period()
         {
-            var property = EdmProperty.Primitive("Property.With.Dots", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            var property = EdmProperty.CreatePrimitive("Property.With.Dots", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
 
             var validationContext
                 = new EdmModelValidationContext(new EdmModel(DataSpace.SSpace), true);
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void EdmModel_NameIsNotAllowed_triggered_for_conceptual_property_with_period()
         {
-            var property = EdmProperty.Primitive("Property.With.Dots", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            var property = EdmProperty.CreatePrimitive("Property.With.Dots", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
 
             var validationContext
                 = new EdmModelValidationContext(new EdmModel(DataSpace.CSpace), true);

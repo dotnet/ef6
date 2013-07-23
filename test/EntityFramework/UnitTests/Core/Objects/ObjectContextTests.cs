@@ -66,7 +66,11 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Parameterless_SaveChanges_calls_SaveOption_flags_to_DetectChangesBeforeSave_and_AcceptAllChangesAfterSave()
             {
-                var objectContextMock = new Mock<ObjectContextForMock>(null /*entityConnection*/, null /*entityAdapter*/);
+                var objectContextMock = new Mock<ObjectContextForMock>(null /*entityConnection*/, null /*entityAdapter*/) { CallBase = true };
+
+                objectContextMock.Setup(
+                    m => m.SaveChanges(SaveOptions.DetectChangesBeforeSave | SaveOptions.AcceptAllChangesAfterSave))
+                    .Returns(1);
 
                 objectContextMock.Object.SaveChanges();
 
@@ -1622,7 +1626,7 @@ namespace System.Data.Entity.Core.Objects
             [Fact]
             public void Parameterless_SaveChangesAsync_calls_SaveOption_flags_to_DetectChangesBeforeSave_and_AcceptAllChangesAfterSave()
             {
-                var objectContextMock = new Mock<ObjectContextForMock>(null /*entityConnection*/, null /*entityAdapter*/);
+                var objectContextMock = new Mock<ObjectContextForMock>(null /*entityConnection*/, null /*entityAdapter*/) { CallBase = true };
                 objectContextMock.Setup(m => m.SaveChangesAsync(It.IsAny<SaveOptions>(), It.IsAny<CancellationToken>()))
                                  .Returns(Task.FromResult(0));
 

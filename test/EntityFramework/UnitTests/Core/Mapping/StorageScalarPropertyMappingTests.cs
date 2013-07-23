@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Mapping
                 Assert.Throws<ArgumentNullException>(
                     () => new StorageScalarPropertyMapping(
                               null,
-                              EdmProperty.Primitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)))).ParamName);
+                              EdmProperty.CreatePrimitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)))).ParamName);
         }
 
         [Fact]
@@ -41,15 +41,15 @@ namespace System.Data.Entity.Core.Mapping
                 "columnMember",
                 Assert.Throws<ArgumentNullException>(
                     () => new StorageScalarPropertyMapping(
-                              EdmProperty.Primitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                              EdmProperty.CreatePrimitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
                               null)).ParamName);
         }
 
         [Fact]
         public void Cannot_create_mapping_for_non_primitive_or_non_enum_property()
         {
-            var modelProperty = EdmProperty.Complex("p", new ComplexType());
-            var storeColumn = EdmProperty.Primitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            var modelProperty = EdmProperty.CreateComplex("p", new ComplexType());
+            var storeColumn = EdmProperty.CreatePrimitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
 
             Assert.Equal(
                 Strings.StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed,
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Mapping
         [Fact]
         public void Cannot_create_mapping_for_non_primitive_store_column()
         {
-            var modelProperty = EdmProperty.Primitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            var modelProperty = EdmProperty.CreatePrimitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
             var storeColumn = new EdmProperty("p", TypeUsage.CreateDefaultTypeUsage(new RowType()));
 
             Assert.Equal(

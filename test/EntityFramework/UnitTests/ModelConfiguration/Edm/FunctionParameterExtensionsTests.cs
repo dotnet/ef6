@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void Can_get_and_set_configuration_annotation()
         {
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             property.SetConfiguration(42);
 

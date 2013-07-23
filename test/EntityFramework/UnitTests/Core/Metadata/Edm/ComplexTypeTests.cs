@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Empty(complexType.Properties);
 
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             complexType.AddMember(property);
 
@@ -31,8 +31,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 DataSpace.CSpace,
                 new[]
                     {
-                        EdmProperty.Primitive("prop1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
-                        EdmProperty.Primitive("prop2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))
+                        EdmProperty.CreatePrimitive("prop1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                        EdmProperty.CreatePrimitive("prop2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))
                     },
                 new[]
                     {

@@ -831,7 +831,7 @@ namespace System.Data.Entity.Core.Common.Utils
 
         internal static TypeUsage ConvertStoreTypeUsageToEdmTypeUsage(TypeUsage storeTypeUsage)
         {
-            var edmTypeUsage = storeTypeUsage.GetModelTypeUsage().ShallowCopy(FacetValues.NullFacetValues);
+            var edmTypeUsage = storeTypeUsage.ModelTypeUsage.ShallowCopy(FacetValues.NullFacetValues);
 
             // we don't reason the facets during the function resolution any more
 

@@ -220,7 +220,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 return
                     ((StoreItemCollection)_funcletizer.RootContext.MetadataWorkspace.GetItemCollection(DataSpace.SSpace)).
-                        StoreProviderManifest;
+                        ProviderManifest;
             }
         }
 

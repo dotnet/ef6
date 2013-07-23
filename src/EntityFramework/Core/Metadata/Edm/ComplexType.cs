@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="namespaceName"> The namespace name of the type </param>
         /// <param name="dataSpace"> dataSpace in which this ComplexType belongs to </param>
         /// <exception cref="System.ArgumentNullException">If either name, namespace or version arguments are null</exception>
-        public ComplexType(string name, string namespaceName, DataSpace dataSpace)
+        internal ComplexType(string name, string namespaceName, DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
         {
         }

@@ -118,6 +118,7 @@
     <Compile Include="Core\Metadata\Edm\DataModelValidationRuleSet.cs" />
     <Compile Include="Core\Metadata\Edm\DataModelValidationRule`.cs" />
     <Compile Include="Core\Metadata\Edm\DataModelValidator.cs" />
+    <Compile Include="Core\Metadata\Edm\EdmFunctionPayload.cs" />
     <Compile Include="Core\Metadata\Edm\EdmModelRuleSet.cs" />
     <Compile Include="Core\Metadata\Edm\EdmModelSemanticValidationRules.cs" />
     <Compile Include="Core\Metadata\Edm\EdmModelSyntacticValidationRules.cs" />

@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             DebugCheck.NotNull(interceptionContext);
 
             var storeMetadata = (StoreItemCollection)commandTree.MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-            return CreateCommandDefinition(storeMetadata.StoreProviderFactory, commandTree, interceptionContext);
+            return CreateCommandDefinition(storeMetadata.ProviderFactory, commandTree, interceptionContext);
         }
 
         /// <summary>

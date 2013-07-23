@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             complexType.AddMember(property1);
 
-            var complexProperty = EdmProperty.Complex("C", complexType);
+            var complexProperty = EdmProperty.CreateComplex("C", complexType);
 
             var parameterBindings
                 = functionParameterMappingGenerator
@@ -83,7 +83,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             complexType.AddMember(property1);
 
-            var complexProperty = EdmProperty.Complex("C", complexType);
+            var complexProperty = EdmProperty.CreateComplex("C", complexType);
 
             var parameterBindings
                 = functionParameterMappingGenerator
@@ -145,7 +145,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             complexType.AddMember(property1);
 
-            var complexProperty = EdmProperty.Complex("C", complexType);
+            var complexProperty = EdmProperty.CreateComplex("C", complexType);
 
             new EntityType("E", "N", DataSpace.CSpace).AddKeyMember(property0);
 
@@ -231,7 +231,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 = new FunctionParameterMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest);
 
             var complexType = new ComplexType("CT", "N", DataSpace.CSpace);
-            complexType.AddMember(EdmProperty.Complex("C1", complexType));
+            complexType.AddMember(EdmProperty.CreateComplex("C1", complexType));
 
             Assert.Equal(
                 Strings.CircularComplexTypeHierarchy,
@@ -239,7 +239,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     () => functionParameterMappingGenerator
                               .Generate(
                                   ModificationOperator.Insert,
-                                  new[] { EdmProperty.Complex("C0", complexType) },
+                                  new[] { EdmProperty.CreateComplex("C0", complexType) },
                                   new ColumnMappingBuilder[0],
                                   new List<EdmProperty>())
                               .ToList()).Message);

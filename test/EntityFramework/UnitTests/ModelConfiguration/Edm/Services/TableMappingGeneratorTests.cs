@@ -31,10 +31,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         {
             var databaseMapping = CreateEmptyModel();
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
-            var property1 = EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var entitySet = databaseMapping.Model.AddEntitySet("ESet", entityType);
@@ -58,11 +58,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var complexType = new ComplexType("C");
 
-            var property = EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             complexType.AddMember(property);
             entityType.AddComplexProperty("C1", complexType);
-            var property1 = EdmProperty.Primitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("P2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var entitySet = databaseMapping.Model.AddEntitySet("ESet", entityType);

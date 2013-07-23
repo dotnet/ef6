@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotEmpty(name);
             DebugCheck.NotNull(targetComplexType);
 
-            var property = EdmProperty.Complex(name, targetComplexType);
+            var property = EdmProperty.CreateComplex(name, targetComplexType);
 
             complexType.AddMember(property);
 

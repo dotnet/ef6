@@ -406,8 +406,8 @@ namespace System.Data.Entity.Core.Common
             public void GetSpatialServices_with_EntityConnection_uses_store_manifest_to_build_key()
             {
                 var mockItemCollection = new Mock<StoreItemCollection>();
-                mockItemCollection.Setup(m => m.StoreProviderInvariantName).Returns("New.York");
-                mockItemCollection.Setup(m => m.StoreProviderManifestToken).Returns("Conversation");
+                mockItemCollection.Setup(m => m.ProviderInvariantName).Returns("New.York");
+                mockItemCollection.Setup(m => m.ProviderManifestToken).Returns("Conversation");
 
                 var mockWorkspace = new Mock<MetadataWorkspace>();
                 mockWorkspace.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(mockItemCollection.Object);
@@ -431,8 +431,8 @@ namespace System.Data.Entity.Core.Common
             public void GetSpatialServices_with_EntityConnection_uses_provider_from_store_connection_if_resolver_returns_null()
             {
                 var mockItemCollection = new Mock<StoreItemCollection>();
-                mockItemCollection.Setup(m => m.StoreProviderInvariantName).Returns("I'm.So.Free");
-                mockItemCollection.Setup(m => m.StoreProviderManifestToken).Returns("2008");
+                mockItemCollection.Setup(m => m.ProviderInvariantName).Returns("I'm.So.Free");
+                mockItemCollection.Setup(m => m.ProviderManifestToken).Returns("2008");
 
                 var mockWorkspace = new Mock<MetadataWorkspace>();
                 mockWorkspace.Setup(m => m.GetItemCollection(DataSpace.SSpace)).Returns(mockItemCollection.Object);

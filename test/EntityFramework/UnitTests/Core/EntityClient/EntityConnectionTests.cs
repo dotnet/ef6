@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var mockStoreItemCollection = new Mock<StoreItemCollection>();
 
                 mockStoreItemCollection
-                    .SetupGet(m => m.StoreProviderFactory)
+                    .SetupGet(m => m.ProviderFactory)
                     .Returns(DbProviderServices.GetProviderFactory(new SqlConnection()));
 
                 var mockMetadataWorkspace = new Mock<MetadataWorkspace>();

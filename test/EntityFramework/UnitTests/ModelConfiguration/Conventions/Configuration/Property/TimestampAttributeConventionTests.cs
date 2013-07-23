@@ -109,7 +109,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
         private void Assert_Timestamp(BinaryPropertyConfiguration binaryPropertyConfiguration)
         {
-            binaryPropertyConfiguration.Configure(EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
+            binaryPropertyConfiguration.Configure(EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)));
 
             Assert.Equal("rowversion", binaryPropertyConfiguration.ColumnType);
             Assert.Equal(false, binaryPropertyConfiguration.IsNullable);

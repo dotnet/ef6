@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
 
-            var property = EdmProperty.Primitive("Fk", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("Fk", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             var associationConstraint
                 = new ReferentialConstraint(
@@ -85,7 +85,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 entityType, RelationshipMultiplicity.ZeroOrOne,
                 entityType, RelationshipMultiplicity.Many);
             var navigationProperty = entityType.AddNavigationProperty("N", associationType);
-            var property = EdmProperty.Primitive("Fk", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("Fk", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
             var fkProperty = property;
@@ -109,11 +109,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                 entityType, RelationshipMultiplicity.ZeroOrOne,
                 entityType, RelationshipMultiplicity.Many);
             var navigationProperty = entityType.AddNavigationProperty("N", associationType);
-            var property = EdmProperty.Primitive("Fk1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("Fk1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
             var fkProperty1 = property;
-            var property1 = EdmProperty.Primitive("Fk2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Fk2", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var fkProperty2 = property1;

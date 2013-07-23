@@ -52,11 +52,11 @@ namespace System.Data.Entity.Spatial
         internal static DbSpatialDataReader CreateSpatialDataReader(MetadataWorkspace workspace, DbDataReader reader)
         {
             var storeItemCollection = (StoreItemCollection)workspace.GetItemCollection(DataSpace.SSpace);
-            var providerFactory = storeItemCollection.StoreProviderFactory;
+            var providerFactory = storeItemCollection.ProviderFactory;
             Debug.Assert(providerFactory != null, "GetProviderSpatialServices requires provider factory to have been initialized");
 
             var providerServices = providerFactory.GetProviderServices();
-            var result = providerServices.GetSpatialDataReader(reader, storeItemCollection.StoreProviderManifestToken);
+            var result = providerServices.GetSpatialDataReader(reader, storeItemCollection.ProviderManifestToken);
 
             if (result == null)
             {

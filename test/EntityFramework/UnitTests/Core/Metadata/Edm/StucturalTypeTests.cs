@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Empty(entityType.Members);
 
-            var property = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
 

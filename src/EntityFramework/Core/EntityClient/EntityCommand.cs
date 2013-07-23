@@ -524,7 +524,7 @@ namespace System.Data.Entity.Core.EntityClient
         ///     For stored procedure commands, if called
         ///     for anything but an entity collection result
         /// </exception>
-        public new Task<EntityDataReader> ExecuteReaderAsync()
+        public new virtual Task<EntityDataReader> ExecuteReaderAsync()
         {
             return ExecuteReaderAsync(CommandBehavior.Default, CancellationToken.None);
         }
@@ -544,7 +544,7 @@ namespace System.Data.Entity.Core.EntityClient
         ///     For stored procedure commands, if called
         ///     for anything but an entity collection result
         /// </exception>
-        public new Task<EntityDataReader> ExecuteReaderAsync(CancellationToken cancellationToken)
+        public new virtual Task<EntityDataReader> ExecuteReaderAsync(CancellationToken cancellationToken)
         {
             return ExecuteReaderAsync(CommandBehavior.Default, cancellationToken);
         }
@@ -562,7 +562,7 @@ namespace System.Data.Entity.Core.EntityClient
         ///     For stored procedure commands, if called
         ///     for anything but an entity collection result
         /// </exception>
-        public new Task<EntityDataReader> ExecuteReaderAsync(CommandBehavior behavior)
+        public new virtual Task<EntityDataReader> ExecuteReaderAsync(CommandBehavior behavior)
         {
             return ExecuteReaderAsync(behavior, CancellationToken.None);
         }

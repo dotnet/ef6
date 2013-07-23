@@ -531,75 +531,78 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         ///     Returns a Model type usage for a provider type
         /// </summary>
-        /// <returns> model (CSpace) type usage </returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        public TypeUsage GetModelTypeUsage()
+        /// <value> Model (CSpace) type usage </value>
+        [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+        public TypeUsage ModelTypeUsage
         {
-            if (_modelTypeUsage == null)
+            get
             {
-                var edmType = EdmType;
-
-                // If the edm type is already a cspace type, return the same type
-                if (edmType.DataSpace == DataSpace.CSpace
-                    || edmType.DataSpace == DataSpace.OSpace)
+                if (_modelTypeUsage == null)
                 {
-                    return this;
-                }
+                    var edmType = EdmType;
 
-                TypeUsage result;
-                if (Helper.IsRowType(edmType))
-                {
-                    var sspaceRowType = (RowType)edmType;
-                    var properties = new EdmProperty[sspaceRowType.Properties.Count];
-                    for (var i = 0; i < properties.Length; i++)
+                    // If the edm type is already a cspace type, return the same type
+                    if (edmType.DataSpace == DataSpace.CSpace
+                        || edmType.DataSpace == DataSpace.OSpace)
                     {
-                        var sspaceProperty = sspaceRowType.Properties[i];
-                        var newTypeUsage = sspaceProperty.TypeUsage.GetModelTypeUsage();
-                        properties[i] = new EdmProperty(sspaceProperty.Name, newTypeUsage);
-                    }
-                    var edmRowType = new RowType(properties, sspaceRowType.InitializerMetadata);
-                    result = Create(edmRowType, Facets);
-                }
-                else if (Helper.IsCollectionType(edmType))
-                {
-                    var sspaceCollectionType = ((CollectionType)edmType);
-                    var newTypeUsage = sspaceCollectionType.TypeUsage.GetModelTypeUsage();
-                    result = Create(new CollectionType(newTypeUsage), Facets);
-                }
-                else if (Helper.IsPrimitiveType(edmType))
-                {
-                    result = ((PrimitiveType)edmType).ProviderManifest.GetEdmType(this);
-
-                    if (result == null)
-                    {
-                        throw new ProviderIncompatibleException(Strings.Mapping_ProviderReturnsNullType(ToString()));
+                        return this;
                     }
 
-                    if (!TypeSemantics.IsNullable(this))
+                    TypeUsage result;
+                    if (Helper.IsRowType(edmType))
                     {
-                        result = Create(
-                            result.EdmType,
-                            OverrideFacetValues(
-                                result.Facets,
-                                new FacetValues
-                                    {
-                                        Nullable = false
-                                    }));
+                        var sspaceRowType = (RowType)edmType;
+                        var properties = new EdmProperty[sspaceRowType.Properties.Count];
+                        for (var i = 0; i < properties.Length; i++)
+                        {
+                            var sspaceProperty = sspaceRowType.Properties[i];
+                            var newTypeUsage = sspaceProperty.TypeUsage.ModelTypeUsage;
+                            properties[i] = new EdmProperty(sspaceProperty.Name, newTypeUsage);
+                        }
+                        var edmRowType = new RowType(properties, sspaceRowType.InitializerMetadata);
+                        result = Create(edmRowType, Facets);
                     }
+                    else if (Helper.IsCollectionType(edmType))
+                    {
+                        var sspaceCollectionType = ((CollectionType)edmType);
+                        var newTypeUsage = sspaceCollectionType.TypeUsage.ModelTypeUsage;
+                        result = Create(new CollectionType(newTypeUsage), Facets);
+                    }
+                    else if (Helper.IsPrimitiveType(edmType))
+                    {
+                        result = ((PrimitiveType)edmType).ProviderManifest.GetEdmType(this);
+
+                        if (result == null)
+                        {
+                            throw new ProviderIncompatibleException(Strings.Mapping_ProviderReturnsNullType(ToString()));
+                        }
+
+                        if (!TypeSemantics.IsNullable(this))
+                        {
+                            result = Create(
+                                result.EdmType,
+                                OverrideFacetValues(
+                                    result.Facets,
+                                    new FacetValues
+                                        {
+                                            Nullable = false
+                                        }));
+                        }
+                    }
+                    else if (Helper.IsEntityTypeBase(edmType)
+                             || Helper.IsComplexType(edmType))
+                    {
+                        result = this;
+                    }
+                    else
+                    {
+                        Debug.Assert(false, "Unexpected type found in entity data reader");
+                        return null;
+                    }
+                    Interlocked.CompareExchange(ref _modelTypeUsage, result, null);
                 }
-                else if (Helper.IsEntityTypeBase(edmType)
-                         || Helper.IsComplexType(edmType))
-                {
-                    result = this;
-                }
-                else
-                {
-                    Debug.Assert(false, "Unexpected type found in entity data reader");
-                    return null;
-                }
-                Interlocked.CompareExchange(ref _modelTypeUsage, result, null);
+                return _modelTypeUsage;
             }
-            return _modelTypeUsage;
         }
 
         /// <summary>

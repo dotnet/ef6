@@ -3982,7 +3982,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             Debug.Assert(type.EdmType.GetMetadataPropertyValue<DataSpace>("DataSpace") == DataSpace.CSpace);
 
-            var storeTypeUsage = _storeItemCollection.StoreProviderManifest.GetStoreType(type);
+            var storeTypeUsage = _storeItemCollection.ProviderManifest.GetStoreType(type);
             return GenerateSqlForStoreType(_sqlVersion, storeTypeUsage);
         }
 

@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             mockManifest.Setup(m => m.GetStoreType(It.IsAny<TypeUsage>())).Returns(typeUsage);
 
             var storeProperty = new TestMappingGenerator(mockManifest.Object)
-                .MapTableColumn(EdmProperty.Primitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)));
+                .MapTableColumn(EdmProperty.CreatePrimitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)));
 
             Assert.Equal("number", storeProperty.TypeUsage.EdmType.Name);
 

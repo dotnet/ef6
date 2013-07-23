@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="name"> The name of the property. </param>
         /// <param name="primitiveType"> The type of the property. </param>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public static EdmProperty Primitive(string name, PrimitiveType primitiveType)
+        public static EdmProperty CreatePrimitive(string name, PrimitiveType primitiveType)
         {
             Check.NotEmpty(name, "name");
             Check.NotNull(primitiveType, "primitiveType");
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="name"> The name of the property. </param>
         /// <param name="primitiveType"> The type of the property. </param>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public static EdmProperty Enum(string name, EnumType enumType)
+        public static EdmProperty CreateEnum(string name, EnumType enumType)
         {
             Check.NotEmpty(name, "name");
             Check.NotNull(enumType, "enumType");
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="name"> The name of the property. </param>
         /// <param name="primitiveType"> The type of the property. </param>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public static EdmProperty Complex(string name, ComplexType complexType)
+        public static EdmProperty CreateComplex(string name, ComplexType complexType)
         {
             Check.NotEmpty(name, "name");
             Check.NotNull(complexType, "complexType");

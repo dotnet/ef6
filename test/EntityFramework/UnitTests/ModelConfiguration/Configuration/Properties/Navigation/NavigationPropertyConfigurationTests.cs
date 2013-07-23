@@ -114,7 +114,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
             associationType.SourceEnd.GetEntityType().Annotations.SetClrType(mockType);
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
-            var property1 = EdmProperty.Primitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             associationType.SourceEnd.GetEntityType().AddMember(property1);
             var property = property1;

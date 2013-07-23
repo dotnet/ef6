@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public void GetPrimitiveProperties_should_return_only_primitive_properties()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property1 = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var property = property1;
@@ -107,7 +107,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
-            var property1 = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var property = property1;
@@ -121,7 +121,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public void GetPrimitiveProperty_should_return_correct_property()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var property1 = EdmProperty.Primitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
+            var property1 = EdmProperty.CreatePrimitive("Foo", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property1);
             var property = property1;

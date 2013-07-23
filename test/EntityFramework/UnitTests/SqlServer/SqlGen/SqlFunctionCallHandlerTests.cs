@@ -286,7 +286,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             mockStoreProviderManifest.Setup(m => m.GetStoreType(It.IsAny<TypeUsage>())).Returns(mockStoreType.Object);
 
             var mockStoreItemCollection = new Mock<StoreItemCollection>();
-            mockStoreItemCollection.Setup(m => m.StoreProviderManifest).Returns(mockStoreProviderManifest.Object);
+            mockStoreItemCollection.Setup(m => m.ProviderManifest).Returns(mockStoreProviderManifest.Object);
 
             var mockSqlGenerator = new Mock<SqlGenerator>();
             mockSqlGenerator.Setup(m => m.StoreItemCollection).Returns(mockStoreItemCollection.Object);
