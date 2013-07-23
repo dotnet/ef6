@@ -7375,6 +7375,67 @@ namespace System.Data.Entity
 
         #endregion
 
+        #region Paging
+        private static readonly MethodInfo _skip = GetMethod(
+            "Skip", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(int)
+                });
+
+        private static readonly MethodInfo _take = GetMethod(
+            "Take", (T) => new[]
+                {
+                    typeof(IQueryable<>).MakeGenericType(T),
+                    typeof(int)
+                });
+
+        /// <summary>
+        /// Bypasses a specified number of elements in a sequence and then returns the remaining elements.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">A sequence to return elements from.</param>
+        /// <param name="countAccessor">An expression that evaluates to the number of elements to skip.</param>
+        /// <returns>A sequence that contains elements that occur after the specified index in the 
+        /// input sequence.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static IQueryable<TSource> Skip<TSource>(
+            this IQueryable<TSource> source, Expression<Func<int>> countAccessor)
+        {
+            Check.NotNull(source, "source");
+            Check.NotNull(countAccessor, "countAccessor");
+
+            return source.Provider.CreateQuery<TSource>(
+                Expression.Call(
+                    null,
+                    _skip.MakeGenericMethod(new[] { typeof(TSource) }),
+                    new[] { source.Expression, countAccessor.Body }));
+        }
+
+        /// <summary>
+        /// Returns a specified number of contiguous elements from the start of a sequence.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">The sequence to return elements from.</param>
+        /// <param name="countAccessor">An expression that evaluates to the number of elements 
+        /// to return.</param>
+        /// <returns>A sequence that contains the specified number of elements from the 
+        /// start of the input sequence.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static IQueryable<TSource> Take<TSource>(
+            this IQueryable<TSource> source, Expression<Func<int>> countAccessor)
+        {
+            Check.NotNull(source, "source");
+            Check.NotNull(countAccessor, "countAccessor");
+
+            return source.Provider.CreateQuery<TSource>(
+                Expression.Call(
+                    null,
+                    _take.MakeGenericMethod(new[] { typeof(TSource) }),
+                    new[] { source.Expression, countAccessor.Body }));
+        }
+        #endregion
+
         #region Private and internal methods
 
         internal static ObjectQuery TryGetObjectQuery(this IQueryable source)
@@ -7436,14 +7497,16 @@ namespace System.Data.Entity
             return GetMethod(methodName, getParameterTypes.Method, 0);
         }
 
-        private static MethodInfo GetMethod(string methodName, Func<Type, Type[]> getParameterTypes)
-        {
-            return GetMethod(methodName, getParameterTypes.Method, 1);
-        }
-
         private static MethodInfo GetMethod(string methodName, Func<Type, Type, Type[]> getParameterTypes)
         {
             return GetMethod(methodName, getParameterTypes.Method, 2);
+        }
+
+#endif
+
+        private static MethodInfo GetMethod(string methodName, Func<Type, Type[]> getParameterTypes)
+        {
+            return GetMethod(methodName, getParameterTypes.Method, 1);
         }
 
         private static MethodInfo GetMethod(string methodName, MethodInfo getParameterTypesMethod, int genericArgumentsCount)
@@ -7471,8 +7534,6 @@ namespace System.Data.Entity
         {
             return methodInfo.GetParameters().Select(p => p.ParameterType).SequenceEqual(parameterTypes);
         }
-
-#endif
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Called from an assert")]

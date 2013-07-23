@@ -1654,5 +1654,134 @@ namespace System.Data.Entity
 #endif
 
         #endregion
+
+        public class Paging
+        {
+            [Fact]
+            public void Parameterized_Skip_throws_with_invalid_arguments()
+            {
+                var strings = new[] { "one", "two", "three" };
+                var count = 2;
+
+                Assert.Equal("source",
+                    Assert.Throws<ArgumentNullException>(
+                        () => QueryableExtensions.Skip(
+                                (IQueryable<string>)null,
+                                () => count))
+                        .ParamName);
+
+                Assert.Equal("countAccessor",
+                    Assert.Throws<ArgumentNullException>(
+                        () => strings.AsQueryable().Skip(null))
+                        .ParamName);
+            }
+
+            [Fact]
+            public void Parameterized_Skip_in_linq_to_objects_query_works_as_expected()
+            {
+                var strings = new[] { "one", "two", "three" };
+                var count = 2;
+                var query = strings.AsQueryable().Skip(() => count);
+
+                Assert.Equal(1, query.Count());
+                Assert.Equal("three", query.ElementAt(0));
+
+                count = 1;
+
+                Assert.Equal(2, query.Count());
+                Assert.Equal("two", query.ElementAt(0));
+                Assert.Equal("three", query.ElementAt(1));
+            }
+
+            [Fact]
+            public void Parameterized_Skip_in_linq_to_entities_query_works_as_expected()
+            {
+                using (var ctx = new Context())
+                {
+                    var count = 2;
+                    var query = ctx.Entities.OrderBy(e => e.Name).Skip(() => count);
+
+                    Assert.Equal(
+@"SELECT 
+    [Extent1].[Id] AS [Id], 
+    [Extent1].[Name] AS [Name]
+    FROM ( SELECT [Extent1].[Id] AS [Id], [Extent1].[Name] AS [Name], row_number() OVER (ORDER BY [Extent1].[Name] ASC) AS [row_number]
+        FROM [dbo].[Entities] AS [Extent1]
+    )  AS [Extent1]
+    WHERE [Extent1].[row_number] > @p__linq__0
+    ORDER BY [Extent1].[Name] ASC",
+                       query.ToString());
+                }
+            }
+
+            [Fact]
+            public void Parameterized_Take_throws_with_invalid_arguments()
+            {
+                var strings = new[] { "one", "two", "three" };
+                var count = 2;
+
+                Assert.Equal("source",
+                    Assert.Throws<ArgumentNullException>(
+                        () => QueryableExtensions.Take(
+                                (IQueryable<string>)null,
+                                () => count))
+                        .ParamName);
+
+                Assert.Equal("countAccessor",
+                    Assert.Throws<ArgumentNullException>(
+                        () => strings.AsQueryable().Take(null))
+                        .ParamName);
+            }
+
+            [Fact]
+            public void Parameterized_Take_in_linq_to_objects_query_works_as_expected()
+            {
+                var strings = new[] { "one", "two", "three" };
+                var count = 2;
+                var query = strings.AsQueryable().Take(() => count);
+
+                Assert.Equal(2, query.Count());
+                Assert.Equal("one", query.ElementAt(0));
+                Assert.Equal("two", query.ElementAt(1));
+
+                count = 1;
+
+                Assert.Equal(1, query.Count());
+                Assert.Equal("one", query.ElementAt(0));
+            }
+
+            [Fact]
+            public void Parameterized_Take_in_linq_to_entities_query_works_as_expected()
+            {
+                using (var ctx = new Context())
+                {
+                    var count = 2;
+                    var query = ctx.Entities.Take(() => count);
+
+                    Assert.Equal(
+@"SELECT TOP (@p__linq__0) 
+    [c].[Id] AS [Id], 
+    [c].[Name] AS [Name]
+    FROM [dbo].[Entities] AS [c]",
+                       query.ToString());
+                }
+            }
+
+            public class Entity
+            {
+                public int Id { get; set; }
+                public string Name { get; set; }
+            }
+
+            public class Context : DbContext
+            {
+                public Context()
+                {
+                    Database.SetInitializer<Context>(null);
+                }
+
+                public DbSet<Entity> Entities { get; set; }
+            }
+        }
     }
 }
