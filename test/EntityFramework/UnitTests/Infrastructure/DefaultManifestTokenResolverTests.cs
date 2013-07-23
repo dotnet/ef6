@@ -24,9 +24,13 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal("1908", resolver.ResolveManifestToken(CreateConnection<FakeSqlConnection>("2108", "Cheese", "Pickle")));
 
             // Each of the following calls should miss the cache and return the new manifest token value
-            Assert.Equal("2109", resolver.ResolveManifestToken(CreateConnection<DerivedFakeSqlConnection>("2109", "Cheese", "Pickle")));
             Assert.Equal("2110", resolver.ResolveManifestToken(CreateConnection<FakeSqlConnection>("2110", "Beer", "Pickle")));
             Assert.Equal("2111", resolver.ResolveManifestToken(CreateConnection<FakeSqlConnection>("2111", "Cheese", "Chips")));
+
+#if !NET40
+            // Only on .NET 4.5 because provider lookup will fail on .NET 4 unless we jump through hoops to register
+            Assert.Equal("2109", resolver.ResolveManifestToken(CreateConnection<DerivedFakeSqlConnection>("2109", "Cheese", "Pickle")));
+#endif
         }
 
         [Fact]
@@ -46,8 +50,10 @@ namespace System.Data.Entity.Infrastructure
             return originalConnection;
         }
 
+#if !NET40
         public class DerivedFakeSqlConnection : FakeSqlConnection
         {
         }
+#endif
     }
 }
