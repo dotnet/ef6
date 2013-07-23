@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     This class describes referential constraint on the relationships
+    ///     This class represents a referential constraint between two entities specifying the "to" and "from" ends of the relationship.
     /// </summary>
     public sealed class ReferentialConstraint : MetadataItem
     {

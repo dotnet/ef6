@@ -10,7 +10,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Represent the Edm Complex Type
+    ///     Represents the Edm Complex Type.  This can be used to configure complex types
+    ///     from a conceptual-space model-based convention. Complex types are not supported in the store model.
     /// </summary>
     public class ComplexType : StructuralType
     {

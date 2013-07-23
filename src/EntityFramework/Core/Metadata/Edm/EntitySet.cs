@@ -11,7 +11,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Concrete class for representing a entity set
+    ///     Represents a particular usage of a structure defined in EntityType. In the conceptual-model, this represents a set that can 
+    ///     query and persist entities. In the store-model it represents a table. 
+    ///     From a store-space model-convention it can be used to configure
+    ///     table name with <see cref="EntitySetBase.Table"/> property and table schema with <see cref="EntitySetBase.Schema"/> property.
     /// </summary>
     public class EntitySet : EntitySetBase
     {

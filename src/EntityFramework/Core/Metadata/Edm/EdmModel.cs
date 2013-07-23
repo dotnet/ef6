@@ -12,7 +12,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
 
     /// <summary>
-    /// Represents a conceptual or store model.
+    ///     Represents a conceptual or store model. This class can be used to access information about the shape of the model 
+    ///     and the way the that it has been configured. 
     /// </summary>
     public class EdmModel : MetadataItem
     {

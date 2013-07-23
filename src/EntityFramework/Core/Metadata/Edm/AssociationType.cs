@@ -10,7 +10,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Represents the EDM Association Type
+    ///     Describes an association/relationship between two entities in the conceptual model or a foreign key relationship 
+    ///     between two tables in the store model. In the conceptual model the dependant class may or may not define a foreign key property.
+    ///     If a foreign key is defined the <see cref="IsForeignKey"/> property will be true and the <see cref="Constraint"/> property will contain details of the foreign keys
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public class AssociationType : RelationshipType

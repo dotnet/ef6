@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the list of the member names that form the key for this entity type
+        ///     Returns the list of the property names that form the key for this entity type
         ///     Perf Bug #529294: To cache the list of member names that form the key for the entity type
         /// </summary>
         internal virtual string[] KeyMemberNames
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the list of all the key members for this entity type
+        ///     Adds the specified property to the list of keys for the current entity.  
         /// </summary>
         /// <exception cref="System.ArgumentNullException">if member argument is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the EntityType has a base type of another EntityTypeBase. In this case KeyMembers should be added to the base type</exception>

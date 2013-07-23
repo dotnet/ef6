@@ -49,7 +49,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _identity ?? Name; }
         }
 
-        /// <summary>Gets the name of this member.</summary>
+        /// <summary>
+        ///     Gets or sets the name of the property. Setting this from a store-space model-convention will change the name of the database 
+        ///     column for this property. In the conceptual model, this should align with the corresponding property from the entity class 
+        ///     and should not be changed.
+        /// </summary>
         /// <returns>The name of this member.</returns>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public virtual string Name

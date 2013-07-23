@@ -10,7 +10,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     concrete Representation the Entity Type
+    ///     Represents the structure of an <see cref="EntitySet"/>. In the conceptual-model this represents the shape and structure 
+    ///     of an entity. In the store model this represents the structure of a table. To change the Schema and Table name use EntitySet.  
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public class EntityType : EntityTypeBase
@@ -143,7 +144,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>Gets the declared properties for the entity type.</summary>
+        /// <summary>Gets the list of declared properties for the entity type.</summary>
         /// <returns>The declared properties for the entity type.</returns>
         public ReadOnlyMetadataCollection<EdmProperty> DeclaredProperties
         {

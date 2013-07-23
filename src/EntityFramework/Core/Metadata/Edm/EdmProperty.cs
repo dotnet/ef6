@@ -14,7 +14,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Represent the edm property class
+    ///     In conceptual-space, EdmProperty represents a property on an Entity.
+    ///     In store-space, EdmProperty represents a column in a table.
     /// </summary>
     public class EdmProperty : EdmMember
     {
@@ -388,7 +389,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>Gets or sets the store generated pattern for the property.</summary>
+        /// <summary>Gets or sets the database generation method for the database column associated with this property</summary>
         /// <returns>The store generated pattern for the property.</returns>
         public StoreGeneratedPattern StoreGeneratedPattern
         {

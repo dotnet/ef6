@@ -108,7 +108,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>Gets the name of the current entity or relationship set.</summary>
+        /// <summary>
+        ///     Gets or sets the name of the current entity or relationship set. 
+        ///     If this property is changed from store-space, the mapping layer must also be updated to reflect the new name. 
+        ///     To change the table name of a store space <see cref="EntitySet"/> use the Table property. 
+        /// </summary>
         /// <returns>The name of the current entity or relationship set.</returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when EntitySetBase instance is in ReadOnly state</exception>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
@@ -166,7 +170,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the database table for this entity set.
+        ///     Gets or sets the database table name for this entity set.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when EntitySetBase instance is in ReadOnly state</exception>
