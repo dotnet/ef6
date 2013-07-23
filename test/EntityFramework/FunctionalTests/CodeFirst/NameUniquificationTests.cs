@@ -2,100 +2,297 @@
 
 namespace System.Data.Entity.CodeFirst
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Infrastructure;
     using System.Text;
     using System.Xml;
     using Xunit;
 
-    public class NameUniquificationTests : TestBase
+    public class NameUniquificationTests
     {
-        [Fact] 
-        public void CodePlex368_column_name_uniquification_is_deterministic()
+        // TPH, navigation properties with same name, on derived types.
+        public class Case1 : TestBase
         {
-            string edmx1, edmx2;
-
-            using (var context1 = new Namespace1.MyContext())
+            // E2 declared before E3.
+            public class Order1
             {
-                edmx1 = WriteEdmx(context1);
+                public class E1
+                {
+                    public int Id { get; set; }
+                }
+
+                public class E2 : E1
+                {
+                    public E4 P { get; set; }
+                }
+
+                public class E3 : E1
+                {
+                    public E4 P { get; set; }
+                }
+
+                public class E4
+                {
+                    public int Id { get; set; }
+                }
+
+                public class Context : DbContext
+                {
+                    public DbSet<E1> E1s { get; set; }
+                }
             }
 
-            using (var context2 = new Namespace2.MyContext())
+            // E2 declared after E3.
+            public class Order2
             {
-                edmx2 = WriteEdmx(context2);
+                public class E1
+                {
+                    public int Id { get; set; }
+                }
+
+                public class E3 : E1
+                {
+                    public E4 P { get; set; }
+                }
+
+                public class E2 : E1
+                {
+                    public E4 P { get; set; }
+                }
+
+                public class E4
+                {
+                    public int Id { get; set; }
+                }
+
+                public class Context : DbContext
+                {
+                    public DbSet<E1> E1s { get; set; }
+                }
             }
 
-            Assert.Equal(edmx1, edmx2.Replace("Namespace2", "Namespace1"));
+            [Fact]
+            public void Column_name_uniquification_is_deterministic()
+            {
+                Assert.Equal(WriteEdmx<Order1.Context>(), WriteEdmx<Order2.Context>());
+            }
         }
 
-        private static string WriteEdmx(DbContext context)
+        // TPH, inverse navigation properties to derived types.
+        public class Case2 : TestBase
         {
+            // E2 declared before E3.
+            public class Order1
+            {
+                public class E1
+                {
+                    public int Id { get; set; }
+                }
+
+                public class E2 : E1
+                {
+                }
+
+                public class E3 : E1
+                {
+                }
+
+                public class E4
+                {
+                    public int Id { get; set; }
+                                        
+                    public ICollection<E2> P1 { get; set; }
+                    public ICollection<E3> P2 { get; set; }                    
+                }
+
+                public class Context : DbContext
+                {
+                    public DbSet<E1> E1s { get; set; }
+                }
+            }
+
+            // E2 declared after E3.
+            public class Order2
+            {
+                public class E1
+                {
+                    public int Id { get; set; }
+                }
+
+                public class E3 : E1
+                {
+                }
+
+                public class E2 : E1
+                {
+                }
+
+                public class E4
+                {
+                    public int Id { get; set; }
+
+                    public ICollection<E2> P1 { get; set; }
+                    public ICollection<E3> P2 { get; set; }
+                }
+
+                public class Context : DbContext
+                {
+                    public DbSet<E1> E1s { get; set; }
+                }
+            }
+
+            [Fact]
+            public void Column_name_uniquification_is_deterministic()
+            {
+                Assert.Equal(WriteEdmx<Order1.Context>(), WriteEdmx<Order2.Context>());
+            }
+        }
+
+        // Inverse navigation properties to same type.
+        public class Case3 : TestBase
+        {
+            public class Order1
+            {
+                public class E1
+                {
+                    public int Id { get; set; }
+                    
+                    // P1 is declared before P2.
+                    public ICollection<E2> P1 { get; set; }
+                    public ICollection<E2> P2 { get; set; }
+                }
+
+                public class E2
+                {
+                    public int Id { get; set; }
+                }
+
+                public class Context : DbContext
+                {
+                    public DbSet<E1> E1s { get; set; }
+                }
+            }
+
+            public class Order2
+            {
+                public class E1
+                {
+                    public int Id { get; set; }
+
+                    // P1 is declared after P2.
+                    public ICollection<E2> P2 { get; set; }
+                    public ICollection<E2> P1 { get; set; }
+                }
+
+                public class E2
+                {
+                    public int Id { get; set; }
+                }
+
+                public class Context : DbContext
+                {
+                    public DbSet<E1> E1s { get; set; }
+                }
+            }
+
+            [Fact]
+            public void Column_name_uniquification_is_deterministic()
+            {
+                Assert.Equal(WriteEdmx<Order1.Context>(), WriteEdmx<Order2.Context>());
+            }
+        }
+
+        // Table splitting, same property names.
+        public class Case4 : TestBase
+        {
+            public class E1
+            {
+                public int Id { get; set; }
+
+                public E2 E2 { get; set; }
+
+                [ForeignKey("P")]
+                public int PId { get; set; }
+
+                public E3 P { get; set; }
+            }
+
+            public class E2
+            {
+                public int Id { get; set; }
+
+                public E1 E1 { get; set; }
+
+                [ForeignKey("P")]
+                public int PId { get; set; }
+
+                public E4 P { get; set; }
+            }
+
+            public class E3
+            {
+                public int Id { get; set; }
+            }
+
+            public class E4
+            {
+                public int Id { get; set; }
+            }
+
+            public class Context1 : DbContext
+            {
+                // E1s declared before E2s
+                public DbSet<E1> E1s { get; set; }
+                public DbSet<E2> E2s { get; set; }
+
+                protected override void OnModelCreating(DbModelBuilder modelBuilder)
+                {
+                    base.OnModelCreating(modelBuilder);
+
+                    modelBuilder.Entity<E1>().ToTable("T1");
+                    modelBuilder.Entity<E2>().ToTable("T1").HasRequired(e => e.E1).WithRequiredPrincipal(e => e.E2);
+                }
+            }
+
+            public class Context2 : DbContext
+            {
+                // E1s declared after E2s
+                public DbSet<E2> E2s { get; set; }
+                public DbSet<E1> E1s { get; set; }                
+
+                protected override void OnModelCreating(DbModelBuilder modelBuilder)
+                {
+                    base.OnModelCreating(modelBuilder);
+
+                    modelBuilder.Entity<E1>().ToTable("T1");
+                    modelBuilder.Entity<E2>().ToTable("T1").HasRequired(e => e.E1).WithRequiredPrincipal(e => e.E2);
+                }
+            }
+
+            [Fact]
+            public void Column_name_uniquification_is_deterministic()
+            {
+                Assert.Equal(WriteEdmx<Context1>(), WriteEdmx<Context2>().Replace("Context2", "Context1"));
+            }
+        }
+
+        private static string WriteEdmx<T>() where T : DbContext, new()
+        {
+            Database.SetInitializer<T>(null);
+
             var builder = new StringBuilder();
             var settings = new XmlWriterSettings { Indent = true };
 
             using (var writer = XmlWriter.Create(builder, settings))
             {
-                EdmxWriter.WriteEdmx(context, writer);
+                using (var context = new T())
+                {
+                    EdmxWriter.WriteEdmx(context, writer);
+                }
             }
 
             return builder.ToString();
-        }
-    }
-
-    // TypeOne appears before TypeTwo
-    namespace Namespace1
-    {
-        class MyContext : DbContext
-        {
-            public DbSet<TypeBase> Types { get; set; }
-        }
-
-        public class TypeBase
-        {
-            public int Id { get; set; }
-        }
-       
-        public class TypeOne : TypeBase
-        {
-            public RelatedType Related { get; set; }
-        }
-
-        public class TypeTwo : TypeBase
-        {
-            public RelatedType Related { get; set; }
-        }
-
-        public class RelatedType
-        {
-            public int Id { get; set; }
-        }
-    }
-
-    // TypeTwo appears before TypeOne
-    namespace Namespace2
-    {
-        class MyContext : DbContext
-        {
-            public DbSet<TypeBase> Types { get; set; }
-        }
-
-        public class TypeBase
-        {
-            public int Id { get; set; }
-        }
-
-        public class TypeTwo : TypeBase
-        {
-            public RelatedType Related { get; set; }
-        }
-
-        public class TypeOne : TypeBase
-        {
-            public RelatedType Related { get; set; }
-        }
-
-        public class RelatedType
-        {
-            public int Id { get; set; }
         }
     }
 }

@@ -54,6 +54,23 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             }
         }
 
+        internal bool MapIfNotNavigationProperty(
+            PropertyInfo propertyInfo, EntityType entityType, Func<EntityTypeConfiguration> entityTypeConfiguration)
+        {
+            DebugCheck.NotNull(propertyInfo);
+            DebugCheck.NotNull(entityType);
+
+            var property = MapPrimitiveOrComplexOrEnumProperty(propertyInfo, entityTypeConfiguration);
+
+            if (property != null)
+            {
+                entityType.AddMember(property);
+                return true;
+            }
+
+            return false;
+        }
+
         private EdmProperty MapPrimitiveOrComplexOrEnumProperty(
             PropertyInfo propertyInfo, Func<StructuralTypeConfiguration> structuralTypeConfiguration,
             bool discoverComplexTypes = false)

@@ -41,8 +41,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                     AssociationType associationType;
                     Assert.True(EntityProxyFactory.TryGetAssociationTypeFromProxyInfo(
-                        mockWrapper.Object, "System.Data.Entity.Core.Objects.Internal.ProxyManyToOne_WithRelationships", out associationType));
-                    Assert.Equal("System.Data.Entity.Core.Objects.Internal.ProxyManyToOne_WithRelationships", associationType.FullName);
+                        mockWrapper.Object, "System.Data.Entity.Core.Objects.Internal.ProxyWithRelationships_ManyToOnes", out associationType));
+                    Assert.Equal("System.Data.Entity.Core.Objects.Internal.ProxyWithRelationships_ManyToOnes", associationType.FullName);
                 }
             }
         }
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     Assert.Equal(3, associations.Count());
                     Assert.Contains("ProxyWithRelationships_OneToOne", associations);
                     Assert.Contains("ProxyOneToMany_WithRelationships", associations);
-                    Assert.Contains("ProxyManyToOne_WithRelationships", associations);
+                    Assert.Contains("ProxyWithRelationships_ManyToOnes", associations);
                 }
             }
         }

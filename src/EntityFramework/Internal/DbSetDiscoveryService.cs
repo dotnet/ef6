@@ -72,7 +72,8 @@ namespace System.Data.Entity.Internal
                 foreach (var propertyInfo in _context.GetType().GetProperties(bindingFlags)
                                                      .Where(
                                                          p => p.GetIndexParameters().Length == 0 &&
-                                                              p.DeclaringType != typeof(DbContext)))
+                                                              p.DeclaringType != typeof(DbContext))
+                                                     .OrderBy(p => p.Name))
                 {
                     var entityType = GetSetType(propertyInfo.PropertyType);
                     if (entityType != null)

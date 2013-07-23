@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 Assert.Equal(3, relationships.Count());
                 Assert.Contains("WithNavProps_OneToOne", relationships);
                 Assert.Contains("OneToMany_WithNavProps", relationships);
-                Assert.Contains("OneToManyIa_WithNavProps", relationships);
+                Assert.Contains("WithNavProps_OneToManyIa", relationships);
             }
         }
 
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     ((IObjectContextAdapter)context).ObjectContext.MetadataWorkspace, typeof(OneToManyIa))
                                                        .Select(r => r.Name);
 
-                Assert.Equal("OneToManyIa_WithNavProps", relationships.Single());
+                Assert.Equal("WithNavProps_OneToManyIa", relationships.Single());
                 Assert.Equal(1, relationships.Count());
             }
         }

@@ -159,12 +159,27 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 _mappingContext.ConventionsConfiguration.ApplyTypeConfiguration(
                     type, entityTypeConfiguration, _mappingContext.ModelConfiguration);
 
+                // Defer the mapping of navigation properties in order to be able to sort them
+                // without affecting the order of the other properties.
+                var navigationProperties = new List<PropertyInfo>();
+
                 MapStructuralElements(
                     type,
                     entityType.Annotations,
-                    (m, p) => m.Map(p, entityType, entityTypeConfiguration),
+                    (m, p) =>
+                    {
+                        if (!m.MapIfNotNavigationProperty(p, entityType, entityTypeConfiguration))
+                        {
+                            navigationProperties.Add(p);
+                        }
+                    },
                     entityType.BaseType != null,
                     entityTypeConfiguration);
+
+                foreach (var propertyInfo in navigationProperties.OrderBy(p => p.Name))
+                {
+                    new NavigationPropertyMapper(this).Map(propertyInfo, entityType, entityTypeConfiguration);
+                }
 
                 // If the base type was discovered through a navigation property
                 // then the inherited properties mapped afterwards need to be lifted
