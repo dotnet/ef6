@@ -279,7 +279,7 @@
     <Compile Include="Infrastructure\DbPropertyEntryTests.cs" />
     <Compile Include="Infrastructure\DbUpdateExceptionTests.cs" />
     <Compile Include="Infrastructure\DefaultDbProviderFactoryServiceTests.cs" />
-    <Compile Include="Infrastructure\DefaultManifestTokenServiceTests.cs" />
+    <Compile Include="Infrastructure\DefaultManifestTokenResolverTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\AppConfigDependencyResolverTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\CachingDependencyResolverTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\CompositeResolverTests.cs" />

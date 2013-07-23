@@ -10,12 +10,18 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
     /// </summary>
     public class FakeSqlConnection : DbConnection
     {
-        private readonly string _manifestToken;
         private readonly DbProviderFactory _factory;
+        private string _dataSource;
+        private string _database;
 
-        public FakeSqlConnection(string manifestToken = "2008", DbProviderFactory factory = null)
+        public FakeSqlConnection()
+            : this("2008")
         {
-            _manifestToken = manifestToken;
+        }
+
+        public FakeSqlConnection(string manifestToken, DbProviderFactory factory = null)
+        {
+            ManifestToken = manifestToken;
             _factory = factory ?? FakeSqlProviderFactory.Instance;
         }
 
@@ -28,12 +34,22 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
 
         public override string DataSource
         {
-            get { return null; }
+            get { return _dataSource; }
+        }
+
+        public void SetDataSource(string dataSource)
+        {
+            _dataSource = dataSource;
         }
 
         public override string Database
         {
-            get { return null; }
+            get { return _database; }
+        }
+
+        public void SetDatabase(string database)
+        {
+            _database = database;
         }
 
         public override string ServerVersion
@@ -46,10 +62,7 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
             get { return ConnectionState.Closed; }
         }
 
-        public string ManifestToken
-        {
-            get { return _manifestToken; }
-        }
+        public string ManifestToken { get; set; }
 
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
