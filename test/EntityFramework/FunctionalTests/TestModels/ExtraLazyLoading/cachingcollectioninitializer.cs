@@ -35,26 +35,37 @@ namespace LazyUnicorns
         public virtual void InitializeCollections(DbContext context, object entity)
         {
             var factories = _factories.GetOrAdd(
-                entity.GetType(), t =>
-                                      {
-                                          var list = new List<Tuple<string, Func<DbCollectionEntry, object>>>();
+                entity.GetType(),
+                t =>
+                    {
+                        var currentDetectChanges = context.Configuration.AutoDetectChangesEnabled;
+                        try
+                        {
+                            context.Configuration.AutoDetectChangesEnabled = false;
 
-                                          foreach (var property in t.GetProperties())
-                                          {
-                                              var collectionEntry = context.Entry(entity).Member(property.Name) as DbCollectionEntry;
+                            var list = new List<Tuple<string, Func<DbCollectionEntry, object>>>();
 
-                                              if (collectionEntry != null)
-                                              {
-                                                  var elementType = TryGetElementType(property);
-                                                  if (elementType != null)
-                                                  {
-                                                      list.Add(Tuple.Create(property.Name, CreateCollectionFactory(elementType)));
-                                                  }
-                                              }
-                                          }
+                            foreach (var property in t.GetProperties())
+                            {
+                                var collectionEntry = context.Entry(entity).Member(property.Name) as DbCollectionEntry;
 
-                                          return list;
-                                      });
+                                if (collectionEntry != null)
+                                {
+                                    var elementType = TryGetElementType(property);
+                                    if (elementType != null)
+                                    {
+                                        list.Add(Tuple.Create(property.Name, CreateCollectionFactory(elementType)));
+                                    }
+                                }
+                            }
+
+                            return list;
+                        }
+                        finally
+                        {
+                            context.Configuration.AutoDetectChangesEnabled = currentDetectChanges;
+                        }
+                    });
 
             foreach (var factory in factories)
             {
