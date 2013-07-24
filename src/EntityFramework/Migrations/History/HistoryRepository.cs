@@ -41,16 +41,16 @@ namespace System.Data.Entity.Migrations.History
         private bool _contextKeyColumnExists;
 
         public HistoryRepository(
-            string connectionString,
-            DbProviderFactory providerFactory,
-            string contextKey,
-            int? commandTimeout,
-            IEnumerable<string> schemas = null,
-            DbContext contextForInterception = null,
-            Func<DbConnection, string, HistoryContext> historyContextFactory = null)
+            string connectionString, 
+            DbProviderFactory providerFactory, 
+            string contextKey, 
+            int? commandTimeout, 
+            Func<DbConnection, string, HistoryContext> historyContextFactory, 
+            IEnumerable<string> schemas = null, DbContext contextForInterception = null)
             : base(connectionString, providerFactory)
         {
             DebugCheck.NotEmpty(contextKey);
+            DebugCheck.NotNull(historyContextFactory);
 
             _commandTimeout = commandTimeout;
 
@@ -60,10 +60,7 @@ namespace System.Data.Entity.Migrations.History
                     .Distinct();
 
             _contextForInterception = contextForInterception;
-
-            _historyContextFactory
-                = historyContextFactory
-                  ?? DbConfiguration.DependencyResolver.GetService<Func<DbConnection, string, HistoryContext>>();
+            _historyContextFactory = historyContextFactory;
 
             using (var connection = CreateConnection())
             {

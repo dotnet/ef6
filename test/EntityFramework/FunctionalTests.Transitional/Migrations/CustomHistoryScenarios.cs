@@ -99,7 +99,12 @@ namespace System.Data.Entity.Migrations
                 Assert.False(TableExists("MigrationsCustomers"));
                 Assert.False(TableExists("__Migrations"));
 
-                var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+                var historyRepository = new HistoryRepository(
+                    ConnectionString, 
+                    ProviderFactory, 
+                    "MyKey",
+                    null,
+                    _testHistoryContextFactoryA);
 
                 Assert.Null(historyRepository.GetLastModel());
             }
@@ -175,7 +180,7 @@ namespace System.Data.Entity.Migrations
             Assert.False(TableExists("MigrationsCustomers"));
             Assert.False(TableExists("__Migrations"));
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             Assert.Null(historyRepository.GetLastModel());
         }

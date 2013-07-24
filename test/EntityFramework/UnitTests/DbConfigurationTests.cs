@@ -603,6 +603,11 @@ namespace System.Data.Entity
                     "factory",
                     Assert.Throws<ArgumentNullException>(
                         () => new DbConfiguration().HistoryContext("Foo", null)).ParamName);
+
+                Assert.Equal(
+                    "factory",
+                    Assert.Throws<ArgumentNullException>(
+                        () => new DbConfiguration().HistoryContext(null)).ParamName);
             }
 
             [Fact]
@@ -614,6 +619,11 @@ namespace System.Data.Entity
                     Strings.ConfigurationLocked("HistoryContext"),
                     Assert.Throws<InvalidOperationException>(
                         () => configuration.HistoryContext("Foo", (e, d) => null)).Message);
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("HistoryContext"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.HistoryContext((e, d) => null)).Message);
             }
 
             [Fact]
@@ -625,6 +635,17 @@ namespace System.Data.Entity
                 new DbConfiguration(mockInternalConfiguration.Object).HistoryContext("Foo", factory);
 
                 mockInternalConfiguration.Verify(m => m.RegisterSingleton(factory, "Foo"));
+            }
+
+            [Fact]
+            public void Default_factory_method_delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
+                Func<DbConnection, string, HistoryContext> factory = (e, d) => null;
+
+                new DbConfiguration(mockInternalConfiguration.Object).HistoryContext(factory);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(factory));
             }
         }
 

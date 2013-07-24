@@ -364,7 +364,8 @@ namespace System.Data.Entity.Migrations
                 new HistoryRepository(
                     ConnectionString, ProviderFactory,
                     "System.Data.Entity.Migrations.DbMigrationsConfiguration",
-                    null).GetLastModel());
+                    null,
+                    HistoryContext.DefaultFactory).GetLastModel());
 
             migrator.Update();
 
@@ -373,7 +374,8 @@ namespace System.Data.Entity.Migrations
                 new HistoryRepository(
                     ConnectionString, ProviderFactory,
                     "System.Data.Entity.Migrations.DbMigrationsConfiguration",
-                    null).GetLastModel());
+                    null,
+                    HistoryContext.DefaultFactory).GetLastModel());
         }
 
         [MigrationsTheory]
@@ -381,7 +383,7 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var migrator = CreateMigrator<ShopContext_v2>(automaticDataLossEnabled: true);
 
@@ -423,7 +425,7 @@ namespace System.Data.Entity.Migrations
 
             Assert.False(TableExists("MigrationsCustomers"));
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             Assert.Null(historyRepository.GetLastModel());
         }
@@ -457,7 +459,7 @@ namespace System.Data.Entity.Migrations
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var migrator = CreateMigrator<ShopContext_v2>();
 

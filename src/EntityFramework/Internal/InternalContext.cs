@@ -123,7 +123,7 @@ namespace System.Data.Entity.Internal
 
         private DatabaseLogFormatter _logFormatter;
 
-        private string _migrationsConfigurationContextKey;
+        private DbMigrationsConfiguration _migrationsConfiguration;
         private bool? _migrationsConfigurationDiscovered;
 
         protected InternalContext(DbContext owner, Lazy<DbDispatchers> dispatchers = null)
@@ -321,8 +321,9 @@ namespace System.Data.Entity.Internal
                 ProviderFactory,
                 ContextKey,
                 CommandTimeout,
-                new [] { DefaultSchema },
-                Owner);
+                HistoryContextFactory,
+                schemas: new [] { DefaultSchema },
+                contextForInterception: Owner);
         }
 
         /// <summary>
@@ -1460,7 +1461,17 @@ namespace System.Data.Entity.Internal
         {
             get
             {
-                return MigrationsConfigurationDiscovered ? _migrationsConfigurationContextKey : DefaultContextKey;
+                return MigrationsConfigurationDiscovered ? _migrationsConfiguration.ContextKey : DefaultContextKey;
+            }
+        }
+
+        public Func<DbConnection, string, HistoryContext> HistoryContextFactory
+        {
+            get
+            {
+                return (MigrationsConfigurationDiscovered
+                            ? _migrationsConfiguration
+                            : new DbMigrationsConfiguration()).GetHistoryContextFactory(ProviderName);
             }
         }
 
@@ -1477,7 +1488,7 @@ namespace System.Data.Entity.Internal
 
                     if (discoveredConfig != null)
                     {
-                        _migrationsConfigurationContextKey = discoveredConfig.ContextKey;
+                        _migrationsConfiguration = discoveredConfig;
                         _migrationsConfigurationDiscovered = true;
                     }
                     else

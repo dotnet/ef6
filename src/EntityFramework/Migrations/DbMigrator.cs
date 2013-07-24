@@ -146,9 +146,9 @@ namespace System.Data.Entity.Migrations
                         _providerFactory,
                         _configuration.ContextKey,
                         _configuration.CommandTimeout,
-                        new[] { _defaultSchema }.Concat(GetHistorySchemas()),
-                        _contextForInterception,
-                        _historyContextFactory);
+                        _historyContextFactory, 
+                        schemas: new[] { _defaultSchema }.Concat(GetHistorySchemas()), 
+                        contextForInterception: _contextForInterception);
 
                 _providerManifestToken
                     = context.InternalContext.ModelProviderInfo != null

@@ -146,7 +146,7 @@ namespace System.Data.Entity.Migrations
         /// </summary>
         /// <param name="providerInvariantName"> Name of the database provider to get thefactory for. </param>
         /// <returns> The history context factory that is set for the database provider. </returns>
-        public Func<DbConnection, string, HistoryContext> GetHistoryContextFactory(string providerInvariantName)
+        public Func<DbConnection, string, HistoryContext>   GetHistoryContextFactory(string providerInvariantName)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
 

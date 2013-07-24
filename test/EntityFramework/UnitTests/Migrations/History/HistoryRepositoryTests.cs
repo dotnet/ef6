@@ -54,7 +54,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var createTableOperation = GetCreateHistoryTableOperation();
 
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             Assert.Equal(150, historyRepository.MigrationIdMaxLength);
             Assert.Equal(300, historyRepository.ContextKeyMaxLength);
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var commandTrees = historyRepository.CreateDiscoveryQueryTrees();
 
@@ -105,7 +105,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var createTableOperation = GetCreateHistoryTableOperation();
 
@@ -127,7 +127,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var createTableOperation = GetCreateHistoryTableOperation();
 
@@ -149,7 +149,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             Assert.False(historyRepository.GetUpgradeOperations().Any());
         }
@@ -160,7 +160,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
@@ -184,7 +184,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
@@ -204,10 +204,10 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository1
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey1", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey1", null, HistoryContext.DefaultFactory);
 
             var historyRepository2
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey2", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey2", null, HistoryContext.DefaultFactory);
 
             ExecuteOperations(GetCreateHistoryTableOperation());
 
@@ -228,7 +228,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
@@ -255,10 +255,10 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository1
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey1", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey1", null, HistoryContext.DefaultFactory);
 
             var historyRepository2
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey2", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey2", null, HistoryContext.DefaultFactory);
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
@@ -287,7 +287,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             ExecuteOperations(GetCreateHistoryTableOperation());
 
@@ -310,7 +310,11 @@ namespace System.Data.Entity.Migrations.History
         {
             var historyRepository
                 = new HistoryRepository(
-                    ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"), ProviderFactory, "MyKey", null);
+                    ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"), 
+                    ProviderFactory, 
+                    "MyKey",
+                    null, 
+                    HistoryContext.DefaultFactory);
 
             Assert.Null(historyRepository.GetMigrationId(DbMigrator.InitialDatabase));
         }
@@ -321,7 +325,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             ExecuteOperations(GetCreateHistoryTableOperation());
 
@@ -346,10 +350,10 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository1
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey1", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey1", null, HistoryContext.DefaultFactory);
 
             var historyRepository2
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey2", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey2", null, HistoryContext.DefaultFactory);
 
             ExecuteOperations(GetCreateHistoryTableOperation());
 
@@ -376,7 +380,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             ExecuteOperations(GetCreateHistoryTableOperation());
 
@@ -400,7 +404,7 @@ namespace System.Data.Entity.Migrations.History
             var historyRepository
                 = new HistoryRepository(
                     ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
-                    ProviderFactory, "MyKey", null);
+                    ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             Assert.False(historyRepository.GetPendingMigrations(Enumerable.Empty<string>()).Any());
         }
@@ -410,7 +414,7 @@ namespace System.Data.Entity.Migrations.History
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             Assert.False(historyRepository.GetPendingMigrations(Enumerable.Empty<string>()).Any());
         }
@@ -420,7 +424,7 @@ namespace System.Data.Entity.Migrations.History
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             Assert.False(historyRepository.GetPendingMigrations(Enumerable.Empty<string>()).Any());
         }
@@ -430,7 +434,7 @@ namespace System.Data.Entity.Migrations.History
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
@@ -453,8 +457,8 @@ namespace System.Data.Entity.Migrations.History
         {
             ResetDatabase();
 
-            var historyRepository1 = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey1", null);
-            var historyRepository2 = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey2", null);
+            var historyRepository1 = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey1", null, HistoryContext.DefaultFactory);
+            var historyRepository2 = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey2", null, HistoryContext.DefaultFactory);
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
@@ -478,7 +482,7 @@ namespace System.Data.Entity.Migrations.History
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
@@ -498,7 +502,7 @@ namespace System.Data.Entity.Migrations.History
             var historyRepository
                 = new HistoryRepository(
                     ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
-                    ProviderFactory, "MyKey", null);
+                    ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var modelBuilder = new DbModelBuilder();
 
@@ -512,7 +516,7 @@ namespace System.Data.Entity.Migrations.History
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
             var modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<MigrationsCustomer>();
@@ -525,7 +529,7 @@ namespace System.Data.Entity.Migrations.History
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
             var modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<MigrationsCustomer>();
@@ -538,7 +542,7 @@ namespace System.Data.Entity.Migrations.History
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var model1 = CreateContext<ShopContext_v1>().GetModel();
 
@@ -563,7 +567,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository1
-                = new HistoryRepository(ConnectionString, ProviderFactory, "Key1", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "Key1", null, HistoryContext.DefaultFactory);
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
@@ -572,7 +576,7 @@ namespace System.Data.Entity.Migrations.History
                 historyRepository1.CreateInsertOperation("Migration 1", model));
 
             var historyRepository2
-                = new HistoryRepository(ConnectionString, ProviderFactory, "Key2", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "Key2", null, HistoryContext.DefaultFactory);
 
             ExecuteOperations(
                 new[] { historyRepository2.CreateInsertOperation("Migration 2", model) });
@@ -595,7 +599,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository1
-                = new HistoryRepository(ConnectionString, ProviderFactory, "Key1", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "Key1", null, HistoryContext.DefaultFactory);
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
@@ -604,7 +608,7 @@ namespace System.Data.Entity.Migrations.History
                 historyRepository1.CreateInsertOperation("Migration 1", model));
 
             var historyRepository2
-                = new HistoryRepository(ConnectionString, ProviderFactory, "Key2", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "Key2", null, HistoryContext.DefaultFactory);
 
             ExecuteOperations(
                 new[] { historyRepository2.CreateInsertOperation("Migration 2", model) });
@@ -622,7 +626,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "LegacyKey", null)
+                = new HistoryRepository(ConnectionString, ProviderFactory, "LegacyKey", null, HistoryContext.DefaultFactory)
                       {
                           CurrentSchema = "foo"
                       };
@@ -634,7 +638,13 @@ namespace System.Data.Entity.Migrations.History
                 historyRepository.CreateInsertOperation("Migration", model));
 
             historyRepository
-                = new HistoryRepository(ConnectionString, ProviderFactory, "NewKey", null, new[] { "foo" });
+                = new HistoryRepository(
+                    ConnectionString, 
+                    ProviderFactory, 
+                    "NewKey", 
+                    null, 
+                    HistoryContext.DefaultFactory,
+                    schemas: new[] { "foo" });
 
             string migrationId;
             model = historyRepository.GetLastModel(out migrationId, "LegacyKey");
@@ -649,7 +659,7 @@ namespace System.Data.Entity.Migrations.History
             ResetDatabase();
 
             var historyRepository1
-                = new HistoryRepository(ConnectionString, ProviderFactory, "Key1", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "Key1", null, HistoryContext.DefaultFactory);
 
             var model = CreateContext<ShopContext_v1>().GetModel();
 
@@ -658,7 +668,7 @@ namespace System.Data.Entity.Migrations.History
                 historyRepository1.CreateInsertOperation("Migration 1", model));
 
             var historyRepository2
-                = new HistoryRepository(ConnectionString, ProviderFactory, "Key2", null);
+                = new HistoryRepository(ConnectionString, ProviderFactory, "Key2", null, HistoryContext.DefaultFactory);
 
             ExecuteOperations(
                 new[] { historyRepository2.CreateInsertOperation("Migration 2", model) });
@@ -678,7 +688,7 @@ namespace System.Data.Entity.Migrations.History
             var historyRepository
                 = new HistoryRepository(
                     ConnectionString.Replace(DatabaseProviderFixture.DefaultDatabaseName, "NoSuchDatabase"),
-                    ProviderFactory, "MyKey", null);
+                    ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             Assert.False(historyRepository.Exists());
         }
@@ -688,7 +698,7 @@ namespace System.Data.Entity.Migrations.History
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             Assert.False(historyRepository.Exists());
         }
@@ -698,7 +708,7 @@ namespace System.Data.Entity.Migrations.History
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             ExecuteOperations(GetCreateHistoryTableOperation());
 
@@ -710,7 +720,7 @@ namespace System.Data.Entity.Migrations.History
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             ExecuteOperations(GetCreateHistoryTableOperation());
 
@@ -742,7 +752,7 @@ namespace System.Data.Entity.Migrations.History
         {
             ResetDatabase();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var createHistoryTableOperation = GetCreateHistoryTableOperation();
 
@@ -784,7 +794,7 @@ namespace System.Data.Entity.Migrations.History
 
             var modelDocument = model.GetModel();
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var historyOperation
                 = (HistoryOperation)historyRepository.CreateInsertOperation("Migration1", modelDocument);
@@ -809,7 +819,7 @@ namespace System.Data.Entity.Migrations.History
                 EdmxWriter.WriteEdmx(model, xmlWriter);
             }
 
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             var historyOperation
                 = (HistoryOperation)historyRepository.CreateDeleteOperation("Migration1");
@@ -880,13 +890,13 @@ namespace System.Data.Entity.Migrations.History
                 }
             }
 
-            return new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null);
+            return new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
         }
 
         [MigrationsTheory]
         public void HistoryRepository_sets_timeout_onto_HistoryContext()
         {
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", 77);
+            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", 77, HistoryContext.DefaultFactory);
 
             using (var connection = new SqlConnection())
             {
@@ -901,7 +911,14 @@ namespace System.Data.Entity.Migrations.History
         public void HistoryRepository_updates_interception_context()
         {
             var owner = new Mock<DbContext>().Object;
-            var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, null, owner);
+            var historyRepository = new HistoryRepository(
+                ConnectionString, 
+                ProviderFactory, 
+                "MyKey", 
+                null, 
+                HistoryContext.DefaultFactory,
+                schemas: null, 
+                contextForInterception: owner);
 
             using (var connection = ProviderFactory.CreateConnection())
             {

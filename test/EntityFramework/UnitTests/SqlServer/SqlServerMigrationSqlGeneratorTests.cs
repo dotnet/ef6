@@ -33,7 +33,8 @@ namespace System.Data.Entity.SqlServer
                     DbProviderFactories.GetFactory(ProviderRegistry.Sql2008_ProviderInfo.ProviderInvariantName),
                     "MyKey",
                     null,
-                    new[] { "dbo", "foo", "bar" });
+                    HistoryContext.DefaultFactory,
+                    schemas: new[] { "dbo", "foo", "bar" });
 
             var updateDatabaseOperation
                 = new UpdateDatabaseOperation(historyRepository.CreateDiscoveryQueryTrees().ToList());

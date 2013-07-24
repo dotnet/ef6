@@ -2,11 +2,14 @@
 
 namespace System.Data.Entity.Internal
 {
+    using System.Data.Common;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
+    using System.Data.Entity.SqlServer;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
@@ -69,9 +72,12 @@ namespace System.Data.Entity.Internal
 
         public class DiscoverableConfiguration : DbMigrationsConfiguration<ContextWithMigrations>
         {
+            public static readonly Func<DbConnection, string, HistoryContext> NewFactory = (c, s) => new HistoryContext(c, s);
+
             public DiscoverableConfiguration()
             {
                 ContextKey = "My Key";
+                SetHistoryContextFactory(SqlProviderServices.ProviderInvariantName, NewFactory);
             }
         }
 
@@ -89,6 +95,35 @@ namespace System.Data.Entity.Internal
             {
                 Database.SetInitializer<ContextWithoutMigrations>(null);
             }
+        }
+
+        [Fact]
+        public void HistoryContextFactory_returns_factory_from_Migrations_configuration_if_discovered()
+        {
+            Assert.Same(DiscoverableConfiguration.NewFactory, new ContextWithMigrations().InternalContext.HistoryContextFactory);
+        }
+
+        [Fact]
+        public void HistoryContextFactory_returns_factory_for_given_provider_invariant_name_if_registered()
+        {
+            Func<DbConnection, string, HistoryContext> newFactory = (c, s) => new HistoryContext(c, s);
+            try
+            {
+                MutableResolver.AddResolver<Func<DbConnection, string, HistoryContext>>(
+                    new SingletonDependencyResolver<Func<DbConnection, string, HistoryContext>>(newFactory, SqlProviderServices.ProviderInvariantName));
+
+                Assert.Same(newFactory, new ContextWithoutMigrations().InternalContext.HistoryContextFactory);
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
+        }
+
+        [Fact]
+        public void HistoryContextFactory_returns_default_factory_if_none_other_found()
+        {
+            Assert.Same(HistoryContext.DefaultFactory, new ContextWithoutMigrations().InternalContext.HistoryContextFactory);
         }
 
         [Fact]

@@ -32,7 +32,8 @@ namespace System.Data.Entity.SqlServerCompact
                         .CreateConnection("Foo").ConnectionString,
                     DbProviderFactories.GetFactory(providerInvariantName),
                     "MyKey",
-                    null);
+                    null,
+                    HistoryContext.DefaultFactory);
 
             var updateDatabaseOperation
                 = new UpdateDatabaseOperation(historyRepository.CreateDiscoveryQueryTrees().ToList());

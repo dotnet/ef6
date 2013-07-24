@@ -412,7 +412,7 @@ namespace System.Data.Entity
         /// <remarks>
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
         ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
-        ///     <see cref="Func<DbContext, IDbModelCacheKey>" />. This means that, if desired, the same functionality can
+        ///     <see cref="Func{DbContext, IDbModelCacheKey}" />. This means that, if desired, the same functionality can
         ///     be achieved using a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="keyFactory"> The key factory. </param>
@@ -426,8 +426,37 @@ namespace System.Data.Entity
 
         /// <summary>
         ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
+        ///     a <see cref="Func{DbConnection, String, HistoryContext}" /> delegate which which be used for 
+        ///     creation of the default  <see cref="Migrations.History.HistoryContext" /> for a any
+        ///     <see cref="DbMigrationsConfiguration" />. This default factory will only be used if no factory is
+        ///     set explicitly in the <see cref="DbMigrationsConfiguration" /> and if no factory has been registered
+        ///     for the provider in use using the
+        ///     <see cref="HistoryContext(String, Func{DbConnection, String, System.Data.Entity.Migrations.History.HistoryContext})"/>
+        ///     method.
+        /// </summary>
+        /// <remarks>
+        ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        ///     Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        ///     <see cref="Func{DbConnection, String, HistoryContext}" />. This means that, if desired, the same functionality
+        ///     can be achieved using a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="factory"> 
+        /// A factory for creating <see cref="Migrations.History.HistoryContext"/> instances for a given <see cref="DbConnection"/> and
+        /// <see cref="String"/> representing the default schema.
+        /// </param>
+        protected internal void HistoryContext(Func<DbConnection, string, HistoryContext> factory)
+        {
+            Check.NotNull(factory, "factory");
+
+            _internalConfiguration.CheckNotLocked("HistoryContext");
+            _internalConfiguration.RegisterSingleton(factory);
+        }
+
+        /// <summary>
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
         ///     a <see cref="Func{DbConnection, String, HistoryContext}" /> delegate which allows for creation of a customized
-        ///     <see cref="Migrations.History.HistoryContext" /> for a given <see cref="DbMigrationsConfiguration" />.
+        ///     <see cref="Migrations.History.HistoryContext" /> for the given provider for any <see cref="DbMigrationsConfiguration" /> 
+        ///     that does not have an explicit factory set.
         /// </summary>
         /// <remarks>
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
