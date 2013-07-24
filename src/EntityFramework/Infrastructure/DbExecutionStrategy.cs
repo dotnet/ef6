@@ -235,7 +235,7 @@ namespace System.Data.Entity.Infrastructure
                 }
                 catch (Exception ex)
                 {
-                    if (!ShouldRetryOn(ex))
+                    if (!UnwrapAndHandleException(ex, ShouldRetryOn))
                     {
                         throw;
                     }

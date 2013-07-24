@@ -314,7 +314,7 @@ namespace System.Data.Entity.Infrastructure
                                                       {
                                                           if (executionCount++ < 3)
                                                           {
-                                                              throw new ExternalException();
+                                                              throw new DbUpdateException("", new ExternalException());
                                                           }
 
                                                           return executionCount;
@@ -646,7 +646,7 @@ namespace System.Data.Entity.Infrastructure
                                                       {
                                                           if (executionCount++ < 3)
                                                           {
-                                                              throw new ExternalException();
+                                                              throw new DbUpdateException("", new ExternalException());
                                                           }
 
                                                           return Task.FromResult(executionCount);
