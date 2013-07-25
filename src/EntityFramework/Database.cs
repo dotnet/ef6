@@ -665,7 +665,7 @@ namespace System.Data.Entity
         /// </summary>
         /// <remarks>
         ///     The format of the log text can be changed by creating a new formatter that derives from
-        ///     <see cref="DatabaseLogFormatter" /> and setting it with <see cref="DbConfiguration.DatabaseLogFormatter" />.
+        ///     <see cref="DatabaseLogFormatter" /> and setting it with <see cref="DbConfiguration.SetDatabaseLogFormatter" />.
         ///     For more low-level control over logging/interception see <see cref="IDbCommandInterceptor" /> and
         ///     <see cref="DbInterception" />.
         /// </remarks>
