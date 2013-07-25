@@ -13222,7 +13222,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        ///     A string like "The property '{0}' cannot be configured. Only scalar properties can be configured using lightweight conventions."
+        ///     A string like "The property '{0}' cannot be configured. Only scalar properties can be configured using the Property method."
         /// </summary>
         internal static string LightweightEntityConfiguration_NonScalarProperty(object p0)
         {
