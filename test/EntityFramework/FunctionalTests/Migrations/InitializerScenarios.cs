@@ -126,7 +126,7 @@ namespace System.Data.Entity.Migrations.UpDownUp
         }
     }
 
-    [GeneratedCode("EntityFramework.Migrations", "6.0.0-beta1")]
+    [GeneratedCode("EntityFramework.Migrations", "6.0.0-rc1")]
     public sealed partial class Test : IMigrationMetadata
     {
         string IMigrationMetadata.Id
@@ -162,7 +162,7 @@ namespace System.Data.Entity.Migrations.UpDownUp
         }
     }
 
-    [GeneratedCode("EntityFramework.Migrations", "6.0.0-beta1")]
+    [GeneratedCode("EntityFramework.Migrations", "6.0.0-rc1")]
     public sealed partial class Second : IMigrationMetadata
     {
         string IMigrationMetadata.Id
