@@ -28,7 +28,7 @@ namespace ConsoleApplication1
     {
         public MyConfiguration()
         {
-            ProviderServices(""My.New.SqlClient"", SqlProviderServices.Instance);
+            SetProviderServices(""My.New.SqlClient"", SqlProviderServices.Instance);
         }
     }
     

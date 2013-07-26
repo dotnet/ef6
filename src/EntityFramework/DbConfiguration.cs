@@ -154,7 +154,7 @@ namespace System.Data.Entity
         /// </summary>
         /// <remarks>
         ///     A <see cref="DbProviderServices" /> implementation is automatically registered as a default resolver
-        ///     when it is added with a call to <see cref="ProviderServices"/>. This allows EF providers to act as
+        ///     when it is added with a call to <see cref="SetProviderServices"/>. This allows EF providers to act as
         ///     resolvers for other services that may need to be overridden by the provider.
         /// </remarks>
         /// <param name="resolver"> The resolver to add. </param>
@@ -192,12 +192,12 @@ namespace System.Data.Entity
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this provider will be used. </param>
         /// <param name="provider"> The provider instance. </param>
         [CLSCompliant(false)]
-        protected internal void ProviderServices(string providerInvariantName, DbProviderServices provider)
+        protected internal void SetProviderServices(string providerInvariantName, DbProviderServices provider)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
             Check.NotNull(provider, "provider");
 
-            _internalConfiguration.CheckNotLocked("ProviderServices");
+            _internalConfiguration.CheckNotLocked("SetProviderServices");
             _internalConfiguration.RegisterSingleton(provider, providerInvariantName);
 
             AddDefaultResolver(provider);
@@ -216,19 +216,18 @@ namespace System.Data.Entity
         /// </remarks>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this provider will be used. </param>
         /// <param name="providerFactory"> The provider instance. </param>
-        [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "1#"), CLSCompliant(false)]
-        protected internal void ProviderFactory(string providerInvariantName, DbProviderFactory providerFactory)
+        protected internal void SetProviderFactory(string providerInvariantName, DbProviderFactory providerFactory)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
             Check.NotNull(providerFactory, "providerFactory");
 
-            _internalConfiguration.CheckNotLocked("ProviderFactory");
+            _internalConfiguration.CheckNotLocked("SetProviderFactory");
             _internalConfiguration.RegisterSingleton(providerFactory, providerInvariantName);
             _internalConfiguration.AddDependencyResolver(new InvariantNameResolver(providerFactory, providerInvariantName));
         }
 
         /// <summary>
-        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add an
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to register an
         ///     <see cref="IDbExecutionStrategy" /> for use with the provider represented by the given invariant name.
         /// </summary>
         /// <remarks>
@@ -239,18 +238,18 @@ namespace System.Data.Entity
         /// </remarks>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this execution strategy will be used. </param>
         /// <param name="getExecutionStrategy"> A function that returns a new instance of an execution strategy. </param>
-        protected internal void ExecutionStrategy(string providerInvariantName, Func<IDbExecutionStrategy> getExecutionStrategy)
+        protected internal void SetExecutionStrategy(string providerInvariantName, Func<IDbExecutionStrategy> getExecutionStrategy)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
             Check.NotNull(getExecutionStrategy, "getExecutionStrategy");
 
-            _internalConfiguration.CheckNotLocked("ExecutionStrategy");
+            _internalConfiguration.CheckNotLocked("SetExecutionStrategy");
             _internalConfiguration.AddDependencyResolver(
                 new ExecutionStrategyResolver<IDbExecutionStrategy>(providerInvariantName, /*serverName:*/ null, getExecutionStrategy));
         }
 
         /// <summary>
-        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add an
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to register an
         ///     <see cref="IDbExecutionStrategy" /> for use with the provider represented by the given invariant name and for a given server name.
         /// </summary>
         /// <remarks>
@@ -262,14 +261,14 @@ namespace System.Data.Entity
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this execution strategy will be used. </param>
         /// <param name="getExecutionStrategy"> A function that returns a new instance of an execution strategy. </param>
         /// <param name="serverName"> A string that will be matched against the server name in the connection string. </param>
-        protected internal void ExecutionStrategy(
+        protected internal void SetExecutionStrategy(
             string providerInvariantName, Func<IDbExecutionStrategy> getExecutionStrategy, string serverName)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
             Check.NotEmpty(serverName, "serverName");
             Check.NotNull(getExecutionStrategy, "getExecutionStrategy");
 
-            _internalConfiguration.CheckNotLocked("ExecutionStrategy");
+            _internalConfiguration.CheckNotLocked("SetExecutionStrategy");
             _internalConfiguration.AddDependencyResolver(
                 new ExecutionStrategyResolver<IDbExecutionStrategy>(providerInvariantName, serverName, getExecutionStrategy));
         }
@@ -291,12 +290,11 @@ namespace System.Data.Entity
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="connectionFactory"> The connection factory. </param>
-        [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
-        protected internal void ConnectionFactory(IDbConnectionFactory connectionFactory)
+        protected internal void SetDefaultConnectionFactory(IDbConnectionFactory connectionFactory)
         {
             Check.NotNull(connectionFactory, "connectionFactory");
 
-            _internalConfiguration.CheckNotLocked("ConnectionFactory");
+            _internalConfiguration.CheckNotLocked("SetDefaultConnectionFactory");
             _internalConfiguration.RegisterSingleton(connectionFactory);
         }
 
@@ -305,14 +303,13 @@ namespace System.Data.Entity
         ///     set the pluralization service.
         /// </summary>
         /// <param name="pluralizationService"> The pluralization service to use. </param>
-        [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Pluralization")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "pluralization")]
-        protected internal void PluralizationService(IPluralizationService pluralizationService)
+        protected internal void SetPluralizationService(IPluralizationService pluralizationService)
         {
             Check.NotNull(pluralizationService, "pluralizationService");
 
-            _internalConfiguration.CheckNotLocked("PluralizationService");
+            _internalConfiguration.CheckNotLocked("SetPluralizationService");
             _internalConfiguration.RegisterSingleton(pluralizationService);
         }
 
@@ -331,14 +328,14 @@ namespace System.Data.Entity
         /// </remarks>
         /// <typeparam name="TContext"> The type of the context. </typeparam>
         /// <param name="initializer"> The initializer to use, or null to disable initialization for the given context type. </param>
-        protected internal void DatabaseInitializer<TContext>(IDatabaseInitializer<TContext> initializer) where TContext : DbContext
+        protected internal void SetDatabaseInitializer<TContext>(IDatabaseInitializer<TContext> initializer) where TContext : DbContext
         {
-            _internalConfiguration.CheckNotLocked("DatabaseInitializer");
+            _internalConfiguration.CheckNotLocked("SetDatabaseInitializer");
             _internalConfiguration.RegisterSingleton(initializer ?? new NullDatabaseInitializer<TContext>());
         }
 
         /// <summary>
-        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add a
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to register a
         ///     <see cref="Migrations.Sql.MigrationSqlGenerator" /> for use with the provider represented by the given invariant name.
         /// </summary>
         /// <remarks>
@@ -353,12 +350,12 @@ namespace System.Data.Entity
         /// </remarks>
         /// <param name="providerInvariantName"> The invariant name of the ADO.NET provider for which this generator should be used. </param>
         /// <param name="sqlGenerator"> A delegate that returns a new instance of the SQL generator each time it is called. </param>
-        protected internal void MigrationSqlGenerator(string providerInvariantName, Func<MigrationSqlGenerator> sqlGenerator)
+        protected internal void SetMigrationSqlGenerator(string providerInvariantName, Func<MigrationSqlGenerator> sqlGenerator)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
             Check.NotNull(sqlGenerator, "sqlGenerator");
 
-            _internalConfiguration.CheckNotLocked("MigrationSqlGenerator");
+            _internalConfiguration.CheckNotLocked("SetMigrationSqlGenerator");
             _internalConfiguration.RegisterSingleton(sqlGenerator, providerInvariantName);
         }
 
@@ -374,11 +371,11 @@ namespace System.Data.Entity
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="resolver"> The manifest token resolver. </param>
-        protected internal void ManifestTokenResolver(IManifestTokenResolver resolver)
+        protected internal void SetManifestTokenResolver(IManifestTokenResolver resolver)
         {
             Check.NotNull(resolver, "resolver");
 
-            _internalConfiguration.CheckNotLocked("ManifestTokenResolver");
+            _internalConfiguration.CheckNotLocked("SetManifestTokenResolver");
             _internalConfiguration.RegisterSingleton(resolver);
         }
 
@@ -395,12 +392,11 @@ namespace System.Data.Entity
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="providerFactoryResolver"> The provider factory service. </param>
-        [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
-        protected internal void ProviderFactoryResolver(IDbProviderFactoryResolver providerFactoryResolver)
+        protected internal void SetProviderFactoryResolver(IDbProviderFactoryResolver providerFactoryResolver)
         {
             Check.NotNull(providerFactoryResolver, "providerFactoryResolver");
 
-            _internalConfiguration.CheckNotLocked("ProviderFactoryResolver");
+            _internalConfiguration.CheckNotLocked("SetProviderFactoryResolver");
             _internalConfiguration.RegisterSingleton(providerFactoryResolver);
         }
 
@@ -416,11 +412,11 @@ namespace System.Data.Entity
         ///     be achieved using a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="keyFactory"> The key factory. </param>
-        protected internal void ModelCacheKey(Func<DbContext, IDbModelCacheKey> keyFactory)
+        protected internal void SetModelCacheKey(Func<DbContext, IDbModelCacheKey> keyFactory)
         {
             Check.NotNull(keyFactory, "keyFactory");
 
-            _internalConfiguration.CheckNotLocked("ModelCacheKey");
+            _internalConfiguration.CheckNotLocked("SetModelCacheKey");
             _internalConfiguration.RegisterSingleton(keyFactory);
         }
 
@@ -431,7 +427,7 @@ namespace System.Data.Entity
         ///     <see cref="DbMigrationsConfiguration" />. This default factory will only be used if no factory is
         ///     set explicitly in the <see cref="DbMigrationsConfiguration" /> and if no factory has been registered
         ///     for the provider in use using the
-        ///     <see cref="HistoryContext(String, Func{DbConnection, String, System.Data.Entity.Migrations.History.HistoryContext})"/>
+        ///     <see cref="SetHistoryContext(string,System.Func{System.Data.Common.DbConnection,string,System.Data.Entity.Migrations.History.HistoryContext})"/>
         ///     method.
         /// </summary>
         /// <remarks>
@@ -444,11 +440,11 @@ namespace System.Data.Entity
         /// A factory for creating <see cref="Migrations.History.HistoryContext"/> instances for a given <see cref="DbConnection"/> and
         /// <see cref="String"/> representing the default schema.
         /// </param>
-        protected internal void HistoryContext(Func<DbConnection, string, HistoryContext> factory)
+        protected internal void SetDefaultHistoryContext(Func<DbConnection, string, HistoryContext> factory)
         {
             Check.NotNull(factory, "factory");
 
-            _internalConfiguration.CheckNotLocked("HistoryContext");
+            _internalConfiguration.CheckNotLocked("SetDefaultHistoryContext");
             _internalConfiguration.RegisterSingleton(factory);
         }
 
@@ -469,12 +465,12 @@ namespace System.Data.Entity
         /// A factory for creating <see cref="Migrations.History.HistoryContext"/> instances for a given <see cref="DbConnection"/> and
         /// <see cref="String"/> representing the default schema.
         /// </param>
-        protected internal void HistoryContext(string providerInvariantName, Func<DbConnection, string, HistoryContext> factory)
+        protected internal void SetHistoryContext(string providerInvariantName, Func<DbConnection, string, HistoryContext> factory)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
             Check.NotNull(factory, "factory");
 
-            _internalConfiguration.CheckNotLocked("HistoryContext");
+            _internalConfiguration.CheckNotLocked("SetHistoryContext");
             _internalConfiguration.RegisterSingleton(factory, providerInvariantName);
         }
 
@@ -495,23 +491,23 @@ namespace System.Data.Entity
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="spatialProvider"> The spatial provider. </param>
-        protected internal void SpatialServices(DbSpatialServices spatialProvider)
+        protected internal void SetDefaultSpatialServices(DbSpatialServices spatialProvider)
         {
             Check.NotNull(spatialProvider, "spatialProvider");
 
-            _internalConfiguration.CheckNotLocked("SpatialServices");
+            _internalConfiguration.CheckNotLocked("SetDefaultSpatialServices");
             _internalConfiguration.RegisterSingleton(spatialProvider);
         }
 
         /// <summary>
-        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
         ///     an implementation of <see cref="DbSpatialServices" /> to use for a specific provider and provider
         ///     manifest token.
         /// </summary>
         /// <remarks>
-        ///     Use <see cref="SpatialServices(DbProviderInfo, DbSpatialServices)" />
+        ///     Use <see cref="SetSpatialServices(System.Data.Entity.Infrastructure.DbProviderInfo,System.Data.Entity.Spatial.DbSpatialServices)" />
         ///     to register spatial services for use only when a specific manifest token is returned by the provider.
-        ///     Use <see cref="SpatialServices(System.Data.Entity.Spatial.DbSpatialServices)" /> to register global
+        ///     Use <see cref="SetDefaultSpatialServices" /> to register global
         ///     spatial services to be used when provider information is not available or no provider-specific
         ///     spatial services are found.
         ///     This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
@@ -523,24 +519,24 @@ namespace System.Data.Entity
         ///     The <see cref="DbProviderInfo" /> indicating the type of ADO.NET connection for which this spatial provider will be used.
         /// </param>
         /// <param name="spatialProvider"> The spatial provider. </param>
-        protected internal void SpatialServices(DbProviderInfo key, DbSpatialServices spatialProvider)
+        protected internal void SetSpatialServices(DbProviderInfo key, DbSpatialServices spatialProvider)
         {
             Check.NotNull(key, "key");
             Check.NotNull(spatialProvider, "spatialProvider");
 
-            _internalConfiguration.CheckNotLocked("SpatialServices");
+            _internalConfiguration.CheckNotLocked("SetSpatialServices");
             _internalConfiguration.RegisterSingleton(spatialProvider, key);
         }
 
         /// <summary>
-        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to add
+        ///     Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
         ///     an implementation of <see cref="DbSpatialServices" /> to use for a specific provider with any
         ///     manifest token.
         /// </summary>
         /// <remarks>
-        ///     Use <see cref="SpatialServices(String, DbSpatialServices)"/> 
+        ///     Use <see cref="SetSpatialServices(string,System.Data.Entity.Spatial.DbSpatialServices)"/> 
         ///     to register spatial services for use when any manifest token is returned by the provider.
-        ///     Use <see cref="SpatialServices(System.Data.Entity.Spatial.DbSpatialServices)"/> to register global
+        ///     Use <see cref="SetDefaultSpatialServices"/> to register global
         ///     spatial services to be used when provider information is not available or no provider-specific
         ///     spatial services are found.
         /// 
@@ -551,12 +547,12 @@ namespace System.Data.Entity
         /// </remarks>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this spatial provider will be used. </param>
         /// <param name="spatialProvider"> The spatial provider. </param>
-        protected internal void SpatialServices(string providerInvariantName, DbSpatialServices spatialProvider)
+        protected internal void SetSpatialServices(string providerInvariantName, DbSpatialServices spatialProvider)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");
             Check.NotNull(spatialProvider, "spatialProvider");
 
-            _internalConfiguration.CheckNotLocked("SpatialServices");
+            _internalConfiguration.CheckNotLocked("SetSpatialServices");
             RegisterSpatialServices(providerInvariantName, spatialProvider);
         }
 
@@ -591,11 +587,11 @@ namespace System.Data.Entity
         /// </remarks>
         /// <param name="logFormatterFactory">A delegate that will create formatter instances.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        protected internal void DatabaseLogFormatter(Func<DbContext, Action<string>, DatabaseLogFormatter> logFormatterFactory)
+        protected internal void SetDatabaseLogFormatter(Func<DbContext, Action<string>, DatabaseLogFormatter> logFormatterFactory)
         {
             Check.NotNull(logFormatterFactory, "logFormatterFactory");
 
-            _internalConfiguration.CheckNotLocked("DatabaseLogFormatter");
+            _internalConfiguration.CheckNotLocked("SetDatabaseLogFormatter");
             _internalConfiguration.RegisterSingleton(logFormatterFactory);
         }
 
@@ -611,12 +607,11 @@ namespace System.Data.Entity
         ///     a custom resolver or a resolver backed by an Inversion-of-Control container.
         /// </remarks>
         /// <param name="interceptor">The interceptor to register.</param>
-        [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
-        protected internal void Interceptor(IDbInterceptor interceptor)
+        protected internal void AddInterceptor(IDbInterceptor interceptor)
         {
             Check.NotNull(interceptor, "interceptor");
 
-            _internalConfiguration.CheckNotLocked("Interceptor");
+            _internalConfiguration.CheckNotLocked("AddInterceptor");
             _internalConfiguration.RegisterSingleton(interceptor);
         }
 
@@ -652,6 +647,13 @@ namespace System.Data.Entity
         public new Type GetType()
         {
             return base.GetType();
+        }
+
+        /// <inheritdoc />
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected new object MemberwiseClone()
+        {
+            return base.MemberwiseClone();
         }
     }
 }

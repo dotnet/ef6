@@ -62,10 +62,10 @@ namespace System.Data.Entity.TestHelpers
 
         public FunctionalTestsConfiguration()
         {
-            ProviderServices(SqlCeProviderServices.ProviderInvariantName, SqlCeProviderServices.Instance);
-            ProviderServices(SqlProviderServices.ProviderInvariantName, SqlProviderServices.Instance);
+            SetProviderServices(SqlCeProviderServices.ProviderInvariantName, SqlCeProviderServices.Instance);
+            SetProviderServices(SqlProviderServices.ProviderInvariantName, SqlProviderServices.Instance);
 
-            ConnectionFactory(new DefaultUnitTestsConnectionFactory());
+            SetDefaultConnectionFactory(new DefaultUnitTestsConnectionFactory());
             AddDependencyResolver(new SingletonDependencyResolver<IManifestTokenResolver>(new FunctionalTestsManifestTokenResolver()));
         }
     }

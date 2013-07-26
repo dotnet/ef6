@@ -19,7 +19,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     /// </summary>
     /// <remarks>
     ///     To set the new formatter create a code-based configuration for EF using <see cref="DbConfiguration" /> and then
-    ///     set the formatter class to use with <see cref="DbConfiguration.DatabaseLogFormatter" />.
+    ///     set the formatter class to use with <see cref="DbConfiguration.SetDatabaseLogFormatter" />.
     ///     Note that setting the type of formatter to use with this method does change the way command are
     ///     logged when <see cref="Database.Log" /> is used. It is still necessary to set a <see cref="Action{String}" />
     ///     onto <see cref="Database.Log" /> before any commands will be logged.
