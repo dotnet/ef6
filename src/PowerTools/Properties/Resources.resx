@@ -165,7 +165,7 @@
     <value>One or more errors occurred while processing template '{0}'.</value>
   </data>
   <data name="ReverseEngineer_Complete" xml:space="preserve">
-    <value>Reverse engineer complete.</value>
+    <value>Reverse engineer complete in {0}.</value>
   </data>
   <data name="ReverseEngineer_Error" xml:space="preserve">
     <value>An error occurred while reverse engineering Code First. See the Output window for details.</value>
@@ -187,6 +187,9 @@
   </data>
   <data name="ReverseEngineer_LoadSchema" xml:space="preserve">
     <value>Loading schema information...</value>
+  </data>
+  <data name="ReverseEngineer_ProcessingClass" xml:space="preserve">
+    <value>Processing {0}...</value>
   </data>
   <data name="ReverseEngineer_SchemaError" xml:space="preserve">
     <value>One or more errors occurred while loading schema information.</value>
