@@ -570,6 +570,55 @@ namespace System.Data.Entity.Utilities
                 Assert.True(typeof(HidesGetHashCode).OverridesEqualsOrGetHashCode());
             }
         }
+
+        public class IsPublic
+        {
+            [Fact]
+            public void Returns_true_for_normal_public_types_and_false_for_internal_types()
+            {
+                Assert.True(typeof(NormalPublicClass).IsPublic());
+                Assert.False(typeof(NormalInternalClass).IsPublic());
+            }
+
+            [Fact]
+            public void Returns_true_for_public_types_nested_to_any_level_in_public_types()
+            {
+                Assert.True(typeof(NormalPublicClass.NestedPublicClass).IsPublic());
+                Assert.True(typeof(NormalPublicClass.NestedPublicClass.DoubleNestedPublicClass).IsPublic());
+            }
+
+            [Fact]
+            public void Returns_false_for_internal_or_pseudo_public_types_nested_at_some_level_in_an_internal_type()
+            {
+                Assert.False(typeof(NormalInternalClass.NestedPseudoPublicClass).IsPublic());
+                Assert.False(typeof(NormalInternalClass.NestedPseudoPublicClass.DoubleNestedPseudoPublicClass).IsPublic());
+                Assert.False(typeof(NormalInternalClass.NestedPseudoPublicClass.NestedInternalClass).IsPublic());
+            }
+        }
+    }
+
+    public class NormalPublicClass
+    {
+        public class NestedPublicClass
+        {
+            public class DoubleNestedPublicClass
+            {
+            }
+        }
+    }
+
+    internal class NormalInternalClass
+    {
+        public class NestedPseudoPublicClass
+        {
+            public class DoubleNestedPseudoPublicClass
+            {
+            }
+
+            internal class NestedInternalClass
+            {
+            }
+        }
     }
 }
 

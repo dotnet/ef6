@@ -280,7 +280,6 @@ namespace System.Data.Entity.Utilities
             return type.FullName.Replace('+', '.');
         }
 
-
         public static bool OverridesEqualsOrGetHashCode(this Type type)
         {
             DebugCheck.NotNull(type);
@@ -299,6 +298,11 @@ namespace System.Data.Entity.Utilities
             }
 
             return false;
+        }
+
+        public static bool IsPublic(this Type type)
+        {
+            return type.IsPublic || (type.IsNestedPublic && type.DeclaringType.IsPublic());
         }
     }
 }

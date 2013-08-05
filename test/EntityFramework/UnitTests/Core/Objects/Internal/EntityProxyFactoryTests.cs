@@ -88,6 +88,51 @@ namespace System.Data.Entity.Core.Objects.Internal
                             .WithRequiredPrincipal(e => e.WithRelationships);
             }
         }
+
+        [Fact] // CodePlex 997
+        public void It_is_not_erroneously_assumed_that_internal_nested_classes_can_be_proxied()
+        {
+            using (var context = new Context997())
+            {
+                // IsType checks exact type; will fail if types are proxies
+                Assert.IsType<NestingSiteA.Product997A>(context.ProductAs.Create());
+                Assert.IsType<NestingSiteB.NestingSiteB2.Product997B>(context.ProductBs.Create());
+            }
+        }
+
+        internal class Context997 : DbContext
+        {
+            static Context997()
+            {
+                Database.SetInitializer<Context997>(null);
+            }
+
+            public virtual DbSet<NestingSiteA.Product997A> ProductAs { get; set; }
+            public virtual DbSet<NestingSiteB.NestingSiteB2.Product997B> ProductBs { get; set; }
+        }
+
+        internal class NestingSiteA
+        {
+            // Public inside internal inside public; change-tracking proxy
+            public class Product997A
+            {
+                public virtual int Id { get; set; }
+                public virtual ICollection<Product997A> Products { get; set; }
+            }
+        }
+    }
+
+    internal class NestingSiteB
+    {
+        public class NestingSiteB2
+        {
+            // Public inside public inside internal; lazy-loading proxy
+            public class Product997B
+            {
+                public int Id { get; set; }
+                public virtual ICollection<Product997B> Products { get; set; }
+            }
+        }
     }
 
     public class ProxyWithRelationships
