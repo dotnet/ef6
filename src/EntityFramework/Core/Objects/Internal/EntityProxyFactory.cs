@@ -556,21 +556,24 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </remarks>
         private static bool CanProxyType(EntityType ospaceEntityType)
         {
-            var access = ospaceEntityType.ClrType.Attributes & TypeAttributes.VisibilityMask;
+            var clrType = ospaceEntityType.ClrType;
+
+            if (!clrType.IsPublic()
+                || clrType.IsSealed
+                || typeof(IEntityWithRelationships).IsAssignableFrom(clrType)
+                || ospaceEntityType.Abstract)
+            {
+                return false;
+            }
 
             var ctor =
-                ospaceEntityType.ClrType.GetConstructor(
+                clrType.GetConstructor(
                     BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null,
                     Type.EmptyTypes, null);
-            var accessableCtor = ctor != null && (((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Public) ||
-                                                  ((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Family) ||
-                                                  ((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.FamORAssem));
 
-            return (!(ospaceEntityType.Abstract ||
-                      ospaceEntityType.ClrType.IsSealed ||
-                      typeof(IEntityWithRelationships).IsAssignableFrom(ospaceEntityType.ClrType) ||
-                      !accessableCtor) &&
-                    (access == TypeAttributes.Public || access == TypeAttributes.NestedPublic));
+            return ctor != null && (((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Public) ||
+                                    ((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Family) ||
+                                    ((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.FamORAssem));
         }
 
         private static bool CanProxyMethod(MethodInfo method)
