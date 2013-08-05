@@ -295,6 +295,11 @@ namespace System.Data.Entity
         ///     a derived type.  If the table or tables queried may contain data for other entity
         ///     types, then the SQL query must be written appropriately to ensure that only entities of
         ///     the correct type are returned.
+        ///
+        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        ///     context.Blogs.SqlQuery("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        ///     context.Blogs.SqlQuery("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <param name="sql"> The SQL query string. </param>
         /// <param name="parameters"> The parameters to apply to the SQL query string. </param>
