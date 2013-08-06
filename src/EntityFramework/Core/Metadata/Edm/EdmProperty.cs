@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary> Creates a new enum property. </summary>
         /// <returns> The newly created property. </returns>
         /// <param name="name"> The name of the property. </param>
-        /// <param name="primitiveType"> The type of the property. </param>
+        /// <param name="enumType"> The type of the property. </param>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static EdmProperty CreateEnum(string name, EnumType enumType)
         {
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary> Creates a new complex property. </summary>
         /// <returns> The newly created property. </returns>
         /// <param name="name"> The name of the property. </param>
-        /// <param name="primitiveType"> The type of the property. </param>
+        /// <param name="complexType"> The type of the property. </param>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static EdmProperty CreateComplex(string name, ComplexType complexType)
         {

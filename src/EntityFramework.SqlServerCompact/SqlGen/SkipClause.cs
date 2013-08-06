@@ -23,8 +23,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <summary>
         ///     Creates a SkipClause with the given skipCount.
         /// </summary>
-        /// <param name="topCount"> </param>
-        /// <param name="withTies"> </param>
         internal SkipClause(ISqlFragment skipCount)
         {
             this.skipCount = skipCount;
@@ -33,8 +31,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <summary>
         ///     Creates a SkipClause with the given skipCount.
         /// </summary>
-        /// <param name="skipCount"> </param>
-        /// <param name="withTies"> </param>
         internal SkipClause(int skipCount)
         {
             var sqlBuilder = new SqlBuilder();
@@ -48,8 +44,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         ///     Write out the OFFSET part of sql select statement
         ///     It basically writes OFFSET X ROWS.
         /// </summary>
-        /// <param name="writer"> </param>
-        /// <param name="sqlGenerator"> </param>
         public void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {
             writer.Write("OFFSET ");

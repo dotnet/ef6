@@ -84,8 +84,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     In addition, if no required columns are specified and no optional columns are
         ///     marked as used, the first optional column is written.
         /// </summary>
-        /// <param name="writer"> </param>
-        /// <param name="sqlGenerator"> </param>
         public override void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {
             writer.Write("SELECT ");
@@ -117,8 +115,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     }
                     base.WriteSql(writer, sqlGenerator);
                 }
-                    //If no optional columns were printed and there were no other columns, 
-                    // print at least the first optional column
+                //If no optional columns were printed and there were no other columns, 
+                // print at least the first optional column
                 else if (!printedAny)
                 {
                     m_optionalColumns[0].MarkAsUsed();
@@ -136,8 +134,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     If this is the topmost statement or distict is specifed as part of the same statement
         ///     all optoinal columns are written.
         /// </summary>
-        /// <param name="writer"> </param>
-        /// <param name="sqlGenerator"> </param>
         /// <returns> Whether at least one column got written </returns>
         private bool WriteOptionalColumns(SqlWriter writer, SqlGenerator sqlGenerator)
         {

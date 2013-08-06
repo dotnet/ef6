@@ -34,8 +34,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <summary>
         ///     Creates a TopClause with the given topCount and withTies.
         /// </summary>
-        /// <param name="topCount"> </param>
-        /// <param name="withTies"> </param>
         internal TopClause(ISqlFragment topCount, bool withTies)
         {
             this.topCount = topCount;
@@ -46,8 +44,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         ///     Creates a TopClause with the given topCount and withTies.
         ///     This function is not called if we have both TOP and SKIP. In that case SqlSelectStatment.WriteOffsetFetch is used.
         /// </summary>
-        /// <param name="topCount"> </param>
-        /// <param name="withTies"> </param>
         internal TopClause(int topCount, bool withTies)
         {
             Debug.Assert(!withTies, "WITH TIES is not supported in Top clause");
@@ -64,8 +60,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         ///     It basically writes TOP (X) [WITH TIES].
         ///     The brackets around X are ommited for Sql8.
         /// </summary>
-        /// <param name="writer"> </param>
-        /// <param name="sqlGenerator"> </param>
         public void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {
             writer.Write("TOP ");

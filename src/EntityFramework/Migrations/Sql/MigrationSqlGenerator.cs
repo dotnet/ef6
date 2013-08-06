@@ -28,7 +28,7 @@ namespace System.Data.Entity.Migrations.Sql
         /// <param name="commandTrees">The command trees representing the commands for an insert, update or delete operation.</param>
         /// <param name="rowsAffectedParameter">The rows affected parameter name.</param>
         /// <param name="providerManifestToken">The provider manifest token.</param>
-        /// <returns></returns>
+        /// <returns>The SQL body for the stored procedure.</returns>
         public virtual string GenerateProcedureBody(
             ICollection<DbModificationCommandTree> commandTrees,
             string rowsAffectedParameter,

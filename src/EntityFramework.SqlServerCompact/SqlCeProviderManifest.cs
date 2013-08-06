@@ -160,7 +160,7 @@ namespace System.Data.Entity.SqlServerCompact
 
             switch (storeTypeName)
             {
-                    // for some types we just go with simple type usage with no facets
+                // for some types we just go with simple type usage with no facets
                 case "tinyint":
                 case "smallint":
                 case "bigint":
@@ -276,7 +276,7 @@ namespace System.Data.Entity.SqlServerCompact
         ///     This method takes a type and a set of facets and returns the best mapped equivalent type
         ///     in SQL Server, taking the store version into consideration.
         /// </summary>
-        /// <param name="storeType"> A TypeUsage encapsulating an EDM type and a set of facets </param>
+        /// <param name="edmType"> A TypeUsage encapsulating an EDM type and a set of facets </param>
         /// <returns> A TypeUsage encapsulating a store type and a set of facets </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override TypeUsage GetStoreType(TypeUsage edmType)

@@ -193,8 +193,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         ///         <item>Write each of the clauses (if it exists) as a string</item>
         ///     </list>
         /// </summary>
-        /// <param name="writer"> </param>
-        /// <param name="sqlGenerator"> </param>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {

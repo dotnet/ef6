@@ -161,8 +161,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         ///     This function needs to be removed till the
         ///     HasNulledOutFacetValues of TypeUsage class become public
         /// </summary>
-        /// <param name="type"> </param>
-        /// <returns> </returns>
         internal static bool HasNulledOutFacetValues(TypeUsage type)
         {
             var primitiveType = GetEdmType<PrimitiveType>(type);
@@ -193,8 +191,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <summary>
         ///     Returns the name of Primitive Data Type
         /// </summary>
-        /// <param name="type"> </param>
-        /// <returns> </returns>
         internal static string PrimitiveTypeName(TypeUsage type)
         {
             var primitiveType = GetEdmType<PrimitiveType>(type);

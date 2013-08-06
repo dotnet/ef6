@@ -42,8 +42,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         ///     Method to add a closing square brace escape for all
         ///     embedded closing square braces in a string
         /// </summary>
-        /// <param name="name"> </param>
-        /// <returns> </returns>
         public static string EscapeSquareBraceNames(string name)
         {
             return EscapeNames(name, ']');
@@ -53,9 +51,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         ///     Routine to replace an interesting character with itself
         ///     (to escape the interesting character)
         /// </summary>
-        /// <param name="name"> </param>
-        /// <param name="quote"> </param>
-        /// <returns> </returns>
         public static string EscapeNames(string name, char quote)
         {
             string outputName;
@@ -87,7 +82,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         ///     Check whether the database pointed to by the file name exists or not.
         /// </summary>
         /// <param name="fileName"> Database file path </param>
-        /// <returns> </returns>
         public static bool DatabaseExists(string fileName)
         {
             var expandedFileName = ReplaceDataDirectory(fileName);

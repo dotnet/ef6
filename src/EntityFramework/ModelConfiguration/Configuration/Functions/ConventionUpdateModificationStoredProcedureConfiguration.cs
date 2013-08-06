@@ -62,7 +62,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>Configures a parameter for this stored procedure.</summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        /// <param name="propertyName"> The property to configure the parameter for. </param>
+        /// <param name="propertyInfo"> The property to configure the parameter for. </param>
         /// <param name="parameterName"> The name of the parameter. </param>
         public ConventionUpdateModificationStoredProcedureConfiguration Parameter(
             PropertyInfo propertyInfo, string parameterName)
@@ -79,7 +79,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>Configures a parameter for this stored procedure.</summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        /// <param name="propertyExpression"> The name of the property to configure the parameter for. </param>
+        /// <param name="propertyName"> The name of the property to configure the parameter for. </param>
         /// <param name="currentValueParameterName">The current value parameter name.</param>
         /// <param name="originalValueParameterName">The original value parameter name.</param>
         public ConventionUpdateModificationStoredProcedureConfiguration Parameter(
@@ -94,7 +94,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>Configures a parameter for this stored procedure.</summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        /// <param name="propertyExpression"> The property to configure the parameter for. </param>
+        /// <param name="propertyInfo"> The property to configure the parameter for. </param>
         /// <param name="currentValueParameterName">The current value parameter name.</param>
         /// <param name="originalValueParameterName">The original value parameter name.</param>
         public ConventionUpdateModificationStoredProcedureConfiguration Parameter(
@@ -136,7 +136,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     This is used for database generated columns.
         /// </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        /// <param name="propertyName"> The property to configure the result for. </param>
+        /// <param name="propertyInfo"> The property to configure the result for. </param>
         /// <param name="columnName">The name of the result column.</param>
         public ConventionUpdateModificationStoredProcedureConfiguration Result(PropertyInfo propertyInfo, string columnName)
         {

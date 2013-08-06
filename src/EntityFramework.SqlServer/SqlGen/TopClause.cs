@@ -33,8 +33,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Creates a TopClause with the given topCount and withTies.
         /// </summary>
-        /// <param name="topCount"> </param>
-        /// <param name="withTies"> </param>
         internal TopClause(ISqlFragment topCount, bool withTies)
         {
             this.topCount = topCount;
@@ -44,8 +42,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Creates a TopClause with the given topCount and withTies.
         /// </summary>
-        /// <param name="topCount"> </param>
-        /// <param name="withTies"> </param>
         internal TopClause(int topCount, bool withTies)
         {
             var sqlBuilder = new SqlBuilder();
@@ -61,8 +57,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     It basically writes TOP (X) [WITH TIES].
         ///     The brackets around X are ommited for Sql8.
         /// </summary>
-        /// <param name="writer"> </param>
-        /// <param name="sqlGenerator"> </param>
         public void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {
             writer.Write("TOP ");

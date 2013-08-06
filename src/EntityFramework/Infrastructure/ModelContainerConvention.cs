@@ -5,7 +5,6 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.Utilities;
-    using System.Linq;
 
     /// <summary>
     ///     This <see cref="DbModelBuilder" /> convention uses the name of the derived
@@ -36,6 +35,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         ///     Applies the convention to the given model.
         /// </summary>
+        /// <param name="item"> The container to apply the convention to. </param>
         /// <param name="model"> The model. </param>
         public virtual void Apply(EntityContainer item, DbModel model)
         {

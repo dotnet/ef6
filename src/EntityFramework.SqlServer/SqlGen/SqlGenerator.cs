@@ -349,11 +349,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     General purpose static function that can be called from System.Data assembly
         /// </summary>
-        /// <param name="sqlVersion"> Server version </param>
         /// <param name="tree"> command tree </param>
+        /// <param name="sqlVersion"> Server version </param>
         /// <param name="parameters"> Parameters to add to the command tree corresponding to constants in the command tree. Used only in ModificationCommandTrees. </param>
         /// <param name="commandType"> CommandType for generated command. </param>
-        /// <returns> The string representing the SQL to be executed. </returns>
+        /// <param name="paramsToForceNonUnicode"> </param>
+        /// <returns> The string representing the SQL to be executed. </returns>\
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static string GenerateSql(
             DbCommandTree tree, SqlVersion sqlVersion, out List<SqlParameter> parameters, out CommandType commandType,
             out HashSet<string> paramsToForceNonUnicode)
@@ -437,7 +439,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     CollectionType => select statement
         ///     non collection type => select expression
         /// </summary>
-        /// <param name="tree"> </param>
         /// <returns> The string representing the SQL to be executed. </returns>
         internal string GenerateSql(DbQueryCommandTree tree, out HashSet<string> paramsToForceNonUnicode)
         {
@@ -472,9 +473,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
             if (BuiltInTypeKind.CollectionType == targetTree.Query.ResultType.EdmType.BuiltInTypeKind)
             {
                 var sqlStatement = VisitExpressionEnsureSqlStatement(targetTree.Query);
-                
+
                 Debug.Assert(sqlStatement != null, "The outer most sql statment is null");
-                
+
                 sqlStatement.IsTopMost = true;
                 result = sqlStatement;
             }
@@ -514,8 +515,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Convert the SQL fragments to a string. Writes a string representing the SQL to be executed
         ///     into the specified writer.
         /// </summary>
+        /// <param name="writer"> </param>
         /// <param name="sqlStatement">The fragment to be emitted</param>
         /// <returns>The writer specified for fluent continuations. </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal SqlWriter WriteSql(SqlWriter writer, ISqlFragment sqlStatement)
         {
             sqlStatement.WriteSql(writer, this);
@@ -525,7 +528,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Translate(left) AND Translate(right)
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" /> .
         /// </returns>
@@ -540,7 +542,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     An apply is just like a join, so it shares the common join processing
         ///     in <see cref="VisitJoinExpression" />
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlSelectStatement" /> .
         /// </returns>
@@ -579,7 +580,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     For binary expressions, we delegate to <see cref="VisitBinaryExpression" />.
         ///     We handle the other expressions directly.
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" />
         /// </returns>
@@ -625,7 +625,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     If the ELSE clause is null, we do not write it out.
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" />
         /// </returns>
@@ -659,10 +658,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return result;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override ISqlFragment Visit(DbCastExpression e)
         {
             Check.NotNull(e, "e");
@@ -687,7 +682,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     The parser generates Not(Equals(...)) for &lt;&gt;.
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" /> .
         /// </returns>
@@ -721,7 +715,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 case DbExpressionKind.GreaterThanOrEquals:
                     result = VisitComparisonExpression(" >= ", e.Left, e.Right);
                     break;
-                    // The parser does not generate the expression kind below.
+                // The parser does not generate the expression kind below.
                 case DbExpressionKind.NotEquals:
                     result = VisitComparisonExpression(" <> ", e.Left, e.Right);
                     break;
@@ -760,8 +754,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Target := Target FUNC Target | DbConstantExpression | DBParameterExpression
         ///     FUNC := CONCAT | RTRIM | LTRIM | TRIM | SUBSTRING | TOLOWER | TOUPPER | REVERSE | REPLACE
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private bool MatchPatternForForcingNonUnicode(DbExpression e)
         {
             switch (e.ExpressionKind)
@@ -790,8 +782,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Matches the non-terminal symbol "target" in above grammar.
         /// </summary>
-        /// <param name="expr"> </param>
-        /// <returns> </returns>
         internal bool MatchTargetPatternForForcingNonUnicode(DbExpression expr)
         {
             if (IsConstParamOrNullExpressionUnicodeNotSpecified(expr))
@@ -840,8 +830,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Determines if the expression represents a non-unicode string column(char/varchar store type)
         /// </summary>
-        /// <param name="argument"> </param>
-        /// <returns> </returns>
         private static bool MatchSourcePatternForForcingNonUnicode(DbExpression argument)
         {
             bool isUnicode;
@@ -853,8 +841,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Determines if the expression represents a string constant or parameter with the facet, unicode=null.
         /// </summary>
-        /// <param name="argument"> </param>
-        /// <returns> </returns>
         internal static bool IsConstParamOrNullExpressionUnicodeNotSpecified(DbExpression argument)
         {
             bool isUnicode;
@@ -942,7 +928,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
                         result.Append(
                             EscapeSingleQuote(
                                 ((DateTimeOffset)e.Value).ToString("yyyy-MM-dd HH:mm:ss.fffffff zzz", CultureInfo.InvariantCulture), false
-                                /* IsUnicode */));
+                            /* IsUnicode */));
                         result.Append(", 121)");
                         break;
 
@@ -1140,10 +1126,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Helper function for <see cref="VisitConstant" />
         ///     Appends the given constant value to the result either 'as is' or wrapped with a cast to the given type.
         /// </summary>
-        /// <param name="cast"> </param>
-        /// <param name="value"> </param>
-        /// <param name="typeName"> </param>
-        /// <param name="result"> </param>
         private static void WrapWithCastIfNeeded(bool cast, string value, string typeName, SqlBuilder result)
         {
             if (!cast)
@@ -1163,7 +1145,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     We do not pass constants as parameters.
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" /> . Strings are wrapped in single quotes and escaped. Numbers are written literally.
         /// </returns>
@@ -1174,10 +1155,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return VisitConstant(e, false /* isCastOptional */);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override ISqlFragment Visit(DbDerefExpression e)
         {
             Check.NotNull(e, "e");
@@ -1190,7 +1167,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     but it might be too late for that.  So, we use a flag on SqlSelectStatement
         ///     instead, and add the "DISTINCT" in the second phase.
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlSelectStatement" />
         /// </returns>
@@ -1216,8 +1192,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     An element expression returns a scalar - so it is translated to
         ///     ( Select ... )
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override ISqlFragment Visit(DbElementExpression e)
         {
             Check.NotNull(e, "e");
@@ -1235,8 +1209,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     <see cref="Visit(DbUnionAllExpression)" />
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override ISqlFragment Visit(DbExceptExpression e)
         {
             Check.NotNull(e, "e");
@@ -1249,8 +1221,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Only concrete expression types will be visited.
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override ISqlFragment Visit(DbExpression e)
         {
             Check.NotNull(e, "e");
@@ -1258,9 +1228,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             throw new InvalidOperationException(String.Empty);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     If we are in a Join context, returns a <see cref="SqlBuilder" /> with the extent name, otherwise, a new
         ///     <see
@@ -1302,7 +1269,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Gets escaped TSql identifier describing this entity set.
         /// </summary>
-        /// <returns> </returns>
         internal static string GetTargetTSql(EntitySetBase entitySetBase)
         {
             var definingQuery = entitySetBase.GetMetadataPropertyValue<string>("DefiningQuery");
@@ -1353,7 +1319,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///         <item>Cleanup</item>
         ///     </list>
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlSelectStatement" />
         /// </returns>
@@ -1377,7 +1342,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     FunctionName(arg1, arg2, ..., argn).
         ///     We translate user-defined functions to NamespaceName.FunctionName(arg1, arg2, ..., argn).
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" />
         /// </returns>
@@ -1395,10 +1359,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override ISqlFragment Visit(DbEntityRefExpression e)
         {
             Check.NotNull(e, "e");
@@ -1406,10 +1366,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override ISqlFragment Visit(DbRefKeyExpression e)
         {
             Check.NotNull(e, "e");
@@ -1462,7 +1418,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     ) as a
         ///     GROUP BY key1, key2, keyn
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlSelectStatement" />
         /// </returns>
@@ -1617,8 +1572,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     <see cref="Visit(DbUnionAllExpression)" />
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override ISqlFragment Visit(DbIntersectExpression e)
         {
             Check.NotNull(e, "e");
@@ -1632,7 +1585,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Not(IsEmpty) has to be handled specially, so we delegate to
         ///     <see cref="VisitIsEmptyExpression" />.
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" /> . <code>[NOT] EXISTS( ... )</code>
         /// </returns>
@@ -1647,7 +1599,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Not(IsNull) is handled specially, so we delegate to
         ///     <see cref="VisitIsNullExpression" />
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" /> <code>IS [NOT] NULL</code>
         /// </returns>
@@ -1661,7 +1612,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     No error is raised if the store cannot support this.
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" />
         /// </returns>
@@ -1675,7 +1625,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     <see cref="VisitJoinExpression" />
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlSelectStatement" /> .
         /// </returns>
@@ -1689,7 +1638,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     <see cref="VisitJoinExpression" />
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlSelectStatement" /> .
         /// </returns>
@@ -1729,9 +1677,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return VisitJoinExpression(inputs, e.ExpressionKind, joinString, e.JoinCondition);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" />
         /// </returns>
@@ -1765,7 +1710,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Translates to TOP expression. For Sql8, limit can only be a constant expression
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" />
         /// </returns>
@@ -1804,8 +1748,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     them into Unions
         ///     <see cref="VisitNewInstanceExpression" /> for the actual implementation.
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override ISqlFragment Visit(DbNewInstanceExpression e)
         {
             Check.NotNull(e, "e");
@@ -1840,7 +1782,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///         </item>
         ///     </list>
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" />
         /// </returns>
@@ -1894,9 +1835,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return result;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     <see cref="SqlBuilder" />
         /// </returns>
@@ -1933,9 +1871,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return result;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" />
         /// </returns>
@@ -2325,7 +2260,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     we add it to the list of candidate parameters. If the parameter occurs in a different
         ///     usage scenario, then disqualify it from being forced to non-unicode.
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" />
         /// </returns>
@@ -2360,7 +2294,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     <see cref="Visit(DbFilterExpression)" /> for the general ideas.
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlSelectStatement" />
         /// </returns>
@@ -2431,7 +2364,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     and then try to find the column.  So, we use a SymbolPair.
         ///     We have reached the end when the symbol no longer points to a join symbol.
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="JoinSymbol" /> if we have not reached the first Join node that has a SELECT statement. A
         ///     <see
@@ -2531,8 +2463,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Any(input, x) => Exists(Filter(input,x))
         ///     All(input, x) => Not Exists(Filter(input, not(x))
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override ISqlFragment Visit(DbQuantifierExpression e)
         {
             Check.NotNull(e, "e");
@@ -2563,10 +2493,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return result;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override ISqlFragment Visit(DbRefExpression e)
         {
             Check.NotNull(e, "e");
@@ -2574,10 +2500,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override ISqlFragment Visit(DbRelationshipNavigationExpression e)
         {
             Check.NotNull(e, "e");
@@ -2595,7 +2517,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     WHERE Y.[row_number] > count
         ///     ORDER BY sk1, sk2, ...
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" />
         /// </returns>
@@ -2706,7 +2627,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     <see cref="Visit(DbFilterExpression)" />
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlSelectStatement" />
         /// </returns>
@@ -2738,9 +2658,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return result;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" />
         /// </returns>
@@ -2758,8 +2675,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Since the left and right expression may not be Sql select statements,
         ///     we must wrap them up to look like SQL select statements.
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override ISqlFragment Visit(DbUnionAllExpression e)
         {
             Check.NotNull(e, "e");
@@ -2773,7 +2688,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     An extent in an outer scope, if its symbol is not in the FromExtents
         ///     of the CurrentSelectStatement.
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns>
         ///     A <see cref="Symbol" /> .
         /// </returns>
@@ -2804,7 +2718,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="aggregate"> The aggregate go be translated </param>
         /// <param name="aggregateArgument"> The translated aggregate argument </param>
-        /// <returns> </returns>
         private static SqlBuilder VisitAggregate(DbAggregate aggregate, object aggregateArgument)
         {
             var aggregateResult = new SqlBuilder();
@@ -2845,8 +2758,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Dump out an expression - optionally wrap it with parantheses if possible
         /// </summary>
-        /// <param name="e"> </param>
-        /// <param name="result"> </param>
         internal void ParenthesizeExpressionIfNeeded(DbExpression e, SqlBuilder result)
         {
             if (IsComplexExpression(e))
@@ -2867,11 +2778,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     For associative operations does flattening.
         ///     Puts parenthesis around the arguments if needed.
         /// </summary>
-        /// <param name="op"> </param>
-        /// <param name="expressionKind"> </param>
-        /// <param name="left"> </param>
-        /// <param name="right"> </param>
-        /// <returns> </returns>
         private SqlBuilder VisitBinaryExpression(string op, DbExpressionKind expressionKind, DbExpression left, DbExpression right)
         {
             var result = new SqlBuilder();
@@ -2897,9 +2803,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     For example, for ((A1 + (A2 - A3)) + A4) it will create A1, (A2 - A3), A4
         ///     Only 'unfolds' the given arguments that are of the given expression kind.
         /// </summary>
-        /// <param name="expressionKind"> </param>
-        /// <param name="arguments"> </param>
-        /// <returns> </returns>
         private static IEnumerable<DbExpression> FlattenAssociativeExpression(DbExpressionKind kind, DbExpression left, DbExpression right)
         {
             if (kind != DbExpressionKind.Or
@@ -2926,9 +2829,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     For example, for ((A1 + (A2 - A3)) + A4) it will add A1, (A2 - A3), A4 to the list.
         ///     Only 'unfolds' the given expression if it is of the given expression kind.
         /// </summary>
-        /// <param name="expressionKind"> </param>
-        /// <param name="argumentList"> </param>
-        /// <param name="expression"> </param>
         private static void ExtractAssociativeArguments(
             DbExpressionKind expressionKind, List<DbExpression> argumentList, DbExpression expression)
         {
@@ -2936,17 +2836,17 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 expression.GetLeafNodes(
                     expressionKind,
                     exp =>
+                    {
+                        //All associative expressions are binary, thus we must be dealing with a DbBinaryExpresson or 
+                        // a DbArithmeticExpression with 2 arguments.
+                        var binaryExpression = exp as DbBinaryExpression;
+                        if (binaryExpression != null)
                         {
-                            //All associative expressions are binary, thus we must be dealing with a DbBinaryExpresson or 
-                            // a DbArithmeticExpression with 2 arguments.
-                            var binaryExpression = exp as DbBinaryExpression;
-                            if (binaryExpression != null)
-                            {
-                                return new[] { binaryExpression.Left, binaryExpression.Right };
-                            }
-                            var arithmeticExpression = (DbArithmeticExpression)exp;
-                            return arithmeticExpression.Arguments;
+                            return new[] { binaryExpression.Left, binaryExpression.Right };
                         }
+                        var arithmeticExpression = (DbArithmeticExpression)exp;
+                        return arithmeticExpression.Arguments;
+                    }
                     );
 
             argumentList.AddRange(result);
@@ -2959,7 +2859,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="op"> the comparison op </param>
         /// <param name="left"> the left-side expression </param>
         /// <param name="right"> the right-side expression </param>
-        /// <returns> </returns>
         private SqlBuilder VisitComparisonExpression(string op, DbExpression left, DbExpression right)
         {
             var result = new SqlBuilder();
@@ -3000,10 +2899,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///         </item>
         ///     </list>
         /// </summary>
-        /// <param name="inputExpression"> </param>
-        /// <param name="inputVarName"> </param>
-        /// <param name="inputVarType"> </param>
-        /// <param name="fromSymbol"> </param>
         /// <returns>
         ///     A <see cref="SqlSelectStatement" /> and the main fromSymbol for this select statement.
         /// </returns>
@@ -3054,7 +2949,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="e"> </param>
         /// <param name="negate"> Was the parent a DbNotExpression? </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private SqlBuilder VisitIsEmptyExpression(DbIsEmptyExpression e, bool negate)
         {
             var result = new SqlBuilder();
@@ -3074,8 +2969,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Translate a NewInstance(Element(X)) expression into
         ///     "select top(1) * from X"
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private ISqlFragment VisitCollectionConstructor(DbNewInstanceExpression e)
         {
             Debug.Assert(e.Arguments.Count <= 1);
@@ -3136,7 +3029,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="e"> </param>
         /// <param name="negate"> Was the parent a DbNotExpression? </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private SqlBuilder VisitIsNullExpression(DbIsNullExpression e, bool negate)
         {
             var result = new SqlBuilder();
@@ -3175,10 +3068,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     This method is called from <see cref="Visit(DbApplyExpression)" /> and
         ///     <see cref="Visit(DbJoinExpression)" />.
         /// </summary>
-        /// <param name="inputs"> </param>
-        /// <param name="joinKind"> </param>
-        /// <param name="joinString"> </param>
-        /// <param name="joinCondition"> </param>
         /// <returns>
         ///     A <see cref="SqlSelectStatement" />
         /// </returns>
@@ -3290,10 +3179,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     The happens when the child visited is a Join, and is the leftmost child of
         ///     the parent.
         /// </summary>
-        /// <param name="fromExtentFragment"> </param>
-        /// <param name="result"> </param>
-        /// <param name="input"> </param>
-        /// <param name="fromSymbolStart"> </param>
         private void ProcessJoinInputResult(
             ISqlFragment fromExtentFragment, SqlSelectStatement result,
             DbExpressionBinding input, int fromSymbolStart)
@@ -3414,9 +3299,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     DbProjectExpression.
         ///     We write out the translation of each of the columns in the record.
         /// </summary>
-        /// <param name="e"> </param>
-        /// <param name="aliasesNeedRenaming"> </param>
-        /// <param name="newColumns"> </param>
         /// <returns>
         ///     A <see cref="SqlBuilder" />
         /// </returns>
@@ -3480,10 +3362,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Only for SQL 8.0 it may need to create a new select statement
         ///     above the set operation if the left child's output columns got renamed
         /// </summary>
-        /// <param name="left"> </param>
-        /// <param name="right"> </param>
-        /// <param name="separator"> </param>
-        /// <returns> </returns>
         private ISqlFragment VisitSetOpExpression(DbExpression left, DbExpression right, string separator)
         {
             var leftSelectStatement = VisitExpressionEnsureSqlStatement(left, true, true);
@@ -3665,9 +3543,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Creates an optional column and registers the corresponding symbol with
         ///     the optionalColumnUsageManager it has not already been registered.
         /// </summary>
-        /// <param name="inputColumnSymbol"> </param>
-        /// <param name="column"> </param>
-        /// <returns> </returns>
         private OptionalColumn CreateOptionalColumn(Symbol inputColumnSymbol, Symbol column)
         {
             if (!optionalColumnUsageManager.ContainsKey(column))
@@ -3763,8 +3638,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Since the inputs may be joins that are flattened, we need to recurse.
         ///     The inputs are inferred from the symbols in FromExtents.
         /// </summary>
-        /// <param name="selectStatement"> </param>
-        /// <returns> </returns>
         private List<Symbol> AddDefaultColumns(SqlSelectStatement selectStatement)
         {
             // This is the list of columns added in this select statement
@@ -3787,9 +3660,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     <see cref="AddFromSymbol(SqlSelectStatement, string, Symbol, bool)" />
         /// </summary>
-        /// <param name="selectStatement"> </param>
-        /// <param name="inputVarName"> </param>
-        /// <param name="fromSymbol"> </param>
         private void AddFromSymbol(SqlSelectStatement selectStatement, string inputVarName, Symbol fromSymbol)
         {
             AddFromSymbol(selectStatement, inputVarName, fromSymbol, true);
@@ -3825,6 +3695,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="inputVarName"> The alias to be used. </param>
         /// <param name="fromSymbol"> </param>
         /// <param name="addToSymbolTable"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void AddFromSymbol(SqlSelectStatement selectStatement, string inputVarName, Symbol fromSymbol, bool addToSymbolTable)
         {
             // the first check is true if this is a new statement
@@ -3856,6 +3727,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="orderByClause"> The SqlBuilder to which the sort keys should be appended </param>
         /// <param name="sortKeys"> </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void AddSortKeys(SqlBuilder orderByClause, IList<DbSortClause> sortKeys)
         {
             var separator = "";
@@ -3880,11 +3752,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     <see cref="CreateNewSelectStatement(SqlSelectStatement, string, TypeUsage, bool, out Symbol)" />
         /// </summary>
-        /// <param name="oldStatement"> </param>
-        /// <param name="inputVarName"> </param>
-        /// <param name="inputVarType"> </param>
-        /// <param name="fromSymbol"> </param>
-        /// <returns> </returns>
         private SqlSelectStatement CreateNewSelectStatement(
             SqlSelectStatement oldStatement,
             string inputVarName, TypeUsage inputVarType, out Symbol fromSymbol)
@@ -3904,11 +3771,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     We cannot reuse the old symbol, but the new select statement must behave
         ///     as though it is working over the "join" record.
         /// </summary>
-        /// <param name="oldStatement"> </param>
-        /// <param name="inputVarName"> </param>
-        /// <param name="inputVarType"> </param>
-        /// <param name="finalizeOldStatement"> </param>
-        /// <param name="fromSymbol"> </param>
         /// <returns> A new select statement, with the old one as the from clause. </returns>
         private SqlSelectStatement CreateNewSelectStatement(
             SqlSelectStatement oldStatement,
@@ -3963,8 +3825,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Before we embed a string literal in a SQL string, we should
         ///     convert all ' to '', and enclose the whole string in single quotes.
         /// </summary>
-        /// <param name="s"> </param>
-        /// <param name="isUnicode"> </param>
         /// <returns> The escaped sql string. </returns>
         private static string EscapeSingleQuote(string s, bool isUnicode)
         {
@@ -3976,8 +3836,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     It will include size, precision or scale depending on type information present in the
         ///     type facets
         /// </summary>
-        /// <param name="type"> </param>
-        /// <returns> </returns>
         private string GetSqlPrimitiveType(TypeUsage type)
         {
             Debug.Assert(type.EdmType.GetMetadataPropertyValue<DataSpace>("DataSpace") == DataSpace.CSpace);
@@ -4055,8 +3913,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     If it is a constant expression, it simply does to string thus avoiding casting it to the specific value
         ///     (which would be done if <see cref="Visit(DbConstantExpression)" /> is called)
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private ISqlFragment HandleCountExpression(DbExpression e)
         {
             ISqlFragment result;
@@ -4082,8 +3938,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     This is used to determine if a particular expression is an Apply operation.
         ///     This is only the case when the DbExpressionKind is CrossApply or OuterApply.
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static bool IsApplyExpression(DbExpression e)
         {
             return (DbExpressionKind.CrossApply == e.ExpressionKind || DbExpressionKind.OuterApply == e.ExpressionKind);
@@ -4094,8 +3948,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     This is true for DbCrossJoinExpression and DbJoinExpression, the
         ///     latter of which may have one of several different ExpressionKinds.
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static bool IsJoinExpression(DbExpression e)
         {
             return (DbExpressionKind.CrossJoin == e.ExpressionKind ||
@@ -4110,7 +3962,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Constants, parameters and properties do not require brackets,
         ///     everything else does.
         /// </summary>
-        /// <param name="e"> </param>
         /// <returns> true, if the expression needs brackets </returns>
         private static bool IsComplexExpression(DbExpression e)
         {
@@ -4133,7 +3984,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         /// <param name="result"> The SqlSelectStatement of the input to the relational node. </param>
         /// <param name="expressionKind"> The kind of the expression node(not the input's) </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static bool IsCompatible(SqlSelectStatement result, DbExpressionKind expressionKind)
         {
@@ -4141,9 +3991,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
             {
                 case DbExpressionKind.Distinct:
                     return result.Select.Top == null
-                           // #494803: The projection after distinct may not project all 
-                           // columns used in the Order By
-                           // Improvement: Consider getting rid of the Order By instead
+                        // #494803: The projection after distinct may not project all 
+                        // columns used in the Order By
+                        // Improvement: Consider getting rid of the Order By instead
                            && result.OrderBy.IsEmpty;
 
                 case DbExpressionKind.Filter:
@@ -4169,8 +4019,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     // a subset of the input columns
                     return result.Select.IsEmpty
                            && result.GroupBy.IsEmpty
-                           // SQLBUDT #513640 - If distinct is specified, the projection may affect
-                           // the cardinality of the results, thus a new statement must be started.
+                        // SQLBUDT #513640 - If distinct is specified, the projection may affect
+                        // the cardinality of the results, thus a new statement must be started.
                            && !result.Select.IsDistinct;
 
                 case DbExpressionKind.Skip:
@@ -4183,10 +4033,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
                     return result.Select.IsEmpty
                            && result.GroupBy.IsEmpty
                            && result.OrderBy.IsEmpty
-                           // SQLBUDT #513640 - A Project may be on the top of the Sort, and if so, it would need
-                           // to be in the same statement as the Sort (see comment above for the Project case).
-                           // A Distinct in the same statement would prevent that, and therefore if Distinct is present,
-                           // we need to start a new statement. 
+                        // SQLBUDT #513640 - A Project may be on the top of the Sort, and if so, it would need
+                        // to be in the same statement as the Sort (see comment above for the Project case).
+                        // A Distinct in the same statement would prevent that, and therefore if Distinct is present,
+                        // we need to start a new statement. 
                            && !result.Select.IsDistinct;
 
                 default:
@@ -4199,8 +4049,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     We use the normal box quotes for SQL server.  We do not deal with ANSI quotes
         ///     i.e. double quotes.
         /// </summary>
-        /// <param name="name"> </param>
-        /// <returns> </returns>
         internal static string QuoteIdentifier(string name)
         {
             DebugCheck.NotEmpty(name);
@@ -4212,8 +4060,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Simply calls <see cref="VisitExpressionEnsureSqlStatement(DbExpression, bool, bool)" />
         ///     with addDefaultColumns set to true and markAllDefaultColumnsAsUsed set to false.
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private SqlSelectStatement VisitExpressionEnsureSqlStatement(DbExpression e)
         {
             return VisitExpressionEnsureSqlStatement(e, true, false);
@@ -4233,10 +4079,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///                                     FROM {expression} as c</code>
         ///     DbLimitExpression needs to start the statement but not add the default columns
         /// </summary>
-        /// <param name="e"> </param>
-        /// <param name="addDefaultColumns"> </param>
-        /// <param name="markAllDefaultColumnsAsUsed"> </param>
-        /// <returns> </returns>
         private SqlSelectStatement VisitExpressionEnsureSqlStatement(
             DbExpression e, bool addDefaultColumns, bool markAllDefaultColumnsAsUsed)
         {
@@ -4307,7 +4149,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="negatePredicate">
         ///     This is passed from <see cref="Visit(DbQuantifierExpression)" /> in the All(...) case.
         /// </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private SqlSelectStatement VisitFilterExpression(DbExpressionBinding input, DbExpression predicate, bool negatePredicate)
         {
             Symbol fromSymbol;
@@ -4353,9 +4195,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///         <item>TVFs, which are conceptually similar to tables</item>
         ///     </list>
         /// </summary>
-        /// <param name="result"> </param>
-        /// <param name="sqlFragment"> </param>
-        /// <param name="expressionKind"> </param>
         private static void WrapNonQueryExtent(SqlSelectStatement result, ISqlFragment sqlFragment, DbExpressionKind expressionKind)
         {
             switch (expressionKind)
@@ -4402,9 +4241,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     </list>
         ///     Potentially, we could furhter optimize this.
         /// </summary>
-        /// <param name="aggregates"> </param>
-        /// <param name="inputVarRefName"> </param>
-        /// <returns> </returns>
         private static bool GroupByAggregatesNeedInnerQuery(IList<DbAggregate> aggregates, string inputVarRefName)
         {
             foreach (var aggregate in aggregates)
@@ -4424,9 +4260,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     referencing the given inputVarRefName, either
         ///     potentially capped with a <see cref="DbCastExpression" />.
         /// </summary>
-        /// <param name="expression"> </param>
-        /// <param name="inputVarRefName"> </param>
-        /// <returns> </returns>
         private static bool GroupByAggregateNeedsInnerQuery(DbExpression expression, string inputVarRefName)
         {
             return GroupByExpressionNeedsInnerQuery(expression, inputVarRefName, true);
@@ -4441,9 +4274,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     (key) to contain at least one column that is not an outer reference. (SQLBUDT #616523)
         ///     Potentially, we could further optimize this.
         /// </summary>
-        /// <param name="keys"> </param>
-        /// <param name="inputVarRefName"> </param>
-        /// <returns> </returns>
         private static bool GroupByKeysNeedInnerQuery(IList<DbExpression> keys, string inputVarRefName)
         {
             foreach (var key in keys)
@@ -4464,9 +4294,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     (key) to contain at least one column that is not an outer reference. (SQLBUDT #616523)
         ///     Potentially, we could further optimize this.
         /// </summary>
-        /// <param name="expression"> </param>
-        /// <param name="inputVarRefName"> </param>
-        /// <returns> </returns>
         private static bool GroupByKeyNeedsInnerQuery(DbExpression expression, string inputVarRefName)
         {
             return GroupByExpressionNeedsInnerQuery(expression, inputVarRefName, false);
@@ -4479,10 +4306,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     a <see cref="DbVariableReferenceExpression" /> referencing the given inputVarRefName,
         ///     either potentially capped with a <see cref="DbCastExpression" />.
         /// </summary>
-        /// <param name="expression"> </param>
-        /// <param name="inputVarRefName"> </param>
-        /// <param name="allowConstants"> </param>
-        /// <returns> </returns>
         private static bool GroupByExpressionNeedsInnerQuery(DbExpression expression, string inputVarRefName, bool allowConstants)
         {
             //Skip a constant if constants are allowed
@@ -4520,7 +4343,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Throws not supported exception if the server is pre-katmai
         /// </summary>
-        /// <param name="primitiveTypeKind"> </param>
         private void AssertKatmaiOrNewer(PrimitiveTypeKind primitiveTypeKind)
         {
             AssertKatmaiOrNewer(_sqlVersion, primitiveTypeKind);
@@ -4537,7 +4359,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Throws not supported exception if the server is pre-katmai
         /// </summary>
-        /// <param name="e"> </param>
         internal void AssertKatmaiOrNewer(DbFunctionExpression e)
         {
             if (IsPreKatmai)

@@ -11,15 +11,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
     ///     This extends IndentedTextWriter/StringWriter primarily to add the ability to add an indent
     ///     to each line that is written out.
     /// </summary>
-    internal class SqlWriter : IndentedTextWriter 
+    internal class SqlWriter : IndentedTextWriter
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="b"> </param>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification="Transferring ownership")]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Transferring ownership")]
         public SqlWriter(StringBuilder b)
             : base(new StringWriter(b, Culture))
-            // Culture must match what is used by underlying IndentedTextWriter
+        // Culture must match what is used by underlying IndentedTextWriter
         {
         }
     }

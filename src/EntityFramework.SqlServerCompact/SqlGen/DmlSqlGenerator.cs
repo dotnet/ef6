@@ -23,6 +23,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         ///     This method is added as a part of the fix for bug 13533
         ///     In this method we try to see from the command tree whether there is any
         ///     updatable column(Property) available on the table(EntityType)
+        /// </summary>
         private static bool GetUpdatableColumn(DbUpdateCommandTree tree, out string updatableColumnName)
         {
             var result = false;
@@ -172,11 +173,11 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                           UpperCaseKeywords = upperCaseKeywords
                       };
 
-            var translator 
+            var translator
                 = new ExpressionTranslator(
-                    commandText, 
-                    tree, 
-                    false, 
+                    commandText,
+                    tree,
+                    false,
                     isLocalProvider,
                     createParameters);
 
@@ -211,11 +212,11 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                           UpperCaseKeywords = upperCaseKeywords
                       };
 
-            var translator 
+            var translator
                 = new ExpressionTranslator(
-                    commandText, 
-                    tree, 
-                    null != tree.Returning, 
+                    commandText,
+                    tree,
+                    null != tree.Returning,
                     isLocalProvider,
                     createParameters);
 
@@ -434,7 +435,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             /// <param name="commandTree"> Command tree generating SQL </param>
             /// <param name="preserveMemberValues"> Indicates whether the translator should preserve member values while compiling t-SQL (only needed for server generation) </param>
             internal ExpressionTranslator(
-                SqlStringBuilder commandText, 
+                SqlStringBuilder commandText,
                 DbModificationCommandTree commandTree,
                 bool preserveMemberValues,
                 bool isLocalProvider,

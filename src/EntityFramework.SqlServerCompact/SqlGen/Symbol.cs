@@ -60,9 +60,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <summary>
         ///     Use this constructor the symbol represents a SqlStatement with renamed output columns.
         /// </summary>
-        /// <param name="name"> </param>
-        /// <param name="type"> </param>
-        /// <param name="columns"> </param>
         public Symbol(string name, TypeUsage type, Dictionary<string, Symbol> columns)
         {
             this.name = name;
@@ -79,8 +76,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         ///     the new name of the symbol (which could be the same as the old name).
         ///     We rename columns here if necessary.
         /// </summary>
-        /// <param name="writer"> </param>
-        /// <param name="sqlGenerator"> </param>
         public void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {
             if (NeedsRenaming)

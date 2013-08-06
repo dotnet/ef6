@@ -6,7 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.Reflection; 
+    using System.Reflection;
 
     /// <summary>
     ///     Creates a convention that configures stored procedures to be used to delete entities in the database.
@@ -62,7 +62,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         /// <summary>Configures a parameter for this stored procedure.</summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        /// <param name="propertyName"> The property to configure the parameter for. </param>
+        /// <param name="propertyInfo"> The property to configure the parameter for. </param>
         /// <param name="parameterName">The name of the parameter.</param>
         public ConventionDeleteModificationStoredProcedureConfiguration Parameter(
             PropertyInfo propertyInfo, string parameterName)
