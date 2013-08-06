@@ -111,7 +111,7 @@ namespace System.Data.Entity.SqlServerCompact
         ///     Creates an empty connection for the current provider.
         ///     Allows derived providers to use connection other than <see cref="SqlConnection" />.
         /// </summary>
-        /// <returns> </returns>
+        /// <returns> An empty connection for the current provider. </returns>
         protected virtual DbConnection CreateConnection()
         {
             return DbConfiguration.DependencyResolver.GetService<DbProviderFactory>("System.Data.SqlServerCe.4.0").CreateConnection();
@@ -168,14 +168,14 @@ namespace System.Data.Entity.SqlServerCompact
 
             createTableOperation.Columns.Each(
                 (c, i) =>
-                    {
-                        Generate(c, writer);
+                {
+                    Generate(c, writer);
 
-                        if (i < createTableOperation.Columns.Count - 1)
-                        {
-                            writer.WriteLine(",");
-                        }
-                    });
+                    if (i < createTableOperation.Columns.Count - 1)
+                    {
+                        writer.WriteLine(",");
+                    }
+                });
 
             if (createTableOperation.PrimaryKey != null)
             {
@@ -206,7 +206,8 @@ namespace System.Data.Entity.SqlServerCompact
         ///     Generates SQL to mark a table as a system table.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name="table"> The table to mark as a system table. </param>
+        /// <param name="createTableOperation"> The table to mark as a system table. </param>
+        /// <param name="writer"> The <see cref='IndentedTextWriter' /> to write the generated SQL to. </param>
         protected virtual void GenerateMakeSystemTable(CreateTableOperation createTableOperation, IndentedTextWriter writer)
         {
         }
@@ -642,37 +643,37 @@ namespace System.Data.Entity.SqlServerCompact
             {
                 historyOperation.CommandTrees.Each(
                     commandTree =>
+                    {
+                        List<DbParameter> _;
+
+                        switch (commandTree.CommandTreeKind)
                         {
-                            List<DbParameter> _;
+                            case DbCommandTreeKind.Insert:
 
-                            switch (commandTree.CommandTreeKind)
-                            {
-                                case DbCommandTreeKind.Insert:
+                                writer.Write(
+                                    string.Join(
+                                        Environment.NewLine,
+                                        DmlSqlGenerator.GenerateInsertSql(
+                                            (DbInsertCommandTree)commandTree,
+                                            out _,
+                                            isLocalProvider: true,
+                                            upperCaseKeywords: true,
+                                            createParameters: false)));
+                                break;
 
-                                    writer.Write(
-                                        string.Join(
-                                            Environment.NewLine,
-                                            DmlSqlGenerator.GenerateInsertSql(
-                                                (DbInsertCommandTree)commandTree,
-                                                out _,
-                                                isLocalProvider: true,
-                                                upperCaseKeywords: true,
-                                                createParameters: false)));
-                                    break;
-
-                                case DbCommandTreeKind.Delete:
-                                    writer.Write(
-                                        string.Join(
-                                            Environment.NewLine,
-                                            DmlSqlGenerator.GenerateDeleteSql(
-                                                (DbDeleteCommandTree)commandTree,
-                                                out _,
-                                                isLocalProvider: true,
-                                                upperCaseKeywords: true,
-                                                createParameters: false)));
-                                    break;
-                            }
-                        });
+                            case DbCommandTreeKind.Delete:
+                                writer.Write(
+                                    string.Join(
+                                        Environment.NewLine,
+                                        DmlSqlGenerator.GenerateDeleteSql(
+                                            (DbDeleteCommandTree)commandTree,
+                                            out _,
+                                            isLocalProvider: true,
+                                            upperCaseKeywords: true,
+                                            createParameters: false)));
+                                break;
+                        }
+                    });
 
                 Statement(writer);
             }
@@ -799,7 +800,7 @@ namespace System.Data.Entity.SqlServerCompact
         ///     Generates SQL to specify the data type of a column.
         ///     This method just generates the actual type, not the SQL to create the column.
         /// </summary>
-        /// <param name="defaultValue"> The definition of the column. </param>
+        /// <param name="columnModel"> The definition of the column. </param>
         /// <returns> SQL representing the data type. </returns>
         protected virtual string BuildColumnType(ColumnModel columnModel)
         {

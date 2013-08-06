@@ -12,7 +12,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// </summary>
         /// <param name="facetCollection"> Collection of facet description </param>
         /// <param name="facetName"> name of the facet </param>
-        /// <returns> </returns>
         internal static FacetDescription GetFacet(IEnumerable<FacetDescription> facetCollection, string facetName)
         {
             foreach (var facetDescription in facetCollection)

@@ -5,6 +5,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Text;
 
@@ -28,10 +29,8 @@ namespace System.Data.Entity.SqlServerCompact
         private readonly List<EntitySet> ignoredEntitySets = new List<EntitySet>();
 
         /// <summary>
-        ///     Helper function for generating the scripts for tables & constraints.
+        ///     Helper function for generating the scripts for tables &amp; constraints.
         /// </summary>
-        /// <param name="itemCollection"> </param>
-        /// <returns> </returns>
         internal static List<string> CreateObjectsScript(StoreItemCollection itemCollection, bool returnWarnings)
         {
             var builder = new SqlDdlBuilder();
@@ -69,7 +68,6 @@ namespace System.Data.Entity.SqlServerCompact
         /// <summary>
         ///     Function that returns final command text by appending Constraints to ObjectBuilder.
         /// </summary>
-        /// <returns> </returns>
         internal List<string> GetCommandText(bool returnWarnings)
         {
             objects.AddRange(constraints);
@@ -88,7 +86,6 @@ namespace System.Data.Entity.SqlServerCompact
         /// <summary>
         ///     Function for generating foreign key constraints.
         /// </summary>
-        /// <param name="associationSet"> </param>
         private void AppendCreateForeignKeys(AssociationSet associationSet)
         {
             var constraintBuilder = new StringBuilder();
@@ -140,7 +137,6 @@ namespace System.Data.Entity.SqlServerCompact
         /// <summary>
         ///     Function for generating create table statements.
         /// </summary>
-        /// <param name="entitySet"> </param>
         private void AppendCreateTable(EntitySet entitySet)
         {
             var objectBuilder = new StringBuilder();
@@ -322,8 +318,10 @@ namespace System.Data.Entity.SqlServerCompact
         /// <summary>
         ///     Append raw SQL into the string builder with formatting options and invariant culture formatting.
         /// </summary>
+        /// <param name="builder"> </param>
         /// <param name="format"> A composite format string. </param>
         /// <param name="args"> An array of objects to format. </param>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static void AppendSqlInvariantFormat(StringBuilder builder, string format, params object[] args)
         {
             builder.AppendFormat(CultureInfo.InvariantCulture, format, args);

@@ -118,9 +118,9 @@ namespace System.Data.Entity.SqlServerCompact
         ///     In SQLCE case, this will translate to File.Delete() call.
         ///     Note: Timeout and storeItemCollection parameters are ignored.
         /// </summary>
-        /// <param name="connection"> </param>
-        /// <param name="timeOut"> </param>
-        /// <param name="storeItemCollection"> </param>
+        /// <param name="connection"> Connection </param>
+        /// <param name="timeOut"> Timeout for internal commands. </param>
+        /// <param name="storeItemCollection"> Item Collection. </param>
         protected override void DbDeleteDatabase(DbConnection connection, int? timeOut, StoreItemCollection storeItemCollection)
         {
             Check.NotNull(connection, "connection");
@@ -503,8 +503,6 @@ namespace System.Data.Entity.SqlServerCompact
         /// <summary>
         ///     Constructs a SqlCeParameter
         /// </summary>
-        /// <param name="queryParameter"> </param>
-        /// <returns> </returns>
         internal static DbParameter CreateSqlCeParameter(
             string name, TypeUsage type, object value, bool ignoreMaxLengthFacet, bool isLocalProvider)
         {
@@ -671,8 +669,8 @@ namespace System.Data.Entity.SqlServerCompact
                 // if the MaxLength facet has a specific value use it
                 return maxLength;
             }
-                // SQLCE doesn't support output parameters. So
-                // excluding the logic for isOutParam 
+            // SQLCE doesn't support output parameters. So
+            // excluding the logic for isOutParam 
             else
             {
                 //we use to default(int?) to identify isMaxLength

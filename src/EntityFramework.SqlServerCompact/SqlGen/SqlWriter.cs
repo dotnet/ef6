@@ -13,13 +13,10 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     /// </summary>
     internal class SqlWriter : IndentedTextWriter
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="b"> </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Transferring ownership")]
         public SqlWriter(StringBuilder b)
             : base(new StringWriter(b, Culture))
-            // Culture must match what is used by underlying IndentedTextWriter
+        // Culture must match what is used by underlying IndentedTextWriter
         {
         }
     }

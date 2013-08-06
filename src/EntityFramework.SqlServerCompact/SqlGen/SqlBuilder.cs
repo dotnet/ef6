@@ -32,7 +32,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         ///     Add an object to the list - we do not verify that it is a proper sql fragment
         ///     since this is an internal method.
         /// </summary>
-        /// <param name="s"> </param>
         public void Append(object s)
         {
             DebugCheck.NotNull(s);
@@ -63,8 +62,6 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         /// <summary>
         ///     We delegate the writing of the fragment to the appropriate type.
         /// </summary>
-        /// <param name="writer"> </param>
-        /// <param name="sqlGenerator"> </param>
         public void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {
             if (null != _sqlFragments)
