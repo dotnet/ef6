@@ -55,7 +55,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     The entry point
         /// </summary>
-        /// <param name="expr"> </param>
         /// <returns> True if the tree needs to be rewriten, false otherwise </returns>
         internal static bool NeedsRewrite(DbExpression expr)
         {
@@ -82,7 +81,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Default handling for DbUnaryExpression-derived classes. Simply visits its argument
         /// </summary>
         /// <param name="expr"> The DbUnaryExpression to visit </param>
-        /// <returns> </returns>
         private bool VisitUnaryExpression(DbUnaryExpression expr)
         {
             return VisitExpression(expr.Argument);
@@ -92,7 +90,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Default handling for DbBinaryExpression-derived classes. Visits both arguments.
         /// </summary>
         /// <param name="expr"> The DbBinaryExpression to visit </param>
-        /// <returns> </returns>
         private bool VisitBinaryExpression(DbBinaryExpression expr)
         {
             var leftNeedsRewrite = VisitExpression(expr.Left);
@@ -103,16 +100,11 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Used for <see cref="VisitList" />
         /// </summary>
-        /// <typeparam name="TElementType"> </typeparam>
-        /// <param name="element"> </param>
-        /// <returns> </returns>
         private delegate bool ListElementHandler<TElementType>(TElementType element);
 
         /// <summary>
         ///     Walks the structure
         /// </summary>
-        /// <param name="aggregate"> </param>
-        /// <returns> </returns>
         private bool VisitAggregate(DbAggregate aggregate)
         {
             return VisitExpressionList(aggregate.Arguments);
@@ -121,8 +113,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     DbExpressionBinding handler
         /// </summary>
-        /// <param name="expressionBinding"> </param>
-        /// <returns> </returns>
         private bool VisitExpressionBinding(DbExpressionBinding expressionBinding)
         {
             return VisitExpression(expressionBinding.Expression);
@@ -131,8 +121,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Used as handler for expressions
         /// </summary>
-        /// <param name="expression"> </param>
-        /// <returns> </returns>
         private bool VisitExpression(DbExpression expression)
         {
             if (expression == null)
@@ -145,8 +133,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Used as handler for SortClauses
         /// </summary>
-        /// <param name="sortClause"> </param>
-        /// <returns> </returns>
         private bool VisitSortClause(DbSortClause sortClause)
         {
             return VisitExpression(sortClause.Expression);
@@ -155,10 +141,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Helper method for iterating a list
         /// </summary>
-        /// <typeparam name="TElementType"> </typeparam>
-        /// <param name="handler"> </param>
-        /// <param name="list"> </param>
-        /// <returns> </returns>
         private static bool VisitList<TElementType>(ListElementHandler<TElementType> handler, IList<TElementType> list)
         {
             var result = false;
@@ -174,8 +156,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Handing for list of <see cref="DbExpressionBinding" />s.
         /// </summary>
-        /// <param name="list"> </param>
-        /// <returns> </returns>
         private bool VisitAggregateList(IList<DbAggregate> list)
         {
             return VisitList(VisitAggregate, list);
@@ -184,8 +164,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Handing for list of <see cref="DbExpressionBinding" />s.
         /// </summary>
-        /// <param name="list"> </param>
-        /// <returns> </returns>
         private bool VisitExpressionBindingList(IList<DbExpressionBinding> list)
         {
             return VisitList(VisitExpressionBinding, list);
@@ -194,8 +172,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Handing for list of <see cref="DbExpression" />s.
         /// </summary>
-        /// <param name="list"> </param>
-        /// <returns> </returns>
         private bool VisitExpressionList(IList<DbExpression> list)
         {
             return VisitList(VisitExpression, list);
@@ -204,8 +180,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Handling for list of <see cref="DbSortClause" />s.
         /// </summary>
-        /// <param name="list"> </param>
-        /// <returns> </returns>
         private bool VisitSortClauseList(IList<DbSortClause> list)
         {
             return VisitList(VisitSortClause, list);
@@ -219,7 +193,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Called when an <see cref="DbExpression" /> of an otherwise unrecognized type is encountered.
         /// </summary>
         /// <param name="expression"> The expression </param>
-        /// <returns> </returns>
         /// <exception cref="NotSupportedException">
         ///     Always thrown if this method is called, since it indicates that
         ///     <paramref name="expression" />
@@ -236,7 +209,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitBinaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbAndExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbAndExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -260,7 +232,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Default handling for DbArithmeticExpression. Visits all arguments.
         /// </summary>
         /// <param name="expression"> The DbArithmeticExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbArithmeticExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -272,7 +243,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Walks the strucutre
         /// </summary>
         /// <param name="expression"> The DbCaseExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbCaseExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -287,7 +257,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitUnaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbCastExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbCastExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -299,7 +268,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitBinaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbComparisonExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbComparisonExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -311,7 +279,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Returns false
         /// </summary>
         /// <param name="expression"> The DbConstantExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbConstantExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -323,7 +290,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Walks the structure
         /// </summary>
         /// <param name="expression"> The DbCrossJoinExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbCrossJoinExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -335,7 +301,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitUnaryExpression" />
         /// </summary>
         /// <param name="expression"> The DeRefExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbDerefExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -347,7 +312,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitUnaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbDistinctExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbDistinctExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -359,7 +323,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitUnaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbElementExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbElementExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -371,7 +334,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitUnaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbEntityRefExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbEntityRefExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -383,7 +345,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Returns true, the tree needs to be rewritten.
         /// </summary>
         /// <param name="expression"> The DbExceptExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbExceptExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -398,7 +359,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Walks the structure
         /// </summary>
         /// <param name="expression"> The DbFilterExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbFilterExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -412,7 +372,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Visits the arguments
         /// </summary>
         /// <param name="expression"> The DbFunctionExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbFunctionExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -424,7 +383,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Visits the arguments and lambda body
         /// </summary>
         /// <param name="expression"> The DbLambdaExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbLambdaExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -439,7 +397,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Walks the structure
         /// </summary>
         /// <param name="expression"> The DbExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbGroupByExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -455,7 +412,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Returns true.
         /// </summary>
         /// <param name="expression"> The DbIntersectExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbIntersectExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -470,7 +426,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitUnaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbIsEmptyExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbIsEmptyExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -482,7 +437,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitUnaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbIsNullExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbIsNullExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -494,7 +448,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitUnaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbIsOfExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbIsOfExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -506,7 +459,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Walks the structure
         /// </summary>
         /// <param name="expression"> The DbJoinExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbJoinExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -521,7 +473,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Walks the structure
         /// </summary>
         /// <param name="expression"> The DbLikeExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbLikeExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -535,8 +486,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Walks the structure
         /// </summary>
-        /// <param name="expression"> </param>
-        /// <returns> </returns>
         /// <exception cref="NotSupportedException">expression.Limit is DbParameterReferenceExpression</exception>
         public override bool Visit(DbLimitExpression expression)
         {
@@ -554,7 +503,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Walks the arguments
         /// </summary>
         /// <param name="expression"> The DbNewInstanceExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbNewInstanceExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -566,7 +514,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitUnaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbNotExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbNotExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -590,7 +537,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitUnaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbOfTypeExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbOfTypeExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -602,7 +548,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitBinaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbOrExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbOrExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -614,7 +559,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="DbInExpression" />
         /// </summary>
         /// <param name="expression"> The DbInExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbInExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -626,7 +570,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Returns false
         /// </summary>
         /// <param name="expression"> The DbParameterReferenceExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbParameterReferenceExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -638,7 +581,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Walks the structure
         /// </summary>
         /// <param name="expression"> The DbProjectExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbProjectExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -652,7 +594,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Returns false
         /// </summary>
         /// <param name="expression"> The DbPropertyExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbPropertyExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -664,7 +605,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Walks the structure
         /// </summary>
         /// <param name="expression"> The DbQuantifierExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbQuantifierExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -678,7 +618,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitUnaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbRefExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbRefExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -690,7 +629,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitUnaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbRefKeyExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbRefKeyExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -702,7 +640,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Walks the structure
         /// </summary>
         /// <param name="expression"> The DbRelationshipNavigationExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbRelationshipNavigationExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -714,7 +651,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Returns false;
         /// </summary>
         /// <param name="expression"> The DbScanExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbScanExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -725,8 +661,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Resturns true
         /// </summary>
-        /// <param name="expression"> </param>
-        /// <returns> </returns>
         /// <exception cref="NotSupportedException">expression.Count is DbParameterReferenceExpression</exception>
         public override bool Visit(DbSkipExpression expression)
         {
@@ -749,7 +683,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Walks the structure
         /// </summary>
         /// <param name="expression"> The DbSortExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbSortExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -763,7 +696,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitUnaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbTreatExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbTreatExpression expression)
         {
             Check.NotNull(expression, "expression");
@@ -775,7 +707,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="VisitBinaryExpression" />
         /// </summary>
         /// <param name="expression"> The DbUnionAllExpression that is being visited. </param>
-        /// <returns> </returns>
         public override bool Visit(DbUnionAllExpression expression)
         {
             Check.NotNull(expression, "expression");

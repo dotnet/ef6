@@ -8,6 +8,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
 
@@ -60,7 +61,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Private Constructor.
         /// </summary>
-        /// <param name="metadata"> </param>
         private Sql8ExpressionRewriter(MetadataWorkspace metadata)
             : base(metadata)
         {
@@ -74,8 +74,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see
         ///         cref="TransformIntersectOrExcept(DbExpression, DbExpression, DbExpressionKind, System.Collections.Generic.IList{System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression}, string)" />
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override DbExpression Visit(DbExceptExpression e)
         {
             Check.NotNull(e, "e");
@@ -87,8 +85,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see
         ///         cref="TransformIntersectOrExcept(DbExpression, DbExpression, DbExpressionKind, System.Collections.Generic.IList{System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression}, string)" />
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override DbExpression Visit(DbIntersectExpression e)
         {
             Check.NotNull(e, "e");
@@ -133,8 +129,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     |
         ///     input
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         public override DbExpression Visit(DbSkipExpression e)
         {
             Check.NotNull(e, "e");
@@ -176,10 +170,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see
         ///         cref="TransformIntersectOrExcept(DbExpression, DbExpression, DbExpressionKind, System.Collections.Generic.IList{System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression}, string)" />
         /// </summary>
-        /// <param name="left"> </param>
-        /// <param name="right"> </param>
-        /// <param name="expressionKind"> </param>
-        /// <returns> </returns>
         private DbExpression TransformIntersectOrExcept(DbExpression left, DbExpression right, DbExpressionKind expressionKind)
         {
             return TransformIntersectOrExcept(left, right, expressionKind, null, null);
@@ -218,7 +208,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <param name="expressionKind"> </param>
         /// <param name="sortExpressionsOverLeft"> note that this list gets destroyed by this method </param>
         /// <param name="sortExpressionsBindingVariableName"> </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private DbExpression TransformIntersectOrExcept(
             DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList<DbPropertyExpression> sortExpressionsOverLeft,
             string sortExpressionsBindingVariableName)
@@ -313,8 +303,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Adds the flattened properties on the input to the flattenedProperties list.
         /// </summary>
-        /// <param name="input"> </param>
-        /// <param name="flattenedProperties"> </param>
         private void FlattenProperties(DbExpression input, IList<DbPropertyExpression> flattenedProperties)
         {
             var properties = input.ResultType.GetProperties();
@@ -353,12 +341,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     <see cref="HasMatchInList" />
         ///     when iterating both list simultaneously.
         /// </summary>
-        /// <param name="list1"> </param>
-        /// <param name="list2"> </param>
-        /// <param name="sortList"> </param>
-        /// <param name="list1BindingVariableName"> </param>
-        /// <param name="sortExpressionsBindingVariableName"> </param>
-        /// <returns> </returns>
         private static bool RemoveNonSortProperties(
             IList<DbPropertyExpression> list1, IList<DbPropertyExpression> list2, IList<DbPropertyExpression> sortList,
             string list1BindingVariableName, string sortExpressionsBindingVariableName)
@@ -381,11 +363,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Checks whether expr has a 'match' in the given list of property expressions.
         ///     If it does, the matching expression is removed form the list, to speed up future matching.
         /// </summary>
-        /// <param name="expr"> </param>
-        /// <param name="sortList"> </param>
-        /// <param name="exprBindingVariableName"> </param>
-        /// <param name="sortExpressionsBindingVariableName"> </param>
-        /// <returns> </returns>
         private static bool HasMatchInList(
             DbPropertyExpression expr, IList<DbPropertyExpression> list, string exprBindingVariableName,
             string listExpressionsBindingVariableName)
@@ -410,11 +387,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     expr1 -> DbPropertyExpression(... (DbPropertyExpression(DbVariableReferenceExpression(expr2BindingVariableName), nameX), ..., name1),
         ///     i.e. if they only differ in the name of the binding.
         /// </summary>
-        /// <param name="expr1"> </param>
-        /// <param name="expr2"> </param>
-        /// <param name="expr1BindingVariableName"> </param>
-        /// <param name="expr2BindingVariableName"> </param>
-        /// <returns> </returns>
         private static bool AreMatching(
             DbPropertyExpression expr1, DbPropertyExpression expr2, string expr1BindingVariableName, string expr2BindingVariableName)
         {
@@ -454,8 +426,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     over the given inputBinding that projects out the given flattenedProperties.
         ///     and updates the flattenedProperties to be over the newly created project.
         /// </summary>
-        /// <param name="inputBinding"> </param>
-        /// <param name="flattenedProperties"> </param>
         /// <returns>
         ///     An <see cref="DbExpressionBinding" /> over the newly created <see cref="DbProjectExpression" />
         /// </returns>

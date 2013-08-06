@@ -74,17 +74,17 @@ namespace System.Data.Entity.SqlServer
                 new SingletonDependencyResolver<DbSpatialServices>(
                     SqlSpatialServices.Instance,
                     k =>
+                    {
+                        if (k == null)
                         {
-                            if (k == null)
-                            {
-                                return true;
-                            }
+                            return true;
+                        }
 
-                            var asSpatialKey = k as DbProviderInfo;
-                            return asSpatialKey != null
-                                   && asSpatialKey.ProviderInvariantName == ProviderInvariantName
-                                   && SupportsSpatial(asSpatialKey.ProviderManifestToken);
-                        }));
+                        var asSpatialKey = k as DbProviderInfo;
+                        return asSpatialKey != null
+                               && asSpatialKey.ProviderInvariantName == ProviderInvariantName
+                               && SupportsSpatial(asSpatialKey.ProviderManifestToken);
+                    }));
         }
 
         /// <summary>
@@ -1039,8 +1039,6 @@ namespace System.Data.Entity.SqlServer
         /// <summary>
         ///     Get the full mdf file name given the attachDBFile value from the connection string
         /// </summary>
-        /// <param name="attachDBFile"> </param>
-        /// <returns> </returns>
         private static string GetMdfFileName(string attachDBFile)
         {
             DebugCheck.NotEmpty(attachDBFile);
@@ -1174,9 +1172,9 @@ namespace System.Data.Entity.SqlServer
         ///     Note that directly deleting the files does not work for a remote server.  However, even for not attached
         ///     databases the current logic would work assuming the user does: if (DatabaseExists) DeleteDatabase
         /// </summary>
-        /// <param name="connection"> </param>
-        /// <param name="commandTimeout"> </param>
-        /// <param name="storeItemCollection"> </param>
+        /// <param name="connection"> Connection </param>
+        /// <param name="commandTimeout"> Timeout for internal commands. </param>
+        /// <param name="storeItemCollection"> Item Collection. </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         protected override void DbDeleteDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
@@ -1231,7 +1229,7 @@ namespace System.Data.Entity.SqlServer
                     throw new InvalidOperationException(Strings.SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog);
                 }
             }
-                // neither initial catalog nor attachDB file name are specified
+            // neither initial catalog nor attachDB file name are specified
             else
             {
                 throw new InvalidOperationException(Strings.SqlProvider_DdlGeneration_MissingInitialCatalog);
@@ -1306,16 +1304,16 @@ namespace System.Data.Entity.SqlServer
                     new ExecutionStrategyKey(ProviderInvariantName, sqlConnection.DataSource))()
                     .Execute(
                         () =>
+                        {
+                            // If Open() fails the original credentials need to be restored before retrying
+                            if (sqlConnection.State == ConnectionState.Closed
+                                && !sqlConnection.ConnectionString.Equals(holdConnectionString, StringComparison.Ordinal))
                             {
-                                // If Open() fails the original credentials need to be restored before retrying
-                                if (sqlConnection.State == ConnectionState.Closed
-                                    && !sqlConnection.ConnectionString.Equals(holdConnectionString, StringComparison.Ordinal))
-                                {
-                                    sqlConnection.ConnectionString = holdConnectionString;
-                                }
+                                sqlConnection.ConnectionString = holdConnectionString;
+                            }
 
-                                sqlConnection.Open();
-                            });
+                            sqlConnection.Open();
+                        });
             }
             try
             {

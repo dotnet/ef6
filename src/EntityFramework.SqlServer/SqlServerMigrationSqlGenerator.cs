@@ -258,7 +258,7 @@ namespace System.Data.Entity.SqlServer
         ///     Creates an empty connection for the current provider.
         ///     Allows derived providers to use connection other than <see cref="SqlConnection" />.
         /// </summary>
-        /// <returns> </returns>
+        /// <returns> An empty connection for the current provider. </returns>
         protected virtual DbConnection CreateConnection()
         {
             return DbConfiguration.DependencyResolver.GetService<DbProviderFactory>("System.Data.SqlClient").CreateConnection();
@@ -446,7 +446,8 @@ namespace System.Data.Entity.SqlServer
         ///     Generates SQL to mark a table as a system table.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name="table"> The table to mark as a system table. </param>
+        /// <param name="createTableOperation"> The table to mark as a system table. </param>
+        /// <param name="writer"> The <see cref='IndentedTextWriter' /> to write the generated SQL to. </param>
         protected virtual void GenerateMakeSystemTable(CreateTableOperation createTableOperation, IndentedTextWriter writer)
         {
             Check.NotNull(createTableOperation, "createTableOperation");
@@ -467,7 +468,7 @@ namespace System.Data.Entity.SqlServer
         ///     Generates SQL to create a database schema.
         ///     Generated SQL should be added using the Statement method.
         /// </summary>
-        /// <param name="createTableOperation"> The name of the schema to create. </param>
+        /// <param name="schema"> The name of the schema to create. </param>
         protected virtual void GenerateCreateSchema(string schema)
         {
             Check.NotEmpty(schema, "schema");
@@ -1243,7 +1244,7 @@ namespace System.Data.Entity.SqlServer
         ///     Generates SQL to specify the data type of a column.
         ///     This method just generates the actual type, not the SQL to create the column.
         /// </summary>
-        /// <param name="defaultValue"> The definition of the column. </param>
+        /// <param name="columnModel"> The definition of the column. </param>
         /// <returns> SQL representing the data type. </returns>
         protected virtual string BuildColumnType(ColumnModel columnModel)
         {

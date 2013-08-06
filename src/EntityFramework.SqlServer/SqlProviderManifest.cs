@@ -195,15 +195,15 @@ namespace System.Data.Entity.SqlServer
                     //Remove the Katmai types for both SQL 8 and SQL 9
                     primitiveTypes.RemoveAll(
                         delegate(PrimitiveType primitiveType)
-                            {
-                                var name = primitiveType.Name.ToLowerInvariant();
-                                return name.Equals("time", StringComparison.Ordinal) ||
-                                       name.Equals("date", StringComparison.Ordinal) ||
-                                       name.Equals("datetime2", StringComparison.Ordinal) ||
-                                       name.Equals("datetimeoffset", StringComparison.Ordinal) ||
-                                       name.Equals("geography", StringComparison.Ordinal) ||
-                                       name.Equals("geometry", StringComparison.Ordinal);
-                            }
+                        {
+                            var name = primitiveType.Name.ToLowerInvariant();
+                            return name.Equals("time", StringComparison.Ordinal) ||
+                                   name.Equals("date", StringComparison.Ordinal) ||
+                                   name.Equals("datetime2", StringComparison.Ordinal) ||
+                                   name.Equals("datetimeoffset", StringComparison.Ordinal) ||
+                                   name.Equals("geography", StringComparison.Ordinal) ||
+                                   name.Equals("geometry", StringComparison.Ordinal);
+                        }
                         );
                     //Remove the types that won't work in SQL 8
                     if (_version == SqlVersion.Sql8)
@@ -211,10 +211,10 @@ namespace System.Data.Entity.SqlServer
                         // SQLBUDT 550667 and 551271: Remove xml and 'max' types for SQL Server 2000
                         primitiveTypes.RemoveAll(
                             delegate(PrimitiveType primitiveType)
-                                {
-                                    var name = primitiveType.Name.ToLowerInvariant();
-                                    return name.Equals("xml", StringComparison.Ordinal) || name.EndsWith("(max)", StringComparison.Ordinal);
-                                }
+                            {
+                                var name = primitiveType.Name.ToLowerInvariant();
+                                return name.Equals("xml", StringComparison.Ordinal) || name.EndsWith("(max)", StringComparison.Ordinal);
+                            }
                             );
                     }
                     _primitiveTypes = primitiveTypes.AsReadOnly();
@@ -375,7 +375,7 @@ namespace System.Data.Entity.SqlServer
 
             switch (storeTypeName)
             {
-                    // for some types we just go with simple type usage with no facets
+                // for some types we just go with simple type usage with no facets
                 case "tinyint":
                 case "smallint":
                 case "bigint":
@@ -528,7 +528,7 @@ namespace System.Data.Entity.SqlServer
         ///     This method takes a type and a set of facets and returns the best mapped equivalent type
         ///     in SQL Server, taking the store version into consideration.
         /// </summary>
-        /// <param name="storeType"> A TypeUsage encapsulating an EDM type and a set of facets </param>
+        /// <param name="edmType"> A TypeUsage encapsulating an EDM type and a set of facets </param>
         /// <returns> A TypeUsage encapsulating a store type and a set of facets </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override TypeUsage GetStoreType(TypeUsage edmType)
@@ -766,7 +766,6 @@ namespace System.Data.Entity.SqlServer
         /// <summary>
         ///     Escapes the wildcard characters and the escape character in the given argument.
         /// </summary>
-        /// <param name="argument"> </param>
         /// <returns> Equivalent to the argument, with the wildcard characters and the escape character escaped </returns>
         public override string EscapeLikeArgument(string argument)
         {

@@ -47,9 +47,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// </summary>
         internal Dictionary<string, Symbol> OutputColumns { get; set; }
 
-        internal List<Symbol> AllJoinExtents { get; // We have a setter as well, even though this is a list,
+        internal List<Symbol> AllJoinExtents
+        {
+            get;
+            // We have a setter as well, even though this is a list,
             // since we use this field only in special cases.
-            set; }
+            set;
+        }
 
         private List<Symbol> fromExtents;
 
@@ -164,8 +168,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///         <item>Write each of the clauses (if it exists) as a string</item>
         ///     </list>
         /// </summary>
-        /// <param name="writer"> </param>
-        /// <param name="sqlGenerator"> </param>
         public void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {
             #region Check if FROM aliases need to be renamed

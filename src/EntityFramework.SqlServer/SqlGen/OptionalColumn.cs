@@ -55,8 +55,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Writes that fragment that represents the optional column
         ///     if the usage manager says it is used.
         /// </summary>
-        /// <param name="writer"> </param>
-        /// <param name="sqlGenerator"> </param>
         public bool WriteSqlIfUsed(SqlWriter writer, SqlGenerator sqlGenerator, string separator)
         {
             if (m_usageManager.IsUsed(m_symbol))

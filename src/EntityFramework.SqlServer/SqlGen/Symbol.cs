@@ -82,10 +82,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Use this constructor if the symbol represents a SqlStatement for which the output columns need to be tracked.
         /// </summary>
-        /// <param name="name"> </param>
-        /// <param name="type"> </param>
-        /// <param name="outputColumns"> </param>
-        /// <param name="outputColumnsRenamed"> </param>
         public Symbol(string name, TypeUsage type, Dictionary<string, Symbol> outputColumns, bool outputColumnsRenamed)
         {
             this.name = name;
@@ -102,8 +98,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     the new name of the symbol (which could be the same as the old name).
         ///     We rename columns here if necessary.
         /// </summary>
-        /// <param name="writer"> </param>
-        /// <param name="sqlGenerator"> </param>
         public void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {
             if (NeedsRenaming)

@@ -107,8 +107,6 @@ namespace System.Data.Entity.SqlServer
         ///     because constructing the value directly allows client code to specify the type, rather than SqlClient using
         ///     the server-specified assembly qualified type name from TDS to try to locate the correct type on the client.
         /// </summary>
-        /// <param name="spatialType"> </param>
-        /// <returns> </returns>
         private static Func<BinaryReader, object> CreateBinaryReadDelegate(Type spatialType)
         {
             DebugCheck.NotNull(spatialType);

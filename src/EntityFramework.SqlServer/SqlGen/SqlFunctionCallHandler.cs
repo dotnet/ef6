@@ -154,7 +154,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     All special store functions and their handlers
         /// </summary>
-        /// <returns> </returns>
         private static Dictionary<string, FunctionHandler> InitializeStoreFunctionHandlers()
         {
             var functionHandlers = new Dictionary<string, FunctionHandler>(15, StringComparer.Ordinal);
@@ -216,7 +215,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     All special non-aggregate canonical functions and their handlers
         /// </summary>
-        /// <returns> </returns>
         private static Dictionary<string, FunctionHandler> InitializeCanonicalFunctionHandlers()
         {
             var functionHandlers = new Dictionary<string, FunctionHandler>(16, StringComparer.Ordinal);
@@ -283,7 +281,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Initalizes the mapping from functions to TSql operators
         ///     for all functions that translate to TSql operators
         /// </summary>
-        /// <returns> </returns>
         private static Dictionary<string, string> InitializeFunctionNameToOperatorDictionary()
         {
             var functionNameToOperatorDictionary = new Dictionary<string, string>(5, StringComparer.Ordinal);
@@ -300,7 +297,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Initalizes the mapping from names of canonical function for date/time addition
         ///     to corresponding dateparts
         /// </summary>
-        /// <returns> </returns>
         private static Dictionary<string, string> InitializeDateAddFunctionNameToDatepartDictionary()
         {
             var dateAddFunctionNameToDatepartDictionary = new Dictionary<string, string>(5, StringComparer.Ordinal);
@@ -320,7 +316,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Initalizes the mapping from names of canonical function for date/time difference
         ///     to corresponding dateparts
         /// </summary>
-        /// <returns> </returns>
         private static Dictionary<string, string> InitializeDateDiffFunctionNameToDatepartDictionary()
         {
             var dateDiffFunctionNameToDatepartDictionary = new Dictionary<string, string>(5, StringComparer.Ordinal);
@@ -340,7 +335,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Initalizes the mapping from names of canonical function that represent static geography methods to their corresponding
         ///     static method name, qualified with the 'geography::' prefix.
         /// </summary>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static Dictionary<string, FunctionHandler> InitializeGeographyStaticMethodFunctionsDictionary()
         {
@@ -404,7 +398,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Initalizes the mapping from names of canonical function that represent geography instance properties to their corresponding
         ///     store property name.
         /// </summary>
-        /// <returns> </returns>
         private static Dictionary<string, string> InitializeGeographyInstancePropertyFunctionsDictionary()
         {
             var instancePropGeographyFunctions = new Dictionary<string, string>();
@@ -421,7 +414,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Initalizes the mapping of canonical function name to instance method name for geography instance functions that differ in name from the sql server equivalent.
         /// </summary>
-        /// <returns> </returns>
         private static Dictionary<string, string> InitializeRenamedGeographyInstanceMethodFunctions()
         {
             var renamedInstanceMethodFunctions = new Dictionary<string, string>();
@@ -457,7 +449,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Initalizes the mapping from names of canonical function that represent static geometry methods to their corresponding
         ///     static method name, qualified with the 'geometry::' prefix.
         /// </summary>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static Dictionary<string, FunctionHandler> InitializeGeometryStaticMethodFunctionsDictionary()
         {
@@ -521,7 +512,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Initalizes the mapping from names of canonical function that represent geometry instance properties to their corresponding
         ///     store property name.
         /// </summary>
-        /// <returns> </returns>
         private static Dictionary<string, string> InitializeGeometryInstancePropertyFunctionsDictionary()
         {
             var instancePropGeometryFunctions = new Dictionary<string, string>();
@@ -538,7 +528,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Initalizes the mapping of canonical function name to instance method name for geometry instance functions that differ in name from the sql server equivalent.
         /// </summary>
-        /// <returns> </returns>
         private static Dictionary<string, string> InitializeRenamedGeometryInstanceMethodFunctions()
         {
             var renamedInstanceMethodFunctions = new Dictionary<string, string>();
@@ -680,8 +669,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Determines whether the given function is a store function that
         ///     requires special handling
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static bool IsSpecialStoreFunction(DbFunctionExpression e)
         {
             return IsStoreFunction(e.Function)
@@ -692,8 +679,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Determines whether the given function is a canonical function that
         ///     requires special handling
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static bool IsSpecialCanonicalFunction(DbFunctionExpression e)
         {
             return e.Function.IsCanonicalFunction()
@@ -704,8 +689,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Determines whether the given function is a canonical function the translates
         ///     to a spatial (geography/geometry) property access or method call.
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static bool IsSpatialCanonicalFunction(DbFunctionExpression e, out PrimitiveTypeKind spatialTypeKind)
         {
             if (e.Function.IsCanonicalFunction())
@@ -732,8 +715,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Default handling for functions.
         ///     Translates them to FunctionName(arg1, arg2, ..., argn)
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleFunctionDefault(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleFunctionDefaultGivenName(sqlgen, e, null);
@@ -743,9 +724,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Default handling for functions with a given name.
         ///     Translates them to FunctionName(arg1, arg2, ..., argn)
         /// </summary>
-        /// <param name="e"> </param>
-        /// <param name="functionName"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleFunctionDefaultGivenName(SqlGenerator sqlgen, DbFunctionExpression e, string functionName)
         {
             // NOTE: The order of checks is important in case of CHARINDEX.
@@ -775,10 +753,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Default handling for functions with a given name and given return value cast.
         ///     Translates them to CAST(FunctionName(arg1, arg2, ..., argn) AS returnType)
         /// </summary>
-        /// <param name="e"> </param>
-        /// <param name="functionName"> </param>
-        /// <param name="returnType"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleFunctionDefaultCastReturnValue(
             SqlGenerator sqlgen, DbFunctionExpression e, string functionName, string returnType)
         {
@@ -823,8 +797,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     If the function is niladic it does not append anything,
         ///     otherwise it appends (arg1, arg2, .., argn)
         /// </summary>
-        /// <param name="e"> </param>
-        /// <param name="result"> </param>
         private static void HandleFunctionArgumentsDefault(SqlGenerator sqlgen, DbFunctionExpression e, SqlBuilder result)
         {
             var isNiladicFunction = e.Function.NiladicFunctionAttribute;
@@ -858,10 +830,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Handler for functions that need to be translated to different store function based on version
         /// </summary>
-        /// <param name="e"> </param>
-        /// <param name="preKatmaiName"> </param>
-        /// <param name="katmaiName"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleFunctionGivenNameBasedOnVersion(
             SqlGenerator sqlgen, DbFunctionExpression e, string preKatmaiName, string katmaiName)
         {
@@ -875,8 +843,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Handler for special build in functions
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleSpecialStoreFunction(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleSpecialFunction(_storeFunctionHandlers, sqlgen, e);
@@ -885,8 +851,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Handler for special canonical functions
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleSpecialCanonicalFunction(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleSpecialFunction(_canonicalFunctionHandlers, sqlgen, e);
@@ -895,9 +859,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Dispatches the special function processing to the appropriate handler
         /// </summary>
-        /// <param name="handlers"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleSpecialFunction(
             Dictionary<string, FunctionHandler> handlers, SqlGenerator sqlgen, DbFunctionExpression e)
         {
@@ -1021,9 +982,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     arg0 op arg1
         ///     Also, the arguments can be optionaly enclosed in parethesis
         /// </summary>
+        /// <param name="sqlgen"> </param>
         /// <param name="e"> </param>
         /// <param name="parenthesiseArguments"> Whether the arguments should be enclosed in parethesis </param>
-        /// <returns> </returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static ISqlFragment HandleSpecialFunctionToOperator(SqlGenerator sqlgen, DbFunctionExpression e, bool parenthesiseArguments)
         {
             var result = new SqlBuilder();
@@ -1061,9 +1023,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     <see cref="HandleSpecialFunctionToOperator"></see>
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleConcatFunction(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleSpecialFunctionToOperator(sqlgen, e, false);
@@ -1072,9 +1031,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     <see cref="HandleSpecialFunctionToOperator"></see>
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionBitwise(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleSpecialFunctionToOperator(sqlgen, e, true);
@@ -1085,9 +1041,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     handles here have *only* the 1st parameter as datepart. datepart value is passed along
         ///     the QP as string and has to be expanded as TSQL keyword.
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         internal static ISqlFragment HandleDatepartDateFunction(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             Debug.Assert(e.Arguments.Count > 0, "e.Arguments.Count > 0");
@@ -1143,9 +1096,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     For example:
         ///     Year(date) -> DATEPART( year, date)
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private static ISqlFragment HandleCanonicalFunctionDatepart(SqlGenerator sqlgen, DbFunctionExpression e)
         {
@@ -1156,9 +1106,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Handler for canonical funcitons for GetTotalOffsetMinutes.
         ///     GetTotalOffsetMinutes(e) --> Datepart(tzoffset, e)
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionGetTotalOffsetMinutes(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleCanonicalFunctionDatepart(sqlgen, "tzoffset", e);
@@ -1168,9 +1115,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Handler for turning a canonical function into DATEPART
         ///     Results in DATEPART(datepart, e)
         /// </summary>
-        /// <param name="datepart"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionDatepart(SqlGenerator sqlgen, string datepart, DbFunctionExpression e)
         {
             var result = new SqlBuilder();
@@ -1191,9 +1135,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     For Sql8 and Sql9:  CurrentDateTime() -> GetDate()
         ///     For Sql10:          CurrentDateTime() -> SysDateTime()
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionCurrentDateTime(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleFunctionGivenNameBasedOnVersion(sqlgen, e, "GetDate", "SysDateTime");
@@ -1204,9 +1145,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     For Sql8 and Sql9:  CurrentUtcDateTime() -> GetUtcDate()
         ///     For Sql10:          CurrentUtcDateTime() -> SysUtcDateTime()
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionCurrentUtcDateTime(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleFunctionGivenNameBasedOnVersion(sqlgen, e, "GetUtcDate", "SysUtcDateTime");
@@ -1217,9 +1155,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     For Sql8 and Sql9:  throw
         ///     For Sql10: CurrentDateTimeOffset() -> SysDateTimeOffset()
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionCurrentDateTimeOffset(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             sqlgen.AssertKatmaiOrNewer(e);
@@ -1231,9 +1166,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Pre Katmai creates datetime.
         ///     On Katmai creates datetime2.
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionCreateDateTime(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             var typeName = (sqlgen.IsPreKatmai) ? "datetime" : "datetime2";
@@ -1245,9 +1177,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Pre Katmai not supported.
         ///     On Katmai creates datetimeoffset.
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionCreateDateTimeOffset(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             sqlgen.AssertKatmaiOrNewer(e);
@@ -1259,9 +1188,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Pre Katmai not supported.
         ///     On Katmai creates time.
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionCreateTime(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             sqlgen.AssertKatmaiOrNewer(e);
@@ -1281,11 +1207,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Time zone part:
         ///     (case when @tzoffset >= 0 then '+' else '-' end) + convert(varchar(255), ABS(@tzoffset)/60) + ':' + convert(varchar(255), ABS(@tzoffset)%60)
         /// </summary>
-        /// <param name="typeName"> </param>
-        /// <param name="args"> </param>
-        /// <param name="hasDatePart"> </param>
-        /// <param name="hasTimeZonePart"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionDateTimeTypeCreation(
             SqlGenerator sqlgen, string typeName, IList<DbExpression> args, bool hasDatePart, bool hasTimeZonePart)
         {
@@ -1358,8 +1279,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Helper method that wrapps the given expession with a conver to varchar(255)
         /// </summary>
-        /// <param name="result"> </param>
-        /// <param name="e"> </param>
         private static void AppendConvertToVarchar(SqlGenerator sqlgen, SqlBuilder result, DbExpression e)
         {
             result.Append("convert(varchar(255), ");
@@ -1375,9 +1294,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     TRUNCATETIME(X) => CONVERT(datetimeoffset, CONVERT(VARCHAR(255), expression,  102)
         ///     + ' 00:00:00 ' +  Right(convert(varchar(255), @arg, 121), 6),  102)
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionTruncateTime(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             //The type that we need to return is based on the argument type.
@@ -1421,9 +1337,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Handler for date addition functions supported only starting from Katmai
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionDateAddKatmaiOrNewer(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             sqlgen.AssertKatmaiOrNewer(e);
@@ -1435,9 +1348,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Translation, e.g.
         ///     AddYears(datetime, number) =>  DATEADD(year, number, datetime)
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionDateAdd(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             var result = new SqlBuilder();
@@ -1456,9 +1366,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Hanndler for date differencing functions supported only starting from Katmai
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionDateDiffKatmaiOrNewer(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             sqlgen.AssertKatmaiOrNewer(e);
@@ -1470,9 +1377,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Translation, e.g.
         ///     DiffYears(datetime, number) =>  DATEDIFF(year, number, datetime)
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionDateDiff(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             var result = new SqlBuilder();
@@ -1491,9 +1395,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Function rename IndexOf -> CHARINDEX
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionIndexOf(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleFunctionDefaultGivenName(sqlgen, e, "CHARINDEX");
@@ -1502,9 +1403,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Function rename NewGuid -> NEWID
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionNewGuid(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleFunctionDefaultGivenName(sqlgen, e, "NEWID");
@@ -1513,9 +1411,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Function rename Length -> LEN
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionLength(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             // We are aware of SQL Server's trimming of trailing spaces. We disclaim that behavior in general.
@@ -1529,9 +1424,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Round(numericExpression) -> Round(numericExpression, 0);
         ///     Round(numericExpression, digits) -> Round(numericExpression, digits);
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionRound(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleCanonicalFunctionRoundOrTruncate(sqlgen, e, true);
@@ -1541,9 +1433,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Truncate(numericExpression) -> Round(numericExpression, 0, 1); (does not exist as canonical function yet)
         ///     Truncate(numericExpression, digits) -> Round(numericExpression, digits, 1);
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionTruncate(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleCanonicalFunctionRoundOrTruncate(sqlgen, e, false);
@@ -1552,9 +1441,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Common handler for the canonical functions ROUND and TRUNCATE
         /// </summary>
-        /// <param name="e"> </param>
-        /// <param name="round"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionRoundOrTruncate(SqlGenerator sqlgen, DbFunctionExpression e, bool round)
         {
             var result = new SqlBuilder();
@@ -1604,9 +1490,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Handle the canonical function Abs().
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionAbs(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             // Convert the call to Abs(Byte) to a no-op, since Byte is an unsigned type. 
@@ -1625,9 +1508,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     TRIM(string) -> LTRIM(RTRIM(string))
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionTrim(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             var result = new SqlBuilder();
@@ -1645,9 +1525,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Function rename ToLower -> LOWER
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionToLower(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleFunctionDefaultGivenName(sqlgen, e, "LOWER");
@@ -1656,9 +1533,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Function rename ToUpper -> UPPER
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionToUpper(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return HandleFunctionDefaultGivenName(sqlgen, e, "UPPER");
@@ -1668,12 +1542,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     Function to translate the StartsWith, EndsWith and Contains canonical functions to LIKE expression in T-SQL
         ///     and also add the trailing ESCAPE '~' when escaping of the search string for the LIKE expression has occurred
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="targetExpression"> </param>
-        /// <param name="constSearchParamExpression"> </param>
-        /// <param name="result"> </param>
-        /// <param name="insertPercentStart"> </param>
-        /// <param name="insertPercentEnd"> </param>
         private static void TranslateConstantParameterForLike(
             SqlGenerator sqlgen, DbExpression targetExpression, DbConstantExpression constSearchParamExpression, SqlBuilder result,
             bool insertPercentStart, bool insertPercentEnd)
@@ -1709,9 +1577,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Handler for Contains. Wraps the normal translation with a case statement
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionContains(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return WrapPredicate(HandleCanonicalFunctionContains, sqlgen, e);
@@ -1720,10 +1585,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     CONTAINS(arg0, arg1) => arg0 LIKE '%arg1%'
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="args"> </param>
-        /// <param name="result"> </param>
-        /// <returns> </returns>
         private static SqlBuilder HandleCanonicalFunctionContains(SqlGenerator sqlgen, IList<DbExpression> args, SqlBuilder result)
         {
             Debug.Assert(args.Count == 2, "Contains should have two arguments");
@@ -1753,9 +1614,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Handler for StartsWith. Wraps the normal translation with a case statement
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionStartsWith(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return WrapPredicate(HandleCanonicalFunctionStartsWith, sqlgen, e);
@@ -1764,10 +1622,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     STARTSWITH(arg0, arg1) => arg0 LIKE 'arg1%'
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="args"> </param>
-        /// <param name="result"> </param>
-        /// <returns> </returns>
         private static SqlBuilder HandleCanonicalFunctionStartsWith(SqlGenerator sqlgen, IList<DbExpression> args, SqlBuilder result)
         {
             Debug.Assert(args.Count == 2, "StartsWith should have two arguments");
@@ -1798,9 +1652,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Handler for EndsWith. Wraps the normal translation with a case statement
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment HandleCanonicalFunctionEndsWith(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             return WrapPredicate(HandleCanonicalFunctionEndsWith, sqlgen, e);
@@ -1809,10 +1660,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     ENDSWITH(arg0, arg1) => arg0 LIKE '%arg1'
         /// </summary>
-        /// <param name="sqlgen"> </param>
-        /// <param name="args"> </param>
-        /// <param name="result"> </param>
-        /// <returns> </returns>
         private static SqlBuilder HandleCanonicalFunctionEndsWith(SqlGenerator sqlgen, IList<DbExpression> args, SqlBuilder result)
         {
             Debug.Assert(args.Count == 2, "EndsWith should have two arguments");
@@ -1850,9 +1697,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         ///     PREDICATE => CASE WHEN (PREDICATE) THEN CAST(1 AS BIT) WHEN (NOT (PREDICATE)) CAST (O AS BIT) END
         ///     The predicate is produced by the given predicateTranslator.
         /// </summary>
-        /// <param name="predicateTranslator"> </param>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         private static ISqlFragment WrapPredicate(
             Func<SqlGenerator, IList<DbExpression>, SqlBuilder, SqlBuilder> predicateTranslator, SqlGenerator sqlgen, DbFunctionExpression e)
         {
@@ -1868,8 +1712,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Writes the function name to the given SqlBuilder.
         /// </summary>
-        /// <param name="function"> </param>
-        /// <param name="result"> </param>
         internal static void WriteFunctionName(SqlBuilder result, EdmFunction function)
         {
             string storeFunctionName;
@@ -1914,8 +1756,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Is this a Store function (ie) does it have the builtinAttribute specified and it is not a canonical function?
         /// </summary>
-        /// <param name="function"> </param>
-        /// <returns> </returns>
         internal static bool IsStoreFunction(EdmFunction function)
         {
             return function.BuiltInAttribute && !function.IsCanonicalFunction();
@@ -1924,8 +1764,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     determines if the function requires the return type be enforeced by use of a cast expression
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         internal static bool CastReturnTypeToInt64(DbFunctionExpression e)
         {
             return CastReturnTypeToGivenType(e, _functionRequiresReturnTypeCastToInt64, PrimitiveTypeKind.Int64);
@@ -1934,8 +1772,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     determines if the function requires the return type be enforeced by use of a cast expression
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         internal static bool CastReturnTypeToInt32(SqlGenerator sqlgen, DbFunctionExpression e)
         {
             if (!_functionRequiresReturnTypeCastToInt32.Contains(e.Function.FullName))
@@ -1950,8 +1786,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     determines if the function requires the return type be enforeced by use of a cast expression
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         internal static bool CastReturnTypeToInt16(DbFunctionExpression e)
         {
             return CastReturnTypeToGivenType(e, _functionRequiresReturnTypeCastToInt16, PrimitiveTypeKind.Int16);
@@ -1960,8 +1794,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     determines if the function requires the return type be enforeced by use of a cast expression
         /// </summary>
-        /// <param name="e"> </param>
-        /// <returns> </returns>
         internal static bool CastReturnTypeToSingle(DbFunctionExpression e)
         {
             //Do not add the cast for the Round() overload having 2 arguments. 
@@ -1973,10 +1805,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         /// <summary>
         ///     Determines if the function requires the return type be enforced by use of a cast expression
         /// </summary>
-        /// <param name="e"> </param>
-        /// <param name="functionsRequiringReturnTypeCast"> </param>
-        /// <param name="type"> </param>
-        /// <returns> </returns>
         private static bool CastReturnTypeToGivenType(
             DbFunctionExpression e, ISet<string> functionsRequiringReturnTypeCast, PrimitiveTypeKind type)
         {
