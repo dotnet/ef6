@@ -62,7 +62,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary> 
         ///     Configures stored procedures to be used for modifying this relationship. 
         /// </summary>
-        /// <param name="modificationStoredProceduresConfigurationAction">
+        /// <param name="modificationStoredProcedureMappingConfigurationAction">
         ///     Configuration to override the default conventions for procedure and parameter names.
         /// </param>
         /// <returns>The same <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.ManyToManyNavigationPropertyConfiguration`2" /> instance so that multiple calls can be chained.</returns>
@@ -113,7 +113,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return base.GetHashCode();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the <see cref="Type" /> of the current instance.
+        /// </summary>
+        /// <returns>The exact runtime type of the current instance.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()

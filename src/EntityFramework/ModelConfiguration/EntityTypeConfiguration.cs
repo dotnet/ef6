@@ -148,7 +148,7 @@ namespace System.Data.Entity.ModelConfiguration
         /// <summary>
         ///     Configures this type to use stored procedures for insert, update and delete.
         /// </summary>
-        /// <param name="modificationStoredProceduresConfigurationAction">
+        /// <param name="modificationStoredProcedureMappingConfigurationAction">
         ///     Configuration to override the default conventions for procedure and parameter names.
         /// </param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>

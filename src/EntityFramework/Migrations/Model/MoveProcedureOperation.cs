@@ -17,7 +17,7 @@ namespace System.Data.Entity.Migrations.Model
         /// Initializes a new instance of the <see cref="MoveProcedureOperation"/> class.
         /// </summary>
         /// <param name="name">The name of the stored procedure to move.</param>
-        /// <param name="newName">The new schema for the stored procedure.</param>
+        /// <param name="newSchema">The new schema for the stored procedure.</param>
         /// <param name="anonymousArguments"> Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public MoveProcedureOperation(string name, string newSchema, object anonymousArguments = null)
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Migrations.Model
                 var databaseName = DatabaseName.Parse(_name);
 
                 return new MoveProcedureOperation(
-                    new DatabaseName(databaseName.Name, NewSchema).ToString(), 
+                    new DatabaseName(databaseName.Name, NewSchema).ToString(),
                     databaseName.Schema);
             }
         }

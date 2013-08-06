@@ -57,10 +57,11 @@ namespace System.Data.Entity.Infrastructure.MappingViews
         /// <summary>
         ///     Creates a <see cref="DbMappingViewCacheTypeAttribute" /> instance that associates a context type
         ///     with a mapping view cache type.
-        ///     <param name="contextType">
-        ///         A subclass of <see cref="ObjectContext" /> or <see cref="DbContext" />.
-        ///     </param>
-        ///     <param name="cacheTypeName">The assembly qualified full name of the cache type.</param>
+        /// </summary>
+        /// <param name="contextType">
+        ///     A subclass of <see cref="ObjectContext" /> or <see cref="DbContext" />.
+        /// </param>
+        /// <param name="cacheTypeName">The assembly qualified full name of the cache type.</param>
         public DbMappingViewCacheTypeAttribute(Type contextType, string cacheTypeName)
         {
             Check.NotNull(contextType, "contextType");

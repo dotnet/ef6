@@ -554,7 +554,10 @@ namespace System.Data.Entity.Migrations.Builders
             return base.GetHashCode();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the <see cref="Type" /> of the current instance.
+        /// </summary>
+        /// <returns>The exact runtime type of the current instance.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
@@ -562,7 +565,10 @@ namespace System.Data.Entity.Migrations.Builders
             return base.GetType();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Creates a shallow copy of the current <see cref="Object" />.
+        /// </summary>
+        /// <returns>A shallow copy of the current <see cref="Object" />.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         protected new object MemberwiseClone()
         {

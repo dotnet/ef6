@@ -82,7 +82,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     This is used for database generated columns.
         /// </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        /// <param name="propertyExpression"> The name of the property to configure the result for. </param>
+        /// <param name="propertyName"> The name of the property to configure the result for. </param>
         /// <param name="columnName">The name of the result column.</param>
         public ConventionInsertModificationStoredProcedureConfiguration Result(string propertyName, string columnName)
         {
@@ -99,7 +99,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         ///     This is used for database generated columns.
         /// </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
-        /// <param name="propertyExpression"> The property to configure the result for. </param>
+        /// <param name="propertyInfo"> The property to configure the result for. </param>
         /// <param name="columnName">The name of the result column.</param>
         public ConventionInsertModificationStoredProcedureConfiguration Result(PropertyInfo propertyInfo, string columnName)
         {

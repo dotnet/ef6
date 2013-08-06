@@ -31,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         /// <param name="dependentProperty"> The candidate property on the dependent end. </param>
         /// <param name="principalEntityType"> The principal end entity type. </param>
         /// <param name="principalKeyProperty"> A key property on the principal end that is a candidate target for the foreign key. </param>
-        /// <returns></returns>
+        /// <returns>true if dependentProperty should be a part of the foreign key; otherwise, false.</returns>
         protected abstract bool MatchDependentKeyProperty(
             AssociationType associationType,
             AssociationEndMember dependentAssociationEnd,

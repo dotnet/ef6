@@ -224,7 +224,6 @@ namespace System.Data.Entity.Infrastructure.Interception
         ///     filtering behavior.
         /// </summary>
         /// <param name="command">The command that was executed.</param>
-        /// <param name="result">The result of executing the command.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
         public virtual void Executed<TResult>(DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)
         {
@@ -331,7 +330,6 @@ namespace System.Data.Entity.Infrastructure.Interception
         ///     logged to <see cref="WriteAction" />.
         /// </summary>
         /// <param name="command">The command being logged.</param>
-        /// <param name="result">The result returned when the command was executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
         public virtual void LogResult<TResult>(DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)
         {

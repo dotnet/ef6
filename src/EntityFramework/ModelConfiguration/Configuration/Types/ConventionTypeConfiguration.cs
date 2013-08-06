@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
-    
+
     /// <summary>
     ///     Allows configuration to be performed for an entity type in a model.
     ///     This configuration functionality is available via lightweight conventions.
@@ -341,14 +341,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var propertyInfos = propertyNames
                 .Select(
                     n =>
+                    {
+                        var propertyInfo = _type.GetProperty(n, PropertyFilter.DefaultBindingFlags);
+                        if (propertyInfo == null)
                         {
-                            var propertyInfo = _type.GetProperty(n, PropertyFilter.DefaultBindingFlags);
-                            if (propertyInfo == null)
-                            {
-                                throw new InvalidOperationException(Strings.NoSuchProperty(n, _type.Name));
-                            }
-                            return propertyInfo;
-                        })
+                            throw new InvalidOperationException(Strings.NoSuchProperty(n, _type.Name));
+                        }
+                        return propertyInfo;
+                    })
                 .ToArray();
 
             return HasKey(propertyInfos);
@@ -544,7 +544,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return base.GetHashCode();
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets the <see cref="Type" /> of the current instance.
+        /// </summary>
+        /// <returns>The exact runtime type of the current instance.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()

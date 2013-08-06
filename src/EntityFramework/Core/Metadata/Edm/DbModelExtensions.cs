@@ -22,6 +22,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return model.ConceptualModel;
         }
 
+        /// <summary>
         /// Gets the store model from the specified DbModel.
         /// </summary>
         /// <param name="model">An instance of a class that implements IEdmModelAdapter (ex. DbModel).</param>

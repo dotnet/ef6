@@ -759,7 +759,7 @@ namespace System.Data.Entity.Core.Common
         /// </summary>
         /// <param name="type">The type of the service to be resolved.</param>
         /// <param name="key">An optional key providing additional information for resolving the service.</param>
-        /// <returns>All registered services that satisfy the given type and key, or an empty enumeration if there are none.
+        /// <returns>All registered services that satisfy the given type and key, or an empty enumeration if there are none.</returns>
         public virtual IEnumerable<object> GetServices(Type type, object key)
         {
             return _resolvers.GetServices(type, key);

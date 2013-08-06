@@ -32,8 +32,8 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Determines whether the specified objects are equal.</summary>
         /// <returns>true if the two objects are equal; otherwise, false.</returns>
-        /// <param name="left">The left objects to compare.</param>
-        /// <param name="right">The right objects to compare.</param>
+        /// <param name="left">The left object to compare.</param>
+        /// <param name="right">The right object to compare.</param>
         public static bool operator ==(ExecutionOptions left, ExecutionOptions right)
         {
             if (ReferenceEquals(left, right))
@@ -49,7 +49,12 @@ namespace System.Data.Entity.Core.Objects
             return left.Equals(right);
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Determines whether the specified objects are not equal.
+        /// </summary>
+        /// <param name="left">The left object to compare.</param>
+        /// <param name="right">The right object to compare.</param>
+        /// <returns>true if the two objects are not equal; otherwise, false.</returns>
         public static bool operator !=(ExecutionOptions left, ExecutionOptions right)
         {
             return !(left == right);

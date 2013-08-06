@@ -13,7 +13,6 @@ namespace System.Data.Entity
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
-    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -439,9 +438,9 @@ namespace System.Data.Entity
         ///     method to return entities that are tracked by the context.
         ///
         ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.Database.SqlQuery<Post>("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        ///     context.Database.SqlQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
         ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.Database.SqlQuery<Post>("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        ///     context.Database.SqlQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <typeparam name="TElement"> The type of object returned by the query. </typeparam>
         /// <param name="sql"> The SQL query string. </param>
@@ -666,7 +665,10 @@ namespace System.Data.Entity
             return base.GetHashCode();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the <see cref="Type" /> of the current instance.
+        /// </summary>
+        /// <returns>The exact runtime type of the current instance.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()

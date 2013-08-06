@@ -88,7 +88,7 @@ namespace System.Data.Entity
         /// <see cref="LoadConfiguration(Type)"/> method should be used since it gives a greater chance that
         /// the correct configuration will be found.
         /// </summary>
-        /// <param name="contextType">A <see cref="DbContext"/> type to use for configuration discovery.</param>
+        /// <param name="assemblyHint">An <see cref="Assembly" /> to use for configuration discovery.</param>
         public static void LoadConfiguration(Assembly assemblyHint)
         {
             Check.NotNull(assemblyHint, "assemblyHint");
@@ -564,10 +564,10 @@ namespace System.Data.Entity
             _internalConfiguration.RegisterSingleton(
                 spatialProvider,
                 k =>
-                    {
-                        var asSpatialKey = k as DbProviderInfo;
-                        return asSpatialKey != null && asSpatialKey.ProviderInvariantName == providerInvariantName;
-                    });
+                {
+                    var asSpatialKey = k as DbProviderInfo;
+                    return asSpatialKey != null && asSpatialKey.ProviderInvariantName == providerInvariantName;
+                });
         }
 
         /// <summary>
@@ -641,7 +641,10 @@ namespace System.Data.Entity
             return base.GetHashCode();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the <see cref="Type" /> of the current instance.
+        /// </summary>
+        /// <returns>The exact runtime type of the current instance.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
@@ -649,7 +652,10 @@ namespace System.Data.Entity
             return base.GetType();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Creates a shallow copy of the current <see cref="Object" />.
+        /// </summary>
+        /// <returns>A shallow copy of the current <see cref="Object" />.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         protected new object MemberwiseClone()
         {

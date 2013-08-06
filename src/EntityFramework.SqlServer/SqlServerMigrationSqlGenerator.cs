@@ -83,7 +83,7 @@ namespace System.Data.Entity.SqlServer
         /// <param name="commandTrees">The command trees representing the commands for an insert, update or delete operation.</param>
         /// <param name="rowsAffectedParameter">The rows affected parameter name.</param>
         /// <param name="providerManifestToken">The provider manifest token.</param>
-        /// <returns></returns>
+        /// <returns>The SQL body for the stored procedure.</returns>
         public override string GenerateProcedureBody(
             ICollection<DbModificationCommandTree> commandTrees,
             string rowsAffectedParameter,
@@ -286,7 +286,7 @@ namespace System.Data.Entity.SqlServer
             Generate(alterProcedureOperation, "ALTER");
         }
 
-       private void Generate(ProcedureOperation procedureOperation, string modifier)
+        private void Generate(ProcedureOperation procedureOperation, string modifier)
         {
             DebugCheck.NotNull(procedureOperation);
             DebugCheck.NotEmpty(modifier);
@@ -299,13 +299,13 @@ namespace System.Data.Entity.SqlServer
 
                 procedureOperation.Parameters.Each(
                     (p, i) =>
-                        {
-                            Generate(p, writer);
-                            writer.WriteLine(
-                                i < procedureOperation.Parameters.Count - 1
-                                    ? ","
-                                    : string.Empty);
-                        });
+                    {
+                        Generate(p, writer);
+                        writer.WriteLine(
+                            i < procedureOperation.Parameters.Count - 1
+                                ? ","
+                                : string.Empty);
+                    });
 
                 writer.Indent--;
                 writer.WriteLine("AS");
@@ -408,14 +408,14 @@ namespace System.Data.Entity.SqlServer
 
             createTableOperation.Columns.Each(
                 (c, i) =>
-                    {
-                        Generate(c, writer);
+                {
+                    Generate(c, writer);
 
-                        if (i < createTableOperation.Columns.Count - 1)
-                        {
-                            writer.WriteLine(",");
-                        }
-                    });
+                    if (i < createTableOperation.Columns.Count - 1)
+                    {
+                        writer.WriteLine(",");
+                    }
+                });
 
             if (createTableOperation.PrimaryKey != null)
             {
@@ -1087,36 +1087,36 @@ namespace System.Data.Entity.SqlServer
             {
                 historyOperation.CommandTrees.Each(
                     commandTree =>
+                    {
+                        List<SqlParameter> _;
+
+                        switch (commandTree.CommandTreeKind)
                         {
-                            List<SqlParameter> _;
+                            case DbCommandTreeKind.Insert:
 
-                            switch (commandTree.CommandTreeKind)
-                            {
-                                case DbCommandTreeKind.Insert:
+                                writer.Write(
+                                    DmlSqlGenerator
+                                        .GenerateInsertSql(
+                                            (DbInsertCommandTree)commandTree,
+                                            _sqlGenerator,
+                                            out _,
+                                            generateReturningSql: false,
+                                            upperCaseKeywords: true,
+                                            createParameters: false));
+                                break;
 
-                                    writer.Write(
-                                        DmlSqlGenerator
-                                            .GenerateInsertSql(
-                                                (DbInsertCommandTree)commandTree,
-                                                _sqlGenerator,
-                                                out _,
-                                                generateReturningSql: false,
-                                                upperCaseKeywords: true,
-                                                createParameters: false));
-                                    break;
-
-                                case DbCommandTreeKind.Delete:
-                                    writer.Write(
-                                        DmlSqlGenerator
-                                            .GenerateDeleteSql(
-                                                (DbDeleteCommandTree)commandTree,
-                                                _sqlGenerator,
-                                                out _,
-                                                upperCaseKeywords: true,
-                                                createParameters: false));
-                                    break;
-                            }
-                        });
+                            case DbCommandTreeKind.Delete:
+                                writer.Write(
+                                    DmlSqlGenerator
+                                        .GenerateDeleteSql(
+                                            (DbDeleteCommandTree)commandTree,
+                                            _sqlGenerator,
+                                            out _,
+                                            upperCaseKeywords: true,
+                                            createParameters: false));
+                                break;
+                        }
+                    });
 
                 Statement(writer);
             }

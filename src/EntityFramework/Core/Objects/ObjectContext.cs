@@ -4123,9 +4123,9 @@ namespace System.Data.Entity.Core.Objects
         ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         ///
         ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQuery<Post>("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
         ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQuery<Post>("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
@@ -4145,9 +4145,9 @@ namespace System.Data.Entity.Core.Objects
         ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         ///
         ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQuery<Post>("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
         ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQuery<Post>("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
@@ -4169,9 +4169,9 @@ namespace System.Data.Entity.Core.Objects
         ///     If an entity set name is specified, results are tracked by the context.
         ///
         ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQuery<Post>("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
         ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQuery<Post>("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
@@ -4198,9 +4198,9 @@ namespace System.Data.Entity.Core.Objects
         ///     If an entity set name is specified, results are tracked by the context.
         ///
         ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQuery<Post>("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
         ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQuery<Post>("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
@@ -4312,9 +4312,9 @@ namespace System.Data.Entity.Core.Objects
         ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         ///
         ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQueryAsync<Post>("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
         ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQueryAsync<Post>("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
@@ -4339,9 +4339,9 @@ namespace System.Data.Entity.Core.Objects
         ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         ///
         ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQueryAsync<Post>("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
         ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQueryAsync<Post>("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
@@ -4379,9 +4379,9 @@ namespace System.Data.Entity.Core.Objects
         ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         ///
         ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQueryAsync<Post>("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
         ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQueryAsync<Post>("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
@@ -4418,9 +4418,9 @@ namespace System.Data.Entity.Core.Objects
         ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         ///
         ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQueryAsync<Post>("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
         ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQueryAsync<Post>("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
@@ -4460,9 +4460,9 @@ namespace System.Data.Entity.Core.Objects
         ///     If an entity set name is specified, results are tracked by the context.
         ///
         ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQueryAsync<Post>("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
         ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQueryAsync<Post>("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
@@ -4490,9 +4490,9 @@ namespace System.Data.Entity.Core.Objects
         ///     If an entity set name is specified, results are tracked by the context.
         ///
         ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQueryAsync<Post>("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
         ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQueryAsync<Post>("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
         ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure

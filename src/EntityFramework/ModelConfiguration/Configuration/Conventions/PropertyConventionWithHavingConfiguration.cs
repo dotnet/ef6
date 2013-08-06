@@ -4,7 +4,6 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -89,7 +88,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return base.GetHashCode();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the <see cref="Type" /> of the current instance.
+        /// </summary>
+        /// <returns>The exact runtime type of the current instance.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public new Type GetType()
