@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Objects
 {
     using System.Collections;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Configuration;
@@ -93,6 +94,13 @@ namespace System.Data.Entity.Core.Objects
 
         private readonly ThrowingMonitor _asyncMonitor = new ThrowingMonitor();
         private DbInterceptionContext _interceptionContext;
+
+        // Dictionary of types that derive from ObjectContext or DbContext that were already processed
+        // in terms of retrieving the DbMappingViewCacheTypeAttribute that associates the context type 
+        // with a mapping view cache type. InitializeMappingViewCacheFactory shortcuts the execution 
+        // if the context type was already processed.
+        private static readonly ConcurrentDictionary<Type, bool> _contextTypesWithViewCacheInitialized
+            = new ConcurrentDictionary<Type, bool>();
 
         #endregion Fields
 
@@ -4895,31 +4903,37 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="owner">A DbContext that owns this ObjectContext.</param>
         internal void InitializeMappingViewCacheFactory(DbContext owner = null)
         {
-            var contextType = owner != null ? owner.GetType() : GetType();
+            var itemCollection = (StorageMappingItemCollection)
+                MetadataWorkspace.GetItemCollection(DataSpace.CSSpace);
 
-            var attributes = ((IEnumerable<DbMappingViewCacheTypeAttribute>)contextType.Assembly
-                .GetCustomAttributes(typeof(DbMappingViewCacheTypeAttribute), inherit: false))
-                .Where(a => a.ContextType == contextType);
-
-            var attributeCount = attributes.Count();
-            if (attributeCount > 1)
+            if (itemCollection == null)
             {
-                throw new InvalidOperationException(
-                    Strings.DbMappingViewCacheTypeAttribute_MultipleInstancesWithSameContextType(
-                        contextType));
+                return;
             }
 
-            if (attributeCount == 1)
-            {
-                var itemCollection = (StorageMappingItemCollection)
-                    MetadataWorkspace.GetItemCollection(DataSpace.CSSpace);
+            var contextType = owner != null ? owner.GetType() : GetType();
 
-                if (itemCollection != null)
+            _contextTypesWithViewCacheInitialized.GetOrAdd(contextType, (t) =>
+            {
+                var attributes = ((IEnumerable<DbMappingViewCacheTypeAttribute>)t.Assembly
+                    .GetCustomAttributes(typeof(DbMappingViewCacheTypeAttribute), inherit: false))
+                    .Where(a => a.ContextType == t);
+
+                var attributeCount = attributes.Count();
+                if (attributeCount > 1)
+                {
+                    throw new InvalidOperationException(
+                        Strings.DbMappingViewCacheTypeAttribute_MultipleInstancesWithSameContextType(t));
+                }
+
+                if (attributeCount == 1)
                 {
                     itemCollection.MappingViewCacheFactory
                         = new DefaultDbMappingViewCacheFactory(attributes.First());
                 }
-            }
+
+                return true;
+            });
         }
 
         #endregion //Methods
