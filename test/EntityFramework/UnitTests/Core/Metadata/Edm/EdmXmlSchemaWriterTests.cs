@@ -310,6 +310,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
+        public void WriteSchemaElementHeader_writes_StoreSchemaGen_namespace_declaration_if_requested()
+        {
+            var fixture = new Fixture(2.0);
+            fixture.Writer.WriteSchemaElementHeader("Room.Store", "fakeProvider", "42", true);
+
+            Assert.Equal(@"<Schema Namespace=""Room.Store"" Provider=""fakeProvider"" ProviderManifestToken=""42"" Alias=""Self"" xmlns:store=""http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator""",
+            fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteSchemaElementHeader_does_not_write_StoreSchemaGen_namespace_declaration_if_not_requested()
+        {
+            var fixture = new Fixture(2.0);
+            fixture.Writer.WriteSchemaElementHeader("Room.Store", "fakeProvider", "42", false);
+
+            Assert.Equal(@"<Schema Namespace=""Room.Store"" Provider=""fakeProvider"" ProviderManifestToken=""42"" Alias=""Self""",
+            fixture.ToString());
+        }
+
+        [Fact]
         public void WriteContainer_writes_annotation_namespace_when_requested()
         {
             var container = EntityContainer.Create(
