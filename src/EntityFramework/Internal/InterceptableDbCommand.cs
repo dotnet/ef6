@@ -236,7 +236,7 @@ namespace System.Data.Entity.Internal
 
             public override int RecordsAffected
             {
-                get { throw new NotImplementedException(); }
+                get { return 0; }
             }
 
             public override bool GetBoolean(int ordinal)
@@ -316,7 +316,7 @@ namespace System.Data.Entity.Internal
 
             public override int GetValues(object[] values)
             {
-                throw new NotImplementedException();
+                return 0;
             }
 
             public override bool IsDBNull(int ordinal)

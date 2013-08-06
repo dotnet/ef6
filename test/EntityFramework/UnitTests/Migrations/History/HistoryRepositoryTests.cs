@@ -10,6 +10,7 @@ namespace System.Data.Entity.Migrations.History
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.SqlServer;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.Linq;
@@ -96,6 +97,34 @@ namespace System.Data.Entity.Migrations.History
                 Assert.NotNull(commandTree);
                 Assert.Equal(DataSpace.SSpace, commandTree.DataSpace);
                 Assert.Equal(0, commandTree.Parameters.Count());
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_create_count_query_command_trees_when_sql_azure_execution_strategy()
+        {
+            ResetDatabase();
+
+            try
+            {
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(
+                    key => (Func<IDbExecutionStrategy>)(() => new SqlAzureExecutionStrategy()));
+
+                var historyRepository
+                    = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
+
+                var commandTrees = historyRepository.CreateDiscoveryQueryTrees();
+
+                foreach (var commandTree in commandTrees)
+                {
+                    Assert.NotNull(commandTree);
+                    Assert.Equal(DataSpace.SSpace, commandTree.DataSpace);
+                    Assert.Equal(0, commandTree.Parameters.Count());
+                }
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
             }
         }
 

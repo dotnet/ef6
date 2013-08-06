@@ -635,8 +635,7 @@ namespace System.Data.Entity.Migrations.History
                             = context.History
                                 .Where(h => h.ContextKey == _contextKey)
                                 .Select(s => s.MigrationId)
-                                .OrderByDescending(s => s)
-                                .AsStreaming();
+                                .OrderByDescending(s => s);
 
                         var dbQuery = query as DbQuery<string>;
 
