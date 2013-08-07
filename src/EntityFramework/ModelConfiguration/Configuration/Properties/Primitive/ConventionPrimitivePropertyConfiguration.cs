@@ -299,18 +299,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsUnicode(bool unicode)
         {
-            if (_dateTimeConfiguration.Value != null
-                || _decimalConfiguration.Value != null
-                || _binaryConfiguration.Value != null)
+            if (_configuration() != null)
             {
-                throw new InvalidOperationException(
-                    Strings.LightweightPrimitivePropertyConfiguration_IsUnicodeNonString(_propertyInfo.Name));
-            }
-
-            if (_stringConfiguration.Value != null
-                && _stringConfiguration.Value.IsUnicode == null)
-            {
-                _stringConfiguration.Value.IsUnicode = unicode;
+                if (_stringConfiguration.Value == null)
+                {
+                    throw new InvalidOperationException(
+                        Strings.LightweightPrimitivePropertyConfiguration_IsUnicodeNonString(_propertyInfo.Name));
+                }
+                else if (_stringConfiguration.Value.IsUnicode == null)
+                {
+                    _stringConfiguration.Value.IsUnicode = unicode;
+                }
             }
 
             return this;
@@ -329,16 +328,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsFixedLength()
         {
-            if (_dateTimeConfiguration.Value != null
-                || _decimalConfiguration.Value != null)
+            if (_configuration() != null)
             {
-                throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonLength(_propertyInfo.Name));
-            }
-
-            if (_lengthConfiguration.Value != null
-                && _lengthConfiguration.Value.IsFixedLength == null)
-            {
-                _lengthConfiguration.Value.IsFixedLength = true;
+                if (_lengthConfiguration.Value == null)
+                {
+                    throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonLength(_propertyInfo.Name));
+                }
+                else if (_lengthConfiguration.Value.IsFixedLength == null)
+                {
+                    _lengthConfiguration.Value.IsFixedLength = true;
+                }
             }
 
             return this;
@@ -357,16 +356,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsVariableLength()
         {
-            if (_dateTimeConfiguration.Value != null
-                || _decimalConfiguration.Value != null)
+            if (_configuration() != null)
             {
-                throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonLength(_propertyInfo.Name));
-            }
-
-            if (_lengthConfiguration.Value != null
-                && _lengthConfiguration.Value.IsFixedLength == null)
-            {
-                _lengthConfiguration.Value.IsFixedLength = false;
+                if (_lengthConfiguration.Value == null)
+                {
+                    throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonLength(_propertyInfo.Name));
+                }
+                else if (_lengthConfiguration.Value.IsFixedLength == null)
+                {
+                    _lengthConfiguration.Value.IsFixedLength = false;
+                }
             }
 
             return this;
@@ -390,27 +389,27 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 throw new ArgumentOutOfRangeException("maxLength");
             }
 
-            if (_dateTimeConfiguration.Value != null
-                || _decimalConfiguration.Value != null)
+            if (_configuration() != null)
             {
-                throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonLength(_propertyInfo.Name));
-            }
-
-            if (_lengthConfiguration.Value != null
-                && _lengthConfiguration.Value.MaxLength == null
-                && _lengthConfiguration.Value.IsMaxLength == null)
-            {
-                _lengthConfiguration.Value.MaxLength = maxLength;
-
-                if (_lengthConfiguration.Value.IsFixedLength == null)
+                if (_lengthConfiguration.Value == null)
                 {
-                    _lengthConfiguration.Value.IsFixedLength = false;
+                    throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonLength(_propertyInfo.Name));
                 }
-
-                if (_stringConfiguration.Value != null
-                    && _stringConfiguration.Value.IsUnicode == null)
+                else if (_lengthConfiguration.Value.MaxLength == null
+                    && _lengthConfiguration.Value.IsMaxLength == null)
                 {
-                    _stringConfiguration.Value.IsUnicode = true;
+                    _lengthConfiguration.Value.MaxLength = maxLength;
+
+                    if (_lengthConfiguration.Value.IsFixedLength == null)
+                    {
+                        _lengthConfiguration.Value.IsFixedLength = false;
+                    }
+
+                    if (_stringConfiguration.Value != null
+                        && _stringConfiguration.Value.IsUnicode == null)
+                    {
+                        _stringConfiguration.Value.IsUnicode = true;
+                    }
                 }
             }
 
@@ -429,17 +428,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsMaxLength()
         {
-            if (_dateTimeConfiguration.Value != null
-                || _decimalConfiguration.Value != null)
+            if (_configuration() != null)
             {
-                throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonLength(_propertyInfo.Name));
-            }
-
-            if (_lengthConfiguration.Value != null
-                && _lengthConfiguration.Value.IsMaxLength == null
-                && _lengthConfiguration.Value.MaxLength == null)
-            {
-                _lengthConfiguration.Value.IsMaxLength = true;
+                if (_lengthConfiguration.Value == null)
+                {
+                    throw new InvalidOperationException(Strings.LightweightPrimitivePropertyConfiguration_NonLength(_propertyInfo.Name));
+                }
+                else if (_lengthConfiguration.Value.IsMaxLength == null
+                    && _lengthConfiguration.Value.MaxLength == null)
+                {
+                    _lengthConfiguration.Value.IsMaxLength = true;
+                }
             }
 
             return this;
@@ -459,24 +458,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration HasPrecision(byte value)
         {
-            if (_decimalConfiguration.Value != null)
+            if (_configuration() != null)
             {
-                throw new InvalidOperationException(
-                    Strings.LightweightPrimitivePropertyConfiguration_DecimalNoScale(_propertyInfo.Name));
-            }
+                if (_dateTimeConfiguration.Value == null)
+                {
+                    if (_decimalConfiguration.Value != null)
+                    {
+                        throw new InvalidOperationException(
+                            Strings.LightweightPrimitivePropertyConfiguration_DecimalNoScale(_propertyInfo.Name));
+                    }
 
-            if (_binaryConfiguration.Value != null
-                || _lengthConfiguration.Value != null
-                || _stringConfiguration.Value != null)
-            {
-                throw new InvalidOperationException(
-                    Strings.LightweightPrimitivePropertyConfiguration_HasPrecisionNonDateTime(_propertyInfo.Name));
-            }
-
-            if (_dateTimeConfiguration.Value != null
-                && _dateTimeConfiguration.Value.Precision == null)
-            {
-                _dateTimeConfiguration.Value.Precision = value;
+                    throw new InvalidOperationException(
+                        Strings.LightweightPrimitivePropertyConfiguration_HasPrecisionNonDateTime(_propertyInfo.Name));
+                }
+                else if (_dateTimeConfiguration.Value.Precision == null)
+                {
+                    _dateTimeConfiguration.Value.Precision = value;
+                }
             }
 
             return this;
@@ -496,26 +494,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration HasPrecision(byte precision, byte scale)
         {
-            if (_dateTimeConfiguration.Value != null)
+            if (_configuration() != null)
             {
-                throw new InvalidOperationException(
-                    Strings.LightweightPrimitivePropertyConfiguration_DateTimeScale(_propertyInfo.Name));
-            }
+                if (_decimalConfiguration.Value == null)
+                {
+                    if (_dateTimeConfiguration.Value != null)
+                    {
+                        throw new InvalidOperationException(
+                            Strings.LightweightPrimitivePropertyConfiguration_DateTimeScale(_propertyInfo.Name));
+                    }
 
-            if (_binaryConfiguration.Value != null
-                || _lengthConfiguration.Value != null
-                || _stringConfiguration.Value != null)
-            {
-                throw new InvalidOperationException(
-                    Strings.LightweightPrimitivePropertyConfiguration_HasPrecisionNonDecimal(_propertyInfo.Name));
-            }
-
-            if (_decimalConfiguration.Value != null
-                && _decimalConfiguration.Value.Precision == null
-                && _decimalConfiguration.Value.Scale == null)
-            {
-                _decimalConfiguration.Value.Precision = precision;
-                _decimalConfiguration.Value.Scale = scale;
+                    throw new InvalidOperationException(
+                        Strings.LightweightPrimitivePropertyConfiguration_HasPrecisionNonDecimal(_propertyInfo.Name));
+                }
+                else if (_decimalConfiguration.Value.Precision == null
+                    && _decimalConfiguration.Value.Scale == null)
+                {
+                    _decimalConfiguration.Value.Precision = precision;
+                    _decimalConfiguration.Value.Scale = scale;
+                }
             }
 
             return this;
@@ -536,18 +533,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsRowVersion()
         {
-            if (_dateTimeConfiguration.Value != null
-                || _decimalConfiguration.Value != null
-                || _stringConfiguration.Value != null)
+            if (_configuration() != null)
             {
-                throw new InvalidOperationException(
-                    Strings.LightweightPrimitivePropertyConfiguration_IsRowVersionNonBinary(_propertyInfo.Name));
-            }
-
-            if (_binaryConfiguration.Value != null
-                && _binaryConfiguration.Value.IsRowVersion == null)
-            {
-                _binaryConfiguration.Value.IsRowVersion = true;
+                if (_binaryConfiguration.Value == null)
+                {
+                    throw new InvalidOperationException(
+                        Strings.LightweightPrimitivePropertyConfiguration_IsRowVersionNonBinary(_propertyInfo.Name));
+                }
+                else if (_binaryConfiguration.Value.IsRowVersion == null)
+                {
+                    _binaryConfiguration.Value.IsRowVersion = true;
+                }
             }
 
             return this;

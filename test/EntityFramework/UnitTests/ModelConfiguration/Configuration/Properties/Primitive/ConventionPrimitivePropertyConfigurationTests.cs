@@ -20,11 +20,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             new ConventionPrimitivePropertyConfiguration(
                 new MockPropertyInfo(),
                 () =>
-                    {
-                        initialized = true;
+                {
+                    initialized = true;
 
-                        return null;
-                    });
+                    return null;
+                });
 
             Assert.False(initialized);
         }
@@ -432,14 +432,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void IsUnicode_with_parameter_is_noop_when_not_string()
+        public void IsUnicode_with_parameter_throws_when_not_string()
         {
             var innerConfig = new Properties.Primitive.PrimitivePropertyConfiguration();
             var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-            var result = config.IsUnicode(false);
+            var ex = Assert.Throws<InvalidOperationException>(() => config.IsUnicode(false));
 
-            Assert.Same(config, result);
+            Assert.Equal(Strings.LightweightPrimitivePropertyConfiguration_IsUnicodeNonString("P"), ex.Message);
         }
 
         [Fact]
@@ -471,7 +471,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void IsFixedLength_throws_when_not_length()
         {
-            var innerConfig = new Properties.Primitive.DateTimePropertyConfiguration();
+            var innerConfig = new Properties.Primitive.PrimitivePropertyConfiguration();
             var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal(
@@ -508,7 +508,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void IsVariableLength_throws_when_not_length()
         {
-            var innerConfig = new Properties.Primitive.DecimalPropertyConfiguration();
+            var innerConfig = new Properties.Primitive.PrimitivePropertyConfiguration();
             var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal(
@@ -606,7 +606,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void HasMaxLength_throws_when_not_length()
         {
-            var innerConfig = new Properties.Primitive.DecimalPropertyConfiguration();
+            var innerConfig = new Properties.Primitive.PrimitivePropertyConfiguration();
             var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal(
@@ -669,7 +669,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void IsMaxLength_throws_when_not_length()
         {
-            var innerConfig = new Properties.Primitive.DateTimePropertyConfiguration();
+            var innerConfig = new Properties.Primitive.PrimitivePropertyConfiguration();
             var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal(
@@ -707,16 +707,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void HasPrecision_throws_when_not_DateTime()
         {
-            var innerConfig = new Properties.Primitive.StringPropertyConfiguration();
+            var innerConfig = new Properties.Primitive.PrimitivePropertyConfiguration();
             var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
-             Assert.Equal(
-                Strings.LightweightPrimitivePropertyConfiguration_HasPrecisionNonDateTime("P"),
-                Assert.Throws<InvalidOperationException>(() => config.HasPrecision(8)).Message);
+            Assert.Equal(
+               Strings.LightweightPrimitivePropertyConfiguration_HasPrecisionNonDateTime("P"),
+               Assert.Throws<InvalidOperationException>(() => config.HasPrecision(8)).Message);
         }
 
         [Fact]
-        public void HasPrecision_throws_on_Decimal()
+        public void HasPrecision_throws_when_Decimal()
         {
             var innerConfig = new Properties.Primitive.DecimalPropertyConfiguration();
             var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
@@ -774,7 +774,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void HasPrecision_with_scale_throws_when_not_decimal()
         {
-            var innerConfig = new Properties.Primitive.StringPropertyConfiguration();
+            var innerConfig = new Properties.Primitive.PrimitivePropertyConfiguration();
             var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal(
@@ -823,7 +823,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void IsRowVersion_throws_when_not_binary()
         {
-            var innerConfig = new Properties.Primitive.StringPropertyConfiguration();
+            var innerConfig = new Properties.Primitive.PrimitivePropertyConfiguration();
             var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
 
             Assert.Equal(
