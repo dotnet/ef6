@@ -270,11 +270,16 @@ namespace System.Data.Entity.Core.Objects.Internal
 
 #endif
 
-        private static ReaderMetadata ReadMetadata(string providerManifestToken, DbProviderServices providerSerivces, DbDataReader reader)
+        private static ReaderMetadata ReadMetadata(string providerManifestToken, DbProviderServices providerServices, DbDataReader reader)
         {
             var fieldCount = reader.FieldCount;
             var hasSpatialColumns = false;
-            var spatialDataReader = providerSerivces.GetSpatialDataReader(reader, providerManifestToken);
+            DbSpatialDataReader spatialDataReader = null;
+            if (fieldCount > 0)
+            {
+                // fieldCount == 0 indicates NullDataReader
+                spatialDataReader = providerServices.GetSpatialDataReader(reader, providerManifestToken);
+            }
             bool[] geographyColumns = null;
             bool[] geometryColumns = null;
             if (spatialDataReader != null)

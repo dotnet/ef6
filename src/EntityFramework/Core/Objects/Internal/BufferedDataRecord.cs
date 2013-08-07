@@ -158,6 +158,12 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public bool IsDBNull(int ordinal)
         {
+            if (_currentRow.Length == 0)
+            {
+                // Reader is being intercepted
+                return true;
+            }
+
             return DBNull.Value == _currentRow[ordinal];
         }
 
