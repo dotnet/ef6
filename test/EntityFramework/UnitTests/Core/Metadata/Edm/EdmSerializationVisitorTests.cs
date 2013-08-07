@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using Moq;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
     using System.Data.Entity.Resources;
@@ -11,7 +12,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Text.RegularExpressions;
     using System.Xml;
     using System.Xml.Linq;
-    using Moq;
     using Xunit;
 
     public class EdmSerializationVisitorTests
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var entityType = new EntityType("MyEntity", "Model", DataSpace.SSpace);
             var entitySet = new EntitySet("Entities", null, "Entities", null, entityType);
             entitySet.AddMetadataProperties(
-                CreateMetadataProperties(new[] { "http://tempuri.org:extended-property" }));
+                CreateMetadataProperties(new[] { new KeyValuePair<string, string>("http://tempuri.org:extended-property", "value") }));
 
             var sb = new StringBuilder();
             using (var writer = XmlWriter.Create(sb))
@@ -32,8 +32,33 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             var xml = XDocument.Parse(sb.ToString());
             Assert.Equal(
-                "ytreporp-dednetxe:gro.irupmet//:ptth",
+                "value",
                 (string)xml.Root.Attribute("{http://tempuri.org}extended-property"));
+        }
+
+        [Fact]
+        public void StoreSchemaGen_attributes_written_using_store_namespace_prefix_and_without_namespace_declaration_on_the_element()
+        {
+            var entityType = new EntityType("MyEntity", "Model", DataSpace.SSpace);
+            var entitySet = new EntitySet("Entities", null, "Entities", null, entityType);
+            entitySet.AddMetadataProperties(
+                CreateMetadataProperties(
+                    new[] { new KeyValuePair<string, string>(XmlConstants.EntityStoreSchemaGeneratorNamespace + ":property", "value") }));
+
+            var container = new EntityContainer("Container.Store", DataSpace.SSpace);
+            container.AddEntitySetBase(entitySet);
+            var model = EdmModel.CreateStoreModel(container, null, null);
+
+
+            var sb = new StringBuilder();
+            using (var writer = XmlWriter.Create(sb))
+            {
+                new EdmSerializationVisitor(writer, 3.0).Visit(model, "ns", "A", "b");
+            }
+
+            Assert.Contains(
+                "<EntitySet Name=\"Entities\" EntityType=\"Self.MyEntity\" Table=\"Entities\" store:property=\"value\" />",
+                sb.ToString());
         }
 
         [Fact]
@@ -50,7 +75,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var entityType = new EntityType("MyEntity", "Model", DataSpace.SSpace);
             var entitySet = new EntitySet("Entities", null, "Entities", null, entityType);
 
-            entitySet.AddMetadataProperties(CreateMetadataProperties(incorrectNames));
+            entitySet.AddMetadataProperties(
+                CreateMetadataProperties(
+                    incorrectNames.Select(n => new KeyValuePair<string, string>(n, ""))));
 
             var sb = new StringBuilder();
             using (var writer = XmlWriter.Create(sb))
@@ -63,19 +90,57 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.False(xml.Root.Attributes().Any(a => a.Name.Namespace != XNamespace.None));
         }
 
-        private static List<MetadataProperty> CreateMetadataProperties(IEnumerable<string> names)
+        private static List<MetadataProperty> CreateMetadataProperties(IEnumerable<KeyValuePair<string, string>> nameValuePairs)
         {
             var edmString = EdmProviderManifest.Instance.GetPrimitiveType(PrimitiveTypeKind.String);
             var metadataProperties = new List<MetadataProperty>();
-            foreach (var name in names)
+            foreach (var nameValuePair in nameValuePairs)
             {
                 metadataProperties.Add(
                     new MetadataProperty(
-                        name,
+                        nameValuePair.Key,
                         TypeUsage.CreateDefaultTypeUsage(edmString),
-                        new string(name.Reverse().ToArray())));
+                        nameValuePair.Value));
             }
             return metadataProperties;
+        }
+
+        [Fact]
+        public void Visit_should_write_store_schema_generator_namespace_on_Schema_if_entity_sets_use_it()
+        {
+            var entityType = new EntityType("MyEntity", "Model", DataSpace.SSpace);
+            var entitySet = new EntitySet("Entities", null, "Entities", null, entityType);
+            entitySet.AddMetadataProperties(
+                CreateMetadataProperties(
+                    new[] { new KeyValuePair<string, string>(XmlConstants.EntityStoreSchemaGeneratorNamespace + ":property", "value") }));
+
+            var container = new EntityContainer("Container.Store", DataSpace.SSpace);
+            container.AddEntitySetBase(entitySet);
+            var model = EdmModel.CreateStoreModel(container, null, null);
+
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
+
+            new EdmSerializationVisitor(schemaWriterMock.Object).Visit(model, "fakeProvider", "42");
+
+            schemaWriterMock.Verify(sw => sw.WriteSchemaElementHeader(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), true), Times.Once());
+            schemaWriterMock.Verify(sw => sw.WriteSchemaElementHeader(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), false), Times.Never());
+        }
+
+        [Fact]
+        public void Visit_should_not_write_store_schema_generator_namespace_on_Schema_if_entity_sets_do_not_use_it()
+        {
+            var entityType = new EntityType("MyEntity", "Model", DataSpace.SSpace);
+            var entitySet = new EntitySet("Entities", null, "Entities", null, entityType);
+            var container = new EntityContainer("Container.Store", DataSpace.SSpace);
+            container.AddEntitySetBase(entitySet);
+            var model = EdmModel.CreateStoreModel(container, null, null);
+
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>();
+
+            new EdmSerializationVisitor(schemaWriterMock.Object).Visit(model, "fakeProvider", "42");
+
+            schemaWriterMock.Verify(sw => sw.WriteSchemaElementHeader(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), true), Times.Never());
+            schemaWriterMock.Verify(sw => sw.WriteSchemaElementHeader(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), false), Times.Once());
         }
 
         [Fact]

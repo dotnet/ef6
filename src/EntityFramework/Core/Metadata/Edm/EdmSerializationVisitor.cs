@@ -60,7 +60,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DebugCheck.NotEmpty(provider);
             DebugCheck.NotEmpty(providerManifestToken);
 
-            _schemaWriter.WriteSchemaElementHeader(namespaceName, provider, providerManifestToken);
+            var storeSchemaGenNamespaceNeeded =
+                edmModel.Container.BaseEntitySets.Any(
+                    e => e.MetadataProperties.Any(p => p.Name.StartsWith(XmlConstants.EntityStoreSchemaGeneratorNamespace, StringComparison.Ordinal)));
+
+            _schemaWriter.WriteSchemaElementHeader(namespaceName, provider, providerManifestToken, storeSchemaGenNamespaceNeeded);
 
             VisitEdmModel(edmModel);
 

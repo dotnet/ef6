@@ -16,6 +16,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         private readonly bool _serializeDefaultNullability;
         private const string AnnotationNamespacePrefix = "annotation";
+        private const string StoreSchemaGenNamespacePrefix = "store";
         private const string DataServicesPrefix = "m";
         private const string DataServicesNamespace = "http://schemas.microsoft.com/ado/2007/08/dataservices/metadata";
         private const string DataServicesMimeTypeAttribute = "System.Data.Services.MimeTypeAttribute";
@@ -225,7 +226,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteAttributeString("xmlns", AnnotationNamespacePrefix, null, XmlConstants.AnnotationNamespace);
         }
 
-        internal void WriteSchemaElementHeader(string schemaNamespace, string provider, string providerManifestToken)
+        // virtual for testing
+        internal virtual void WriteSchemaElementHeader(string schemaNamespace, string provider, string providerManifestToken, bool writeStoreSchemaGenNamespace)
         {
             DebugCheck.NotEmpty(schemaNamespace);
             DebugCheck.NotEmpty(provider);
@@ -237,6 +239,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteAttributeString(XmlConstants.Provider, provider);
             _xmlWriter.WriteAttributeString(XmlConstants.ProviderManifestToken, providerManifestToken);
             _xmlWriter.WriteAttributeString(XmlConstants.Alias, XmlConstants.Self);
+
+            if (writeStoreSchemaGenNamespace)
+            {
+                _xmlWriter.WriteAttributeString("xmlns", StoreSchemaGenNamespacePrefix, null, XmlConstants.EntityStoreSchemaGeneratorNamespace);
+            }
         }
 
         private void WritePolymorphicTypeAttributes(EdmType edmType)
@@ -726,7 +733,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteEndElement();
         }
 
-        internal void WriteEntityContainerElementHeader(EntityContainer container)
+        // virtual for testing
+        internal virtual void WriteEntityContainerElementHeader(EntityContainer container)
         {
             DebugCheck.NotNull(container);
 
@@ -758,7 +766,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteEndElement();
         }
 
-        internal void WriteEntitySetElementHeader(EntitySet entitySet)
+        // virtual for testing
+        internal virtual void WriteEntitySetElementHeader(EntitySet entitySet)
         {
             DebugCheck.NotNull(entitySet);
 
