@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata schemaVersion="2">
     <id>EntityFramework</id>
-    <version>6.0.0-rc1</version>
+    <version>6.0.0</version>
     <title>EntityFramework</title>
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
