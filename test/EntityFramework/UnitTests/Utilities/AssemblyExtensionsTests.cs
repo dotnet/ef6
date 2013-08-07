@@ -12,7 +12,7 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void GetInformationalVersion_returns_the_informational_version()
             {
-                Assert.True(typeof(DbMigrator).Assembly.GetInformationalVersion().StartsWith("6.0.0"));
+                Assert.True(typeof(DbMigrator).Assembly.GetInformationalVersion().StartsWith("6.0.1-alpha1"));
             }
         }
     }

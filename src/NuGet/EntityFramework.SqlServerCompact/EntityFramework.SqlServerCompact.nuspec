@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata schemaVersion="2">
     <id>EntityFramework.SqlServerCompact</id>
-    <version>6.0.0</version>
+    <version>6.0.1-alpha1</version>
     <title>EntityFramework.SqlServerCompact</title>
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
@@ -15,7 +15,7 @@
     <language>en-US</language>
     <dependencies>
       <dependency id="Microsoft.SqlServer.Compact" version="4.0" />
-      <dependency id="EntityFramework" version="6.0.0" />
+      <dependency id="EntityFramework" version="6.0.1-alpha1" />
     </dependencies>
   </metadata>
 </package>
