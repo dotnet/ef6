@@ -372,6 +372,28 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal("SqlCeConnection", ((EntityConnection)objectContext.Connection).StoreConnection.GetType().Name);
         }
 
+        [Fact] // CodePlex 1524
+        public void CreateInstance_should_use_passed_provider_info_when_building_model_even_when_connection_is_in_app_config()
+        {
+            var contextInfo = new DbContextInfo(typeof(ContextWithConnectionInConfig), ProviderRegistry.SqlCe4_ProviderInfo);
+
+            using (var context = contextInfo.CreateInstance())
+            {
+                var objectContext = ((IObjectContextAdapter)context).ObjectContext;
+
+                Assert.NotNull(objectContext);
+                Assert.Equal("SqlCeConnection", ((EntityConnection)objectContext.Connection).StoreConnection.GetType().Name);
+            }
+        }
+
+        public class ContextWithConnectionInConfig : DbContext
+        {
+            public ContextWithConnectionInConfig()
+                : base("name=DbContextInfoTest")
+            {
+            }
+        }
+
         private class ContextWithExternalOnModelCreating1 : DbContext
         {
         }
