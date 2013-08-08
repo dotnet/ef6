@@ -7,6 +7,10 @@ namespace System.Data.Entity.Migrations.Model
 
     /// <summary>
     /// Represents a provider specific SQL statement to be executed directly against the target database.
+    ///
+    /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+    /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+    /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
     public class SqlOperation : MigrationOperation
     {
@@ -14,6 +18,10 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Initializes a new instance of the SqlOperation class.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="sql"> The SQL to be executed. </param>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>

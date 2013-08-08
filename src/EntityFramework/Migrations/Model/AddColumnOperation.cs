@@ -7,6 +7,10 @@ namespace System.Data.Entity.Migrations.Model
 
     /// <summary>
     /// Represents a column being added to a table.
+    ///
+    /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+    /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+    /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
     public class AddColumnOperation : MigrationOperation
     {
@@ -15,6 +19,10 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Initializes a new instance of the AddColumnOperation class.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table"> The name of the table the column should be added to. </param>
         /// <param name="column"> Details of the column being added. </param>

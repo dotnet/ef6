@@ -9,6 +9,10 @@ namespace System.Data.Entity.Migrations.Model
 
     /// <summary>
     /// Used when scripting an update database operation to store the operations that would have been performed against the database.
+    ///
+    /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+    /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+    /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
     public class UpdateDatabaseOperation : MigrationOperation
     {
@@ -58,6 +62,10 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpdateDatabaseOperation"/> class.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="historyQueryTrees">
         /// The queries used to determine if this migration needs to be applied to the database. 
@@ -93,6 +101,10 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Adds a migration to this update database operation.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="migrationId">The id of the migration.</param>
         /// <param name="operations">The individual operations applied by the migration.</param>

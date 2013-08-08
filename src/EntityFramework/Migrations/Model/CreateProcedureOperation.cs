@@ -5,12 +5,20 @@ namespace System.Data.Entity.Migrations.Model
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// A migration operation to add a new stored procedure to the database
+    /// A migration operation to add a new stored procedure to the database.
+    ///
+    /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+    /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+    /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
     public class CreateProcedureOperation : ProcedureOperation
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateProcedureOperation"/> class.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="name">The name of the stored procedure.</param>
         /// <param name="bodySql">The body of the stored procedure expressed in SQL.</param>

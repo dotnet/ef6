@@ -10,11 +10,19 @@ namespace System.Data.Entity.Migrations.Builders
 
     /// <summary>
     /// Helper class that is used to configure a column.
+    ///
+    /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+    /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+    /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
     public class ColumnBuilder
     {
         /// <summary>
         /// Creates a new column definition to store Binary data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="maxLength"> The maximum allowable length of the array data. </param>
@@ -51,6 +59,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store Boolean data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
@@ -78,6 +90,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store Byte data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
@@ -108,6 +124,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store DateTime data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="precision"> The precision of the column. </param>
@@ -138,6 +158,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store Decimal data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="precision"> The numeric precision of the column. </param>
@@ -174,6 +198,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store Double data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
@@ -201,6 +229,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store GUID data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
@@ -231,6 +263,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store Single data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
@@ -258,6 +294,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store Short data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
@@ -288,6 +328,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store Integer data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
@@ -318,6 +362,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store Long data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
@@ -348,6 +396,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store String data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="maxLength"> The maximum allowable length of the string data. </param>
@@ -384,6 +436,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store Time data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="precision"> The precision of the column. </param>
@@ -414,6 +470,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store DateTimeOffset data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="precision"> The precision of the column. </param>
@@ -444,6 +504,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store geography data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
@@ -471,6 +535,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new column definition to store geometry data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>

@@ -4,11 +4,19 @@ namespace System.Data.Entity.Migrations.Sql
 {
     /// <summary>
     /// Represents a migration operation that has been translated into a SQL statement.
+    ///
+    /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+    /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+    /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
     public class MigrationStatement
     {
         /// <summary>
         /// Gets or sets the SQL to be executed to perform this migration operation.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         public string Sql { get; set; }
 
@@ -21,6 +29,10 @@ namespace System.Data.Entity.Migrations.Sql
 
         /// <summary>
         /// Gets or sets the batch terminator for the database provider.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <value>
         /// The batch terminator for the database provider.

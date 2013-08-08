@@ -9,6 +9,10 @@ namespace System.Data.Entity.Migrations.Model
 
     /// <summary>
     /// Common base class to represent operations affecting primary keys.
+    ///
+    /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+    /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+    /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
     public abstract class PrimaryKeyOperation : MigrationOperation
     {
@@ -19,6 +23,10 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Initializes a new instance of the PrimaryKeyOperation class.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
@@ -29,6 +37,10 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Gets or sets the name of the table that contains the primary key.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         public string Table
         {
@@ -43,6 +55,10 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Gets the column(s) that make up the primary key.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         public IList<string> Columns
         {
@@ -60,6 +76,10 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         /// Gets or sets the name of this primary key.
         /// If no name is supplied, a default name will be calculated.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         public string Name
         {
