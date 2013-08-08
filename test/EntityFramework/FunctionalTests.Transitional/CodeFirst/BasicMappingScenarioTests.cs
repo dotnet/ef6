@@ -5910,7 +5910,7 @@ namespace FunctionalTests
 
         public class CTRegion
         {
-            public string Country { get; set; }
+            public string CountryOrRegion { get; set; }
             public string Zip { get; set; }
         }
 

@@ -3227,11 +3227,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var countries = context.Länder.ToList();
+                var countriesOrRegions = context.Länder.ToList();
 
-                Assert.Equal(2, countries.Count);
-                Assert.Equal(1, countries.Count(l => l.Näme == "A"));
-                Assert.Equal(1, countries.Count(l => l.Näme == "B"));
+                Assert.Equal(2, countriesOrRegions.Count);
+                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "A"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "B"));
             }
         }
 
@@ -3296,11 +3296,11 @@ namespace ProductivityApiTests
         {
             using (var context = new SpecialCharacters())
             {
-                var countries = context.Länder.SqlQuery("select * from Länder").ToList();
+                var countriesOrRegions = context.Länder.SqlQuery("select * from Länder").ToList();
 
-                Assert.Equal(2, countries.Count);
-                Assert.Equal(1, countries.Count(l => l.Näme == "A"));
-                Assert.Equal(1, countries.Count(l => l.Näme == "B"));
+                Assert.Equal(2, countriesOrRegions.Count);
+                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "A"));
+                Assert.Equal(1, countriesOrRegions.Count(l => l.Näme == "B"));
             }
         }
 

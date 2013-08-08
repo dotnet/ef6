@@ -157,15 +157,15 @@ ORDER BY [Project1].[ProductID] DESC";
         [Fact]
         public void Function_returning_complex_type()
         {
-            var query = "ProductModel.F_Ret_CT().City + ' ' + ProductModel.F_Ret_CT().Country";
+            var query = "ProductModel.F_Ret_CT().City + ' ' + ProductModel.F_Ret_CT().CountryOrRegion";
             var expectedSql =
                 @"SELECT 
-[Limit1].[City] + ' ' + [Limit2].[Country] AS [C1]
+[Limit1].[City] + ' ' + [Limit2].[CountryOrRegion] AS [C1]
 FROM    ( SELECT 1 AS X ) AS [SingleRowTable1]
 LEFT OUTER JOIN  (SELECT TOP (1) [Extent1].[City] AS [City]
 	FROM [dbo].[Customers] AS [Extent1]
 	ORDER BY [Extent1].[CustomerID] ASC ) AS [Limit1] ON 1 = 1
-LEFT OUTER JOIN  (SELECT TOP (1) [Extent2].[Country] AS [Country]
+LEFT OUTER JOIN  (SELECT TOP (1) [Extent2].[CountryOrRegion] AS [CountryOrRegion]
 	FROM [dbo].[Customers] AS [Extent2]
 	ORDER BY [Extent2].[CustomerID] ASC ) AS [Limit2] ON 1 = 1";
 
@@ -183,15 +183,15 @@ LEFT OUTER JOIN  (SELECT TOP (1) [Extent2].[Country] AS [Country]
 [Limit1].[City] AS [City], 
 [Limit1].[Region] AS [Region], 
 [Limit1].[PostalCode] AS [PostalCode], 
-[Limit1].[Country] AS [Country]
-FROM ( SELECT TOP (5) [Project1].[HomeAddress] AS [HomeAddress], [Project1].[City] AS [City], [Project1].[Region] AS [Region], [Project1].[PostalCode] AS [PostalCode], [Project1].[Country] AS [Country], [Project1].[C1] AS [C1]
+[Limit1].[CountryOrRegion] AS [CountryOrRegion]
+FROM ( SELECT TOP (5) [Project1].[HomeAddress] AS [HomeAddress], [Project1].[City] AS [City], [Project1].[Region] AS [Region], [Project1].[PostalCode] AS [PostalCode], [Project1].[CountryOrRegion] AS [CountryOrRegion], [Project1].[C1] AS [C1]
 	FROM ( SELECT 
 		[Extent1].[CustomerID] AS [CustomerID], 
 		[Extent1].[HomeAddress] AS [HomeAddress], 
 		[Extent1].[City] AS [City], 
 		[Extent1].[Region] AS [Region], 
 		[Extent1].[PostalCode] AS [PostalCode], 
-		[Extent1].[Country] AS [Country], 
+		[Extent1].[CountryOrRegion] AS [CountryOrRegion], 
 		1 AS [C1]
 		FROM [dbo].[Customers] AS [Extent1]
 	)  AS [Project1]
@@ -216,14 +216,14 @@ ORDER BY [Limit1].[City] ASC";
 [Project1].[City] AS [City], 
 [Project1].[Region] AS [Region], 
 [Project1].[PostalCode] AS [PostalCode], 
-[Project1].[Country] AS [Country]
+[Project1].[CountryOrRegion] AS [CountryOrRegion]
 FROM ( SELECT 
 	[Extent1].[CustomerID] AS [CustomerID], 
 	[Extent1].[HomeAddress] AS [HomeAddress], 
 	[Extent1].[City] AS [City], 
 	[Extent1].[Region] AS [Region], 
 	[Extent1].[PostalCode] AS [PostalCode], 
-	[Extent1].[Country] AS [Country], 
+	[Extent1].[CountryOrRegion] AS [CountryOrRegion], 
 	1 AS [C1]
 	FROM [dbo].[Customers] AS [Extent1]
 )  AS [Project1]
@@ -247,7 +247,7 @@ WHERE  EXISTS (SELECT
 FROM ( SELECT 
 	MIN([Extent1].[City]) AS [A1]
 	FROM [dbo].[Customers] AS [Extent1]
-	WHERE [Extent1].[Country] = 'Mexico'
+	WHERE [Extent1].[CountryOrRegion] = 'Mexico'
 )  AS [GroupBy1]";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
@@ -266,17 +266,17 @@ FROM ( SELECT
 [Limit1].[City] AS [City], 
 [Limit1].[Region] AS [Region], 
 [Limit1].[PostalCode] AS [PostalCode], 
-[Limit1].[Country] AS [Country]
+[Limit1].[CountryOrRegion] AS [CountryOrRegion]
 FROM ( SELECT TOP (5) 
 	[Extent1].[CustomerID] AS [CustomerID], 
 	[Extent1].[HomeAddress] AS [HomeAddress], 
 	[Extent1].[City] AS [City], 
 	[Extent1].[Region] AS [Region], 
 	[Extent1].[PostalCode] AS [PostalCode], 
-	[Extent1].[Country] AS [Country], 
+	[Extent1].[CountryOrRegion] AS [CountryOrRegion], 
 	1 AS [C1]
 	FROM [dbo].[Customers] AS [Extent1]
-	WHERE [Extent1].[Country] = 'Mexico'
+	WHERE [Extent1].[CountryOrRegion] = 'Mexico'
 )  AS [Limit1]";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
@@ -295,16 +295,16 @@ FROM ( SELECT TOP (5)
 [Limit1].[City] AS [City], 
 [Limit1].[Region] AS [Region], 
 [Limit1].[PostalCode] AS [PostalCode], 
-[Limit1].[Country] AS [Country]
+[Limit1].[CountryOrRegion] AS [CountryOrRegion]
 FROM ( SELECT TOP (5) 
 	[Extent1].[HomeAddress] AS [HomeAddress], 
 	[Extent1].[City] AS [City], 
 	[Extent1].[Region] AS [Region], 
 	[Extent1].[PostalCode] AS [PostalCode], 
-	[Extent1].[Country] AS [Country], 
+	[Extent1].[CountryOrRegion] AS [CountryOrRegion], 
 	1 AS [C1]
 	FROM [dbo].[Customers] AS [Extent1]
-	WHERE [Extent1].[Country] = 'Mexico'
+	WHERE [Extent1].[CountryOrRegion] = 'Mexico'
 )  AS [Limit1]";
 
             QueryTestHelpers.VerifyQuery(query, workspace, expectedSql);
@@ -360,13 +360,13 @@ FROM ( SELECT TOP (5)
 [Limit1].[HomeAddress] AS [HomeAddress], 
 [Limit1].[Region] AS [Region], 
 [Limit1].[PostalCode] AS [PostalCode], 
-[Limit1].[Country] AS [Country]
+[Limit1].[CountryOrRegion] AS [CountryOrRegion]
 FROM ( SELECT TOP (5) 
 	[Extent1].[HomeAddress] AS [HomeAddress], 
 	[Extent1].[City] AS [City], 
 	[Extent1].[Region] AS [Region], 
 	[Extent1].[PostalCode] AS [PostalCode], 
-	[Extent1].[Country] AS [Country], 
+	[Extent1].[CountryOrRegion] AS [CountryOrRegion], 
 	1 AS [C1],
 	LEN([Extent1].[CustomerID]) AS [C2]
 	FROM [dbo].[Customers] AS [Extent1]
@@ -388,13 +388,13 @@ FROM ( SELECT TOP (5)
 [Limit1].[HomeAddress] AS [HomeAddress], 
 [Limit1].[Region] AS [Region], 
 [Limit1].[PostalCode] AS [PostalCode], 
-[Limit1].[Country] AS [Country]
+[Limit1].[CountryOrRegion] AS [CountryOrRegion]
 FROM ( SELECT TOP (5) 
 	[Extent1].[HomeAddress] AS [HomeAddress], 
 	[Extent1].[City] AS [City], 
 	[Extent1].[Region] AS [Region], 
 	[Extent1].[PostalCode] AS [PostalCode], 
-	[Extent1].[Country] AS [Country], 
+	[Extent1].[CountryOrRegion] AS [CountryOrRegion], 
 	1 AS [C1], 
 	LEN([Extent1].[CustomerID]) AS [C2]
 	FROM [dbo].[Customers] AS [Extent1]

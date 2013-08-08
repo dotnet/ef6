@@ -239,17 +239,17 @@ WHERE @@ROWCOUNT > 0 AND t0.[CustomerId] = @CustomerId",
 
             Assert.Equal(
                 @"DECLARE @generated_keys table([order_id] int, [Key] uniqueidentifier, [Code] nvarchar(128), [Signature] varbinary(128))
-INSERT [dbo].[Orders]([Code], [Signature], [Name], [Address_Street], [Address_City], [Address_Country_Name], [OrderGroupId], [Customer_CustomerId])
+INSERT [dbo].[Orders]([Code], [Signature], [Name], [Address_Street], [Address_City], [Address_CountryOrRegion_Name], [OrderGroupId], [Customer_CustomerId])
 OUTPUT inserted.[order_id], inserted.[Key], inserted.[Code], inserted.[Signature] INTO @generated_keys
-VALUES (@teh_codez, @Signature, @the_name, @Address_Street, @Address_City, @Address_Country_Name, @OrderGroupId, @Customer_CustomerId)
+VALUES (@teh_codez, @Signature, @the_name, @Address_Street, @Address_City, @Address_CountryOrRegion_Name, @OrderGroupId, @Customer_CustomerId)
 
 DECLARE @order_id int, @Key uniqueidentifier
 SELECT @order_id = t.[order_id], @Key = t.[Key]
 FROM @generated_keys AS g JOIN [dbo].[Orders] AS t ON g.[order_id] = t.[order_id] AND g.[Key] = t.[Key] AND g.[Code] = t.[Code] AND g.[Signature] = t.[Signature]
 WHERE @@ROWCOUNT > 0
 
-INSERT [dbo].[special_orders]([order_id], [so_key], [Code], [Signature], [OtherCustomer_CustomerId], [OtherAddress_Street], [OtherAddress_City], [OtherAddress_Country_Name])
-VALUES (@order_id, @Key, @teh_codez, @Signature, @OtherCustomer_CustomerId, @OtherAddress_Street, @OtherAddress_City, @OtherAddress_Country_Name)
+INSERT [dbo].[special_orders]([order_id], [so_key], [Code], [Signature], [OtherCustomer_CustomerId], [OtherAddress_Street], [OtherAddress_City], [OtherAddress_CountryOrRegion_Name])
+VALUES (@order_id, @Key, @teh_codez, @Signature, @OtherCustomer_CustomerId, @OtherAddress_Street, @OtherAddress_City, @OtherAddress_CountryOrRegion_Name)
 
 INSERT [dbo].[xspecial_orders]([xid], [so_key], [Code], [Signature], [TheSpecialist])
 VALUES (@order_id, @Key, @teh_codez, @Signature, @TheSpecialist)
@@ -311,11 +311,11 @@ WHERE ([CustomerId] = @CustomerId)",
 
             Assert.Equal(
                 @"UPDATE [dbo].[Orders]
-SET [Name] = @Name, [Address_Street] = @Address_Street, [Address_City] = @Address_City, [Address_Country_Name] = @Address_Country_Name, [OrderGroupId] = @OrderGroupId, [Customer_CustomerId] = @Customer_CustomerId
+SET [Name] = @Name, [Address_Street] = @Address_Street, [Address_City] = @Address_City, [Address_CountryOrRegion_Name] = @Address_CountryOrRegion_Name, [OrderGroupId] = @OrderGroupId, [Customer_CustomerId] = @Customer_CustomerId
 WHERE (((((([order_id] = @xid) AND ([Key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([Name] = @Name_Original) OR ([Name] IS NULL AND @Name_Original IS NULL))) AND (([RowVersion] = @RowVersion_Original) OR ([RowVersion] IS NULL AND @RowVersion_Original IS NULL)))
 
 UPDATE [dbo].[special_orders]
-SET [OtherCustomer_CustomerId] = @OtherCustomer_CustomerId, [OtherAddress_Street] = @OtherAddress_Street, [OtherAddress_City] = @OtherAddress_City, [OtherAddress_Country_Name] = @OtherAddress_Country_Name
+SET [OtherCustomer_CustomerId] = @OtherCustomer_CustomerId, [OtherAddress_Street] = @OtherAddress_Street, [OtherAddress_City] = @OtherAddress_City, [OtherAddress_CountryOrRegion_Name] = @OtherAddress_CountryOrRegion_Name
 WHERE (((([order_id] = @xid) AND ([so_key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature))
 AND @@ROWCOUNT > 0
 

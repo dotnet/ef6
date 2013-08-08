@@ -5,7 +5,7 @@ namespace System.Data.Entity.Validation
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    [CustomValidation(typeof(AirportDetails), "ValidateCountry")]
+    [CustomValidation(typeof(AirportDetails), "ValidateCountryOrRegion")]
     public class AirportDetails : IValidatableObject
     {
         [Required]
@@ -14,17 +14,17 @@ namespace System.Data.Entity.Validation
 
         public string CityCode { get; set; }
 
-        public string CountryCode { get; set; }
+        public string CountryOrRegionCode { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             throw new NotImplementedException();
         }
 
-        public static ValidationResult ValidateCountry(AirportDetails airportDetails, ValidationContext validationContex)
+        public static ValidationResult ValidateCountryOrRegion(AirportDetails airportDetails, ValidationContext validationContex)
         {
-            return airportDetails.CountryCode == "ZZ" && airportDetails.CityCode != "XXX"
-                       ? new ValidationResult(string.Format("City '{0}' is not located in country 'ZZ'.", airportDetails.CityCode))
+            return airportDetails.CountryOrRegionCode == "ZZ" && airportDetails.CityCode != "XXX"
+                       ? new ValidationResult(string.Format("City '{0}' is not located in country or region 'ZZ'.", airportDetails.CityCode))
                        : ValidationResult.Success;
         }
     }

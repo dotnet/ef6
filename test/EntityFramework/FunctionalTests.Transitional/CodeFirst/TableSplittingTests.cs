@@ -102,10 +102,10 @@ namespace System.Data.Entity.CodeFirst
         [Table("B")]
         public class B : A
         {
-            [ForeignKey("Y")]
-            public virtual int YId { get; set; }
+            [ForeignKey("Z")]
+            public virtual int ZId { get; set; }
 
-            public virtual Y Y { get; set; }
+            public virtual Z Z { get; set; }
         }
 
         [Table("B")]
@@ -116,10 +116,10 @@ namespace System.Data.Entity.CodeFirst
         [Table("C")]
         public class C : A
         {
-            [ForeignKey("Y")]
-            public virtual int YId { get; set; }
+            [ForeignKey("Z")]
+            public virtual int ZId { get; set; }
 
-            public virtual Y Y { get; set; }
+            public virtual Z Z { get; set; }
         }
 
         [Table("C")]
@@ -127,14 +127,14 @@ namespace System.Data.Entity.CodeFirst
         {
         }
 
-        public class Y
+        public class Z
         {
             public virtual int Id { get; set; }
 
-            [InverseProperty("Y")]
+            [InverseProperty("Z")]
             public virtual ICollection<B> Bs { get; set; }
 
-            [InverseProperty("Y")]
+            [InverseProperty("Z")]
             public virtual ICollection<C> Cs { get; set; }
         }
 
@@ -147,7 +147,7 @@ namespace System.Data.Entity.CodeFirst
             modelBuilder.Entity<B1>();
             modelBuilder.Entity<C>();
             modelBuilder.Entity<C1>();
-            modelBuilder.Entity<Y>();
+            modelBuilder.Entity<Z>();
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -158,33 +158,33 @@ namespace System.Data.Entity.CodeFirst
 
             databaseMapping.Assert<B>("B")
                 .HasColumn("Id")
-                .HasColumn("YId")
+                .HasColumn("ZId")
                 .HasColumn("Discriminator")
-                .HasForeignKeyColumn("YId", "Y")
+                .HasForeignKeyColumn("ZId", "Z")
                 .HasForeignKeyColumn("Id", "A");
 
             databaseMapping.Assert<B1>("B")
                 .HasColumn("Id")
-                .HasColumn("YId")
+                .HasColumn("ZId")
                 .HasColumn("Discriminator")
-                .HasForeignKeyColumn("YId", "Y")
+                .HasForeignKeyColumn("ZId", "Z")
                 .HasForeignKeyColumn("Id", "A");
 
             databaseMapping.Assert<C>("C")
                 .HasColumn("Id")
-                .HasColumn("YId")
+                .HasColumn("ZId")
                 .HasColumn("Discriminator")
-                .HasForeignKeyColumn("YId", "Y")
+                .HasForeignKeyColumn("ZId", "Z")
                 .HasForeignKeyColumn("Id", "A");
 
             databaseMapping.Assert<C1>("C")
                 .HasColumn("Id")
-                .HasColumn("YId")
+                .HasColumn("ZId")
                 .HasColumn("Discriminator")
-                .HasForeignKeyColumn("YId", "Y")
+                .HasForeignKeyColumn("ZId", "Z")
                 .HasForeignKeyColumn("Id", "A");
 
-            databaseMapping.Assert<Y>("Y")
+            databaseMapping.Assert<Z>("Z")
                 .HasColumn("Id");
         }
     }

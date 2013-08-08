@@ -536,20 +536,20 @@ namespace System.Data.Entity.Core.EntityClient
 
                 Assert.NotNull(new EntityCommand("37").InterceptionContext);
 
-                Assert.NotNull(new EntityCommand("That's Number Wang!", new EntityConnection()).InterceptionContext);
+                Assert.NotNull(new EntityCommand("That's Number One!", new EntityConnection()).InterceptionContext);
 
                 Assert.NotNull(
                     new EntityCommand("2", new EntityConnection(), new EntityCommand.EntityDataReaderFactory()).InterceptionContext);
 
                 Assert.NotNull(
-                    new EntityCommand("That's Number Wang!", new EntityConnection(), new EntityTransaction()).InterceptionContext);
+                    new EntityCommand("That's Number One!", new EntityConnection(), new EntityTransaction()).InterceptionContext);
 
                 Assert.NotNull(
                     new EntityCommand("376", new EntityConnection(), new EntityTransaction(), new EntityCommand.EntityDataReaderFactory())
                         .InterceptionContext);
 
                 Assert.NotNull(
-                    new EntityCommand("That's Number Wang!", new EntityConnection(), new Mock<IDbDependencyResolver>().Object)
+                    new EntityCommand("That's Number One!", new EntityConnection(), new Mock<IDbDependencyResolver>().Object)
                         .InterceptionContext);
             }
         }

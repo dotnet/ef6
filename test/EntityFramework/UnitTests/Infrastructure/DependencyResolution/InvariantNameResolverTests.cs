@@ -16,7 +16,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             [Fact]
             public void GetService_returns_null_for_non_IProviderInvariantName_types()
             {
-                Assert.Null(new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.FTW").GetService<Random>());
+                Assert.Null(new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.ForTheWin").GetService<Random>());
             }
 
             [Fact]
@@ -25,13 +25,13 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Equal(
                     Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
                     Assert.Throws<ArgumentException>(
-                        () => new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.FTW")
+                        () => new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.ForTheWin")
                                   .GetService<IProviderInvariantName>(null)).Message);
 
                 Assert.Equal(
                     Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
                     Assert.Throws<ArgumentException>(
-                        () => new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.FTW")
+                        () => new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.ForTheWin")
                                   .GetService<IProviderInvariantName>("Oh No!")).Message);
             }
 
@@ -41,15 +41,15 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var factory = new Mock<DbProviderFactory>().Object;
 
                 Assert.Equal(
-                    "920.FTW",
-                    new InvariantNameResolver(factory, "920.FTW").GetService<IProviderInvariantName>(factory).Name);
+                    "920.ForTheWin",
+                    new InvariantNameResolver(factory, "920.ForTheWin").GetService<IProviderInvariantName>(factory).Name);
             }
 
             [Fact]
             public void GetService_returns_null_for_a_different_DbProviderFactory()
             {
                 Assert.Null(
-                    new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.FTW")
+                    new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.ForTheWin")
                         .GetService<IProviderInvariantName>(SqlClientFactory.Instance));
             }
         }
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             [Fact]
             public void GetService_returns_empty_list_for_non_IProviderInvariantName_types()
             {
-                Assert.Empty(new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.FTW").GetServices<Random>());
+                Assert.Empty(new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.ForTheWin").GetServices<Random>());
             }
 
             [Fact]
@@ -68,13 +68,13 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Equal(
                     Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
                     Assert.Throws<ArgumentException>(
-                        () => new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.FTW")
+                        () => new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.ForTheWin")
                                   .GetServices<IProviderInvariantName>(null)).Message);
 
                 Assert.Equal(
                     Strings.DbDependencyResolver_InvalidKey(typeof(DbProviderFactory).Name, typeof(IProviderInvariantName)),
                     Assert.Throws<ArgumentException>(
-                        () => new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.FTW")
+                        () => new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.ForTheWin")
                                   .GetServices<IProviderInvariantName>("Oh No!")).Message);
             }
 
@@ -84,15 +84,15 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var factory = new Mock<DbProviderFactory>().Object;
 
                 Assert.Equal(
-                    "920.FTW",
-                    new InvariantNameResolver(factory, "920.FTW").GetServices<IProviderInvariantName>(factory).Single().Name);
+                    "920.ForTheWin",
+                    new InvariantNameResolver(factory, "920.ForTheWin").GetServices<IProviderInvariantName>(factory).Single().Name);
             }
 
             [Fact]
             public void GetServices_returns_empty_list_for_a_different_DbProviderFactory()
             {
                 Assert.Empty(
-                    new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.FTW")
+                    new InvariantNameResolver(new Mock<DbProviderFactory>().Object, "920.ForTheWin")
                         .GetServices<IProviderInvariantName>(SqlClientFactory.Instance));
             }
         }

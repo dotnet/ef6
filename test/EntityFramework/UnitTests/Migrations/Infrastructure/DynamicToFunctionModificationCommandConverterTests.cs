@@ -120,7 +120,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("the_name", firstCommandTree.Parameters.ElementAt(2).Key);
             Assert.Equal("Address_Street", firstCommandTree.Parameters.ElementAt(3).Key);
             Assert.Equal("Address_City", firstCommandTree.Parameters.ElementAt(4).Key);
-            Assert.Equal("Address_Country_Name", firstCommandTree.Parameters.ElementAt(5).Key);
+            Assert.Equal("Address_CountryOrRegion_Name", firstCommandTree.Parameters.ElementAt(5).Key);
             Assert.Equal("OrderGroupId", firstCommandTree.Parameters.ElementAt(6).Key);
             Assert.Equal("Customer_CustomerId", firstCommandTree.Parameters.ElementAt(7).Key);
 
@@ -163,7 +163,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("Name", firstCommandTree.Parameters.ElementAt(0).Key);
             Assert.Equal("Address_Street", firstCommandTree.Parameters.ElementAt(1).Key);
             Assert.Equal("Address_City", firstCommandTree.Parameters.ElementAt(2).Key);
-            Assert.Equal("Address_Country_Name", firstCommandTree.Parameters.ElementAt(3).Key);
+            Assert.Equal("Address_CountryOrRegion_Name", firstCommandTree.Parameters.ElementAt(3).Key);
             Assert.Equal("OrderGroupId", firstCommandTree.Parameters.ElementAt(4).Key);
             Assert.Equal("Customer_CustomerId", firstCommandTree.Parameters.ElementAt(5).Key);
             Assert.Equal("xid", firstCommandTree.Parameters.ElementAt(6).Key);

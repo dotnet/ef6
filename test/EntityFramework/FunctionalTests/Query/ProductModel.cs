@@ -29,7 +29,7 @@ namespace System.Data.Entity.Query
     <Property Name=""City"" Type=""nvarchar"" MaxLength=""15"" />
     <Property Name=""Region"" Type=""nvarchar"" MaxLength=""15"" />
     <Property Name=""PostalCode"" Type=""nvarchar"" MaxLength=""10"" />
-    <Property Name=""Country"" Type=""nvarchar"" MaxLength=""15"" />
+    <Property Name=""CountryOrRegion"" Type=""nvarchar"" MaxLength=""15"" />
     <Property Name=""Phone"" Type=""nvarchar"" MaxLength=""24"" />
     <Property Name=""Fax"" Type=""nvarchar"" MaxLength=""24"" />
   </EntityType>
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Query
             <ScalarProperty Name=""City"" ColumnName=""City"" />
             <ScalarProperty Name=""Region"" ColumnName=""Region"" />
             <ScalarProperty Name=""PostalCode"" ColumnName=""PostalCode"" />
-            <ScalarProperty Name=""Country"" ColumnName=""Country"" />
+            <ScalarProperty Name=""CountryOrRegion"" ColumnName=""CountryOrRegion"" />
           </ComplexProperty>
         </MappingFragment>
       </EntityTypeMapping>
@@ -114,7 +114,7 @@ namespace System.Data.Entity.Query
     <Property Name=""City"" Type=""String"" />
     <Property Name=""Region"" Type=""String"" />
     <Property Name=""PostalCode"" Type=""String"" />
-    <Property Name=""Country"" Type=""String"" />
+    <Property Name=""CountryOrRegion"" Type=""String"" />
   </ComplexType>
   <Function Name=""F_CountProducts"" ReturnType=""Int32"">
     <Parameter Name=""products"" Type=""Collection(Self.Product)""/>
@@ -270,7 +270,7 @@ namespace System.Data.Entity.Query
     <Parameter Name=""pAddresses"" Type=""Collection(Self.Address)""/>
     <DefiningExpression>
       using ProductModel;
-      Min(select value a.City from pAddresses as a where a.Country = 'Mexico')
+      Min(select value a.City from pAddresses as a where a.CountryOrRegion = 'Mexico')
     </DefiningExpression>
   </Function>
   <!-- positive: function takes collection of complex type elements returns a collection of scalar types -->
@@ -278,7 +278,7 @@ namespace System.Data.Entity.Query
     <Parameter Name=""pAddresses"" Type=""Collection(Self.Address)""/>
     <DefiningExpression>
       using ProductModel;
-      select value a.City from pAddresses as a where a.Country = 'Mexico'
+      select value a.City from pAddresses as a where a.CountryOrRegion = 'Mexico'
     </DefiningExpression>
   </Function>
   <!-- positive: function takes collection of Customers entities returns a collection of entities -->
@@ -286,7 +286,7 @@ namespace System.Data.Entity.Query
     <Parameter Name=""pCustomers"" Type=""Collection(Self.Customer)""/>
     <DefiningExpression>
       using ProductModel;
-      select value c from pCustomers as c where c.Address.Country = 'Mexico'
+      select value c from pCustomers as c where c.Address.CountryOrRegion = 'Mexico'
     </DefiningExpression>
   </Function>
   <!-- positive: function takes collection of complex type elements returns a collection of complex type elements -->
@@ -294,7 +294,7 @@ namespace System.Data.Entity.Query
     <Parameter Name=""pAddresses"" Type=""Collection(Self.Address)""/>
     <DefiningExpression>
       using ProductModel;
-      select value p from pAddresses as p where p.Country = 'Mexico'
+      select value p from pAddresses as p where p.CountryOrRegion = 'Mexico'
     </DefiningExpression>
   </Function>
   <!-- positive: function takes collection of scalars returns a collection of scalars -->
