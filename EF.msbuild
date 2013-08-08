@@ -98,6 +98,7 @@
             <AssemblyVersion>6.0.0.0</AssemblyVersion>
             <AssemblyFileVersion>6.0.$(DatePart).$(BUILD_NUMBER)</AssemblyFileVersion>
             <AssemblyInfoVersion>6.0.0-$(DatePart)</AssemblyInfoVersion>
+            <PackageVersion>6.0.0</PackageVersion>
         </PropertyGroup>
         <ItemGroup>
             <Lines Include="using System.Reflection%3b"/>
@@ -111,11 +112,11 @@
                           Encoding="UTF-8" />
         <XmlPoke XmlInputPath="src\NuGet\EntityFramework\EntityFramework.nuspec"
                  Query="//x:package/x:metadata/x:version"
-                 Value="$(AssemblyInfoVersion)"
+                 Value="$(PackageVersion)"
                  Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd' /&gt;" />
         <XmlPoke XmlInputPath="src\NuGet\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.nuspec"
                  Query="//x:package/x:metadata/x:version"
-                 Value="$(AssemblyInfoVersion)"
+                 Value="$(PackageVersion)"
                  Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd' /&gt;" />
     </Target>
 
