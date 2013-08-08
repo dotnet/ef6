@@ -16,23 +16,23 @@ namespace System.Data.Entity.Core.Objects
         private readonly ObjectContext _context;
         private readonly EdmType[] _edmTypes;
         private readonly int _resultSetIndex;
-        private readonly bool _useSpatialReader;
+        private readonly bool _streaming;
         private readonly MergeOption _mergeOption;
 
         internal NextResultGenerator(
             ObjectContext context, EntityCommand entityCommand, EdmType[] edmTypes, ReadOnlyMetadataCollection<EntitySet> entitySets,
-            MergeOption mergeOption, bool useSpatialReader, int resultSetIndex)
+            MergeOption mergeOption, bool streaming, int resultSetIndex)
         {
             _context = context;
             _entityCommand = entityCommand;
             _entitySets = entitySets;
             _edmTypes = edmTypes;
             _resultSetIndex = resultSetIndex;
-            _useSpatialReader = useSpatialReader;
+            _streaming = streaming;
             _mergeOption = mergeOption;
         }
 
-        internal ObjectResult<TElement> GetNextResult<TElement>(DbDataReader storeReader, bool shouldReleaseConnection)
+        internal ObjectResult<TElement> GetNextResult<TElement>(DbDataReader storeReader)
         {
             var isNextResult = false;
             try
@@ -53,8 +53,7 @@ namespace System.Data.Entity.Core.Objects
                 var edmType = _edmTypes[_resultSetIndex];
                 MetadataHelper.CheckFunctionImportReturnType<TElement>(edmType, _context.MetadataWorkspace);
                 return _context.MaterializedDataRecord<TElement>(
-                    _entityCommand, storeReader, _resultSetIndex, _entitySets, _edmTypes, _mergeOption, _useSpatialReader,
-                    shouldReleaseConnection);
+                    _entityCommand, storeReader, _resultSetIndex, _entitySets, _edmTypes, _mergeOption, _streaming);
             }
             else
             {

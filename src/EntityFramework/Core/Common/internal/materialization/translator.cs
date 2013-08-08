@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// a ShaperFactory which can be used to materialize results for a query.
         /// </summary>
         internal virtual ShaperFactory<T> TranslateColumnMap<T>(
-            ColumnMap columnMap, MetadataWorkspace workspace, SpanIndex spanIndex, MergeOption mergeOption, bool valueLayer)
+            ColumnMap columnMap, MetadataWorkspace workspace, SpanIndex spanIndex, MergeOption mergeOption, bool streaming, bool valueLayer)
         {
             DebugCheck.NotNull(columnMap);
             DebugCheck.NotNull(workspace);
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             // the translator visitor that recursively tranforms ColumnMaps into Expressions
             // stored on the CoordinatorScratchpads it also constructs.  We'll compile those
             // expressions into delegates later.
-            var translatorVisitor = new TranslatorVisitor(workspace, spanIndex, mergeOption, valueLayer);
+            var translatorVisitor = new TranslatorVisitor(workspace, spanIndex, mergeOption, streaming, valueLayer);
             columnMap.Accept(translatorVisitor, new TranslatorArg(typeof(IEnumerable<>).MakeGenericType(typeof(T))));
 
             Debug.Assert(
@@ -90,6 +90,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             MetadataWorkspace workspace,
             SpanIndex spanIndex,
             MergeOption mergeOption,
+            bool streaming,
             bool valueLayer)
         {
             DebugCheck.NotNull(elementType);
@@ -99,7 +100,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             var typedCreateMethod = GenericTranslateColumnMap.MakeGenericMethod(elementType);
 
             return (ShaperFactory)typedCreateMethod.Invoke(
-                translator, new object[] { columnMap, workspace, spanIndex, mergeOption, valueLayer });
+                translator, new object[] { columnMap, workspace, spanIndex, mergeOption, streaming, valueLayer });
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -123,6 +124,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             /// entities when they are materialized).
             /// </summary>
             private readonly MergeOption _mergeOption;
+
+            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
+            private readonly bool _streaming;
 
             /// <summary>
             /// When true, indicates we're processing for the value layer (BridgeDataReader)
@@ -150,13 +154,14 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             private static readonly MethodInfo Translator_TypedCreateInlineDelegate = typeof(TranslatorVisitor).GetMethod(
                 "TypedCreateInlineDelegate", BindingFlags.NonPublic | BindingFlags.Instance);
 
-            public TranslatorVisitor(MetadataWorkspace workspace, SpanIndex spanIndex, MergeOption mergeOption, bool valueLayer)
+            public TranslatorVisitor(MetadataWorkspace workspace, SpanIndex spanIndex, MergeOption mergeOption, bool streaming, bool valueLayer)
             {
                 DebugCheck.NotNull(workspace);
 
                 _workspace = workspace;
                 _spanIndex = spanIndex;
                 _mergeOption = mergeOption;
+                _streaming = streaming;
                 IsValueLayer = valueLayer;
             }
 

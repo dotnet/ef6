@@ -5,7 +5,6 @@ namespace System.Data.Entity.Query.StoredProcedures
     using System.Collections.Generic;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Spatial;
-    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
     using Xunit;

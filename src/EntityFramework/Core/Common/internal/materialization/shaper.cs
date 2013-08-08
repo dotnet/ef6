@@ -21,11 +21,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     /// </summary>
     internal abstract class Shaper
     {
-        private readonly bool _useSpatialReader;
-
         internal Shaper(
             DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption,
-            int stateCount, bool useSpatialReader)
+            int stateCount, bool streaming)
         {
             Debug.Assert(context == null || workspace == context.MetadataWorkspace, "workspace must match context's workspace");
 
@@ -36,7 +34,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             Workspace = workspace;
             AssociationSpaceMap = new Dictionary<AssociationType, AssociationType>();
             _spatialReader = new Lazy<DbSpatialDataReader>(CreateSpatialDataReader);
-            _useSpatialReader = useSpatialReader;
+            Streaming = streaming;
         }
 
         /// <summary>
@@ -91,6 +89,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         private readonly Dictionary<AssociationType, AssociationType> AssociationSpaceMap;
 
+        protected readonly bool Streaming;
+        
         /// <summary>
         /// Caches Tuples of EntitySet, AssociationType, and source member name for which RelatedEnds exist.
         /// </summary>
@@ -633,7 +633,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         public DbGeography GetGeographyColumnValue(int ordinal)
         {
-            if (_useSpatialReader)
+            if (Streaming)
             {
                 return _spatialReader.Value.GetGeography(ordinal);
             }
@@ -645,7 +645,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         public DbGeometry GetGeometryColumnValue(int ordinal)
         {
-            if (_useSpatialReader)
+            if (Streaming)
             {
                 return _spatialReader.Value.GetGeometry(ordinal);
             }
@@ -664,7 +664,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             TColumn result;
             if (spatialTypeKind == PrimitiveTypeKind.Geography)
             {
-                if (_useSpatialReader)
+                if (Streaming)
                 {
                     result = new ColumnErrorHandlingValueReader<TColumn>(
                         (reader, column) => (TColumn)(object)_spatialReader.Value.GetGeography(column),
@@ -681,7 +681,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
             else
             {
-                if (_useSpatialReader)
+                if (Streaming)
                 {
                     result = new ColumnErrorHandlingValueReader<TColumn>(
                         (reader, column) => (TColumn)(object)_spatialReader.Value.GetGeometry(column),
@@ -705,7 +705,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             TProperty result;
             if (Helper.IsGeographicTypeKind(spatialTypeKind))
             {
-                if (_useSpatialReader)
+                if (Streaming)
                 {
                     result = new PropertyErrorHandlingValueReader<TProperty>(
                         propertyName, typeName,
@@ -724,7 +724,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
             else
             {
-                if (_useSpatialReader)
+                if (Streaming)
                 {
                     Debug.Assert(Helper.IsGeometricTypeKind(spatialTypeKind));
                     result = new PropertyErrorHandlingValueReader<TProperty>(

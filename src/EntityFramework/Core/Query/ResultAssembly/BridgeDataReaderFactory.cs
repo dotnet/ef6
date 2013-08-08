@@ -54,10 +54,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             DebugCheck.NotNull(columnMap);
             DebugCheck.NotNull(workspace);
 
-            var shaperFactory = _translator.TranslateColumnMap<RecordState>(columnMap, workspace, null, MergeOption.NoTracking, valueLayer: true);
+            var shaperFactory = _translator.TranslateColumnMap<RecordState>(columnMap, workspace, null, MergeOption.NoTracking, streaming: true, valueLayer: true);
             var recordShaper = shaperFactory.Create(
-                storeDataReader, null, workspace, MergeOption.NoTracking, readerOwned: true, useSpatialReader: true,
-                shouldReleaseConnection: true);
+                storeDataReader, null, workspace, MergeOption.NoTracking, readerOwned: true, streaming: true);
 
             return new KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>(
                 recordShaper, recordShaper.RootCoordinator.TypedCoordinatorFactory);

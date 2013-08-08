@@ -82,8 +82,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 if (Streaming)
                 {
                     shaper = shaperFactory.Create(
-                        storeReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: true,
-                        shouldReleaseConnection: Streaming);
+                        storeReader, context, context.MetadataWorkspace, MergeOption, true, Streaming);
                 }
                 else
                 {
@@ -94,8 +93,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     bufferedReader.Initialize(storeItemCollection.ProviderManifestToken, providerServices);
 
                     shaper = shaperFactory.Create(
-                        bufferedReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: false,
-                        shouldReleaseConnection: Streaming);
+                        bufferedReader, context, context.MetadataWorkspace, MergeOption, true, Streaming);
                 }
 
                 // create materializer delegate
@@ -158,8 +156,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 if (Streaming)
                 {
                     shaper = shaperFactory.Create(
-                        storeReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: true,
-                        shouldReleaseConnection: Streaming);
+                        storeReader, context, context.MetadataWorkspace, MergeOption, true, Streaming);
                 }
                 else
                 {
@@ -172,8 +169,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                                       .ConfigureAwait(continueOnCapturedContext: false);
 
                     shaper = shaperFactory.Create(
-                        bufferedReader, context, context.MetadataWorkspace, MergeOption, true, useSpatialReader: false,
-                        shouldReleaseConnection: Streaming);
+                        bufferedReader, context, context.MetadataWorkspace, MergeOption, true, Streaming);
                 }
 
                 // create materializer delegate
