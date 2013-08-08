@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Configuration;
+    using System.Data.Common;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
@@ -320,6 +321,14 @@ namespace System.Data.Entity.Infrastructure
             if (_connectionInfo != null)
             {
                 context.InternalContext.OverrideConnection(new LazyInternalConnection(_connectionInfo));
+            }
+            else if (_modelProviderInfo != null
+                     && _appConfig == AppConfig.DefaultInstance)
+            {
+                context.InternalContext.OverrideConnection(
+                    new EagerInternalConnection(
+                        DbConfiguration.DependencyResolver.GetService<DbProviderFactory>(
+                            _modelProviderInfo.ProviderInvariantName).CreateConnection(), connectionOwned: true));
             }
 
             if (_onModelCreating != null)
