@@ -7,6 +7,10 @@ namespace System.Data.Entity.Migrations.Model
 
     /// <summary>
     /// Represents moving a table from one schema to another.
+    ///
+    /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+    /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+    /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
     public class MoveTableOperation : MigrationOperation
     {
@@ -15,6 +19,10 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Initializes a new instance of the MoveTableOperation class.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="name"> Name of the table to be moved. </param>
         /// <param name="newSchema"> Name of the schema to move the table to. </param>

@@ -7,6 +7,10 @@ namespace System.Data.Entity.Migrations.Model
 
     /// <summary>
     /// Represents information about a property of an entity.
+    ///
+    /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+    /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+    /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
     public abstract class PropertyModel
     {
@@ -15,6 +19,10 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Initializes a new instance of the PropertyModel class.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="type"> The data type for this property model. </param>
         /// <param name="typeUsage"> Additional details about the data type. This includes details such as maximum length, nullability etc. </param>
@@ -44,11 +52,19 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Gets or sets the name of the property model.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets a provider specific data type to use for this property model.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         public virtual string StoreType { get; set; }
 
@@ -72,11 +88,19 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Gets or sets a constant value to use as the default value for this property model.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         public virtual object DefaultValue { get; set; }
 
         /// <summary>
         /// Gets or sets a SQL expression used as the default value for this property model.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         public virtual string DefaultValueSql { get; set; }
 

@@ -14,6 +14,10 @@ namespace System.Data.Entity.Migrations
 
     /// <summary>
     /// Base class for code-based migrations.
+    ///
+    /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+    /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+    /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
     public abstract class DbMigration : IDbMigration
     {
@@ -31,7 +35,13 @@ namespace System.Data.Entity.Migrations
         {
         }
 
-        /// <summary>Adds an operation to create a new stored procedure.</summary>
+        /// <summary>
+        /// Adds an operation to create a new stored procedure.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
         /// <param name="name">
         /// The name of the stored procedure. Schema name is optional, if no schema is specified then dbo is
         /// assumed.
@@ -49,7 +59,13 @@ namespace System.Data.Entity.Migrations
             CreateStoredProcedure<object>(name, _ => new { }, body, anonymousArguments);
         }
 
-        /// <summary>Adds an operation to create a new stored procedure.</summary>
+        /// <summary>
+        /// Adds an operation to create a new stored procedure.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
         /// <param name="name">
         /// The name of the stored procedure. Schema name is optional, if no schema is specified then dbo is
         /// assumed.
@@ -100,6 +116,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to alter a stored procedure.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="name">
         /// The name of the stored procedure. Schema name is optional, if no schema is specified then dbo is
@@ -120,6 +140,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to alter a stored procedure.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <typeparam name="TParameters">
         /// The parameters in this alter stored procedure operation. You do not need to specify this
@@ -169,7 +193,13 @@ namespace System.Data.Entity.Migrations
                     });
         }
 
-        /// <summary>Adds an operation to drop an existing stored procedure with the specified name.</summary>
+        /// <summary>
+        /// Adds an operation to drop an existing stored procedure with the specified name.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
+        /// </summary>
         /// <param name="name">
         /// The name of the procedure to drop. Schema name is optional, if no schema is specified then dbo is
         /// assumed.
@@ -190,6 +220,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to create a new table.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <typeparam name="TColumns">
         /// The columns in this create table operation. You do not need to specify this type, it will
@@ -242,6 +276,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to create a new foreign key constraint.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="dependentTable">
         /// The table that contains the foreign key column. Schema name is optional, if no schema is
@@ -294,6 +332,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to create a new foreign key constraint.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="dependentTable">
         /// The table that contains the foreign key columns. Schema name is optional, if no schema is
@@ -360,6 +402,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to drop a foreign key constraint based on its name.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="dependentTable">
         /// The table that contains the foreign key column. Schema name is optional, if no schema is
@@ -388,6 +434,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to drop a foreign key constraint based on the column it targets.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="dependentTable">
         /// The table that contains the foreign key column. Schema name is optional, if no schema is
@@ -422,6 +472,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to drop a foreign key constraint based on the column it targets.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="dependentTable">
         /// The table that contains the foreign key column.
@@ -460,6 +514,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to drop a foreign key constraint based on the columns it targets.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="dependentTable">
         /// The table that contains the foreign key columns. Schema name is optional, if no schema is
@@ -504,6 +562,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to drop a table.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="name">
         /// The name of the table to be dropped. Schema name is optional, if no schema is specified then dbo is
@@ -523,6 +585,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to move a table to a new schema.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="name">
         /// The name of the table to be moved. Schema name is optional, if no schema is specified then dbo is
@@ -543,6 +609,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to move a stored procedure to a new schema.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="name">
         /// The name of the stored procedure to be moved. Schema name is optional, if no schema is specified
@@ -562,7 +632,11 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        /// Adds an operation to rename a table. To change the schema of a table use MoveTable
+        /// Adds an operation to rename a table. To change the schema of a table use MoveTable.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="name">
         /// The name of the table to be renamed. Schema name is optional, if no schema is specified then dbo is
@@ -587,6 +661,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to rename a stored procedure. To change the schema of a stored procedure use MoveStoredProcedure
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="name">
         /// The name of the stored procedure to be renamed. Schema name is optional, if no schema is specified
@@ -611,6 +689,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to rename a column.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table">
         /// The name of the table that contains the column to be renamed. Schema name is optional, if no
@@ -635,6 +717,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to add a column to an existing table.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table">
         /// The name of the table to add the column to. Schema name is optional, if no schema is specified
@@ -666,6 +752,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to drop an existing column.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table">
         /// The name of the table to drop the column from. Schema name is optional, if no schema is specified
@@ -688,6 +778,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to alter the definition of an existing column.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table">
         /// The name of the table the column exists in. Schema name is optional, if no schema is specified
@@ -721,6 +815,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to create a new primary key.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table">
         /// The table that contains the primary key column. Schema name is optional, if no schema is specified
@@ -752,6 +850,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to create a new primary key based on multiple columns.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table">
         /// The table that contains the primary key columns. Schema name is optional, if no schema is
@@ -798,6 +900,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to drop an existing primary key that does not have the default name.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table">
         /// The table that contains the primary key column. Schema name is optional, if no schema is specified
@@ -826,6 +932,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to drop an existing primary key that was created with the default name.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table">
         /// The table that contains the primary key column. Schema name is optional, if no schema is specified
@@ -851,6 +961,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to create an index on a single column.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table">
         /// The name of the table to create the index on. Schema name is optional, if no schema is specified
@@ -887,6 +1001,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to create an index on multiple columns.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table">
         /// The name of the table to create the index on. Schema name is optional, if no schema is specified
@@ -939,6 +1057,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to drop an index based on its name.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table">
         /// The name of the table to drop the index from. Schema name is optional, if no schema is specified
@@ -970,6 +1092,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to drop an index based on the columns it targets.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="table">
         /// The name of the table to drop the index from. Schema name is optional, if no schema is specified
@@ -1007,6 +1133,10 @@ namespace System.Data.Entity.Migrations
 
         /// <summary>
         /// Adds an operation to execute a SQL command.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="sql"> The SQL to be executed. </param>
         /// <param name="suppressTransaction">

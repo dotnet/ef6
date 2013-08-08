@@ -8,6 +8,10 @@ namespace System.Data.Entity.Migrations.Model
 
     /// <summary>
     /// A migration operation that affects stored procedures.
+    ///
+    /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+    /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+    /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
     public abstract class ProcedureOperation : MigrationOperation
     {
@@ -18,6 +22,10 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcedureOperation"/> class.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="name">The name of the stored procedure.</param>
         /// <param name="bodySql">The body of the stored procedure expressed in SQL.</param>

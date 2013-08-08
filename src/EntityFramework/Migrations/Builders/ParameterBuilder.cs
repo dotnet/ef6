@@ -10,11 +10,19 @@ namespace System.Data.Entity.Migrations.Builders
 
     /// <summary>
     /// Helper class that is used to configure a parameter.
+    ///
+    /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+    /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+    /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
     public class ParameterBuilder
     {
         /// <summary>
         /// Creates a new parameter definition to pass Binary data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="maxLength"> The maximum allowable length of the array data. </param>
         /// <param name="fixedLength"> Value indicating whether or not all data should be padded to the maximum length. </param>
@@ -49,6 +57,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass Boolean data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -75,6 +87,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass Byte data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -101,6 +117,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass DateTime data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="precision"> The precision of the parameter. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
@@ -130,6 +150,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass Decimal data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="precision"> The numeric precision of the parameter. </param>
         /// <param name="scale"> The numeric scale of the parameter. </param>
@@ -162,6 +186,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass Double data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -188,6 +216,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass GUID data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -214,6 +246,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass Single data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -240,6 +276,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass Short data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -266,6 +306,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass Integer data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -292,6 +336,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass Long data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -318,6 +366,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass String data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="maxLength"> The maximum allowable length of the string data. </param>
         /// <param name="fixedLength"> Value indicating whether or not all data should be padded to the maximum length. </param>
@@ -353,6 +405,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass Time data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="precision"> The precision of the parameter. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
@@ -382,6 +438,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass DateTimeOffset data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="precision"> The precision of the parameter. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
@@ -411,6 +471,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass geography data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -437,6 +501,10 @@ namespace System.Data.Entity.Migrations.Builders
 
         /// <summary>
         /// Creates a new parameter definition to pass geometry data.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>

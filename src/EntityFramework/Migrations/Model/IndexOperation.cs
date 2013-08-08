@@ -9,6 +9,10 @@ namespace System.Data.Entity.Migrations.Model
 
     /// <summary>
     /// Common base class for operations affecting indexes.
+    ///
+    /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+    /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+    /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
     public abstract class IndexOperation : MigrationOperation
     {
@@ -18,6 +22,10 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Initializes a new instance of the IndexOperation class.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
@@ -28,6 +36,10 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Gets or sets the table the index belongs to.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         public string Table
         {
@@ -42,6 +54,10 @@ namespace System.Data.Entity.Migrations.Model
 
         /// <summary>
         /// Gets the columns that are indexed.
+        /// 
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         public IList<string> Columns
         {
@@ -59,6 +75,10 @@ namespace System.Data.Entity.Migrations.Model
         /// <summary>
         /// Gets or sets the name of this index.
         /// If no name is supplied, a default name will be calculated.
+        ///
+        /// Entity Framework Migrations APIs are not designed to accept input provided by untrusted sources 
+        /// (such as the end user of an application). If input is accepted from such sources it should be validated 
+        /// before being passed to these APIs to protect against SQL injection attacks etc.
         /// </summary>
         public string Name
         {
